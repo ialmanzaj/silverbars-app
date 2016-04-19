@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.project.calisthenic.WorkingOut"
+    android:background="#2d2d2d"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="#c8000000">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="00"
+            android:id="@+id/timer"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="40dp" />
+
+        <!--<com.serhatsurguvec.continuablecirclecountdownview.ContinuableCircleCountDownView-->
+            <!--xmlns:app="http://schemas.android.com/apk/lib/com.serhatsurguvec.continuablecirclecountdownview.ContinuableCircleCountDownView"-->
+            <!--android:id="@+id/CountDownView"-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:layout_marginBottom="20dp"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--app:shapeRate="9"-->
+            <!--app:innerColor="#c8000000"-->
+            <!--app:outerColor="#c8000000"-->
+            <!--app:progress="180"-->
+            <!--app:textColor="#FFffffff"-->
+            <!--app:progressColor="#FFFF0000"-->
+            <!--app:textSize="23sp" />-->
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView5"
+                android:layout_gravity="left|center_vertical"
+                android:src="@mipmap/user"
+                android:background="#eee" />
+
+            <SeekBar
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/seekBar"
+                android:layout_gravity="center_horizontal|bottom"
+                android:progressDrawable="@drawable/red_scrubber_progress"
+                android:thumb="@drawable/red_scrubber_control" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Something good"
+                android:id="@+id/textView11"
+                android:layout_gravity="center_horizontal|top"
+                android:textColor="#ffffff" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Theme park"
+                android:id="@+id/textView12"
+                android:layout_gravity="center"
+                android:textColor="#888" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnPlay"
+                android:layout_gravity="right|center_vertical"
+                android:src="@android:drawable/ic_media_play"
+                android:background="#00ffffff" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnPause"
+                android:layout_gravity="right|center_vertical"
+                android:src="@android:drawable/ic_media_pause"
+                android:background="#00ffffff"
+                android:visibility="gone" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_weight="1.01">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/reciclador"
+            android:layout_gravity="center_horizontal"
+            android:scrollbars="horizontal"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:paddingBottom="10dp">
+
+        <!--<ImageView-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="250dp"-->
+            <!--android:id="@+id/imageView6"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:background="@mipmap/imagen3" />-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+            <!--android:text="Upper body"-->
+            <!--android:id="@+id/textView13"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:textColor="#ffffff" />-->
+
+        <!--<LinearLayout-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:gravity="center">-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+                <!--android:text="Next"-->
+                <!--android:id="@+id/textView14"-->
+                <!--android:textColor="#ffffff"-->
+                <!--android:layout_marginRight="5dp"-->
+                <!--android:textSize="30dp" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+                <!--android:text="->"-->
+                <!--android:id="@+id/textView16"-->
+                <!--android:textColor="#ffffff"-->
+                <!--android:textSize="30dp" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+                <!--android:text="2 min Rest"-->
+                <!--android:id="@+id/textView15"-->
+                <!--android:textColor="#ffffff"-->
+                <!--android:layout_marginLeft="5dp"-->
+                <!--android:textSize="30dp" />-->
+        <!--</LinearLayout>-->
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Next exercise"
+            android:id="@+id/button9"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:layout_marginTop="5dp">
+
+            <Button
+                android:layout_width="190dp"
+                android:layout_height="50dp"
+                android:text="PAUSE"
+                android:id="@+id/button10"
+                android:background="#c3c3c3" />
+
+            <Button
+                android:layout_width="190dp"
+                android:layout_height="50dp"
+                android:text="END WORKOUT"
+                android:id="@+id/button11"
+                android:background="#cb0000"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
