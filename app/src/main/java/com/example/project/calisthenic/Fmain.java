@@ -15,11 +15,16 @@ public class Fmain extends Fragment {
 
     View rootView;
     Button songs;
+    private String email,name;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_fmain, container, false);
+
+        Intent intent = this.getActivity().getIntent();
+        email = intent.getStringExtra("Email");
+        name = intent.getStringExtra("Name");
 
         songs = (Button) rootView.findViewById(R.id.songs);
 

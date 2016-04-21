@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.afollestad.materialdialogs.MaterialDialog;
@@ -24,13 +25,23 @@ public class MainScreen extends AppCompatActivity {
     ViewPager view;
     SimpleTabAdapter adapter;
     Button songs;
-
+    private String email,name;
+    TextView emailView, nameView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
 
         songs = (Button) findViewById(R.id.songs);
+        Intent intent = this.getIntent();
+        email = intent.getStringExtra("Email");
+        name = intent.getStringExtra("Name");
+
+        emailView = (TextView) findViewById(R.id.email);
+        nameView = (TextView) findViewById(R.id.name);
+
+        emailView.setText(email);
+        nameView.setText(name);
 
         songs.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,6 +49,7 @@ public class MainScreen extends AppCompatActivity {
                 WorkoutActivity();
             }
         });
+
 
         int[] image = {R.mipmap.home, R.mipmap.search,
                 R.mipmap.acrobatics, R.mipmap.user};

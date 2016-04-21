@@ -3,6 +3,8 @@ package com.example.project.calisthenic;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -19,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,16 +33,26 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphRequestAsyncTask;
+import com.facebook.GraphResponse;
+import com.facebook.ProfileTracker;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -72,6 +85,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private LoginButton loginButton;
     CallbackManager callbackManager = CallbackManager.Factory.create();
+    ProfileTracker profileTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,17 +99,71 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         populateAutoComplete();
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
-        // Callback registration
+        loginButton.setReadPermissions(Arrays.asList(
+                "public_profile", "email", "user_birthday", "user_friends"));
+
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                // App code
-                Toast.makeText(getApplicationContext(),
+                Log.d("debug", "onSuccess");
+                GraphRequest request = new GraphRequest().newMeRequest(loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                String email = null;
+                                String name = null;
+                                try {
+                                    email = object.getString("email");
+                                    name = object.getString("name");
+//                                    Utils.saveUserData(ProfileActivity.this, email, name);
 
-                        "Logueado",
+                                    Log.d("debug", email + "");
+                                    Log.d("debug", name + "");
+//                                    Toast.makeText(getApplicationContext(),
+////
+//                                            email+" / "+name,
+//
+//                                            Toast.LENGTH_LONG).show();
+                                    startActivity(new Intent(getApplicationContext(), MainScreen.class).putExtra("Email",email).putExtra("Name",name));
+                                    finish();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
 
-                        Toast.LENGTH_LONG).show();
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email");
+                request.setParameters(parameters);
+                request.executeAsync();
+
             }
+                // Callback registration
+//        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//                // App code
+//                GraphRequest.newMeRequest( loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+//                            @Override
+//                            public void onCompleted(JSONObject me, GraphResponse response) {
+//                                if (response.getError() != null) {
+//                                    // handle error
+//                                } else {
+//                                    String email = me.optString("email");
+//                                    String id = me.optString("id");
+//                                    String name = me.optString("name");
+//                                    Toast.makeText(getApplicationContext(),
+//
+//                                            email+" / "+name,
+//
+//                                            Toast.LENGTH_LONG).show();
+//                                    // send email and id to your web server
+//                                }
+//                            }
+//                        }).executeAsync();
+//
+//
+//            }
 
             @Override
             public void onCancel() {
@@ -116,8 +184,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                         Toast.LENGTH_LONG).show();
             }
+
+
         });
+
 //        loginButton.setReadPermissions("user_friends");
+
+
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -142,6 +215,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+        if (callbackManager.onActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
+    }
+
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -395,5 +478,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
+
+
 }
 
