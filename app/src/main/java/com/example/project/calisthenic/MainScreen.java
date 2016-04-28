@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 //import com.afollestad.materialdialogs.MaterialDialog;
 import com.baoyz.actionsheet.ActionSheet;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationItem;
 import com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationView;
 import com.luseen.luseenbottomnavigation.BottomNavigation.OnBottomNavigationItemClickListener;
@@ -34,7 +36,7 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main_screen);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
@@ -58,7 +60,7 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
         email = intent.getStringExtra("Email");
         name = intent.getStringExtra("Name");
 
-        Username.setText(name);
+        Username.setText("Welcome, "+name);
 
 
         int[] image = {R.mipmap.home, R.mipmap.acrobatics,
@@ -98,13 +100,23 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
 
     @Override
     public void onOtherButtonClick(ActionSheet actionSheet, int index) {
-        Toast.makeText(getApplicationContext(), "click item index = " + index,
-                Toast.LENGTH_LONG).show();
+//        Toast.makeText(getApplicationContext(), "click item index = " + index,
+//                Toast.LENGTH_LONG).show();
+        switch (index){
+            case 0:
+                break;
+            case 1:
+                LoginManager.getInstance().logOut();
+//                finish();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
     public void onDismiss(ActionSheet actionSheet, boolean isCancle) {
-        Toast.makeText(getApplicationContext(), "dismissed isCancle = " + isCancle, Toast.LENGTH_LONG).show();
+//        Toast.makeText(getApplicationContext(), "dismissed isCancle = " + isCancle, Toast.LENGTH_LONG).show();
     }
 
     public void WorkoutActivity(){

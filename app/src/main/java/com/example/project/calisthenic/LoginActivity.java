@@ -86,6 +86,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private LoginButton loginButton;
     CallbackManager callbackManager = CallbackManager.Factory.create();
     ProfileTracker profileTracker;
+    String basicMail, basicPass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //        AppEventsLogger.activateApp(this);
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+
+        basicMail = "prueba@correo.com";
+        basicPass = "123";
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList(
@@ -115,6 +119,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 try {
                                     email = object.getString("email");
                                     name = object.getString("name");
+                                    mEmailView.setText(email);
 //                                    Utils.saveUserData(ProfileActivity.this, email, name);
 
                                     Log.d("debug", email + "");
@@ -208,7 +213,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+//                attemptLogin();
+                String correo, password;
+                correo = mEmailView.getText().toString();
+                password = mPasswordView.getText().toString();
+//                if (basicMail == correo && basicPass == password){
+                    startActivity(new Intent(getApplicationContext(), MainScreen.class).putExtra("Email",basicMail).putExtra("Name","Nombre"));
+                    finish();
+//                }
+//                Toast.makeText(getApplicationContext(),
+//
+//                                            basicMail+" / "+correo+" /// "+basicPass+" / "+password+" ",
+//
+//                                            Toast.LENGTH_LONG).show();
             }
         });
 
