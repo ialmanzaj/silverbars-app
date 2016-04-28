@@ -4,13 +4,11 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="4dp"
-    android:background="#2d2d2d">
+    card_view:cardElevation="4dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#2d2d2d">
+        android:layout_height="wrap_content">
 
         <!--<View-->
             <!--android:layout_width="wrap_content"-->
@@ -43,7 +41,7 @@
                 android:layout_toRightOf="@+id/imagen"
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="10dp"
-                android:textColor="#fff" />
+                android:textColor="#000" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -59,7 +57,7 @@
                     android:id="@+id/next"
                     android:layout_below="@+id/nombre"
                     android:layout_alignLeft="@+id/nombre"
-                    android:textColor="#fff" />
+                    android:textColor="#000" />
             </LinearLayout>
 
         </LinearLayout>

@@ -25,13 +25,15 @@ dependencies {
     //    compile 'com.github.EverythingMe:overscroll-decor:3086e2f742'
     //    compile 'com.roughike:bottom-bar:1.2.6'
 //    compile 'com.lapism:searchview:2.2'
-    compile 'com.android.support:appcompat-v7:23.2.1'
-    compile 'com.android.support:support-v4:23.2.1'
-    compile 'com.github.armcha:LuseenBottomNavigation:1.4.0'
-    compile 'com.github.arimorty:floatingsearchview:1.1.2'
-//    compile('com.github.afollestad.material-dialogs:core:0.8.5.7@aar') {
+    //    compile('com.github.afollestad.material-dialogs:core:0.8.5.7@aar') {
 //        transitive = true
 //    }
+    //    compile 'com.yalantis:contextmenu:1.0.6'
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:support-v4:23.3.0'
+    compile 'com.github.armcha:LuseenBottomNavigation:1.4.0'
+    compile 'com.github.arimorty:floatingsearchview:1.1.2'
     compile 'com.github.SerhatSurguvec:continuablecirclecountdownview:v1.0'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
+    compile 'com.baoyz.actionsheet:library:1.1.5'
 }

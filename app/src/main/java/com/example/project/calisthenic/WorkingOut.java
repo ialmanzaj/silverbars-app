@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -28,11 +29,12 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
     ArrayList<File> mySongs, playlist;
     Thread updateSeekBar;
     SeekBar sb;
-    ImageButton btPlay, btPause;
+    ImageButton btPlay, btPause, nxtExercise, prvExercise;
     Uri u;
     long[] position;
     int x = 0, y=0, elements = 0;
-    TextView timer;
+    TextView timer, song_name;
+    FrameLayout prvLayout, nxtLayout;
 
     ContinuableCircleCountDownView mCountDownView;
     private RecyclerView recycler;
@@ -47,6 +49,14 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
 //        mCountDownView = (ContinuableCircleCountDownView) findViewById(R.id.CountDownView);
 
+        prvExercise = (ImageButton) findViewById(R.id.prvExercise);
+        nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
+
+        prvLayout = (FrameLayout) findViewById(R.id.prvLayout);
+        nxtLayout = (FrameLayout) findViewById(R.id.nxtLayout);
+
+
+        song_name = (TextView) findViewById(R.id.song_name);
         // Inicializar Animes
         List<Workouts_info> items = new ArrayList<>();
 
@@ -124,6 +134,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         mp = MediaPlayer.create(getApplicationContext(),u);
 
         sb.setMax(mp.getDuration());
+//        String Songname = playlist.get(x).getName().toString().replace(".mp3","");
+//        song_name.setText(Songname);
         btPlay.setVisibility(View.GONE);
         btPause.setVisibility(View.VISIBLE);
         updateSeekBar.start();
@@ -140,7 +152,10 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                     mp.stop();
                     mp.release();
                     x = (x+1)%playlist.size();
+//                    Toast.makeText(getApplicationContext(), getString(x),Toast.LENGTH_LONG).show();
                     u = Uri.parse(playlist.get(x).toString());
+                    String Songname = playlist.get(x).getName().toString().replace(".mp3","");
+                    song_name.setText(Songname);
                     mp = MediaPlayer.create(getApplicationContext(),u);
 //                    updateSeekBar.start();
                     mp.start();
@@ -182,7 +197,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         });
 
         alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle("Alert 3");
+        alertDialog.setTitle("Get Ready!");
         alertDialog.setMessage("4");
         alertDialog.show();   //
 
@@ -220,9 +235,17 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
             public void onFinish() {
 
                 if (y < elements){
+                    prvLayout.setVisibility(View.VISIBLE);
+                    if((y+1)==elements){
+                        nxtLayout.setVisibility(View.GONE);
+                    }
                     recycler.smoothScrollToPosition(y);
                     Timer(31,1);
                 }
+                else{
+                    timer.setText("Well Done!");
+                }
+
 
             }
         }.start();

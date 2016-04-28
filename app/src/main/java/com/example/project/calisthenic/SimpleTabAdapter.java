@@ -1,6 +1,5 @@
 package com.example.project.calisthenic;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,8 +9,8 @@ import android.support.v4.app.FragmentPagerAdapter;
  */
 public class SimpleTabAdapter extends FragmentPagerAdapter {
 
-    private int page = 4;
-    private String[] tabtitle = new String[]{"Home", "Search", "Workout", "Profile"};
+    private int page = 5;
+    private String[] tabtitle = new String[]{"Home", "Workouts", "Progress", "Challenges", "Profile"};
 
     public SimpleTabAdapter(FragmentManager fm) {
         super(fm);
@@ -24,10 +23,12 @@ public class SimpleTabAdapter extends FragmentPagerAdapter {
             case 0:
                 return new Fmain();
             case 1:
-                return new Search();
+                return new Myworkouts();
             case 2:
-//                return new Workout();
+                return new progress();
             case 3:
+                return new Challenges();
+            case 4:
                 return new Profile();
             default:
                 return null;

@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" tools:context=".Fmain"
-    android:background="#2d2d2d"
     android:padding="20px">
 
     <LinearLayout
@@ -53,7 +52,7 @@
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="New Button"
+                        android:text="START"
                         android:id="@+id/button"
                         android:layout_gravity="center_horizontal|bottom" />
 
@@ -83,8 +82,8 @@
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="New Button"
-                        android:id="@+id/button2"
+                        android:text="START"
+                        android:id="@+id/songs"
                         android:layout_gravity="center_horizontal|bottom" />
 
                     <TextView
@@ -114,7 +113,7 @@
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="New Button"
+                        android:text="START"
                         android:id="@+id/button3"
                         android:layout_gravity="center_horizontal|bottom"/>
                 </FrameLayout>
@@ -133,7 +132,7 @@
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="New Button"
+                        android:text="START"
                         android:id="@+id/button4"
                         android:layout_gravity="center_horizontal|bottom"/>
                 </FrameLayout>
@@ -152,7 +151,7 @@
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="New Button"
+                        android:text="START"
                         android:id="@+id/button5"
                         android:layout_gravity="center_horizontal|bottom"/>
                 </FrameLayout>
@@ -172,12 +171,5 @@
 
         </LinearLayout>
     </HorizontalScrollView>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Canciones"
-        android:id="@+id/songs"
-        android:layout_gravity="center_horizontal" />
 
 </LinearLayout>

@@ -1,16 +1,13 @@
 package com.example.project.calisthenic;
 
-import android.content.Context;
-import android.net.Uri;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-
-public class Profile extends Fragment {
+public class Challenges extends Fragment {
 
     View rootView;
 
@@ -18,11 +15,9 @@ public class Profile extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        rootView = inflater.inflate(R.layout.activity_workouts, container, false);
 
 
         return rootView;
     }
-
-
 }

@@ -10,82 +10,114 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.afollestad.materialdialogs.MaterialDialog;
+import com.baoyz.actionsheet.ActionSheet;
 import com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationItem;
 import com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationView;
 import com.luseen.luseenbottomnavigation.BottomNavigation.OnBottomNavigationItemClickListener;
 
-public class MainScreen extends AppCompatActivity {
+public class MainScreen extends AppCompatActivity implements ActionSheet.ActionSheetListener {
 
     ViewPager view;
     SimpleTabAdapter adapter;
     Button songs;
     private String email,name;
-    TextView emailView, nameView;
+    TextView emailView, nameView, Username;
+    ImageButton settings;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main_screen);
 
-        songs = (Button) findViewById(R.id.songs);
-        Intent intent = this.getIntent();
-        email = intent.getStringExtra("Email");
-        name = intent.getStringExtra("Name");
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
-        emailView = (TextView) findViewById(R.id.email);
-        nameView = (TextView) findViewById(R.id.name);
-
-        emailView.setText(email);
-        nameView.setText(name);
-
-        songs.setOnClickListener(new View.OnClickListener() {
+        settings = (ImageButton) findViewById(R.id.settings);
+        settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                WorkoutActivity();
+                Setting_popup();
             }
         });
 
 
-        int[] image = {R.mipmap.home, R.mipmap.search,
-                R.mipmap.acrobatics, R.mipmap.user};
-        int[] color = {ContextCompat.getColor(this, R.color.firstColor), ContextCompat.getColor(this, R.color.secondColor),
-                ContextCompat.getColor(this, R.color.thirdColor), ContextCompat.getColor(this, R.color.fourthColor)};
+        Username = (TextView) findViewById(R.id.Username);
+
+
+
+//        songs = (Button) findViewById(R.id.songs);
+        Intent intent = this.getIntent();
+        email = intent.getStringExtra("Email");
+        name = intent.getStringExtra("Name");
+
+        Username.setText(name);
+
+
+        int[] image = {R.mipmap.home, R.mipmap.acrobatics,
+                R.mipmap.progress, R.mipmap.ic_stars_black_24dp, R.mipmap.profile};
+        int[] color = {ContextCompat.getColor(this, R.color.BarColor), ContextCompat.getColor(this, R.color.BarColor),
+                ContextCompat.getColor(this, R.color.BarColor), ContextCompat.getColor(this, R.color.BarColor), ContextCompat.getColor(this, R.color.BarColor)};
         adapter = new SimpleTabAdapter(getSupportFragmentManager());
 //        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
-//        view = (ViewPager) findViewById(R.id.view);
-//        view.setAdapter(adapter);
+        view = (ViewPager) findViewById(R.id.view);
+        view.setAdapter(adapter);
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
 
-        BottomNavigationItem bottomNavigationItem = new BottomNavigationItem
-                ("Home", getResources().getColor(R.color.firstColor), R.mipmap.home);
-        BottomNavigationItem bottomNavigationItem1 = new BottomNavigationItem
-                ("Search", getResources().getColor(R.color.secondColor), R.mipmap.search);
-        BottomNavigationItem bottomNavigationItem2 = new BottomNavigationItem
-                ("Workouts", getResources().getColor(R.color.thirdColor), R.mipmap.acrobatics);
-        BottomNavigationItem bottomNavigationItem3 = new BottomNavigationItem
-                ("Profile", getResources().getColor(R.color.fourthColor), R.mipmap.user);
+//        bottomNavigationView.isColoredBackground(false);
+//        bottomNavigationView.setItemActiveColorWithoutColoredBackground("#cb0000");
+
+//        BottomNavigationItem bottomNavigationItem = new BottomNavigationItem
+//                ("Home", getResources().getColor(R.color.firstColor), R.mipmap.home);
+//        BottomNavigationItem bottomNavigationItem1 = new BottomNavigationItem
+//                ("Myworkouts", getResources().getColor(R.color.BarColor), R.mipmap.search);
+//        BottomNavigationItem bottomNavigationItem2 = new BottomNavigationItem
+//                ("Challenges", getResources().getColor(R.color.thirdColor), R.mipmap.acrobatics);
+//        BottomNavigationItem bottomNavigationItem3 = new BottomNavigationItem
+//                ("Profile", getResources().getColor(R.color.BarColor), R.mipmap.profile);
 
 
 
-        bottomNavigationView.addTab(bottomNavigationItem);
-        bottomNavigationView.addTab(bottomNavigationItem1);
-        bottomNavigationView.addTab(bottomNavigationItem2);
-        bottomNavigationView.addTab(bottomNavigationItem3);
+//        bottomNavigationView.addTab(bottomNavigationItem);
+//        bottomNavigationView.addTab(bottomNavigationItem1);
+//        bottomNavigationView.addTab(bottomNavigationItem2);
+//        bottomNavigationView.addTab(bottomNavigationItem3);
 
-//        view.setAdapter(adapter);
-//        bottomNavigationView.setViewPager(view , color , image);
+        view.setAdapter(adapter);
+        bottomNavigationView.setViewPager(view , color , image);
 
+    }
+
+    @Override
+    public void onOtherButtonClick(ActionSheet actionSheet, int index) {
+        Toast.makeText(getApplicationContext(), "click item index = " + index,
+                Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onDismiss(ActionSheet actionSheet, boolean isCancle) {
+        Toast.makeText(getApplicationContext(), "dismissed isCancle = " + isCancle, Toast.LENGTH_LONG).show();
     }
 
     public void WorkoutActivity(){
         Intent intent = new Intent(getApplicationContext(), Workout.class);
         startActivity(intent);
+    }
+
+    public void Setting_popup(){
+        ActionSheet.createBuilder(this, getSupportFragmentManager())
+                .setCancelButtonTitle("Cancel")
+                .setOtherButtonTitles("About", "Log out")
+                .setCancelableOnTouchOutside(true)
+                .setListener(this).show();
     }
 
 }

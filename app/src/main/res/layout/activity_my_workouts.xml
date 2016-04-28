@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Myworkouts">
+
+    <!--<com.arlib.floatingsearchview.FloatingSearchView-->
+        <!--android:id="@+id/floating_search_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:floatingSearch_searchBarMarginLeft="@dimen/search_view_inset"-->
+        <!--app:floatingSearch_searchBarMarginTop="@dimen/search_view_inset"-->
+        <!--app:floatingSearch_searchBarMarginRight="@dimen/search_view_inset"-->
+        <!--app:floatingSearch_searchHint="Myworkouts..."-->
+        <!--app:floatingSearch_showSearchHintWhenNotFocused="true"-->
+        <!--app:floatingSearch_showSearchKey="false"-->
+        <!--app:floatingSearch_dismissOnOutsideTouch="true"-->
+        <!--app:floatingSearch_leftActionMode="showHamburger"-->
+        <!--app:floatingSearch_menu="@menu/menu_main"/>-->
+
+
+    <TabHost
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/tabHost"
+        android:layout_gravity="center_horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/tab1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="THERE&apos;S NO WORKOUT YET"
+                        android:layout_gravity="center"
+                        android:gravity="center" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Create a new one"
+                        android:id="@+id/button7"
+                        android:layout_gravity="center"
+                        android:gravity="center" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="THERE&apos;S NO SAVED WORKOUTS YET"
+                        android:layout_gravity="center"
+                        android:gravity="center" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="EXPLORE"
+                        android:id="@+id/button6"
+                        android:layout_gravity="center"
+                        android:gravity="center" />
+                </LinearLayout>
+
+
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
+</LinearLayout>
