@@ -36,4 +36,5 @@ dependencies {
     compile 'com.github.SerhatSurguvec:continuablecirclecountdownview:v1.0'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
     compile 'com.baoyz.actionsheet:library:1.1.5'
+    compile 'com.github.vignesh-iopex:confirmdialog:2.0-rc1'
 }

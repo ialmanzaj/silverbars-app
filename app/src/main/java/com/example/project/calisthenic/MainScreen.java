@@ -1,6 +1,7 @@
 package com.example.project.calisthenic;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -59,8 +60,17 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
         Intent intent = this.getIntent();
         email = intent.getStringExtra("Email");
         name = intent.getStringExtra("Name");
+        SharedPreferences info = getSharedPreferences("UserData",MODE_PRIVATE);
+        String SharedData = info.getString("UserEmail",null);
+        String SharedEmail = "";
+        String SharedName = "";
+        if (SharedData != null){
+            SharedEmail = info.getString("UserEmail","No email stored");
+            SharedName = info.getString("UserName","No name stored");
+        }
 
-        Username.setText("Welcome, "+name);
+
+        Username.setText("Welcome, "+SharedName);
 
 
         int[] image = {R.mipmap.home, R.mipmap.acrobatics,
@@ -73,7 +83,9 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
         view.setAdapter(adapter);
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
-
+        bottomNavigationView.isColoredBackground(false);
+//        bottomNavigationView.setItemActiveColorWithoutColoredBackground(R.color.colorAccent);
+        bottomNavigationView.setItemActiveColorWithoutColoredBackground(ContextCompat.getColor(getApplicationContext(),R.color.colorAccent));
 //        bottomNavigationView.isColoredBackground(false);
 //        bottomNavigationView.setItemActiveColorWithoutColoredBackground("#cb0000");
 
@@ -94,6 +106,7 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
 //        bottomNavigationView.addTab(bottomNavigationItem3);
 
         view.setAdapter(adapter);
+
         bottomNavigationView.setViewPager(view , color , image);
 
     }
@@ -107,6 +120,8 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
                 break;
             case 1:
                 LoginManager.getInstance().logOut();
+                SharedPreferences.Editor info = getSharedPreferences("UserData",MODE_PRIVATE).edit();
+                info.clear().commit();
 //                finish();
                 break;
             default:
@@ -130,6 +145,11 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
                 .setOtherButtonTitles("About", "Log out")
                 .setCancelableOnTouchOutside(true)
                 .setListener(this).show();
+    }
+
+    @Override
+    public void onBackPressed(){
+        finish();
     }
 
 }

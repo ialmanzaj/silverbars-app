@@ -87,13 +87,13 @@
         <!--</LinearLayout>-->
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="250dp"
             android:layout_height="fill_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="00"
             android:id="@+id/timer"
             android:gravity="center"
-            android:textColor="#000"
+            android:textColor="@color/colorAccent"
             android:textSize="40dp"
             android:layout_gravity="center" />
 
@@ -187,19 +187,21 @@
             android:layout_marginTop="5dp">
 
             <Button
-                android:layout_width="190dp"
+                android:layout_width="170dp"
                 android:layout_height="50dp"
                 android:text="PAUSE"
-                android:id="@+id/button10"
-                android:background="#c3c3c3" />
+                android:id="@+id/PauseButton"
+                android:background="@drawable/buttonsec"
+                android:layout_marginRight="2dp" />
 
             <Button
-                android:layout_width="190dp"
+                android:layout_width="170dp"
                 android:layout_height="50dp"
                 android:text="END WORKOUT"
                 android:id="@+id/button11"
-                android:background="#cb0000"
-                android:textColor="#ffffff" />
+                android:background="@drawable/button"
+                android:textColor="#ffffff"
+                android:layout_marginLeft="2dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -232,7 +234,8 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:padding="5dp"
-            android:background="#000">
+            android:background="#000"
+            android:id="@+id/PlayerLayout">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -243,22 +246,21 @@
                 android:background="#eee"
                 android:layout_marginLeft="20dp" />
 
-            <SeekBar
-                android:layout_width="260dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/seekBar"
-                android:layout_gravity="center_horizontal|bottom"
-                android:progressDrawable="@drawable/red_scrubber_progress"
-                android:thumb="@drawable/red_scrubber_control" />
+            <!--<SeekBar-->
+                <!--android:layout_width="260dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/seekBar"-->
+                <!--android:layout_gravity="center_horizontal|bottom"-->
+                <!--android:progressDrawable="@drawable/red_scrubber_progress"-->
+                <!--android:thumb="@drawable/red_scrubber_control" />-->
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:id="@+id/song_name"
                 android:layout_gravity="center"
-                android:textColor="#ffffff"
-                android:layout_marginBottom="10dp" />
+                android:textColor="#ffffff" />
 
             <ImageButton
                 android:layout_width="wrap_content"

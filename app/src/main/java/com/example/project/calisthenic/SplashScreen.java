@@ -47,27 +47,27 @@ public class SplashScreen extends AppCompatActivity {
     private void updateWithToken(AccessToken currentAccessToken) {
 
         if (currentAccessToken != null) {
-            new Handler().postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
+//            new Handler().postDelayed(new Runnable() {
+//
+//                @Override
+//                public void run() {
                     Intent i = new Intent(SplashScreen.this, MainScreen.class);
                     startActivity(i);
 
                     finish();
-                }
-            }, 3000);
+//                }
+//            }, 3000);
         } else {
-            new Handler().postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
+//            new Handler().postDelayed(new Runnable() {
+//
+//                @Override
+//                public void run() {
                     Intent i = new Intent(SplashScreen.this, LoginActivity.class);
                     startActivity(i);
 
                     finish();
-                }
-            }, 3000);
+//                }
+//            }, 3000);
         }
     }
 }

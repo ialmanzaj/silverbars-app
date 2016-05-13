@@ -42,21 +42,9 @@ public class Playlist_Picker extends AppCompatActivity {
         final ArrayList<File> mySongs = findSongs(Environment.getExternalStorageDirectory());
         items = new String[mySongs.size()];
         for (int i = 0; i<mySongs.size(); i++){
-//            toast(mySongs.get(i).getName());
             items[i]= mySongs.get(i).getName().toString().replace(".mp3","").replace(".mp3","");
 
         }
-
-//        boton = (Button) findViewById(R.id.boton);
-//
-//        boton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                modal();
-//            }
-//        });
-
-
 
         ArrayAdapter<String> adp = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_multiple_choice,android.R.id.text1,items);
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -75,22 +63,13 @@ public class Playlist_Picker extends AppCompatActivity {
                         selected[i] = lv.getItemIdAtPosition(i);
                     }
                 }
-
+//                for (int i = 0; i < choice; i++){
+//                    toast(String.valueOf(selected[i]));
+//                }
                 startActivity(new Intent(getApplicationContext(),Workout.class).putExtra("pos",selected).putExtra("songlist",mySongs) );
                 finish();
-//                Toast.makeText(getApplicationContext(),
-//
-//                        selected,
-//
-//                        Toast.LENGTH_LONG).show();
             }
         });
-//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                startActivity(new Intent(getApplicationContext(),WorkingOut.class).putExtra("pos",i).putExtra("songlist",mySongs) );
-//            }
-//        });
     }
 
     public void toast(String text){
@@ -112,5 +91,10 @@ public class Playlist_Picker extends AppCompatActivity {
         }
 
         return al;
+    }
+
+    @Override
+    public void onBackPressed(){
+        finish();
     }
 }

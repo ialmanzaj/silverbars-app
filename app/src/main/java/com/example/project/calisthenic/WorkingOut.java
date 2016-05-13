@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -17,6 +18,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.vignesh_iopex.confirmdialog.Confirm;
+import com.github.vignesh_iopex.confirmdialog.Dialog;
 import com.serhatsurguvec.continuablecirclecountdownview.ContinuableCircleCountDownView;
 
 import java.io.File;
@@ -27,21 +30,23 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
      static MediaPlayer mp;
     ArrayList<File> mySongs, playlist;
-    Thread updateSeekBar;
-    SeekBar sb;
+//    Thread updateSeekBar;
+//    SeekBar sb;
     ImageButton btPlay, btPause, nxtExercise, prvExercise;
     Uri u;
     long[] position;
-    int x = 0, y=0, elements = 0;
+    int x = 0, y=0, elements = 0, size, time=0;
     TextView timer, song_name;
-    FrameLayout prvLayout, nxtLayout;
+    CountDownTimer timer2;
+    FrameLayout prvLayout, nxtLayout, PlayerLayout;
+    Button PauseButton;
 
     ContinuableCircleCountDownView mCountDownView;
     private RecyclerView recycler;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
-
     AlertDialog alertDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +60,81 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         prvLayout = (FrameLayout) findViewById(R.id.prvLayout);
         nxtLayout = (FrameLayout) findViewById(R.id.nxtLayout);
 
+        PlayerLayout = (FrameLayout) findViewById(R.id.PlayerLayout);
+
+        PauseButton = (Button) findViewById(R.id.PauseButton);
+
+        PlayerLayout.setOnTouchListener(new OnSwipeTouchListener(this){
+            public void onSwipeRight() {
+                int playlist_size = playlist.size();
+                if (playlist_size > 1 && (x-1) >= 0 ){
+                    //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+                    mp.stop();
+                    mp.release();
+                    x = (x-1)%playlist.size();
+                    u = Uri.parse(playlist.get(x).toString());
+                    String Songname = playlist.get(x).getName().toString().replace(".mp3","");
+                    song_name.setText(Songname);
+                    mp = MediaPlayer.create(getApplicationContext(),u);
+                    mp.start();
+                }
+                else{
+                    //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+                    mp.stop();
+                    mp.release();
+                    u = Uri.parse(playlist.get(x).toString());
+                    mp = MediaPlayer.create(getApplicationContext(),u);
+                    mp.start();
+                }
+            }
+            public void onSwipeLeft() {
+//                Toast.makeText(getApplicationContext(), "left", Toast.LENGTH_SHORT).show();
+                int playlist_size = playlist.size();
+                if (playlist_size > 1 && x+1 < playlist_size){
+                    //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+                    mp.stop();
+                    mp.release();
+                    x = (x+1)%playlist.size();
+                    u = Uri.parse(playlist.get(x).toString());
+                    String Songname = playlist.get(x).getName().toString().replace(".mp3","");
+                    song_name.setText(Songname);
+                    mp = MediaPlayer.create(getApplicationContext(),u);
+                    mp.start();
+                }
+                else{
+                    //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+                    mp.stop();
+                    mp.release();
+                    u = Uri.parse(playlist.get(x).toString());
+                    mp = MediaPlayer.create(getApplicationContext(),u);
+                    mp.start();
+                }
+            }
+        });
+
+        PauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String state = PauseButton.getText().toString();
+                switch (state){
+                    case "PAUSE":
+                        PauseButton.setText("RESUME");
+                        onTimerPause();
+                        mp.pause();
+                        break;
+                    case "RESUME":
+                        PauseButton.setText("PAUSE");
+                        onTimerResume();
+                        mp.start();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
 
         song_name = (TextView) findViewById(R.id.song_name);
-        // Inicializar Animes
+        // Inicializar Workouts
         List<Workouts_info> items = new ArrayList<>();
 
         items.add(new Workouts_info(R.mipmap.imagen1, "Upper Body", "core"));
@@ -68,7 +145,9 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
-        recycler.setHasFixedSize(true);
+        if (recycler != null) {
+            recycler.setHasFixedSize(true);
+        }
 
         // Usar un administrador para LinearLayout
         lManager = new LinearLayoutManager(this);
@@ -79,12 +158,60 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         recycler.setAdapter(adapter);
 
         elements = adapter.getItemCount();
+//        toast(String.valueOf(elements));
+        recycler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                lManager.getPosition(view);
+//                toast(String.valueOf(lManager.getPosition(view)));
+            }
+        });
+        prvExercise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+//                y--;
 
+                recycler.smoothScrollToPosition(y-1);
+                y--;
+                String position = String.valueOf(y);
+                toast(position);
+                timer2.cancel();
+                Timer(30,1);
 
+                if (y == 0){
+                    prvLayout.setVisibility(View.GONE);
+                }
+                else{
+                    if(y < elements-1){
+                        nxtLayout.setVisibility(View.VISIBLE);
+                    }
+                }
 
-//        mCountDownView.setTimer(30000);
-//        mCountDownView.start();
+            }
+        });
+        nxtExercise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+//                y++;
+                recycler.smoothScrollToPosition(y+1);
+                y++;
+                String position = String.valueOf(y);
+                toast(position);
+                timer2.cancel();
+                Timer(30,1);
+                if (y == elements-1){
+                    nxtLayout.setVisibility(View.GONE);
+                }
+                else{
+                    if (y > 0){
+                        prvLayout.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+
 
         btPlay = (ImageButton)findViewById(R.id.btnPlay);
         btPause = (ImageButton)findViewById(R.id.btnPause);
@@ -92,107 +219,33 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         btPlay.setOnClickListener(this);
         btPause.setOnClickListener(this);
 
-        sb = (SeekBar)findViewById(R.id.seekBar);
-        updateSeekBar = new Thread(){
-            @Override
-            public void run(){
-                int totalDuration = mp.getDuration();
-                int currentPosition = 0;
-//                sb.setMax(totalDuration);
-                while (currentPosition < totalDuration){
-                    try{
-                        sleep(500);
-                        currentPosition = mp.getCurrentPosition();
-                        sb.setProgress(currentPosition);
-                    } catch (InterruptedException e){
-                        e.printStackTrace();
-                    }
-                }
-//                super.run();
-            }
-        };
-
-        if (mp!=null){
-            mp.stop();
-            mp.release();
-        }
-
         Intent i = getIntent();
         Bundle b = i.getExtras();
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
         position = b.getLongArray("pos");
         playlist = new ArrayList<>();
 
+//        for (int z = 0; z < position.length; z++){
+//            toast(String.valueOf(position[z]));
+//        }
+
         for(int j = 0; j < mySongs.size(); j++){
             if (j == position[j]){
                 playlist.add(mySongs.get(j));
-//                x++;
             }
         }
 
         u = Uri.parse(playlist.get(x).toString());
         mp = MediaPlayer.create(getApplicationContext(),u);
-
-        sb.setMax(mp.getDuration());
-//        String Songname = playlist.get(x).getName().toString().replace(".mp3","");
-//        song_name.setText(Songname);
+        String Songname = playlist.get(x).getName().toString().replace(".mp3","");
+        song_name.setText(Songname);
         btPlay.setVisibility(View.GONE);
         btPause.setVisibility(View.VISIBLE);
-        updateSeekBar.start();
-        int playlist_size = playlist.size();
-        if (playlist_size>1){
-//            Toast.makeText(getApplicationContext(),
-//
-//                    "mas de 1 cancion",
-//
-//                    Toast.LENGTH_LONG).show();
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mp.stop();
-                    mp.release();
-                    x = (x+1)%playlist.size();
-//                    Toast.makeText(getApplicationContext(), getString(x),Toast.LENGTH_LONG).show();
-                    u = Uri.parse(playlist.get(x).toString());
-                    String Songname = playlist.get(x).getName().toString().replace(".mp3","");
-                    song_name.setText(Songname);
-                    mp = MediaPlayer.create(getApplicationContext(),u);
-//                    updateSeekBar.start();
-                    mp.start();
-                    sb.setMax(mp.getDuration());
-
-                }
-            });
-        }else{
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    mp.stop();
-                    mp.release();
-//                    x = 0;
-                    u = Uri.parse(playlist.get(x).toString());
-                    mp = MediaPlayer.create(getApplicationContext(),u);
-                    mp.start();
-                    sb.setMax(mp.getDuration());
-                }
-            });
-        }
-
-        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        final int playlist_size = playlist.size();
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                mp.seekTo(seekBar.getProgress());
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                MusicPlayList(playlist_size);
             }
         });
 
@@ -211,44 +264,83 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
             public void onFinish() {
 //                info.setVisibility(View.GONE);
                 timer = (TextView) findViewById(R.id.timer);
-                Timer(31,1);
+                Timer(30,1);
                 mp.start();
                 alertDialog.dismiss();
             }
         }.start();
+    }
 
+    @Override
+    public void onBackPressed(){
+        mp.pause();
+        onTimerPause();
+        Confirm.using(this).ask("Are you sure you want to exit?").onPositive("Yes", new Dialog.OnClickListener() {
+            @Override public void onClick(Dialog dialog, int which) {
+//                mp.stop();
+                mp.release();
+                finish();
+            }}).onNegative("No",  new Dialog.OnClickListener() {
+            @Override public void onClick(Dialog dialog, int which) {
+                mp.start();
+                onTimerResume();
+            }}).build().show();
+    }
 
+    public void MusicPlayList(int playlist_size){
+        if (playlist_size>1){
+//            mp.stop();
+//            mp.reset();
+            x = (x+1)%playlist.size();
+            u = Uri.parse(playlist.get(x).toString());
+            String Songname = playlist.get(x).getName().toString().replace(".mp3","");
+            song_name.setText(Songname);
+            mp = MediaPlayer.create(getApplicationContext(),u);
+            mp.start();
+        }else{
+//            mp.stop();
+//            mp.reset();
+            u = Uri.parse(playlist.get(x).toString());
+            mp = MediaPlayer.create(getApplicationContext(),u);
+            mp.start();
+        }
     }
 
     public void Timer(int seconds,int interval){
         int totalsecs= seconds * 1000;
         int sec_interval= interval * 1000 ;
-        y++;
-//        timer.setText(seconds+"");
-        new CountDownTimer(totalsecs, sec_interval) {
+
+        timer2 = new CountDownTimer(totalsecs, sec_interval) {
 
             public void onTick(long millisUntilFinished) {
 
-                timer.setText(millisUntilFinished / 1000+"");
+                performTick(millisUntilFinished);
             }
 
             public void onFinish() {
-
+                y++;
                 if (y < elements){
                     prvLayout.setVisibility(View.VISIBLE);
                     if((y+1)==elements){
                         nxtLayout.setVisibility(View.GONE);
                     }
                     recycler.smoothScrollToPosition(y);
-                    Timer(31,1);
+                    Timer(30,1);
                 }
                 else{
                     timer.setText("Well Done!");
                 }
-
-
             }
         }.start();
+        performTick(totalsecs);
+    }
+
+    void performTick(long millisUntilFinished) {
+        timer.setText(String.valueOf(Math.round(millisUntilFinished * 0.001f)));
+    }
+
+    public void toast(String text){
+        Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -265,7 +357,15 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 btPause.setVisibility(View.GONE);
                 mp.pause();
                 break;
-
         }
+    }
+
+    public void onTimerPause(){
+        time = Integer.valueOf(timer.getText().toString());
+        timer2.cancel();
+    }
+
+    public void onTimerResume(){
+        Timer(time,1);
     }
 }

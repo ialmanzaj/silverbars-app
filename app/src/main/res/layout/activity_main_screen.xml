@@ -60,11 +60,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:bnv_colored_background="true"
         app:bnv_with_text="false"
-        app:bnv_shadow="false"
+        app:bnv_shadow="true"
         app:bnv_tablet="false"
-        app:bnv_active_color="#cb0000"
+        app:bnv_active_color="@color/colorAccent"
+        app:bnv_colored_background="false"
+        app:bnv_viewpager_slide="false"
         app:bnv_active_text_size="1sp"
         app:bnv_inactive_text_size="1sp"/>
 
