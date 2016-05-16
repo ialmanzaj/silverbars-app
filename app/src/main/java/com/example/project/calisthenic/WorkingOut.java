@@ -40,6 +40,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
     CountDownTimer timer2;
     FrameLayout prvLayout, nxtLayout, PlayerLayout;
     Button PauseButton;
+    boolean exit = false, SelectedSongs = false;
 
     ContinuableCircleCountDownView mCountDownView;
     private RecyclerView recycler;
@@ -66,48 +67,52 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
         PlayerLayout.setOnTouchListener(new OnSwipeTouchListener(this){
             public void onSwipeRight() {
-                int playlist_size = playlist.size();
-                if (playlist_size > 1 && (x-1) >= 0 ){
-                    //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
-                    mp.stop();
-                    mp.release();
-                    x = (x-1)%playlist.size();
-                    u = Uri.parse(playlist.get(x).toString());
-                    String Songname = playlist.get(x).getName().toString().replace(".mp3","");
-                    song_name.setText(Songname);
-                    mp = MediaPlayer.create(getApplicationContext(),u);
-                    mp.start();
+                if (SelectedSongs == true){
+                    int playlist_size = playlist.size();
+                    if (playlist_size > 1 && (x-1) >= 0 ){
+                        //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+                        mp.stop();
+                        mp.release();
+                        x = (x-1)%playlist.size();
+                        u = Uri.parse(playlist.get(x).toString());
+                        String Songname = playlist.get(x).getName().toString().replace(".mp3","");
+                        song_name.setText(Songname);
+                        mp = MediaPlayer.create(getApplicationContext(),u);
+                        mp.start();
+                    }
+                    else{
+                        //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+                        mp.stop();
+                        mp.release();
+                        u = Uri.parse(playlist.get(x).toString());
+                        mp = MediaPlayer.create(getApplicationContext(),u);
+                        mp.start();
+                    }
                 }
-                else{
-                    //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
-                    mp.stop();
-                    mp.release();
-                    u = Uri.parse(playlist.get(x).toString());
-                    mp = MediaPlayer.create(getApplicationContext(),u);
-                    mp.start();
-                }
+
             }
             public void onSwipeLeft() {
-//                Toast.makeText(getApplicationContext(), "left", Toast.LENGTH_SHORT).show();
-                int playlist_size = playlist.size();
-                if (playlist_size > 1 && x+1 < playlist_size){
-                    //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
-                    mp.stop();
-                    mp.release();
-                    x = (x+1)%playlist.size();
-                    u = Uri.parse(playlist.get(x).toString());
-                    String Songname = playlist.get(x).getName().toString().replace(".mp3","");
-                    song_name.setText(Songname);
-                    mp = MediaPlayer.create(getApplicationContext(),u);
-                    mp.start();
-                }
-                else{
-                    //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
-                    mp.stop();
-                    mp.release();
-                    u = Uri.parse(playlist.get(x).toString());
-                    mp = MediaPlayer.create(getApplicationContext(),u);
-                    mp.start();
+                if (SelectedSongs == true) {
+                    //                Toast.makeText(getApplicationContext(), "left", Toast.LENGTH_SHORT).show();
+                    int playlist_size = playlist.size();
+                    if (playlist_size > 1 && x + 1 < playlist_size) {
+                        //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+                        mp.stop();
+                        mp.release();
+                        x = (x + 1) % playlist.size();
+                        u = Uri.parse(playlist.get(x).toString());
+                        String Songname = playlist.get(x).getName().toString().replace(".mp3", "");
+                        song_name.setText(Songname);
+                        mp = MediaPlayer.create(getApplicationContext(), u);
+                        mp.start();
+                    } else {
+                        //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+                        mp.stop();
+                        mp.release();
+                        u = Uri.parse(playlist.get(x).toString());
+                        mp = MediaPlayer.create(getApplicationContext(), u);
+                        mp.start();
+                    }
                 }
             }
         });
@@ -120,12 +125,16 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                     case "PAUSE":
                         PauseButton.setText("RESUME");
                         onTimerPause();
-                        mp.pause();
+                        if (SelectedSongs != false){
+                            mp.pause();
+                        }
                         break;
                     case "RESUME":
                         PauseButton.setText("PAUSE");
                         onTimerResume();
-                        mp.start();
+                        if (SelectedSongs != false) {
+                            mp.start();
+                        }
                         break;
                     default:
                         break;
@@ -174,8 +183,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
                 recycler.smoothScrollToPosition(y-1);
                 y--;
-                String position = String.valueOf(y);
-                toast(position);
+//                String position = String.valueOf(y);
+//                toast(position);
                 timer2.cancel();
                 Timer(30,1);
 
@@ -197,8 +206,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 //                y++;
                 recycler.smoothScrollToPosition(y+1);
                 y++;
-                String position = String.valueOf(y);
-                toast(position);
+//                String position = String.valueOf(y);
+//                toast(position);
                 timer2.cancel();
                 Timer(30,1);
                 if (y == elements-1){
@@ -228,26 +237,39 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 //        for (int z = 0; z < position.length; z++){
 //            toast(String.valueOf(position[z]));
 //        }
-
-        for(int j = 0; j < mySongs.size(); j++){
-            if (j == position[j]){
-                playlist.add(mySongs.get(j));
+        if (mySongs != null){
+            SelectedSongs = true;
+            for(int j = 0; j < mySongs.size(); j++){
+                if (j == position[j]){
+                    playlist.add(mySongs.get(j));
+                }
             }
+            u = Uri.parse(playlist.get(x).toString());
+            mp = MediaPlayer.create(getApplicationContext(),u);
+            String Songname = playlist.get(x).getName().toString().replace(".mp3","");
+            song_name.setText(Songname);
+            btPlay.setVisibility(View.GONE);
+            btPause.setVisibility(View.VISIBLE);
+            final int playlist_size = playlist.size();
+            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    MusicPlayList(playlist_size);
+                }
+            });
+        }
+        else{
+            song_name.setText("No Songs");
+            btPlay.setEnabled(false);
+            btPlay.setClickable(false);
+            btPause.setEnabled(false);
+            btPause.setClickable(false);
+
         }
 
-        u = Uri.parse(playlist.get(x).toString());
-        mp = MediaPlayer.create(getApplicationContext(),u);
-        String Songname = playlist.get(x).getName().toString().replace(".mp3","");
-        song_name.setText(Songname);
-        btPlay.setVisibility(View.GONE);
-        btPause.setVisibility(View.VISIBLE);
-        final int playlist_size = playlist.size();
-        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                MusicPlayList(playlist_size);
-            }
-        });
+
+
+
 
         alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle("Get Ready!");
@@ -265,7 +287,9 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 //                info.setVisibility(View.GONE);
                 timer = (TextView) findViewById(R.id.timer);
                 Timer(30,1);
-                mp.start();
+                if (SelectedSongs == true){
+                    mp.start();
+                }
                 alertDialog.dismiss();
             }
         }.start();
@@ -278,13 +302,23 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         Confirm.using(this).ask("Are you sure you want to exit?").onPositive("Yes", new Dialog.OnClickListener() {
             @Override public void onClick(Dialog dialog, int which) {
 //                mp.stop();
-                mp.release();
-                finish();
+                if (SelectedSongs == true){
+                    mp.release();
+                }
+                exit = true;
+//                finish();
             }}).onNegative("No",  new Dialog.OnClickListener() {
             @Override public void onClick(Dialog dialog, int which) {
-                mp.start();
+                exit = false;
+                if (SelectedSongs == true){
+                    mp.start();
+                }
                 onTimerResume();
             }}).build().show();
+
+        if (exit == true){
+            finish();
+        }
     }
 
     public void MusicPlayList(int playlist_size){
@@ -361,8 +395,12 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
     }
 
     public void onTimerPause(){
-        time = Integer.valueOf(timer.getText().toString());
-        timer2.cancel();
+        String value = timer.getText().toString();
+        if (value != "Well Done!"){
+            time = Integer.valueOf(value);
+            timer2.cancel();
+        }
+
     }
 
     public void onTimerResume(){
