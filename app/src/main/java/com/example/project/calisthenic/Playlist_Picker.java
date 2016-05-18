@@ -74,6 +74,7 @@ public class Playlist_Picker extends AppCompatActivity {
 
     public void toast(String text){
         Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
+
     }
 
     public ArrayList<File> findSongs(File root){

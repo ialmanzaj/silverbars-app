@@ -4,11 +4,14 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +37,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,6 +70,8 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+
+    ImageButton RefreshButton;
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -115,6 +121,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } catch (NoSuchAlgorithmException e) {
 
         }
+
+        checkConn();
+
+        RefreshButton = (ImageButton) findViewById(R.id.RefreshButton);
+        RefreshButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkConn();
+            }
+        });
+
 
 //        AppEventsLogger.activateApp(this);
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -507,6 +524,31 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+    public void checkConn() {
+
+        boolean connection = isNetworkConnected();
+
+        if (!connection){
+            loginButton.setEnabled(false);
+            loginButton.setClickable(false);
+            toast("Verifique su conexion a internet");
+        }else{
+            loginButton.setEnabled(true);
+            loginButton.setClickable(true);
+        }
+    }
+
+    public void toast(String text){
+        Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
+
     }
 
 

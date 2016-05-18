@@ -318,8 +318,9 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 if (SelectedSongs){
                     mp.release();
                 }
-                exit = true;
-//                finish();
+//                exit = true;
+                dialog.dismissDialog();
+                finish();
             }}).onNegative("No",  new Dialog.OnClickListener() {
             @Override public void onClick(Dialog dialog, int which) {
                 exit = false;
@@ -329,9 +330,9 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 onTimerResume();
             }}).build().show();
 
-        if (exit){
-            finish();
-        }
+//        if (exit){
+//            finish();
+//        }
     }
 
     public void MusicPlayList(int playlist_size){
