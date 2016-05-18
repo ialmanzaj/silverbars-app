@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/tab1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -34,24 +34,38 @@
                     android:layout_gravity="center"
                     android:gravity="center">
 
-                    <TextView
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="YOU HAVEN&apos;T DONE ANY WORKOUT TODAY"
-                        android:gravity="center"
-                        android:layout_gravity="center" />
+                        android:layout_height="350dp"
+                        android:paddingStart="10dp"
+                        android:id="@+id/frameLayout">
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="EXPLORE"
-                        android:id="@+id/button8"
-                        android:gravity="center"
-                        android:layout_gravity="center" />
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/imageView4"
+                            android:layout_gravity="center_horizontal|top"
+                            android:src="@mipmap/bothviews" />
 
-                </LinearLayout>
+                    </FrameLayout>
 
-                <LinearLayout
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/frameLayout">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="UpperBody: 5%"
+                            android:id="@+id/textView22" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/tab2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -59,23 +73,28 @@
                     android:layout_gravity="center"
                     android:gravity="center">
 
-                    <TextView
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="YOU HAVEN&apos;T DONE ANY WORKOUT THIS WEEK"
-                        android:gravity="center"
-                        android:layout_gravity="center" />
+                        android:layout_height="350dp"
+                        android:paddingStart="10dp"
+                        android:id="@+id/framelayout2">
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="EXPLORE"
-                        android:id="@+id/button9"
-                        android:gravity="center"
-                        android:layout_gravity="center" />
-                </LinearLayout>
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/imageView6"
+                            android:layout_gravity="center_horizontal|top"
+                            android:src="@mipmap/bothviews" />
+                    </FrameLayout>
 
-                <LinearLayout
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/framelayout2"/>
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/tab3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -83,21 +102,26 @@
                     android:layout_gravity="center"
                     android:gravity="center">
 
-                    <TextView
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="YOU HAVEN&apos;T DONE ANY WORKOUT THIE MONTH"
-                        android:gravity="center"
-                        android:layout_gravity="center" />
+                        android:layout_height="350dp"
+                        android:paddingStart="10dp"
+                        android:id="@+id/framelayout3">
 
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="EXPLORE"
-                        android:id="@+id/button10"
-                        android:gravity="center"
-                        android:layout_gravity="center" />
-                </LinearLayout>
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/imageView7"
+                            android:layout_gravity="center_horizontal|top"
+                            android:src="@mipmap/bothviews" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/framelayout3"/>
+                </RelativeLayout>
 
 
             </FrameLayout>

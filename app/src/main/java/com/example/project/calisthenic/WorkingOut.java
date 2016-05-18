@@ -1,9 +1,11 @@
 package com.example.project.calisthenic;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,11 +38,11 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
     Uri u;
     long[] position;
     int x = 0, y=0, elements = 0, size, time=0;
-    TextView timer, song_name;
+    TextView timer, song_name, CurrentSet, TotalSet, CurrentExercise, TotalExercise;
     CountDownTimer timer2;
     FrameLayout prvLayout, nxtLayout, PlayerLayout;
     Button PauseButton;
-    boolean exit = false, SelectedSongs = false;
+    boolean exit = false, SelectedSongs = false, finish = false;
 
     ContinuableCircleCountDownView mCountDownView;
     private RecyclerView recycler;
@@ -57,6 +59,11 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
         prvExercise = (ImageButton) findViewById(R.id.prvExercise);
         nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
+
+        CurrentSet = (TextView) findViewById(R.id.CurrentSet);
+        TotalSet = (TextView) findViewById(R.id.TotalSet);
+        CurrentExercise = (TextView) findViewById(R.id.CurrentExercise);
+        TotalExercise = (TextView) findViewById(R.id.TotalExercise);
 
         prvLayout = (FrameLayout) findViewById(R.id.prvLayout);
         nxtLayout = (FrameLayout) findViewById(R.id.nxtLayout);
@@ -167,6 +174,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         recycler.setAdapter(adapter);
 
         elements = adapter.getItemCount();
+        CurrentExercise.setText("1");
+        TotalExercise.setText(String.valueOf(elements));
 //        toast(String.valueOf(elements));
         recycler.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,6 +192,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
                 recycler.smoothScrollToPosition(y-1);
                 y--;
+                CurrentExercise.setText(String.valueOf(y+1));
 //                String position = String.valueOf(y);
 //                toast(position);
                 timer2.cancel();
@@ -206,6 +216,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 //                y++;
                 recycler.smoothScrollToPosition(y+1);
                 y++;
+                CurrentExercise.setText(String.valueOf(y+1));
 //                String position = String.valueOf(y);
 //                toast(position);
                 timer2.cancel();
@@ -297,12 +308,14 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
     @Override
     public void onBackPressed(){
-        mp.pause();
+        if (SelectedSongs) {
+            mp.pause();
+        }
         onTimerPause();
         Confirm.using(this).ask("Are you sure you want to exit?").onPositive("Yes", new Dialog.OnClickListener() {
             @Override public void onClick(Dialog dialog, int which) {
 //                mp.stop();
-                if (SelectedSongs == true){
+                if (SelectedSongs){
                     mp.release();
                 }
                 exit = true;
@@ -310,13 +323,13 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
             }}).onNegative("No",  new Dialog.OnClickListener() {
             @Override public void onClick(Dialog dialog, int which) {
                 exit = false;
-                if (SelectedSongs == true){
+                if (SelectedSongs){
                     mp.start();
                 }
                 onTimerResume();
             }}).build().show();
 
-        if (exit == true){
+        if (exit){
             finish();
         }
     }
@@ -359,10 +372,14 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                         nxtLayout.setVisibility(View.GONE);
                     }
                     recycler.smoothScrollToPosition(y);
+                    CurrentExercise.setText(String.valueOf(y+1));
                     Timer(30,1);
                 }
                 else{
-                    timer.setText("Well Done!");
+//                    timer.setText("Well Done!");
+                    finish = true;
+                    Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
+                    vb.vibrate(500);
                 }
             }
         }.start();
@@ -396,7 +413,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
     public void onTimerPause(){
         String value = timer.getText().toString();
-        if (value != "Well Done!"){
+        if (finish != true){
             time = Integer.valueOf(value);
             timer2.cancel();
         }

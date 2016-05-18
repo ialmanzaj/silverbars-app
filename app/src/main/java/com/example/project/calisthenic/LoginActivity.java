@@ -210,7 +210,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 // App code
                 Toast.makeText(getApplicationContext(),
 
-                        "Error",
+                        "Error:"+exception,
 
                         Toast.LENGTH_LONG).show();
             }

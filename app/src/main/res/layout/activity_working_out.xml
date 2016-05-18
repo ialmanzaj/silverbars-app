@@ -87,21 +87,10 @@
                 <!--android:textSize="30dp" />-->
         <!--</LinearLayout>-->
 
-        <TextView
-            android:layout_width="250dp"
-            android:layout_height="fill_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="00"
-            android:id="@+id/timer"
-            android:gravity="center"
-            android:textColor="@color/colorAccent"
-            android:textSize="40dp"
-            android:layout_gravity="center" />
-
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="70dp"
             android:layout_gravity="center_horizontal"
             android:gravity="center">
 
@@ -138,24 +127,50 @@
                 </FrameLayout>
             </LinearLayout>
 
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:id="@+id/imageButton7"
-                android:src="@mipmap/ic_list_black_24dp"
-                android:background="#fff" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="00"
+                        android:id="@+id/timer"
+                        android:gravity="center"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="40dp"
+                        android:layout_gravity="center_horizontal|top"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Reps"
+                        android:id="@+id/textView16"
+                        android:layout_gravity="center_horizontal|bottom" />
+                </FrameLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="70dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="40dp"
-                android:gravity="center">
+                android:gravity="end|right"
+                android:layout_gravity="right">
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/nxtLayout">
+                    android:id="@+id/nxtLayout"
+                    android:layout_gravity="right">
 
                     <ImageButton
                         android:layout_width="match_parent"
@@ -176,6 +191,129 @@
                         android:layout_gravity="center_horizontal|bottom" />
                 </FrameLayout>
             </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+            <RelativeLayout
+                android:layout_width="185dp"
+                android:layout_height="match_parent"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="/"
+                    android:id="@+id/textView18"
+                    android:gravity="center"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="25dp"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="00"
+                    android:id="@+id/CurrentSet"
+                    android:gravity="center"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="25dp"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_alignTop="@+id/textView18"
+                    android:layout_toLeftOf="@+id/textView18"
+                    android:layout_toStartOf="@+id/textView18" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="00"
+                    android:id="@+id/TotalSet"
+                    android:gravity="center"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="25dp"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_alignTop="@+id/textView18"
+                    android:layout_toRightOf="@+id/textView18"
+                    android:layout_toEndOf="@+id/textView18" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Set"
+                    android:id="@+id/textView19"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:layout_below="@+id/textView18"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="-5dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="/"
+                    android:id="@+id/textView20"
+                    android:gravity="center"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="25dp"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="00"
+                    android:id="@+id/CurrentExercise"
+                    android:gravity="center"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="25dp"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_above="@+id/textView21"
+                    android:layout_toLeftOf="@+id/textView20"
+                    android:layout_toStartOf="@+id/textView20" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="00"
+                    android:id="@+id/TotalExercise"
+                    android:gravity="center"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="25dp"
+                    android:layout_gravity="center_horizontal|top"
+                    android:layout_alignTop="@+id/textView20"
+                    android:layout_toRightOf="@+id/textView20"
+                    android:layout_toEndOf="@+id/textView20" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Exercise"
+                    android:id="@+id/textView21"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:layout_below="@+id/textView20"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="-5dp" />
+            </RelativeLayout>
 
         </LinearLayout>
 
