@@ -4,12 +4,14 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
@@ -158,20 +160,22 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                     email = object.getString("email");
                                     name = object.getString("name");
                                     mEmailView.setText(email);
-                                    SharedPreferences.Editor info = getSharedPreferences("UserData",MODE_PRIVATE).edit();
-                                    info.putString("UserEmail",email);
-                                    info.putString("UserName",name);
-                                    info.commit();
-//                                    Utils.saveUserData(ProfileActivity.this, email, name);
 
-                                    Log.d("debug", email + "");
-                                    Log.d("debug", name + "");
-//                                    Toast.makeText(getApplicationContext(),
-////
-//                                            email+" / "+name,
-//
-//                                            Toast.LENGTH_LONG).show();
-                                    startActivity(new Intent(getApplicationContext(), MainScreen.class).putExtra("Email",email).putExtra("Name",name));
+                                    AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(getBaseContext(), "Personal", null, 1);
+                                    SQLiteDatabase bd = admin.getWritableDatabase();
+                                    Cursor row = bd.rawQuery("SELECT * FROM users WHERE  email='"+email+"'",null);
+                                    if(row.moveToFirst()){
+
+                                    }else{
+                                        ContentValues registro = new ContentValues();
+                                        registro.put("email",email);
+                                        registro.put("name",name);
+                                        registro.put("active","1");
+                                        bd.insert("users",null,registro);
+                                        bd.close();
+                                    }
+
+                                    startActivity(new Intent(getApplicationContext(), MainScreen.class));
                                     finish();
                                 } catch (JSONException e) {
                                     e.printStackTrace();

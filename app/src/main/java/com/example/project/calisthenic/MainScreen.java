@@ -2,6 +2,8 @@ package com.example.project.calisthenic;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -31,7 +33,7 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
     ViewPager view;
     SimpleTabAdapter adapter;
     Button songs;
-    private String email,name;
+    String email,name;
     TextView emailView, nameView, Username;
     ImageButton settings;
     @Override
@@ -51,27 +53,21 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
             }
         });
 
-
         Username = (TextView) findViewById(R.id.Username);
 
-
-
 //        songs = (Button) findViewById(R.id.songs);
-        Intent intent = this.getIntent();
-        email = intent.getStringExtra("Email");
-        name = intent.getStringExtra("Name");
-        SharedPreferences info = getSharedPreferences("UserData",MODE_PRIVATE);
-        String SharedData = info.getString("UserEmail",null);
-        String SharedEmail = "";
-        String SharedName = "";
-        if (SharedData != null){
-            SharedEmail = info.getString("UserEmail","No email stored");
-            SharedName = info.getString("UserName","No name stored");
+//        Intent intent = this.getIntent();
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(getBaseContext(), "Personal", null, 1);
+        SQLiteDatabase bd = admin.getWritableDatabase();
+        Cursor row = bd.rawQuery("SELECT * FROM users WHERE  active='1'",null);
+        if (row.getCount() > 0){
+            row.moveToFirst();
+            email = row.getString(row.getColumnIndex("email"));
+            name = row.getString(row.getColumnIndex("name"));
+            row.close();
         }
 
-
-        Username.setText("Welcome, "+SharedName);
-
+        Username.setText("Welcome, "+name);
 
         int[] image = {R.mipmap.home, R.mipmap.acrobatics,
                 R.mipmap.progress, R.mipmap.ic_stars_black_24dp, R.mipmap.profile};
