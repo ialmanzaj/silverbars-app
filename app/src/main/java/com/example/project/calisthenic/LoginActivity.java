@@ -62,6 +62,7 @@ import com.facebook.ProfileTracker;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.facebook.stetho.Stetho;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -108,6 +109,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
         // Set up the login form.
+
+        Stetho.initializeWithDefaults(this);
 
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
