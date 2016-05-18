@@ -40,4 +40,5 @@ dependencies {
 //    compile 'com.github.recruit-lifestyle:PlayPauseButton:1.0'
     compile 'com.mikhaellopez:circularimageview:3.0.2'
 //    compile 'com.afollestad.material-dialogs:core:0.8.5.9'
+    compile 'com.yarolegovich:lovely-dialog:1.0.4'
 }

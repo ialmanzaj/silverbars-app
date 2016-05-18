@@ -71,8 +71,6 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-
-
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -124,13 +122,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         }
 
-        checkConn();
+//        checkConn();
 
         RefreshButton = (ImageButton) findViewById(R.id.RefreshButton);
         RefreshButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkConn();
+//                checkConn();
             }
         });
 
@@ -528,7 +526,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    private boolean isNetworkConnected() {
+    public boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         return cm.getActiveNetworkInfo() != null;
@@ -539,12 +537,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean connection = isNetworkConnected();
 
         if (!connection){
-            loginButton.setEnabled(false);
-            loginButton.setClickable(false);
+//            loginButton.setEnabled(false);
+//            loginButton.setClickable(false);
             toast("Verifique su conexion a internet");
         }else{
-            loginButton.setEnabled(true);
-            loginButton.setClickable(true);
+//            loginButton.setEnabled(true);
+//            loginButton.setClickable(true);
         }
     }
 
