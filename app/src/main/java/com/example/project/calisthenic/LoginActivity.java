@@ -71,7 +71,7 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    ImageButton RefreshButton;
+
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -99,6 +99,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     CallbackManager callbackManager = CallbackManager.Factory.create();
     ProfileTracker profileTracker;
     String basicMail, basicPass;
+    ImageButton RefreshButton;
+    View login_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
