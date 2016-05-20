@@ -50,8 +50,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
     AlertDialog alertDialog;
-    public PowerManager powerManager = (PowerManager)getBaseContext().getSystemService(Context.POWER_SERVICE);
-    PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
+    public PowerManager powerManager ;
+    PowerManager.WakeLock wakeLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         setContentView(R.layout.activity_working_out);
 
 //        mCountDownView = (ContinuableCircleCountDownView) findViewById(R.id.CountDownView);
-
+        powerManager = (PowerManager)getBaseContext().getSystemService(Context.POWER_SERVICE);
+        wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
         wakeLock.acquire();
 
         prvExercise = (ImageButton) findViewById(R.id.prvExercise);
