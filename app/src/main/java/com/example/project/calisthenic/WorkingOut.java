@@ -50,8 +50,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
     AlertDialog alertDialog;
-    public PowerManager powerManager ;
-    PowerManager.WakeLock wakeLock;
+//    public PowerManager powerManager ;
+//    PowerManager.WakeLock wakeLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +59,9 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         setContentView(R.layout.activity_working_out);
 
 //        mCountDownView = (ContinuableCircleCountDownView) findViewById(R.id.CountDownView);
-        powerManager = (PowerManager)getBaseContext().getSystemService(Context.POWER_SERVICE);
-        wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
-        wakeLock.acquire();
+//        powerManager = (PowerManager)getBaseContext().getSystemService(Context.POWER_SERVICE);
+//        wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
+//        wakeLock.acquire();
 
         prvExercise = (ImageButton) findViewById(R.id.prvExercise);
         nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
@@ -344,7 +344,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 if (SelectedSongs){
                     mp.release();
                 }
-                wakeLock.release();
+//                wakeLock.release();
                 dialog.dismissDialog();
                 finish();
             }}).onNegative("No",  new Dialog.OnClickListener() {
@@ -403,7 +403,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                     finish = true;
                     Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                     vb.vibrate(500);
-                    wakeLock.release();
+//                    wakeLock.release();
                 }
             }
         }.start();
@@ -437,7 +437,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
     public void onTimerPause(){
         String value = timer.getText().toString();
-        wakeLock.release();
+//        wakeLock.release();
         if (!finish){
             time = Integer.valueOf(value);
             timer2.cancel();
@@ -447,7 +447,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
     public void onTimerResume(){
         Timer(time,1);
-        wakeLock.acquire();
+//        wakeLock.acquire();
     }
 
 }
