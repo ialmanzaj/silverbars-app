@@ -53,10 +53,10 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
 //        Intent intent = this.getIntent();
 //        name = intent.getStringExtra("name");
 //        email = intent.getStringExtra("email");
-        results = database.getActiveUser();
-        name = results[1];
-        email = results[2];
-        Username.setText("Welcome, "+name);
+//        results = database.getActiveUser();
+//        name = results[1];
+//        email = results[2];
+        Username.setText("Welcome, ");
 
         int[] image = {R.mipmap.home, R.mipmap.acrobatics,
                 R.mipmap.progress, R.mipmap.ic_stars_black_24dp, R.mipmap.profile};
@@ -65,12 +65,18 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
         adapter = new SimpleTabAdapter(getSupportFragmentManager());
 //        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
         view = (ViewPager) findViewById(R.id.view);
-        view.setAdapter(adapter);
+        if (view != null) {
+            view.setAdapter(adapter);
+        }
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
-        bottomNavigationView.isColoredBackground(false);
+        if (bottomNavigationView != null) {
+            bottomNavigationView.isColoredBackground(false);
+        }
 //        bottomNavigationView.setItemActiveColorWithoutColoredBackground(R.color.colorAccent);
-        bottomNavigationView.setItemActiveColorWithoutColoredBackground(ContextCompat.getColor(getApplicationContext(),R.color.colorAccent));
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setItemActiveColorWithoutColoredBackground(ContextCompat.getColor(getApplicationContext(),R.color.colorAccent));
+        }
 //        bottomNavigationView.isColoredBackground(false);
 //        bottomNavigationView.setItemActiveColorWithoutColoredBackground("#cb0000");
 
@@ -92,7 +98,9 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
 
         view.setAdapter(adapter);
 
-        bottomNavigationView.setViewPager(view , color , image);
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setViewPager(view , color , image);
+        }
 
         setContentView(R.layout.activity_main_screen);
     }
@@ -106,7 +114,7 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
                 break;
             case 1:
                 LoginManager.getInstance().logOut();
-                database.updateUser(email,0);
+//                database.updateUser(email,0);
                 finish();
                 break;
             default:

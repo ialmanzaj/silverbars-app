@@ -27,14 +27,6 @@
             android:layout_marginBottom="30dp"
             android:gravity="center_vertical|center|center_horizontal" />
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/RefreshButton"
-            android:src="@drawable/ic_refresh_black_24dp"
-            android:background="#f5f5f5"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp" />
     </LinearLayout>
 
     <!-- Login progress -->

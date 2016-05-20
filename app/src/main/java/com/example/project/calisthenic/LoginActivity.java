@@ -55,7 +55,6 @@ import com.facebook.GraphResponse;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.facebook.stetho.Stetho;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -97,17 +96,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     View login_button;
     private MySQLiteHelper database;
     boolean checkUser = false;
-    String[] results = new String[4];
-//    private UsersDataSource SourceData;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
-        // Set up the login form.
-//        database.getReadableDatabase();
-        Stetho.initializeWithDefaults(this);
 
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
@@ -118,24 +112,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 md.update(signature.toByteArray());
                 Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
+        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
 
         }
 
-//        checkConn();
-
-        RefreshButton = (ImageButton) findViewById(R.id.RefreshButton);
-        RefreshButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                checkConn();
-            }
-        });
 
 
-//        AppEventsLogger.activateApp(this);
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
@@ -154,11 +136,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
+                                String email = null;
+                                String name = null;
                                 try {
                                     email = object.getString("email");
                                     name = object.getString("name");
-//                                    toast(email+" / "+name);
-                                    startActivity(new Intent(getApplicationContext(), MainScreen.class));
+                                    mEmailView.setText(email);
+//                                    checkUser = database.checkUser(email);
+//                                    if (checkUser){
+//                                        final String[] result = database.getUserByEmail(email);
+//                                        final int id = Integer.parseInt(result[0]);
+//                                        database.updateUserState(id);
+//                                    }else{
+//                                        database.addUser(name,email,1);
+//                                    }
+                                    startActivity(new Intent(getApplicationContext(), MainScreen.class).putExtra("email",email).putExtra("name",name));
                                     finish();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -172,39 +164,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 request.executeAsync();
 
             }
-                // Callback registration
-//        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-//            @Override
-//            public void onSuccess(LoginResult loginResult) {
-//                // App code
-//                GraphRequest.newMeRequest( loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-//                            @Override
-//                            public void onCompleted(JSONObject me, GraphResponse response) {
-//                                if (response.getError() != null) {
-//                                    // handle error
-//                                } else {
-//                                    String email = me.optString("email");
-//                                    String id = me.optString("id");
-//                                    String name = me.optString("name");
-//                                    Toast.makeText(getApplicationContext(),
-//
-//                                            email+" / "+name,
-//
-//                                            Toast.LENGTH_LONG).show();
-//                                    // send email and id to your web server
-//                                }
-//                            }
-//                        }).executeAsync();
-//
-//
-//            }
 
             @Override
             public void onCancel() {
                 // App code
                 Toast.makeText(getApplicationContext(),
 
-                        "Cancelado",
+                        "Canceled",
 
                         Toast.LENGTH_LONG).show();
             }
