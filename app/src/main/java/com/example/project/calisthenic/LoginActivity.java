@@ -3,13 +3,11 @@ package com.example.project.calisthenic;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -150,7 +148,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //                                    }else{
 //                                        database.addUser(name,email,1);
 //                                    }
-                                    startActivity(new Intent(getApplicationContext(), MainScreen.class).putExtra("email",email).putExtra("name",name));
+                                    startActivity(new Intent(getApplicationContext(), MainScreen.class));
                                     finish();
                                 } catch (JSONException e) {
                                     e.printStackTrace();

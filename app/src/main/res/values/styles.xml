@@ -17,9 +17,7 @@
 
     <style name="EditTextTintTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/colorPrimary</item>
-
     </style>
-
 
 
 </resources>

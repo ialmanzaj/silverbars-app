@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/lib/com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationView"
     tools:context=".MainScreen"
     android:background="#fff">
 
@@ -39,10 +38,10 @@
                 android:layout_height="4dp"
                 android:background="@drawable/shadow" />
 
-        <android.support.v4.view.ViewPager
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/view" />
+            <android.support.v4.view.ViewPager
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/view" />
     </LinearLayout>
 
 
@@ -56,6 +55,7 @@
 
 
     <com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationView
+        xmlns:app="http://schemas.android.com/apk/lib/com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationView"
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -22,7 +22,7 @@ import android.widget.Toast;
 
 import com.github.vignesh_iopex.confirmdialog.Confirm;
 import com.github.vignesh_iopex.confirmdialog.Dialog;
-import com.serhatsurguvec.continuablecirclecountdownview.ContinuableCircleCountDownView;
+//import com.serhatsurguvec.continuablecirclecountdownview.ContinuableCircleCountDownView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
     Button PauseButton;
     boolean exit = false, SelectedSongs = false, finish = false;
 
-    ContinuableCircleCountDownView mCountDownView;
+//    ContinuableCircleCountDownView mCountDownView;
     private RecyclerView recycler;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
@@ -132,14 +132,14 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                     case "PAUSE":
                         PauseButton.setText("RESUME");
                         onTimerPause();
-                        if (SelectedSongs != false){
+                        if (SelectedSongs){
                             mp.pause();
                         }
                         break;
                     case "RESUME":
                         PauseButton.setText("PAUSE");
                         onTimerResume();
-                        if (SelectedSongs != false) {
+                        if (SelectedSongs) {
                             mp.start();
                         }
                         break;
@@ -203,14 +203,11 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 }
                 switch (state){
                     case "PAUSE":
-//                        PauseButton.setText("RESUME");
-                        onTimerResume();
                         if (SelectedSongs){
                             mp.pause();
                         }
                         break;
                     case "RESUME":
-//                        PauseButton.setText("PAUSE");
                         onTimerPause();
                         if (SelectedSongs) {
                             mp.start();
@@ -219,9 +216,9 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                     default:
                         break;
                 }
-
             }
         });
+
         nxtExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -242,7 +239,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 switch (state){
                     case "PAUSE":
 //                        PauseButton.setText("RESUME");
-                        onTimerResume();
+//                        onTimerResume();
                         if (SelectedSongs){
                             mp.pause();
                         }
@@ -434,7 +431,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
     public void onTimerPause(){
         String value = timer.getText().toString();
-        if (finish != true){
+        if (!finish){
             time = Integer.valueOf(value);
             timer2.cancel();
         }
