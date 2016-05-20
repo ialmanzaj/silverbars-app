@@ -29,6 +29,7 @@ public class Playlist_Picker extends AppCompatActivity {
     String[] items, songs;
     Button clean,done;
     long[] selected;
+    private ArrayList<File> mySongs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,13 +44,14 @@ public class Playlist_Picker extends AppCompatActivity {
         });
         done = (Button)findViewById(R.id.done);
 
-
-        final ArrayList<File> mySongs = findSongs(Environment.getExternalStorageDirectory());
-        items = new String[mySongs.size()];
-        for (int i = 0; i<mySongs.size(); i++){
-            items[i]= mySongs.get(i).getName().toString().replace(".mp3","").replace(".mp3","");
-
+        if (findSongs(Environment.getExternalStorageDirectory()) != null){
+            mySongs = findSongs(Environment.getExternalStorageDirectory());
+            items = new String[mySongs.size()];
+            for (int i = 0; i<mySongs.size(); i++){
+                items[i]= mySongs.get(i).getName().toString().replace(".mp3","").replace(".mp3","");
+            }
         }
+
 
         ArrayAdapter<String> adp = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_multiple_choice,android.R.id.text1,items);
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -113,6 +115,7 @@ public class Playlist_Picker extends AppCompatActivity {
 
     public ArrayList<File> findSongs(File root){
         ArrayList<File> al = new ArrayList<File>();
+
         File[] files = root.listFiles();
         for(File singleFile : files){
             if (singleFile.isDirectory() && !singleFile.isHidden()){
