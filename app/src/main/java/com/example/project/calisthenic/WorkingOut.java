@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.CountDownTimer;
+import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +50,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
     AlertDialog alertDialog;
+    public PowerManager powerManager = (PowerManager)getBaseContext().getSystemService(Context.POWER_SERVICE);
+    PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         setContentView(R.layout.activity_working_out);
 
 //        mCountDownView = (ContinuableCircleCountDownView) findViewById(R.id.CountDownView);
+
+        wakeLock.acquire();
 
         prvExercise = (ImageButton) findViewById(R.id.prvExercise);
         nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
@@ -338,6 +343,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 if (SelectedSongs){
                     mp.release();
                 }
+                wakeLock.release();
                 dialog.dismissDialog();
                 finish();
             }}).onNegative("No",  new Dialog.OnClickListener() {
@@ -376,10 +382,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         timer2 = new CountDownTimer(totalsecs, sec_interval) {
 
             public void onTick(long millisUntilFinished) {
-
                 performTick(millisUntilFinished);
             }
-
             public void onFinish() {
                 y++;
                 if (y < elements){
@@ -398,6 +402,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                     finish = true;
                     Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                     vb.vibrate(500);
+                    wakeLock.release();
                 }
             }
         }.start();
@@ -431,6 +436,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
     public void onTimerPause(){
         String value = timer.getText().toString();
+        wakeLock.release();
         if (!finish){
             time = Integer.valueOf(value);
             timer2.cancel();
@@ -440,5 +446,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
     public void onTimerResume(){
         Timer(time,1);
+        wakeLock.acquire();
     }
+
 }
