@@ -51,6 +51,8 @@ public class Playlist_Picker extends AppCompatActivity {
                 items[i]= mySongs.get(i).getName().toString().replace(".mp3","").replace(".mp3","");
             }
         }
+        else
+            mySongs = null;
 
 
         ArrayAdapter<String> adp = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_multiple_choice,android.R.id.text1,items);
@@ -95,6 +97,7 @@ public class Playlist_Picker extends AppCompatActivity {
 //                                            @Override
 //                                            public void onTextInputConfirmed(String text) {
 ////                                                Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
+//                                                toast("Guardado");
 //                                            }
 //                                        })
 //                                        .show();

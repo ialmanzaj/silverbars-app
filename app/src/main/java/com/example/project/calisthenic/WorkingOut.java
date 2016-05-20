@@ -390,7 +390,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                     recycler.smoothScrollToPosition(y);
                     CurrentExercise.setText(String.valueOf(y+1));
                     Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
-                    vb.vibrate(500);
+                    vb.vibrate(1000);
                     Timer(30,1);
                 }
                 else{
