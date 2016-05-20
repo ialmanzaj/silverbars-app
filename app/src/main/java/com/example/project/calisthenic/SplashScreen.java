@@ -19,15 +19,17 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import java.io.IOException;
+
 public class SplashScreen extends AppCompatActivity {
 
     AccessTokenTracker accessTokenTracker;
+    MySQLiteHelper database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
-
 
         accessTokenTracker = new AccessTokenTracker() {
             @Override

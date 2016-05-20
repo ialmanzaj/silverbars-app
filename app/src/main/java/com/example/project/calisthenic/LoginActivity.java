@@ -3,17 +3,14 @@ package com.example.project.calisthenic;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -43,8 +40,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -56,10 +51,8 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
-import com.facebook.GraphRequestAsyncTask;
 import com.facebook.GraphResponse;
 import com.facebook.ProfileTracker;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.stetho.Stetho;
@@ -99,9 +92,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private LoginButton loginButton;
     CallbackManager callbackManager = CallbackManager.Factory.create();
     ProfileTracker profileTracker;
-    String basicMail, basicPass;
+    String basicMail, basicPass, email, name;
     ImageButton RefreshButton;
     View login_button;
+    private MySQLiteHelper database;
+    boolean checkUser = false;
+    String[] results = new String[4];
+//    private UsersDataSource SourceData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +106,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
         // Set up the login form.
-
+//        database.getReadableDatabase();
         Stetho.initializeWithDefaults(this);
 
         try {
@@ -157,27 +154,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                String email = null;
-                                String name = null;
                                 try {
                                     email = object.getString("email");
                                     name = object.getString("name");
-                                    mEmailView.setText(email);
-
-                                    AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(getBaseContext(), "Personal", null, 1);
-                                    SQLiteDatabase bd = admin.getWritableDatabase();
-                                    Cursor row = bd.rawQuery("SELECT * FROM users WHERE  email='"+email+"'",null);
-                                    if(row.moveToFirst()){
-
-                                    }else{
-                                        ContentValues registro = new ContentValues();
-                                        registro.put("email",email);
-                                        registro.put("name",name);
-                                        registro.put("active","1");
-                                        bd.insert("users",null,registro);
-                                        bd.close();
-                                    }
-
+//                                    toast(email+" / "+name);
                                     startActivity(new Intent(getApplicationContext(), MainScreen.class));
                                     finish();
                                 } catch (JSONException e) {

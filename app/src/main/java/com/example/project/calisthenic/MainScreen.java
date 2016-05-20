@@ -1,15 +1,9 @@
 package com.example.project.calisthenic;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.IdRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,15 +12,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 //import com.afollestad.materialdialogs.MaterialDialog;
 import com.baoyz.actionsheet.ActionSheet;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
-import com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationItem;
 import com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationView;
-import com.luseen.luseenbottomnavigation.BottomNavigation.OnBottomNavigationItemClickListener;
 
 public class MainScreen extends AppCompatActivity implements ActionSheet.ActionSheetListener {
 
@@ -34,13 +25,16 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
     SimpleTabAdapter adapter;
     Button songs;
     String email,name;
+    int id;
     TextView emailView, nameView, Username;
     ImageButton settings;
+    MySQLiteHelper database;
+    String[] results = new String[4];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
-        setContentView(R.layout.activity_main_screen);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -57,16 +51,11 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
 
 //        songs = (Button) findViewById(R.id.songs);
 //        Intent intent = this.getIntent();
-        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(getBaseContext(), "Personal", null, 1);
-        SQLiteDatabase bd = admin.getWritableDatabase();
-        Cursor row = bd.rawQuery("SELECT * FROM users WHERE  active='1'",null);
-        if (row.getCount() > 0){
-            row.moveToFirst();
-            email = row.getString(row.getColumnIndex("email"));
-            name = row.getString(row.getColumnIndex("name"));
-            row.close();
-        }
-
+//        name = intent.getStringExtra("name");
+//        email = intent.getStringExtra("email");
+        results = database.getActiveUser();
+        name = results[1];
+        email = results[2];
         Username.setText("Welcome, "+name);
 
         int[] image = {R.mipmap.home, R.mipmap.acrobatics,
@@ -105,6 +94,7 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
 
         bottomNavigationView.setViewPager(view , color , image);
 
+        setContentView(R.layout.activity_main_screen);
     }
 
     @Override
@@ -116,9 +106,8 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
                 break;
             case 1:
                 LoginManager.getInstance().logOut();
-                SharedPreferences.Editor info = getSharedPreferences("UserData",MODE_PRIVATE).edit();
-                info.clear().commit();
-//                finish();
+                database.updateUser(email,0);
+                finish();
                 break;
             default:
                 break;

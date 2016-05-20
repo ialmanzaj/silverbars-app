@@ -187,17 +187,12 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         prvExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-//                y--;
-
+                String state = PauseButton.getText().toString();
                 recycler.smoothScrollToPosition(y-1);
                 y--;
                 CurrentExercise.setText(String.valueOf(y+1));
-//                String position = String.valueOf(y);
-//                toast(position);
                 timer2.cancel();
                 Timer(30,1);
-
                 if (y == 0){
                     prvLayout.setVisibility(View.GONE);
                 }
@@ -206,19 +201,34 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                         nxtLayout.setVisibility(View.VISIBLE);
                     }
                 }
+                switch (state){
+                    case "PAUSE":
+//                        PauseButton.setText("RESUME");
+                        onTimerResume();
+                        if (SelectedSongs){
+                            mp.pause();
+                        }
+                        break;
+                    case "RESUME":
+//                        PauseButton.setText("PAUSE");
+                        onTimerPause();
+                        if (SelectedSongs) {
+                            mp.start();
+                        }
+                        break;
+                    default:
+                        break;
+                }
 
             }
         });
         nxtExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-//                y++;
+                String state = PauseButton.getText().toString();
                 recycler.smoothScrollToPosition(y+1);
                 y++;
                 CurrentExercise.setText(String.valueOf(y+1));
-//                String position = String.valueOf(y);
-//                toast(position);
                 timer2.cancel();
                 Timer(30,1);
                 if (y == elements-1){
@@ -228,6 +238,24 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                     if (y > 0){
                         prvLayout.setVisibility(View.VISIBLE);
                     }
+                }
+                switch (state){
+                    case "PAUSE":
+//                        PauseButton.setText("RESUME");
+                        onTimerResume();
+                        if (SelectedSongs){
+                            mp.pause();
+                        }
+                        break;
+                    case "RESUME":
+//                        PauseButton.setText("PAUSE");
+                        onTimerPause();
+                        if (SelectedSongs) {
+                            mp.start();
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
         });
@@ -275,12 +303,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
             btPlay.setClickable(false);
             btPause.setEnabled(false);
             btPause.setClickable(false);
-
         }
-
-
-
-
 
         alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle("Get Ready!");
@@ -318,7 +341,6 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 if (SelectedSongs){
                     mp.release();
                 }
-//                exit = true;
                 dialog.dismissDialog();
                 finish();
             }}).onNegative("No",  new Dialog.OnClickListener() {
@@ -329,10 +351,6 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 }
                 onTimerResume();
             }}).build().show();
-
-//        if (exit){
-//            finish();
-//        }
     }
 
     public void MusicPlayList(int playlist_size){
@@ -374,6 +392,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                     }
                     recycler.smoothScrollToPosition(y);
                     CurrentExercise.setText(String.valueOf(y+1));
+                    Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
+                    vb.vibrate(500);
                     Timer(30,1);
                 }
                 else{
