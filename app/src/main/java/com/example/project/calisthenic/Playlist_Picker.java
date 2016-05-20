@@ -65,11 +65,14 @@ public class Playlist_Picker extends AppCompatActivity {
                 int choice = lv.getCount();
                 selected = new long[choice];
                 songs = new String[choice];
-
+                SparseBooleanArray spa = lv.getCheckedItemPositions();
+                if (spa.size() < 1){
+                    mySongs = null;
+                }
                 for (int i = 0; i<choice ; i++){
                     selected[i]=-1;
                 }
-                SparseBooleanArray spa = lv.getCheckedItemPositions();
+
                 for (int i = 0; i < choice; i++){
                     if (spa.get(i)){
                         selected[i] = lv.getItemIdAtPosition(i);

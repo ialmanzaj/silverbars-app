@@ -28,7 +28,13 @@
 
         <activity
             android:name=".MainScreen"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Workout"
             android:launchMode="singleTask" />
@@ -51,11 +57,6 @@
         <activity
             android:name=".SplashScreen"
             android:theme="@style/SplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
