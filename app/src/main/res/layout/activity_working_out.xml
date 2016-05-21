@@ -144,7 +144,7 @@
                         android:id="@+id/timer"
                         android:gravity="top|center"
                         android:textColor="@color/colorAccent"
-                        android:textSize="70dp"
+                        android:textSize="60dp"
                         android:layout_gravity="center_horizontal|top"
                         android:textStyle="bold" />
 

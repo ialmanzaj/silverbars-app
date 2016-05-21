@@ -73,9 +73,9 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
             case 0:
                 break;
             case 1:
-                LoginManager.getInstance().logOut();
+//                LoginManager.getInstance().logOut();
 //                database.updateUser(email,0);
-                finish();
+//                finish();
                 break;
             default:
                 break;

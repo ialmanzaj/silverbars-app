@@ -3,171 +3,360 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.project.calisthenic.Workout">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <TabHost
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/workout"
-        android:layout_alignParentTop="true">
-
-        <FrameLayout
-            android:layout_width="fill_parent"
-            android:layout_height="250dp">
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/imageView"
-                android:background="@mipmap/imagen2" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/star_off"
-                android:layout_gravity="right|bottom"
-                android:src="@android:drawable/btn_star_big_off" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="By Ivan Markioli"
-                android:id="@+id/textView4"
-                android:layout_gravity="left|bottom"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="40dp"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Upper Body"
-                android:id="@+id/textView5"
-                android:layout_gravity="center_horizontal|top"
-                android:background="#c8000000"
-                android:textStyle="bold"
-                android:textColor="#ffffff"
-                android:gravity="center" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/star_on"
-                android:layout_gravity="right|bottom"
-                android:src="@android:drawable/btn_star_big_on"
-                android:visibility="gone" />
-        </FrameLayout>
+        android:layout_height="match_parent"
+        android:id="@+id/tabHost2"
+        android:layout_gravity="center_horizontal">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp">
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:orientation="horizontal"
+            <TabWidget
+                android:id="@android:id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="90dp"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp">
+                android:layout_height="wrap_content"></TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="190dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right"
-                    android:gravity="end"
-                    android:paddingEnd="10dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/imageView3"
-                        android:src="@android:drawable/ic_menu_save"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginRight="5dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Save"
-                        android:id="@+id/textView6"
-                        android:textColor="#000" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="vertical"
+                    android:id="@+id/tab2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingStart="10dp"
-                    android:layout_gravity="left"
-                    android:gravity="start">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/imageView2"
-                        android:src="@android:drawable/ic_menu_sort_by_size"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginRight="5dp" />
+                    android:orientation="vertical"
+                    android:paddingTop="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Muscle to train"
-                        android:id="@+id/textView7"
-                        android:textColor="#000" />
+                        android:text="Tempo in Reps"
+                        android:textSize="40dp"
+                        android:layout_gravity="center" />
+
+                    <Spinner
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spinner"
+                        android:layout_gravity="center_horizontal"
+                        android:spinnerMode="dialog" />
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center">
+
+                            <Button
+                                style="?android:attr/buttonStyleSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="+"
+                                android:id="@+id/plusPositive"
+                                android:layout_gravity="center" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:id="@+id/Positive"
+                                android:layout_gravity="center"
+                                android:textSize="35dp"
+                                android:text="-" />
+
+                            <Button
+                                style="?android:attr/buttonStyleSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="-"
+                                android:id="@+id/minusPositive"
+                                android:layout_gravity="center" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="Positive"
+                                android:id="@+id/textView8"
+                                android:layout_gravity="center" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text=":"
+                            android:id="@+id/textView26"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="10dp"
+                            android:textStyle="bold"
+                            android:textSize="35dp" />
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center">
+
+                            <Button
+                                style="?android:attr/buttonStyleSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="+"
+                                android:id="@+id/plusIsometric"
+                                android:layout_gravity="center" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:id="@+id/Isometric"
+                                android:layout_gravity="center"
+                                android:text="-"
+                                android:textSize="35dp" />
+
+                            <Button
+                                style="?android:attr/buttonStyleSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="-"
+                                android:id="@+id/minusIsometric"
+                                android:layout_gravity="center" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="Isometric"
+                                android:id="@+id/textView23"
+                                android:layout_gravity="center" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text=":"
+                            android:id="@+id/textView27"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="10dp"
+                            android:textStyle="bold"
+                            android:textSize="35dp" />
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center">
+
+                            <Button
+                                style="?android:attr/buttonStyleSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="+"
+                                android:id="@+id/plusNegative"
+                                android:layout_gravity="center" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:id="@+id/Negative"
+                                android:layout_gravity="center"
+                                android:text="-"
+                                android:textSize="35dp" />
+
+                            <Button
+                                style="?android:attr/buttonStyleSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="-"
+                                android:id="@+id/minusNegative"
+                                android:layout_gravity="center" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="Negative"
+                                android:id="@+id/textView25"
+                                android:layout_gravity="center" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Reps per Exercise"
+                            android:id="@+id/textView5"
+                            android:layout_gravity="center" />
+
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:ems="10"
+                            android:id="@+id/Reps"
+                            android:layout_gravity="center" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text=" Total workout aprox = 45min"
-                android:id="@+id/textView8"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="5dp"
-                android:textSize="15sp" />
+                <LinearLayout
+                    android:id="@+id/tab1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select you playlist"
-                android:id="@+id/playlist"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp" />
+                    <FrameLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="350dp" >
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imageButton4"
-                android:src="@mipmap/ic_list_black_24dp"
-                android:layout_gravity="center_horizontal" />
+                        <ImageView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:id="@+id/imageView2"
+                            android:background="@mipmap/imagen2" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Exercise list"
-                android:id="@+id/textView10"
-                android:layout_gravity="center_horizontal" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/star_off"
+                            android:layout_gravity="right|bottom"
+                            android:src="@android:drawable/btn_star_big_off" />
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text="By Ivan Markioli"
+                            android:id="@+id/textView6"
+                            android:layout_gravity="left|bottom"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="40dp"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Upper Body"
+                            android:id="@+id/textView7"
+                            android:layout_gravity="center_horizontal|top"
+                            android:background="#c8000000"
+                            android:textStyle="bold"
+                            android:textColor="#ffffff"
+                            android:gravity="center" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/star_on"
+                            android:layout_gravity="right|bottom"
+                            android:src="@android:drawable/btn_star_big_on"
+                            android:visibility="gone" />
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp" >
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Select you playlist"
+                            android:id="@+id/button8"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginBottom="10dp" />
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="90dp"
+                            android:paddingTop="15dp"
+                            android:paddingBottom="15dp" >
+
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="190dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="right"
+                                android:gravity="end"
+                                android:paddingEnd="10dp" >
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/imageView"
+                                    android:src="@android:drawable/ic_menu_save"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginRight="5dp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:text="Save"
+                                    android:id="@+id/textView4"
+                                    android:textColor="#000" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"></LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"></LinearLayout>
+            </FrameLayout>
         </LinearLayout>
+    </TabHost>
 
-    </LinearLayout>
 
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="60dp"
-        android:text="START WORKOUT"
-        android:id="@+id/workout"
-        android:layout_gravity="center_horizontal"
-        android:textSize="25dp"
-        android:layout_alignParentBottom="true" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:src="@android:drawable/ic_menu_send"
+        app:borderWidth="0dp"
+        app:fabSize="normal"
+        app:rippleColor="@color/colorAccent"/>
+
 
 </RelativeLayout>

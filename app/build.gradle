@@ -19,6 +19,7 @@ android {
     }
 }
 
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
@@ -41,5 +42,5 @@ dependencies {
     compile 'com.mikhaellopez:circularimageview:3.0.2'
 //    compile 'com.afollestad.material-dialogs:core:0.8.5.9'
     compile 'com.yarolegovich:lovely-dialog:1.0.4'
-//    compile 'com.github.coyarzun89:fabtransitionactivity:0.2.0'
+    compile 'com.github.coyarzun89:fabtransitionactivity:0.2.0'
 }

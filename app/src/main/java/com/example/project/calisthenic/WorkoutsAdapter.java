@@ -25,7 +25,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
             super(v);
             imagen = (ImageView) v.findViewById(R.id.imagen);
             nombre = (TextView) v.findViewById(R.id.nombre);
-            next = (TextView) v.findViewById(R.id.next);
+//            next = (TextView) v.findViewById(R.id.next);
         }
     }
 
@@ -49,6 +49,6 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
     public void onBindViewHolder(WorkoutsViewHolder viewHolder, int i) {
         viewHolder.imagen.setImageResource(items.get(i).getImagen());
         viewHolder.nombre.setText(items.get(i).getNombre());
-        viewHolder.next.setText("Visitas:"+String.valueOf(items.get(i).getVisitas()));
+//        viewHolder.next.setText("Visitas:"+String.valueOf(items.get(i).getVisitas()));
     }
 }

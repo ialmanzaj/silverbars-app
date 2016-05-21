@@ -12,6 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -38,7 +41,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
     ImageButton btPlay, btPause, nxtExercise, prvExercise;
     Uri u;
     long[] position;
-    int x = 0, y=0, elements = 0, size, time=0;
+    int x = 0, y=0, elements = 0, size, time=0, tempo = 0, count = 0, totalReps, actualReps;
+    int totalTime;
     TextView timer, song_name, CurrentSet, TotalSet, CurrentExercise, TotalExercise;
     CountDownTimer timer2;
     FrameLayout prvLayout, nxtLayout, PlayerLayout;
@@ -77,6 +81,50 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         PlayerLayout = (FrameLayout) findViewById(R.id.PlayerLayout);
 
         PauseButton = (Button) findViewById(R.id.PauseButton);
+
+        actualReps = totalReps;
+
+        timer = (TextView) findViewById(R.id.timer);
+        timer.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                toast("Cambio"+charSequence);
+                actualReps = Integer.valueOf(charSequence.toString());
+
+                if (actualReps == 0){
+                    y++;
+                    if (y < elements){
+                        prvLayout.setVisibility(View.VISIBLE);
+                        if((y+1)==elements){
+                            nxtLayout.setVisibility(View.GONE);
+                        }
+                        recycler.smoothScrollToPosition(y);
+                        CurrentExercise.setText(String.valueOf(y+1));
+                        Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
+                        vb.vibrate(1000);
+                        Timer(totalTime,1);
+                    }
+                    else{
+//                    timer.setText("Well Done!");
+                        finish = true;
+                        Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
+                        vb.vibrate(500);
+//                    wakeLock.release();
+                    }
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         PlayerLayout.setOnTouchListener(new OnSwipeTouchListener(this){
             public void onSwipeRight() {
@@ -206,7 +254,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 y--;
                 CurrentExercise.setText(String.valueOf(y+1));
                 timer2.cancel();
-                Timer(30,1);
+                timer.setText(String.valueOf(totalReps));
+                Timer(totalTime,1);
                 if (y == 0){
                     prvLayout.setVisibility(View.GONE);
                 }
@@ -241,7 +290,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 y++;
                 CurrentExercise.setText(String.valueOf(y+1));
                 timer2.cancel();
-                Timer(30,1);
+                timer.setText(String.valueOf(totalReps));
+                Timer(totalTime,1);
                 if (y == elements-1){
                     nxtLayout.setVisibility(View.GONE);
                 }
@@ -280,6 +330,9 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
         Intent i = getIntent();
         Bundle b = i.getExtras();
+        totalReps = b.getInt("reps");
+        tempo = b.getInt("tempo");
+        totalTime = totalReps * tempo;
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
         position = b.getLongArray("pos");
         playlist = new ArrayList<>();
@@ -330,8 +383,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
             @Override
             public void onFinish() {
 //                info.setVisibility(View.GONE);
-                timer = (TextView) findViewById(R.id.timer);
-                Timer(30,1);
+                timer.setText(String.valueOf(totalReps));
+                Timer(totalTime,1);
                 if (SelectedSongs == true){
                     mp.start();
                 }
@@ -394,32 +447,20 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 performTick(millisUntilFinished);
             }
             public void onFinish() {
-                y++;
-                if (y < elements){
-                    prvLayout.setVisibility(View.VISIBLE);
-                    if((y+1)==elements){
-                        nxtLayout.setVisibility(View.GONE);
-                    }
-                    recycler.smoothScrollToPosition(y);
-                    CurrentExercise.setText(String.valueOf(y+1));
-                    Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
-                    vb.vibrate(1000);
-                    Timer(30,1);
-                }
-                else{
-//                    timer.setText("Well Done!");
-                    finish = true;
-                    Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
-                    vb.vibrate(500);
-//                    wakeLock.release();
-                }
+
             }
         }.start();
         performTick(totalsecs);
     }
 
     void performTick(long millisUntilFinished) {
-        timer.setText(String.valueOf(Math.round(millisUntilFinished * 0.001f)));
+        count++;
+        if (count == tempo){
+//            timer.setText(String.valueOf(Math.round(millisUntilFinished * 0.001f)));
+            actualReps--;
+            timer.setText(String.valueOf(actualReps));
+            count = 0;
+        }
     }
 
     public void toast(String text){
