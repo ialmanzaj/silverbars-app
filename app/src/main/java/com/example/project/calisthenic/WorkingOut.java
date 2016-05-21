@@ -84,6 +84,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                     int playlist_size = playlist.size();
                     if (playlist_size > 1 && (x-1) >= 0 ){
                         //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+                        btPlay.setVisibility(View.GONE);
+                        btPause.setVisibility(View.VISIBLE);
                         mp.stop();
                         mp.release();
                         x = (x-1)%playlist.size();
@@ -95,6 +97,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                     }
                     else{
                         //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+                        btPlay.setVisibility(View.GONE);
+                        btPause.setVisibility(View.VISIBLE);
                         mp.stop();
                         mp.release();
                         u = Uri.parse(playlist.get(x).toString());
@@ -110,6 +114,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                     int playlist_size = playlist.size();
                     if (playlist_size > 1 && x + 1 < playlist_size) {
                         //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+                        btPlay.setVisibility(View.GONE);
+                        btPause.setVisibility(View.VISIBLE);
                         mp.stop();
                         mp.release();
                         x = (x + 1) % playlist.size();
@@ -120,6 +126,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                         mp.start();
                     } else {
                         //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
+                        btPlay.setVisibility(View.GONE);
+                        btPause.setVisibility(View.VISIBLE);
                         mp.stop();
                         mp.release();
                         u = Uri.parse(playlist.get(x).toString());

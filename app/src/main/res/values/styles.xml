@@ -22,10 +22,10 @@
     <style name="FacebookLoginButton">
         <!--<item name="android:textSize">@dimen/smallTxtSize</item>-->
         <!--<item name="android:background">@drawable/facebook_signin_btn</item>-->
-        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginTop">50dp</item>
         <item name="android:layout_marginBottom">10dp</item>
         <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:height">80dp</item>
+        <item name="android:height">100dp</item>
     </style>
 
 

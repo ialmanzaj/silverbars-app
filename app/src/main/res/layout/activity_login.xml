@@ -16,9 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-        android:gravity="center_vertical|center|center_horizontal"
-        android:layout_marginTop="50dp"
-        android:theme="@style/FacebookLoginButton"/>
+        android:gravity="center_vertical|center|center_horizontal"/>
 
     <ProgressBar
         android:id="@+id/login_progress"
