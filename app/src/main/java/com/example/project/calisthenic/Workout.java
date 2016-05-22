@@ -30,7 +30,7 @@ public class Workout extends AppCompatActivity {
     private static final int REQUEST_CODE = 1;
 
     ImageView star_on, star_off;
-    Button workout, playlist, plusPositive, minusPositive, plusIsometric, minusIsometric, plusNegative, minusNegative;
+    Button workout, playlist, plusPositive, minusPositive, plusIsometric, minusIsometric, plusNegative, minusNegative, plusReps, minusReps;
     TextView Positive, Negative, Isometric;
     ArrayList<File> mySongs, play_list;
     long[] position;
@@ -40,7 +40,7 @@ public class Workout extends AppCompatActivity {
     Spinner spinner;
     List<String> spinnerArray = new ArrayList<String>();
     int value = 0, tempoTotal = 0;
-    EditText Reps;
+    TextView Reps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class Workout extends AppCompatActivity {
             }
         });
 
-        Reps = (EditText) findViewById(R.id.Reps);
+        Reps = (TextView) findViewById(R.id.Reps);
 
         plusPositive = (Button) findViewById(R.id.plusPositive);
         plusPositive.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +99,23 @@ public class Workout extends AppCompatActivity {
                 minusTempo(Negative,minusNegative,plusNegative);
             }
         });
+        plusReps = (Button) findViewById(R.id.plusReps);
+        plusReps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                plusTempo(Reps,plusReps,minusReps);
+            }
+        });
+        minusReps = (Button) findViewById(R.id.minusReps);
+        minusReps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                minusTempo(Reps,minusReps,plusReps);
+            }
+        });
+        minusReps.setEnabled(false);
+        minusReps.setClickable(false);
+
 
         Positive = (TextView) findViewById(R.id.Positive);
         Isometric = (TextView) findViewById(R.id.Isometric);
@@ -268,7 +285,7 @@ public class Workout extends AppCompatActivity {
     public void working() {
         int positive,isometric,negative, totalReps;
         totalReps = Integer.parseInt(Reps.getText().toString());
-        if ((totalReps > 0) && (totalReps != Integer.valueOf(""))){
+        if (totalReps > 0){
             positive = Integer.parseInt(Positive.getText().toString());
             isometric = Integer.parseInt(Isometric.getText().toString());
             negative = Integer.parseInt(Negative.getText().toString());
@@ -299,30 +316,56 @@ public class Workout extends AppCompatActivity {
         value = Integer.parseInt(view.getText().toString());
         view.setText(String.valueOf(value+1));
         value++;
-        if (value == 10){
-            button.setEnabled(false);
-            button.setClickable(false);
+        if (view == Reps){
+            if (value == 20){
+                button.setEnabled(false);
+                button.setClickable(false);
+            }else{
+                if(value > 1){
+                    button2.setEnabled(true);
+                    button2.setClickable(true);
+                }
+            }
         }else{
-            if(value > 1){
-                button2.setEnabled(true);
-                button2.setClickable(true);
+            if (value == 10){
+                button.setEnabled(false);
+                button.setClickable(false);
+            }else{
+                if(value > 1){
+                    button2.setEnabled(true);
+                    button2.setClickable(true);
+                }
             }
         }
+
     }
 
     public void minusTempo(TextView view, Button button, Button button2){
         value = Integer.parseInt(view.getText().toString());
         view.setText(String.valueOf(value-1));
         value--;
-        if ((value)==1){
-            button.setEnabled(false);
-            button.setClickable(false);
+        if (view == Reps){
+            if ((value)==1){
+                button.setEnabled(false);
+                button.setClickable(false);
+            }else{
+                if(value < 20){
+                    button2.setEnabled(true);
+                    button2.setClickable(true);
+                }
+            }
         }else{
-            if(value < 10){
-                button2.setEnabled(true);
-                button2.setClickable(true);
+            if ((value)==1){
+                button.setEnabled(false);
+                button.setClickable(false);
+            }else{
+                if(value < 10){
+                    button2.setEnabled(true);
+                    button2.setClickable(true);
+                }
             }
         }
+
     }
 
 }

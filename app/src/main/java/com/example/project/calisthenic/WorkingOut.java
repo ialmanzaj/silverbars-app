@@ -107,6 +107,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                         CurrentExercise.setText(String.valueOf(y+1));
                         Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                         vb.vibrate(1000);
+                        timer.setText(String.valueOf(totalReps));
                         Timer(totalTime,1);
                     }
                     else{

@@ -76,8 +76,7 @@
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:id="@+id/Positive"
                                 android:layout_gravity="center"
-                                android:textSize="35dp"
-                                android:text="-" />
+                                android:textSize="35dp" />
 
                             <Button
                                 style="?android:attr/buttonStyleSmall"
@@ -128,7 +127,6 @@
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:id="@+id/Isometric"
                                 android:layout_gravity="center"
-                                android:text="-"
                                 android:textSize="35dp" />
 
                             <Button
@@ -180,7 +178,6 @@
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:id="@+id/Negative"
                                 android:layout_gravity="center"
-                                android:text="-"
                                 android:textSize="35dp" />
 
                             <Button
@@ -215,13 +212,40 @@
                             android:id="@+id/textView5"
                             android:layout_gravity="center" />
 
-                        <EditText
+                        <LinearLayout
+                            android:orientation="vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:inputType="number"
-                            android:ems="10"
-                            android:id="@+id/Reps"
-                            android:layout_gravity="center" />
+                            android:layout_gravity="center"
+                            android:gravity="center" >
+
+                            <Button
+                                style="?android:attr/buttonStyleSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="+"
+                                android:id="@+id/plusReps"
+                                android:layout_gravity="center" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:id="@+id/Reps"
+                                android:layout_gravity="center"
+                                android:textSize="35dp"
+                                android:text="1" />
+
+                            <Button
+                                style="?android:attr/buttonStyleSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:text="-"
+                                android:id="@+id/minusReps"
+                                android:layout_gravity="center" />
+
+                        </LinearLayout>
+
                     </LinearLayout>
                 </LinearLayout>
 
