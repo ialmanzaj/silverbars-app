@@ -443,13 +443,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         int sec_interval= interval * 1000 ;
 
         timer2 = new CountDownTimer(totalsecs, sec_interval) {
-
-            public void onTick(long millisUntilFinished) {
-                performTick(millisUntilFinished);
-            }
-            public void onFinish() {
-
-            }
+            public void onTick(long millisUntilFinished) {performTick(millisUntilFinished);}
+            public void onFinish() {}
         }.start();
         performTick(totalsecs);
     }
