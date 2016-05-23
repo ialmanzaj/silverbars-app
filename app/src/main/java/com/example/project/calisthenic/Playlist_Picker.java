@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
@@ -122,6 +123,7 @@ public class Playlist_Picker extends AppCompatActivity {
         ArrayList<File> al = new ArrayList<File>();
 
         File[] files = root.listFiles();
+        Log.v("Files",files+", ");
         for(File singleFile : files){
             if (singleFile.isDirectory() && !singleFile.isHidden()){
                 al.addAll(findSongs(singleFile));

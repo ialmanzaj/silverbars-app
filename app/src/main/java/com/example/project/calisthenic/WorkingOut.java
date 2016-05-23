@@ -43,7 +43,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
     long[] position;
     int x = 0, y=0, elements = 0, size, time=0, tempo = 0, count = 0, totalReps, actualReps;
     int totalTime;
-    TextView timer, song_name, CurrentSet, TotalSet, CurrentExercise, TotalExercise;
+    TextView timer, song_name, CurrentSet, TotalSet, CurrentExercise, TotalExercise, TimeView;
     CountDownTimer timer2;
     FrameLayout prvLayout, nxtLayout, PlayerLayout;
     Button PauseButton;
@@ -82,6 +82,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
         PauseButton = (Button) findViewById(R.id.PauseButton);
 
+        TimeView = (TextView) findViewById(R.id.time);
+
         actualReps = totalReps;
 
         timer = (TextView) findViewById(R.id.timer);
@@ -97,8 +99,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 actualReps = Integer.valueOf(charSequence.toString());
 
                 if (actualReps == 0){
-                    y++;
-                    if (y < elements){
+                    if (y+1 < elements){
+                        y++;
                         prvLayout.setVisibility(View.VISIBLE);
                         if((y+1)==elements){
                             nxtLayout.setVisibility(View.GONE);
@@ -107,17 +109,21 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                         CurrentExercise.setText(String.valueOf(y+1));
                         Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                         vb.vibrate(1000);
-                        timer.setText(String.valueOf(totalReps));
+                        timer.setText(String.valueOf(totalReps+1));
+                        timer2.cancel();
                         Timer(totalTime,1);
                     }
                     else{
 //                    timer.setText("Well Done!");
+                        toast("done");
+                        timer2.cancel();
                         finish = true;
                         Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                         vb.vibrate(500);
 //                    wakeLock.release();
                     }
                 }
+
 
             }
 
@@ -333,7 +339,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         Bundle b = i.getExtras();
         totalReps = b.getInt("reps");
         tempo = b.getInt("tempo");
-        totalTime = totalReps * tempo;
+        totalTime = totalReps * tempo + 2;
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
         position = b.getLongArray("pos");
         playlist = new ArrayList<>();
@@ -341,7 +347,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 //        for (int z = 0; z < position.length; z++){
 //            toast(String.valueOf(position[z]));
 //        }
-        if (mySongs.size() > 0){
+        if (mySongs.size() > 0 && mySongs != null){
             SelectedSongs = true;
             for(int j = 0; j < mySongs.size(); j++){
                 if (j == position[j]){
@@ -456,13 +462,13 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
     }
 
     void performTick(long millisUntilFinished) {
-        count++;
+        String Format_Time = String.valueOf(Math.round(millisUntilFinished * 0.001f));
         if (count == tempo){
-//            timer.setText(String.valueOf(Math.round(millisUntilFinished * 0.001f)));
             actualReps--;
             timer.setText(String.valueOf(actualReps));
             count = 0;
         }
+        count++;
     }
 
     public void toast(String text){
