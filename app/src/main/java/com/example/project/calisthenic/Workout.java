@@ -1,6 +1,7 @@
 package com.example.project.calisthenic;
 
 import android.content.Intent;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -270,9 +271,14 @@ public class Workout extends AppCompatActivity {
     }
 
     public void LaunchMusicActivity() {
-        Intent intent = new Intent(this, Playlist_Picker.class);
-        startActivity(intent);
-        finish();
+        if (Environment.getExternalStorageDirectory().listFiles() != null){
+            Intent intent = new Intent(this, Playlist_Picker.class);
+            startActivity(intent);
+            finish();
+        }else{
+            toast("You don't have any audio file");
+        }
+
 //        Intent intent = new Intent();
 //        intent.setType("audio/*");
 //        intent.setAction(Intent.ACTION_GET_CONTENT);

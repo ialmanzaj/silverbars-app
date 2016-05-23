@@ -52,14 +52,12 @@ public class Playlist_Picker extends AppCompatActivity {
             for (int i = 0; i < mySongs.size(); i++) {
                 items[i] = mySongs.get(i).getName().toString().replace(".mp3", "").replace(".mp3", "");
             }
-
             ArrayAdapter<String> adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
             lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
             lv.setAdapter(adp);
             done.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     int choice = lv.getCount();
                     selected = new long[choice];
                     songs = new String[choice];
@@ -70,42 +68,11 @@ public class Playlist_Picker extends AppCompatActivity {
                     for (int i = 0; i < choice; i++) {
                         selected[i] = -1;
                     }
-
                     for (int i = 0; i < choice; i++) {
                         if (spa.get(i)) {
                             selected[i] = lv.getItemIdAtPosition(i);
-//                        songs[i] = lv.getItem
                         }
                     }
-//                for (int i = 0; i < mySongs.size(); i++){
-//                    toast(mySongs.get(i).getName());
-//                }
-//               new LovelyStandardDialog(getBaseContext())
-//                        .setTopColorRes(R.color.colorAccent)
-//                        .setButtonsColorRes(R.color.colorPrimary)
-//                        .setIcon(R.drawable.ic_mic_black_24dp)
-//                        .setTitle("Save Playlist")
-//                        .setMessage("Would you like to save this playlist for a future use?")
-//                        .setPositiveButton(android.R.string.ok, new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                new LovelyTextInputDialog(getBaseContext(), R.style.EditTextTintTheme)
-//                                        .setTopColorRes(R.color.colorAccent)
-//                                        .setTitle("Save Playlist")
-//                                        .setMessage("Name your playlist")
-//                                        .setIcon(R.drawable.ic_mic_black_24dp)
-//                                        .setConfirmButton(android.R.string.ok, new LovelyTextInputDialog.OnTextInputConfirmListener() {
-//                                            @Override
-//                                            public void onTextInputConfirmed(String text) {
-////                                                Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
-//                                                toast("Guardado");
-//                                            }
-//                                        })
-//                                        .show();
-//                            }
-//                        })
-//                        .setNegativeButton(android.R.string.no, null)
-//                        .show();
                     startActivity(new Intent(getApplicationContext(), Workout.class).putExtra("pos", selected).putExtra("songlist", mySongs));
                     finish();
                 }
