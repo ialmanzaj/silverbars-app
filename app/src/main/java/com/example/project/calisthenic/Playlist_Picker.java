@@ -47,39 +47,36 @@ public class Playlist_Picker extends AppCompatActivity {
 
 
         mySongs = findSongs(Environment.getExternalStorageDirectory());
-        if (mySongs.size() > 0){
+        if (mySongs.size() > 0) {
             items = new String[mySongs.size()];
-            for (int i = 0; i<mySongs.size(); i++){
-                items[i]= mySongs.get(i).getName().toString().replace(".mp3","").replace(".mp3","");
+            for (int i = 0; i < mySongs.size(); i++) {
+                items[i] = mySongs.get(i).getName().toString().replace(".mp3", "").replace(".mp3", "");
             }
-        }
 
+            ArrayAdapter<String> adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
+            lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            lv.setAdapter(adp);
+            done.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-
-        ArrayAdapter<String> adp = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_multiple_choice,android.R.id.text1,items);
-        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        lv.setAdapter(adp);
-        done.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                int choice = lv.getCount();
-                selected = new long[choice];
-                songs = new String[choice];
-                SparseBooleanArray spa = lv.getCheckedItemPositions();
-                if (spa.size() < 1){
-                    mySongs = null;
-                }
-                for (int i = 0; i<choice ; i++){
-                    selected[i]=-1;
-                }
-
-                for (int i = 0; i < choice; i++){
-                    if (spa.get(i)){
-                        selected[i] = lv.getItemIdAtPosition(i);
-//                        songs[i] = lv.getItem
+                    int choice = lv.getCount();
+                    selected = new long[choice];
+                    songs = new String[choice];
+                    SparseBooleanArray spa = lv.getCheckedItemPositions();
+                    if (spa.size() < 1) {
+                        mySongs = null;
                     }
-                }
+                    for (int i = 0; i < choice; i++) {
+                        selected[i] = -1;
+                    }
+
+                    for (int i = 0; i < choice; i++) {
+                        if (spa.get(i)) {
+                            selected[i] = lv.getItemIdAtPosition(i);
+//                        songs[i] = lv.getItem
+                        }
+                    }
 //                for (int i = 0; i < mySongs.size(); i++){
 //                    toast(mySongs.get(i).getName());
 //                }
@@ -109,10 +106,11 @@ public class Playlist_Picker extends AppCompatActivity {
 //                        })
 //                        .setNegativeButton(android.R.string.no, null)
 //                        .show();
-                startActivity(new Intent(getApplicationContext(),Workout.class).putExtra("pos",selected).putExtra("songlist",mySongs) );
-                finish();
-            }
-        });
+                    startActivity(new Intent(getApplicationContext(), Workout.class).putExtra("pos", selected).putExtra("songlist", mySongs));
+                    finish();
+                }
+            });
+        }
     }
 
     public void toast(String text){
