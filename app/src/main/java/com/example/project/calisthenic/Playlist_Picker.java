@@ -28,23 +28,30 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class Playlist_Picker extends AppCompatActivity {
-    ListView lv;
+    ListView ListMusic;
     String[] items, songs;
     Button clean,done;
     long[] selected;
     private ArrayList<File> mySongs;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_playlist__picker);
-        lv = (ListView)findViewById(R.id.lvPlaylist);
+
+
+        ListMusic = (ListView)findViewById(R.id.lvPlaylist);
+
         clean = (Button)findViewById(R.id.clean);
+
         clean.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
             }
         });
+
         done = (Button)findViewById(R.id.done);
 
 
@@ -56,15 +63,19 @@ public class Playlist_Picker extends AppCompatActivity {
                 items[i] = SongName(mySongs.get(i));
             }
             ArrayAdapter<String> adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
-            lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-            lv.setAdapter(adp);
+
+
+            ListMusic.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            ListMusic.setAdapter(adp);
+
+
             done.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int choice = lv.getCount();
+                    int choice = ListMusic.getCount();
                     selected = new long[choice];
                     songs = new String[choice];
-                    SparseBooleanArray spa = lv.getCheckedItemPositions();
+                    SparseBooleanArray spa = ListMusic.getCheckedItemPositions();
                     if (spa.size() < 1) {
                         mySongs = null;
                     }
@@ -73,7 +84,7 @@ public class Playlist_Picker extends AppCompatActivity {
                     }
                     for (int i = 0; i < choice; i++) {
                         if (spa.get(i)) {
-                            selected[i] = lv.getItemIdAtPosition(i);
+                            selected[i] = ListMusic.getItemIdAtPosition(i);
                         }
                     }
                     startActivity(new Intent(getApplicationContext(), Workout.class).putExtra("pos", selected).putExtra("songlist", mySongs));
