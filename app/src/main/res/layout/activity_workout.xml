@@ -76,7 +76,8 @@
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:id="@+id/Positive"
                                 android:layout_gravity="center"
-                                android:textSize="35dp" />
+                                android:textSize="35dp"
+                                android:text="3" />
 
                             <Button
                                 style="?android:attr/buttonStyleSmall"
@@ -127,7 +128,8 @@
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:id="@+id/Isometric"
                                 android:layout_gravity="center"
-                                android:textSize="35dp" />
+                                android:textSize="35dp"
+                                android:text="1" />
 
                             <Button
                                 style="?android:attr/buttonStyleSmall"
@@ -178,7 +180,8 @@
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:id="@+id/Negative"
                                 android:layout_gravity="center"
-                                android:textSize="35dp" />
+                                android:textSize="35dp"
+                                android:text="3" />
 
                             <Button
                                 style="?android:attr/buttonStyleSmall"
@@ -312,7 +315,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Select you playlist"
-                            android:id="@+id/button8"
+                            android:id="@+id/playlist"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginBottom="10dp" />
 
