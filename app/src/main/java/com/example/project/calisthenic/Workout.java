@@ -284,9 +284,9 @@ public class Workout extends AppCompatActivity {
             Intent intent = new Intent(this, MusicActivity.class);
             startActivity(intent);
 //            finish();
-        }else{
-            toast("You don't have any audio file");
-        }
+//        }else{
+//            toast("You don't have any audio file");
+//        }
 
 
 //        }else{
