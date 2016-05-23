@@ -198,28 +198,6 @@ public class Workout extends AppCompatActivity {
             }
         });
 
-        star_off = (ImageView) findViewById(R.id.star_off);
-        star_off.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Favorite(view);
-            }
-        });
-
-        star_on = (ImageView) findViewById(R.id.star_on);
-        star_off.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Unfavorite(view);
-            }
-        });
-        playlist = (Button) findViewById(R.id.playlist);
-        playlist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LaunchMusicActivity();
-            }
-        });
 
         //Tabs
         tabHost2 = (TabHost) findViewById(R.id.tabHost2);
