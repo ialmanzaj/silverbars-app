@@ -298,6 +298,11 @@ public class Workout extends AppCompatActivity {
         Intent intent = new Intent(this, Playlist_Picker.class);
         startActivity(intent);
         finish();
+//        Intent intent = new Intent();
+//        intent.setType("audio/*");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+//        startActivityForResult(intent, 1);
     }
 
     public void toast(String text){
