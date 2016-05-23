@@ -51,7 +51,7 @@ public class Workout extends AppCompatActivity {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                working();
+                LaunchWorkingOutActivity();
             }
         });
 
@@ -149,9 +149,9 @@ public class Workout extends AppCompatActivity {
                         minusIsometric.setClickable(true);
                         minusNegative.setEnabled(true);
                         minusNegative.setClickable(true);
-                        Positive.setText("10");
-                        Isometric.setText("5");
-                        Negative.setText("10");
+                        Positive.setText("3");
+                        Isometric.setText("1");
+                        Negative.setText("3");
                         break;
                     case 1:
                         plusPositive.setEnabled(true);
@@ -166,9 +166,9 @@ public class Workout extends AppCompatActivity {
                         minusIsometric.setClickable(true);
                         minusNegative.setEnabled(true);
                         minusNegative.setClickable(true);
-                        Positive.setText("5");
-                        Isometric.setText("2");
-                        Negative.setText("5");
+                        Positive.setText("2");
+                        Isometric.setText("1");
+                        Negative.setText("2");
                         break;
                     case 2:
                         plusPositive.setEnabled(true);
@@ -184,7 +184,7 @@ public class Workout extends AppCompatActivity {
                         minusNegative.setEnabled(false);
                         minusNegative.setClickable(false);
                         Positive.setText("1");
-                        Isometric.setText("1");
+                        Isometric.setText("3");
                         Negative.setText("1");
                         break;
                     default:
@@ -198,42 +198,28 @@ public class Workout extends AppCompatActivity {
             }
         });
 
+        star_off = (ImageView) findViewById(R.id.star_off);
+        star_off.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Favorite(view);
+            }
+        });
 
-
-
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        rootView = inflater.inflate(R.layout.activity_workout, container, false);
-
-//        star_off = (ImageView) findViewById(R.id.star_off);
-//        star_on = (ImageView) findViewById(R.id.star_on);
-//        playlist = (Button) findViewById(R.id.playlist);
-//        playlist.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                S_playlist();
-//            }
-//        });
-//        workout =(Button) findViewById(R.id.workout);
-//        workout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                working();
-//            }
-//        });
-//        star_off.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Favorite(view);
-//            }
-//        });
-//
-//        star_on.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Unfavorite(view);
-//            }
-//        });
+        star_on = (ImageView) findViewById(R.id.star_on);
+        star_off.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Unfavorite(view);
+            }
+        });
+        playlist = (Button) findViewById(R.id.playlist);
+        playlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LaunchMusicActivity();
+            }
+        });
 
         //Tabs
         tabHost2 = (TabHost) findViewById(R.id.tabHost2);
@@ -268,6 +254,7 @@ public class Workout extends AppCompatActivity {
             position = b.getLongArray("pos");
         }
 
+
 //        return rootView;
     }
 
@@ -282,27 +269,32 @@ public class Workout extends AppCompatActivity {
         star_off.setVisibility(v.VISIBLE);
     }
 
-    public void working() {
+    public void LaunchWorkingOutActivity() {
         int positive,isometric,negative, totalReps;
         totalReps = Integer.parseInt(Reps.getText().toString());
         if (totalReps > 0){
-            positive = Integer.parseInt(Positive.getText().toString());
-            isometric = Integer.parseInt(Isometric.getText().toString());
-            negative = Integer.parseInt(Negative.getText().toString());
-            tempoTotal = positive+isometric+negative;
-            Intent intent = new Intent(this, WorkingOut.class);
-            intent.putExtra("reps",totalReps);
-            intent.putExtra("tempo",tempoTotal);
-            intent.putExtra("pos",position);
-            intent.putExtra("songlist",mySongs);
-            startActivity(intent);
+            if (Positive.getText().toString() != "" && Isometric.getText().toString() != "" && Negative.getText().toString() != ""){
+                positive = Integer.parseInt(Positive.getText().toString());
+                isometric = Integer.parseInt(Isometric.getText().toString());
+                negative = Integer.parseInt(Negative.getText().toString());
+                tempoTotal = positive+isometric+negative;
+                Intent intent = new Intent(this, WorkingOut.class);
+                intent.putExtra("reps",totalReps);
+                intent.putExtra("tempo",tempoTotal);
+                intent.putExtra("pos",position);
+                intent.putExtra("songlist",mySongs);
+                startActivity(intent);
+            }
+            else{
+                toast("Must select a tempo");
+            }
         }
         else
             toast("Dont be lazzy, have to do more than 1 Rep");
 
     }
 
-    public void S_playlist() {
+    public void LaunchMusicActivity() {
         Intent intent = new Intent(this, Playlist_Picker.class);
         startActivity(intent);
         finish();

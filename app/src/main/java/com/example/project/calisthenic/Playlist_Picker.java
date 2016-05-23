@@ -44,15 +44,15 @@ public class Playlist_Picker extends AppCompatActivity {
         });
         done = (Button)findViewById(R.id.done);
 
-        if (findSongs(Environment.getExternalStorageDirectory()) != null){
-            mySongs = findSongs(Environment.getExternalStorageDirectory());
+
+        mySongs = findSongs(Environment.getExternalStorageDirectory());
+        if (mySongs.size() > 0){
             items = new String[mySongs.size()];
             for (int i = 0; i<mySongs.size(); i++){
                 items[i]= mySongs.get(i).getName().toString().replace(".mp3","").replace(".mp3","");
             }
         }
-        else
-            mySongs = null;
+
 
 
         ArrayAdapter<String> adp = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_multiple_choice,android.R.id.text1,items);
@@ -79,8 +79,8 @@ public class Playlist_Picker extends AppCompatActivity {
 //                        songs[i] = lv.getItem
                     }
                 }
-//                for (int i = 0; i < choice; i++){
-//                    toast(String.valueOf(selected[i]));
+//                for (int i = 0; i < mySongs.size(); i++){
+//                    toast(mySongs.get(i).getName());
 //                }
 //               new LovelyStandardDialog(getBaseContext())
 //                        .setTopColorRes(R.color.colorAccent)
@@ -116,7 +116,6 @@ public class Playlist_Picker extends AppCompatActivity {
 
     public void toast(String text){
         Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
-
     }
 
     public ArrayList<File> findSongs(File root){
@@ -139,6 +138,7 @@ public class Playlist_Picker extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
+        startActivity(new Intent(getApplicationContext(),Workout.class) );
         finish();
     }
 }

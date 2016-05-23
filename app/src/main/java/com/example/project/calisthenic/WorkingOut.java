@@ -341,7 +341,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 //        for (int z = 0; z < position.length; z++){
 //            toast(String.valueOf(position[z]));
 //        }
-        if (mySongs != null){
+        if (mySongs.size() > 0){
             SelectedSongs = true;
             for(int j = 0; j < mySongs.size(); j++){
                 if (j == position[j]){
@@ -419,7 +419,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
             }}).build().show();
     }
 
-    public void MusicPlayList(int playlist_size){
+    public void MusicPlayList(final int playlist_size){
         if (playlist_size>1){
 //            mp.stop();
 //            mp.reset();
@@ -436,6 +436,12 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
             mp = MediaPlayer.create(getApplicationContext(),u);
             mp.start();
         }
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                MusicPlayList(playlist_size);
+            }
+        });
     }
 
     public void Timer(int seconds,int interval){
