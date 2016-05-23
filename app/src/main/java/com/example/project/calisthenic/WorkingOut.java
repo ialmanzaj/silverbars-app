@@ -2,6 +2,7 @@ package com.example.project.calisthenic;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -67,6 +68,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 //        wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
 //        wakeLock.acquire();
 
+
         prvExercise = (ImageButton) findViewById(R.id.prvExercise);
         nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
 
@@ -117,6 +119,23 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                     else{
 //                    timer.setText("Well Done!");
                         toast("done");
+                        new CountDownTimer(4000, 1000) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                alertDialog.setMessage(""+ (millisUntilFinished/1000));
+                            }
+
+                            @Override
+                            public void onFinish() {
+//                info.setVisibility(View.GONE);
+                                timer.setText(String.valueOf(totalReps));
+                                Timer(totalTime,1);
+                                if (SelectedSongs == true){
+                                    mp.start();
+                                }
+                                alertDialog.dismiss();
+                            }
+                        }.start();
                         timer2.cancel();
                         finish = true;
 
@@ -177,8 +196,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                         mp.release();
                         x = (x + 1) % playlist.size();
                         u = Uri.parse(playlist.get(x).toString());
-                        String Songname = playlist.get(x).getName().toString().replace(".mp3", "");
-                        song_name.setText(Songname);
+                        song_name.setText(SongName(playlist.get(x)));
                         mp = MediaPlayer.create(getApplicationContext(), u);
                         mp.start();
                     } else {
@@ -221,6 +239,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         });
 
         song_name = (TextView) findViewById(R.id.song_name);
+        song_name.setSelected(true);
 
 
         // Inicializar Workouts
@@ -359,9 +378,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 }
             }
             u = Uri.parse(playlist.get(x).toString());
+            song_name.setText(SongName(playlist.get(x)));
             mp = MediaPlayer.create(getApplicationContext(),u);
-            String Songname = playlist.get(x).getName().toString().replace(".mp3","");
-            song_name.setText(Songname);
             btPlay.setVisibility(View.GONE);
             btPause.setVisibility(View.VISIBLE);
             final int playlist_size = playlist.size();
@@ -435,8 +453,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 //            mp.reset();
             x = (x+1)%playlist.size();
             u = Uri.parse(playlist.get(x).toString());
-            String Songname = playlist.get(x).getName().toString().replace(".mp3","");
-            song_name.setText(Songname);
+            song_name.setText(SongName(playlist.get(x)));
             mp = MediaPlayer.create(getApplicationContext(),u);
             mp.start();
         }else{
@@ -471,11 +488,9 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         if (count == tempo){
             actualReps--;
             timer.setText(String.valueOf(actualReps));
-
             // VIBRADOR POR REPETICION
             Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
             vb.vibrate(250);
-            // ====================
             count = 0;
         }
         count++;
@@ -504,17 +519,23 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
     public void onTimerPause(){
         String value = timer.getText().toString();
-//        wakeLock.release();
         if (!finish){
             time = Integer.valueOf(value);
             timer2.cancel();
         }
+    }
 
+    private String SongName(File file){
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        Uri uri = Uri.fromFile(file);
+        mediaMetadataRetriever.setDataSource(this, uri);
+        String name = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+
+        return name;
     }
 
     public void onTimerResume(){
         Timer(time,1);
-//        wakeLock.acquire();
     }
 
 }

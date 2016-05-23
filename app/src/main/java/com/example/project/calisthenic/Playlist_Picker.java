@@ -3,6 +3,8 @@ package com.example.project.calisthenic;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -50,7 +52,8 @@ public class Playlist_Picker extends AppCompatActivity {
         if (mySongs.size() > 0) {
             items = new String[mySongs.size()];
             for (int i = 0; i < mySongs.size(); i++) {
-                items[i] = mySongs.get(i).getName().toString().replace(".mp3", "").replace(".mp3", "");
+
+                items[i] = SongName(mySongs.get(i));
             }
             ArrayAdapter<String> adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
             lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -110,5 +113,14 @@ public class Playlist_Picker extends AppCompatActivity {
     public void onBackPressed(){
         startActivity(new Intent(getApplicationContext(),Workout.class) );
         finish();
+    }
+
+    private String SongName(File file){
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        Uri uri = Uri.fromFile(file);
+        mediaMetadataRetriever.setDataSource(this, uri);
+        String name = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+
+        return name;
     }
 }

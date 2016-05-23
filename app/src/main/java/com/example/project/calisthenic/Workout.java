@@ -282,7 +282,7 @@ public class Workout extends AppCompatActivity {
         if (Environment.getExternalStorageDirectory().listFiles() != null){
             Intent intent = new Intent(this, Playlist_Picker.class);
             startActivity(intent);
-            finish();
+//            finish();
         }else{
             toast("You don't have any audio file");
         }
