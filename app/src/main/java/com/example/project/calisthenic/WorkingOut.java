@@ -35,17 +35,20 @@ import java.util.List;
 public class WorkingOut extends AppCompatActivity implements View.OnClickListener {
 
      static MediaPlayer mp;
-    ArrayList<File> mySongs, playlist;
+    private ArrayList<File> mySongs, playlist;
 //    Thread updateSeekBar;
 //    SeekBar sb;
-    private ImageButton btPlay, btPause, nxtExercise, prvExercise;
+    private ImageButton btPlay;
+    private ImageButton btPause;
     private Uri u;
-    private long[] position;
     private int x = 0, y=0, elements = 0, size, time=0, tempo = 0, count = 0, totalReps, actualReps;
     private int totalTime;
-    private TextView timer, song_name, CurrentExercise, TotalExercise;
+    private TextView timer;
+    private TextView song_name;
+    private TextView CurrentExercise;
     private CountDownTimer timer2;
-    private FrameLayout prvLayout, nxtLayout, PlayerLayout;
+    private FrameLayout prvLayout;
+    private FrameLayout nxtLayout;
     private Button PauseButton;
     private boolean exit = false, SelectedSongs = false, finish = false;
 
@@ -67,17 +70,17 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 //        wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
 //        wakeLock.acquire();
 
-        prvExercise = (ImageButton) findViewById(R.id.prvExercise);
-        nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
+        ImageButton prvExercise = (ImageButton) findViewById(R.id.prvExercise);
+        ImageButton nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
 
 
         CurrentExercise = (TextView) findViewById(R.id.CurrentExercise);
-        TotalExercise = (TextView) findViewById(R.id.TotalExercise);
+        TextView totalExercise = (TextView) findViewById(R.id.TotalExercise);
 
         prvLayout = (FrameLayout) findViewById(R.id.prvLayout);
         nxtLayout = (FrameLayout) findViewById(R.id.nxtLayout);
 
-        PlayerLayout = (FrameLayout) findViewById(R.id.PlayerLayout);
+        FrameLayout playerLayout = (FrameLayout) findViewById(R.id.PlayerLayout);
 
         PauseButton = (Button) findViewById(R.id.PauseButton);
 
@@ -126,7 +129,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
             }
         });
 
-        PlayerLayout.setOnTouchListener(new OnSwipeTouchListener(this){
+        playerLayout.setOnTouchListener(new OnSwipeTouchListener(this){
             public void onSwipeRight() {
                 if (SelectedSongs == true){
                     int playlist_size = playlist.size();
@@ -237,7 +240,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
         elements = adapter.getItemCount();
         CurrentExercise.setText("1");
-        TotalExercise.setText(String.valueOf(elements));
+        totalExercise.setText(String.valueOf(elements));
 //        toast(String.valueOf(elements));
         recycler.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -334,7 +337,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         tempo = b.getInt("tempo");
         totalTime = totalReps * tempo;
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
-        position = b.getLongArray("pos");
+        long[] position = b.getLongArray("pos");
         playlist = new ArrayList<>();
 
 //        for (int z = 0; z < position.length; z++){
