@@ -268,22 +268,6 @@
                             android:id="@+id/imageView2"
                             android:background="@mipmap/imagen2" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/star_off"
-                            android:layout_gravity="right|bottom"
-                            android:src="@android:drawable/btn_star_big_off" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text="By Ivan Markioli"
-                            android:id="@+id/textView6"
-                            android:layout_gravity="left|bottom"
-                            android:textStyle="bold" />
-
                         <TextView
                             android:layout_width="fill_parent"
                             android:layout_height="40dp"
@@ -296,13 +280,6 @@
                             android:textColor="#ffffff"
                             android:gravity="center" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/star_on"
-                            android:layout_gravity="right|bottom"
-                            android:src="@android:drawable/btn_star_big_on"
-                            android:visibility="gone" />
                     </FrameLayout>
 
                     <LinearLayout
@@ -332,7 +309,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_gravity="right"
                                 android:gravity="end"
-                                android:paddingEnd="10dp" >
+                                >
 
                                 <ImageView
                                     android:layout_width="wrap_content"

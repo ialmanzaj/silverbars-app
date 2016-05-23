@@ -30,26 +30,31 @@ public class Workout extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 1;
 
-    ImageView star_on, star_off;
-    Button workout, playlist, plusPositive, minusPositive, plusIsometric, minusIsometric, plusNegative, minusNegative, plusReps, minusReps;
-    TextView Positive, Negative, Isometric;
-    ArrayList<File> mySongs, play_list;
-    long[] position;
+
+
+    private Button plusPositive;
+    private Button minusPositive;
+    private Button plusIsometric;
+    private Button minusIsometric;
+    private Button plusNegative;
+    private Button minusNegative;
+    private Button plusReps;
+    private Button minusReps;
+    private TextView Positive, Negative, Isometric;
+    private ArrayList<File> mySongs, play_list;
+    private long[] position;
     View rootView;
-    TabHost tabHost2;
-    FloatingActionButton mFab;
-    Spinner spinner;
-    List<String> spinnerArray = new ArrayList<String>();
-    int value = 0, tempoTotal = 0;
-    TextView Reps;
+    private List<String> spinnerArray = new ArrayList<String>();
+    private int value = 0;
+    private TextView Reps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
 
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton startButton = (FloatingActionButton) findViewById(R.id.fab);
+        startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LaunchWorkingOutActivity();
@@ -122,7 +127,7 @@ public class Workout extends AppCompatActivity {
         Isometric = (TextView) findViewById(R.id.Isometric);
         Negative = (TextView) findViewById(R.id.Negative);
 
-        spinner = (Spinner) findViewById(R.id.spinner);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinnerArray.add("Easy");
         spinnerArray.add("Normal");
         spinnerArray.add("Hard");
@@ -199,8 +204,9 @@ public class Workout extends AppCompatActivity {
             }
         });
 
-        playlist = (Button) findViewById(R.id.playlist);
-        playlist.setOnClickListener(new View.OnClickListener() {
+
+        Button MusicButton = (Button) findViewById(R.id.playlist);
+        MusicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LaunchMusicActivity();
@@ -208,7 +214,7 @@ public class Workout extends AppCompatActivity {
         });
 
         //Tabs
-        tabHost2 = (TabHost) findViewById(R.id.tabHost2);
+        TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost2);
         tabHost2.setup();
 
         TabHost.TabSpec data1 = tabHost2.newTabSpec("Overview");
@@ -245,7 +251,9 @@ public class Workout extends AppCompatActivity {
     }
 
 
-    public void LaunchWorkingOutActivity() {
+
+
+    private void LaunchWorkingOutActivity() {
         int positive,isometric,negative, totalReps;
         totalReps = Integer.parseInt(Reps.getText().toString());
         if (totalReps > 0){
@@ -253,10 +261,10 @@ public class Workout extends AppCompatActivity {
                 positive = Integer.parseInt(Positive.getText().toString());
                 isometric = Integer.parseInt(Isometric.getText().toString());
                 negative = Integer.parseInt(Negative.getText().toString());
-                tempoTotal = positive+isometric+negative;
+                int tempoTotal = positive + isometric + negative;
                 Intent intent = new Intent(this, WorkingOut.class);
                 intent.putExtra("reps",totalReps);
-                intent.putExtra("tempo",tempoTotal);
+                intent.putExtra("tempo", tempoTotal);
                 intent.putExtra("pos",position);
                 intent.putExtra("songlist",mySongs);
                 startActivity(intent);

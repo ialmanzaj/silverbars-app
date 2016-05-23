@@ -42,12 +42,12 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
     Uri u;
     long[] position;
     private int x = 0, y=0, elements = 0, time=0, tempo = 0, count = 0, totalReps, actualReps;
-    int totalTime;
+    private int totalTime;
     private TextView timer, song_name, CurrentSet, TotalSet, CurrentExercise, TotalExercise, TimeView;
     private CountDownTimer timer2;
-    FrameLayout prvLayout, nxtLayout, PlayerLayout;
+    private FrameLayout prvLayout, nxtLayout, PlayerLayout;
     private Button PauseButton;
-    boolean exit = false, SelectedSongs = false, finish = false;
+    private boolean exit = false, SelectedSongs = false, finish = false;
 
 //    ContinuableCircleCountDownView mCountDownView;
     private RecyclerView recycler;
