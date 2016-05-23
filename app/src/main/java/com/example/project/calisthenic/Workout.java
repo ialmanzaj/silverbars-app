@@ -45,7 +45,7 @@ public class Workout extends AppCompatActivity {
     View rootView;
     private List<String> spinnerArray = new ArrayList<String>();
     private int value = 0;
-    TextView Reps;
+    private TextView Reps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
