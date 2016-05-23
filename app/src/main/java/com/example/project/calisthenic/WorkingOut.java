@@ -38,15 +38,20 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
     ArrayList<File> mySongs, playlist;
 //    Thread updateSeekBar;
 //    SeekBar sb;
-    ImageButton btPlay, btPause, nxtExercise, prvExercise;
+    private ImageButton btPlay, btPause, nxtExercise, prvExercise;
     Uri u;
     long[] position;
-    int x = 0, y=0, elements = 0, size, time=0, tempo = 0, count = 0, totalReps, actualReps;
+    private int x = 0, y=0, elements = 0, time=0, tempo = 0, count = 0, totalReps, actualReps;
     int totalTime;
+<<<<<<< Updated upstream
     TextView timer, song_name, CurrentSet, TotalSet, CurrentExercise, TotalExercise, TimeView;
     CountDownTimer timer2;
+=======
+    private TextView timer, song_name, CurrentSet, TotalSet, CurrentExercise, TotalExercise;
+    private CountDownTimer timer2;
+>>>>>>> Stashed changes
     FrameLayout prvLayout, nxtLayout, PlayerLayout;
-    Button PauseButton;
+    private Button PauseButton;
     boolean exit = false, SelectedSongs = false, finish = false;
 
 //    ContinuableCircleCountDownView mCountDownView;
@@ -107,17 +112,28 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                         }
                         recycler.smoothScrollToPosition(y);
                         CurrentExercise.setText(String.valueOf(y+1));
+
                         Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                         vb.vibrate(1000);
+<<<<<<< Updated upstream
                         timer.setText(String.valueOf(totalReps+1));
                         timer2.cancel();
+=======
+
+                        timer.setText(String.valueOf(totalReps));
+>>>>>>> Stashed changes
                         Timer(totalTime,1);
                     }
                     else{
 //                    timer.setText("Well Done!");
+<<<<<<< Updated upstream
                         toast("done");
                         timer2.cancel();
+=======
+
+>>>>>>> Stashed changes
                         finish = true;
+
                         Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                         vb.vibrate(500);
 //                    wakeLock.release();
@@ -219,6 +235,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         });
 
         song_name = (TextView) findViewById(R.id.song_name);
+
+
         // Inicializar Workouts
         List<Workouts_info> items = new ArrayList<>();
 
@@ -245,7 +263,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         elements = adapter.getItemCount();
         CurrentExercise.setText("1");
         TotalExercise.setText(String.valueOf(elements));
-//        toast(String.valueOf(elements));
+//        toast(String.valueOf(elements))
         recycler.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -461,11 +479,17 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         performTick(totalsecs);
     }
 
+    // CONTADOR DE REPETICIONES
     void performTick(long millisUntilFinished) {
         String Format_Time = String.valueOf(Math.round(millisUntilFinished * 0.001f));
         if (count == tempo){
             actualReps--;
             timer.setText(String.valueOf(actualReps));
+
+            // VIBRADOR POR REPETICION
+            Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
+            vb.vibrate(250);
+            // ====================
             count = 0;
         }
         count++;
