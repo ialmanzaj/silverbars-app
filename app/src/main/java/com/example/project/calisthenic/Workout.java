@@ -30,13 +30,13 @@ public class Workout extends AppCompatActivity {
     private static final int REQUEST_CODE = 1;
 
     ImageView star_on, star_off;
-    Button workout, playlist, plusPositive, minusPositive, plusIsometric, minusIsometric, plusNegative, minusNegative, plusReps, minusReps;
-    TextView Positive, Negative, Isometric;
-    ArrayList<File> mySongs, play_list;
-    long[] position;
+    private Button workout, playlist, plusPositive, minusPositive, plusIsometric, minusIsometric, plusNegative, minusNegative, plusReps, minusReps;
+    private TextView Positive, Negative, Isometric;
+    private ArrayList<File> mySongs, play_list;
+    private long[] position;
     View rootView;
     TabHost tabHost2;
-    FloatingActionButton mFab;
+    FloatingActionButton StartButton;
     Spinner spinner;
     List<String> spinnerArray = new ArrayList<String>();
     int value = 0, tempoTotal = 0;
@@ -47,8 +47,8 @@ public class Workout extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
 
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
-        mFab.setOnClickListener(new View.OnClickListener() {
+        StartButton = (FloatingActionButton) findViewById(R.id.fab);
+        StartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LaunchWorkingOutActivity();
