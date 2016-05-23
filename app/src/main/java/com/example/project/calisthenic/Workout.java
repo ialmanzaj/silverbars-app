@@ -198,21 +198,6 @@ public class Workout extends AppCompatActivity {
             }
         });
 
-        star_off = (ImageView) findViewById(R.id.star_off);
-        star_off.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Favorite(view);
-            }
-        });
-
-        star_on = (ImageView) findViewById(R.id.star_on);
-        star_off.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Unfavorite(view);
-            }
-        });
         playlist = (Button) findViewById(R.id.playlist);
         playlist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,16 +243,6 @@ public class Workout extends AppCompatActivity {
 //        return rootView;
     }
 
-
-    public void Favorite(View v){
-        star_off.setVisibility(v.GONE);
-        star_on.setVisibility(v.VISIBLE);
-    }
-
-    public void Unfavorite(View v){
-        star_on.setVisibility(v.GONE);
-        star_off.setVisibility(v.VISIBLE);
-    }
 
     public void LaunchWorkingOutActivity() {
         int positive,isometric,negative, totalReps;

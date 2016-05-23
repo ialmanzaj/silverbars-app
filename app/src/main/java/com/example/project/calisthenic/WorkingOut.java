@@ -43,13 +43,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
     long[] position;
     private int x = 0, y=0, elements = 0, time=0, tempo = 0, count = 0, totalReps, actualReps;
     int totalTime;
-<<<<<<< Updated upstream
-    TextView timer, song_name, CurrentSet, TotalSet, CurrentExercise, TotalExercise, TimeView;
-    CountDownTimer timer2;
-=======
-    private TextView timer, song_name, CurrentSet, TotalSet, CurrentExercise, TotalExercise;
+    private TextView timer, song_name, CurrentSet, TotalSet, CurrentExercise, TotalExercise, TimeView;
     private CountDownTimer timer2;
->>>>>>> Stashed changes
     FrameLayout prvLayout, nxtLayout, PlayerLayout;
     private Button PauseButton;
     boolean exit = false, SelectedSongs = false, finish = false;
@@ -115,23 +110,14 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
                         Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                         vb.vibrate(1000);
-<<<<<<< Updated upstream
                         timer.setText(String.valueOf(totalReps+1));
                         timer2.cancel();
-=======
-
-                        timer.setText(String.valueOf(totalReps));
->>>>>>> Stashed changes
                         Timer(totalTime,1);
                     }
                     else{
 //                    timer.setText("Well Done!");
-<<<<<<< Updated upstream
                         toast("done");
                         timer2.cancel();
-=======
-
->>>>>>> Stashed changes
                         finish = true;
 
                         Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
