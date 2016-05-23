@@ -122,18 +122,21 @@ public class Playlist_Picker extends AppCompatActivity {
     public ArrayList<File> findSongs(File root){
         ArrayList<File> al = new ArrayList<File>();
 
-        File[] files = root.listFiles();
-        Log.v("Files",files+", ");
-        for(File singleFile : files){
-            if (singleFile.isDirectory() && !singleFile.isHidden()){
-                al.addAll(findSongs(singleFile));
-            }
-            else{
-                if (singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".wav")){
-                    al.add(singleFile);
+        if (root.listFiles() != null){
+            File[] files = root.listFiles();
+//            Log.v("Files",files+", ");
+            for(File singleFile : files){
+                if (singleFile.isDirectory() && !singleFile.isHidden()){
+                    al.addAll(findSongs(singleFile));
+                }
+                else{
+                    if (singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".wav")){
+                        al.add(singleFile);
+                    }
                 }
             }
         }
+
 
         return al;
     }

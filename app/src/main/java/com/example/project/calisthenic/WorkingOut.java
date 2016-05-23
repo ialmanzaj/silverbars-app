@@ -35,22 +35,19 @@ import java.util.List;
 public class WorkingOut extends AppCompatActivity implements View.OnClickListener {
 
      static MediaPlayer mp;
-    private ArrayList<File> mySongs, playlist;
+    ArrayList<File> mySongs, playlist;
 //    Thread updateSeekBar;
 //    SeekBar sb;
-    private ImageButton btPlay;
-    private ImageButton btPause;
-    private Uri u;
-    private int x = 0, y=0, elements = 0, size, time=0, tempo = 0, count = 0, totalReps, actualReps;
-    private int totalTime;
-    private TextView timer;
-    private TextView song_name;
-    private TextView CurrentExercise;
+    private ImageButton btPlay, btPause, nxtExercise, prvExercise;
+    Uri u;
+    long[] position;
+    private int x = 0, y=0, elements = 0, time=0, tempo = 0, count = 0, totalReps, actualReps;
+    int totalTime;
+    private TextView timer, song_name, CurrentSet, TotalSet, CurrentExercise, TotalExercise, TimeView;
     private CountDownTimer timer2;
-    private FrameLayout prvLayout;
-    private FrameLayout nxtLayout;
+    FrameLayout prvLayout, nxtLayout, PlayerLayout;
     private Button PauseButton;
-    private boolean exit = false, SelectedSongs = false, finish = false;
+    boolean exit = false, SelectedSongs = false, finish = false;
 
 //    ContinuableCircleCountDownView mCountDownView;
     private RecyclerView recycler;
@@ -70,19 +67,22 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 //        wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
 //        wakeLock.acquire();
 
-        ImageButton prvExercise = (ImageButton) findViewById(R.id.prvExercise);
-        ImageButton nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
+        prvExercise = (ImageButton) findViewById(R.id.prvExercise);
+        nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
 
-
+        CurrentSet = (TextView) findViewById(R.id.CurrentSet);
+        TotalSet = (TextView) findViewById(R.id.TotalSet);
         CurrentExercise = (TextView) findViewById(R.id.CurrentExercise);
-        TextView totalExercise = (TextView) findViewById(R.id.TotalExercise);
+        TotalExercise = (TextView) findViewById(R.id.TotalExercise);
 
         prvLayout = (FrameLayout) findViewById(R.id.prvLayout);
         nxtLayout = (FrameLayout) findViewById(R.id.nxtLayout);
 
-        FrameLayout playerLayout = (FrameLayout) findViewById(R.id.PlayerLayout);
+        PlayerLayout = (FrameLayout) findViewById(R.id.PlayerLayout);
 
         PauseButton = (Button) findViewById(R.id.PauseButton);
+
+        TimeView = (TextView) findViewById(R.id.time);
 
         actualReps = totalReps;
 
@@ -99,27 +99,33 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 actualReps = Integer.valueOf(charSequence.toString());
 
                 if (actualReps == 0){
-                    y++;
-                    if (y < elements){
+                    if (y+1 < elements){
+                        y++;
                         prvLayout.setVisibility(View.VISIBLE);
                         if((y+1)==elements){
                             nxtLayout.setVisibility(View.GONE);
                         }
                         recycler.smoothScrollToPosition(y);
                         CurrentExercise.setText(String.valueOf(y+1));
+
                         Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                         vb.vibrate(1000);
-                        timer.setText(String.valueOf(totalReps));
+                        timer.setText(String.valueOf(totalReps+1));
+                        timer2.cancel();
                         Timer(totalTime,1);
                     }
                     else{
 //                    timer.setText("Well Done!");
+                        toast("done");
+                        timer2.cancel();
                         finish = true;
+
                         Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                         vb.vibrate(500);
 //                    wakeLock.release();
                     }
                 }
+
 
             }
 
@@ -129,7 +135,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
             }
         });
 
-        playerLayout.setOnTouchListener(new OnSwipeTouchListener(this){
+        PlayerLayout.setOnTouchListener(new OnSwipeTouchListener(this){
             public void onSwipeRight() {
                 if (SelectedSongs == true){
                     int playlist_size = playlist.size();
@@ -215,6 +221,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         });
 
         song_name = (TextView) findViewById(R.id.song_name);
+
+
         // Inicializar Workouts
         List<Workouts_info> items = new ArrayList<>();
 
@@ -240,8 +248,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
         elements = adapter.getItemCount();
         CurrentExercise.setText("1");
-        totalExercise.setText(String.valueOf(elements));
-//        toast(String.valueOf(elements));
+        TotalExercise.setText(String.valueOf(elements));
+//        toast(String.valueOf(elements))
         recycler.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -335,15 +343,15 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         Bundle b = i.getExtras();
         totalReps = b.getInt("reps");
         tempo = b.getInt("tempo");
-        totalTime = totalReps * tempo;
+        totalTime = totalReps * tempo + 2;
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
-        long[] position = b.getLongArray("pos");
+        position = b.getLongArray("pos");
         playlist = new ArrayList<>();
 
 //        for (int z = 0; z < position.length; z++){
 //            toast(String.valueOf(position[z]));
 //        }
-        if (mySongs.size() > 0){
+        if (mySongs.size() > 0 && mySongs != null){
             SelectedSongs = true;
             for(int j = 0; j < mySongs.size(); j++){
                 if (j == position[j]){
@@ -421,7 +429,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
             }}).build().show();
     }
 
-    private void MusicPlayList(final int playlist_size){
+    public void MusicPlayList(final int playlist_size){
         if (playlist_size>1){
 //            mp.stop();
 //            mp.reset();
@@ -446,7 +454,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         });
     }
 
-    private void Timer(int seconds, int interval){
+    public void Timer(int seconds,int interval){
         int totalsecs= seconds * 1000;
         int sec_interval= interval * 1000 ;
 
@@ -457,14 +465,20 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         performTick(totalsecs);
     }
 
-    private void performTick(long millisUntilFinished) {
-        count++;
+    // CONTADOR DE REPETICIONES
+    void performTick(long millisUntilFinished) {
+        String Format_Time = String.valueOf(Math.round(millisUntilFinished * 0.001f));
         if (count == tempo){
-//            timer.setText(String.valueOf(Math.round(millisUntilFinished * 0.001f)));
             actualReps--;
             timer.setText(String.valueOf(actualReps));
+
+            // VIBRADOR POR REPETICION
+            Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
+            vb.vibrate(250);
+            // ====================
             count = 0;
         }
+        count++;
     }
 
     public void toast(String text){
@@ -488,7 +502,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         }
     }
 
-    private void onTimerPause(){
+    public void onTimerPause(){
         String value = timer.getText().toString();
 //        wakeLock.release();
         if (!finish){
@@ -498,7 +512,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
     }
 
-    private void onTimerResume(){
+    public void onTimerResume(){
         Timer(time,1);
 //        wakeLock.acquire();
     }
