@@ -2,6 +2,7 @@ package com.example.project.calisthenic;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -38,16 +39,16 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
     ArrayList<File> mySongs, playlist;
 //    Thread updateSeekBar;
 //    SeekBar sb;
-    ImageButton btPlay, btPause, nxtExercise, prvExercise;
+    private ImageButton btPlay, btPause, nxtExercise, prvExercise;
     Uri u;
     long[] position;
-    int x = 0, y=0, elements = 0, size, time=0, tempo = 0, count = 0, totalReps, actualReps;
-    int totalTime;
-    TextView timer, song_name, CurrentSet, TotalSet, CurrentExercise, TotalExercise;
-    CountDownTimer timer2;
-    FrameLayout prvLayout, nxtLayout, PlayerLayout;
-    Button PauseButton;
-    boolean exit = false, SelectedSongs = false, finish = false;
+    private int x = 0, y=0, elements = 0, time=0, tempo = 0, count = 0, totalReps, actualReps;
+    private int totalTime;
+    private TextView timer, song_name, CurrentSet, TotalSet, CurrentExercise, TotalExercise, TimeView;
+    private CountDownTimer timer2;
+    private FrameLayout prvLayout, nxtLayout, PlayerLayout;
+    private Button PauseButton;
+    private boolean exit = false, SelectedSongs = false, finish = false;
 
 //    ContinuableCircleCountDownView mCountDownView;
     private RecyclerView recycler;
@@ -67,6 +68,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 //        wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
 //        wakeLock.acquire();
 
+
         prvExercise = (ImageButton) findViewById(R.id.prvExercise);
         nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
 
@@ -81,6 +83,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         PlayerLayout = (FrameLayout) findViewById(R.id.PlayerLayout);
 
         PauseButton = (Button) findViewById(R.id.PauseButton);
+
+        TimeView = (TextView) findViewById(R.id.time);
 
         actualReps = totalReps;
 
@@ -97,27 +101,50 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 actualReps = Integer.valueOf(charSequence.toString());
 
                 if (actualReps == 0){
-                    y++;
-                    if (y < elements){
+                    if (y+1 < elements){
+                        y++;
                         prvLayout.setVisibility(View.VISIBLE);
                         if((y+1)==elements){
                             nxtLayout.setVisibility(View.GONE);
                         }
                         recycler.smoothScrollToPosition(y);
                         CurrentExercise.setText(String.valueOf(y+1));
+
                         Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                         vb.vibrate(1000);
-                        timer.setText(String.valueOf(totalReps));
+                        timer.setText(String.valueOf(totalReps+1));
+                        timer2.cancel();
                         Timer(totalTime,1);
                     }
                     else{
 //                    timer.setText("Well Done!");
+                        toast("done");
+                        new CountDownTimer(4000, 1000) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                alertDialog.setMessage(""+ (millisUntilFinished/1000));
+                            }
+
+                            @Override
+                            public void onFinish() {
+//                info.setVisibility(View.GONE);
+                                timer.setText(String.valueOf(totalReps));
+                                Timer(totalTime,1);
+                                if (SelectedSongs == true){
+                                    mp.start();
+                                }
+                                alertDialog.dismiss();
+                            }
+                        }.start();
+                        timer2.cancel();
                         finish = true;
+
                         Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                         vb.vibrate(500);
 //                    wakeLock.release();
                     }
                 }
+
 
             }
 
@@ -169,8 +196,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                         mp.release();
                         x = (x + 1) % playlist.size();
                         u = Uri.parse(playlist.get(x).toString());
-                        String Songname = playlist.get(x).getName().toString().replace(".mp3", "");
-                        song_name.setText(Songname);
+                        song_name.setText(SongName(playlist.get(x)));
                         mp = MediaPlayer.create(getApplicationContext(), u);
                         mp.start();
                     } else {
@@ -213,6 +239,9 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         });
 
         song_name = (TextView) findViewById(R.id.song_name);
+        song_name.setSelected(true);
+
+
         // Inicializar Workouts
         List<Workouts_info> items = new ArrayList<>();
 
@@ -239,7 +268,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         elements = adapter.getItemCount();
         CurrentExercise.setText("1");
         TotalExercise.setText(String.valueOf(elements));
-//        toast(String.valueOf(elements));
+//        toast(String.valueOf(elements))
         recycler.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -333,7 +362,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         Bundle b = i.getExtras();
         totalReps = b.getInt("reps");
         tempo = b.getInt("tempo");
-        totalTime = totalReps * tempo;
+        totalTime = totalReps * tempo + 2;
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
         position = b.getLongArray("pos");
         playlist = new ArrayList<>();
@@ -341,7 +370,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 //        for (int z = 0; z < position.length; z++){
 //            toast(String.valueOf(position[z]));
 //        }
-        if (mySongs.size() > 0){
+        if (mySongs.size() > 0 && mySongs != null){
             SelectedSongs = true;
             for(int j = 0; j < mySongs.size(); j++){
                 if (j == position[j]){
@@ -349,9 +378,8 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
                 }
             }
             u = Uri.parse(playlist.get(x).toString());
+            song_name.setText(SongName(playlist.get(x)));
             mp = MediaPlayer.create(getApplicationContext(),u);
-            String Songname = playlist.get(x).getName().toString().replace(".mp3","");
-            song_name.setText(Songname);
             btPlay.setVisibility(View.GONE);
             btPause.setVisibility(View.VISIBLE);
             final int playlist_size = playlist.size();
@@ -425,8 +453,7 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 //            mp.reset();
             x = (x+1)%playlist.size();
             u = Uri.parse(playlist.get(x).toString());
-            String Songname = playlist.get(x).getName().toString().replace(".mp3","");
-            song_name.setText(Songname);
+            song_name.setText(SongName(playlist.get(x)));
             mp = MediaPlayer.create(getApplicationContext(),u);
             mp.start();
         }else{
@@ -455,14 +482,18 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         performTick(totalsecs);
     }
 
+    // CONTADOR DE REPETICIONES
     void performTick(long millisUntilFinished) {
-        count++;
+        String Format_Time = String.valueOf(Math.round(millisUntilFinished * 0.001f));
         if (count == tempo){
-//            timer.setText(String.valueOf(Math.round(millisUntilFinished * 0.001f)));
             actualReps--;
             timer.setText(String.valueOf(actualReps));
+            // VIBRADOR POR REPETICION
+            Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
+            vb.vibrate(250);
             count = 0;
         }
+        count++;
     }
 
     public void toast(String text){
@@ -488,17 +519,23 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
     public void onTimerPause(){
         String value = timer.getText().toString();
-//        wakeLock.release();
         if (!finish){
             time = Integer.valueOf(value);
             timer2.cancel();
         }
+    }
 
+    private String SongName(File file){
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        Uri uri = Uri.fromFile(file);
+        mediaMetadataRetriever.setDataSource(this, uri);
+        String name = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+
+        return name;
     }
 
     public void onTimerResume(){
         Timer(time,1);
-//        wakeLock.acquire();
     }
 
 }

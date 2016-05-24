@@ -16,6 +16,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
     private List<Workouts_info> items;
 
     public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {
+
         // Campos respectivos de un item
         public ImageView imagen;
         public TextView nombre;

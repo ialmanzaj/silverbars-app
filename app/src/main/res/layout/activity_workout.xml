@@ -6,6 +6,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.project.calisthenic.Workout">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="4dp"
+
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+    </android.support.v7.widget.Toolbar>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@drawable/shadow" />
+
     <TabHost
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,6 +46,51 @@
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/tab1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="350dp" >
+
+                        <ImageView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:id="@+id/imageView2"
+                            android:background="@mipmap/imagen2" />
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="40dp"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Upper Body"
+                            android:id="@+id/textView7"
+                            android:layout_gravity="center_horizontal|top"
+                            android:background="#c8000000"
+                            android:textStyle="bold"
+                            android:textColor="#ffffff"
+                            android:gravity="center" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp" >
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Music"
+                            android:id="@+id/SelectMusic"
+                            android:layout_gravity="center_horizontal" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/tab2"
@@ -253,110 +318,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/tab1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <FrameLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="350dp" >
-
-                        <ImageView
-                            android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
-                            android:id="@+id/imageView2"
-                            android:background="@mipmap/imagen2" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/star_off"
-                            android:layout_gravity="right|bottom"
-                            android:src="@android:drawable/btn_star_big_off" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text="By Ivan Markioli"
-                            android:id="@+id/textView6"
-                            android:layout_gravity="left|bottom"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="fill_parent"
-                            android:layout_height="40dp"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Upper Body"
-                            android:id="@+id/textView7"
-                            android:layout_gravity="center_horizontal|top"
-                            android:background="#c8000000"
-                            android:textStyle="bold"
-                            android:textColor="#ffffff"
-                            android:gravity="center" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/star_on"
-                            android:layout_gravity="right|bottom"
-                            android:src="@android:drawable/btn_star_big_on"
-                            android:visibility="gone" />
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="5dp" >
-
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Select you playlist"
-                            android:id="@+id/playlist"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginBottom="10dp" />
-
-                        <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="90dp"
-                            android:paddingTop="15dp"
-                            android:paddingBottom="15dp" >
-
-                            <LinearLayout
-                                android:orientation="vertical"
-                                android:layout_width="190dp"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="right"
-                                android:gravity="end"
-                                android:paddingEnd="10dp" >
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/imageView"
-                                    android:src="@android:drawable/ic_menu_save"
-                                    android:layout_marginTop="5dp"
-                                    android:layout_marginRight="5dp" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textAppearance="?android:attr/textAppearanceMedium"
-                                    android:text="Save"
-                                    android:id="@+id/textView4"
-                                    android:textColor="#000" />
-                            </LinearLayout>
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/tab3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -371,7 +332,7 @@
         </LinearLayout>
     </TabHost>
 
-
+    </LinearLayout>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"

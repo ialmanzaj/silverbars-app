@@ -3,10 +3,13 @@ package com.example.project.calisthenic;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,93 +28,84 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class Playlist_Picker extends AppCompatActivity {
-    ListView lv;
-    String[] items, songs;
-    Button clean,done;
-    long[] selected;
+    private ListView ListMusic;
+    private String[] items, songs;
+    private Button clean,done;
+    private long[] selected;
     private ArrayList<File> mySongs;
+    private int Reps = 0, Tempo = 0;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        Bundle b = intent.getExtras();
+        if (intent.hasExtra("reps") && intent.hasExtra("tempo")){
+            Reps = b.getInt("reps");
+            Tempo = b.getInt("tempo");
+        }
+
         setContentView(R.layout.activity_playlist__picker);
-        lv = (ListView)findViewById(R.id.lvPlaylist);
+
+
+        ListMusic = (ListView)findViewById(R.id.lvPlaylist);
+
         clean = (Button)findViewById(R.id.clean);
+
         clean.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
             }
         });
+
         done = (Button)findViewById(R.id.done);
 
 
         mySongs = findSongs(Environment.getExternalStorageDirectory());
-        if (mySongs.size() > 0){
+        if (mySongs.size() > 0) {
             items = new String[mySongs.size()];
-            for (int i = 0; i<mySongs.size(); i++){
-                items[i]= mySongs.get(i).getName().toString().replace(".mp3","").replace(".mp3","");
+            for (int i = 0; i < mySongs.size(); i++) {
+
+                items[i] = SongName(mySongs.get(i));
             }
-        }
+            ArrayAdapter<String> adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
 
 
+            ListMusic.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            ListMusic.setAdapter(adp);
 
-        ArrayAdapter<String> adp = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_multiple_choice,android.R.id.text1,items);
-        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        lv.setAdapter(adp);
-        done.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                int choice = lv.getCount();
-                selected = new long[choice];
-                songs = new String[choice];
-                SparseBooleanArray spa = lv.getCheckedItemPositions();
-                if (spa.size() < 1){
-                    mySongs = null;
-                }
-                for (int i = 0; i<choice ; i++){
-                    selected[i]=-1;
-                }
-
-                for (int i = 0; i < choice; i++){
-                    if (spa.get(i)){
-                        selected[i] = lv.getItemIdAtPosition(i);
-//                        songs[i] = lv.getItem
+            done.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int choice = ListMusic.getCount();
+                    selected = new long[choice];
+                    songs = new String[choice];
+                    SparseBooleanArray spa = ListMusic.getCheckedItemPositions();
+                    if (spa.size() < 1) {
+                        mySongs = null;
                     }
+                    for (int i = 0; i < choice; i++) {
+                        selected[i] = -1;
+                    }
+                    for (int i = 0; i < choice; i++) {
+                        if (spa.get(i)) {
+                            selected[i] = ListMusic.getItemIdAtPosition(i);
+                        }
+                    }
+                    Intent intent = new Intent(getApplicationContext(), WorkingOut.class);
+                    intent.putExtra("reps", Tempo);
+                    intent.putExtra("tempo", Tempo);
+                    intent.putExtra("pos", selected);
+                    intent.putExtra("songlist", mySongs);
+
+                    startActivity(intent);
+                    finish();
                 }
-//                for (int i = 0; i < mySongs.size(); i++){
-//                    toast(mySongs.get(i).getName());
-//                }
-//               new LovelyStandardDialog(getBaseContext())
-//                        .setTopColorRes(R.color.colorAccent)
-//                        .setButtonsColorRes(R.color.colorPrimary)
-//                        .setIcon(R.drawable.ic_mic_black_24dp)
-//                        .setTitle("Save Playlist")
-//                        .setMessage("Would you like to save this playlist for a future use?")
-//                        .setPositiveButton(android.R.string.ok, new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                new LovelyTextInputDialog(getBaseContext(), R.style.EditTextTintTheme)
-//                                        .setTopColorRes(R.color.colorAccent)
-//                                        .setTitle("Save Playlist")
-//                                        .setMessage("Name your playlist")
-//                                        .setIcon(R.drawable.ic_mic_black_24dp)
-//                                        .setConfirmButton(android.R.string.ok, new LovelyTextInputDialog.OnTextInputConfirmListener() {
-//                                            @Override
-//                                            public void onTextInputConfirmed(String text) {
-////                                                Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
-//                                                toast("Guardado");
-//                                            }
-//                                        })
-//                                        .show();
-//                            }
-//                        })
-//                        .setNegativeButton(android.R.string.no, null)
-//                        .show();
-                startActivity(new Intent(getApplicationContext(),Workout.class).putExtra("pos",selected).putExtra("songlist",mySongs) );
-                finish();
-            }
-        });
+            });
+        }
     }
 
     public void toast(String text){
@@ -121,24 +115,38 @@ public class Playlist_Picker extends AppCompatActivity {
     public ArrayList<File> findSongs(File root){
         ArrayList<File> al = new ArrayList<File>();
 
-        File[] files = root.listFiles();
-        for(File singleFile : files){
-            if (singleFile.isDirectory() && !singleFile.isHidden()){
-                al.addAll(findSongs(singleFile));
-            }
-            else{
-                if (singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".wav")){
-                    al.add(singleFile);
+        if (root.listFiles() != null){
+            File[] files = root.listFiles();
+//            Log.v("Files",files+", ");
+            for(File singleFile : files){
+                if (singleFile.isDirectory() && !singleFile.isHidden()){
+                    al.addAll(findSongs(singleFile));
+                }
+                else{
+                    if (singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".wav")){
+                        al.add(singleFile);
+                    }
                 }
             }
         }
+
 
         return al;
     }
 
     @Override
     public void onBackPressed(){
-        startActivity(new Intent(getApplicationContext(),Workout.class) );
+        startActivity(new Intent(getApplicationContext(),MusicActivity.class) );
         finish();
+    }
+
+    private String SongName(File file){
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+        Uri uri = Uri.fromFile(file);
+        mediaMetadataRetriever.setDataSource(this, uri);
+        String title = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+        String artist = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+
+        return title;
     }
 }
