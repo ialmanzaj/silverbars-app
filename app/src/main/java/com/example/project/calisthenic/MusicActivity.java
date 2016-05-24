@@ -41,7 +41,7 @@ public class MusicActivity extends AppCompatActivity {
 
         ListView MusicOptions = (ListView) findViewById(R.id.music_options);
 
-        options = new String[]{"SELECT FROM MUSIC LIBRARY", "SELECT FROM SPOTIFY", "SELECT FROM SOUNDCLOUD"};
+        options = new String[]{"MUSIC FROM MUSIC LIBRARY", "MUSIC FROM SPOTIFY", "MUSIC FROM SOUNDCLOUD"};
 
         ArrayAdapter<String> OptionsMusic = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1,  options);
 
