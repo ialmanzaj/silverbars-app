@@ -55,6 +55,7 @@ public class Workout extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_workout);
+
         // ======= TOOL BAR - BACK BUTTON  ADDED
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
