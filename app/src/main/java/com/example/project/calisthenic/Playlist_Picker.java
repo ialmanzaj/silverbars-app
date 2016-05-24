@@ -28,15 +28,23 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class Playlist_Picker extends AppCompatActivity {
-    ListView ListMusic;
-    String[] items, songs;
-    Button clean,done;
-    long[] selected;
+    private ListView ListMusic;
+    private String[] items, songs;
+    private Button clean,done;
+    private long[] selected;
     private ArrayList<File> mySongs;
+    private int Reps = 0, Tempo = 0;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        Bundle b = intent.getExtras();
+        if (intent.hasExtra("reps") && intent.hasExtra("tempo")){
+            Reps = b.getInt("reps");
+            Tempo = b.getInt("tempo");
+        }
 
         setContentView(R.layout.activity_playlist__picker);
 
@@ -87,7 +95,13 @@ public class Playlist_Picker extends AppCompatActivity {
                             selected[i] = ListMusic.getItemIdAtPosition(i);
                         }
                     }
-                    startActivity(new Intent(getApplicationContext(), Workout.class).putExtra("pos", selected).putExtra("songlist", mySongs));
+                    Intent intent = new Intent(getApplicationContext(), WorkingOut.class);
+                    intent.putExtra("reps", Tempo);
+                    intent.putExtra("tempo", Tempo);
+                    intent.putExtra("pos", selected);
+                    intent.putExtra("songlist", mySongs);
+
+                    startActivity(intent);
                     finish();
                 }
             });
@@ -122,7 +136,7 @@ public class Playlist_Picker extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        startActivity(new Intent(getApplicationContext(),Workout.class) );
+        startActivity(new Intent(getApplicationContext(),MusicActivity.class) );
         finish();
     }
 
@@ -130,8 +144,9 @@ public class Playlist_Picker extends AppCompatActivity {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         Uri uri = Uri.fromFile(file);
         mediaMetadataRetriever.setDataSource(this, uri);
-        String name = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+        String title = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+        String artist = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
 
-        return name;
+        return title;
     }
 }

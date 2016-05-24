@@ -205,14 +205,6 @@ public class Workout extends AppCompatActivity {
         });
 
 
-        Button MusicButton = (Button) findViewById(R.id.playlist);
-        MusicButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LaunchMusicActivity();
-            }
-        });
-
         //Tabs
         TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost2);
         tabHost2.setup();
@@ -262,11 +254,11 @@ public class Workout extends AppCompatActivity {
                 isometric = Integer.parseInt(Isometric.getText().toString());
                 negative = Integer.parseInt(Negative.getText().toString());
                 int tempoTotal = positive + isometric + negative;
-                Intent intent = new Intent(this, WorkingOut.class);
+                Intent intent = new Intent(this, MusicActivity.class);
                 intent.putExtra("reps",totalReps);
                 intent.putExtra("tempo", tempoTotal);
-                intent.putExtra("pos",position);
-                intent.putExtra("songlist",mySongs);
+//                intent.putExtra("pos",position);
+//                intent.putExtra("songlist",mySongs);
                 startActivity(intent);
             }
             else{
