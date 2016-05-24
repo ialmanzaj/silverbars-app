@@ -37,6 +37,7 @@
         </activity>
         <activity
             android:name=".Workout"
+            android:launchMode="singleTask"
             android:parentActivityName=".MainScreen">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

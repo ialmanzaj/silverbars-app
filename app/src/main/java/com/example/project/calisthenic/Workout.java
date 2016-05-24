@@ -21,6 +21,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.fabtransitionactivity.SheetLayout;
 
 import java.io.File;
@@ -41,6 +42,7 @@ public class Workout extends AppCompatActivity {
     private Button minusNegative;
     private Button plusReps;
     private Button minusReps;
+    private Button SelectMusic;
     private TextView Positive, Negative, Isometric;
     private ArrayList<File> mySongs, play_list;
     private long[] position;
@@ -135,6 +137,8 @@ public class Workout extends AppCompatActivity {
         });
         minusReps.setEnabled(false);
         minusReps.setClickable(false);
+
+
 
 
         Positive = (TextView) findViewById(R.id.Positive);
@@ -252,7 +256,18 @@ public class Workout extends AppCompatActivity {
             position = b.getLongArray("pos");
         }
 
-
+        SelectMusic = (Button) findViewById(R.id.SelectMusic);
+        SelectMusic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new MaterialDialog.Builder(Workout.this)
+                        .title("Music")
+                        .content("This is where the music goes")
+                        .positiveText("Accept")
+                        .negativeText("Cancel")
+                        .show();
+            }
+        });
 //        return rootView;
     }
 

@@ -21,6 +21,10 @@
         android:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
     </android.support.v7.widget.Toolbar>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@drawable/shadow" />
 
     <TabHost
         android:layout_width="match_parent"
@@ -79,6 +83,12 @@
                         android:layout_height="match_parent"
                         android:padding="5dp" >
 
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Music"
+                            android:id="@+id/SelectMusic"
+                            android:layout_gravity="center_horizontal" />
                     </LinearLayout>
                 </LinearLayout>
 
