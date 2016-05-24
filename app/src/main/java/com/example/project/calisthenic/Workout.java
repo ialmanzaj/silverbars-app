@@ -62,7 +62,7 @@ public class Workout extends AppCompatActivity {
 
         if (myToolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("UPPER BODY");
+            getSupportActionBar().setTitle("Workouts");
         }
 
 
