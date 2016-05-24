@@ -37,8 +37,12 @@
         </activity>
         <activity
             android:name=".Workout"
-            android:launchMode="singleInstance" />
-            android:launchMode="singleTask" />
+            android:parentActivityName=".MainScreen">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainScreen"/>
+        </activity>
+
 
         <activity
             android:name=".MusicActivity"
