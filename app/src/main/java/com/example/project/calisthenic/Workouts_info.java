@@ -7,11 +7,13 @@ public class Workouts_info {
     private int imagen;
     private String nombre;
     private String next;
+    private String Reps;
 
-    public Workouts_info(int imagen, String nombre, String next) {
+    public Workouts_info(int imagen, String nombre, String next, String Reps) {
         this.imagen = imagen;
         this.nombre = nombre;
         this.next = next;
+        this.Reps = Reps;
     }
 
     public String getNombre() {
@@ -24,5 +26,9 @@ public class Workouts_info {
 
     public int getImagen() {
         return imagen;
+    }
+
+    public String getReps() {
+        return Reps;
     }
 }

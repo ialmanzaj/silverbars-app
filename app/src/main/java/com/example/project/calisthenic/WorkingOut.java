@@ -245,11 +245,11 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
         // Inicializar Workouts
         List<Workouts_info> items = new ArrayList<>();
 
-        items.add(new Workouts_info(R.mipmap.imagen1, "Upper Body", "core"));
-        items.add(new Workouts_info(R.mipmap.imagen2, "Core", "Arms and Back"));
-        items.add(new Workouts_info(R.mipmap.imagen3, "Arms and Back", "Legs"));
-        items.add(new Workouts_info(R.mipmap.imagen4, "Legs", "Full Body"));
-        items.add(new Workouts_info(R.mipmap.imagen5, "Full body", "End Workout"));
+        items.add(new Workouts_info(R.mipmap.imagen1, "Upper Body", "core", String.valueOf(totalReps)));
+        items.add(new Workouts_info(R.mipmap.imagen2, "Core", "Arms and Back", String.valueOf(totalReps)));
+        items.add(new Workouts_info(R.mipmap.imagen3, "Arms and Back", "Legs", String.valueOf(totalReps)));
+        items.add(new Workouts_info(R.mipmap.imagen4, "Legs", "Full Body", String.valueOf(totalReps)));
+        items.add(new Workouts_info(R.mipmap.imagen5, "Full body", "End Workout", String.valueOf(totalReps)));
 
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
