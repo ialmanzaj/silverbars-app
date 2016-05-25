@@ -1,5 +1,6 @@
 package com.example.project.calisthenic;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -25,6 +26,8 @@ import com.afollestad.materialdialogs.Theme;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class WorkoutActivity extends AppCompatActivity {
 
@@ -292,15 +295,27 @@ public class WorkoutActivity extends AppCompatActivity {
 //        return rootView;
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
     public void ShowMusicDialog(){
         MaterialDialog dialog = new MaterialDialog.Builder(WorkoutActivity.this)
                 .theme(Theme.LIGHT)
-                .title("Pick your Music")
-                .customView(R.layout.musicmodal, true)
+                .title("Choose source of your music")
+                .adapter(new MusicSourceAdapter(WorkoutActivity.this), new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+
+                    }
+                })
+                .positiveText("continue")
                 .negativeText(android.R.string.cancel)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        /*
                         View v = dialog.getCustomView();
                         localButton = (ImageButton) v.findViewById(R.id.localButton);
                         localButton.setOnClickListener(new View.OnClickListener() {
@@ -323,10 +338,12 @@ public class WorkoutActivity extends AppCompatActivity {
                                 toast("Soundcloud");
                             }
                         });
+                        */
                     }
                 }).build();
 
         dialog.show();
+
     }
 
 
