@@ -2,7 +2,6 @@ package com.example.project.calisthenic;
 
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,10 +73,6 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                         context.startActivity(i);
                     }
                 });
-
-                if (position == 5) {
-                    ViewGroup.MarginLayoutParams params;
-                }
 
                 break;
             case TYPE_VIEW_MORE:

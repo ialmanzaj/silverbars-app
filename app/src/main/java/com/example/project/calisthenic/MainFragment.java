@@ -34,17 +34,6 @@ public class MainFragment extends Fragment {
         email = intent.getStringExtra("Email");
         name = intent.getStringExtra("Name");
 
-        /*
-        songs = (Button) getView().findViewById(R.id.songs);
-        songs.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getContext(),Workout.class);
-                startActivity(i);
-            }
-        });
-        */
-
         recyclerView = (TwoWayView) getView().findViewById(R.id.list);
         recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
 
