@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +20,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class WorkoutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_workout);
 
         // ======= TOOL BAR - BACK BUTTON  ADDED
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
         if (myToolbar != null) {
@@ -294,6 +294,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     public void ShowMusicDialog(){
         MaterialDialog dialog = new MaterialDialog.Builder(WorkoutActivity.this)
+                .theme(Theme.LIGHT)
                 .title("Pick your Music")
                 .customView(R.layout.musicmodal, true)
                 .negativeText(android.R.string.cancel)

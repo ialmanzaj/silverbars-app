@@ -28,7 +28,7 @@ public class MusicActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_music);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
         if (myToolbar != null) {
