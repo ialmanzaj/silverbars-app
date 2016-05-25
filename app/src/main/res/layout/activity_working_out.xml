@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.project.calisthenic.WorkingOut"
+    tools:context=".WorkingOutActivity"
     android:weightSum="1"
     android:background="#fff">
 

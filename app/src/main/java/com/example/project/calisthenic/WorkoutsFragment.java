@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
-public class Myworkouts extends Fragment {
+public class WorkoutsFragment extends Fragment {
 
     View rootView;
 

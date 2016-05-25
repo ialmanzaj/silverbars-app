@@ -12,7 +12,7 @@ import android.widget.TabHost;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class progress extends Fragment {
+public class ProgressFragment extends Fragment {
 
     View rootView;
 

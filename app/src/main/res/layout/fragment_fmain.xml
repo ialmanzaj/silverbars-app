@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" tools:context=".Fmain"
-    android:padding="20px">
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textColor="#000"
+        android:textSize="20sp"
+        android:text="Recommended by the community"/>
+
+    <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="80px"
-        android:layout_marginBottom="5px">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        app:twowayview_layoutManager="GridLayoutManager"
+        app:twowayview_numColumns="2"/>
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Recommended by the community"
-            android:id="@+id/textView"
-            android:textColor="#000000"
-            android:gravity="center"
-            android:layout_gravity="center" />
-    </LinearLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="304dp"
-        android:id="@+id/horizontalScrollView"
-        android:layout_gravity="center_horizontal" >
-
+        <!--
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -282,6 +281,6 @@
             </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+        -->
 
 </LinearLayout>

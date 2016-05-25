@@ -1,36 +1,29 @@
 package com.example.project.calisthenic;
 
 import android.content.Intent;
-import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.github.fabtransitionactivity.SheetLayout;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Workout extends AppCompatActivity {
+public class WorkoutActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 1;
 
@@ -289,7 +282,7 @@ public class Workout extends AppCompatActivity {
         SelectMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new MaterialDialog.Builder(Workout.this)
+                new MaterialDialog.Builder(WorkoutActivity.this)
                         .title("Music")
                         .content("This is where the music goes")
                         .positiveText("Accept")
