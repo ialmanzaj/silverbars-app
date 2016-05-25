@@ -37,5 +37,6 @@ public class MainFragment extends Fragment {
         recyclerView = (TwoWayView) getView().findViewById(R.id.list);
         recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
 
+
     }
 }

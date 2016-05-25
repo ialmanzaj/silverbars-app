@@ -66,7 +66,7 @@ public class MainScreenActivity extends AppCompatActivity implements ActionSheet
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
         bottomNavigationView.isColoredBackground(false);
-        bottomNavigationView.setItemActiveColorWithoutColoredBackground(ContextCompat.getColor(getApplicationContext(),R.color.colorAccent));
+        bottomNavigationView.setItemActiveColorWithoutColoredBackground(ContextCompat.getColor(getApplicationContext(),R.color.colorPrimary));
         view.setAdapter(adapter);
         bottomNavigationView.setViewPager(view , color , image);
     }

@@ -1,6 +1,7 @@
 package com.example.project.calisthenic;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 
@@ -282,16 +284,26 @@ public class WorkoutActivity extends AppCompatActivity {
         SelectMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new MaterialDialog.Builder(WorkoutActivity.this)
-                        .theme(Theme.LIGHT)
-                        .title("Music")
-                        .content("This is where the music goes")
-                        .positiveText("accept")
-                        .negativeText("cancel")
-                        .show();
+                ShowMusicDialog();
             }
         });
 //        return rootView;
+    }
+
+    public void ShowMusicDialog(){
+        MaterialDialog dialog = new MaterialDialog.Builder(WorkoutActivity.this)
+                .theme(Theme.LIGHT)
+                .title("Pick your Music")
+                .customView(R.layout.musicmodal, true)
+                .negativeText(android.R.string.cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//                                toast("Password: " + passwordInput.getText().toString());
+                    }
+                }).build();
+
+        dialog.show();
     }
 
 
