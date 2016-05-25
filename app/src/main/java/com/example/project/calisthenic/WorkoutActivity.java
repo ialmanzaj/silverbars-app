@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
@@ -38,10 +41,13 @@ public class WorkoutActivity extends AppCompatActivity {
     private TextView Positive, Negative, Isometric;
     private ArrayList<File> mySongs, play_list;
     private long[] position;
-    View rootView;
     private List<String> spinnerArray = new ArrayList<String>();
     private int value = 0;
     private TextView Reps;
+    private RecyclerView recycler;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager lManager;
+    private int ExerciseReps = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +124,7 @@ public class WorkoutActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 plusTempo(Reps,plusReps,minusReps);
+                ExerciseReps = Integer.valueOf(Reps.getText().toString());
             }
         });
         minusReps = (Button) findViewById(R.id.minusReps);
@@ -125,11 +132,34 @@ public class WorkoutActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 minusTempo(Reps,minusReps,plusReps);
+                ExerciseReps = Integer.valueOf(Reps.getText().toString());
             }
         });
         minusReps.setEnabled(false);
         minusReps.setClickable(false);
 
+        // Tab 3 Inicializar Exercises en el RecyclerView
+        List<WorkoutInfo> items = new ArrayList<>();
+
+        items.add(new WorkoutInfo(R.mipmap.imagen1, "Upper Body", "core", String.valueOf(ExerciseReps)));
+        items.add(new WorkoutInfo(R.mipmap.imagen2, "Core", "Arms and Back", String.valueOf(ExerciseReps)));
+        items.add(new WorkoutInfo(R.mipmap.imagen3, "Arms and Back", "Legs", String.valueOf(ExerciseReps)));
+        items.add(new WorkoutInfo(R.mipmap.imagen4, "Legs", "Full Body", String.valueOf(ExerciseReps)));
+        items.add(new WorkoutInfo(R.mipmap.imagen5, "Full body", "End Workout", String.valueOf(ExerciseReps)));
+
+        // Obtener el Recycler
+        recycler = (RecyclerView) findViewById(R.id.reciclador);
+        if (recycler != null) {
+            recycler.setHasFixedSize(true);
+        }
+
+        // Usar un administrador para LinearLayout
+        lManager = new LinearLayoutManager(this);
+        recycler.setLayoutManager(lManager);
+
+        // Crear un nuevo adaptador
+        adapter = new ExerciseAdapter(items);
+        recycler.setAdapter(adapter);
 
 
 

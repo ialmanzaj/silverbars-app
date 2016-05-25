@@ -72,7 +72,7 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".SplashScreen"
-            android:theme="@style/SplashTheme"></activity>
+            android:theme="@style/SplashTheme" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -81,7 +81,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-
+        <activity android:name=".ExerciseAdapter"></activity>
     </application>
 
 </manifest>

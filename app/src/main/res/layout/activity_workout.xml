@@ -48,6 +48,19 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
+                    android:id="@+id/tab3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                        <android.support.v7.widget.RecyclerView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/reciclador"
+                            android:layout_gravity="center_horizontal"
+                            android:scrollbars="horizontal"/>
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/tab1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -316,12 +329,6 @@
 
                     </LinearLayout>
                 </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/tab3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"></LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/tab4"

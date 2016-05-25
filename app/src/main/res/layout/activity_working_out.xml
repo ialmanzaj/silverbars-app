@@ -437,20 +437,12 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:id="@+id/song_name"
+
                 android:layout_gravity="center_horizontal|top"
                 android:textColor="#ffffff"
                 android:text="Song Name"
                 android:textStyle="bold"
-                android:textAlignment="center"
-                android:singleLine="true"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:paddingLeft="15dip"
-                android:paddingRight="15dip"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:freezesText="true"/>
+                android:textAlignment="center" />
 
             <TextView
                 android:layout_width="200dp"
