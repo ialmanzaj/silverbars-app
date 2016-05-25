@@ -13,7 +13,7 @@ import java.util.List;
  * Created by andre_000 on 4/12/2016.
  */
 public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.WorkoutsViewHolder> {
-    private List<Workouts_info> items;
+    private List<WorkoutInfo> items;
 
     public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {
 
@@ -30,7 +30,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         }
     }
 
-    public WorkoutsAdapter(List<Workouts_info> items) {
+    public WorkoutsAdapter(List<WorkoutInfo> items) {
         this.items = items;
     }
 

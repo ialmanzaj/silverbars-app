@@ -1,18 +1,13 @@
 package com.example.project.calisthenic;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -20,14 +15,10 @@ import android.widget.Toast;
 
 //import com.afollestad.materialdialogs.MaterialDialog;
 
-import com.yarolegovich.lovelydialog.LovelyInfoDialog;
-import com.yarolegovich.lovelydialog.LovelyStandardDialog;
-import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
-
 import java.io.File;
 import java.util.ArrayList;
 
-public class Playlist_Picker extends AppCompatActivity {
+public class PlaylistPickerActivity extends AppCompatActivity {
     private ListView ListMusic;
     private String[] items, songs;
     private Button clean,done;
@@ -95,7 +86,7 @@ public class Playlist_Picker extends AppCompatActivity {
                             selected[i] = ListMusic.getItemIdAtPosition(i);
                         }
                     }
-                    Intent intent = new Intent(getApplicationContext(), WorkingOut.class);
+                    Intent intent = new Intent(getApplicationContext(), WorkingOutActivity.class);
                     intent.putExtra("reps", Tempo);
                     intent.putExtra("tempo", Tempo);
                     intent.putExtra("pos", selected);

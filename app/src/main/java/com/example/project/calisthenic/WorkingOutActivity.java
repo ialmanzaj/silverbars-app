@@ -6,7 +6,6 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.CountDownTimer;
-import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,13 +14,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +29,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WorkingOut extends AppCompatActivity implements View.OnClickListener {
+public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener {
 
      static MediaPlayer mp;
     ArrayList<File> mySongs, playlist;
@@ -243,13 +239,13 @@ public class WorkingOut extends AppCompatActivity implements View.OnClickListene
 
 
         // Inicializar Workouts
-        List<Workouts_info> items = new ArrayList<>();
+        List<WorkoutInfo> items = new ArrayList<>();
 
-        items.add(new Workouts_info(R.mipmap.imagen1, "Upper Body", "core"));
-        items.add(new Workouts_info(R.mipmap.imagen2, "Core", "Arms and Back"));
-        items.add(new Workouts_info(R.mipmap.imagen3, "Arms and Back", "Legs"));
-        items.add(new Workouts_info(R.mipmap.imagen4, "Legs", "Full Body"));
-        items.add(new Workouts_info(R.mipmap.imagen5, "Full body", "End Workout"));
+        items.add(new WorkoutInfo(R.mipmap.imagen1, "Upper Body", "core"));
+        items.add(new WorkoutInfo(R.mipmap.imagen2, "Core", "Arms and Back"));
+        items.add(new WorkoutInfo(R.mipmap.imagen3, "Arms and Back", "Legs"));
+        items.add(new WorkoutInfo(R.mipmap.imagen4, "Legs", "Full Body"));
+        items.add(new WorkoutInfo(R.mipmap.imagen5, "Full body", "End Workout"));
 
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);

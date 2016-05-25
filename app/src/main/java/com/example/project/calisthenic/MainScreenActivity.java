@@ -1,12 +1,12 @@
 package com.example.project.calisthenic;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -14,12 +14,11 @@ import android.widget.TextView;
 //import com.afollestad.materialdialogs.MaterialDialog;
 import com.baoyz.actionsheet.ActionSheet;
 import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
 import com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationView;
 
-import java.util.Set;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class MainScreen extends AppCompatActivity implements ActionSheet.ActionSheetListener {
+public class MainScreenActivity extends AppCompatActivity implements ActionSheet.ActionSheetListener {
 
     ViewPager view;
     SimpleTabAdapter adapter;
@@ -36,11 +35,13 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
-
         setContentView(R.layout.activity_main_screen);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Welcome 'name' ");
+
+        /*
         settings = (ImageButton) findViewById(R.id.settings);
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,6 +51,8 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
         });
         Username = (TextView) findViewById(R.id.Username);
         Username.setText("Welcome 'name' ");
+        */
+
 
         int[] image = {R.mipmap.home, R.mipmap.acrobatics,
                 R.mipmap.progress, R.mipmap.ic_stars_black_24dp, R.mipmap.profile};
@@ -57,7 +60,7 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
                 ContextCompat.getColor(this, R.color.BarColor), ContextCompat.getColor(this, R.color.BarColor), ContextCompat.getColor(this, R.color.BarColor)};
         adapter = new SimpleTabAdapter(getSupportFragmentManager());
 
-        view = (ViewPager) findViewById(R.id.view);
+        view = (ViewPager) findViewById(R.id.view_pager);
         view.setAdapter(adapter);
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
@@ -65,6 +68,11 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
         bottomNavigationView.setItemActiveColorWithoutColoredBackground(ContextCompat.getColor(getApplicationContext(),R.color.colorAccent));
         view.setAdapter(adapter);
         bottomNavigationView.setViewPager(view , color , image);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
@@ -88,7 +96,7 @@ public class MainScreen extends AppCompatActivity implements ActionSheet.ActionS
     }
 
     public void WorkoutActivity(){
-        Intent intent = new Intent(getApplicationContext(), Workout.class);
+        Intent intent = new Intent(getApplicationContext(), WorkoutActivity.class);
         startActivity(intent);
     }
 

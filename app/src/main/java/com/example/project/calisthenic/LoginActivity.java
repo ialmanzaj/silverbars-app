@@ -148,7 +148,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 //                                    }else{
 //                                        database.addUser(name,email,1);
 //                                    }
-                                    startActivity(new Intent(getApplicationContext(), MainScreen.class));
+                                    startActivity(new Intent(getApplicationContext(), MainScreenActivity.class));
                                     finish();
                                 } catch (JSONException e) {
                                     e.printStackTrace();

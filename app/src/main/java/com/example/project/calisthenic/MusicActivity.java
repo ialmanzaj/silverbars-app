@@ -10,8 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 public class MusicActivity extends AppCompatActivity {
 
     private int Reps = 0, Tempo = 0;
@@ -52,7 +50,7 @@ public class MusicActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i){
                     case 0:
-                        Intent intent = new Intent(MusicActivity.this, Playlist_Picker.class);
+                        Intent intent = new Intent(MusicActivity.this, PlaylistPickerActivity.class);
                         intent.putExtra("reps",Reps);
                         intent.putExtra("tempo",Tempo);
                         startActivity(intent);

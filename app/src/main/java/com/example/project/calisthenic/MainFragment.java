@@ -4,30 +4,38 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import org.lucasr.twowayview.widget.TwoWayView;
 
-public class Fmain extends Fragment {
+public class MainFragment extends Fragment {
 
-    View rootView;
-    Button songs;
-    private String email,name;
+    private String email;
+    private String name;
+
+    private TwoWayView recyclerView;
+    private Button songs;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_fmain, container, false);
+        return inflater.inflate(R.layout.fragment_fmain, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         Intent intent = this.getActivity().getIntent();
         email = intent.getStringExtra("Email");
         name = intent.getStringExtra("Name");
 
-        songs = (Button) rootView.findViewById(R.id.songs);
-
+        /*
+        songs = (Button) getView().findViewById(R.id.songs);
         songs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -35,8 +43,10 @@ public class Fmain extends Fragment {
                 startActivity(i);
             }
         });
+        */
 
-        return rootView;
+        recyclerView = (TwoWayView) getView().findViewById(R.id.list);
+        recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
+
     }
-
 }
