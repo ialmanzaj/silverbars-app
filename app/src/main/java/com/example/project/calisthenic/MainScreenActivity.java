@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -73,6 +74,12 @@ public class MainScreenActivity extends AppCompatActivity implements ActionSheet
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.baritems, menu);
+        return true;
     }
 
     @Override
