@@ -42,18 +42,15 @@
             android:parentActivityName=".MainScreenActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainScreenActivity"/>
+                android:value=".MainScreenActivity" />
         </activity>
-
-
         <activity
             android:name=".MusicActivity"
             android:parentActivityName=".WorkoutActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".WorkoutActivity"/>
+                android:value=".WorkoutActivity" />
         </activity>
-
         <activity
             android:name=".WorkingOutActivity"
             android:launchMode="singleTask" />
@@ -81,7 +78,6 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".ExerciseAdapter"></activity>
     </application>
 
 </manifest>

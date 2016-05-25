@@ -1,5 +1,6 @@
 package com.example.project.calisthenic;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class PlaylistPickerActivity extends AppCompatActivity {
     private ListView ListMusic;
@@ -139,5 +142,10 @@ public class PlaylistPickerActivity extends AppCompatActivity {
         String artist = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
 
         return title;
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase){
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

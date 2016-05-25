@@ -56,6 +56,8 @@ public class WorkoutActivity extends AppCompatActivity {
     private int ExerciseReps = 1;
     private ImageButton localButton, spotifyButton, soundcloudButton;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -357,7 +359,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 isometric = Integer.parseInt(Isometric.getText().toString());
                 negative = Integer.parseInt(Negative.getText().toString());
                 int tempoTotal = positive + isometric + negative;
-                Intent intent = new Intent(this, MusicActivity.class);
+                Intent intent = new Intent(this, WorkingOutActivity.class);
                 intent.putExtra("reps",totalReps);
                 intent.putExtra("tempo", tempoTotal);
 //                intent.putExtra("pos",position);
