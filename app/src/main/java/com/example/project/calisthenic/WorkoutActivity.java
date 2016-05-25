@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -50,6 +51,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
     private int ExerciseReps = 1;
+    private ImageButton localButton, spotifyButton, soundcloudButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -299,7 +301,28 @@ public class WorkoutActivity extends AppCompatActivity {
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                                toast("Password: " + passwordInput.getText().toString());
+                        View v = dialog.getCustomView();
+                        localButton = (ImageButton) v.findViewById(R.id.localButton);
+                        localButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                toast("Local");
+                            }
+                        });
+                        spotifyButton = (ImageButton) v.findViewById(R.id.spotifyButton);
+                        spotifyButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                toast("Spotify");
+                            }
+                        });
+                        soundcloudButton = (ImageButton) v.findViewById(R.id.soundcloudButton);
+                        soundcloudButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                toast("Soundcloud");
+                            }
+                        });
                     }
                 }).build();
 

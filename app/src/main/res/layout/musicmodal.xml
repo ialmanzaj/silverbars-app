@@ -43,7 +43,7 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageButton"
+            android:id="@+id/soundcloudButton"
             android:layout_below="@+id/imageButton"
             android:layout_alignParentStart="true"
             android:src="@drawable/soundcloud48"
@@ -71,7 +71,7 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageButton2"
+            android:id="@+id/spotifyButton"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:src="@drawable/spotify48"
