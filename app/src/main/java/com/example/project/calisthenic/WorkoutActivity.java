@@ -347,9 +347,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
     }
 
-
-
-
     private void LaunchWorkingOutActivity() {
         int positive,isometric,negative, totalReps;
         totalReps = Integer.parseInt(Reps.getText().toString());
