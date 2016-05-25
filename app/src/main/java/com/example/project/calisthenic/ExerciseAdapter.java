@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
-    private List<Workouts_info> items;
+    private List<WorkoutInfo> items;
 
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
@@ -31,7 +31,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         }
     }
 
-    public ExerciseAdapter(List<Workouts_info> items) {
+    public ExerciseAdapter(List<WorkoutInfo> items) {
         this.items = items;
     }
 

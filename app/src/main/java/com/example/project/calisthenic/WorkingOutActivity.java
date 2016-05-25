@@ -241,11 +241,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         // Inicializar Workouts
         List<WorkoutInfo> items = new ArrayList<>();
 
-        items.add(new WorkoutInfo(R.mipmap.imagen1, "Upper Body", "core"));
-        items.add(new WorkoutInfo(R.mipmap.imagen2, "Core", "Arms and Back"));
-        items.add(new WorkoutInfo(R.mipmap.imagen3, "Arms and Back", "Legs"));
-        items.add(new WorkoutInfo(R.mipmap.imagen4, "Legs", "Full Body"));
-        items.add(new WorkoutInfo(R.mipmap.imagen5, "Full body", "End Workout"));
+        items.add(new WorkoutInfo(R.mipmap.imagen1, "Upper Body", "core",null));
+        items.add(new WorkoutInfo(R.mipmap.imagen2, "Core", "Arms and Back",null));
+        items.add(new WorkoutInfo(R.mipmap.imagen3, "Arms and Back", "Legs",null));
+        items.add(new WorkoutInfo(R.mipmap.imagen4, "Legs", "Full Body",null));
+        items.add(new WorkoutInfo(R.mipmap.imagen5, "Full body", "End Workout",null));
 
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);

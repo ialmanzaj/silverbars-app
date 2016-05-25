@@ -139,13 +139,13 @@ public class WorkoutActivity extends AppCompatActivity {
         minusReps.setClickable(false);
 
         // Tab 3 Inicializar Exercises en el RecyclerView
-        List<Workouts_info> items = new ArrayList<>();
+        List<WorkoutInfo> items = new ArrayList<>();
 
-        items.add(new Workouts_info(R.mipmap.imagen1, "Upper Body", "core", String.valueOf(ExerciseReps)));
-        items.add(new Workouts_info(R.mipmap.imagen2, "Core", "Arms and Back", String.valueOf(ExerciseReps)));
-        items.add(new Workouts_info(R.mipmap.imagen3, "Arms and Back", "Legs", String.valueOf(ExerciseReps)));
-        items.add(new Workouts_info(R.mipmap.imagen4, "Legs", "Full Body", String.valueOf(ExerciseReps)));
-        items.add(new Workouts_info(R.mipmap.imagen5, "Full body", "End Workout", String.valueOf(ExerciseReps)));
+        items.add(new WorkoutInfo(R.mipmap.imagen1, "Upper Body", "core", String.valueOf(ExerciseReps)));
+        items.add(new WorkoutInfo(R.mipmap.imagen2, "Core", "Arms and Back", String.valueOf(ExerciseReps)));
+        items.add(new WorkoutInfo(R.mipmap.imagen3, "Arms and Back", "Legs", String.valueOf(ExerciseReps)));
+        items.add(new WorkoutInfo(R.mipmap.imagen4, "Legs", "Full Body", String.valueOf(ExerciseReps)));
+        items.add(new WorkoutInfo(R.mipmap.imagen5, "Full body", "End Workout", String.valueOf(ExerciseReps)));
 
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
