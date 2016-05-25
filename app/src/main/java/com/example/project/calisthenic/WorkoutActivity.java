@@ -307,10 +307,9 @@ public class WorkoutActivity extends AppCompatActivity {
                 .adapter(new MusicSourceAdapter(WorkoutActivity.this), new MaterialDialog.ListCallback() {
                     @Override
                     public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-
+                        dialog.dismiss();
                     }
                 })
-                .positiveText("continue")
                 .negativeText(android.R.string.cancel)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
