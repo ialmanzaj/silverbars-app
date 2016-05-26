@@ -249,9 +249,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
-        if (recycler != null) {
-            recycler.setHasFixedSize(true);
-        }
+        //if (recycler != null) {
+            //recycler.setHasFixedSize(true);
+        //}
 
         // Usar un administrador para LinearLayout
         lManager = new LinearLayoutManager(this);
@@ -366,7 +366,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 //        for (int z = 0; z < position.length; z++){
 //            toast(String.valueOf(position[z]));
 //        }
-        if (mySongs.size() > 0 && mySongs != null){
+        if (mySongs != null && mySongs.size() > 0){
             SelectedSongs = true;
             for(int j = 0; j < mySongs.size(); j++){
                 if (j == position[j]){
