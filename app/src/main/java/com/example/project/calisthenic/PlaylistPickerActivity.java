@@ -91,7 +91,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("positions",selected);
                     returnIntent.putExtra("songs",mySongs);
-                    setResult(Activity.RESULT_OK,returnIntent);
+                    setResult(RESULT_OK, returnIntent);
                     finish();
                 }
             });

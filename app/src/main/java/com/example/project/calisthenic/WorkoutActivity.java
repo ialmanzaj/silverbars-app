@@ -329,7 +329,7 @@ public class WorkoutActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1 && resultCode == RESULT_OK && data.hasExtra("songs") && data.hasExtra("positions")){
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null){
             mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
             position = data.getLongArrayExtra("positions");
         }
