@@ -1,7 +1,12 @@
 package com.example.project.calisthenic;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -9,11 +14,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -22,6 +29,8 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.like.LikeButton;
+import com.like.OnLikeListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,7 +54,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private Button minusReps;
     private Button SelectMusic;
     private TextView Positive, Negative, Isometric;
-    private ArrayList<File> mySongs, play_list;
+    private ArrayList<File> play_list;
     private long[] position;
     private List<String> spinnerArray = new ArrayList<String>();
     private int value = 0;
@@ -54,7 +63,13 @@ public class WorkoutActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
     private int ExerciseReps = 1;
-    private ImageButton localButton, spotifyButton, soundcloudButton;
+    private LikeButton likeButton;
+    private ListView ListMusic;
+    private String[] items, songs;
+    private Button clean,done;
+    private long[] selected;
+    private ArrayList<File> mySongs;
+    private ArrayAdapter<String> adp;
 
 
 
@@ -73,6 +88,19 @@ public class WorkoutActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Workouts");
         }
+
+        likeButton = (LikeButton) findViewById(R.id.star_button);
+        likeButton.setOnLikeListener(new OnLikeListener() {
+            @Override
+            public void liked(LikeButton likeButton) {
+
+            }
+
+            @Override
+            public void unLiked(LikeButton likeButton) {
+
+            }
+        });
 
 
 
@@ -280,12 +308,12 @@ public class WorkoutActivity extends AppCompatActivity {
         tabHost2.addTab(data3);
         tabHost2.addTab(data4);
 
-        Intent i = getIntent();
-        Bundle b = i.getExtras();
-        if (getIntent().hasExtra("songlist") && getIntent().hasExtra("pos")){
-            mySongs = (ArrayList) b.getParcelableArrayList("songlist");
-            position = b.getLongArray("pos");
-        }
+//        Intent i = getIntent();
+//        Bundle b = i.getExtras();
+//        if (getIntent().hasExtra("songlist") && getIntent().hasExtra("pos")){
+//            mySongs = (ArrayList) b.getParcelableArrayList("songlist");
+//            position = b.getLongArray("pos");
+//        }
 
         SelectMusic = (Button) findViewById(R.id.SelectMusic);
         SelectMusic.setOnClickListener(new View.OnClickListener() {
@@ -298,9 +326,30 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Bundle b;
+        if (data.hasExtra("songs") && data.hasExtra("positions")){
+            b = data.getExtras();
+            if (requestCode == 1) {
+                if(resultCode == Activity.RESULT_OK){
+                    mySongs = (ArrayList) b.getParcelableArrayList("songs");
+                    position = b.getLongArray("positions");
+                }
+                if (resultCode == Activity.RESULT_CANCELED) {
+                    mySongs = null;
+                    position = null;
+                }
+            }
+        }
+
+    }
+
+    @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
+
 
     public void ShowMusicDialog(){
         MaterialDialog dialog = new MaterialDialog.Builder(WorkoutActivity.this)
@@ -309,39 +358,22 @@ public class WorkoutActivity extends AppCompatActivity {
                 .adapter(new MusicSourceAdapter(WorkoutActivity.this), new MaterialDialog.ListCallback() {
                     @Override
                     public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                        dialog.dismiss();
+//                        dialog.dismiss();
+                        switch (which){
+                            case 0:
+                                LaunchMusicActivity();
+                                break;
+                            case 1:
+                                break;
+                            case 2:
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 })
                 .negativeText(android.R.string.cancel)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        /*
-                        View v = dialog.getCustomView();
-                        localButton = (ImageButton) v.findViewById(R.id.localButton);
-                        localButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                toast("Local");
-                            }
-                        });
-                        spotifyButton = (ImageButton) v.findViewById(R.id.spotifyButton);
-                        spotifyButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                toast("Spotify");
-                            }
-                        });
-                        soundcloudButton = (ImageButton) v.findViewById(R.id.soundcloudButton);
-                        soundcloudButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                toast("Soundcloud");
-                            }
-                        });
-                        */
-                    }
-                }).build();
+                .build();
 
         dialog.show();
 
@@ -359,8 +391,8 @@ public class WorkoutActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, WorkingOutActivity.class);
                 intent.putExtra("reps",totalReps);
                 intent.putExtra("tempo", tempoTotal);
-//                intent.putExtra("pos",position);
-//                intent.putExtra("songlist",mySongs);
+                intent.putExtra("pos",position);
+                intent.putExtra("songlist",mySongs);
                 startActivity(intent);
             }
             else{
@@ -375,8 +407,8 @@ public class WorkoutActivity extends AppCompatActivity {
     public void LaunchMusicActivity() {
 //        if (Environment.getExternalStorageDirectory().listFiles() != null){
 
-            Intent intent = new Intent(this, MusicActivity.class);
-            startActivity(intent);
+            Intent intent = new Intent(this, PlaylistPickerActivity.class);
+            startActivityForResult(intent,1);
 //            finish();
 //        }else{
 //            toast("You don't have any audio file");
@@ -447,7 +479,5 @@ public class WorkoutActivity extends AppCompatActivity {
                 }
             }
         }
-
     }
-
 }

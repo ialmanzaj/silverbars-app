@@ -79,6 +79,14 @@
                             android:textColor="#ffffff"
                             android:gravity="center" />
 
+                        <com.like.LikeButton
+                            app:icon_type="heart"
+                            app:icon_size="25dp"
+                            android:id="@+id/star_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right|bottom" />
+
                     </FrameLayout>
 
                     <LinearLayout
