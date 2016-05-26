@@ -328,7 +328,7 @@ public class WorkoutActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        
         if (requestCode == 1 && resultCode == RESULT_OK && data != null){
             mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
             position = data.getLongArrayExtra("positions");
@@ -357,7 +357,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 .adapter(new MusicSourceAdapter(WorkoutActivity.this), new MaterialDialog.ListCallback() {
                     @Override
                     public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-//                        dialog.dismiss();
+                        dialog.dismiss();
                         switch (which){
                             case 0:
                                 LaunchMusicActivity();
