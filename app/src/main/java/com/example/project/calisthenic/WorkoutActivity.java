@@ -327,21 +327,16 @@ public class WorkoutActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Bundle b;
-        if (data.hasExtra("songs") && data.hasExtra("positions")){
-            b = data.getExtras();
-            if (requestCode == 1) {
-                if(resultCode == Activity.RESULT_OK){
-                    mySongs = (ArrayList) b.getParcelableArrayList("songs");
-                    position = b.getLongArray("positions");
-                }
-                if (resultCode == Activity.RESULT_CANCELED) {
-                    mySongs = null;
-                    position = null;
-                }
-            }
-        }
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == 1 && resultCode == RESULT_OK && data.hasExtra("songs") && data.hasExtra("positions")){
+            mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
+            position = data.getLongArrayExtra("positions");
+        }
+        else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
+            mySongs = null;
+            position = null;
+        }
     }
 
     @Override
