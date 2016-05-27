@@ -105,19 +105,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/tab3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                        <android.support.v7.widget.RecyclerView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/reciclador"
-                            android:layout_gravity="center_horizontal"
-                            android:scrollbars="horizontal"/>
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/tab2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -129,6 +116,7 @@
                         android:layout_height="wrap_content"
                         android:text="Tempo in Reps"
                         android:textSize="40dp"
+                        android:textColor="@color/colorPrimaryText"
                         android:layout_gravity="center" />
 
                     <Spinner
@@ -165,6 +153,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:id="@+id/Positive"
+                                android:textColor="@color/colorPrimaryText"
                                 android:layout_gravity="center"
                                 android:textSize="35dp"
                                 android:text="3" />
@@ -182,6 +171,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:text="Positive"
+                                android:textColor="@color/colorPrimaryText"
                                 android:id="@+id/textView8"
                                 android:layout_gravity="center" />
                         </LinearLayout>
@@ -193,6 +183,7 @@
                             android:text=":"
                             android:id="@+id/textView26"
                             android:layout_gravity="center"
+                            android:textColor="@color/colorPrimaryText"
                             android:layout_marginBottom="10dp"
                             android:textStyle="bold"
                             android:textSize="35dp" />
@@ -217,6 +208,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:id="@+id/Isometric"
+                                android:textColor="@color/colorPrimaryText"
                                 android:layout_gravity="center"
                                 android:textSize="35dp"
                                 android:text="1" />
@@ -234,6 +226,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:text="Isometric"
+                                android:textColor="@color/colorPrimaryText"
                                 android:id="@+id/textView23"
                                 android:layout_gravity="center" />
                         </LinearLayout>
@@ -245,6 +238,7 @@
                             android:text=":"
                             android:id="@+id/textView27"
                             android:layout_gravity="center"
+                            android:textColor="@color/colorPrimaryText"
                             android:layout_marginBottom="10dp"
                             android:textStyle="bold"
                             android:textSize="35dp" />
@@ -269,6 +263,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:id="@+id/Negative"
+                                android:textColor="@color/colorPrimaryText"
                                 android:layout_gravity="center"
                                 android:textSize="35dp"
                                 android:text="3" />
@@ -286,6 +281,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:text="Negative"
+                                android:textColor="@color/colorPrimaryText"
                                 android:id="@+id/textView25"
                                 android:layout_gravity="center" />
                         </LinearLayout>
@@ -302,6 +298,7 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:text="Reps per Exercise"
+                            android:textColor="@color/colorPrimaryText"
                             android:id="@+id/textView5"
                             android:layout_gravity="center" />
 
@@ -327,6 +324,7 @@
                                 android:id="@+id/Reps"
                                 android:layout_gravity="center"
                                 android:textSize="35dp"
+                                android:textColor="@color/colorPrimaryText"
                                 android:text="1" />
 
                             <Button
@@ -340,6 +338,19 @@
                         </LinearLayout>
 
                     </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                        <android.support.v7.widget.RecyclerView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/reciclador"
+                            android:layout_gravity="center_horizontal"
+                            android:scrollbars="horizontal"/>
                 </LinearLayout>
 
                 <LinearLayout
