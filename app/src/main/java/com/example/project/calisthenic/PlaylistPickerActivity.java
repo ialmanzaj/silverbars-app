@@ -96,6 +96,17 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                 }
             });
         }
+        else {
+            done = (Button)findViewById(R.id.done);
+            done.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent returnIntent = new Intent();
+                    setResult(RESULT_OK, returnIntent);
+                    finish();
+                }
+            });
+        }
     }
 
     public void toast(String text){
