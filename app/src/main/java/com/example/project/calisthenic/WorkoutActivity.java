@@ -332,15 +332,11 @@ public class WorkoutActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK && data != null){
             mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
             position = data.getLongArrayExtra("positions");
-            toast("Success");
         }
         else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
             mySongs = null;
             position = null;
-            toast("Canceled");
         }
-
-        toast("None of them");
     }
 
     @Override

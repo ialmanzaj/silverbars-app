@@ -60,7 +60,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
             items = new String[mySongs.size()];
             for (int i = 0; i < mySongs.size(); i++) {
 
-                items[i] = SongName(mySongs.get(i));
+                items[i] = mySongs.get(i).getName();
             }
             ArrayAdapter<String> adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
 
