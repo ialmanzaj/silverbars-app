@@ -328,7 +328,7 @@ public class WorkoutActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        
+
         if (requestCode == 1 && resultCode == RESULT_OK && data != null){
             mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
             position = data.getLongArrayExtra("positions");
@@ -363,6 +363,7 @@ public class WorkoutActivity extends AppCompatActivity {
                                 LaunchMusicActivity();
                                 break;
                             case 1:
+                                startActivity(new Intent(getApplicationContext(), SearchActivity.class));
                                 break;
                             case 2:
                                 break;
