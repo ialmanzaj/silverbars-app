@@ -59,19 +59,22 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     @Override
     public void onBindViewHolder(final ExerciseViewHolder viewHolder, int i) {
         final int a = i;
+        //Setting values to each recylerView Element
         viewHolder.imagen.setImageResource(items.get(a).getImagen());
         viewHolder.nombre.setText(items.get(a).getNombre());
 //        viewHolder.next.setText("Visitas:"+String.valueOf(items.get(i).getVisitas()));
         viewHolder.repetitions.setText(items.get(a).getReps());
-
+        //OnLongClickListener for each recylclerView element
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             private TextView DialogName, Reps;
             private Button plusRep, minusRep;
             private int value = 0;
+            private int ActualRepValue = 0;
 
             @Override
             public boolean onLongClick(View view) {
                 boolean wrapInScrollView = true;
+                //Dialog when LongClick on element
                 View v = new MaterialDialog.Builder(view.getContext())
                         .title(R.string.title)
                         .customView(R.layout.edit_reps_setup, wrapInScrollView)
@@ -79,29 +82,43 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 dialog.dismiss();
+                                //On Dialog "Done" ClickListener
                                 viewHolder.repetitions.setText(String.valueOf(NewRepValue()));
                             }
                         })
                         .show()
                         .getCustomView();
+                //Dialog elements
                 DialogName = (TextView) v.findViewById(R.id.ExerciseName);
                 DialogName.setText(items.get(a).getNombre());
                 Reps = (TextView) v.findViewById(R.id.Reps);
-                Reps.setText(viewHolder.repetitions.getText());
+                ActualRepValue = Integer.valueOf(viewHolder.repetitions.getText().toString());
+                Reps.setText(String.valueOf(ActualRepValue));
                 plusRep = (Button) v.findViewById(R.id.plusRep);
                 plusRep.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //Increasing Reps Button
                         plusTempo(Reps,plusRep,minusRep);
                     }
                 });
+
                 minusRep = (Button) v.findViewById(R.id.minusRep);
                 minusRep.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //Decreasing Reps Button
                         minusTempo(Reps,minusRep,plusRep);
                     }
                 });
+                //Check if actual rep value is 1 or 20 on Dialog open
+                if (ActualRepValue == 1){
+                    minusRep.setEnabled(false);
+                    minusRep.setClickable(false);
+                }else if(ActualRepValue == 20){
+                    plusRep.setEnabled(false);
+                    plusRep.setClickable(false);
+                }
 
                 return false;
             }

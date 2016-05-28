@@ -198,8 +198,6 @@ public class WorkoutActivity extends AppCompatActivity {
         adapter = new ExerciseAdapter(items);
         recycler.setAdapter(adapter);
 
-
-
         Positive = (TextView) findViewById(R.id.Positive);
         Isometric = (TextView) findViewById(R.id.Isometric);
         Negative = (TextView) findViewById(R.id.Negative);
@@ -276,13 +274,10 @@ public class WorkoutActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
 
-
-        //Tabs
+        //Defining Tabs
         TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost2);
         tabHost2.setup();
 
@@ -308,13 +303,6 @@ public class WorkoutActivity extends AppCompatActivity {
         tabHost2.addTab(data3);
         tabHost2.addTab(data4);
 
-//        Intent i = getIntent();
-//        Bundle b = i.getExtras();
-//        if (getIntent().hasExtra("songlist") && getIntent().hasExtra("pos")){
-//            mySongs = (ArrayList) b.getParcelableArrayList("songlist");
-//            position = b.getLongArray("pos");
-//        }
-
         SelectMusic = (Button) findViewById(R.id.SelectMusic);
         SelectMusic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -322,13 +310,11 @@ public class WorkoutActivity extends AppCompatActivity {
                 ShowMusicDialog();
             }
         });
-//        return rootView;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == 1 && resultCode == RESULT_OK && data != null){
             mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
             position = data.getLongArrayExtra("positions");
@@ -370,9 +356,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 })
                 .negativeText(android.R.string.cancel)
                 .build();
-
         dialog.show();
-
     }
 
     private void LaunchWorkingOutActivity() {
@@ -397,25 +381,11 @@ public class WorkoutActivity extends AppCompatActivity {
         }
         else
             toast("Dont be lazzy, have to do more than 1 Rep");
-
     }
 
     public void LaunchMusicActivity() {
-//        if (Environment.getExternalStorageDirectory().listFiles() != null){
-
-            Intent intent = new Intent(this, PlaylistPickerActivity.class);
-            startActivityForResult(intent,1);
-//            finish();
-//        }else{
-//            toast("You don't have any audio file");
-//        }
-
-
-//        }else{
-//            toast("You don't have any audio file");
-//        }
-
-
+        Intent intent = new Intent(this, PlaylistPickerActivity.class);
+        startActivityForResult(intent,1);
     }
 
     public void toast(String text){

@@ -124,7 +124,7 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/spinner"
                         android:layout_gravity="center_horizontal"
-                        android:spinnerMode="dialog" />
+                        android:spinnerMode="dialog"/>
 
                     <LinearLayout
                         android:orientation="horizontal"
