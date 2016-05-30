@@ -105,17 +105,17 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             nxtLayout.setVisibility(View.GONE);
                         }
 
-                        s = Uri.parse("https://www.dropbox.com/home/Proyecto%20Workout/audio-examples?preview=closedpullups.mp3");
-                        stream = MediaPlayer.create(getApplicationContext(),s);
-                        stream.start();
-                        mp.stop();
-                        stream.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer mediaPlayer) {
-                                stream.release();
-                                mp.start();
-                            }
-                        });
+//                        s = Uri.parse("https://www.dropbox.com/home/Proyecto%20Workout/audio-examples?preview=closedpullups.mp3");
+//                        stream = MediaPlayer.create(getApplicationContext(),s);
+//                        stream.start();
+//                        mp.stop();
+//                        stream.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                            @Override
+//                            public void onCompletion(MediaPlayer mediaPlayer) {
+//                                stream.release();
+//                                mp.start();
+//                            }
+//                        });
 
                         recycler.smoothScrollToPosition(y);
                         CurrentExercise.setText(String.valueOf(y+1));
@@ -263,13 +263,20 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
+//        recycler.setOnTouchListener(null);
         //if (recycler != null) {
             //recycler.setHasFixedSize(true);
         //}
 
         // Usar un administrador para LinearLayout
-        lManager = new LinearLayoutManager(this);
+        lManager = new CustomGridLayoutManager(this){
+            @Override
+            public boolean canScrollVertically(){
+                return false;
+            }
+        };
         recycler.setLayoutManager(lManager);
+
 
         // Crear un nuevo adaptador
         adapter = new WorkoutsAdapter(items);

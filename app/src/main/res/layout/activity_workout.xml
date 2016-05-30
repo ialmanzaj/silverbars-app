@@ -101,6 +101,12 @@
                             android:text="Music"
                             android:id="@+id/SelectMusic"
                             android:layout_gravity="center_horizontal" />
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Download music"
+                            android:id="@+id/download" />
                     </LinearLayout>
                 </LinearLayout>
 

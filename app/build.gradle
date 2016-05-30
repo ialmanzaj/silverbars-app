@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 
 repositories {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "https://dl.bintray.com/ayz4sci/maven/" }
 }
 
 android {
@@ -59,7 +60,8 @@ dependencies {
     compile 'com.pnikosis:materialish-progress:1.7'
     compile 'com.squareup.okhttp3:okhttp:3.3.0'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.6.2'
-
+    compile 'com.ayz4sci.androidfactory:downloadprogress:1.0.1'
+    compile 'com.mani:ThinDownloadManager:1.2.5'
 //    // This library handles authentication and authorization
 //    compile 'com.spotify.sdk:spotify-auth:1.0.0-beta12@aar'
 //    // This library handles music playback
