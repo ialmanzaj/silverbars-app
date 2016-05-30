@@ -1,6 +1,5 @@
 package com.example.project.calisthenic;
 
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * Created by saleventa7 on 5/25/2016.
+ * Created by roberto on 5/25/2016.
  */
 public class MusicSourceAdapter extends ArrayAdapter<String> {
 

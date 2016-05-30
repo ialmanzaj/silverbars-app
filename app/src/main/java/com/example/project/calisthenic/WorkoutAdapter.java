@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * Created by saleventa7 on 5/24/2016.
+ * Created by roberto on 5/24/2016.
  */
 public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
 
