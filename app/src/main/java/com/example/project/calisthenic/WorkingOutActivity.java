@@ -51,6 +51,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView recycler;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
+    private int TotalSets = 4, ActualSets = 0;
     AlertDialog alertDialog;
 //    public PowerManager powerManager ;
 //    PowerManager.WakeLock wakeLock;
@@ -128,30 +129,29 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     }
                     else{
 //                    timer.setText("Well Done!");
-                        toast("done");
-                        new CountDownTimer(4000, 1000) {
-                            @Override
-                            public void onTick(long millisUntilFinished) {
-                                alertDialog.setMessage(""+ (millisUntilFinished/1000));
-                            }
 
-                            @Override
-                            public void onFinish() {
-//                info.setVisibility(View.GONE);
-                                timer.setText(String.valueOf(totalReps));
-                                Timer(totalTime,1);
-                                if (SelectedSongs == true){
-                                    mp.start();
-                                }
-                                alertDialog.dismiss();
-                            }
-                        }.start();
-                        timer2.cancel();
-                        finish = true;
+                        if (ActualSets+1 <= 4){
 
-                        Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
-                        vb.vibrate(500);
-//                    wakeLock.release();
+                            ActualSets++;
+                            CurrentSet.setText(String.valueOf(ActualSets));
+                            CurrentExercise.setText(String.valueOf("1"));
+                            y = 0;
+                            recycler.smoothScrollToPosition(y);
+
+                            finish = true;
+
+                            Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
+                            vb.vibrate(500);
+                            timer.setText(String.valueOf(totalReps+1));
+                            timer2.cancel();
+                            Timer(totalTime,1);
+                            nxtLayout.setVisibility(View.VISIBLE);
+                            prvLayout.setVisibility(View.GONE);
+                        }
+                        else{
+                            timer2.cancel();
+                            toast("done");
+                        }
                     }
                 }
 
@@ -285,6 +285,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         elements = adapter.getItemCount();
         CurrentExercise.setText("1");
         TotalExercise.setText(String.valueOf(elements));
+        CurrentSet.setText("1");
+        TotalSet.setText(String.valueOf(TotalSets));
 //        toast(String.valueOf(elements))
         recycler.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -379,7 +381,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Bundle b = i.getExtras();
         totalReps = b.getInt("reps");
         tempo = b.getInt("tempo");
-        totalTime = totalReps * tempo + 2;
+        totalTime = totalReps * tempo + 5;
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
         position = b.getLongArray("pos");
         playlist = new ArrayList<>();
@@ -430,6 +432,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             public void onFinish() {
 //                info.setVisibility(View.GONE);
                 timer.setText(String.valueOf(totalReps));
+                TotalSet.setText(String.valueOf(TotalSets));
+                CurrentSet.setText("0");
                 Timer(totalTime,1);
                 if (SelectedSongs == true){
                     mp.start();
