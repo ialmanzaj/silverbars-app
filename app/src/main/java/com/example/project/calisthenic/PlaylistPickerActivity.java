@@ -1,13 +1,12 @@
 package com.example.project.calisthenic;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -15,12 +14,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-//import com.afollestad.materialdialogs.MaterialDialog;
-
 import java.io.File;
 import java.util.ArrayList;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+//import com.afollestad.materialdialogs.MaterialDialog;
 
 public class PlaylistPickerActivity extends AppCompatActivity {
     private ListView ListMusic;

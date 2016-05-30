@@ -22,7 +22,7 @@ import org.lucasr.twowayview.widget.DividerItemDecoration;
 import org.lucasr.twowayview.widget.TwoWayView;
 
 /**
- * Created by saleventa7 on 5/26/2016.
+ * Created by roberto on 5/26/2016.
  */
 public class SearchActivity extends AppCompatActivity {
 

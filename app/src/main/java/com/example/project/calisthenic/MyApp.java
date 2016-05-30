@@ -5,7 +5,7 @@ import android.app.Application;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
- * Created by saleventa7 on 5/24/2016.
+ * Created by roberto on 5/24/2016.
  */
 public class MyApp extends Application {
 
