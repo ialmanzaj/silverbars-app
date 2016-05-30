@@ -1,7 +1,9 @@
 package com.example.project.calisthenic;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -11,11 +13,14 @@ import android.view.Menu;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 //import com.afollestad.materialdialogs.MaterialDialog;
 import com.baoyz.actionsheet.ActionSheet;
 import com.facebook.FacebookSdk;
 import com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationView;
+
+import java.io.File;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -29,7 +34,6 @@ public class MainScreenActivity extends AppCompatActivity implements ActionSheet
     TextView emailView, nameView, Username;
     ImageButton settings;
     MySQLiteHelper database;
-    String[] results = new String[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +117,12 @@ public class MainScreenActivity extends AppCompatActivity implements ActionSheet
                 .setOtherButtonTitles("About", "Log out")
                 .setCancelableOnTouchOutside(true)
                 .setListener(this).show();
+    }
+
+
+
+    public void toast(String text){
+        Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -26,17 +26,18 @@ import com.github.vignesh_iopex.confirmdialog.Dialog;
 //import com.serhatsurguvec.continuablecirclecountdownview.ContinuableCircleCountDownView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener {
 
-     static MediaPlayer mp;
+     static MediaPlayer mp, stream;
     ArrayList<File> mySongs, playlist;
 //    Thread updateSeekBar;
 //    SeekBar sb;
     private ImageButton btPlay, btPause, nxtExercise, prvExercise;
-    Uri u;
+    Uri u, s;
     long[] position;
     private int x = 0, y=0, elements = 0, time=0, tempo = 0, count = 0, totalReps, actualReps;
     private int totalTime;
@@ -103,6 +104,19 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         if((y+1)==elements){
                             nxtLayout.setVisibility(View.GONE);
                         }
+
+//                        s = Uri.parse("https://www.dropbox.com/home/Proyecto%20Workout/audio-examples?preview=closedpullups.mp3");
+//                        stream = MediaPlayer.create(getApplicationContext(),s);
+//                        stream.start();
+//                        mp.stop();
+//                        stream.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                            @Override
+//                            public void onCompletion(MediaPlayer mediaPlayer) {
+//                                stream.release();
+//                                mp.start();
+//                            }
+//                        });
+
                         recycler.smoothScrollToPosition(y);
                         CurrentExercise.setText(String.valueOf(y+1));
 
@@ -249,13 +263,20 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
+//        recycler.setOnTouchListener(null);
         //if (recycler != null) {
             //recycler.setHasFixedSize(true);
         //}
 
         // Usar un administrador para LinearLayout
-        lManager = new LinearLayoutManager(this);
+        lManager = new CustomGridLayoutManager(this){
+            @Override
+            public boolean canScrollVertically(){
+                return false;
+            }
+        };
         recycler.setLayoutManager(lManager);
+
 
         // Crear un nuevo adaptador
         adapter = new WorkoutsAdapter(items);

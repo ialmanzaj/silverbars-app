@@ -1,32 +1,62 @@
 package com.example.project.calisthenic;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Environment;
+import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.ayz4sci.androidfactory.DownloadProgressView;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
+import com.thin.downloadmanager.DefaultRetryPolicy;
+import com.thin.downloadmanager.DownloadRequest;
+import com.thin.downloadmanager.DownloadStatusListenerV1;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class WorkoutActivity extends AppCompatActivity {
@@ -34,7 +64,8 @@ public class WorkoutActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 1;
 
 
-
+    private ProgressDialog pDialog;
+    public static final int progress_bar_type = 0;
     private Button plusPositive;
     private Button minusPositive;
     private Button plusIsometric;
@@ -61,6 +92,8 @@ public class WorkoutActivity extends AppCompatActivity {
     private long[] selected;
     private ArrayList<File> mySongs;
     private ArrayAdapter<String> adp;
+    private DownloadProgressView downloadProgressView;
+    private Button download;
 
 
 
@@ -70,6 +103,9 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_workout);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         // ======= TOOL BAR - BACK BUTTON  ADDED
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -93,7 +129,16 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
+//        downloadProgressView = (DownloadProgressView) findViewById(R.id.downloadProgressView);
+        download = (Button) findViewById(R.id.download);
+        download.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DownloadFileFromURL().execute("https://www.dropbox.com/home/Proyecto%20Workout/audio-examples?preview=closedpullups.mp3");
 
+
+            }
+        });
 
         FloatingActionButton startButton = (FloatingActionButton) findViewById(R.id.fab);
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -189,8 +234,6 @@ public class WorkoutActivity extends AppCompatActivity {
         adapter = new ExerciseAdapter(items);
         recycler.setAdapter(adapter);
 
-
-
         Positive = (TextView) findViewById(R.id.Positive);
         Isometric = (TextView) findViewById(R.id.Isometric);
         Negative = (TextView) findViewById(R.id.Negative);
@@ -267,13 +310,10 @@ public class WorkoutActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
 
-
-        //Tabs
+        //Defining Tabs
         TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost2);
         tabHost2.setup();
 
@@ -299,13 +339,6 @@ public class WorkoutActivity extends AppCompatActivity {
         tabHost2.addTab(data3);
         tabHost2.addTab(data4);
 
-//        Intent i = getIntent();
-//        Bundle b = i.getExtras();
-//        if (getIntent().hasExtra("songlist") && getIntent().hasExtra("pos")){
-//            mySongs = (ArrayList) b.getParcelableArrayList("songlist");
-//            position = b.getLongArray("pos");
-//        }
-
         SelectMusic = (Button) findViewById(R.id.SelectMusic);
         SelectMusic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -313,13 +346,28 @@ public class WorkoutActivity extends AppCompatActivity {
                 ShowMusicDialog();
             }
         });
-//        return rootView;
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+            case progress_bar_type: // we set this to 0
+                pDialog = new ProgressDialog(this);
+                pDialog.setMessage("Downloading file. Please wait...");
+                pDialog.setIndeterminate(false);
+                pDialog.setMax(100);
+                pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                pDialog.setCancelable(true);
+                pDialog.show();
+                return pDialog;
+            default:
+                return null;
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == 1 && resultCode == RESULT_OK && data != null){
             mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
             position = data.getLongArrayExtra("positions");
@@ -361,9 +409,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 })
                 .negativeText(android.R.string.cancel)
                 .build();
-
         dialog.show();
-
     }
 
     private void LaunchWorkingOutActivity() {
@@ -388,25 +434,11 @@ public class WorkoutActivity extends AppCompatActivity {
         }
         else
             toast("Dont be lazzy, have to do more than 1 Rep");
-
     }
 
     public void LaunchMusicActivity() {
-//        if (Environment.getExternalStorageDirectory().listFiles() != null){
-
-            Intent intent = new Intent(this, PlaylistPickerActivity.class);
-            startActivityForResult(intent,1);
-//            finish();
-//        }else{
-//            toast("You don't have any audio file");
-//        }
-
-
-//        }else{
-//            toast("You don't have any audio file");
-//        }
-
-
+        Intent intent = new Intent(this, PlaylistPickerActivity.class);
+        startActivityForResult(intent,1);
     }
 
     public void toast(String text){
@@ -467,4 +499,94 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         }
     }
+
+    class DownloadFileFromURL extends AsyncTask<String, String, String> {
+
+        /**
+         * Before starting background thread Show Progress Bar Dialog
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showDialog(progress_bar_type);
+        }
+
+        /**
+         * Downloading file in background thread
+         */
+        @Override
+        protected String doInBackground(String... f_url) {
+            int count;
+            try {
+                URL url = new URL(f_url[0]);
+                URLConnection conection = url.openConnection();
+                conection.connect();
+
+                // this will be useful so that you can show a tipical 0-100%
+                // progress bar
+                int lenghtOfFile = conection.getContentLength();
+
+                // download the file
+                InputStream input = new BufferedInputStream(url.openStream(),
+                        8192);
+
+                // Output stream
+                OutputStream output = new FileOutputStream("/sdcard/Audios/workout.mp3");
+
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    // publishing the progress....
+                    // After this onProgressUpdate will be called
+                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
+
+                    // writing data to file
+                    output.write(data, 0, count);
+                }
+
+                // flushing output
+                output.flush();
+
+                // closing streams
+                output.close();
+                input.close();
+
+            } catch (Exception e) {
+                Log.e("Error: ", e.getMessage());
+            }
+
+            return null;
+        }
+
+        /**
+         * Updating progress bar
+         */
+        protected void onProgressUpdate(String... progress) {
+            // setting progress percentage
+            pDialog.setProgress(Integer.parseInt(progress[0]));
+        }
+
+        /**
+         * After completing background task Dismiss the progress dialog
+         **/
+        @Override
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog after the file was downloaded
+            dismissDialog(progress_bar_type);
+            MediaPlayer mp=new MediaPlayer();
+//                u = Uri.parse(playlist.get(x).toString());
+//                mp = MediaPlayer.create(getApplicationContext(),u);
+            try {
+                mp.setDataSource("/sdcard/workout.mp3");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mp.prepareAsync();
+            mp.start();
+        }
+    }
+
 }
