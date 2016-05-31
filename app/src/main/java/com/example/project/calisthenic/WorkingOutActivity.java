@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -566,6 +567,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     public void PlayAudio (String file){
         MediaPlayer m = new MediaPlayer();
+        final MediaPlayer media = mp;
         try {
             if (m.isPlaying()) {
                 m.stop();
@@ -578,9 +580,17 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             descriptor.close();
 
             m.prepare();
-            m.setVolume(1f, 1f);
+            m.setVolume(50, 50);
+
 //            m.setLooping(true);
             m.start();
+            media.setVolume(20,20);
+            m.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                 media.setVolume(50,50);
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
