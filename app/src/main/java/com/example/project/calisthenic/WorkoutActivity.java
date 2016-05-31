@@ -6,6 +6,7 @@ import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -116,6 +117,15 @@ public class WorkoutActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Workouts");
         }
 
+        FloatingActionButton startButton = (FloatingActionButton) findViewById(R.id.fab);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LaunchWorkingOutActivity();
+            }
+        });
+
+//        Tab 1
         likeButton = (LikeButton) findViewById(R.id.star_button);
         likeButton.setOnLikeListener(new OnLikeListener() {
             @Override
@@ -140,15 +150,13 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton startButton = (FloatingActionButton) findViewById(R.id.fab);
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LaunchWorkingOutActivity();
-            }
-        });
+//        Tab 2
 
         Reps = (TextView) findViewById(R.id.Reps);
+
+        Positive = (TextView) findViewById(R.id.Positive);
+        Isometric = (TextView) findViewById(R.id.Isometric);
+        Negative = (TextView) findViewById(R.id.Negative);
 
         plusPositive = (Button) findViewById(R.id.plusPositive);
         plusPositive.setOnClickListener(new View.OnClickListener() {
@@ -210,33 +218,6 @@ public class WorkoutActivity extends AppCompatActivity {
         });
         minusReps.setEnabled(false);
         minusReps.setClickable(false);
-
-        // Tab 3 Inicializar Exercises en el RecyclerView
-        List<WorkoutInfo> items = new ArrayList<>();
-
-        items.add(new WorkoutInfo(R.mipmap.imagen1, "Upper Body", "core", String.valueOf(ExerciseReps)));
-        items.add(new WorkoutInfo(R.mipmap.imagen2, "Core", "Arms and Back", String.valueOf(ExerciseReps)));
-        items.add(new WorkoutInfo(R.mipmap.imagen3, "Arms and Back", "Legs", String.valueOf(ExerciseReps)));
-        items.add(new WorkoutInfo(R.mipmap.imagen4, "Legs", "Full Body", String.valueOf(ExerciseReps)));
-        items.add(new WorkoutInfo(R.mipmap.imagen5, "Full body", "End Workout", String.valueOf(ExerciseReps)));
-
-        // Obtener el Recycler
-        recycler = (RecyclerView) findViewById(R.id.reciclador);
-        if (recycler != null) {
-            recycler.setHasFixedSize(true);
-        }
-
-        // Usar un administrador para LinearLayout
-        lManager = new LinearLayoutManager(this);
-        recycler.setLayoutManager(lManager);
-
-        // Crear un nuevo adaptador
-        adapter = new ExerciseAdapter(items);
-        recycler.setAdapter(adapter);
-
-        Positive = (TextView) findViewById(R.id.Positive);
-        Isometric = (TextView) findViewById(R.id.Isometric);
-        Negative = (TextView) findViewById(R.id.Negative);
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinnerArray.add("Easy");
@@ -308,10 +289,34 @@ public class WorkoutActivity extends AppCompatActivity {
                         break;
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}
         });
+
+        // Tab 3 Inicializar Exercises en el RecyclerView
+        List<WorkoutInfo> items = new ArrayList<>();
+
+        items.add(new WorkoutInfo(R.mipmap.imagen1, "Upper Body", "core", String.valueOf(ExerciseReps)));
+        items.add(new WorkoutInfo(R.mipmap.imagen2, "Core", "Arms and Back", String.valueOf(ExerciseReps)));
+        items.add(new WorkoutInfo(R.mipmap.imagen3, "Arms and Back", "Legs", String.valueOf(ExerciseReps)));
+        items.add(new WorkoutInfo(R.mipmap.imagen4, "Legs", "Full Body", String.valueOf(ExerciseReps)));
+        items.add(new WorkoutInfo(R.mipmap.imagen5, "Full body", "End Workout", String.valueOf(ExerciseReps)));
+
+        // Obtener el Recycler
+        recycler = (RecyclerView) findViewById(R.id.reciclador);
+        if (recycler != null) {
+            recycler.setHasFixedSize(true);
+        }
+
+        // Usar un administrador para LinearLayout
+        lManager = new LinearLayoutManager(this);
+        recycler.setLayoutManager(lManager);
+
+        // Crear un nuevo adaptador
+        adapter = new ExerciseAdapter(items);
+        recycler.setAdapter(adapter);
+
+
 
         //Defining Tabs
         TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost2);
@@ -531,7 +536,7 @@ public class WorkoutActivity extends AppCompatActivity {
                         8192);
 
                 // Output stream
-                OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"workout.mp3");
+                OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"/workout.mp3");
 
                 byte data[] = new byte[1024];
 
@@ -573,10 +578,17 @@ public class WorkoutActivity extends AppCompatActivity {
         protected void onPostExecute(String file_url) {
             // dismiss the dialog after the file was downloaded
             dismissDialog(progress_bar_type);
-            MediaPlayer mp=new MediaPlayer();
-            Uri u = Uri.parse(Environment.getExternalStorageDirectory().getPath()+"workout.mp3");
-            mp = MediaPlayer.create(getApplicationContext(),u);
-            mp.start();
+            Uri u = Uri.parse(Environment.getExternalStorageDirectory().getPath()+"/workout.mp3");
+            try{
+                MediaPlayer mediaPlayer = new MediaPlayer();
+                mediaPlayer.setDataSource(getApplicationContext(), u);
+                mediaPlayer.create(getApplicationContext(),u);
+                mediaPlayer.start();
+            } catch (IOException e){
+                e.printStackTrace();
+                Log.e("MediaPlayer Error:",e.toString());
+            }
+
         }
     }
 

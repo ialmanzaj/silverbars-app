@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,9 +23,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.vignesh_iopex.confirmdialog.Confirm;
-import com.github.vignesh_iopex.confirmdialog.Dialog;
-//import com.serhatsurguvec.continuablecirclecountdownview.ContinuableCircleCountDownView;
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 
 import java.io.File;
 import java.io.IOException;
@@ -260,7 +261,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         song_name = (TextView) findViewById(R.id.song_name);
         song_name.setSelected(true);
 
-
         // Inicializar Workouts
         List<WorkoutInfo> items = new ArrayList<>();
 
@@ -272,10 +272,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
-//        recycler.setOnTouchListener(null);
-        //if (recycler != null) {
-            //recycler.setHasFixedSize(true);
-        //}
 
         RecyclerView.OnItemTouchListener disable = new RecyclerViewTouch();
 
@@ -323,14 +319,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 }
                 switch (state){
                     case "PAUSE":
-                        if (SelectedSongs){
-                            mp.pause();
-                        }
+//                        if (SelectedSongs){
+//                            mp.start();
+//                        }
                         break;
                     case "RESUME":
                         onTimerPause();
                         if (SelectedSongs) {
-                            mp.start();
+                            mp.pause();
                         }
                         break;
                     default:
@@ -361,15 +357,15 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     case "PAUSE":
 //                        PauseButton.setText("RESUME");
 //                        onTimerResume();
-                        if (SelectedSongs){
-                            mp.pause();
-                        }
+//                        if (SelectedSongs){
+//                            mp.start();
+//                        }
                         break;
                     case "RESUME":
 //                        PauseButton.setText("PAUSE");
                         onTimerPause();
                         if (SelectedSongs) {
-                            mp.start();
+                            mp.pause();
                         }
                         break;
                     default:
@@ -394,9 +390,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         position = b.getLongArray("pos");
         playlist = new ArrayList<>();
 
-//        for (int z = 0; z < position.length; z++){
-//            toast(String.valueOf(position[z]));
-//        }
+
         if (mySongs != null && mySongs.size() > 0){
             SelectedSongs = true;
             for(int j = 0; j < mySongs.size(); j++){
@@ -457,37 +451,41 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             mp.pause();
         }
         onTimerPause();
-        Confirm.using(this).ask("Are you sure you want to exit?").onPositive("Yes", new Dialog.OnClickListener() {
-            @Override public void onClick(Dialog dialog, int which) {
-//                mp.stop();
-                if (SelectedSongs){
-                    mp.release();
-                }
-//                wakeLock.release();
-                dialog.dismissDialog();
+        new MaterialDialog.Builder(this)
+                .title("End Working Out?")
+                .titleColor(getResources().getColor(R.color.colorPrimaryText))
+                .contentColor(getResources().getColor(R.color.colorPrimaryText))
+                .positiveColor(getResources().getColor(R.color.colorPrimaryText))
+                .negativeColor(getResources().getColor(R.color.colorPrimaryText))
+                .content("Are you sure you want to exit?")
+                .positiveText("Yes").onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
                 finish();
-            }}).onNegative("No",  new Dialog.OnClickListener() {
-            @Override public void onClick(Dialog dialog, int which) {
-                exit = false;
-                if (SelectedSongs){
+            }
+        })
+                .negativeText("No").onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
+                if (SelectedSongs) {
                     mp.start();
                 }
                 onTimerResume();
-            }}).build().show();
+            }
+        })
+                .show();
     }
 
     public void MusicPlayList(final int playlist_size){
         if (playlist_size>1){
-//            mp.stop();
-//            mp.reset();
             x = (x+1)%playlist.size();
             u = Uri.parse(playlist.get(x).toString());
             song_name.setText(SongName(playlist.get(x)));
             mp = MediaPlayer.create(getApplicationContext(),u);
             mp.start();
         }else{
-//            mp.stop();
-//            mp.reset();
             u = Uri.parse(playlist.get(x).toString());
             mp = MediaPlayer.create(getApplicationContext(),u);
             mp.start();
