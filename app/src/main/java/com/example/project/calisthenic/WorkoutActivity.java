@@ -6,6 +6,7 @@ import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -13,6 +14,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -515,35 +517,33 @@ public class WorkoutActivity extends AppCompatActivity {
 
     public void mp3load() throws IOException {
 
-        URL url = new URL("https://mega.nz/#!Z9lmCT6a");
-        HttpURLConnection c = (HttpURLConnection) url.openConnection();
-        c.setRequestMethod("GET");
-        c.setDoOutput(true);
-        c.connect();
-
-        String PATH = Environment.getExternalStorageDirectory().getPath();
-        Log.v("Directory:", "PATH: " + PATH);
-        File file = new File(PATH);
-        file.mkdirs();
-
-        String fileName = "/workout.mp3";
-
-
-        File outputFile = new File(file, fileName);
-        FileOutputStream fos = new FileOutputStream(outputFile);
-
-        InputStream is = c.getInputStream();
-
-        byte[] buffer = new byte[16384];
-        int len1 = 0;
-        while ((len1 = is.read(buffer)) != -1) {
-            fos.write(buffer, 0, len1);
-        }
-        fos.close();
-        is.close();
-
+//        URL url = new URL("http://farm1.static.flickr.com/114/298125983_0e4bf66782_b.jpg");
+//        HttpURLConnection c = (HttpURLConnection) url.openConnection();
+//        c.setRequestMethod("GET");
+//        c.setDoOutput(true);
+//        c.connect();
+//
+//        String PATH = Environment.getExternalStorageDirectory().getPath();
+//        Log.v("LogPath", "PATH: " + PATH);
+//        File file = new File(PATH);
+//        file.mkdirs();
+//
+//        String fileName = "test.mp3";
+//
+//
+//        File outputFile = new File(file, fileName);
+//        FileOutputStream fos = new FileOutputStream(outputFile);
+//
+//        InputStream is = c.getInputStream();
+//
+//        byte[] buffer = new byte[1024];
+//        int len1 = 0;
+//        while ((len1 = is.read(buffer)) != -1) {
+//            fos.write(buffer, 0, len1);
+//        }
+//        fos.close();
+//        is.close();
+//            PlayAudio();
     }
-
-
 
 }
