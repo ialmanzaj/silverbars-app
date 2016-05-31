@@ -344,7 +344,7 @@
                 android:layout_height="50dp"
                 android:text="PAUSE"
                 android:id="@+id/PauseButton"
-                android:background="@drawable/buttonsec"
+                android:background="@color/grey"
                 android:layout_marginRight="2dp" />
 
             <ImageButton
@@ -362,7 +362,7 @@
                 android:layout_height="50dp"
                 android:text="END WORKOUT"
                 android:id="@+id/button11"
-                android:background="@drawable/button"
+                android:background="@color/red"
                 android:textColor="#ffffff"
                 android:layout_marginLeft="2dp" />
         </LinearLayout>
@@ -470,8 +470,8 @@
 
             <ImageButton
                 android:layout_width="0dp"
-                android:minWidth="35dp"
-                android:layout_height="wrap_content"
+                android:minHeight="30dp"
+                android:layout_height="match_parent"
                 android:id="@+id/btnPlay"
                 android:layout_weight="1"
                 android:src="@android:drawable/ic_media_play"
