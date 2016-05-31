@@ -277,9 +277,16 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             //recycler.setHasFixedSize(true);
         //}
 
+        RecyclerView.OnItemTouchListener disable = new RecyclerViewTouch();
+
+        recycler.addOnItemTouchListener(disable);        // disables scolling
+
+
         // Usar un administrador para LinearLayout
-        lManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        lManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
+
         recycler.setLayoutManager(lManager);
+
 
 
         // Crear un nuevo adaptador
@@ -292,14 +299,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         totalExercise.setText(String.valueOf(elements));
         CurrentSet.setText("1");
         TotalSet.setText(String.valueOf(TotalSets));
-//        toast(String.valueOf(elements))
-        recycler.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                lManager.getPosition(view);
-//                toast(String.valueOf(lManager.getPosition(view)));
-            }
-        });
+
+
+
+
         prvExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
