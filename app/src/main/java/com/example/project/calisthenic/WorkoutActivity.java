@@ -531,7 +531,7 @@ public class WorkoutActivity extends AppCompatActivity {
                         8192);
 
                 // Output stream
-                OutputStream output = new FileOutputStream("/sdcard/Audios/workout.mp3");
+                OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"workout.mp3");
 
                 byte data[] = new byte[1024];
 
@@ -557,10 +557,8 @@ public class WorkoutActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.e("Error: ", e.getMessage());
             }
-
             return null;
         }
-
         /**
          * Updating progress bar
          */
@@ -568,7 +566,6 @@ public class WorkoutActivity extends AppCompatActivity {
             // setting progress percentage
             pDialog.setProgress(Integer.parseInt(progress[0]));
         }
-
         /**
          * After completing background task Dismiss the progress dialog
          **/
@@ -577,14 +574,8 @@ public class WorkoutActivity extends AppCompatActivity {
             // dismiss the dialog after the file was downloaded
             dismissDialog(progress_bar_type);
             MediaPlayer mp=new MediaPlayer();
-//                u = Uri.parse(playlist.get(x).toString());
-//                mp = MediaPlayer.create(getApplicationContext(),u);
-            try {
-                mp.setDataSource("/sdcard/workout.mp3");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            mp.prepareAsync();
+            Uri u = Uri.parse(Environment.getExternalStorageDirectory().getPath()+"workout.mp3");
+            mp = MediaPlayer.create(getApplicationContext(),u);
             mp.start();
         }
     }
