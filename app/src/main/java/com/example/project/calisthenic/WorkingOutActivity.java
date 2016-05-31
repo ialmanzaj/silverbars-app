@@ -2,6 +2,7 @@ package com.example.project.calisthenic;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -111,6 +112,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 if (actualReps == 0){
                     if (y+1 < elements){
                         y++;
+                        PlayAudio("frontlever");
                         prvLayout.setVisibility(View.VISIBLE);
                         if((y+1)==elements){
                             nxtLayout.setVisibility(View.GONE);
@@ -560,6 +562,30 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     public void onTimerResume(){
         Timer(time,1);
+    }
+
+    public void PlayAudio (String file){
+        MediaPlayer m = new MediaPlayer();
+        try {
+            if (m.isPlaying()) {
+                m.stop();
+                m.release();
+                m = new MediaPlayer();
+            }
+
+            AssetFileDescriptor descriptor = getAssets().openFd("audios/"+file+".mp3");
+            m.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
+            descriptor.close();
+
+            m.prepare();
+            m.setVolume(1f, 1f);
+//            m.setLooping(true);
+            m.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 }
