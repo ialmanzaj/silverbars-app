@@ -52,9 +52,11 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
             case TYPE_WORKOUT:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.workout_row_layout, parent, false);
                 return new VH(v);
+            /*
             case TYPE_VIEW_MORE:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.ver_mas_row_layout, parent, false);
                 return new VH(v);
+                */
         }
 
         return null;
@@ -75,6 +77,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                 });
 
                 break;
+            /*
             case TYPE_VIEW_MORE:
                 vh.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -84,13 +87,14 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                 });
 
                 break;
+                */
         }
 
     }
 
     @Override
     public int getItemCount() {
-        return 6;
+        return 5;
     }
 
     @Override
