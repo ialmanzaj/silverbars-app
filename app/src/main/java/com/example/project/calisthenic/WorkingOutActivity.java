@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,14 +37,21 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     ArrayList<File> mySongs, playlist;
 //    Thread updateSeekBar;
 //    SeekBar sb;
-    private ImageButton btPlay, btPause, nxtExercise, prvExercise;
+    private ImageButton btPlay;
+    private ImageButton btPause;
     Uri u, s;
     long[] position;
     private int x = 0, y=0, elements = 0, time=0, tempo = 0, count = 0, totalReps, actualReps;
     private int totalTime;
-    private TextView timer, song_name, CurrentSet, TotalSet, CurrentExercise, TotalExercise, TimeView;
+    private TextView timer;
+    private TextView song_name;
+    private TextView CurrentSet;
+    private TextView TotalSet;
+    private TextView CurrentExercise;
+    private TextView TimeView;
     private CountDownTimer timer2;
-    private FrameLayout prvLayout, nxtLayout, PlayerLayout;
+    private FrameLayout prvLayout;
+    private FrameLayout nxtLayout;
     private Button PauseButton;
     private boolean exit = false, SelectedSongs = false, finish = false;
 
@@ -67,18 +75,18 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 //        wakeLock.acquire();
 
 
-        prvExercise = (ImageButton) findViewById(R.id.prvExercise);
-        nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
+        ImageButton prvExercise = (ImageButton) findViewById(R.id.prvExercise);
+        ImageButton nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
 
         CurrentSet = (TextView) findViewById(R.id.CurrentSet);
         TotalSet = (TextView) findViewById(R.id.TotalSet);
         CurrentExercise = (TextView) findViewById(R.id.CurrentExercise);
-        TotalExercise = (TextView) findViewById(R.id.TotalExercise);
+        TextView totalExercise = (TextView) findViewById(R.id.TotalExercise);
 
         prvLayout = (FrameLayout) findViewById(R.id.prvLayout);
         nxtLayout = (FrameLayout) findViewById(R.id.nxtLayout);
 
-        PlayerLayout = (FrameLayout) findViewById(R.id.PlayerLayout);
+        LinearLayout playerLayout = (LinearLayout) findViewById(R.id.PlayerLayout);
 
         PauseButton = (Button) findViewById(R.id.PauseButton);
 
@@ -119,6 +127,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 //                        });
 
                         recycler.smoothScrollToPosition(y);
+
                         CurrentExercise.setText(String.valueOf(y+1));
 
                         Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
@@ -164,9 +173,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        PlayerLayout.setOnTouchListener(new OnSwipeTouchListener(this){
+        playerLayout.setOnTouchListener(new OnSwipeTouchListener(this){
             public void onSwipeRight() {
-                if (SelectedSongs == true){
+                if (SelectedSongs){
                     int playlist_size = playlist.size();
                     if (playlist_size > 1 && (x-1) >= 0 ){
                         //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
@@ -269,12 +278,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         //}
 
         // Usar un administrador para LinearLayout
-        lManager = new CustomGridLayoutManager(this){
-            @Override
-            public boolean canScrollVertically(){
-                return false;
-            }
-        };
+        lManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recycler.setLayoutManager(lManager);
 
 
@@ -282,9 +286,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         adapter = new WorkoutsAdapter(items);
         recycler.setAdapter(adapter);
 
+
         elements = adapter.getItemCount();
         CurrentExercise.setText("1");
-        TotalExercise.setText(String.valueOf(elements));
+        totalExercise.setText(String.valueOf(elements));
         CurrentSet.setText("1");
         TotalSet.setText(String.valueOf(TotalSets));
 //        toast(String.valueOf(elements))
