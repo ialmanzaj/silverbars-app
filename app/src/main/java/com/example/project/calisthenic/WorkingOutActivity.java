@@ -2,6 +2,7 @@ package com.example.project.calisthenic;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -452,6 +453,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 .contentColor(getResources().getColor(R.color.colorPrimaryText))
                 .positiveColor(getResources().getColor(R.color.colorPrimaryText))
                 .negativeColor(getResources().getColor(R.color.colorPrimaryText))
+                .backgroundColor(Color.WHITE)
                 .content("Are you sure you want to exit?")
                 .positiveText("Yes").onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override

@@ -51,6 +51,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -144,8 +146,12 @@ public class WorkoutActivity extends AppCompatActivity {
         download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DownloadFileFromURL().execute("https://www.dropbox.com/home/Proyecto%20Workout/audio-examples?preview=closedpullups.mp3");
-
+//                new DownloadFileFromURL().execute("https://www.dropbox.com/home/Proyecto%20Workout/audio-examples?preview=closedpullups.mp3");
+                try {
+                    mp3load();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
@@ -376,10 +382,12 @@ public class WorkoutActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK && data != null){
             mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
             position = data.getLongArrayExtra("positions");
+            toast("Activity result");
         }
         else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
             mySongs = null;
             position = null;
+            toast("No result");
         }
     }
 
@@ -505,91 +513,37 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
-    class DownloadFileFromURL extends AsyncTask<String, String, String> {
+    public void mp3load() throws IOException {
 
-        /**
-         * Before starting background thread Show Progress Bar Dialog
-         */
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showDialog(progress_bar_type);
+        URL url = new URL("https://mega.nz/#!Z9lmCT6a");
+        HttpURLConnection c = (HttpURLConnection) url.openConnection();
+        c.setRequestMethod("GET");
+        c.setDoOutput(true);
+        c.connect();
+
+        String PATH = Environment.getExternalStorageDirectory().getPath();
+        Log.v("Directory:", "PATH: " + PATH);
+        File file = new File(PATH);
+        file.mkdirs();
+
+        String fileName = "/workout.mp3";
+
+
+        File outputFile = new File(file, fileName);
+        FileOutputStream fos = new FileOutputStream(outputFile);
+
+        InputStream is = c.getInputStream();
+
+        byte[] buffer = new byte[16384];
+        int len1 = 0;
+        while ((len1 = is.read(buffer)) != -1) {
+            fos.write(buffer, 0, len1);
         }
+        fos.close();
+        is.close();
 
-        /**
-         * Downloading file in background thread
-         */
-        @Override
-        protected String doInBackground(String... f_url) {
-            int count;
-            try {
-                URL url = new URL(f_url[0]);
-                URLConnection conection = url.openConnection();
-                conection.connect();
-
-                // this will be useful so that you can show a tipical 0-100%
-                // progress bar
-                int lenghtOfFile = conection.getContentLength();
-
-                // download the file
-                InputStream input = new BufferedInputStream(url.openStream(),
-                        8192);
-
-                // Output stream
-                OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory().getPath()+"/workout.mp3");
-
-                byte data[] = new byte[1024];
-
-                long total = 0;
-
-                while ((count = input.read(data)) != -1) {
-                    total += count;
-                    // publishing the progress....
-                    // After this onProgressUpdate will be called
-                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
-
-                    // writing data to file
-                    output.write(data, 0, count);
-                }
-
-                // flushing output
-                output.flush();
-
-                // closing streams
-                output.close();
-                input.close();
-
-            } catch (Exception e) {
-                Log.e("Error: ", e.getMessage());
-            }
-            return null;
-        }
-        /**
-         * Updating progress bar
-         */
-        protected void onProgressUpdate(String... progress) {
-            // setting progress percentage
-            pDialog.setProgress(Integer.parseInt(progress[0]));
-        }
-        /**
-         * After completing background task Dismiss the progress dialog
-         **/
-        @Override
-        protected void onPostExecute(String file_url) {
-            // dismiss the dialog after the file was downloaded
-            dismissDialog(progress_bar_type);
-            Uri u = Uri.parse(Environment.getExternalStorageDirectory().getPath()+"/workout.mp3");
-            try{
-                MediaPlayer mediaPlayer = new MediaPlayer();
-                mediaPlayer.setDataSource(getApplicationContext(), u);
-                mediaPlayer.create(getApplicationContext(),u);
-                mediaPlayer.start();
-            } catch (IOException e){
-                e.printStackTrace();
-                Log.e("MediaPlayer Error:",e.toString());
-            }
-
-        }
     }
+
+
 
 }
