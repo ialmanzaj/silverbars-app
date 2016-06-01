@@ -1,9 +1,16 @@
 package com.example.project.calisthenic;
 
+import android.content.Context;
+import android.graphics.Point;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +21,7 @@ import java.util.List;
  */
 public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.WorkoutsViewHolder> {
     private List<WorkoutInfo> items;
+    private Context context;
 
     public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {
 
@@ -30,8 +38,9 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         }
     }
 
-    public WorkoutsAdapter(List<WorkoutInfo> items) {
+    public WorkoutsAdapter(List<WorkoutInfo> items, Context context) {
         this.items = items;
+        this.context = context;
     }
 
     @Override
@@ -49,7 +58,18 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
     @Override
     public void onBindViewHolder(WorkoutsViewHolder viewHolder, int i) {
         viewHolder.imagen.setImageResource(items.get(i).getImagen());
+//        WorkingOutActivity work = new WorkingOutActivity();
+        viewHolder.imagen.getLayoutParams().width = containerHeight(context);
         viewHolder.nombre.setText(items.get(i).getNombre());
 //        viewHolder.next.setText("Visitas:"+String.valueOf(items.get(i).getVisitas()));
+    }
+
+    public static int containerHeight(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        return width;
     }
 }

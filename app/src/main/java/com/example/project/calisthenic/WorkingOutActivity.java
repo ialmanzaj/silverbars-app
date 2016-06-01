@@ -65,6 +65,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView.LayoutManager lManager;
     private int TotalSets = 4, ActualSets = 0;
     AlertDialog alertDialog;
+    private MediaPlayer media;
 //    public PowerManager powerManager ;
 //    PowerManager.WakeLock wakeLock;
 
@@ -90,7 +91,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         prvLayout = (FrameLayout) findViewById(R.id.prvLayout);
         nxtLayout = (FrameLayout) findViewById(R.id.nxtLayout);
 
-        LinearLayout playerLayout = (LinearLayout) findViewById(R.id.PlayerLayout);
+        FrameLayout playerLayout = (FrameLayout) findViewById(R.id.PlayerLayout);
 
         PauseButton = (Button) findViewById(R.id.PauseButton);
 
@@ -283,7 +284,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
         // Crear un nuevo adaptador
-        adapter = new WorkoutsAdapter(items);
+        adapter = new WorkoutsAdapter(items,getApplicationContext());
         recycler.setAdapter(adapter);
 
 
@@ -449,6 +450,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         if (SelectedSongs) {
             mp.pause();
         }
+        if (media!=null){
+            media.pause();
+        }
         onTimerPause();
         new MaterialDialog.Builder(this)
                 .title("End Working Out?")
@@ -462,6 +466,12 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 dialog.dismiss();
+                if (media!=null){
+                    media.pause();
+                }
+                if (SelectedSongs) {
+                    mp.release();
+                }
                 finish();
             }
         })
@@ -566,29 +576,35 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void PlayAudio (String file){
-        MediaPlayer m = new MediaPlayer();
-        final MediaPlayer media = mp;
+        media = new MediaPlayer();
+        int maxVolume = 100;
+        final float volumeFull = (float)(Math.log(maxVolume)/Math.log(maxVolume));;
+        final float volumeHalf = (float)(Math.log(maxVolume-90)/Math.log(maxVolume));
+
         try {
-            if (m.isPlaying()) {
-                m.stop();
-                m.release();
-                m = new MediaPlayer();
+            if (media.isPlaying()) {
+                media.stop();
+                media.release();
+                media = new MediaPlayer();
             }
 
             AssetFileDescriptor descriptor = getAssets().openFd("audios/"+file+".mp3");
-            m.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
+            media.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
             descriptor.close();
 
-            m.prepare();
-            m.setVolume(50, 50);
-
-//            m.setLooping(true);
-            m.start();
-            media.setVolume(20,20);
-            m.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            media.prepare();
+            if (mp.isPlaying()){
+                mp.setVolume(0.04f,0.04f);
+            }
+            media.setVolume(volumeFull, volumeFull);
+            media.start();
+            media.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
-                public void onCompletion(MediaPlayer mp) {
-                 media.setVolume(50,50);
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    if (mp.isPlaying()) {
+                        mp.setVolume(volumeFull, volumeFull);
+                        mediaPlayer.release();
+                    }
                 }
             });
         } catch (Exception e) {
