@@ -16,8 +16,8 @@
         android:layout_above="@+id/linearLayout">
 
         <android.support.v7.widget.RecyclerView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:id="@+id/reciclador"
             android:orientation="horizontal"
 
@@ -34,59 +34,7 @@
         android:layout_above="@id/bottom"
         android:id="@+id/linearLayout">
 
-        <!--<ImageView-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="250dp"-->
-            <!--android:id="@+id/imageView6"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--android:background="@mipmap/imagen3" />-->
 
-        <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
-            <!--android:text="Upper body"-->
-            <!--android:id="@+id/textView13"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--android:textColor="#ffffff" />-->
-
-        <!--<LinearLayout-->
-            <!--android:orientation="horizontal"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--android:layout_marginTop="10dp"-->
-            <!--android:gravity="center">-->
-
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
-                <!--android:text="Next"-->
-                <!--android:id="@+id/textView14"-->
-                <!--android:textColor="#ffffff"-->
-                <!--android:layout_marginRight="5dp"-->
-                <!--android:textSize="30dp" />-->
-
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
-                <!--android:text="->"-->
-                <!--android:id="@+id/textView16"-->
-                <!--android:textColor="#ffffff"-->
-                <!--android:textSize="30dp" />-->
-
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
-                <!--android:text="2 min Rest"-->
-                <!--android:id="@+id/textView15"-->
-                <!--android:textColor="#ffffff"-->
-                <!--android:layout_marginLeft="5dp"-->
-                <!--android:textSize="30dp" />-->
-        <!--</LinearLayout>-->
 
         <LinearLayout
             android:orientation="horizontal"
@@ -347,15 +295,7 @@
                 android:background="@color/grey"
                 android:layout_marginRight="2dp" />
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnPause"
-                android:layout_gravity="right|center_vertical"
-                android:src="@android:drawable/ic_media_pause"
-                android:background="#00ffffff"
-                android:layout_marginRight="20dp"
-                android:visibility="gone" />
+
 
             <Button
                 android:layout_width="170dp"
@@ -469,15 +409,23 @@
 
 
             <ImageButton
-                android:layout_width="0dp"
-                android:minHeight="30dp"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
                 android:id="@+id/btnPlay"
-                android:layout_weight="1"
+
                 android:src="@android:drawable/ic_media_play"
                 android:background="#00ffffff"
                 />
-
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnPause"
+                android:layout_gravity="right|center_vertical"
+                android:src="@android:drawable/ic_media_pause"
+                android:background="#00ffffff"
+                android:layout_marginRight="20dp"
+                android:visibility="gone" />
         </LinearLayout>
 
 
