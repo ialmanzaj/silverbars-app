@@ -16,8 +16,8 @@
         android:layout_above="@+id/linearLayout">
 
         <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/reciclador"
             android:orientation="horizontal"
 
@@ -333,12 +333,11 @@
             <!--app:progressColor="#FFFF0000"-->
             <!--app:textSize="23sp" />-->
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:padding="5dp"
             android:background="#000"
-            android:orientation="horizontal"
             android:id="@+id/PlayerLayout">
 
             <ImageView
@@ -348,7 +347,10 @@
                 android:layout_gravity="left|center_vertical"
                 android:src="@mipmap/profile"
                 android:background="#eee"
-                android:layout_marginLeft="20dp" />
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="34dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true" />
 
             <!--<SeekBar-->
                 <!--android:layout_width="260dp"-->
@@ -365,13 +367,39 @@
                 <!--android:layout_marginEnd="15dp"-->
                 <!--android:layout_gravity="right|center_vertical" />-->
 
-            <LinearLayout
+
+            <ImageButton
                 android:layout_width="wrap_content"
+                android:minHeight="30dp"
+                android:layout_height="match_parent"
+                android:id="@+id/btnPlay"
+                android:src="@android:drawable/ic_media_play"
+                android:background="#00ffffff"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="center|right" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnPause"
+                android:layout_gravity="right|center_vertical"
+                android:src="@android:drawable/ic_media_pause"
+                android:background="#00ffffff"
+                android:layout_marginRight="20dp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="250dp"
                 android:paddingLeft="15dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/linearLayout2"
+                android:layout_gravity="center">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:id="@+id/song_name"
@@ -385,14 +413,15 @@
                     android:ellipsize="marquee"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
-
-
+                    android:paddingLeft="15dip"
+                    android:paddingRight="15dip"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
-                    android:freezesText="true"/>
+                    android:freezesText="true"
+                    android:textAlignment="center" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Unknow Artist"
@@ -401,11 +430,13 @@
 
                     android:textColor="#c9c9c9"
                     android:textSize="15dp"
-                    />
+                    android:layout_gravity="center"
+                    android:textAlignment="center" />
 
 
             </LinearLayout>
 
+        </FrameLayout>
 
 
             <ImageButton

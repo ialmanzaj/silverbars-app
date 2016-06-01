@@ -226,6 +226,8 @@ public class WorkoutActivity extends AppCompatActivity {
         });
         minusReps.setEnabled(false);
         minusReps.setClickable(false);
+        minusIsometric.setEnabled(false);
+        minusIsometric.setClickable(false);
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
         spinnerArray.add("Easy");
