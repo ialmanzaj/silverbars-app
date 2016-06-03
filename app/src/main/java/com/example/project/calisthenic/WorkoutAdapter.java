@@ -50,7 +50,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
 
         switch (viewType) {
             case TYPE_WORKOUT:
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.workout_row_layout, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_workout, parent, false);
                 return new VH(v);
             /*
             case TYPE_VIEW_MORE:

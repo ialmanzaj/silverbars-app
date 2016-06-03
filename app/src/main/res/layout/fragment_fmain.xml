@@ -5,289 +5,36 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:textColor="#000"
-        android:textSize="20sp"
-        android:text="Recommended by the community"/>
 
-    <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        app:twowayview_layoutManager="GridLayoutManager"
-        app:twowayview_numColumns="2"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button"
-        android:layout_gravity="center_horizontal" />
-
-    <!--
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-            <LinearLayout
-                android:orientation="horizontal"
+            <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/list"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                app:twowayview_layoutManager="GridLayoutManager"
+                app:twowayview_numColumns="2"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Button"
+                android:id="@+id/button"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:layout_gravity="center"
-                android:gravity="center">
+                android:textColor="#000"
+                android:textSize="20sp"
+                android:text="Recommended by the community"/>
 
-                <FrameLayout
-                    android:layout_width="300px"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5px">
 
-                    <ImageButton
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:id="@+id/imageButton"
-                        android:background="@mipmap/imagen1" />
 
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="#914e4e4e" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="START"
-                        android:id="@+id/button"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:background="@drawable/buttonsec"
-                        android:layout_marginBottom="5dp" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="80dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Chest"
-                        android:id="@+id/textView2"
-                        android:layout_gravity="center"
-                        android:textColor="#ffffff"
-                        android:textAlignment="center"
-                        android:textSize="28dp" />
-
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="300px"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5px">
-
-                    <ImageButton
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:id="@+id/imageButton2"
-                        android:background="@mipmap/imagen2" />
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="#914e4e4e" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="START"
-                        android:id="@+id/songs"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:background="@drawable/buttonsec"
-                        android:layout_marginBottom="5dp" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="80dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Upper Body"
-                        android:id="@+id/textView3"
-                        android:layout_gravity="center"
-                        android:visibility="visible"
-                        android:textColor="#ffffff"
-                        android:textAlignment="center"
-                        android:textSize="28dp" />
-
-                </FrameLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:gravity="center">
-
-                <FrameLayout
-                    android:layout_width="300px"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5px">
-
-                    <ImageButton
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:id="@+id/imageButton3"
-                        android:background="@mipmap/imagen3" />
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="#914e4e4e" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="START"
-                        android:id="@+id/button3"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:background="@drawable/buttonsec"
-                        android:layout_marginBottom="5dp" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="80dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Core"
-                        android:id="@+id/textView13"
-                        android:layout_gravity="center"
-                        android:textColor="#ffffff"
-                        android:textAlignment="center"
-                        android:textSize="28dp" />
-
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="300px"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5px">
-
-                    <ImageButton
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:id="@+id/imageButton4"
-                        android:background="@mipmap/imagen4" />
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="#914e4e4e" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="START"
-                        android:id="@+id/button4"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:background="@drawable/buttonsec"
-                        android:layout_marginBottom="5dp" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="80dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Back Destruction"
-                        android:id="@+id/textView14"
-                        android:layout_gravity="center"
-                        android:textColor="#ffffff"
-                        android:textAlignment="center"
-                        android:textSize="28dp" />
-
-                </FrameLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:gravity="center">
-
-                <FrameLayout
-                    android:layout_width="300px"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5px">
-
-                    <ImageButton
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:id="@+id/imageButton5"
-                        android:background="@mipmap/imagen5" />
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="#914e4e4e" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:text="START"
-                        android:id="@+id/button5"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:background="@drawable/buttonsec"
-                        android:layout_marginBottom="5dp" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="80dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Chest"
-                        android:id="@+id/textView15"
-                        android:layout_gravity="center"
-                        android:textColor="#ffffff"
-                        android:textAlignment="center"
-                        android:textSize="28dp" />
-
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="300px"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5px">
-
-                    <Button
-                        android:layout_width="fill_parent"
-                        android:layout_height="146dp"
-                        android:text="View More"
-                        android:id="@+id/button2"
-                        android:layout_gravity="right|bottom"
-                        android:background="@drawable/buttonsec" />
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:background="#914e4e4e" />
-                </FrameLayout>
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
-    -->
 
 </LinearLayout>
