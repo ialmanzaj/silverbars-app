@@ -245,16 +245,16 @@ public class WorkoutActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i){
                     case 0:
-                        plusPositive.setEnabled(false);
-                        plusPositive.setClickable(false);
+                        plusPositive.setEnabled(true);
+                        plusPositive.setClickable(true);
                         plusIsometric.setEnabled(true);
                         plusIsometric.setClickable(true);
-                        plusNegative.setEnabled(false);
-                        plusNegative.setClickable(false);
+                        plusNegative.setEnabled(true);
+                        plusNegative.setClickable(true);
                         minusPositive.setEnabled(true);
                         minusPositive.setClickable(true);
-                        minusIsometric.setEnabled(true);
-                        minusIsometric.setClickable(true);
+                        minusIsometric.setEnabled(false);
+                        minusIsometric.setClickable(false);
                         minusNegative.setEnabled(true);
                         minusNegative.setClickable(true);
                         Positive.setText("3");
@@ -270,8 +270,8 @@ public class WorkoutActivity extends AppCompatActivity {
                         plusNegative.setClickable(true);
                         minusPositive.setEnabled(true);
                         minusPositive.setClickable(true);
-                        minusIsometric.setEnabled(true);
-                        minusIsometric.setClickable(true);
+                        minusIsometric.setEnabled(false);
+                        minusIsometric.setClickable(false);
                         minusNegative.setEnabled(true);
                         minusNegative.setClickable(true);
                         Positive.setText("2");
@@ -287,8 +287,8 @@ public class WorkoutActivity extends AppCompatActivity {
                         plusNegative.setClickable(true);
                         minusPositive.setEnabled(false);
                         minusPositive.setClickable(false);
-                        minusIsometric.setEnabled(false);
-                        minusIsometric.setClickable(false);
+                        minusIsometric.setEnabled(true);
+                        minusIsometric.setClickable(true);
                         minusNegative.setEnabled(false);
                         minusNegative.setClickable(false);
                         Positive.setText("1");

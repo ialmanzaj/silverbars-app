@@ -18,6 +18,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -32,6 +33,7 @@ import com.afollestad.materialdialogs.Theme;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +65,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView recycler;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
-    private int TotalSets = 4, ActualSets = 0;
+    private int TotalSets = 4, ActualSets = 0, Time_aux = 0;
     AlertDialog alertDialog;
     private MediaPlayer media;
 //    public PowerManager powerManager ;
@@ -120,25 +122,13 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             nxtLayout.setVisibility(View.GONE);
                         }
 
-//                        s = Uri.parse("https://www.dropbox.com/home/Proyecto%20Workout/audio-examples?preview=closedpullups.mp3");
-//                        stream = MediaPlayer.create(getApplicationContext(),s);
-//                        stream.start();
-//                        mp.stop();
-//                        stream.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//                            @Override
-//                            public void onCompletion(MediaPlayer mediaPlayer) {
-//                                stream.release();
-//                                mp.start();
-//                            }
-//                        });
-
                         recycler.smoothScrollToPosition(y);
 
                         CurrentExercise.setText(String.valueOf(y+1));
 
                         Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                         vb.vibrate(1000);
-                        timer.setText(String.valueOf(totalReps+1));
+                        timer.setText(String.valueOf(totalReps));
                         timer2.cancel();
                         Timer(totalTime,1);
                     }
@@ -157,7 +147,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
                             Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                             vb.vibrate(500);
-                            timer.setText(String.valueOf(totalReps+1));
+                            timer.setText(String.valueOf(totalReps));
                             timer2.cancel();
                             Timer(totalTime,1);
                             nxtLayout.setVisibility(View.VISIBLE);
@@ -450,7 +440,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         if (SelectedSongs) {
             mp.pause();
         }
-        if (media!=null){
+        if (media!=null && media.isPlaying()){
             media.pause();
         }
         onTimerPause();
@@ -467,7 +457,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 dialog.dismiss();
                 if (media!=null){
-                    media.pause();
+                    media.release();
                 }
                 if (SelectedSongs) {
                     mp.release();
@@ -511,26 +501,28 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     public void Timer(int seconds,int interval){
         int totalsecs= seconds * 1000;
         int sec_interval= interval * 1000 ;
+        Time_aux = totalTime;
 
         timer2 = new CountDownTimer(totalsecs, sec_interval) {
             public void onTick(long millisUntilFinished) {performTick(millisUntilFinished);}
             public void onFinish() {}
         }.start();
-        performTick(totalsecs);
     }
 
     // CONTADOR DE REPETICIONES
     void performTick(long millisUntilFinished) {
-        String Format_Time = String.valueOf(Math.round(millisUntilFinished * 0.001f));
-        if (count == tempo){
+
+        int Format_Time = Math.round(millisUntilFinished * 0.001f);
+        if (Time_aux-tempo == Format_Time){
+            Time_aux = Time_aux - tempo;
+            toast(String.valueOf(Format_Time)+" / "+String.valueOf(Time_aux));
             actualReps--;
             timer.setText(String.valueOf(actualReps));
             // VIBRADOR POR REPETICION
             Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
             vb.vibrate(250);
-            count = 0;
         }
-        count++;
+//        toast(String.valueOf(Format_Time)+" / "+count);
     }
 
     public void toast(String text){
@@ -580,38 +572,46 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         int maxVolume = 100;
         final float volumeFull = (float)(Math.log(maxVolume)/Math.log(maxVolume));;
         final float volumeHalf = (float)(Math.log(maxVolume-90)/Math.log(maxVolume));
-
+        if (media.isPlaying()) {
+            media.stop();
+            media.release();
+            media = new MediaPlayer();
+        }
         try {
-            if (media.isPlaying()) {
-                media.stop();
-                media.release();
-                media = new MediaPlayer();
-            }
-
             AssetFileDescriptor descriptor = getAssets().openFd("audios/"+file+".mp3");
             media.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
             descriptor.close();
-
             media.prepare();
-            if (mp.isPlaying()){
-                mp.setVolume(0.04f,0.04f);
-            }
-            media.setVolume(volumeFull, volumeFull);
-            media.start();
-            media.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    if (mp.isPlaying()) {
-                        mp.setVolume(volumeFull, volumeFull);
-                        mediaPlayer.release();
-                    }
-                }
-            });
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        if (mp!=null && mp.isPlaying()){
+            mp.setVolume(0.04f,0.04f);
+        }
+        media.start();
 
+        media.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                if (mp!=null && mp.isPlaying()) {
+                    mp.setVolume(volumeFull, volumeFull);
+                    mediaPlayer.release();
+                }
+            }
+        });
     }
 
+    @Override
+    protected void onDestroy() {
+        toast("Exited");
+        timer2.cancel();
+        if (media.isPlaying()){
+            media.stop();
+            media.release();
+        }else
+            media.release();
+        super.onDestroy();
+        //Put your http calls code here . It always called when your activity close
+    }
 }
