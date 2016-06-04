@@ -182,8 +182,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         mp.release();
                         x = (x-1)%playlist.size();
                         u = Uri.parse(playlist.get(x).toString());
-                        String Songname = playlist.get(x).getName().toString().replace(".mp3","");
-                        song_name.setText(Songname);
+                        String SongName = playlist.get(x).getName().toString().replace(".mp3","");
+                        song_name.setText(SongName);
                         mp = MediaPlayer.create(getApplicationContext(),u);
                         mp.start();
                     }
@@ -201,7 +201,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
             }
             public void onSwipeLeft() {
-                if (SelectedSongs == true) {
+                if (SelectedSongs) {
                     //                Toast.makeText(getApplicationContext(), "left", Toast.LENGTH_SHORT).show();
                     int playlist_size = playlist.size();
                     if (playlist_size > 1 && x + 1 < playlist_size) {
@@ -396,6 +396,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             }
             u = Uri.parse(playlist.get(x).toString());
             song_name.setText(SongName(playlist.get(x)));
+            Log.d("WorkingOutActivity", (String) song_name.getText());
+
             mp = MediaPlayer.create(getApplicationContext(),u);
             btPlay.setVisibility(View.GONE);
             btPause.setVisibility(View.VISIBLE);
@@ -413,6 +415,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             btPlay.setClickable(false);
             btPause.setEnabled(false);
             btPause.setClickable(false);
+            Log.d("WorkingOutActivity", (String) song_name.getText());
         }
 
         alertDialog = new AlertDialog.Builder(this).create();
@@ -433,7 +436,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 TotalSet.setText(String.valueOf(TotalSets));
                 CurrentSet.setText("0");
                 Timer(totalTime,1);
-                if (SelectedSongs == true){
+                if (SelectedSongs){
                     mp.start();
                 }
                 alertDialog.dismiss();
@@ -489,6 +492,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             x = (x+1)%playlist.size();
             u = Uri.parse(playlist.get(x).toString());
             song_name.setText(SongName(playlist.get(x)));
+            Log.d("WorkingOutActivity", (String) song_name.getText());
             mp = MediaPlayer.create(getApplicationContext(),u);
             mp.start();
         }else{
