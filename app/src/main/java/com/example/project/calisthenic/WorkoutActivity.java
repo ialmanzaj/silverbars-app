@@ -144,7 +144,7 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
 //        downloadProgressView = (DownloadProgressView) findViewById(R.id.downloadProgressView);
-        download = (Button) findViewById(R.id.download);
+       /* download = (Button) findViewById(R.id.download);
         download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,7 +158,7 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
-//        Tab 2
+//        Tab 2*/
 
         Reps = (TextView) findViewById(R.id.Reps);
 

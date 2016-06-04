@@ -9,8 +9,8 @@ import android.support.v4.app.FragmentPagerAdapter;
  */
 public class SimpleTabAdapter extends FragmentPagerAdapter {
 
-    private int page = 5;
-    private String[] tabtitle = new String[]{"Home", "Workouts", "Progress", "Challenges", "Profile"};
+    private int page = 3;
+    private String[] tabtitle = new String[]{"Workouts", "My Workouts",  "Profile"};
 
     public SimpleTabAdapter(FragmentManager fm) {
         super(fm);
@@ -25,10 +25,6 @@ public class SimpleTabAdapter extends FragmentPagerAdapter {
             case 1:
                 return new WorkoutsFragment();
             case 2:
-                return new ProgressFragment();
-            case 3:
-                return new ChallengesFragment();
-            case 4:
                 return new ProfileFragment();
             default:
                 return null;

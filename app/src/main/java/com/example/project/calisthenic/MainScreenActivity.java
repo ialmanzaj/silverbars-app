@@ -44,25 +44,15 @@ public class MainScreenActivity extends AppCompatActivity implements ActionSheet
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Welcome 'name' ");
-
-        /*
-        settings = (ImageButton) findViewById(R.id.settings);
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Setting_popup();
-            }
-        });
-        Username = (TextView) findViewById(R.id.Username);
-        Username.setText("Welcome 'name' ");
-        */
 
 
-        int[] image = {R.mipmap.home, R.mipmap.acrobatics,
-                R.mipmap.progress, R.mipmap.ic_stars_black_24dp, R.mipmap.profile};
+
+        int[] image = {R.mipmap.home, R.mipmap.acrobatics, R.mipmap.profile};
+
         int[] color = {ContextCompat.getColor(this, R.color.BarColor), ContextCompat.getColor(this, R.color.BarColor),
-                ContextCompat.getColor(this, R.color.BarColor), ContextCompat.getColor(this, R.color.BarColor), ContextCompat.getColor(this, R.color.BarColor)};
+                ContextCompat.getColor(this, R.color.BarColor)};
+
+
         adapter = new SimpleTabAdapter(getSupportFragmentManager());
 
         view = (ViewPager) findViewById(R.id.view_pager);
@@ -70,6 +60,7 @@ public class MainScreenActivity extends AppCompatActivity implements ActionSheet
 
         BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigation);
         bottomNavigationView.isColoredBackground(false);
+
         bottomNavigationView.setItemActiveColorWithoutColoredBackground(ContextCompat.getColor(getApplicationContext(),R.color.colorPrimary));
         view.setAdapter(adapter);
         bottomNavigationView.setViewPager(view , color , image);
