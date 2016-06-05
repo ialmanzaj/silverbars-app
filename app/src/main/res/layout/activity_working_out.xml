@@ -86,15 +86,15 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
+                        android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="00"
+                        android:text="0"
                         android:id="@+id/timer"
-                        android:gravity="top|center"
                         android:textColor="@color/colorAccent"
                         android:textSize="60dp"
                         android:layout_gravity="center_horizontal|top"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:gravity="center_vertical" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -102,7 +102,8 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="Reps"
                         android:id="@+id/textView16"
-                        android:layout_gravity="center_horizontal|bottom" />
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:textColor="@color/colorAccent" />
 
                     <TextView
                         android:layout_width="50dp"
@@ -157,122 +158,156 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="60dp">
+            android:layout_height="65dp">
 
             <RelativeLayout
-                android:layout_width="185dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:padding="5dp">
+
+                android:layout_gravity="center_horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="/"
-                    android:id="@+id/textView18"
-                    android:gravity="center"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="25dp"
-                    android:layout_gravity="center_horizontal|top"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="0"
-                    android:id="@+id/CurrentSet"
-                    android:gravity="center"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="25dp"
-                    android:layout_gravity="center_horizontal|top"
-                    android:layout_alignTop="@+id/textView18"
-                    android:layout_toLeftOf="@+id/textView18"
-                    android:layout_toStartOf="@+id/textView18" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="0"
-                    android:id="@+id/TotalSet"
-                    android:gravity="center"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="25dp"
-                    android:layout_gravity="center_horizontal|top"
-                    android:layout_alignTop="@+id/textView18"
-                    android:layout_toRightOf="@+id/textView18"
-                    android:layout_toEndOf="@+id/textView18" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Set"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="SET"
                     android:id="@+id/textView19"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:layout_below="@+id/textView18"
+
+                    android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="-5dp" />
+
+                    android:textColor="@color/colorAccent" />
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="0"
+                        android:id="@+id/CurrentSet"
+                        android:gravity="center"
+                        android:textColor="@color/colorAccent"
+
+
+
+
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="/"
+                        android:id="@+id/textView18"
+                        android:gravity="center"
+                        android:textColor="@color/colorAccent"
+
+
+
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text=" 0"
+                        android:id="@+id/TotalSet"
+
+                        android:textColor="@color/colorAccent"
+                        />
+                </LinearLayout>
+
             </RelativeLayout>
 
+            <!---    Layout SETS -->
+
             <RelativeLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:padding="5dp">
+
+                android:layout_gravity="center_horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="/"
-                    android:id="@+id/textView20"
-                    android:gravity="center"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="25dp"
-                    android:layout_gravity="center_horizontal|top"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="0"
-                    android:id="@+id/CurrentExercise"
-                    android:gravity="center"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="25dp"
-                    android:layout_gravity="center_horizontal|top"
-                    android:layout_above="@+id/textView21"
-                    android:layout_toLeftOf="@+id/textView20"
-                    android:layout_toStartOf="@+id/textView20" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="0"
-                    android:id="@+id/TotalExercise"
-                    android:gravity="center"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="25dp"
-                    android:layout_gravity="center_horizontal|top"
-                    android:layout_alignTop="@+id/textView20"
-                    android:layout_toRightOf="@+id/textView20"
-                    android:layout_toEndOf="@+id/textView20" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Exercise"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="EXERCISE"
                     android:id="@+id/textView21"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:layout_below="@+id/textView20"
+                    android:textColor="@color/colorAccent"
+
+
+                    android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="-5dp" />
+
+
+                    />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="0"
+                        android:id="@+id/CurrentExercise"
+                        android:gravity="center"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="25dp"
+                        android:layout_gravity="center_horizontal|top"
+                        android:layout_above="@+id/textView21"
+                        android:layout_toLeftOf="@+id/textView20"
+                        android:layout_toStartOf="@+id/textView20" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="/"
+                        android:id="@+id/textView20"
+                        android:gravity="center"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="25dp"
+                        android:layout_gravity="center_horizontal|top"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="0"
+                        android:id="@+id/TotalExercise"
+                        android:gravity="center"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="25dp"
+                        android:layout_gravity="center_horizontal|top"
+
+
+                        />
+                </LinearLayout>
+
+
+
+
+
+
+
 
             </RelativeLayout>
 
@@ -281,28 +316,32 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_height="50dp"
+
             android:gravity="center"
-            android:layout_marginTop="5dp">
+            >
 
             <Button
-                android:layout_width="170dp"
-                android:layout_height="50dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:text="PAUSE"
                 android:id="@+id/PauseButton"
-                android:background="@color/grey"
-                android:layout_marginRight="2dp" />
+                android:background="@color/grey" />
 
             <Button
-                android:layout_width="170dp"
-                android:layout_height="50dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:text="END WORKOUT"
                 android:id="@+id/button11"
                 android:background="@color/red"
                 android:textColor="#ffffff"
-                android:layout_marginLeft="2dp" />
+
+                android:layout_marginLeft="4dp" />
         </LinearLayout>
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -396,7 +435,7 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="15dp"
 
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true">
