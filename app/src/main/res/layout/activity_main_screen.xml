@@ -25,20 +25,20 @@
                     android:id="@+id/Username"
                     android:gravity="center"
                     android:layout_gravity="center"/>
-                <ImageButton
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@mipmap/ic_settings_black_24dp"
-                    android:gravity="end"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="15dp"
-                    android:id="@+id/settings"/>
-            </android.support.v7.widget.Toolbar>
-            <View
+                    <View
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
                 android:background="@drawable/shadow" />
                 -->
+                <!--<ImageButton-->
+                    <!--android:layout_width="24dp"-->
+                    <!--android:layout_height="24dp"-->
+                    <!--android:src="@mipmap/ic_settings_black_24dp"-->
+                    <!--android:gravity="end"-->
+                    <!--android:layout_gravity="end"-->
+                    <!--android:layout_marginEnd="15dp"-->
+                    <!--android:id="@+id/settings"/>-->
+
         </android.support.v7.widget.Toolbar>
 
             <android.support.v4.view.ViewPager
