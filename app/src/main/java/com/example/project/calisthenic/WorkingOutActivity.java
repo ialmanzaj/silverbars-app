@@ -74,19 +74,12 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private int TotalSets = 4, ActualSets = 0, Time_aux = 0;
     AlertDialog alertDialog;
     private MediaPlayer media;
-//    public PowerManager powerManager ;
-//    PowerManager.WakeLock wakeLock;
+    private int[] Exercises_reps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_working_out);
-
-//        mCountDownView = (ContinuableCircleCountDownView) findViewById(R.id.CountDownView);
-//        powerManager = (PowerManager)getBaseContext().getSystemService(Context.POWER_SERVICE);
-//        wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Lock");
-//        wakeLock.acquire();
-
 
         ImageButton prvExercise = (ImageButton) findViewById(R.id.prvExercise);
         ImageButton nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
@@ -94,7 +87,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         CurrentSet = (TextView) findViewById(R.id.CurrentSet);
         TotalSet = (TextView) findViewById(R.id.TotalSet);
         CurrentExercise = (TextView) findViewById(R.id.CurrentExercise);
-        TextView totalExercise = (TextView) findViewById(R.id.TotalExercise);
+        final TextView totalExercise = (TextView) findViewById(R.id.TotalExercise);
 
         prvLayout = (FrameLayout) findViewById(R.id.prvLayout);
         nxtLayout = (FrameLayout) findViewById(R.id.nxtLayout);
@@ -104,8 +97,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         PauseButton = (Button) findViewById(R.id.PauseButton);
 
         TimeView = (TextView) findViewById(R.id.time);
-
-        actualReps = totalReps;
 
         timer = (TextView) findViewById(R.id.timer);
         timer.addTextChangedListener(new TextWatcher() {
@@ -134,9 +125,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
                         Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                         vb.vibrate(1000);
-                        timer.setText(String.valueOf(totalReps));
+                        timer.setText(String.valueOf(Exercises_reps[y]));
                         timer2.cancel();
+                        RepsTime(y);
                         Timer(totalTime,1);
+                        toast(String.valueOf(y));
                     }
                     else{
 //                    timer.setText("Well Done!");
@@ -151,13 +144,15 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
                             finish = true;
 
+                            Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
+                            vb.vibrate(500);
+
                             if(VibrationActivatedPerSet()){
                                 VibrationPerSet();
                             }
-
-
-                            timer.setText(String.valueOf(totalReps));
+                            timer.setText(String.valueOf(Exercises_reps[y]));
                             timer2.cancel();
+                            RepsTime(y);
                             Timer(totalTime,1);
                             nxtLayout.setVisibility(View.VISIBLE);
                             prvLayout.setVisibility(View.GONE);
@@ -311,7 +306,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 y--;
                 CurrentExercise.setText(String.valueOf(y+1));
                 timer2.cancel();
-                timer.setText(String.valueOf(totalReps));
+                timer.setText(String.valueOf(Exercises_reps[y]));
+                RepsTime(y);
                 Timer(totalTime,1);
                 if (y == 0){
                     prvLayout.setVisibility(View.GONE);
@@ -347,7 +343,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 y++;
                 CurrentExercise.setText(String.valueOf(y+1));
                 timer2.cancel();
-                timer.setText(String.valueOf(totalReps));
+                timer.setText(String.valueOf(Exercises_reps[y]));
+                RepsTime(y);
                 Timer(totalTime,1);
                 if (y == elements-1){
                     nxtLayout.setVisibility(View.GONE);
@@ -387,12 +384,15 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         Intent i = getIntent();
         Bundle b = i.getExtras();
+        Exercises_reps = b.getIntArray("Exercises");
         totalReps = b.getInt("reps");
         tempo = b.getInt("tempo");
-        totalTime = totalReps * tempo + 5;
+        RepsTime(y);
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
         position = b.getLongArray("pos");
         playlist = new ArrayList<>();
+
+        actualReps = Exercises_reps[0];
 
 
         if (mySongs != null && mySongs.size() > 0){
@@ -440,7 +440,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onFinish() {
 //                info.setVisibility(View.GONE);
-                timer.setText(String.valueOf(totalReps));
+                timer.setText(String.valueOf(Exercises_reps[0]));
                 TotalSet.setText(String.valueOf(TotalSets));
                 CurrentSet.setText("0");
                 Timer(totalTime,1);
@@ -457,9 +457,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         if (SelectedSongs) {
             mp.pause();
         }
-        if (media!=null && media.isPlaying()){
-            media.pause();
-        }
+//        if (media!=null && media.isPlaying()){
+//            media.pause();
+//        }
         onTimerPause();
         new MaterialDialog.Builder(this)
                 .title("End Working Out?")
@@ -515,9 +515,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             }
         });
     }
-
-
-
 
     public void Timer(int seconds,int interval){
         int totalsecs= seconds * 1000;
@@ -639,12 +636,13 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     protected void onDestroy() {
         toast("Exited");
         timer2.cancel();
-        if (media.isPlaying()){
-            media.stop();
-            media.release();
-        }else
+        if (media!=null)
             media.release();
         super.onDestroy();
         //Put your http calls code here . It always called when your activity close
+    }
+
+    public void RepsTime(int position){
+        totalTime = Exercises_reps[position] * tempo + 5;
     }
 }

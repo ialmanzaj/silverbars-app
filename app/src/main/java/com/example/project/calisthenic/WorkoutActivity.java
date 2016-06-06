@@ -102,6 +102,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private ArrayAdapter<String> adp;
     private DownloadProgressView downloadProgressView;
     private Button download;
+    static public int[] Exercises_reps;
 
     private static boolean VibrationIsActivePerRep=false;
     private static boolean VibrationIsActivePerSet=false;
@@ -111,7 +112,6 @@ public class WorkoutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
 
         setContentView(R.layout.activity_workout);
@@ -166,24 +166,21 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 //        Tab 1
-
-
-//        downloadProgressView = (DownloadProgressView) findViewById(R.id.downloadProgressView);
-       /* download = (Button) findViewById(R.id.download);
-        download.setOnClickListener(new View.OnClickListener() {
+        likeButton = (LikeButton) findViewById(R.id.star_button);
+        likeButton.setOnLikeListener(new OnLikeListener() {
             @Override
-            public void onClick(View v) {
-//                new DownloadFileFromURL().execute("https://www.dropbox.com/home/Proyecto%20Workout/audio-examples?preview=closedpullups.mp3");
-                try {
-                    mp3load();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            public void liked(LikeButton likeButton) {
+
+            }
+
+            @Override
+            public void unLiked(LikeButton likeButton) {
 
             }
         });
 
-//        Tab 2*/
+
+//        Tab 2
 
         Reps = (TextView) findViewById(R.id.Reps);
 
@@ -337,6 +334,11 @@ public class WorkoutActivity extends AppCompatActivity {
         items.add(new WorkoutInfo(R.mipmap.imagen4, "Legs", "Full Body", String.valueOf(ExerciseReps)));
         items.add(new WorkoutInfo(R.mipmap.imagen5, "Full body", "End Workout", String.valueOf(ExerciseReps)));
 
+        Exercises_reps = new int[items.size()];
+        for (int i = 0; i <items.size() ; i++){
+            Exercises_reps[i] = 1;
+        }
+
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
         if (recycler != null) {
@@ -350,7 +352,6 @@ public class WorkoutActivity extends AppCompatActivity {
         // Crear un nuevo adaptador
         adapter = new ExerciseAdapter(items);
         recycler.setAdapter(adapter);
-
 
 
         //Defining Tabs
@@ -449,6 +450,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 negative = Integer.parseInt(Negative.getText().toString());
                 int tempoTotal = positive + isometric + negative;
                 Intent intent = new Intent(this, WorkingOutActivity.class);
+                intent.putExtra("Exercises",Exercises_reps);
                 intent.putExtra("reps",totalReps);
                 intent.putExtra("tempo", tempoTotal);
                 intent.putExtra("pos",position);
@@ -535,38 +537,4 @@ public class WorkoutActivity extends AppCompatActivity {
     public static boolean VibrationActivatedPerSet(){
         return VibrationIsActivePerSet;
     }
-
-
-
-    public void mp3load() throws IOException {
-
-//        URL url = new URL("http://farm1.static.flickr.com/114/298125983_0e4bf66782_b.jpg");
-//        HttpURLConnection c = (HttpURLConnection) url.openConnection();
-//        c.setRequestMethod("GET");
-//        c.setDoOutput(true);
-//        c.connect();
-//
-//        String PATH = Environment.getExternalStorageDirectory().getPath();
-//        Log.v("LogPath", "PATH: " + PATH);
-//        File file = new File(PATH);
-//        file.mkdirs();
-//
-//        String fileName = "test.mp3";
-//
-//
-//        File outputFile = new File(file, fileName);
-//        FileOutputStream fos = new FileOutputStream(outputFile);
-//
-//        InputStream is = c.getInputStream();
-//
-//        byte[] buffer = new byte[1024];
-//        int len1 = 0;
-//        while ((len1 = is.read(buffer)) != -1) {
-//            fos.write(buffer, 0, len1);
-//        }
-//        fos.close();
-//        is.close();
-//            PlayAudio();
-    }
-
 }

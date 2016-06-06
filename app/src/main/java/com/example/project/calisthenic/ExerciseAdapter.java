@@ -1,5 +1,6 @@
 package com.example.project.calisthenic;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -84,6 +85,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                                 dialog.dismiss();
                                 //On Dialog "Done" ClickListener
                                 viewHolder.repetitions.setText(String.valueOf(NewRepValue()));
+                                WorkoutActivity workout = new WorkoutActivity();
+                                workout.Exercises_reps[a] = NewRepValue();
                             }
                         })
                         .show()
