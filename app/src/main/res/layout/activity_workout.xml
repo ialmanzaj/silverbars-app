@@ -238,59 +238,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginTop="10dp">
+                        android:layout_marginTop="30dp"
+                        android:paddingStart="80dp"
+                        android:paddingEnd="80dp">
 
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_height="wrap_content"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            >
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:text="Reps per Exercise"
-                                android:textColor="@color/colorPrimaryText"
-                                android:id="@+id/textView5"
-                                android:layout_gravity="center" />
-
-                            <LinearLayout
-                                android:orientation="vertical"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:gravity="center" >
-
-                                <Button
-                                    style="?android:attr/buttonStyleSmall"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="40dp"
-                                    android:text="+"
-                                    android:id="@+id/plusReps"
-                                    android:layout_gravity="center" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textAppearance="?android:attr/textAppearanceLarge"
-                                    android:id="@+id/Reps"
-                                    android:layout_gravity="center"
-                                    android:textSize="35dp"
-                                    android:textColor="@color/colorPrimaryText"
-                                    android:text="1" />
-
-                                <Button
-                                    style="?android:attr/buttonStyleSmall"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="40dp"
-                                    android:text="-"
-                                    android:id="@+id/minusReps"
-                                    android:layout_gravity="center" />
-
-                            </LinearLayout>
-                        </LinearLayout><!-- lINEAS OF REPS PER EXERCISE -->
+                        <!-- lINEAS OF REPS PER EXERCISE -->
 
                         <RelativeLayout
                             android:layout_width="0dp"

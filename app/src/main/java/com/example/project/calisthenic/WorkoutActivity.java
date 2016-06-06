@@ -166,18 +166,18 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 //        Tab 1
-        likeButton = (LikeButton) findViewById(R.id.star_button);
-        likeButton.setOnLikeListener(new OnLikeListener() {
-            @Override
-            public void liked(LikeButton likeButton) {
-
-            }
-
-            @Override
-            public void unLiked(LikeButton likeButton) {
-
-            }
-        });
+//        likeButton = (LikeButton) findViewById(R.id.star_button);
+//        likeButton.setOnLikeListener(new OnLikeListener() {
+//            @Override
+//            public void liked(LikeButton likeButton) {
+//
+//            }
+//
+//            @Override
+//            public void unLiked(LikeButton likeButton) {
+//
+//            }
+//        });
 
 
 //        Tab 2
