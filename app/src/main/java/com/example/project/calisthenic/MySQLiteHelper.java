@@ -24,10 +24,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     // Database Version
     public static final int DATABASE_VERSION = 1;
     // Database Name
-    public static final String DATABASE_NAME = "Personal";
+    public static final String DATABASE_NAME = "SilverbarsData";
     //     Database tables name
     public static final String TABLE_USERS = "users";
     public static final String TABLE_PLAYLISTS = "playlists";
+    public static final String TABLE_WORKOUTS = "workouts";
+    public static final String TABLE_EXERCISES = "exercises";
 
     //     Users Table Columns names
     public static final String KEY_IDUSER = "id";
@@ -39,12 +41,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String KEY_PNAME = "name";
     public static final String KEY_POSITION = "position";
     public static final String KEY_USERID = "user_id";
-
-
+    //    Workouts table Columns names
+    public static final String KEY_IDWORKOUT = "id";
+    //    Exercises table Column names
+    public static final String KEY_IDEXERCISE = "id";
 
     public MySQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-//        this.myContext = context;
     }
 
     private static final String CREATE_TABLE_USERS = "CREATE TABLE "+

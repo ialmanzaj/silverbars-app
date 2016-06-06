@@ -75,12 +75,23 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private int[] Exercises_reps;
 
     private boolean VibrationPerSet = false,VibrationPerRep = false;
-    private Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_working_out);
+
+        Intent i = getIntent();
+        Bundle b = i.getExtras();
+        Exercises_reps = b.getIntArray("Exercises");
+        tempo = b.getInt("tempo");
+        VibrationPerRep = b.getBoolean("VibrationPerRep");
+        VibrationPerSet =  b.getBoolean("VibrationPerSet");
+        RepsTime(y);
+        mySongs = (ArrayList) b.getParcelableArrayList("songlist");
+        position = b.getLongArray("pos");
+        playlist = new ArrayList<>();
+        actualReps = Exercises_reps[0];
 
         ImageButton prvExercise = (ImageButton) findViewById(R.id.prvExercise);
         ImageButton nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
@@ -130,7 +141,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         timer2.cancel();
                         RepsTime(y);
                         Timer(totalTime,1);
-                        toast(String.valueOf(y));
                     }
                     else{
 //                    timer.setText("Well Done!");
@@ -157,7 +167,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         }
                         else{
                             timer2.cancel();
-                            toast("done");
                         }
                     }
                 }
@@ -380,21 +389,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         btPlay.setOnClickListener(this);
         btPause.setOnClickListener(this);
 
-        Intent i = getIntent();
-        Bundle b = i.getExtras();
-        Exercises_reps = b.getIntArray("Exercises");
-        tempo = b.getInt("tempo");
-        VibrationPerRep = b.getBoolean("VibrationPerRep");
-        VibrationPerSet =  b.getBoolean("VibrationPerSet");
-
-        RepsTime(y);
-        mySongs = (ArrayList) b.getParcelableArrayList("songlist");
-        position = b.getLongArray("pos");
-        playlist = new ArrayList<>();
-
-        actualReps = Exercises_reps[0];
-
-
         if (mySongs != null && mySongs.size() > 0){
             SelectedSongs = true;
             for(int j = 0; j < mySongs.size(); j++){
@@ -533,7 +527,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         int Format_Time = Math.round(millisUntilFinished * 0.001f);
         if (Time_aux-tempo == Format_Time){
             Time_aux = Time_aux - tempo;
-            toast(String.valueOf(Format_Time)+" / "+String.valueOf(Time_aux));
             actualReps--;
             timer.setText(String.valueOf(actualReps));
 
@@ -551,14 +544,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     public void ActivateVibrationPerRep(){
         if (VibrationPerRep) {
-
+            Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
             vb.vibrate(250);
         }
 
     }
     public void ActivateVibrationPerSet(){
         if (VibrationPerSet){
-
+            Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
             vb.vibrate(1000);
         }
 
@@ -639,7 +632,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onDestroy() {
-        toast("Exited");
         timer2.cancel();
         if (media!=null)
             media.release();

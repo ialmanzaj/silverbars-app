@@ -41,12 +41,8 @@ import android.widget.ToggleButton;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.ayz4sci.androidfactory.DownloadProgressView;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
-import com.thin.downloadmanager.DefaultRetryPolicy;
-import com.thin.downloadmanager.DownloadRequest;
-import com.thin.downloadmanager.DownloadStatusListenerV1;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -100,7 +96,6 @@ public class WorkoutActivity extends AppCompatActivity {
     private long[] selected;
     private ArrayList<File> mySongs;
     private ArrayAdapter<String> adp;
-    private DownloadProgressView downloadProgressView;
     private Button download;
     static public int[] Exercises_reps;
 
@@ -225,7 +220,7 @@ public class WorkoutActivity extends AppCompatActivity {
         spinnerArray.add("Hard");
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item,spinnerArray
+                this, R.layout.spinner_item,spinnerArray
         );
 
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

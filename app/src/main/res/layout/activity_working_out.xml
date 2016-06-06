@@ -327,7 +327,7 @@
                 android:layout_weight="1"
                 android:text="PAUSE"
                 android:id="@+id/PauseButton"
-                android:background="@color/grey" />
+                android:background="@color/BarColor" />
 
             <Button
                 android:layout_width="0dp"
@@ -335,7 +335,7 @@
                 android:layout_weight="1"
                 android:text="END WORKOUT"
                 android:id="@+id/button11"
-                android:background="@color/red"
+                android:background="@color/secondColor"
                 android:textColor="#ffffff"
 
                 android:layout_marginLeft="4dp" />

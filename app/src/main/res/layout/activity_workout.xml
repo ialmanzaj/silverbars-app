@@ -71,7 +71,8 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/spinner"
                         android:layout_gravity="center_horizontal"
-                        android:spinnerMode="dialog"/>
+                        android:spinnerMode="dialog"
+                        android:background="@color/BarColor" />
 
                     <LinearLayout
                         android:orientation="horizontal"
@@ -280,6 +281,7 @@
 
                     </LinearLayout>
 
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -362,7 +364,8 @@
         android:src="@android:drawable/ic_menu_send"
         app:borderWidth="0dp"
         app:fabSize="normal"
-        app:rippleColor="@color/colorAccent"/>
+        app:backgroundTint="@color/colorAccent"
+        app:rippleColor="@color/colorPrimary"/>
 
 
 </RelativeLayout>
