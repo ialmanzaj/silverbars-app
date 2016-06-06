@@ -230,24 +230,6 @@ public class WorkoutActivity extends AppCompatActivity {
                 minusTempo(Negative,minusNegative,plusNegative);
             }
         });
-        plusReps = (Button) findViewById(R.id.plusReps);
-        plusReps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                plusTempo(Reps,plusReps,minusReps);
-                ExerciseReps = Integer.valueOf(Reps.getText().toString());
-            }
-        });
-        minusReps = (Button) findViewById(R.id.minusReps);
-        minusReps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                minusTempo(Reps,minusReps,plusReps);
-                ExerciseReps = Integer.valueOf(Reps.getText().toString());
-            }
-        });
-        minusReps.setEnabled(false);
-        minusReps.setClickable(false);
         minusIsometric.setEnabled(false);
         minusIsometric.setClickable(false);
 
@@ -441,9 +423,7 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private void LaunchWorkingOutActivity() {
-        int positive,isometric,negative, totalReps;
-        totalReps = Integer.parseInt(Reps.getText().toString());
-        if (totalReps > 0){
+        int positive,isometric,negative;
             if (Positive.getText().toString() != "" && Isometric.getText().toString() != "" && Negative.getText().toString() != ""){
                 positive = Integer.parseInt(Positive.getText().toString());
                 isometric = Integer.parseInt(Isometric.getText().toString());
@@ -451,7 +431,6 @@ public class WorkoutActivity extends AppCompatActivity {
                 int tempoTotal = positive + isometric + negative;
                 Intent intent = new Intent(this, WorkingOutActivity.class);
                 intent.putExtra("Exercises",Exercises_reps);
-                intent.putExtra("reps",totalReps);
                 intent.putExtra("tempo", tempoTotal);
                 intent.putExtra("pos",position);
                 intent.putExtra("songlist",mySongs);
@@ -460,9 +439,6 @@ public class WorkoutActivity extends AppCompatActivity {
             else{
                 toast("Must select a tempo");
             }
-        }
-        else
-            toast("Dont be lazzy, have to do more than 1 Rep");
     }
 
     public void LaunchMusicActivity() {

@@ -385,7 +385,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Intent i = getIntent();
         Bundle b = i.getExtras();
         Exercises_reps = b.getIntArray("Exercises");
-        totalReps = b.getInt("reps");
         tempo = b.getInt("tempo");
         RepsTime(y);
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
