@@ -38,6 +38,11 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.project.calisthenic.WorkoutActivity.VibrationActivatedPerRep;
+import static com.example.project.calisthenic.WorkoutActivity.VibrationActivatedPerSet;
+
+
+
 public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener {
 
      static MediaPlayer mp, stream;
@@ -146,8 +151,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
                             finish = true;
 
-                            Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
-                            vb.vibrate(500);
+                            if(VibrationActivatedPerSet()){
+                                VibrationPerSet();
+                            }
+
+
                             timer.setText(String.valueOf(totalReps));
                             timer2.cancel();
                             Timer(totalTime,1);
@@ -508,6 +516,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
+
+
+
     public void Timer(int seconds,int interval){
         int totalsecs= seconds * 1000;
         int sec_interval= interval * 1000 ;
@@ -528,9 +539,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             toast(String.valueOf(Format_Time)+" / "+String.valueOf(Time_aux));
             actualReps--;
             timer.setText(String.valueOf(actualReps));
-            // VIBRADOR POR REPETICION
-            Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
-            vb.vibrate(250);
+
+            if (VibrationActivatedPerRep()){
+                VibrationPerRep();
+            }
+
         }
 //        toast(String.valueOf(Format_Time)+" / "+count);
     }
@@ -539,6 +552,16 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
     }
 
+    public void VibrationPerRep(){
+        Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
+        vb.vibrate(250);
+
+    }
+    public void VibrationPerSet(){
+        Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
+        vb.vibrate(500);
+
+    }
     @Override
     public void onClick(View view) {
         int id = view.getId();

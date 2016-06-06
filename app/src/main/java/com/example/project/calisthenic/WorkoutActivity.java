@@ -28,12 +28,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -100,11 +103,15 @@ public class WorkoutActivity extends AppCompatActivity {
     private DownloadProgressView downloadProgressView;
     private Button download;
 
+    private static boolean VibrationIsActivePerRep=false;
+    private static boolean VibrationIsActivePerSet=false;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
 
         setContentView(R.layout.activity_workout);
@@ -129,19 +136,37 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
-//        Tab 1
-        likeButton = (LikeButton) findViewById(R.id.star_button);
-        likeButton.setOnLikeListener(new OnLikeListener() {
-            @Override
-            public void liked(LikeButton likeButton) {
+        // ACTIVAR VIBRACION POR SET O POR REPETICION
 
-            }
+        Switch VibrationRep = (Switch) findViewById(R.id.vibration_rep);
+        Switch VibrationSet = (Switch) findViewById(R.id.vibration_set);
 
-            @Override
-            public void unLiked(LikeButton likeButton) {
 
+        VibrationRep.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    VibrationIsActivePerRep = true;
+                } else {
+                    VibrationIsActivePerRep = false;
+                }
             }
         });
+
+        VibrationSet.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    VibrationIsActivePerSet = true;
+                } else {
+                    VibrationIsActivePerSet = false;
+                }
+            }
+        });
+
+
+//        Tab 1
+
 
 //        downloadProgressView = (DownloadProgressView) findViewById(R.id.downloadProgressView);
        /* download = (Button) findViewById(R.id.download);
@@ -363,22 +388,7 @@ public class WorkoutActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case progress_bar_type: // we set this to 0
-                pDialog = new ProgressDialog(this);
-                pDialog.setMessage("Downloading file. Please wait...");
-                pDialog.setIndeterminate(false);
-                pDialog.setMax(100);
-                pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                pDialog.setCancelable(true);
-                pDialog.show();
-                return pDialog;
-            default:
-                return null;
-        }
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -516,6 +526,17 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         }
     }
+
+
+   public static boolean VibrationActivatedPerRep(){
+       return VibrationIsActivePerRep;
+   }
+
+    public static boolean VibrationActivatedPerSet(){
+        return VibrationIsActivePerSet;
+    }
+
+
 
     public void mp3load() throws IOException {
 

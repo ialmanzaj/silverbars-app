@@ -52,60 +52,6 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:id="@+id/tab1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <FrameLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="200dp" >
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/imageView2"
-                            android:background="@mipmap/imagen2" />
-
-                        <TextView
-                            android:layout_width="fill_parent"
-                            android:layout_height="40dp"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Upper Body"
-                            android:id="@+id/textView7"
-                            android:layout_gravity="center_horizontal|top"
-                            android:background="#c8000000"
-                            android:textStyle="bold"
-                            android:textColor="#ffffff"
-                            android:gravity="center" />
-
-                        <com.like.LikeButton
-                            app:icon_type="heart"
-                            app:icon_size="25dp"
-                            android:id="@+id/star_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right|bottom" />
-
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="5dp" >
-
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Select Music"
-                            android:id="@+id/SelectMusic"
-                            android:layout_gravity="center_horizontal" />
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/tab2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -289,54 +235,142 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Reps per Exercise"
-                            android:textColor="@color/colorPrimaryText"
-                            android:id="@+id/textView5"
-                            android:layout_gravity="center" />
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp">
 
                         <LinearLayout
                             android:orientation="vertical"
-                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center" >
-
-                            <Button
-                                style="?android:attr/buttonStyleSmall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="40dp"
-                                android:text="+"
-                                android:id="@+id/plusReps"
-                                android:layout_gravity="center" />
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            >
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:id="@+id/Reps"
-                                android:layout_gravity="center"
-                                android:textSize="35dp"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="Reps per Exercise"
                                 android:textColor="@color/colorPrimaryText"
-                                android:text="1" />
-
-                            <Button
-                                style="?android:attr/buttonStyleSmall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="40dp"
-                                android:text="-"
-                                android:id="@+id/minusReps"
+                                android:id="@+id/textView5"
                                 android:layout_gravity="center" />
 
-                        </LinearLayout>
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center" >
+
+                                <Button
+                                    style="?android:attr/buttonStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:text="+"
+                                    android:id="@+id/plusReps"
+                                    android:layout_gravity="center" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:id="@+id/Reps"
+                                    android:layout_gravity="center"
+                                    android:textSize="35dp"
+                                    android:textColor="@color/colorPrimaryText"
+                                    android:text="1" />
+
+                                <Button
+                                    style="?android:attr/buttonStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:text="-"
+                                    android:id="@+id/minusReps"
+                                    android:layout_gravity="center" />
+
+                            </LinearLayout>
+                        </LinearLayout><!-- lINEAS OF REPS PER EXERCISE -->
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content">
+
+
+                            <Switch
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Vibration per rep"
+                                android:textColor="@color/colorPrimaryText"
+                                android:textSize="16sp"
+                                android:id="@+id/vibration_rep"
+
+                                />
+                            <Switch
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:layout_below="@+id/vibration_rep"
+                                android:text="Vibration per Set"
+                                android:textColor="@color/colorPrimaryText"
+                                android:textSize="16sp"
+                                android:id="@+id/vibration_set"
+                                android:layout_marginTop="5dp"
+
+                                />
+
+                        </RelativeLayout>
+
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="200dp" >
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/imageView2"
+                            android:background="@mipmap/imagen2" />
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="40dp"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Upper Body"
+                            android:id="@+id/textView7"
+                            android:layout_gravity="center_horizontal|top"
+                            android:background="#c8000000"
+                            android:textStyle="bold"
+                            android:textColor="#ffffff"
+                            android:gravity="center" />
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp" >
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Select your Music"
+                            android:id="@+id/SelectMusic"
+                            android:layout_gravity="center_horizontal" />
 
                     </LinearLayout>
                 </LinearLayout>
