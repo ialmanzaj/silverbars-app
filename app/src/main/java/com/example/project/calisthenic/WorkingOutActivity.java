@@ -38,9 +38,6 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.project.calisthenic.WorkoutActivity.VibrationActivatedPerRep;
-import static com.example.project.calisthenic.WorkoutActivity.VibrationActivatedPerSet;
-
 
 
 public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener {
@@ -74,7 +71,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private int TotalSets = 4, ActualSets = 0, Time_aux = 0;
     AlertDialog alertDialog;
     private MediaPlayer media;
+
     private int[] Exercises_reps;
+
+    private boolean VibrationPerSet = false,VibrationPerRep = false;
+    private Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,8 +124,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
                         CurrentExercise.setText(String.valueOf(y+1));
 
-                        Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
-                        vb.vibrate(1000);
+                        ActivateVibrationPerSet();
+
                         timer.setText(String.valueOf(Exercises_reps[y]));
                         timer2.cancel();
                         RepsTime(y);
@@ -144,12 +145,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
                             finish = true;
 
-                            Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
-                            vb.vibrate(500);
 
-                            if(VibrationActivatedPerSet()){
-                                VibrationPerSet();
-                            }
+
+
                             timer.setText(String.valueOf(Exercises_reps[y]));
                             timer2.cancel();
                             RepsTime(y);
@@ -386,6 +384,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Bundle b = i.getExtras();
         Exercises_reps = b.getIntArray("Exercises");
         tempo = b.getInt("tempo");
+        VibrationPerRep = b.getBoolean("VibrationPerRep");
+        VibrationPerSet =  b.getBoolean("VibrationPerSet");
+
         RepsTime(y);
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
         position = b.getLongArray("pos");
@@ -536,8 +537,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             actualReps--;
             timer.setText(String.valueOf(actualReps));
 
-            if (VibrationActivatedPerRep()){
-                VibrationPerRep();
+            if (VibrationPerRep){
+                ActivateVibrationPerRep();
             }
 
         }
@@ -548,14 +549,19 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
     }
 
-    public void VibrationPerRep(){
-        Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
-        vb.vibrate(250);
+    public void ActivateVibrationPerRep(){
+        if (VibrationPerRep) {
+
+            vb.vibrate(250);
+        }
 
     }
-    public void VibrationPerSet(){
-        Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
-        vb.vibrate(500);
+    public void ActivateVibrationPerSet(){
+        if (VibrationPerSet){
+
+            vb.vibrate(1000);
+        }
+
 
     }
     @Override

@@ -62,7 +62,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Tempo in Reps"
-                        android:textSize="40dp"
+                        android:textSize="20dp"
                         android:textColor="@color/colorPrimaryText"
                         android:layout_gravity="center" />
 
@@ -254,6 +254,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Vibration per rep"
+                                
                                 android:textColor="@color/colorPrimaryText"
                                 android:textSize="16sp"
                                 android:id="@+id/vibration_rep"

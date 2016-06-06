@@ -165,21 +165,7 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
 
-//        Tab 1
-//        likeButton = (LikeButton) findViewById(R.id.star_button);
-//        likeButton.setOnLikeListener(new OnLikeListener() {
-//            @Override
-//            public void liked(LikeButton likeButton) {
 //
-//            }
-//
-//            @Override
-//            public void unLiked(LikeButton likeButton) {
-//
-//            }
-//        });
-
-
 //        Tab 2
 
         Reps = (TextView) findViewById(R.id.Reps);
@@ -434,6 +420,8 @@ public class WorkoutActivity extends AppCompatActivity {
                 intent.putExtra("tempo", tempoTotal);
                 intent.putExtra("pos",position);
                 intent.putExtra("songlist",mySongs);
+                intent.putExtra("VibrationPerSet",VibrationIsActivePerSet);
+                intent.putExtra("VibrationPerRep",VibrationIsActivePerRep);
                 startActivity(intent);
             }
             else{
@@ -506,11 +494,5 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
 
-   public static boolean VibrationActivatedPerRep(){
-       return VibrationIsActivePerRep;
-   }
 
-    public static boolean VibrationActivatedPerSet(){
-        return VibrationIsActivePerSet;
-    }
 }
