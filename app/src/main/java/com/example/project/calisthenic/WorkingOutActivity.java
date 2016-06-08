@@ -68,10 +68,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView recycler;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
-    private int TotalSets = 4, ActualSets = 0, Time_aux = 0;
+    private int TotalSets = 0, ActualSets = 0, Time_aux = 0;
     AlertDialog alertDialog;
     private MediaPlayer media;
-
+    private JsonExercise[] Exercises;
     private int[] Exercises_reps;
 
     private boolean VibrationPerSet = false,VibrationPerRep = false;
@@ -83,10 +83,12 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         Intent i = getIntent();
         Bundle b = i.getExtras();
-        Exercises_reps = b.getIntArray("Exercises");
+        Exercises_reps = b.getIntArray("ExercisesReps");
         tempo = b.getInt("tempo");
         VibrationPerRep = b.getBoolean("VibrationPerRep");
         VibrationPerSet =  b.getBoolean("VibrationPerSet");
+        TotalSets = b.getInt("Sets");
+        Exercises = WorkoutActivity.ParsedExercises;
         RepsTime(y);
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
         position = b.getLongArray("pos");
@@ -270,11 +272,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         // Inicializar Workouts
         List<WorkoutInfo> items = new ArrayList<>();
 
-        items.add(new WorkoutInfo(R.mipmap.imagen1, "Upper Body", "core",null));
-        items.add(new WorkoutInfo(R.mipmap.imagen2, "Core", "Arms and Back",null));
-        items.add(new WorkoutInfo(R.mipmap.imagen3, "Arms and Back", "Legs",null));
-        items.add(new WorkoutInfo(R.mipmap.imagen4, "Legs", "Full Body",null));
-        items.add(new WorkoutInfo(R.mipmap.imagen5, "Full body", "End Workout",null));
+        for (int a = 0; a < Exercises.length; a++){
+            items.add(new WorkoutInfo(Exercises[a].exercise_name,null));
+        }
+//        items.add(new WorkoutInfo(R.mipmap.imagen1, "Upper Body", "core",null));
+//        items.add(new WorkoutInfo(R.mipmap.imagen2, "Core", "Arms and Back",null));
+//        items.add(new WorkoutInfo(R.mipmap.imagen3, "Arms and Back", "Legs",null));
+//        items.add(new WorkoutInfo(R.mipmap.imagen4, "Legs", "Full Body",null));
+//        items.add(new WorkoutInfo(R.mipmap.imagen5, "Full body", "End Workout",null));
 
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
@@ -299,7 +304,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         elements = adapter.getItemCount();
         CurrentExercise.setText("1");
         totalExercise.setText(String.valueOf(elements));
-        CurrentSet.setText("1");
         TotalSet.setText(String.valueOf(TotalSets));
 
 

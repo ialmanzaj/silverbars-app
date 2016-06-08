@@ -4,11 +4,13 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -22,19 +24,20 @@ import com.facebook.FacebookSdk;
 import com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationView;
 
 import java.io.File;
+import java.util.Arrays;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainScreenActivity extends AppCompatActivity implements ActionSheet.ActionSheetListener {
 
-    ViewPager view;
-    SimpleTabAdapter adapter;
-    Button songs;
-    String email,name;
-    int id;
-    TextView emailView, nameView, Username;
-    ImageButton settings;
-    MySQLiteHelper database;
+    private ViewPager view;
+    private SimpleTabAdapter adapter;
+    private Button songs;
+    private String email,name;
+    private int id;
+    private TextView emailView, nameView, Username;
+    private ImageButton settings;
+    private MySQLiteHelper database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,8 +122,6 @@ public class MainScreenActivity extends AppCompatActivity implements ActionSheet
                 .setListener(this).show();
     }
 
-
-
     public void toast(String text){
         Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
     }
@@ -129,5 +130,8 @@ public class MainScreenActivity extends AppCompatActivity implements ActionSheet
     public void onBackPressed(){
         finish();
     }
+
+
+
 
 }

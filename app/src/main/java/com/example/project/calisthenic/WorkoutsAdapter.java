@@ -57,9 +57,9 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
     @Override
     public void onBindViewHolder(WorkoutsViewHolder viewHolder, int i) {
-        viewHolder.imagen.setImageResource(items.get(i).getImagen());
+//        viewHolder.imagen.setImageResource(items.get(i).getImagen());
 //        WorkingOutActivity work = new WorkingOutActivity();
-        viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
+//        viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
         viewHolder.nombre.setText(items.get(i).getNombre());
 //        viewHolder.next.setText("Visitas:"+String.valueOf(items.get(i).getVisitas()));
     }

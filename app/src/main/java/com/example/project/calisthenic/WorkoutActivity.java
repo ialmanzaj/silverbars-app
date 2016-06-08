@@ -41,8 +41,14 @@ import android.widget.ToggleButton;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.google.gson.Gson;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.lucasr.twowayview.widget.TwoWayView;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -57,47 +63,36 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class WorkoutActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE = 1;
-
-
-    private ProgressDialog pDialog;
-    public static final int progress_bar_type = 0;
     private Button plusPositive;
     private Button minusPositive;
     private Button plusIsometric;
     private Button minusIsometric;
     private Button plusNegative;
     private Button minusNegative;
-    private Button plusReps;
-    private Button minusReps;
     private Button SelectMusic;
-    private TextView Positive, Negative, Isometric;
-    private ArrayList<File> play_list;
+    private TextView Positive, Negative, Isometric, Reps, Workout_name;
     private long[] position;
     private List<String> spinnerArray = new ArrayList<String>();
     private int value = 0;
-    private TextView Reps;
     private RecyclerView recycler;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
     private int ExerciseReps = 1;
-    private LikeButton likeButton;
-    private ListView ListMusic;
-    private String[] items, songs;
-    private Button clean,done;
-    private long[] selected;
     private ArrayList<File> mySongs;
-    private ArrayAdapter<String> adp;
-    private Button download;
     static public int[] Exercises_reps;
+    private String[] exercises;
+    private String workout_name;
+    private int workout_id = 0, workout_sets = 0;
+    private List<WorkoutInfo> items = new ArrayList<>();
+    public static JsonExercise[] ParsedExercises;
+
 
     private static boolean VibrationIsActivePerRep=false;
     private static boolean VibrationIsActivePerSet=false;
@@ -110,6 +105,17 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_workout);
+
+//        new AsyncTaskParseJson().execute();
+
+        Intent intent = getIntent();
+        exercises = intent.getStringArrayExtra("exercises");
+        workout_name = intent.getStringExtra("name");
+        workout_id = intent.getIntExtra("id",0);
+        workout_sets = intent.getIntExtra("sets",0);
+
+        Workout_name = (TextView) findViewById(R.id.Workout_name);
+        Workout_name.setText(workout_name);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -289,18 +295,12 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
         // Tab 3 Inicializar Exercises en el RecyclerView
-        List<WorkoutInfo> items = new ArrayList<>();
 
-        items.add(new WorkoutInfo(R.mipmap.imagen1, "Upper Body", "core", String.valueOf(ExerciseReps)));
-        items.add(new WorkoutInfo(R.mipmap.imagen2, "Core", "Arms and Back", String.valueOf(ExerciseReps)));
-        items.add(new WorkoutInfo(R.mipmap.imagen3, "Arms and Back", "Legs", String.valueOf(ExerciseReps)));
-        items.add(new WorkoutInfo(R.mipmap.imagen4, "Legs", "Full Body", String.valueOf(ExerciseReps)));
-        items.add(new WorkoutInfo(R.mipmap.imagen5, "Full body", "End Workout", String.valueOf(ExerciseReps)));
-
-        Exercises_reps = new int[items.size()];
-        for (int i = 0; i <items.size() ; i++){
-            Exercises_reps[i] = 1;
-        }
+//        items.add(new WorkoutInfo(R.mipmap.imagen1, "Upper Body", "core", String.valueOf(ExerciseReps)));
+//        items.add(new WorkoutInfo(R.mipmap.imagen2, "Core", "Arms and Back", String.valueOf(ExerciseReps)));
+//        items.add(new WorkoutInfo(R.mipmap.imagen3, "Arms and Back", "Legs", String.valueOf(ExerciseReps)));
+//        items.add(new WorkoutInfo(R.mipmap.imagen4, "Legs", "Full Body", String.valueOf(ExerciseReps)));
+//        items.add(new WorkoutInfo(R.mipmap.imagen5, "Full body", "End Workout", String.valueOf(ExerciseReps)));
 
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
@@ -312,10 +312,7 @@ public class WorkoutActivity extends AppCompatActivity {
         lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
 
-        // Crear un nuevo adaptador
-        adapter = new ExerciseAdapter(items);
-        recycler.setAdapter(adapter);
-
+        new AsyncTaskParseJson().execute();
 
         //Defining Tabs
         TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost2);
@@ -411,10 +408,11 @@ public class WorkoutActivity extends AppCompatActivity {
                 negative = Integer.parseInt(Negative.getText().toString());
                 int tempoTotal = positive + isometric + negative;
                 Intent intent = new Intent(this, WorkingOutActivity.class);
-                intent.putExtra("Exercises",Exercises_reps);
+                intent.putExtra("ExercisesReps",Exercises_reps);
                 intent.putExtra("tempo", tempoTotal);
                 intent.putExtra("pos",position);
                 intent.putExtra("songlist",mySongs);
+                intent.putExtra("Sets",workout_sets);
                 intent.putExtra("VibrationPerSet",VibrationIsActivePerSet);
                 intent.putExtra("VibrationPerRep",VibrationIsActivePerRep);
                 startActivity(intent);
@@ -488,6 +486,37 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
+    public class AsyncTaskParseJson extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {}
+
+        @Override
+        protected String doInBackground(String... arg0) {
+            JsonParser JsonData = new JsonParser();
+            ParsedExercises = new JsonExercise[exercises.length];
+            try {
+                for (int i = 0; i < exercises.length; i++){
+                    JsonExercise ExerciseData = JsonData.getExercise(exercises[i]);
+                    ParsedExercises[i] = ExerciseData;
+                    items.add(new WorkoutInfo(ExerciseData.exercise_name, String.valueOf(ExerciseReps)));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String strFromDoInBg) {
+            Exercises_reps = new int[items.size()];
+            for (int i = 0; i <items.size() ; i++){
+                Exercises_reps[i] = 1;
+            }
+            adapter = new ExerciseAdapter(items);
+            recycler.setAdapter(adapter);
+        }
+    }
 
 
 }

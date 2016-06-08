@@ -27,14 +27,14 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
         // Campos respectivos de un item
-        public ImageView imagen;
+//        public ImageView imagen;
         public TextView nombre;
         public TextView next;
         public TextView repetitions;
 
         public ExerciseViewHolder(View v) {
             super(v);
-            imagen = (ImageView) v.findViewById(R.id.imagen);
+//            imagen = (ImageView) v.findViewById(R.id.imagen);
             nombre = (TextView) v.findViewById(R.id.nombre);
 //            next = (TextView) v.findViewById(R.id.next);
             repetitions = (TextView) v.findViewById(R.id.repetitions);
@@ -61,7 +61,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     public void onBindViewHolder(final ExerciseViewHolder viewHolder, int i) {
         final int a = i;
         //Setting values to each recylerView Element
-        viewHolder.imagen.setImageResource(items.get(a).getImagen());
+//        viewHolder.imagen.setImageResource(items.get(a).getImagen());
         viewHolder.nombre.setText(items.get(a).getNombre());
 //        viewHolder.next.setText("Visitas:"+String.valueOf(items.get(i).getVisitas()));
         viewHolder.repetitions.setText(items.get(a).getReps());
