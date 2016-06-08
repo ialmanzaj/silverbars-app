@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.like.LikeButton;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,6 +75,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private JsonExercise[] Exercises;
     private int[] Exercises_reps;
 
+
     private boolean VibrationPerSet = false,VibrationPerRep = false;
 
     @Override
@@ -94,6 +96,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         position = b.getLongArray("pos");
         playlist = new ArrayList<>();
         actualReps = Exercises_reps[0];
+
 
         ImageButton prvExercise = (ImageButton) findViewById(R.id.prvExercise);
         ImageButton nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);

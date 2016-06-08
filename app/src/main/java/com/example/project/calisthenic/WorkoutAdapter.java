@@ -13,6 +13,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.like.LikeButton;
+
 import java.util.Arrays;
 
 /**
@@ -35,6 +37,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
 //        ImageView img;
         TextView text;
         Button btn;
+        LikeButton like;
 
         public VH(View v) {
             super(v);
@@ -43,6 +46,14 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
 //            img  = (ImageView) v.findViewById(R.id.img);
             text = (TextView)  v.findViewById(R.id.text);
             btn  = (Button)    v.findViewById(R.id.btn);
+            like = (LikeButton) v.findViewById(R.id.like);
+            like.setIconSizeDp(30);
+            like.setAnimationScaleFactor(1);
+            like.setUnlikeDrawableRes(R.drawable.bookmark_unlike);
+            like.setLikeDrawableRes(R.drawable.bookmark_like);
+//            like.setIconSizePx(64);
+
+            like.setExplodingDotColorsRes(R.color.colorPrimaryText,R.color.bookmark);
         }
     }
 

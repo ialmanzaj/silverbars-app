@@ -1,28 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/lib/com.like.LikeButton"
     android:id="@+id/layout"
     android:layout_width="wrap_content"
-    android:layout_height="150dp"
+    android:layout_height="200dp"
 
-    android:layout_margin="4dp">
+    android:layout_margin="4dp"
+    android:background="@drawable/boxshadow">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#914e4e4e"/>
+        android:background="#ccc"
+        android:layout_margin="1dp" />
 
-        <Button
-            android:id="@+id/btn"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:layout_margin="8dp"
-            android:layout_gravity="center_horizontal|bottom"
-            android:background="@drawable/buttonsec"
-            android:textColor="@color/colorSecondaryText"
-            android:text="START"/>
-
-        <TextView
+    <TextView
             android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,5 +25,38 @@
             android:textAlignment="center"
             android:text="START"
            />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@color/white"
+        android:layout_marginBottom="1dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp">
+
+        <Button
+            android:id="@+id/btn"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:background="@drawable/buttonsec"
+            android:textColor="@color/colorSecondaryText"
+            android:layout_marginStart="30dp"
+            android:text="START" />
+
+        <com.like.LikeButton
+            app:like_drawable="@drawable/like"
+            app:unlike_drawable="@drawable/unlike"
+            app:dots_primary_color="@color/colorPrimaryText"
+            app:dots_secondary_color="@color/bookmark"
+            android:id="@+id/like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
 </FrameLayout>
