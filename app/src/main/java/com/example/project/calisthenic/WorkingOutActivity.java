@@ -33,6 +33,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.like.LikeButton;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.Time;
@@ -54,7 +56,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private int x = 0, y=0, elements = 0, time=0, tempo = 0, count = 0, totalReps, actualReps;
     private int totalTime;
     private TextView timer;
-    private TextView song_name;
+    private TextView song_name, artist_name;
     private TextView CurrentSet;
     private TextView TotalSet;
     private TextView CurrentExercise;
@@ -96,6 +98,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         position = b.getLongArray("pos");
         playlist = new ArrayList<>();
         actualReps = Exercises_reps[0];
+
+        artist_name = (TextView) findViewById(R.id.artist_name);
 
 
         ImageButton prvExercise = (ImageButton) findViewById(R.id.prvExercise);
@@ -197,8 +201,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         mp.release();
                         x = (x-1)%playlist.size();
                         u = Uri.parse(playlist.get(x).toString());
-                        String SongName = playlist.get(x).getName().toString().replace(".mp3","");
+                        String SongName = SongName(playlist.get(x)).replace(".mp3","");
                         song_name.setText(SongName);
+                        String SongArtist = SongArtist(playlist.get(x));
+                        artist_name.setText(SongArtist);
                         mp = MediaPlayer.create(getApplicationContext(),u);
                         mp.start();
                     }
@@ -227,7 +233,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         mp.release();
                         x = (x + 1) % playlist.size();
                         u = Uri.parse(playlist.get(x).toString());
-                        song_name.setText(SongName(playlist.get(x)));
+                        String SongName = SongName(playlist.get(x)).replace(".mp3","");
+                        song_name.setText(SongName);
+                        String SongArtist = SongArtist(playlist.get(x));
+                        artist_name.setText(SongArtist);
                         mp = MediaPlayer.create(getApplicationContext(), u);
                         mp.start();
                     } else {
@@ -302,6 +311,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         // Crear un nuevo adaptador
         adapter = new WorkoutsAdapter(items,getApplicationContext());
         recycler.setAdapter(adapter);
+
+        if (adapter.getItemCount() == 1){
+            prvLayout.setVisibility(View.GONE);
+            nxtLayout.setVisibility(View.GONE);
+        }
 
 
         elements = adapter.getItemCount();
@@ -404,7 +418,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 }
             }
             u = Uri.parse(playlist.get(x).toString());
-            song_name.setText(SongName(playlist.get(x)));
+            String SongName = SongName(playlist.get(x)).replace(".mp3","");
+            song_name.setText(SongName);
+            String SongArtist = SongArtist(playlist.get(x));
+            artist_name.setText(SongArtist);
             Log.d("WorkingOutActivity", (String) song_name.getText());
 
             mp = MediaPlayer.create(getApplicationContext(),u);
@@ -500,7 +517,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         if (playlist_size>1){
             x = (x+1)%playlist.size();
             u = Uri.parse(playlist.get(x).toString());
-            song_name.setText(SongName(playlist.get(x)));
+            String SongName = SongName(playlist.get(x)).replace(".mp3","");
+            song_name.setText(SongName);
+            String SongArtist = SongArtist(playlist.get(x));
+            artist_name.setText(SongArtist);
             Log.d("WorkingOutActivity", (String) song_name.getText());
             mp = MediaPlayer.create(getApplicationContext(),u);
             mp.start();
@@ -589,14 +609,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private String SongName(File file){
-        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-        Uri uri = Uri.fromFile(file);
-        mediaMetadataRetriever.setDataSource(this, uri);
-        String name = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-
-        return name;
-    }
 
     public void onTimerResume(){
         Timer(time,1);
@@ -648,5 +660,29 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     public void RepsTime(int position){
         totalTime = Exercises_reps[position] * tempo + 5;
+    }
+    private String SongName(File file){
+        String title = null;
+        try{
+            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+            Uri uri = Uri.fromFile(file);
+            mediaMetadataRetriever.setDataSource(this, uri);
+            title = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+        }catch(Exception e){
+            Log.v("Exception",e.toString());
+        }
+        return title;
+    }
+    private String SongArtist(File file){
+        String artist = null;
+        try{
+            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+            Uri uri = Uri.fromFile(file);
+            mediaMetadataRetriever.setDataSource(this, uri);
+            artist = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+        }catch(Exception e){
+            Log.v("Exception",e.toString());
+        }
+        return artist;
     }
 }

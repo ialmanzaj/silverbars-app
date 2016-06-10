@@ -5,15 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".PlaylistPickerActivity">
 
-    <ListView
-        android:layout_width="fill_parent"
-        android:layout_height="300dp"
-        android:id="@+id/lvPlaylist"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/clean"
-        android:layout_alignParentBottom="true" />
-
     <Button
         android:layout_width="192dp"
         android:layout_height="wrap_content"
@@ -33,6 +24,64 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:background="#537755" />
+
+    <TabHost
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/tabHost4"
+        android:layout_below="@+id/clean"
+        android:layout_centerHorizontal="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/tab2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ListView
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/SavedPlaylist"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentBottom="true"
+                        android:choiceMode="multipleChoice" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ListView
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/lvPlaylist"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentBottom="true"
+                        android:choiceMode="multipleChoice" />
+                </LinearLayout>
+
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
 
     <!--<Button-->
         <!--android:layout_width="wrap_content"-->

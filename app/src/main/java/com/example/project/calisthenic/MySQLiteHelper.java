@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.DuplicateFormatFlagsException;
 
 /**
  * Created by andre_000 on 5/18/2016.
@@ -39,7 +40,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     //    Playlists Table Columns names
     public static final String KEY_IDPLIST = "id";
     public static final String KEY_PNAME = "name";
-    public static final String KEY_POSITION = "position";
+    public static final String KEY_SONGNAME = "songname";
     public static final String KEY_USERID = "user_id";
     //    Workouts table Columns names
     public static final String KEY_IDWORKOUT = "id";
@@ -52,17 +53,17 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_USERS = "CREATE TABLE "+
             TABLE_USERS+"(" +
-            KEY_IDUSER+"INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-            KEY_NAME+" name TEXT, " +
-            KEY_EMAIL+"email varchar, " +
-            KEY_ACTIVE+"active integer";
+            KEY_IDUSER+"INTEGER PRIMARY KEY," +
+            KEY_NAME+" TEXT, " +
+            KEY_EMAIL+" varchar, " +
+            KEY_ACTIVE+" integer)";
     private static final String CREATE_TABLE_PLAYLISTS = "CREATE TABLE "+
             TABLE_PLAYLISTS+"(" +
-            KEY_IDPLIST+"INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-            KEY_PNAME+" name TEXT, " +
-            KEY_POSITION+"email varchar, " +
-            KEY_USERID+"active integer," +
-            "FOREIGN KEY("+KEY_USERID+") REFERENCES "+TABLE_USERS+"("+KEY_IDUSER+")";
+            KEY_IDPLIST+" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            KEY_PNAME+" TEXT, " +
+            KEY_SONGNAME+" varchar, " +
+            KEY_USERID+" integer)";
+//            "FOREIGN KEY("+KEY_USERID+") REFERENCES "+TABLE_USERS+"("+KEY_IDUSER+")";
 
     @Override
     public void onCreate(SQLiteDatabase database) {
@@ -126,6 +127,33 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             results[2] = row.getString(2);
             results[3] = row.getString(3);
         }
+        db.close();
+        return results;
+    }
+
+    public void insertPlaylist(String name, String songname, int userid){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_PNAME,name);
+        cv.put(KEY_SONGNAME,songname);
+        cv.put(KEY_USERID,userid);
+        db.insert(TABLE_PLAYLISTS,null,cv);
+        db.close();
+    }
+
+    public String[] getPlaylist(int id){
+        String[] results = new String[4] ;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_PLAYLISTS+" WHERE "+KEY_IDPLIST+" = "+id,null);
+        if (row.moveToFirst()){
+            row.moveToFirst();
+            results[0] = String.valueOf(row.getInt(0));
+            results[1] = row.getString(1);
+            results[2] = row.getString(2);
+            results[3] = row.getString(3);
+        }
+        else
+            Log.v("Database Error","No results");
         db.close();
         return results;
     }
