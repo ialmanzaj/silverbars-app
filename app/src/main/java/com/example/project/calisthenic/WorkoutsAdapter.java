@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -29,11 +30,13 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         public ImageView imagen;
         public TextView nombre;
         public TextView next;
+        public RelativeLayout Layout;
 
         public WorkoutsViewHolder(View v) {
             super(v);
             imagen = (ImageView) v.findViewById(R.id.imagen);
             nombre = (TextView) v.findViewById(R.id.nombre);
+            Layout = (RelativeLayout) v.findViewById(R.id.Layout);
 //            next = (TextView) v.findViewById(R.id.next);
         }
     }
@@ -60,6 +63,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 //        viewHolder.imagen.setImageResource(items.get(i).getImagen());
 //        WorkingOutActivity work = new WorkingOutActivity();
 //        viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
+        viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
         viewHolder.nombre.setText(items.get(i).getNombre());
 //        viewHolder.next.setText("Visitas:"+String.valueOf(items.get(i).getVisitas()));
     }

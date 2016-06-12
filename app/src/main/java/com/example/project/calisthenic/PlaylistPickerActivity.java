@@ -12,6 +12,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -81,11 +82,34 @@ public class PlaylistPickerActivity extends AppCompatActivity {
             }
             ArrayAdapter<String> adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
             ListMusic.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            ListMusic.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    ListPlaylist.requestLayout();
+                    ListPlaylist.clearChoices();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
             ListMusic.setAdapter(adp);
 
             if (getPlaylist(1)!=null){
                 ArrayAdapter<String> adp2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, android.R.id.text1, getPlaylist(1));
                 ListPlaylist.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                ListPlaylist.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
                 ListPlaylist.setAdapter(adp2);
             }
             else{
@@ -103,6 +127,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                     selected = new long[choice];
                     songs = new String[choice];
                     final SparseBooleanArray spa = ListMusic.getCheckedItemPositions();
+                    final SparseBooleanArray spa2 = ListPlaylist.getCheckedItemPositions();
                     if (spa.size() < 1) {
                         mySongs = null;
                         for (int i = 0; i < choice; i++) {
@@ -114,7 +139,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    else {
+                    else if(spa.size() >= 1) {
                         playlist = new String[ListMusic.getCheckedItemCount()];
                         int x = 0;
                         for (int i = 0; i < choice; i++) {
@@ -179,9 +204,13 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                                         finish();
                                     }
                                 }).show();
+                    }else if(spa2.size() >= 1 ){
+//                        Intent returnIntent = new Intent();
+//                        returnIntent.putExtra("positions",selected);
+//                        returnIntent.putExtra("songs",mySongs);
+//                        setResult(RESULT_OK, returnIntent);
+//                        finish();
                     }
-
-
 
                 }
             });
