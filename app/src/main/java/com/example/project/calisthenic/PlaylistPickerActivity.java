@@ -179,7 +179,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                         dialog.dismiss();
                                         Intent returnIntent = new Intent();
-                                        returnIntent.putExtra("positions",selected);
+                                        returnIntent.putExtra("positions",playlist);
                                         returnIntent.putExtra("songs",mySongs);
                                         setResult(RESULT_OK, returnIntent);
                                         finish();
@@ -196,21 +196,29 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                                         }
                                         MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
                                         database.insertPlaylist(Playlist_name,convertArrayToString(playlist),1);
+                                        Log.v("Playlist",Arrays.toString(playlist));
                                         toast(Playlist_name);
                                         Intent returnIntent = new Intent();
-                                        returnIntent.putExtra("positions",selected);
+                                        returnIntent.putExtra("positions",playlist);
                                         returnIntent.putExtra("songs",mySongs);
                                         setResult(RESULT_OK, returnIntent);
                                         finish();
                                     }
                                 }).show();
-                    }else if(spa2.size() >= 1 ){
+                    }else if(spa2.size() == 1){
+                        MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
+                        int pos = ListPlaylist.getCheckedItemPosition();
+                        String[] result = database.getPlaylist(pos);
+                        String[] songs = convertStringToArray(result[2]);
+                        Log.v("Songs", Arrays.toString(songs));
 //                        Intent returnIntent = new Intent();
 //                        returnIntent.putExtra("positions",selected);
 //                        returnIntent.putExtra("songs",mySongs);
 //                        setResult(RESULT_OK, returnIntent);
 //                        finish();
                     }
+
+                    toast(String.valueOf(spa2));
 
                 }
             });

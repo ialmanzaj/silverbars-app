@@ -40,7 +40,7 @@ import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Objects;
 
 
 public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener {
@@ -51,8 +51,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 //    SeekBar sb;
     private ImageButton btPlay;
     private ImageButton btPause;
-    Uri u, s;
-    long[] position;
+    private Uri u, s;
+    private String[] position;
     private int x = 0, y=0, elements = 0, time=0, tempo = 0, count = 0, totalReps, actualReps;
     private int totalTime;
     private TextView timer;
@@ -95,7 +95,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Exercises = WorkoutActivity.ParsedExercises;
         RepsTime(y);
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
-        position = b.getLongArray("pos");
+        position = b.getStringArray("pos");
         playlist = new ArrayList<>();
         actualReps = Exercises_reps[0];
 
@@ -412,8 +412,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         if (mySongs != null && mySongs.size() > 0){
             SelectedSongs = true;
+            int x = 0;
             for(int j = 0; j < mySongs.size(); j++){
-                if (j == position[j]){
+                if (Objects.equals(position[x], SongName(mySongs.get(j)))){
+                    x++;
                     playlist.add(mySongs.get(j));
                 }
             }

@@ -78,7 +78,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private Button minusNegative;
     private Button SelectMusic;
     private TextView Positive, Negative, Isometric, Reps, Workout_name;
-    private long[] position;
+    private String[] position;
     private List<String> spinnerArray = new ArrayList<String>();
     private int value = 0;
     private RecyclerView recycler;
@@ -356,7 +356,7 @@ public class WorkoutActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK && data != null){
             mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
-            position = data.getLongArrayExtra("positions");
+            position = data.getStringArrayExtra("positions");
             toast("Activity result");
         }
         else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
