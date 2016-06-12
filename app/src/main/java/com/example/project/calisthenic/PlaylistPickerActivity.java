@@ -80,13 +80,20 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                 items[i] = SongName(mySongs.get(i));
             }
             ArrayAdapter<String> adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
-            ArrayAdapter<String> adp2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, getPlaylist());
-
-
-            ListPlaylist.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-            ListPlaylist.setAdapter(adp2);
             ListMusic.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
             ListMusic.setAdapter(adp);
+
+            if (getPlaylist(1)!=null){
+                ArrayAdapter<String> adp2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, android.R.id.text1, getPlaylist(1));
+                ListPlaylist.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+                ListPlaylist.setAdapter(adp2);
+            }
+            else{
+                String[] noResult = new String[1];
+                noResult[0] = "No Playlist";
+                ArrayAdapter<String> adp2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, noResult);
+                ListPlaylist.setAdapter(adp2);
+            }
 
             done = (Button)findViewById(R.id.done);
             done.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +135,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                                 .title("Create a Playlist")
                                 .content("Would you like to create a playlist with the selected songs?")
 //                                .positiveText("Done")
-                                .negativeText("Cancel")
+                                .negativeText("No")
 //                                .onPositive(new MaterialDialog.SingleButtonCallback() {
 //                                    @Override
 //                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -145,6 +152,12 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        dialog.dismiss();
+                                        Intent returnIntent = new Intent();
+                                        returnIntent.putExtra("positions",selected);
+                                        returnIntent.putExtra("songs",mySongs);
+                                        setResult(RESULT_OK, returnIntent);
+                                        finish();
                                         toast("Cancel");
                                     }
                                 })
@@ -159,13 +172,15 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                                         MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
                                         database.insertPlaylist(Playlist_name,convertArrayToString(playlist),1);
                                         toast(Playlist_name);
+                                        Intent returnIntent = new Intent();
+                                        returnIntent.putExtra("positions",selected);
+                                        returnIntent.putExtra("songs",mySongs);
+                                        setResult(RESULT_OK, returnIntent);
+                                        finish();
                                     }
                                 }).show();
                     }
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("positions",selected);
-                    returnIntent.putExtra("songs",mySongs);
-                    setResult(RESULT_OK, returnIntent);
+
 
 
                 }
@@ -264,10 +279,10 @@ public class PlaylistPickerActivity extends AppCompatActivity {
         return str;
     }
 
-    public String[] getPlaylist(){
+    public String[] getPlaylist(int userId){
         String[] result;
         MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
-        result = database.getPlaylist(1);
+        result = database.getUserPlaylists(userId);
 
         return result;
     }

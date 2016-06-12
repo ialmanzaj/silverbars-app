@@ -143,7 +143,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     public String[] getPlaylist(int id){
         String[] results = new String[4] ;
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor row = db.rawQuery("SELECT * FROM "+TABLE_PLAYLISTS+" WHERE "+KEY_IDPLIST+" = "+id,null);
         if (row.moveToFirst()){
             row.moveToFirst();
@@ -154,6 +154,31 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         }
         else
             Log.v("Database Error","No results");
+        db.close();
+        return results;
+    }
+
+    public String[] getUserPlaylists(int id){
+        String songName;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_PLAYLISTS+" WHERE "+KEY_USERID+" = "+id,null);
+        String[] results = null;
+        if (row.moveToFirst()){
+            row.moveToFirst();
+            results = new String[row.getCount()];
+            int i = 0;
+            songName = row.getString(row.getColumnIndex(KEY_PNAME));
+            results[i] = songName;
+            i++;
+            while(row.moveToNext()){
+                songName = row.getString(row.getColumnIndex(KEY_PNAME));
+                results[i] = songName;
+                i++;
+            }
+        }
+        else
+            Log.v("Database Error","No results");
+
         db.close();
         return results;
     }

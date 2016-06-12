@@ -1,33 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".PlaylistPickerActivity">
-
-    <Button
-        android:layout_width="192dp"
-        android:layout_height="wrap_content"
-        android:text="Limpiar"
-        android:id="@+id/clean"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="@color/colorAccent" />
-
-    <Button
-        android:layout_width="192dp"
-        android:layout_height="wrap_content"
-        android:text="Listo"
-        android:id="@+id/done"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:background="#537755" />
 
     <TabHost
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="519dp"
         android:id="@+id/tabHost4"
         android:layout_below="@+id/clean"
         android:layout_centerHorizontal="true">
@@ -83,6 +64,33 @@
         </LinearLayout>
     </TabHost>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal">
+
+        <Button
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:text="Limpiar"
+            android:id="@+id/clean"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorAccent" />
+
+        <Button
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+            android:text="Listo"
+            android:id="@+id/done"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:background="#537755" />
+    </LinearLayout>
+
     <!--<Button-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
@@ -90,4 +98,4 @@
         <!--android:id="@+id/boton"-->
         <!--android:layout_centerVertical="true"-->
         <!--android:layout_centerHorizontal="true" />-->
-</RelativeLayout>
+</LinearLayout>
