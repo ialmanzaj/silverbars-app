@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -96,6 +97,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         RepsTime(y);
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
         position = b.getStringArray("pos");
+        Log.v("Songs", Arrays.toString(position));
         playlist = new ArrayList<>();
         actualReps = Exercises_reps[0];
 
@@ -412,12 +414,13 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         if (mySongs != null && mySongs.size() > 0){
             SelectedSongs = true;
-            int x = 0;
+//            int z = 0;
             for(int j = 0; j < mySongs.size(); j++){
-                if (Objects.equals(position[x], SongName(mySongs.get(j)))){
-                    x++;
-                    playlist.add(mySongs.get(j));
-                }
+                for(int z = 0; z < position.length; z++)
+                    if (Objects.equals(position[z], SongName(mySongs.get(j)))){
+                        z++;
+                        playlist.add(mySongs.get(j));
+                    }
             }
             u = Uri.parse(playlist.get(x).toString());
             String SongName = SongName(playlist.get(x)).replace(".mp3","");

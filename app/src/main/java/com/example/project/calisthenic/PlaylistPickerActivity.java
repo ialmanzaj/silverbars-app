@@ -127,8 +127,8 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                     selected = new long[choice];
                     songs = new String[choice];
                     final SparseBooleanArray spa = ListMusic.getCheckedItemPositions();
-                    final SparseBooleanArray spa2 = ListPlaylist.getCheckedItemPositions();
-                    if (spa.size() < 1) {
+                    final int spa2 = ListPlaylist.getCheckedItemPosition();
+                    if (spa.size() == 0) {
                         mySongs = null;
                         for (int i = 0; i < choice; i++) {
                             selected[i] = -1;
@@ -138,8 +138,21 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                                 selected[i] = ListMusic.getItemIdAtPosition(i);
                             }
                         }
+                        if(spa2 != -1){
+                            mySongs = findSongs(Environment.getExternalStorageDirectory());
+                            MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
+                            int pos = ListPlaylist.getCheckedItemPosition();
+                            String[] result = database.getPlaylist(pos);
+                            String[] songs = convertStringToArray(result[2]);
+                            Log.v("Playlist", Arrays.toString(songs));
+                            Intent returnIntent = new Intent();
+                            returnIntent.putExtra("positions",songs);
+                            returnIntent.putExtra("songs",mySongs);
+                            setResult(RESULT_OK, returnIntent);
+                            finish();
+                        }
                     }
-                    else if(spa.size() >= 1) {
+                    else {
                         playlist = new String[ListMusic.getCheckedItemCount()];
                         int x = 0;
                         for (int i = 0; i < choice; i++) {
@@ -156,6 +169,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                                 x++;
                             }
                         }
+                        Log.v("Songs",Arrays.toString(playlist));
                         new MaterialDialog.Builder(PlaylistPickerActivity.this)
                                 .title("Create a Playlist")
                                 .content("Would you like to create a playlist with the selected songs?")
@@ -205,21 +219,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                                         finish();
                                     }
                                 }).show();
-                    }else if(spa2.size() == 1){
-                        MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
-                        int pos = ListPlaylist.getCheckedItemPosition();
-                        String[] result = database.getPlaylist(pos);
-                        String[] songs = convertStringToArray(result[2]);
-                        Log.v("Songs", Arrays.toString(songs));
-//                        Intent returnIntent = new Intent();
-//                        returnIntent.putExtra("positions",selected);
-//                        returnIntent.putExtra("songs",mySongs);
-//                        setResult(RESULT_OK, returnIntent);
-//                        finish();
                     }
-
-                    toast(String.valueOf(spa2));
-
                 }
             });
         }
