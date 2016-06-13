@@ -46,29 +46,24 @@ import java.util.Objects;
 
 public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener {
 
-     static MediaPlayer mp, stream;
+     static MediaPlayer mp;
     ArrayList<File> mySongs, playlist;
-//    Thread updateSeekBar;
-//    SeekBar sb;
     private ImageButton btPlay;
     private ImageButton btPause;
-    private Uri u, s;
+    private Uri u;
     private String[] position;
-    private int x = 0, y=0, elements = 0, time=0, tempo = 0, count = 0, totalReps, actualReps;
+    private int x = 0, y=0, elements = 0, time=0, tempo = 0, actualReps;
     private int totalTime;
     private TextView timer;
     private TextView song_name, artist_name;
     private TextView CurrentSet;
     private TextView TotalSet;
     private TextView CurrentExercise;
-    private TextView TimeView;
     private CountDownTimer timer2;
     private FrameLayout prvLayout;
     private FrameLayout nxtLayout;
     private Button PauseButton;
-    private boolean exit = false, SelectedSongs = false, finish = false;
-
-//    ContinuableCircleCountDownView mCountDownView;
+    private boolean SelectedSongs = false, finish = false;
     private RecyclerView recycler;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
@@ -77,15 +72,12 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private MediaPlayer media;
     private JsonExercise[] Exercises;
     private int[] Exercises_reps;
-
-
     private boolean VibrationPerSet = false,VibrationPerRep = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_working_out);
-
         Intent i = getIntent();
         Bundle b = i.getExtras();
         Exercises_reps = b.getIntArray("ExercisesReps");
@@ -100,39 +92,26 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Log.v("Songs", Arrays.toString(position));
         playlist = new ArrayList<>();
         actualReps = Exercises_reps[0];
-
         artist_name = (TextView) findViewById(R.id.artist_name);
-
-
         ImageButton prvExercise = (ImageButton) findViewById(R.id.prvExercise);
         ImageButton nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
-
         CurrentSet = (TextView) findViewById(R.id.CurrentSet);
         TotalSet = (TextView) findViewById(R.id.TotalSet);
         CurrentExercise = (TextView) findViewById(R.id.CurrentExercise);
         final TextView totalExercise = (TextView) findViewById(R.id.TotalExercise);
-
         prvLayout = (FrameLayout) findViewById(R.id.prvLayout);
         nxtLayout = (FrameLayout) findViewById(R.id.nxtLayout);
-
         RelativeLayout playerLayout = (RelativeLayout) findViewById(R.id.PlayerLayout);
-
         PauseButton = (Button) findViewById(R.id.PauseButton);
-
-        TimeView = (TextView) findViewById(R.id.time);
-
         timer = (TextView) findViewById(R.id.timer);
         timer.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 //                toast("Cambio"+charSequence);
                 actualReps = Integer.valueOf(charSequence.toString());
-
                 if (actualReps == 0){
                     if (y+1 < elements){
                         y++;
@@ -141,34 +120,22 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         if((y+1)==elements){
                             nxtLayout.setVisibility(View.GONE);
                         }
-
                         recycler.smoothScrollToPosition(y);
-
                         CurrentExercise.setText(String.valueOf(y+1));
-
                         ActivateVibrationPerSet();
-
                         timer.setText(String.valueOf(Exercises_reps[y]));
                         timer2.cancel();
                         RepsTime(y);
                         Timer(totalTime,1);
                     }
                     else{
-//                    timer.setText("Well Done!");
-
                         if (ActualSets+1 <= 4){
-
                             ActualSets++;
                             CurrentSet.setText(String.valueOf(ActualSets));
                             CurrentExercise.setText(String.valueOf("1"));
                             y = 0;
                             recycler.smoothScrollToPosition(y);
-
                             finish = true;
-
-
-
-
                             timer.setText(String.valueOf(Exercises_reps[y]));
                             timer2.cancel();
                             RepsTime(y);
@@ -176,19 +143,13 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             nxtLayout.setVisibility(View.VISIBLE);
                             prvLayout.setVisibility(View.GONE);
                         }
-                        else{
-                            timer2.cancel();
-                        }
+                        else{timer2.cancel();}
                     }
                 }
-
-
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
+            public void afterTextChanged(Editable editable) {}
         });
 
         playerLayout.setOnTouchListener(new OnSwipeTouchListener(this){
@@ -196,7 +157,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 if (SelectedSongs){
                     int playlist_size = playlist.size();
                     if (playlist_size > 1 && (x-1) >= 0 ){
-                        //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
                         btPlay.setVisibility(View.GONE);
                         btPause.setVisibility(View.VISIBLE);
                         mp.stop();
@@ -211,7 +171,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         mp.start();
                     }
                     else{
-                        //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
                         btPlay.setVisibility(View.GONE);
                         btPause.setVisibility(View.VISIBLE);
                         mp.stop();
@@ -221,14 +180,12 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         mp.start();
                     }
                 }
-
             }
+
             public void onSwipeLeft() {
                 if (SelectedSongs) {
-                    //                Toast.makeText(getApplicationContext(), "left", Toast.LENGTH_SHORT).show();
                     int playlist_size = playlist.size();
                     if (playlist_size > 1 && x + 1 < playlist_size) {
-                        //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
                         btPlay.setVisibility(View.GONE);
                         btPause.setVisibility(View.VISIBLE);
                         mp.stop();
@@ -242,7 +199,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         mp = MediaPlayer.create(getApplicationContext(), u);
                         mp.start();
                     } else {
-                        //                Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_SHORT).show();
                         btPlay.setVisibility(View.GONE);
                         btPause.setVisibility(View.VISIBLE);
                         mp.stop();
@@ -289,12 +245,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         for (int a = 0; a < Exercises.length; a++){
             items.add(new WorkoutInfo(Exercises[a].exercise_name,null));
         }
-//        items.add(new WorkoutInfo(R.mipmap.imagen1, "Upper Body", "core",null));
-//        items.add(new WorkoutInfo(R.mipmap.imagen2, "Core", "Arms and Back",null));
-//        items.add(new WorkoutInfo(R.mipmap.imagen3, "Arms and Back", "Legs",null));
-//        items.add(new WorkoutInfo(R.mipmap.imagen4, "Legs", "Full Body",null));
-//        items.add(new WorkoutInfo(R.mipmap.imagen5, "Full body", "End Workout",null));
-
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
 
@@ -414,7 +364,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         if (mySongs != null && mySongs.size() > 0){
             SelectedSongs = true;
-//            int z = 0;
             for(int j = 0; j < mySongs.size(); j++){
                 for(int z = 0; z < position.length; z++)
                     if (Objects.equals(position[z], SongName(mySongs.get(j)))){
@@ -480,9 +429,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         if (SelectedSongs) {
             mp.pause();
         }
-//        if (media!=null && media.isPlaying()){
-//            media.pause();
-//        }
         onTimerPause();
         new MaterialDialog.Builder(this)
                 .title("End Working Out?")
@@ -561,13 +507,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             Time_aux = Time_aux - tempo;
             actualReps--;
             timer.setText(String.valueOf(actualReps));
-
             if (VibrationPerRep){
                 ActivateVibrationPerRep();
             }
-
         }
-//        toast(String.valueOf(Format_Time)+" / "+count);
     }
 
     public void toast(String text){
@@ -579,16 +522,15 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
             vb.vibrate(250);
         }
-
     }
+
     public void ActivateVibrationPerSet(){
         if (VibrationPerSet){
             Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
             vb.vibrate(1000);
         }
-
-
     }
+
     @Override
     public void onClick(View view) {
         int id = view.getId();
@@ -637,12 +579,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         if (mp!=null && mp.isPlaying()){
             mp.setVolume(0.04f,0.04f);
         }
         media.start();
-
         media.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
@@ -660,7 +600,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         if (media!=null)
             media.release();
         super.onDestroy();
-        //Put your http calls code here . It always called when your activity close
     }
 
     public void RepsTime(int position){

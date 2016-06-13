@@ -129,17 +129,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                     final SparseBooleanArray spa = ListMusic.getCheckedItemPositions();
                     final int spa2 = ListPlaylist.getCheckedItemPosition();
                     if (spa.size() == 0) {
-                        mySongs = null;
-                        for (int i = 0; i < choice; i++) {
-                            selected[i] = -1;
-                        }
-                        for (int i = 0; i < choice; i++) {
-                            if (spa.get(i)) {
-                                selected[i] = ListMusic.getItemIdAtPosition(i);
-                            }
-                        }
                         if(spa2 != -1){
-                            mySongs = findSongs(Environment.getExternalStorageDirectory());
                             MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
                             int pos = ListPlaylist.getCheckedItemPosition();
                             String[] result = database.getPlaylist(pos);
@@ -151,6 +141,8 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                             setResult(RESULT_OK, returnIntent);
                             finish();
                         }
+                        else
+                            mySongs = null;
                     }
                     else {
                         playlist = new String[ListMusic.getCheckedItemCount()];
@@ -173,21 +165,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                         new MaterialDialog.Builder(PlaylistPickerActivity.this)
                                 .title("Create a Playlist")
                                 .content("Would you like to create a playlist with the selected songs?")
-//                                .positiveText("Done")
                                 .negativeText("No")
-//                                .onPositive(new MaterialDialog.SingleButtonCallback() {
-//                                    @Override
-//                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                                        for (int i = 0; i < choice; i++) {
-//                                            if (spa.get(i)) {
-//                                                songs[i] = ListMusic.getItemAtPosition(i).toString();
-//                                                Log.v("Song", songs[i]);
-//                                            }
-//                                        }
-//                                        dialog.dismiss();
-//                                        finish();
-//                                    }
-//                                })
                                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                                     @Override
                                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -245,7 +223,6 @@ public class PlaylistPickerActivity extends AppCompatActivity {
 
         if (root.listFiles() != null){
             File[] files = root.listFiles();
-//            Log.v("Files",files+", ");
             for(File singleFile : files){
                 if (singleFile.isDirectory() && !singleFile.isHidden()){
                     al.addAll(findSongs(singleFile));

@@ -92,6 +92,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private int workout_id = 0, workout_sets = 0;
     private List<WorkoutInfo> items = new ArrayList<>();
     public static JsonExercise[] ParsedExercises;
+    public static JsonReps[] ParsedReps;
 
 
     private static boolean VibrationIsActivePerRep=false;
@@ -495,9 +496,11 @@ public class WorkoutActivity extends AppCompatActivity {
         protected String doInBackground(String... arg0) {
             JsonParser JsonData = new JsonParser();
             ParsedExercises = new JsonExercise[exercises.length];
+            ParsedReps = new JsonReps[exercises.length];
             try {
                 for (int i = 0; i < exercises.length; i++){
                     JsonExercise ExerciseData = JsonData.getExercise(exercises[i]);
+                    JsonReps RepsData = JsonData.getReps(exercises[i]);
                     ParsedExercises[i] = ExerciseData;
                     items.add(new WorkoutInfo(ExerciseData.exercise_name, String.valueOf(ExerciseReps)));
                 }

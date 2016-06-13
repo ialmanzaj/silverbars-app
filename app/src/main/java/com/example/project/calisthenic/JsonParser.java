@@ -72,4 +72,26 @@ public class JsonParser {
         }
     }
 
+    public static JsonReps getReps(String urlString) throws Exception {
+        BufferedReader reader = null;
+        try {
+            URL url = new URL(urlString);
+            reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            StringBuffer buffer = new StringBuffer();
+            int read;
+            char[] chars = new char[1024];
+            while ((read = reader.read(chars)) != -1)
+                buffer.append(chars, 0, read);
+
+            String json = buffer.toString();
+            Gson gson = new Gson();
+            JsonReps reps = gson.fromJson(json, JsonReps.class);
+//            Log.v("Workouts:",Arrays.toString(workout));
+            return reps;
+        } finally {
+            if (reader != null)
+                reader.close();
+        }
+    }
+
 }
