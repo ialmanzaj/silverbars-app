@@ -72,7 +72,7 @@ public class JsonParser {
         }
     }
 
-    public static JsonReps getReps(String urlString) throws Exception {
+    public static JsonReps[] getReps(String urlString, int workout_id, int exercises) throws Exception {
         BufferedReader reader = null;
         try {
             URL url = new URL(urlString);
@@ -85,9 +85,18 @@ public class JsonParser {
 
             String json = buffer.toString();
             Gson gson = new Gson();
-            JsonReps reps = gson.fromJson(json, JsonReps.class);
-//            Log.v("Workouts:",Arrays.toString(workout));
-            return reps;
+            JsonReps[] reps = gson.fromJson(json, JsonReps[].class);
+            JsonReps[] ParsedReps = new JsonReps[exercises];
+            int y = 0;
+            for (int z = 0; z < reps.length; z++){
+                String workout = reps[z].workout_id;
+                if (workout.indexOf("workouts/"+workout_id)>0){
+                    ParsedReps[y] = reps[z];
+                    y++;
+                }
+            }
+            Log.v("Workouts:",Arrays.toString(ParsedReps));
+            return ParsedReps;
         } finally {
             if (reader != null)
                 reader.close();

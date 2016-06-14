@@ -6,8 +6,8 @@ package com.example.project.calisthenic;
 public class JsonReps {
 
     public int id;
-    public String[] workout_id;
-    public String[] exercise;
+    public String workout_id;
+    public String exercise;
     public int repetition;
 
     @Override

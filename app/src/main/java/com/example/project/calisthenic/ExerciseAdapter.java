@@ -60,11 +60,12 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     @Override
     public void onBindViewHolder(final ExerciseViewHolder viewHolder, int i) {
         final int a = i;
+        WorkoutActivity workout = new WorkoutActivity();
         //Setting values to each recylerView Element
 //        viewHolder.imagen.setImageResource(items.get(a).getImagen());
         viewHolder.nombre.setText(items.get(a).getNombre());
 //        viewHolder.next.setText("Visitas:"+String.valueOf(items.get(i).getVisitas()));
-        viewHolder.repetitions.setText(items.get(a).getReps());
+        viewHolder.repetitions.setText(String.valueOf(workout.Exercises_reps[i]));
         //OnLongClickListener for each recylclerView element
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             private TextView DialogName, Reps;
