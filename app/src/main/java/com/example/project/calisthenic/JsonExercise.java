@@ -11,10 +11,12 @@ public class JsonExercise {
     public String audio_url;
     public String[] type_exercise;
     public String[] muscle;
+    public String exercise_audio;
+    public String exercise_image;
 
     @Override
     public String toString(){
-        return (id+","+exercise_name+","+level+","+audio_url+","+type_exercise+","+muscle);
+        return (id+","+exercise_name+","+level+","+audio_url+","+type_exercise+","+muscle+","+exercise_audio+","+exercise_image);
     }
 
 }

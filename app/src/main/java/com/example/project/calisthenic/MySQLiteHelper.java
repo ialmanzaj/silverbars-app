@@ -7,13 +7,18 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.DuplicateFormatFlagsException;
 
 /**
@@ -113,6 +118,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             results[3] = row.getString(3);
         }
         db.close();
+        try {
+            BD_backup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return results;
     }
 
@@ -128,6 +138,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             results[3] = row.getString(3);
         }
         db.close();
+        try {
+            BD_backup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return results;
     }
 
@@ -145,6 +160,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         String[] results = new String[4] ;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor row = db.rawQuery("SELECT * FROM "+TABLE_PLAYLISTS+" WHERE "+KEY_IDPLIST+" = "+id,null);
+        Log.v("Row Count",String.valueOf(row.getCount()));
         if (row.moveToFirst()){
             row.moveToFirst();
             results[0] = String.valueOf(row.getInt(0));
@@ -155,6 +171,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         else
             Log.v("Database Error","No results");
         db.close();
+        try {
+            BD_backup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return results;
     }
 
@@ -169,17 +190,21 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             int i = 0;
             songName = row.getString(row.getColumnIndex(KEY_PNAME));
             results[i] = songName;
-            i++;
             while(row.moveToNext()){
+                i++;
                 songName = row.getString(row.getColumnIndex(KEY_PNAME));
                 results[i] = songName;
-                i++;
             }
         }
         else
             Log.v("Database Error","No results");
 
         db.close();
+        try {
+            BD_backup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return results;
     }
 
@@ -206,5 +231,37 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 //        db.execSQL("create table playlists(id integer primary key autoincrement, name text, position integer, user_id integer, FOREIGN KEY(user_id) REFERENCES users(id))");
 //
 //    }
+
+
+    public static void BD_backup() throws IOException {
+//        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
+
+        final String inFileName = "/data/data/com.example.project.calisthenic/databases/"+DATABASE_NAME;
+        File dbFile = new File(inFileName);
+        FileInputStream fis = null;
+
+        fis = new FileInputStream(dbFile);
+
+        String directorio = Environment.getExternalStorageDirectory()+"/Database";
+        File d = new File(directorio);
+        if (!d.exists()) {
+            d.mkdir();
+        }
+        String outFileName = directorio + "/"+DATABASE_NAME;
+
+        OutputStream output = new FileOutputStream(outFileName);
+
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = fis.read(buffer)) > 0) {
+            output.write(buffer, 0, length);
+        }
+
+        output.flush();
+        output.close();
+        fis.close();
+
+    }
+
 
 }

@@ -2,6 +2,7 @@ package com.example.project.calisthenic;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,6 +50,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
 
         ListMusic = (ListView)findViewById(R.id.lvPlaylist);
         ListPlaylist = (ListView)findViewById(R.id.SavedPlaylist);
+
 
         clean = (Button)findViewById(R.id.clean);
 
@@ -132,9 +134,8 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                         if(spa2 != -1){
                             MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
                             int pos = ListPlaylist.getCheckedItemPosition();
-                            String[] result = database.getPlaylist(pos);
+                            String[] result = database.getPlaylist(pos+1);
                             String[] songs = convertStringToArray(result[2]);
-                            Log.v("Playlist", Arrays.toString(songs));
                             Intent returnIntent = new Intent();
                             returnIntent.putExtra("positions",songs);
                             returnIntent.putExtra("songs",mySongs);
@@ -220,7 +221,6 @@ public class PlaylistPickerActivity extends AppCompatActivity {
 
     public ArrayList<File> findSongs(File root){
         ArrayList<File> al = new ArrayList<File>();
-
         if (root.listFiles() != null){
             File[] files = root.listFiles();
             for(File singleFile : files){
@@ -235,8 +235,6 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                 }
             }
         }
-
-
         return al;
     }
 
@@ -297,12 +295,11 @@ public class PlaylistPickerActivity extends AppCompatActivity {
         String[] result;
         MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
         result = database.getUserPlaylists(userId);
-
+        Log.v("Result",Arrays.toString(result));
         return result;
     }
     public static String[] convertStringToArray(String str){
-        String[] arr = str.split(strSeparator);
-        return arr;
+        return str.split(strSeparator);
     }
 
     @Override

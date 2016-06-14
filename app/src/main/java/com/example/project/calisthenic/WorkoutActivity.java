@@ -496,12 +496,13 @@ public class WorkoutActivity extends AppCompatActivity {
         protected String doInBackground(String... arg0) {
             JsonParser JsonData = new JsonParser();
             ParsedExercises = new JsonExercise[exercises.length];
-            ParsedReps = new JsonReps[exercises.length];
             try {
                 for (int i = 0; i < exercises.length; i++){
                     JsonExercise ExerciseData = JsonData.getExercise(exercises[i]);
-                    JsonReps RepsData = JsonData.getReps(exercises[i]);
+//                    JsonReps RepsData = JsonData.getReps("http://api.silverbarsapp.com/workout/?format=json");
                     ParsedExercises[i] = ExerciseData;
+//                    ParsedReps[i] = RepsData;
+
                     items.add(new WorkoutInfo(ExerciseData.exercise_name, String.valueOf(ExerciseReps)));
                 }
             } catch (Exception e) {
