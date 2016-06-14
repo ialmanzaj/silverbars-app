@@ -17,9 +17,12 @@
         android:background="#ccc"
         android:layout_margin="1dp" />
 
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Routine Name"
+
         android:id="@+id/text"
         />
     <LinearLayout
