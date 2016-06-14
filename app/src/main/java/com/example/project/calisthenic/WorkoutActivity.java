@@ -131,7 +131,8 @@ public class WorkoutActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Workouts");
         }
 
-        FloatingActionButton startButton = (FloatingActionButton) findViewById(R.id.fab);
+        Button startButton = (Button) findViewById(R.id.start_button);
+
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
