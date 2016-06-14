@@ -8,12 +8,42 @@
     android:paddingRight="8dp">
 
 
-            <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:twowayview_layoutManager="GridLayoutManager"
-                app:twowayview_numColumns="2"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:twowayview_layoutManager="GridLayoutManager"
+            app:twowayview_numColumns="2"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/NoInternet">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/RefreshInternet"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_refresh_black_36dp"
+                android:background="#fff" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="No Internet Conection"
+                android:id="@+id/textView"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+    </FrameLayout>
 
 
 </LinearLayout>

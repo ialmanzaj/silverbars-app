@@ -1,6 +1,8 @@
 package com.example.project.calisthenic;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -60,9 +64,19 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
     @Override
     public void onBindViewHolder(WorkoutsViewHolder viewHolder, int i) {
-//        viewHolder.imagen.setImageResource(items.get(i).getImagen());
-//        WorkingOutActivity work = new WorkingOutActivity();
-//        viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
+        WorkoutActivity workout = new WorkoutActivity();
+        Bitmap bmp = null;
+        //Setting values to each recylerView Element
+        URL url = null;
+        try {
+            url = new URL(workout.ParsedExercises[i].exercise_image);
+            Log.v("Url",url.toString());
+            bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        viewHolder.imagen.setImageBitmap(bmp);
+        viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
         viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
         viewHolder.nombre.setText(items.get(i).getNombre());
 //        viewHolder.next.setText("Visitas:"+String.valueOf(items.get(i).getVisitas()));

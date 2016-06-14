@@ -1,6 +1,8 @@
 package com.example.project.calisthenic;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +21,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
@@ -27,14 +32,14 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
         // Campos respectivos de un item
-//        public ImageView imagen;
+        public ImageView imagen;
         public TextView nombre;
         public TextView next;
         public TextView repetitions;
 
         public ExerciseViewHolder(View v) {
             super(v);
-//            imagen = (ImageView) v.findViewById(R.id.imagen);
+            imagen = (ImageView) v.findViewById(R.id.imagen);
             nombre = (TextView) v.findViewById(R.id.nombre);
 //            next = (TextView) v.findViewById(R.id.next);
             repetitions = (TextView) v.findViewById(R.id.repetitions);
@@ -61,8 +66,17 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     public void onBindViewHolder(final ExerciseViewHolder viewHolder, int i) {
         final int a = i;
         WorkoutActivity workout = new WorkoutActivity();
+        Bitmap bmp = null;
         //Setting values to each recylerView Element
-//        viewHolder.imagen.setImageResource(items.get(a).getImagen());
+        URL url = null;
+        try {
+            url = new URL(workout.ParsedExercises[i].exercise_image);
+            Log.v("Url",url.toString());
+            bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        viewHolder.imagen.setImageBitmap(bmp);
         viewHolder.nombre.setText(items.get(a).getNombre());
 //        viewHolder.next.setText("Visitas:"+String.valueOf(items.get(i).getVisitas()));
         viewHolder.repetitions.setText(String.valueOf(workout.Exercises_reps[i]));
