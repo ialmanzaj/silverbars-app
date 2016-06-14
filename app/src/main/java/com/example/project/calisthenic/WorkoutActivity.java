@@ -93,6 +93,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private List<WorkoutInfo> items = new ArrayList<>();
     public static JsonExercise[] ParsedExercises;
     public static JsonReps[] ParsedReps;
+    private int[] exercises_id;
 
 
     private static boolean VibrationIsActivePerRep=false;
@@ -114,7 +115,7 @@ public class WorkoutActivity extends AppCompatActivity {
         workout_name = intent.getStringExtra("name");
         workout_id = intent.getIntExtra("id",0);
         workout_sets = intent.getIntExtra("sets",0);
-
+        exercises_id = new int[exercises.length];
         Workout_name = (TextView) findViewById(R.id.Workout_name);
         Workout_name.setText(workout_name);
 
@@ -499,12 +500,13 @@ public class WorkoutActivity extends AppCompatActivity {
             try {
                 for (int i = 0; i < exercises.length; i++){
                     JsonExercise ExerciseData = JsonData.getExercise(exercises[i]);
-//                    JsonReps RepsData = JsonData.getReps("http://api.silverbarsapp.com/workout/?format=json");
                     ParsedExercises[i] = ExerciseData;
-//                    ParsedReps[i] = RepsData;
-
                     items.add(new WorkoutInfo(ExerciseData.exercise_name, String.valueOf(ExerciseReps)));
+                    exercises_id[i] = ExerciseData.id;
                 }
+                JsonReps[] RepsData = JsonData.getReps("http://api.silverbarsapp.com/workout/?format=json",workout_id,exercises.length);
+                ParsedReps = RepsData;
+                Log.v("Reps",Arrays.toString(ParsedReps));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -515,7 +517,12 @@ public class WorkoutActivity extends AppCompatActivity {
         protected void onPostExecute(String strFromDoInBg) {
             Exercises_reps = new int[items.size()];
             for (int i = 0; i <items.size() ; i++){
-                Exercises_reps[i] = 1;
+                String exercise = ParsedReps[i].exercise;
+                if (exercise.indexOf("exercises/"+exercises_id[i])>0){
+//                    Log.v("Exercise",exercise);
+                    Exercises_reps[i] = ParsedReps[i].repetition;
+                }
+//                Log.v("Repetitions",String.valueOf(Exercises_reps[i]));
             }
             adapter = new ExerciseAdapter(items);
             recycler.setAdapter(adapter);
