@@ -20,7 +20,7 @@
         <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
 
             app:twowayview_layoutManager="GridLayoutManager"
             app:twowayview_numColumns="2"
@@ -35,7 +35,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:id="@+id/NoInternet">
+            android:id="@+id/NoInternet"
+            android:visibility="gone">
 
             <ImageButton
                 android:layout_width="wrap_content"
