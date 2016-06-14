@@ -3,6 +3,7 @@ package com.example.project.calisthenic;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,7 +43,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         public VH(View v) {
             super(v);
 
-            layout = (FrameLayout) v.findViewById(R.id.layout);
+            layout = (CardView) v.findViewById(R.id.layout);
 //            img  = (ImageView) v.findViewById(R.id.img);
             text = (TextView)  v.findViewById(R.id.text);
             btn  = (Button)    v.findViewById(R.id.btn);

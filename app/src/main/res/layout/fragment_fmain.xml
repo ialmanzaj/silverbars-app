@@ -3,9 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="8dp"
-    android:paddingTop="4dp"
-    android:paddingRight="8dp">
+
+    android:paddingRight="10dp"
+    android:paddingLeft="10dp"
+   android:paddingTop="14dp"
+    android:paddingEnd="14dp"
+    >
+
+
 
 
     <FrameLayout
@@ -15,9 +20,15 @@
         <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+
             app:twowayview_layoutManager="GridLayoutManager"
-            app:twowayview_numColumns="2"/>
+            app:twowayview_numColumns="2"
+            android:orientation="vertical"
+
+            android:layout_weight="1" />
+
+
 
         <LinearLayout
             android:orientation="vertical"
