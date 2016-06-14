@@ -12,7 +12,6 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1.01"
         android:layout_above="@+id/linearLayout">
 
         <android.support.v7.widget.RecyclerView
@@ -29,7 +28,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:paddingTop="5dp"
         android:paddingBottom="10dp"
         android:layout_above="@id/bottom"
         android:id="@+id/linearLayout">
@@ -44,9 +43,10 @@
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="70dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:layout_marginRight="40dp"
+
                 android:gravity="center">
 
                 <FrameLayout
@@ -78,6 +78,7 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
+                android:layout_weight="1"
                 android:layout_height="match_parent">
 
                 <FrameLayout
@@ -105,25 +106,16 @@
                         android:layout_gravity="center_horizontal|bottom"
                         android:textColor="@color/colorAccent" />
 
-                    <TextView
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:id="@+id/time"
-                        android:layout_centerVertical="true"
-                        android:layout_toStartOf="@+id/textView21"
-                        android:layout_toLeftOf="@+id/textView21"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="20dp"
-                        android:textSize="20dp" />
+
                 </FrameLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="70dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="40dp"
+
                 android:gravity="end|right"
                 android:layout_gravity="right">
 
@@ -158,7 +150,7 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="65dp">
+            android:layout_height="80dp">
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -170,7 +162,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="SET"
                     android:id="@+id/textView19"
 
@@ -240,7 +232,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="EXERCISE"
                     android:id="@+id/textView21"
                     android:textColor="@color/colorAccent"
@@ -327,7 +319,8 @@
                 android:layout_weight="1"
                 android:text="PAUSE"
                 android:id="@+id/PauseButton"
-                android:background="@color/BarColor" />
+                 android:textColor="@color/white"
+                android:background="@color/gray_active_icon" />
 
             <Button
                 android:layout_width="0dp"
@@ -352,22 +345,7 @@
         android:layout_alignParentBottom="true"
         android:id="@+id/bottom">
 
-        <!--<com.serhatsurguvec.continuablecirclecountdownview.ContinuableCircleCountDownView-->
-        <!--xmlns:app="http://schemas.android.com/apk/lib/com.serhatsurguvec.continuablecirclecountdownview.ContinuableCircleCountDownView"-->
-        <!--android:id="@+id/CountDownView"-->
-        <!--android:layout_width="100dp"-->
-        <!--android:layout_height="fill_parent"-->
-        <!--android:layout_centerInParent="true"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:layout_marginBottom="20dp"-->
-        <!--android:layout_marginTop="20dp"-->
-        <!--app:shapeRate="9"-->
-        <!--app:innerColor="#c8000000"-->
-        <!--app:outerColor="#c8000000"-->
-        <!--app:progress="180"-->
-        <!--app:textColor="#FFffffff"-->
-        <!--app:progressColor="#FFFF0000"-->
-        <!--app:textSize="23sp" />-->
+
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -375,18 +353,6 @@
             android:padding="5dp"
             android:background="#000"
             android:id="@+id/PlayerLayout">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/song_img"
-
-                android:src="@mipmap/profile"
-                android:background="#eee"
-
-                android:layout_marginStart="15dp"
-                android:layout_centerVertical="true"
-                 />
 
 
             <RelativeLayout
