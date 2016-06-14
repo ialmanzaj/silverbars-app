@@ -3,17 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+
     android:paddingRight="10dp"
     android:paddingLeft="10dp"
    android:paddingTop="12dp"
     android:paddingEnd="12dp"
     >
 
-
             <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+
                 app:twowayview_layoutManager="GridLayoutManager"
                 app:twowayview_numColumns="2"/>
 
