@@ -300,12 +300,13 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Vibration per rep"
-                                
+
                                 android:textColor="@color/colorPrimaryText"
                                 android:textSize="16sp"
                                 android:id="@+id/vibration_rep"
 
-                                />
+                                android:enabled="true"
+                                android:checked="false" />
                             <Switch
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -317,7 +318,7 @@
                                 android:id="@+id/vibration_set"
                                 android:layout_marginTop="5dp"
 
-                                />
+                                android:checked="true" />
 
                         </RelativeLayout>
 
