@@ -1,6 +1,8 @@
 package com.example.project.calisthenic;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
@@ -16,6 +18,9 @@ import android.widget.TextView;
 
 import com.like.LikeButton;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Arrays;
 
 /**
@@ -35,7 +40,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
     public static class VH extends RecyclerView.ViewHolder {
 
         FrameLayout layout;
-//        ImageView img;
+        ImageView img;
         TextView text;
         Button btn;
         LikeButton like;
@@ -44,7 +49,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
             super(v);
 
             layout = (CardView) v.findViewById(R.id.layout);
-//            img  = (ImageView) v.findViewById(R.id.img);
+            img  = (ImageView) v.findViewById(R.id.img);
             text = (TextView)  v.findViewById(R.id.text);
             btn  = (Button)    v.findViewById(R.id.btn);
             like = (LikeButton) v.findViewById(R.id.like);
@@ -71,13 +76,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
             case TYPE_WORKOUT:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_workout, parent, false);
                 return new VH(v);
-            /*
-            case TYPE_VIEW_MORE:
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.ver_mas_row_layout, parent, false);
-                return new VH(v);
-                */
         }
-
         return null;
     }
 
@@ -86,7 +85,8 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
 
         switch (vh.getItemViewType()) {
             case TYPE_WORKOUT:
-//                vh.img.setImageResource(IMG[position]);
+                new DownloadImageTask(vh.img).execute(workouts[position].workout_image);
+//                vh.img.setImageBitmap(bmp);
                 vh.text.setText(workouts[position].workout_name);
                 vh.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -126,5 +126,36 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         return position < workouts.length ? TYPE_WORKOUT : TYPE_VIEW_MORE;
     }
 
+    class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
 
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            super.onPreExecute();
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+            bmImage.setImageBitmap(result);
+        }
+    }
 }

@@ -1,6 +1,9 @@
 package com.example.project.calisthenic;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -51,7 +54,7 @@ public class MainFragment extends Fragment {
             JsonParser JsonData = new JsonParser();
             try {
                 Workouts = JsonData.getWorkouts("http://api.silverbarsapp.com/workouts/?format=json");
-//                Log.v("Workout:",Arrays.toString(Workouts));
+                Log.v("Workout:",Arrays.toString(Workouts));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -63,6 +66,13 @@ public class MainFragment extends Fragment {
             recyclerView = (TwoWayView) getView().findViewById(R.id.list);
             recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
         }
+    }
+
+    public boolean CheckInternet(Context context){
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork.isConnectedOrConnecting();
+        return isConnected;
     }
 
 }
