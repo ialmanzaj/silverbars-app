@@ -10,20 +10,22 @@
     card_view:cardCornerRadius="4dp"
     card_view:cardElevation="2dp"
     android:layout_margin="4dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
             >
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-
+                android:alpha="0.8"
                 android:id="@+id/img"
                 android:contentDescription="Workout Name" />
 
@@ -32,11 +34,15 @@
                 android:layout_height="wrap_content"
                 android:text="Routine Name"
                 android:textColor="@color/white"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="15dp"
 
 
                 android:id="@+id/text"
                 />
-        </LinearLayout>
+        </RelativeLayout>
 
 
         <LinearLayout
