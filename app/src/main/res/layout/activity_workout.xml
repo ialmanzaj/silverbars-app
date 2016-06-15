@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/primary_dark_material_dark"
-                android:baselineAligned="false"></TabWidget>
+                android:baselineAligned="false" />
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
@@ -354,19 +354,17 @@
     </TabHost>
 
     </LinearLayout>
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
+
+    <Button
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:src="@android:drawable/ic_menu_send"
-        app:borderWidth="0dp"
-        app:fabSize="normal"
-        app:backgroundTint="@color/colorAccent"
-        app:rippleColor="@color/colorPrimary"/>
+        android:text="START"
+        android:textSize="18sp"
+        android:id="@+id/start_button"
+        android:background="@color/colorPrimaryDark"
+        android:elevation="4dp"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentBottom="true" />
 
 
 </RelativeLayout>
