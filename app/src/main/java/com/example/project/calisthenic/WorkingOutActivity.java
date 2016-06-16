@@ -78,8 +78,12 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_working_out);
+
+
         Intent i = getIntent();
         Bundle b = i.getExtras();
+
+
         Exercises_reps = b.getIntArray("ExercisesReps");
         tempo = b.getInt("tempo");
         VibrationPerRep = b.getBoolean("VibrationPerRep");
@@ -93,17 +97,21 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         playlist = new ArrayList<>();
         actualReps = Exercises_reps[0];
         artist_name = (TextView) findViewById(R.id.artist_name);
-        ImageButton prvExercise = (ImageButton) findViewById(R.id.prvExercise);
-        ImageButton nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
+
         CurrentSet = (TextView) findViewById(R.id.CurrentSet);
         TotalSet = (TextView) findViewById(R.id.TotalSet);
         CurrentExercise = (TextView) findViewById(R.id.CurrentExercise);
         final TextView totalExercise = (TextView) findViewById(R.id.TotalExercise);
+
+        ImageButton prvExercise = (ImageButton) findViewById(R.id.prvExercise);
+        ImageButton nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
         prvLayout = (FrameLayout) findViewById(R.id.prvLayout);
         nxtLayout = (FrameLayout) findViewById(R.id.nxtLayout);
         RelativeLayout playerLayout = (RelativeLayout) findViewById(R.id.PlayerLayout);
         PauseButton = (Button) findViewById(R.id.PauseButton);
         timer = (TextView) findViewById(R.id.timer);
+
+
         timer.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}

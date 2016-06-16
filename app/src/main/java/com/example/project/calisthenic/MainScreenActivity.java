@@ -46,6 +46,7 @@ public class MainScreenActivity extends AppCompatActivity implements ActionSheet
 
         setContentView(R.layout.activity_main_screen);
 
+
         int[] image = {R.mipmap.home, R.mipmap.acrobatics, R.mipmap.profile};
 
         int[] color = {ContextCompat.getColor(this, R.color.BarColor), ContextCompat.getColor(this, R.color.BarColor),
@@ -82,9 +83,7 @@ public class MainScreenActivity extends AppCompatActivity implements ActionSheet
             case 0:
                 break;
             case 1:
-//                LoginManager.getInstance().logOut();
-//                database.updateUser(email,0);
-//                finish();
+
                 break;
             default:
                 break;

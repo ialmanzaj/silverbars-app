@@ -19,11 +19,7 @@
 
             app:twowayview_layoutManager="GridLayoutManager"
             app:twowayview_numColumns="2"
-            android:orientation="vertical"
-
-             />
-
-
+            android:orientation="vertical" />
 
         <LinearLayout
             android:orientation="vertical"
