@@ -18,18 +18,7 @@
 
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:src="@drawable/ic_add_white_36dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="50dp"
-        app:backgroundTint="@color/colorPrimary"
-        app:fabSize="normal"/>
+
 
     <!--<Button-->
     <!--android:layout_width="wrap_content"-->

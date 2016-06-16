@@ -96,8 +96,8 @@ public class WorkoutActivity extends AppCompatActivity {
     private int[] exercises_id;
 
 
-    private static boolean VibrationIsActivePerRep=false;
-    private static boolean VibrationIsActivePerSet=false;
+    private static boolean VibrationIsActivePerRep=true;
+    private static boolean VibrationIsActivePerSet=true;
 
 
 
@@ -116,8 +116,7 @@ public class WorkoutActivity extends AppCompatActivity {
         workout_id = intent.getIntExtra("id",0);
         workout_sets = intent.getIntExtra("sets",0);
         exercises_id = new int[exercises.length];
-        Workout_name = (TextView) findViewById(R.id.Workout_name);
-        Workout_name.setText(workout_name);
+
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -128,7 +127,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         if (myToolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Workouts");
+            getSupportActionBar().setTitle(workout_name);
         }
 
         Button startButton = (Button) findViewById(R.id.start_button);
@@ -149,22 +148,14 @@ public class WorkoutActivity extends AppCompatActivity {
         VibrationRep.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    VibrationIsActivePerRep = true;
-                } else {
-                    VibrationIsActivePerRep = false;
-                }
+                VibrationIsActivePerRep = isChecked;
             }
         });
 
         VibrationSet.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    VibrationIsActivePerSet = true;
-                } else {
-                    VibrationIsActivePerSet = false;
-                }
+                VibrationIsActivePerSet = isChecked;
             }
         });
 
@@ -319,35 +310,28 @@ public class WorkoutActivity extends AppCompatActivity {
         TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost2);
         tabHost2.setup();
 
-        TabHost.TabSpec data1 = tabHost2.newTabSpec("Overview");
-        TabHost.TabSpec data2 = tabHost2.newTabSpec("Setup");
-        TabHost.TabSpec data3 = tabHost2.newTabSpec("Exercises");
-        TabHost.TabSpec data4 = tabHost2.newTabSpec("Muscles");
 
-        data1.setIndicator("Overview");
-        data1.setContent(R.id.tab1);
+        TabHost.TabSpec setup = tabHost2.newTabSpec("Setup");
+        TabHost.TabSpec exercises = tabHost2.newTabSpec("Exercises");
+        TabHost.TabSpec muscles = tabHost2.newTabSpec("Muscles");
 
-        data2.setIndicator("Setup");
-        data2.setContent(R.id.tab2);
 
-        data3.setIndicator("Exercises");
-        data3.setContent(R.id.tab3);
 
-        data4.setIndicator("Muscles");
-        data4.setContent(R.id.tab4);
+        setup.setIndicator("Setup");
+        setup.setContent(R.id.setup);
 
-        tabHost2.addTab(data1);
-        tabHost2.addTab(data2);
-        tabHost2.addTab(data3);
-        tabHost2.addTab(data4);
+        exercises.setIndicator("Exercises");
+        exercises.setContent(R.id.exercises);
 
-        SelectMusic = (Button) findViewById(R.id.SelectMusic);
-        SelectMusic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ShowMusicDialog();
-            }
-        });
+        muscles.setIndicator("Muscles");
+        muscles.setContent(R.id.muscles);
+
+        tabHost2.addTab(exercises);
+        tabHost2.addTab(setup);
+        tabHost2.addTab(muscles);
+
+
+
     }
 
 
