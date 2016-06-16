@@ -23,7 +23,7 @@
             android:minHeight="?android:attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:background="@color/primary_dark_material_dark"
-            android:fitsSystemWindows="true"/>
+            android:fitsSystemWindows="false"/>
 
         </android.support.design.widget.AppBarLayout>
 
@@ -31,8 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/tabHost2"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/colorPrimary">
+        android:layout_gravity="center_horizontal">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,12 +44,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/primary_dark_material_dark"
-                android:baselineAligned="false" />
+                android:baselineAligned="false"
+                android:tabStripEnabled="false" />
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:measureAllChildren="false">
 
                 <LinearLayout
                     android:id="@+id/tab1"
@@ -334,14 +335,22 @@
                 <LinearLayout
                     android:id="@+id/tab3"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                         <android.support.v7.widget.RecyclerView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/reciclador"
+                            android:scrollbars="vertical"
                             android:layout_gravity="center_horizontal"
-                            android:scrollbars="horizontal"/>
+
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+
+
+                            />
+
                 </LinearLayout>
 
                 <LinearLayout

@@ -46,16 +46,6 @@ public class MainScreenActivity extends AppCompatActivity implements ActionSheet
 
         setContentView(R.layout.activity_main_screen);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Setting_popup();
-                return true;
-            }
-        });
 
 
 

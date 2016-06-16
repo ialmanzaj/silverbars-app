@@ -4,6 +4,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout"
     android:layout_width="wrap_content"
+    android:minWidth="165dp"
     android:layout_height="200dp"
 
     card_view:cardCornerRadius="4dp"
@@ -12,54 +13,64 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#ccc"
-        android:layout_margin="1dp" >
+        android:layout_height="match_parent">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="129dp">
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            >
 
             <ImageView
                 android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:alpha="0.8"
+                android:id="@+id/img"
+                android:contentDescription="Workout Name" />
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/img" />
-        </FrameLayout>
-    </LinearLayout>
+                android:text="Routine Name"
+                android:textColor="@color/white"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="15dp"
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Routine Name"
+                android:id="@+id/text"
+                />
+        </RelativeLayout>
 
-        android:id="@+id/text"
-        />
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:paddingTop="5dp"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"
-        android:paddingBottom="5dp"
-        android:background="@color/white"
-        android:layout_marginBottom="1dp"
-        android:layout_marginLeft="1dp"
-        android:layout_marginRight="1dp">
 
-        <Button
-            android:id="@+id/btn"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_gravity="center"
-            android:background="@color/gray_active_icon"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
 
-            android:textColor="@color/white"
 
-            android:text="START" />
+            android:layout_gravity="center_horizontal|bottom"
+            android:paddingTop="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="10dp"
+            android:background="@color/white"
+
+
+            >
+            <Button
+                    android:id="@+id/btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:text="START"
+                    android:background="@color/gray_active_icon"
+                    android:textColor="@color/white"
+
+
+                    android:layout_gravity="left" />
 
         <com.like.LikeButton
             android:layout_marginTop="7dp"
@@ -69,7 +80,9 @@
             app:dots_secondary_color="@color/bookmark"
             android:id="@+id/like"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:minHeight="32dp"
+            android:gravity="right"/>
 
     </LinearLayout>
 

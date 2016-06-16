@@ -1,32 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+
 
     android:paddingRight="10dp"
     android:paddingLeft="10dp"
-   android:paddingTop="14dp"
-    android:paddingEnd="14dp"
+   android:paddingTop="10dp"
+    android:paddingEnd="10dp"
     >
 
-
-
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
+
             app:twowayview_layoutManager="GridLayoutManager"
             app:twowayview_numColumns="2"
             android:orientation="vertical"
 
-            android:layout_weight="1" />
+             />
 
 
 
@@ -44,7 +39,8 @@
                 android:id="@+id/RefreshInternet"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_refresh_black_36dp"
-                android:background="#fff" />
+                android:background="#fff"
+                android:contentDescription="Imagen refresh" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -55,7 +51,7 @@
                 android:layout_gravity="center" />
         </LinearLayout>
 
-    </FrameLayout>
 
 
-</LinearLayout>
+
+</RelativeLayout>

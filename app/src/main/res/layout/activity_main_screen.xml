@@ -10,37 +10,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="?android:attr/actionBarSize"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:background="@color/colorPrimary"
-            android:fitsSystemWindows="true">
-        <!--
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text=""
-                    android:id="@+id/Username"
-                    android:gravity="center"
-                    android:layout_gravity="center"/>
-                    <View
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:background="@drawable/shadow" />
-                -->
-                <!--<ImageButton-->
-                    <!--android:layout_width="24dp"-->
-                    <!--android:layout_height="24dp"-->
-                    <!--android:src="@mipmap/ic_settings_black_24dp"-->
-                    <!--android:gravity="end"-->
-                    <!--android:layout_gravity="end"-->
-                    <!--android:layout_marginEnd="15dp"-->
-                    <!--android:id="@+id/settings"/>-->
-
-        </android.support.v7.widget.Toolbar>
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/view_pager"
@@ -86,7 +55,5 @@
         app:bnv_viewpager_slide="false"
         app:bnv_active_text_size="1sp"
         app:bnv_inactive_text_size="1sp"/>
-
-
 
 </RelativeLayout>
