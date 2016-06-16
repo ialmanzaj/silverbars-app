@@ -104,11 +104,6 @@ public class WorkoutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new AsyncTaskParseJson().execute();
-        setContentView(R.layout.activity_workout);
-
-//        new AsyncTaskParseJson().execute();
-
         Intent intent = getIntent();
         exercises = intent.getStringArrayExtra("exercises");
         Log.v("Exercises",Arrays.toString(exercises));
@@ -116,6 +111,10 @@ public class WorkoutActivity extends AppCompatActivity {
         workout_id = intent.getIntExtra("id",0);
         workout_sets = intent.getIntExtra("sets",0);
         exercises_id = new int[exercises.length];
+        new AsyncTaskParseJson().execute();
+
+        setContentView(R.layout.activity_workout);
+
         Workout_name = (TextView) findViewById(R.id.Workout_name);
         Workout_name.setText(workout_name);
 
@@ -495,7 +494,7 @@ public class WorkoutActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... arg0) {
             JsonParser JsonData = new JsonParser();
-            Log.v("Size",String.valueOf(exercises.length));
+
             ParsedExercises = new JsonExercise[exercises.length];
             try {
                 for (int i = 0; i < exercises.length; i++){
@@ -519,8 +518,8 @@ public class WorkoutActivity extends AppCompatActivity {
             for (int i = 0; i <items.size() ; i++){
                 String exercise = ParsedReps[i].exercise;
                 if (exercise.indexOf("exercises/"+exercises_id[i])>0){
+//                    Log.v("Exercise",exercise);
                     Exercises_reps[i] = ParsedReps[i].repetition;
-                    Log.v("Exercise",exercise+" / "+Exercises_reps[i]);
                 }
 //                Log.v("Repetitions",String.valueOf(Exercises_reps[i]));
             }
