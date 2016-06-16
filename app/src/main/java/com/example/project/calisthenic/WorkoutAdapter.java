@@ -53,10 +53,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
             text = (TextView)  v.findViewById(R.id.text);
             btn  = (Button)    v.findViewById(R.id.btn);
             like = (LikeButton) v.findViewById(R.id.like);
-            like.setIconSizeDp(30);
-            like.setAnimationScaleFactor(1);
-            like.setUnlikeDrawableRes(R.drawable.bookmark_unlike);
-            like.setLikeDrawableRes(R.drawable.bookmark_like);
+            like.setAnimationScaleFactor(2);
 //            like.setIconSizePx(64);
 
             like.setExplodingDotColorsRes(R.color.colorPrimaryText,R.color.bookmark);

@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#fff">
 
     <LinearLayout
@@ -48,6 +49,19 @@
 
     </LinearLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:src="@drawable/ic_add_white_36dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="50dp"
+        app:backgroundTint="@color/colorPrimary"
+        app:fabSize="normal"/>
+
     <!--<Button-->
     <!--android:layout_width="wrap_content"-->
     <!--android:layout_height="wrap_content"-->
@@ -55,6 +69,7 @@
     <!--android:id="@+id/songs"-->
     <!--android:layout_alignParentTop="false" />
 -->
+
 
 
     <com.luseen.luseenbottomnavigation.BottomNavigation.BottomNavigationView
@@ -71,5 +86,7 @@
         app:bnv_viewpager_slide="false"
         app:bnv_active_text_size="1sp"
         app:bnv_inactive_text_size="1sp"/>
+
+
 
 </RelativeLayout>

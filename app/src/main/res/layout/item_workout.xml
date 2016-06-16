@@ -62,8 +62,9 @@
             android:text="START" />
 
         <com.like.LikeButton
-            app:like_drawable="@drawable/like"
-            app:unlike_drawable="@drawable/unlike"
+            android:layout_marginTop="7dp"
+            android:layout_marginStart="10dp"
+            app:icon_type="heart"
             app:dots_primary_color="@color/colorPrimaryText"
             app:dots_secondary_color="@color/bookmark"
             android:id="@+id/like"

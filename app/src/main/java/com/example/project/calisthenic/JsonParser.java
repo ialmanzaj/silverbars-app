@@ -26,66 +26,64 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class JsonParser {
+   public OkHttpClient client = new OkHttpClient();
 
-    public static JsonWorkout[] getWorkouts(String urlString) throws Exception {
-        BufferedReader reader = null;
-        try {
-            URL url = new URL(urlString);
-            reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuffer buffer = new StringBuffer();
-            int read;
-            char[] chars = new char[1024];
-            while ((read = reader.read(chars)) != -1)
-                buffer.append(chars, 0, read);
-
-            String json = buffer.toString();
+        JsonWorkout[] getWorkouts(String urlString) throws IOException, JSONException {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(urlString)
+                    .build();
+            Response responses = null;
+            try {
+                responses = client.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String jsonData = responses.body().string();
             Gson gson = new Gson();
-            JsonWorkout[] workout = gson.fromJson(json, JsonWorkout[].class);
-//            Log.v("Workouts:",Arrays.toString(workout));
+            JsonWorkout[] workout = gson.fromJson(jsonData, JsonWorkout[].class);
+            Log.v("Json",Arrays.toString(workout));
+
             return workout;
-        } finally {
-            if (reader != null)
-                reader.close();
         }
-    }
 
-    public static JsonExercise getExercise(String urlString) throws Exception {
-        BufferedReader reader = null;
-        try {
-            URL url = new URL(urlString);
-            reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuffer buffer = new StringBuffer();
-            int read;
-            char[] chars = new char[1024];
-            while ((read = reader.read(chars)) != -1)
-                buffer.append(chars, 0, read);
-
-            String json = buffer.toString();
+        JsonExercise getExercise(String urlString) throws Exception {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(urlString)
+                    .build();
+            Response responses = null;
+            try {
+                responses = client.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String jsonData = responses.body().string();
             Gson gson = new Gson();
-            JsonExercise exercise = gson.fromJson(json, JsonExercise.class);
+            JsonExercise exercise = gson.fromJson(jsonData, JsonExercise.class);
 //            Log.v("Workouts:",Arrays.toString(workout));
             return exercise;
-        } finally {
-            if (reader != null)
-                reader.close();
         }
-    }
 
-    public static JsonReps[] getReps(String urlString, int workout_id, int exercises) throws Exception {
-        BufferedReader reader = null;
-        try {
-            URL url = new URL(urlString);
-            reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuffer buffer = new StringBuffer();
-            int read;
-            char[] chars = new char[1024];
-            while ((read = reader.read(chars)) != -1)
-                buffer.append(chars, 0, read);
-
-            String json = buffer.toString();
+        JsonReps[] getReps(String urlString, int workout_id, int exercises) throws Exception {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(urlString)
+                    .build();
+            Response responses = null;
+            try {
+                responses = client.newCall(request).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String jsonData = responses.body().string();
             Gson gson = new Gson();
-            JsonReps[] reps = gson.fromJson(json, JsonReps[].class);
+            JsonReps[] reps = gson.fromJson(jsonData, JsonReps[].class);
             JsonReps[] ParsedReps = new JsonReps[exercises];
             int y = 0;
             for (int z = 0; z < reps.length; z++){
@@ -95,12 +93,7 @@ public class JsonParser {
                     y++;
                 }
             }
-            Log.v("Workouts:",Arrays.toString(ParsedReps));
+//            Log.v("Workouts:",Arrays.toString(ParsedReps));
             return ParsedReps;
-        } finally {
-            if (reader != null)
-                reader.close();
         }
-    }
-
 }

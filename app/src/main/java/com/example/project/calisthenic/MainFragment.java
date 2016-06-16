@@ -38,7 +38,8 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        new AsyncTaskParseJson().execute();
+        AsyncTask task = new AsyncTaskParseJson().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         Intent intent = this.getActivity().getIntent();
         email = intent.getStringExtra("Email");
         name = intent.getStringExtra("Name");
@@ -54,7 +55,6 @@ public class MainFragment extends Fragment {
             JsonParser JsonData = new JsonParser();
             try {
                 Workouts = JsonData.getWorkouts("http://api.silverbarsapp.com/workouts/?format=json");
-                Log.v("Workout:",Arrays.toString(Workouts));
             } catch (Exception e) {
                 e.printStackTrace();
             }

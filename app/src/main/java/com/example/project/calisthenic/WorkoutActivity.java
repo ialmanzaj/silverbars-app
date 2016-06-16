@@ -104,8 +104,7 @@ public class WorkoutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        new AsyncTaskParseJson().execute();
         setContentView(R.layout.activity_workout);
 
 //        new AsyncTaskParseJson().execute();
@@ -315,8 +314,6 @@ public class WorkoutActivity extends AppCompatActivity {
         lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
 
-        new AsyncTaskParseJson().execute();
-
         //Defining Tabs
         TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost2);
         tabHost2.setup();
@@ -520,8 +517,8 @@ public class WorkoutActivity extends AppCompatActivity {
             for (int i = 0; i <items.size() ; i++){
                 String exercise = ParsedReps[i].exercise;
                 if (exercise.indexOf("exercises/"+exercises_id[i])>0){
-//                    Log.v("Exercise",exercise);
                     Exercises_reps[i] = ParsedReps[i].repetition;
+                    Log.v("Exercise",exercise+" / "+Exercises_reps[i]);
                 }
 //                Log.v("Repetitions",String.valueOf(Exercises_reps[i]));
             }

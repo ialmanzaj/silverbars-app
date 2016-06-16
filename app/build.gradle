@@ -60,6 +60,8 @@ dependencies {
     compile 'com.pnikosis:materialish-progress:1.7'
     compile 'com.squareup.okhttp3:okhttp:3.3.0'
     compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.squareup.okhttp3:okhttp:3.3.1'
+    compile 'com.loopj.android:android-async-http:1.4.9'
     //    // This library handles authentication and authorization
     //    compile 'com.spotify.sdk:spotify-auth:1.0.0-beta12@aar'
     //    // This library handles music playback
