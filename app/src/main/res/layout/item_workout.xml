@@ -84,6 +84,7 @@
             android:minHeight="32dp"
             android:gravity="right"/>
 
+        </LinearLayout>
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

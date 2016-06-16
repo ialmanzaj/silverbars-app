@@ -111,6 +111,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         exercises = intent.getStringArrayExtra("exercises");
+        Log.v("Exercises",Arrays.toString(exercises));
         workout_name = intent.getStringExtra("name");
         workout_id = intent.getIntExtra("id",0);
         workout_sets = intent.getIntExtra("sets",0);
@@ -494,6 +495,7 @@ public class WorkoutActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... arg0) {
             JsonParser JsonData = new JsonParser();
+            Log.v("Size",String.valueOf(exercises.length));
             ParsedExercises = new JsonExercise[exercises.length];
             try {
                 for (int i = 0; i < exercises.length; i++){

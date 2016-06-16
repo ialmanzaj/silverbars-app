@@ -93,6 +93,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                         i.putExtra("name",workouts[position].workout_name);
                         i.putExtra("sets",workouts[position].sets);
                         i.putExtra("exercises",workouts[position].exercises);
+//                        Log.v("Exercises",Arrays.toString(workouts[position].exercises));
                         context.startActivity(i);
                     }
                 });
