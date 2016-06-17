@@ -66,6 +66,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import inaka.com.tinytask.DoThis;
+import inaka.com.tinytask.Something;
+import inaka.com.tinytask.TinyTask;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class WorkoutActivity extends AppCompatActivity {
@@ -112,15 +115,11 @@ public class WorkoutActivity extends AppCompatActivity {
         workout_id = intent.getIntExtra("id",0);
         workout_sets = intent.getIntExtra("sets",0);
         exercises_id = new int[exercises.length];
-        new AsyncTaskParseJson().execute();
-
-        setContentView(R.layout.activity_workout);
+//        new AsyncTaskParseJson().execute();
+        Task();
 
 //        Workout_name = (TextView) findViewById(R.id.Workout_name);
 //        Workout_name.setText(workout_name);
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
 
         // ======= TOOL BAR - BACK BUTTON  ADDED
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -473,45 +472,53 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
-    public class AsyncTaskParseJson extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {}
-
-        @Override
-        protected String doInBackground(String... arg0) {
-            JsonParser JsonData = new JsonParser();
-
-            ParsedExercises = new JsonExercise[exercises.length];
-            try {
-                for (int i = 0; i < exercises.length; i++){
-                    JsonExercise ExerciseData = JsonData.getExercise(exercises[i]);
-                    ParsedExercises[i] = ExerciseData;
-                    items.add(new WorkoutInfo(ExerciseData.exercise_name, String.valueOf(ExerciseReps)));
-                    exercises_id[i] = ExerciseData.id;
+    public void Task(){
+        TinyTask.perform(new Something<String>() {
+            @Override
+            public String whichDoes() {
+                Log.v("Task","Doing it");
+                JsonParser JsonData = new JsonParser();
+                String array = null;
+                ParsedExercises = new JsonExercise[exercises.length];
+                try {
+//                    for (int i = 0; i < exercises.length; i++){
+                        JsonExercise ExerciseData = JsonData.getExercise(exercises[0]);
+                        ParsedExercises[0] = ExerciseData;
+                        items.add(new WorkoutInfo(ExerciseData.exercise_name, String.valueOf(ExerciseReps)));
+                        exercises_id[0] = ExerciseData.id;
+//                    }
+                    JsonReps[] RepsData = JsonData.getReps("http://api.silverbarsapp.com/workout/?format=json",workout_id,exercises.length);
+                    ParsedReps = RepsData;
+                    array = Arrays.toString(ParsedReps);
+                    Log.v("Reps",Arrays.toString(ParsedReps));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                JsonReps[] RepsData = JsonData.getReps("http://api.silverbarsapp.com/workout/?format=json",workout_id,exercises.length);
-                ParsedReps = RepsData;
-                Log.v("Reps",Arrays.toString(ParsedReps));
-            } catch (Exception e) {
-                e.printStackTrace();
+                return array; // you write this method..
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String strFromDoInBg) {
-            Exercises_reps = new int[items.size()];
-            for (int i = 0; i <items.size() ; i++){
-                String exercise = ParsedReps[i].exercise;
-                if (exercise.indexOf("exercises/"+exercises_id[i])>0){
-                    Exercises_reps[i] = ParsedReps[i].repetition;
-                }
+        }).whenDone(new DoThis<String>() {
+            @Override
+            public void ifOK(String result) {
+                Exercises_reps = new int[items.size()];
+                for (int i = 0; i <items.size() ; i++){
+                    String exercise = ParsedReps[i].exercise;
+                    if (exercise.indexOf("exercises/"+exercises_id[i])>0){
+                        Exercises_reps[i] = ParsedReps[i].repetition;
+                    }
 //                Log.v("Repetitions",String.valueOf(Exercises_reps[i]));
+                }
+                adapter = new ExerciseAdapter(items);
+                recycler.setAdapter(adapter);
+                setContentView(R.layout.activity_workout);
+                Log.i("Result", result);
             }
-            adapter = new ExerciseAdapter(items);
-            recycler.setAdapter(adapter);
-        }
+
+            @Override
+            public void ifNotOK(Exception e) {
+                Log.i("Result", e.toString());
+            }
+        }).go();
     }
 
 
