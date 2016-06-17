@@ -84,6 +84,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
     @Override
     public void onBindViewHolder(VH vh, final int position) {
         int height = containerDimensions(context);
+        Log.v("Height",String.valueOf(height));
         vh.layout.getLayoutParams().height = height / 3;
         switch (vh.getItemViewType()) {
             case TYPE_WORKOUT:

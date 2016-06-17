@@ -18,6 +18,10 @@ import org.lucasr.twowayview.widget.TwoWayView;
 
 import java.util.Arrays;
 
+import inaka.com.tinytask.DoThis;
+import inaka.com.tinytask.Something;
+import inaka.com.tinytask.TinyTask;
+
 public class MainFragment extends Fragment {
 
     private String email;
@@ -38,34 +42,42 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        AsyncTask task = new AsyncTaskParseJson().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
+//        AsyncTask task = new AsyncTaskParseJson().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        startProgress();
+        Task();
         Intent intent = this.getActivity().getIntent();
         email = intent.getStringExtra("Email");
         name = intent.getStringExtra("Name");
     }
 
-    public class AsyncTaskParseJson extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {}
-
-        @Override
-        protected String doInBackground(String... arg0) {
-            JsonParser JsonData = new JsonParser();
-            try {
-                Workouts = JsonData.getWorkouts("http://api.silverbarsapp.com/workouts/?format=json");
-            } catch (Exception e) {
-                e.printStackTrace();
+    public void Task(){
+        TinyTask.perform(new Something<String>() {
+            @Override
+            public String whichDoes() {
+                JsonParser JsonData = new JsonParser();
+                String array = null;
+                try {
+                    Workouts = JsonData.getWorkouts("http://api.silverbarsapp.com/workouts/?format=json");
+                    array = Arrays.toString(Workouts);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return array; // you write this method..
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String strFromDoInBg) {
-            recyclerView = (TwoWayView) getView().findViewById(R.id.list);
-            recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
-        }
+        }).whenDone(new DoThis<String>() {
+            @Override
+            public void ifOK(String result) {
+                recyclerView = (TwoWayView) getView().findViewById(R.id.list);
+                recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
+                Log.i("Result", result);
+            }
+
+            @Override
+            public void ifNotOK(Exception e) {
+                Log.i("Result", e.toString());
+            }
+        }).go();
     }
 
     public boolean CheckInternet(Context context){
