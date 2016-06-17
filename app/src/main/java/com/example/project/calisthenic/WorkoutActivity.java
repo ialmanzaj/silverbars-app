@@ -105,6 +105,7 @@ public class WorkoutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
+
         exercises = intent.getStringArrayExtra("exercises");
         Log.v("Exercises",Arrays.toString(exercises));
         workout_name = intent.getStringExtra("name");
@@ -311,8 +312,9 @@ public class WorkoutActivity extends AppCompatActivity {
         tabHost2.setup();
 
 
-        TabHost.TabSpec setup = tabHost2.newTabSpec("Setup");
+
         TabHost.TabSpec exercises = tabHost2.newTabSpec("Exercises");
+        TabHost.TabSpec setup = tabHost2.newTabSpec("Setup");
         TabHost.TabSpec muscles = tabHost2.newTabSpec("Muscles");
 
 
