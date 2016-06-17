@@ -115,8 +115,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_workout);
 
-        Workout_name = (TextView) findViewById(R.id.Workout_name);
-        Workout_name.setText(workout_name);
+//        Workout_name = (TextView) findViewById(R.id.Workout_name);
+//        Workout_name.setText(workout_name);
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);

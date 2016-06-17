@@ -1,16 +1,20 @@
 package com.example.project.calisthenic;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -79,7 +83,8 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
 
     @Override
     public void onBindViewHolder(VH vh, final int position) {
-
+        int height = containerDimensions(context);
+        vh.layout.getLayoutParams().height = height / 3;
         switch (vh.getItemViewType()) {
             case TYPE_WORKOUT:
                 new DownloadImageTask(vh.img).execute(workouts[position].workout_image);
@@ -155,5 +160,14 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
             super.onPostExecute(result);
             bmImage.setImageBitmap(result);
         }
+    }
+
+    public static int containerDimensions(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+        return height;
     }
 }
