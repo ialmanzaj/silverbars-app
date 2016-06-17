@@ -131,6 +131,8 @@ public class WorkoutActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(workout_name);
         }
 
+
+
         Button startButton = (Button) findViewById(R.id.start_button);
 
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -139,6 +141,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 LaunchWorkingOutActivity();
             }
         });
+
 
         // ACTIVAR VIBRACION POR SET O POR REPETICION
 
@@ -313,7 +316,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-        TabHost.TabSpec exercises = tabHost2.newTabSpec("Exercises");
+        TabHost.TabSpec overview = tabHost2.newTabSpec("Overview");
         TabHost.TabSpec setup = tabHost2.newTabSpec("Setup");
         TabHost.TabSpec muscles = tabHost2.newTabSpec("Muscles");
 
@@ -322,17 +325,23 @@ public class WorkoutActivity extends AppCompatActivity {
         setup.setIndicator("Setup");
         setup.setContent(R.id.setup);
 
-        exercises.setIndicator("Exercises");
-        exercises.setContent(R.id.exercises);
+        overview.setIndicator("Overview");
+        overview.setContent(R.id.overview);
 
         muscles.setIndicator("Muscles");
         muscles.setContent(R.id.muscles);
 
-        tabHost2.addTab(exercises);
+        tabHost2.addTab(overview);
         tabHost2.addTab(setup);
         tabHost2.addTab(muscles);
 
-
+        SelectMusic = (Button) findViewById(R.id.SelectMusic);
+        SelectMusic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ShowMusicDialog();
+            }
+        });
 
     }
 
