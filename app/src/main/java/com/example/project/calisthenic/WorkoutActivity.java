@@ -69,6 +69,12 @@ import java.util.List;
 import inaka.com.tinytask.DoThis;
 import inaka.com.tinytask.Something;
 import inaka.com.tinytask.TinyTask;
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import rx.Observable;
+import rx.Subscriber;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class WorkoutActivity extends AppCompatActivity {
@@ -94,7 +100,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private String workout_name;
     private int workout_id = 0, workout_sets = 0;
     private List<WorkoutInfo> items = new ArrayList<>();
-    public static JsonExercise[] ParsedExercises;
+    public static List<JsonExercise> ParsedExercises;
     public static JsonReps[] ParsedReps;
     private int[] exercises_id;
 
@@ -115,9 +121,8 @@ public class WorkoutActivity extends AppCompatActivity {
         workout_id = intent.getIntExtra("id",0);
         workout_sets = intent.getIntExtra("sets",0);
         exercises_id = new int[exercises.length];
-//        new AsyncTaskParseJson().execute();
         Task();
-
+        setContentView(R.layout.activity_workout);
 //        Workout_name = (TextView) findViewById(R.id.Workout_name);
 //        Workout_name.setText(workout_name);
 
@@ -473,52 +478,90 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     public void Task(){
-        TinyTask.perform(new Something<String>() {
-            @Override
-            public String whichDoes() {
-                Log.v("Task","Doing it");
-                JsonParser JsonData = new JsonParser();
-                String array = null;
-                ParsedExercises = new JsonExercise[exercises.length];
-                try {
-//                    for (int i = 0; i < exercises.length; i++){
-                        JsonExercise ExerciseData = JsonData.getExercise(exercises[0]);
-                        ParsedExercises[0] = ExerciseData;
-                        items.add(new WorkoutInfo(ExerciseData.exercise_name, String.valueOf(ExerciseReps)));
-                        exercises_id[0] = ExerciseData.id;
+        for (int i = 0; i < exercises.length; i++){
+            RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(exercises[i]).build();
+            WorkoutService service = restAdapter.create(WorkoutService.class);
+            service.getExercises(new Callback<List<JsonExercise>>() {
+                @Override
+                public void success(List<JsonExercise> jsonExercise, Response response) {
+
+                    ParsedExercises = jsonExercise;
+                    Log.v("Exercises",String.valueOf(ParsedExercises));
+                    Log.v("Exercises size",String.valueOf(ParsedExercises.size()));
+//                On Complete
+//                Exercises_reps = new int[items.size()];
+//                for (int i = 0; i <items.size() ; i++){
+//                    String exercise = ParsedReps[i].exercise;
+//                    if (exercise.indexOf("exercises/"+exercises_id[i])>0){
+//                        Exercises_reps[i] = ParsedReps[i].repetition;
 //                    }
-                    JsonReps[] RepsData = JsonData.getReps("http://api.silverbarsapp.com/workout/?format=json",workout_id,exercises.length);
-                    ParsedReps = RepsData;
-                    array = Arrays.toString(ParsedReps);
-                    Log.v("Reps",Arrays.toString(ParsedReps));
-                } catch (Exception e) {
-                    e.printStackTrace();
+////                Log.v("Repetitions",String.valueOf(Exercises_reps[i]));
+//                }
+//                adapter = new ExerciseAdapter(items);
+//                recycler.setAdapter(adapter);
+                    Log.v("Result","Complete");
                 }
-                return array; // you write this method..
-            }
 
-        }).whenDone(new DoThis<String>() {
-            @Override
-            public void ifOK(String result) {
-                Exercises_reps = new int[items.size()];
-                for (int i = 0; i <items.size() ; i++){
-                    String exercise = ParsedReps[i].exercise;
-                    if (exercise.indexOf("exercises/"+exercises_id[i])>0){
-                        Exercises_reps[i] = ParsedReps[i].repetition;
-                    }
-//                Log.v("Repetitions",String.valueOf(Exercises_reps[i]));
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.v("Error",error.toString());
                 }
-                adapter = new ExerciseAdapter(items);
-                recycler.setAdapter(adapter);
-                setContentView(R.layout.activity_workout);
-                Log.i("Result", result);
-            }
+            });
+        }
+        Log.v("Exercises total",String.valueOf(ParsedExercises));
+        Log.v("Exercises size total",String.valueOf(ParsedExercises.size()));
 
-            @Override
-            public void ifNotOK(Exception e) {
-                Log.i("Result", e.toString());
-            }
-        }).go();
+//        Observable WorkoutObservable = Observable.create(new Observable.OnSubscribe() {
+//            @Override
+//            public void call(Object o) {
+//                Log.v("Task","Doing it");
+//                JsonParser JsonData = new JsonParser();
+//                String array = null;
+//                ParsedExercises = new JsonExercise[exercises.length];
+//                try {
+////                    for (int i = 0; i < exercises.length; i++){
+//                    JsonExercise ExerciseData = JsonData.getExercise(exercises[0]);
+//                    ParsedExercises[0] = ExerciseData;
+//                    items.add(new WorkoutInfo(ExerciseData.exercise_name, String.valueOf(ExerciseReps)));
+//                    exercises_id[0] = ExerciseData.id;
+////                    }
+//                    JsonReps[] RepsData = JsonData.getReps("http://api.silverbarsapp.com/workout/?format=json",workout_id,exercises.length);
+//                    ParsedReps = RepsData;
+//                    array = Arrays.toString(ParsedReps);
+//                    Log.v("Reps",Arrays.toString(ParsedReps));
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//
+//        Subscriber WorkoutSubscriber = new Subscriber() {
+//            @Override
+//            public void onCompleted() {
+//                Exercises_reps = new int[items.size()];
+//                for (int i = 0; i <items.size() ; i++){
+//                    String exercise = ParsedReps[i].exercise;
+//                    if (exercise.indexOf("exercises/"+exercises_id[i])>0){
+//                        Exercises_reps[i] = ParsedReps[i].repetition;
+//                    }
+////                Log.v("Repetitions",String.valueOf(Exercises_reps[i]));
+//                }
+//                adapter = new ExerciseAdapter(items);
+//                recycler.setAdapter(adapter);
+//                Log.v("Result","Complete");
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//
+//            @Override
+//            public void onNext(Object o) {
+//
+//            }
+//        };
+//        WorkoutObservable.subscribe(WorkoutSubscriber);
     }
 
 

@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by roberto on 5/24/2016.
@@ -37,7 +38,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
     private static final String[] WORKOUTS = {"Chest", "Upper Body", "Core", "Back Destruction", "Chest"};
     private static final int[] IMG = {R.mipmap.imagen1, R.mipmap.imagen2, R.mipmap.imagen3, R.mipmap.imagen4, R.mipmap.imagen5};
     private MainFragment outerClass = new MainFragment();
-    private JsonWorkout[] workouts = outerClass.Workouts;
+    private List<JsonWorkout> workouts = outerClass.Workouts;
 
     private final FragmentActivity context;
 
@@ -65,7 +66,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
     }
 
     public WorkoutAdapter(FragmentActivity context) {
-        Log.v("Workouts:", Arrays.toString(workouts));
+        Log.v("Workouts:", String.valueOf(workouts));
         this.context = context;
     }
 
@@ -88,17 +89,17 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         vh.layout.getLayoutParams().height = height / 3;
         switch (vh.getItemViewType()) {
             case TYPE_WORKOUT:
-                new DownloadImageTask(vh.img).execute(workouts[position].workout_image);
+                new DownloadImageTask(vh.img).execute(workouts.get(position).getWorkout_image());
 //                vh.img.setImageBitmap(bmp);
-                vh.text.setText(workouts[position].workout_name);
+                vh.text.setText(workouts.get(position).getWorkout_name());
                 vh.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(context, WorkoutActivity.class);
-                        i.putExtra("id",workouts[position].id);
-                        i.putExtra("name",workouts[position].workout_name);
-                        i.putExtra("sets",workouts[position].sets);
-                        i.putExtra("exercises",workouts[position].exercises);
+                        i.putExtra("id",workouts.get(position).getId());
+                        i.putExtra("name",workouts.get(position).getWorkout_name());
+                        i.putExtra("sets",workouts.get(position).getSets());
+                        i.putExtra("exercises",workouts.get(position).getExercises());
 //                        Log.v("Exercises",Arrays.toString(workouts[position].exercises));
                         context.startActivity(i);
                     }
@@ -122,12 +123,12 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
 
     @Override
     public int getItemCount() {
-        return workouts.length;
+        return workouts.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return position < workouts.length ? TYPE_WORKOUT : TYPE_VIEW_MORE;
+        return position < workouts.size() ? TYPE_WORKOUT : TYPE_VIEW_MORE;
     }
 
     class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

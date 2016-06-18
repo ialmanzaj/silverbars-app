@@ -70,16 +70,16 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         //Setting values to each recylerView Element
         URL url = null;
         try {
-            url = new URL(workout.ParsedExercises[i].exercise_image);
+            url = new URL(workout.ParsedExercises.get(a).getExercise_image());
             Log.v("Url",url.toString());
             bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
         viewHolder.imagen.setImageBitmap(bmp);
-        viewHolder.nombre.setText(items.get(a).getNombre());
+        viewHolder.nombre.setText(workout.ParsedExercises.get(a).getExercise_name());
 //        viewHolder.next.setText("Visitas:"+String.valueOf(items.get(i).getVisitas()));
-        viewHolder.repetitions.setText(String.valueOf(workout.Exercises_reps[i]));
+//        viewHolder.repetitions.setText(String.valueOf(workout.ParsedExercises.get(i).get);
         //OnLongClickListener for each recylclerView element
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             private TextView DialogName, Reps;

@@ -70,7 +70,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private int TotalSets = 0, ActualSets = 0, Time_aux = 0;
     AlertDialog alertDialog;
     private MediaPlayer media;
-    private JsonExercise[] Exercises;
+    private List<JsonExercise> Exercises;
     private int[] Exercises_reps;
     private boolean VibrationPerSet = false,VibrationPerRep = false;
 
@@ -250,8 +250,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         // Inicializar Workouts
         List<WorkoutInfo> items = new ArrayList<>();
 
-        for (int a = 0; a < Exercises.length; a++){
-            items.add(new WorkoutInfo(Exercises[a].exercise_name,null));
+        for (int a = 0; a < Exercises.size(); a++){
+            items.add(new WorkoutInfo(Exercises.get(a).getExercise_name(),null));
         }
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
