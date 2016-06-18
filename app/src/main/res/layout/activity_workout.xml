@@ -14,7 +14,7 @@
             android:id="@+id/appbarlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:elevation="0dp">
+            app:elevation="2dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -54,17 +54,70 @@
                 android:measureAllChildren="false">
 
                 <LinearLayout
+                    android:id="@+id/overview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="45dp">
+
+
+                    <RelativeLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:gravity="center_horizontal"
+                        android:padding="25dp"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Select your music"
+                            android:id="@+id/SelectMusic"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp"
+                            android:background="@color/white"
+                            android:textColor="@color/black"
+
+                            style="@android:style/MediaButton"
+                            />
+                    </RelativeLayout>
+
+
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Exercises"
+                        android:textColor="@color/gray_active_icon"
+                        android:layout_marginStart="15dp"
+                        />
+
+
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/reciclador"
+                        android:layout_gravity="center_horizontal"
+                         />
+
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/setup"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:paddingTop="20dp">
+                    android:paddingTop="20dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="true">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Tempo in Reps"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:textColor="@color/colorPrimaryText"
                         android:layout_gravity="center" />
 
@@ -105,7 +158,7 @@
                                 android:id="@+id/Positive"
                                 android:textColor="@color/colorPrimaryText"
                                 android:layout_gravity="center"
-                                android:textSize="35dp"
+                                android:textSize="35sp"
                                 android:text="3" />
 
                             <Button
@@ -116,14 +169,6 @@
                                 android:id="@+id/minusPositive"
                                 android:layout_gravity="center" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:text="Positive"
-                                android:textColor="@color/colorPrimaryText"
-                                android:id="@+id/textView8"
-                                android:layout_gravity="center" />
                         </LinearLayout>
 
                         <TextView
@@ -136,7 +181,7 @@
                             android:textColor="@color/colorPrimaryText"
                             android:layout_marginBottom="10dp"
                             android:textStyle="bold"
-                            android:textSize="35dp" />
+                            android:textSize="35sp" />
 
                         <LinearLayout
                             android:orientation="vertical"
@@ -160,7 +205,7 @@
                                 android:id="@+id/Isometric"
                                 android:textColor="@color/colorPrimaryText"
                                 android:layout_gravity="center"
-                                android:textSize="35dp"
+                                android:textSize="35sp"
                                 android:text="1" />
 
                             <Button
@@ -171,14 +216,6 @@
                                 android:id="@+id/minusIsometric"
                                 android:layout_gravity="center" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:text="Isometric"
-                                android:textColor="@color/colorPrimaryText"
-                                android:id="@+id/textView23"
-                                android:layout_gravity="center" />
                         </LinearLayout>
 
                         <TextView
@@ -191,7 +228,7 @@
                             android:textColor="@color/colorPrimaryText"
                             android:layout_marginBottom="10dp"
                             android:textStyle="bold"
-                            android:textSize="35dp" />
+                            android:textSize="35sp" />
 
                         <LinearLayout
                             android:orientation="vertical"
@@ -215,7 +252,7 @@
                                 android:id="@+id/Negative"
                                 android:textColor="@color/colorPrimaryText"
                                 android:layout_gravity="center"
-                                android:textSize="35dp"
+                                android:textSize="35sp"
                                 android:text="3" />
 
                             <Button
@@ -226,14 +263,6 @@
                                 android:id="@+id/minusNegative"
                                 android:layout_gravity="center" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:text="Negative"
-                                android:textColor="@color/colorPrimaryText"
-                                android:id="@+id/textView25"
-                                android:layout_gravity="center" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -241,36 +270,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:layout_marginTop="30dp"
+
                         android:paddingStart="15dp"
                         android:paddingEnd="15dp">
 
                         <!-- lINEAS OF REPS PER EXERCISE -->
 
-                            <Switch
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Vibration per rep"
 
-                                android:textColor="@color/colorPrimaryText"
-                                android:textSize="18sp"
-                                android:id="@+id/vibration_rep"
-
-                                android:enabled="true"
-                                android:checked="true" />
-
-                            <Switch
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-
-
-                                android:text="Vibration per Set"
-                                android:textColor="@color/colorPrimaryText"
-                                android:textSize="18sp"
-                                android:id="@+id/vibration_set"
-                                android:layout_marginTop="5dp"
-
-                                android:checked="true" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -294,17 +300,55 @@
                                     style="?android:attr/buttonStyleSmall"
                                     android:layout_width="wrap_content"
                                     android:layout_height="40dp"
-                                    android:text="+"
 
+                                    android:text="-"
 
                                     />
 
                                 <EditText
                                     android:layout_width="0dp"
-                                    android:minWidth="45dp"
                                     android:layout_height="wrap_content"
-                                    android:id="@+id/editText"
-                                    android:layout_weight="1" />
+                                    android:layout_weight="1"
+                                    android:inputType="numberSigned"
+                                    android:text="5"
+                                    android:minWidth="45dp"
+                                    android:focusableInTouchMode="true"
+                                    android:textColor="@color/black"
+                                    android:gravity="center_vertical|center_horizontal"
+                                    android:id="@+id/editText2"
+                                    android:textAlignment="center"
+                                    android:hint="0" />
+
+
+
+                                <Button
+                                    style="?android:attr/buttonStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:text="+"
+
+
+                                    />
+                            </LinearLayout>
+
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Rest between exercise "
+                                android:textColor="@color/black"
+                                android:textSize="18sp"
+                                android:layout_marginTop="5dp"
+
+                                />
+                            <LinearLayout
+                                android:layout_alignParentEnd="true"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
 
                                 <Button
                                     style="?android:attr/buttonStyleSmall"
@@ -314,28 +358,93 @@
                                     android:text="-"
 
                                     />
+
+                                <EditText
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:inputType="numberSigned"
+                                    android:text="5"
+                                    android:minWidth="45dp"
+                                    android:focusableInTouchMode="true"
+                                    android:textColor="@color/black"
+                                    android:gravity="center_vertical|center_horizontal"
+
+                                    android:textAlignment="center"
+                                    android:hint="0" />
+
+
+
+                                <Button
+                                    style="?android:attr/buttonStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:text="+"
+
+
+                                    />
                             </LinearLayout>
 
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Rest between Sets"
+                                android:textColor="@color/black"
+                                android:textSize="18sp"
+                                android:layout_marginTop="5dp"
+
+                                />
+                            <LinearLayout
+                                android:layout_alignParentEnd="true"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <Button
+                                    style="?android:attr/buttonStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+
+                                    android:text="-"
+
+                                    />
+
+                                <EditText
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:inputType="numberSigned"
+                                    android:text="5"
+                                    android:minWidth="45dp"
+                                    android:focusableInTouchMode="true"
+                                    android:textColor="@color/black"
+                                    android:gravity="center_vertical|center_horizontal"
+
+                                    android:textAlignment="center"
+                                    android:hint="0" />
+
+
+
+                                <Button
+                                    style="?android:attr/buttonStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:text="+"
+
+
+                                    />
+                            </LinearLayout>
 
                         </RelativeLayout>
 
-
-
-
-
-
-
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/exercises"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                        <Switch
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Vibration per rep"
 
                         <android.support.v7.widget.RecyclerView
                             android:layout_width="wrap_content"
@@ -344,11 +453,21 @@
                             android:scrollbars="vertical"
                             android:layout_gravity="center_horizontal"
 
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
+
+                            android:text="Vibration per Set"
+                            android:textColor="@color/colorPrimaryText"
+                            android:textSize="18sp"
+                            android:id="@+id/vibration_set"
+                            android:layout_marginTop="5dp"
+
+                            android:checked="true" />
 
 
-                            />
+
+
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
@@ -363,16 +482,19 @@
 
     </LinearLayout>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="START"
-        android:textSize="18sp"
-        android:id="@+id/start_button"
-        android:background="@color/colorPrimaryDark"
-        android:elevation="4dp"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentBottom="true" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="START"
+            android:textSize="18sp"
+            android:id="@+id/start_button"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimaryDark"
+
+            />
+
+
 
 
 </RelativeLayout>
