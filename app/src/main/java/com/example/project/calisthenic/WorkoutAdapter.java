@@ -38,7 +38,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
     private static final String[] WORKOUTS = {"Chest", "Upper Body", "Core", "Back Destruction", "Chest"};
     private static final int[] IMG = {R.mipmap.imagen1, R.mipmap.imagen2, R.mipmap.imagen3, R.mipmap.imagen4, R.mipmap.imagen5};
     private MainFragment outerClass = new MainFragment();
-    private List<JsonWorkout> workouts = outerClass.Workouts;
+    private JsonWorkout[] workouts = outerClass.Workouts;
 
     private final FragmentActivity context;
 
@@ -89,18 +89,18 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         vh.layout.getLayoutParams().height = height / 3;
         switch (vh.getItemViewType()) {
             case TYPE_WORKOUT:
-                new DownloadImageTask(vh.img).execute(workouts.get(position).getWorkout_image());
+                new DownloadImageTask(vh.img).execute(workouts[position].getWorkout_image());
 //                vh.img.setImageBitmap(bmp);
-                vh.text.setText(workouts.get(position).getWorkout_name());
+                vh.text.setText(workouts[position].getWorkout_name());
                 vh.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(context, WorkoutActivity.class);
-                        i.putExtra("id",workouts.get(position).getId());
-                        i.putExtra("name",workouts.get(position).getWorkout_name());
-                        i.putExtra("sets",workouts.get(position).getSets());
-                        i.putExtra("exercises",workouts.get(position).getExercises());
-//                        Log.v("Exercises",Arrays.toString(workouts[position].exercises));
+                        i.putExtra("id",workouts[position].getId());
+                        i.putExtra("name",workouts[position].getWorkout_name());
+                        i.putExtra("sets",workouts[position].getSets());
+                        i.putExtra("exercises",workouts[position].getExercises());
+                        Log.v("Exercises",Arrays.toString(workouts[position].exercises));
                         context.startActivity(i);
                     }
                 });
@@ -123,12 +123,12 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
 
     @Override
     public int getItemCount() {
-        return workouts.size();
+        return workouts.length;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return position < workouts.size() ? TYPE_WORKOUT : TYPE_VIEW_MORE;
+        return position < workouts.length ? TYPE_WORKOUT : TYPE_VIEW_MORE;
     }
 
     class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

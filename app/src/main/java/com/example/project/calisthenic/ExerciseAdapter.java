@@ -22,9 +22,22 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Url;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
     private List<WorkoutInfo> items;
@@ -66,20 +79,16 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     public void onBindViewHolder(final ExerciseViewHolder viewHolder, int i) {
         final int a = i;
         WorkoutActivity workout = new WorkoutActivity();
-        Bitmap bmp = null;
+//        Bitmap bmp = null;
         //Setting values to each recylerView Element
-        URL url = null;
-        try {
-            url = new URL(workout.ParsedExercises.get(a).getExercise_image());
-            Log.v("Url",url.toString());
-            bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        viewHolder.imagen.setImageBitmap(bmp);
-        viewHolder.nombre.setText(workout.ParsedExercises.get(a).getExercise_name());
+        String[] parts = workout.ParsedExercises[a].getExercise_image().split("exercises");;
+        String Parsedurl = "exercises"+parts[1];
+        DownloadImage(Parsedurl,viewHolder);
+//            bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+//        viewHolder.imagen.setImageBitmap(bmp);
+        viewHolder.nombre.setText(workout.ParsedExercises[a].getExercise_name());
 //        viewHolder.next.setText("Visitas:"+String.valueOf(items.get(i).getVisitas()));
-//        viewHolder.repetitions.setText(String.valueOf(workout.ParsedExercises.get(i).get);
+//        viewHolder.repetitions.setText(String.valueOf(workout.ParsedExercises[i].get);
         //OnLongClickListener for each recylclerView element
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             private TextView DialogName, Reps;
@@ -198,6 +207,57 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                         }
                     }
                 }
+            }
+        });
+    }
+
+    public void DownloadImage(String url, final ExerciseViewHolder vh) {
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+
+                // Customize the request
+                Request request = original.newBuilder()
+                        .header("Accept", "application/json")
+                        .header("Authorization", "auth-token")
+                        .method(original.method(), original.body())
+                        .build();
+
+                okhttp3.Response response = chain.proceed(request);
+                Log.v("Response", response.toString());
+                // Customize or return the response
+                return response;
+            }
+        });
+
+        OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        WorkoutService downloadService = retrofit.create(WorkoutService.class);
+        Call<ResponseBody> call = downloadService.downloadImage(url);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.d("State", "server contacted and has file");
+                    Bitmap bmp = BitmapFactory.decodeStream(response.body().byteStream());
+                    vh.imagen.setImageBitmap(bmp);
+//                    boolean writtenToDisk = writeResponseBodyToDisk(response.body());
+
+//                    Log.d(TAG, "file download was a success? " + writtenToDisk);
+                } else {
+                    Log.d("State", "server contact failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
             }
         });
     }

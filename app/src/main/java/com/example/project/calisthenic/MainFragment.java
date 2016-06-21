@@ -17,13 +17,19 @@ import android.widget.Button;
 
 import org.lucasr.twowayview.widget.TwoWayView;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class MainFragment extends Fragment {
@@ -32,7 +38,7 @@ public class MainFragment extends Fragment {
     private String name;
     private TwoWayView recyclerView;
     private Button songs;
-    public static List<JsonWorkout> Workouts;
+    public static JsonWorkout[] Workouts;
 
 
     private View rootView;
@@ -57,23 +63,71 @@ public class MainFragment extends Fragment {
     }
 
     public void Task(){
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint("http://api.silverbarsapp.com").build();
-        WorkoutService service = restAdapter.create(WorkoutService.class);
-        service.getWorkouts(new Callback<List<JsonWorkout>>() {
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
             @Override
-            public void success(List<JsonWorkout> jsonWorkouts, Response response) {
-                Workouts = jsonWorkouts;
-                Log.v("List",String.valueOf(jsonWorkouts));
-                Log.v("Response",String.valueOf(response));
-                recyclerView = (TwoWayView) getView().findViewById(R.id.list);
-                recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+
+                // Customize the request
+                Request request = original.newBuilder()
+                        .header("Accept", "application/json")
+                        .header("Authorization", "auth-token")
+                        .method(original.method(), original.body())
+                        .build();
+
+                okhttp3.Response response = chain.proceed(request);
+                Log.v("Response",response.toString());
+                // Customize or return the response
+                return response;
+            }
+        });
+
+        OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        WorkoutService service = retrofit.create(WorkoutService.class);
+        Call<JsonWorkout[]> call = service.getWorkouts();
+        call.enqueue(new Callback<JsonWorkout[]>() {
+            @Override
+            public void onResponse(Call<JsonWorkout[]> call, Response<JsonWorkout[]> response) {
+                if (response.isSuccessful()) {
+                    Workouts = response.body();
+                    Log.v("Size",String.valueOf(Workouts.length));
+                    recyclerView = (TwoWayView) getView().findViewById(R.id.list);
+                    recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
+                } else {
+                    int statusCode = response.code();
+                    // handle request errors yourself
+                    ResponseBody errorBody = response.errorBody();
+                    Log.v("Error",errorBody.toString());
+
+                }
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                Log.v("Error",error.toString());
+            public void onFailure(Call<JsonWorkout[]> call, Throwable t) {
+                Log.v("Exception",t.toString());
             }
         });
+//        service.getWorkouts(new Callback<List<JsonWorkout>>() {
+//            @Override
+//            public void success(List<JsonWorkout> jsonWorkouts, Response response) {
+//                Workouts = jsonWorkouts;
+//                Log.v("List",String.valueOf(jsonWorkouts));
+//                Log.v("Response",String.valueOf(response));
+//                recyclerView = (TwoWayView) getView().findViewById(R.id.list);
+//                recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                Log.v("Error",error.toString());
+//            }
+//        });
 //        Observable WorkoutObservable = Observable.create(new Observable.OnSubscribe() {
 //            @Override
 //            public void call(Object o) {

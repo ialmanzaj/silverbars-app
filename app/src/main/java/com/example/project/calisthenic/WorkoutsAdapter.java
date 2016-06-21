@@ -69,7 +69,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         //Setting values to each recylerView Element
         URL url = null;
         try {
-            url = new URL(workout.ParsedExercises.get(i).getExercise_image());
+            url = new URL(workout.ParsedExercises[i].getExercise_image());
             Log.v("Url",url.toString());
             bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
         } catch (IOException e) {

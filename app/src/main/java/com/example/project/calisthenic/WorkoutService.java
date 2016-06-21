@@ -2,9 +2,12 @@ package com.example.project.calisthenic;
 
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.http.GET;
-import retrofit.http.Path;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Url;
 import rx.Observable;
 
 /**
@@ -12,8 +15,11 @@ import rx.Observable;
  */
 public interface WorkoutService {
     @GET("/workouts/?format=json")
-    void getWorkouts(Callback<List<JsonWorkout>> callback);
+    Call<JsonWorkout[]> getWorkouts();
 
-    @GET("/exercises/?format=json")
-    void getExercises(Callback<List<JsonExercise>> callback);
+    @GET
+    public Call<JsonExercise> getExercises(@Url String url);
+
+    @GET
+    Call<ResponseBody> downloadImage(@Url String fileUrl);
 }

@@ -445,26 +445,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Vibration per rep"
-
-                        <android.support.v7.widget.RecyclerView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:id="@+id/reciclador"
-                            android:scrollbars="vertical"
-                            android:layout_gravity="center_horizontal"
-
-
-                            android:text="Vibration per Set"
-                            android:textColor="@color/colorPrimaryText"
-                            android:textSize="18sp"
-                            android:id="@+id/vibration_set"
-                            android:layout_marginTop="5dp"
-
-                            android:checked="true" />
-
-
-
-
+                            />
 
                     </LinearLayout>
 
