@@ -28,6 +28,12 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 /**
  * Created by roberto on 5/24/2016.
  */
@@ -66,7 +72,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
     }
 
     public WorkoutAdapter(FragmentActivity context) {
-        Log.v("Workouts:", String.valueOf(workouts));
+//        Log.v("Workouts:", String.valueOf(workouts));
         this.context = context;
     }
 
@@ -89,12 +95,15 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         vh.layout.getLayoutParams().height = height / 3;
         switch (vh.getItemViewType()) {
             case TYPE_WORKOUT:
-                new DownloadImageTask(vh.img).execute(workouts[position].getWorkout_image());
+                String[] parts = workouts[position].getWorkout_image().split("workouts");;
+                String Parsedurl = "workouts"+parts[1];
+                DownloadImage(Parsedurl,vh);
 //                vh.img.setImageBitmap(bmp);
                 vh.text.setText(workouts[position].getWorkout_name());
                 vh.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Log.v("Workout id",String.valueOf(workouts[position].getId()));
                         Intent i = new Intent(context, WorkoutActivity.class);
                         i.putExtra("id",workouts[position].getId());
                         i.putExtra("name",workouts[position].getWorkout_name());
@@ -131,37 +140,28 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         return position < workouts.length ? TYPE_WORKOUT : TYPE_VIEW_MORE;
     }
 
-    class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
+    public void DownloadImage(String url, final VH vh){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
+                .build();
+        SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
+        Call<ResponseBody> call = downloadService.downloadImage(url);
 
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            // TODO Auto-generated method stub
-            super.onPreExecute();
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.d("State", "server contacted and has file");
+                    Bitmap bmp = BitmapFactory.decodeStream(response.body().byteStream());
+                    vh.img.setImageBitmap(bmp);
+                } else {
+                    Log.d("State", "server contact failed");
+                }
             }
-            return mIcon11;
-        }
 
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            super.onPostExecute(result);
-            bmImage.setImageBitmap(result);
-        }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {}
+        });
     }
 
     public static int containerDimensions(Context context) {

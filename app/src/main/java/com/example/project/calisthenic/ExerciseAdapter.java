@@ -1,11 +1,11 @@
 package com.example.project.calisthenic;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,18 +14,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import org.w3c.dom.Text;
-
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
+import java.io.OutputStream;
 import java.util.List;
 
 import okhttp3.Interceptor;
@@ -37,7 +34,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Url;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
     private List<WorkoutInfo> items;
@@ -49,6 +45,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         public TextView nombre;
         public TextView next;
         public TextView repetitions;
+        private Context context;
 
         public ExerciseViewHolder(View v) {
             super(v);
@@ -81,8 +78,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         WorkoutActivity workout = new WorkoutActivity();
 //        Bitmap bmp = null;
         //Setting values to each recylerView Element
-        String[] parts = workout.ParsedExercises[a].getExercise_image().split("exercises");;
-        String Parsedurl = "exercises"+parts[1];
+        String[] imageDir = workout.ParsedExercises[a].getExercise_image().split("exercises");;
+        String Parsedurl = "exercises"+imageDir[1];
+        Log.v("Url",Parsedurl);
         DownloadImage(Parsedurl,viewHolder);
 //            bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 //        viewHolder.imagen.setImageBitmap(bmp);
@@ -211,33 +209,12 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         });
     }
 
-    public void DownloadImage(String url, final ExerciseViewHolder vh) {
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
+    public void DownloadImage(final String url, final ExerciseViewHolder vh) {
 
-                // Customize the request
-                Request request = original.newBuilder()
-                        .header("Accept", "application/json")
-                        .header("Authorization", "auth-token")
-                        .method(original.method(), original.body())
-                        .build();
-
-                okhttp3.Response response = chain.proceed(request);
-                Log.v("Response", response.toString());
-                // Customize or return the response
-                return response;
-            }
-        });
-
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
-        WorkoutService downloadService = retrofit.create(WorkoutService.class);
+        SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
         Call<ResponseBody> call = downloadService.downloadImage(url);
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -245,11 +222,14 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     Log.d("State", "server contacted and has file");
+                    String[] imagesName = url.split("/");
+                    String imgName = imagesName[2];
+//                    Log.v("Dir",vh.context + "_" + imgName);
+//                    boolean writtenToDisk = writeResponseBodyToDisk(vh,response.body(),imgName);
+//                    Log.d("Download", "file download was a success? " + writtenToDisk);
                     Bitmap bmp = BitmapFactory.decodeStream(response.body().byteStream());
                     vh.imagen.setImageBitmap(bmp);
-//                    boolean writtenToDisk = writeResponseBodyToDisk(response.body());
 
-//                    Log.d(TAG, "file download was a success? " + writtenToDisk);
                 } else {
                     Log.d("State", "server contact failed");
                 }
@@ -260,6 +240,40 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
             }
         });
+    }
+
+    private boolean writeResponseBodyToDisk(final ExerciseViewHolder vh, ResponseBody body, String fileName) {
+        try {
+            // todo change the file location/name according to your needs
+            File futureStudioIconFile = new File(vh.context.getCacheDir() + File.separator + fileName);
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+
+            try {
+                byte[] fileReader = new byte[4096];
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+                inputStream = body.byteStream();
+                outputStream = new FileOutputStream(futureStudioIconFile);
+
+                while (true) {
+                    int read = inputStream.read(fileReader);
+                    if (read == -1) {break;}
+                    outputStream.write(fileReader, 0, read);
+                    fileSizeDownloaded += read;
+                    Log.d("Image", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+
+                outputStream.flush();
+
+                return true;
+            } catch (IOException e) {return false;
+            }
+            finally {
+                if (inputStream != null) {inputStream.close();}
+                if (outputStream != null) {outputStream.close();}
+            }
+        }catch (IOException e) {return false;}
     }
 
 }

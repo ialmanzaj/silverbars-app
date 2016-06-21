@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -18,8 +16,6 @@ import android.widget.Button;
 import org.lucasr.twowayview.widget.TwoWayView;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -89,7 +85,7 @@ public class MainFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
-        WorkoutService service = retrofit.create(WorkoutService.class);
+        SilverbarsService service = retrofit.create(SilverbarsService.class);
         Call<JsonWorkout[]> call = service.getWorkouts();
         call.enqueue(new Callback<JsonWorkout[]>() {
             @Override
