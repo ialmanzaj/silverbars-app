@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +21,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +40,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
     private List<WorkoutInfo> items;
+    private Context mContext;
 
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
@@ -45,7 +49,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         public TextView nombre;
         public TextView next;
         public TextView repetitions;
-        private Context context;
+
 
         public ExerciseViewHolder(View v) {
             super(v);
@@ -56,8 +60,10 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         }
     }
 
-    public ExerciseAdapter(List<WorkoutInfo> items) {
+    public ExerciseAdapter(List<WorkoutInfo> items, Context context) {
         this.items = items;
+        mContext = context;
+
     }
 
     @Override
@@ -80,13 +86,18 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         //Setting values to each recylerView Element
         String[] imageDir = workout.ParsedExercises[a].getExercise_image().split("exercises");;
         String Parsedurl = "exercises"+imageDir[1];
-        Log.v("Url",Parsedurl);
-        DownloadImage(Parsedurl,viewHolder);
-//            bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-//        viewHolder.imagen.setImageBitmap(bmp);
+        String[] imagesName = Parsedurl.split("/");
+        String imgName = imagesName[2];
+//        Bitmap bmp = loadImageFromCache(imgName);
+//        if (bmp != null){
+//            viewHolder.imagen.setImageBitmap(bmp);
+//        }
+//        else{
+            DownloadImage(Parsedurl,viewHolder,imgName);
+//        }
         viewHolder.nombre.setText(workout.ParsedExercises[a].getExercise_name());
 //        viewHolder.next.setText("Visitas:"+String.valueOf(items.get(i).getVisitas()));
-//        viewHolder.repetitions.setText(String.valueOf(workout.ParsedExercises[i].get);
+        viewHolder.repetitions.setText(String.valueOf(workout.Exercises_reps[a]));
         //OnLongClickListener for each recylclerView element
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             private TextView DialogName, Reps;
@@ -209,7 +220,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         });
     }
 
-    public void DownloadImage(final String url, final ExerciseViewHolder vh) {
+    public void DownloadImage(final String url, final ExerciseViewHolder vh, final String imgName) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
@@ -221,14 +232,11 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    Log.d("State", "server contacted and has file");
-                    String[] imagesName = url.split("/");
-                    String imgName = imagesName[2];
-//                    Log.v("Dir",vh.context + "_" + imgName);
-//                    boolean writtenToDisk = writeResponseBodyToDisk(vh,response.body(),imgName);
-//                    Log.d("Download", "file download was a success? " + writtenToDisk);
                     Bitmap bmp = BitmapFactory.decodeStream(response.body().byteStream());
                     vh.imagen.setImageBitmap(bmp);
+                    Log.d("State", "server contacted and has file");
+//                    boolean writtenToDisk = writeResponseBodyToDisk(response.body(),imgName);
+//                    Log.d("Download", "file download was a success? " + writtenToDisk);
 
                 } else {
                     Log.d("State", "server contact failed");
@@ -242,10 +250,10 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         });
     }
 
-    private boolean writeResponseBodyToDisk(final ExerciseViewHolder vh, ResponseBody body, String fileName) {
+    private boolean writeResponseBodyToDisk(ResponseBody body, String fileName) {
         try {
             // todo change the file location/name according to your needs
-            File futureStudioIconFile = new File(vh.context.getCacheDir() + File.separator + fileName);
+            File futureStudioIconFile = new File(mContext.getCacheDir() + File.separator + fileName);
             InputStream inputStream = null;
             OutputStream outputStream = null;
 
@@ -274,6 +282,17 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                 if (outputStream != null) {outputStream.close();}
             }
         }catch (IOException e) {return false;}
+    }
+
+    private Bitmap loadImageFromCache(String imageURI) {
+        Bitmap bitmap = null;
+        try {
+            Uri uri = Uri.parse(mContext.getCacheDir() + File.separator + imageURI);
+            bitmap = BitmapFactory.decodeStream(mContext.getContentResolver().openInputStream(uri));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 
 }

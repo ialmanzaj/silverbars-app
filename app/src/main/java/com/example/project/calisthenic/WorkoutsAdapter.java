@@ -21,6 +21,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 /**
  * Created by andre_000 on 4/12/2016.
  */
@@ -67,14 +73,11 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         WorkoutActivity workout = new WorkoutActivity();
         Bitmap bmp = null;
         //Setting values to each recylerView Element
-        URL url = null;
-        try {
-            url = new URL(workout.ParsedExercises[i].getExercise_image());
-            Log.v("Url",url.toString());
-            bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String[] imageDir = workout.ParsedExercises[i].getExercise_image().split("exercises");;
+        String Parsedurl = "exercises"+imageDir[1];
+        String[] imagesName = Parsedurl.split("/");
+        String imgName = imagesName[2];
+        DownloadImage(Parsedurl,viewHolder,imgName);
         viewHolder.imagen.setImageBitmap(bmp);
         viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
         viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
@@ -89,5 +92,35 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         display.getSize(size);
         int width = size.x;
         return width;
+    }
+
+    public void DownloadImage(final String url, final WorkoutsViewHolder vh, final String imgName) {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
+                .build();
+        SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
+        Call<ResponseBody> call = downloadService.downloadImage(url);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Bitmap bmp = BitmapFactory.decodeStream(response.body().byteStream());
+                    vh.imagen.setImageBitmap(bmp);
+                    Log.d("State", "server contacted and has file");
+//                    boolean writtenToDisk = writeResponseBodyToDisk(response.body(),imgName);
+//                    Log.d("Download", "file download was a success? " + writtenToDisk);
+
+                } else {
+                    Log.d("State", "server contact failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 }

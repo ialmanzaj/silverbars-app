@@ -20,6 +20,8 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 
+import org.lucasr.twowayview.widget.TwoWayView;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -85,7 +87,7 @@ public class WorkoutActivity extends AppCompatActivity {
         workout_sets = intent.getIntExtra("sets",0);
         exercises_id = new int[exercises.length];
         ParsedExercises = new JsonExercise[exercises.length];
-        Task();
+        Exercises();
         setContentView(R.layout.activity_workout);
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
@@ -98,14 +100,6 @@ public class WorkoutActivity extends AppCompatActivity {
         Log.v("Item size test", String.valueOf(items.size()));
 //        adapter = new ExerciseAdapter(items);
 //        recycler.setAdapter(adapter);
-//        Exercises_reps = new int[items.size()];
-//        for (int i = 0; i <items.size() ; i++){
-//            String exercise = ParsedReps[i].exercise;
-//            if (exercise.indexOf("exercises/"+exercises_id[i])>0){
-//                Exercises_reps[i] = ParsedReps[i].repetition;
-//            }
-////                Log.v("Repetitions",String.valueOf(Exercises_reps[i]));
-//        }
 //        Log.v("Url",Arrays.toString(ParsedExercises));
 //        Workout_name = (TextView) findViewById(R.id.Workout_name);
 //        Workout_name.setText(workout_name);
@@ -461,7 +455,7 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
-    public void Task(){
+    public void Exercises(){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
             @Override
@@ -501,8 +495,7 @@ public class WorkoutActivity extends AppCompatActivity {
 //                        Log.v("Items size",String.valueOf(items.size()));
                         exercises_id[a] = ParsedExercises[a].getId();
                         if ( items.size() == exercises.length){
-                            adapter = new ExerciseAdapter(items);
-                            recycler.setAdapter(adapter);
+                            exercisesReps();
                         }
 //                    Workouts = response.body();
                     } else {
@@ -520,5 +513,69 @@ public class WorkoutActivity extends AppCompatActivity {
             });
         }
 //
+    }
+//    JsonReps[] RepsData = JsonData.getReps("http://api.silverbarsapp.com/workout/?format=json",workout_id,exercises.length);
+//    ParsedReps = RepsData;
+    public void exercisesReps(){
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+
+                // Customize the request
+                Request request = original.newBuilder()
+                        .header("Accept", "application/json")
+                        .header("Authorization", "auth-token")
+                        .method(original.method(), original.body())
+                        .build();
+
+                okhttp3.Response response = chain.proceed(request);
+                Log.v("Response",response.toString());
+                // Customize or return the response
+                return response;
+            }
+        });
+
+        OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        SilverbarsService service = retrofit.create(SilverbarsService.class);
+        Call<JsonReps[]> call = service.getReps();
+        call.enqueue(new Callback<JsonReps[]>() {
+            @Override
+            public void onResponse(Call<JsonReps[]> call, Response<JsonReps[]> response) {
+                if (response.isSuccessful()) {
+                    JsonReps[] Reps = response.body();
+                    ParsedReps = new JsonReps[items.size()];
+                    int y = 0;
+                    for (int z = 0; z < Reps.length; z++){
+                        String workout = Reps[z].getWorkout_id();
+                        if (workout.indexOf("workouts/"+workout_id)>0){
+                            ParsedReps[y] = Reps[z];
+                            y++;
+                        }
+                    }
+                    Exercises_reps = new int[items.size()];
+                    for (int i = 0; i <items.size() ; i++){
+                        Exercises_reps[i] = ParsedReps[i].getRepetition();
+                    }
+                    adapter = new ExerciseAdapter(items,WorkoutActivity.this);
+                    recycler.setAdapter(adapter);
+                } else {
+                    int statusCode = response.code();
+                    // handle request errors yourself
+                    ResponseBody errorBody = response.errorBody();
+                    Log.v("Error",errorBody.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonReps[]> call, Throwable t) {
+                Log.v("Exception",t.toString());
+            }
+        });
     }
 }
