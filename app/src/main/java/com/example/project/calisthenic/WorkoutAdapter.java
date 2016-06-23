@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -22,8 +23,11 @@ import android.widget.TextView;
 
 import com.like.LikeButton;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -78,7 +82,6 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
 
     @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View v = null;
         switch (viewType) {
             case TYPE_WORKOUT:
@@ -91,41 +94,37 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
     @Override
     public void onBindViewHolder(VH vh, final int position) {
         int height = containerDimensions(context);
-        Log.v("Height",String.valueOf(height));
         vh.layout.getLayoutParams().height = height / 3;
         switch (vh.getItemViewType()) {
             case TYPE_WORKOUT:
                 String[] parts = workouts[position].getWorkout_image().split("workouts");;
                 String Parsedurl = "workouts"+parts[1];
-                DownloadImage(Parsedurl,vh);
+                Log.v("Image",Parsedurl);
+//                DownloadImage(Parsedurl,vh);
+                String[] imagesName = Parsedurl.split("/");
+                String imgName = imagesName[2];
+                Log.v("Image Name",imgName);
+                Bitmap bmp = loadImageFromCache(imgName);
+                if (bmp != null){
+                    vh.img.setImageBitmap(bmp);
+                }
+                else{
+                    DownloadImage(Parsedurl,vh,imgName);
+                }
 //                vh.img.setImageBitmap(bmp);
                 vh.text.setText(workouts[position].getWorkout_name());
                 vh.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.v("Workout id",String.valueOf(workouts[position].getId()));
                         Intent i = new Intent(context, WorkoutActivity.class);
                         i.putExtra("id",workouts[position].getId());
                         i.putExtra("name",workouts[position].getWorkout_name());
                         i.putExtra("sets",workouts[position].getSets());
                         i.putExtra("exercises",workouts[position].getExercises());
-                        Log.v("Exercises",Arrays.toString(workouts[position].exercises));
                         context.startActivity(i);
                     }
                 });
-
                 break;
-            /*
-            case TYPE_VIEW_MORE:
-                vh.btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
-
-                break;
-                */
         }
 
     }
@@ -140,7 +139,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         return position < workouts.length ? TYPE_WORKOUT : TYPE_VIEW_MORE;
     }
 
-    public void DownloadImage(String url, final VH vh){
+    public void DownloadImage(String url, final VH vh, final String imgName){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
@@ -151,11 +150,20 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    Log.d("State", "server contacted and has file");
-                    Bitmap bmp = BitmapFactory.decodeStream(response.body().byteStream());
-                    vh.img.setImageBitmap(bmp);
+//                    Bitmap bmp = BitmapFactory.decodeStream(response.body().byteStream());
+//                    vh.img.setImageBitmap(bmp);
+                    Bitmap bitmap = null;
+                    if (response.isSuccessful()) {
+                        Log.v("Response","success");
+                        boolean writtenToDisk = writeResponseBodyToDisk(response.body(),imgName);
+                        if(writtenToDisk){bitmap = loadImageFromCache(imgName);}
+                        vh.img.setImageBitmap(bitmap);
+                    }
+                    else {
+                        Log.v("Download", "server contact failed");
+                    }
                 } else {
-                    Log.d("State", "server contact failed");
+                    Log.v("State", "server contact failed");
                 }
             }
 
@@ -171,5 +179,42 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         display.getSize(size);
         int height = size.y;
         return height;
+    }
+    private Bitmap loadImageFromCache(String imageURI) {
+        Bitmap bitmap = null;
+        File file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageURI);
+        if (file.exists()){
+            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        }
+        return bitmap;
+    }
+    private boolean writeResponseBodyToDisk(ResponseBody body, String imgName) {
+        try {
+            File futureStudioIconFile = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imgName);
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+            try {
+                byte[] fileReader = new byte[4096];
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+                inputStream = body.byteStream();
+                outputStream = new FileOutputStream(futureStudioIconFile);
+                while (true) {
+                    int read = inputStream.read(fileReader);
+                    if (read == -1) {break;}
+                    outputStream.write(fileReader, 0, read);
+                    fileSizeDownloaded += read;
+                    Log.d("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+                outputStream.flush();
+                return true;
+
+            } catch (IOException e) {
+                return false;
+            } finally {
+                if (inputStream != null) {inputStream.close();}
+                if (outputStream != null) {outputStream.close();}
+            }
+        } catch (IOException e) {return false;}
     }
 }

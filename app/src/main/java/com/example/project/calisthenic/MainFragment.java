@@ -95,7 +95,6 @@ public class MainFragment extends Fragment {
             public void onResponse(Call<JsonWorkout[]> call, Response<JsonWorkout[]> response) {
                 if (response.isSuccessful()) {
                     Workouts = response.body();
-                    Log.v("Size",String.valueOf(Workouts.length));
                     recyclerView = (TwoWayView) getView().findViewById(R.id.list);
                     recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
                 } else {
@@ -112,81 +111,6 @@ public class MainFragment extends Fragment {
                 Log.v("Exception",t.toString());
             }
         });
-//        service.getWorkouts(new Callback<List<JsonWorkout>>() {
-//            @Override
-//            public void success(List<JsonWorkout> jsonWorkouts, Response response) {
-//                Workouts = jsonWorkouts;
-//                Log.v("List",String.valueOf(jsonWorkouts));
-//                Log.v("Response",String.valueOf(response));
-//                recyclerView = (TwoWayView) getView().findViewById(R.id.list);
-//                recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                Log.v("Error",error.toString());
-//            }
-//        });
-//        Observable WorkoutObservable = Observable.create(new Observable.OnSubscribe() {
-//            @Override
-//            public void call(Object o) {
-//                JsonParser JsonData = new JsonParser();
-//                String array = null;
-//                try {
-//                    Workouts = JsonData.getWorkouts("http://api.silverbarsapp.com/workouts/?format=json");
-//                    array = Arrays.toString(Workouts);
-//                    Log.v("Array",Arrays.toString(Workouts));
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//
-//        Subscriber WorkoutSubscriber = new Subscriber() {
-//            @Override
-//            public void onCompleted() {
-//                recyclerView = (TwoWayView) getView().findViewById(R.id.list);
-//                recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//
-//            }
-//
-//            @Override
-//            public void onNext(Object o) {
-//
-//            }
-//        };
-//        WorkoutObservable.subscribe(WorkoutSubscriber);
-//        TinyTask.perform(new Something<String>() {
-//            @Override
-//            public String whichDoes() {
-//                JsonParser JsonData = new JsonParser();
-//                String array = null;
-//                try {
-//                    Workouts = JsonData.getWorkouts("http://api.silverbarsapp.com/workouts/?format=json");
-//                    array = Arrays.toString(Workouts);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                return array; // you write this method..
-//            }
-//
-//        }).whenDone(new DoThis<String>() {
-//            @Override
-//            public void ifOK(String result) {
-//                recyclerView = (TwoWayView) getView().findViewById(R.id.list);
-//                recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
-//                Log.i("Result", result);
-//            }
-//
-//            @Override
-//            public void ifNotOK(Exception e) {
-//                Log.i("Result", e.toString());
-//            }
-//        }).go();
     }
 
     public boolean CheckInternet(Context context){

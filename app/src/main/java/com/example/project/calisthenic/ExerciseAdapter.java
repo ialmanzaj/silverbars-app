@@ -86,10 +86,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         Bitmap bmp = loadImageFromCache(imgName);
         if (bmp != null){
             viewHolder.imagen.setImageBitmap(bmp);
-            Log.v("Image","Loaded from device"+bmp);
         }
         else{
-            Log.v("Image","Downloaded image"+bmp);
             DownloadImage(Parsedurl,viewHolder,imgName);
         }
         viewHolder.nombre.setText(workout.ParsedExercises[a].getExercise_name());
@@ -227,11 +225,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         Bitmap bitmap = null;
                         if (response.isSuccessful()) {
-                            Log.d("Download", "server contacted and has file");
                             boolean writtenToDisk = writeResponseBodyToDisk(response.body(),imgName);
                             if(writtenToDisk){bitmap = loadImageFromCache(imgName);}
                             vh.imagen.setImageBitmap(bitmap);
-                            Log.d("Download", "file download was a success? " + writtenToDisk);
                         }
                         else {
                             Log.d("Download", "server contact failed");
