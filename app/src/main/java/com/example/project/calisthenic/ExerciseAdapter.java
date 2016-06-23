@@ -1,13 +1,12 @@
 package com.example.project.calisthenic;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,19 +27,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
     private List<WorkoutInfo> items;
     private Context mContext;
+    private InputStream bmpInput;
 
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
@@ -82,23 +78,21 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     public void onBindViewHolder(final ExerciseViewHolder viewHolder, int i) {
         final int a = i;
         WorkoutActivity workout = new WorkoutActivity();
-//        Bitmap bmp = null;
         //Setting values to each recylerView Element
         String[] imageDir = workout.ParsedExercises[a].getExercise_image().split("exercises");;
         String Parsedurl = "exercises"+imageDir[1];
         String[] imagesName = Parsedurl.split("/");
         String imgName = imagesName[2];
-//        Bitmap bmp = loadImageFromCache(imgName);
-//        if (bmp != null){
-//            viewHolder.imagen.setImageBitmap(bmp);
-//        }
-//        else{
+        Bitmap bmp = loadImageFromCache(imgName);
+        if (bmp != null){
+            viewHolder.imagen.setImageBitmap(bmp);
+            Log.v("Image","Loaded from device"+bmp);
+        }
+        else{
+            Log.v("Image","Downloaded image"+bmp);
             DownloadImage(Parsedurl,viewHolder,imgName);
-//        }
+        }
         viewHolder.nombre.setText(workout.ParsedExercises[a].getExercise_name());
-//        viewHolder.next.setText("Visitas:"+String.valueOf(items.get(i).getVisitas()));
-        viewHolder.repetitions.setText(String.valueOf(workout.Exercises_reps[a]));
-        //OnLongClickListener for each recylclerView element
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             private TextView DialogName, Reps;
             private Button plusRep, minusRep;
@@ -188,7 +182,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                         }
                     }
                 }
-
             }
 
             public void minusTempo(TextView view, Button button, Button button2){
@@ -221,78 +214,76 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     }
 
     public void DownloadImage(final String url, final ExerciseViewHolder vh, final String imgName) {
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
-        SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
-        Call<ResponseBody> call = downloadService.downloadImage(url);
+        final SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
 
-        call.enqueue(new Callback<ResponseBody>() {
+        new AsyncTask<Void, Long, Void>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Bitmap bmp = BitmapFactory.decodeStream(response.body().byteStream());
-                    vh.imagen.setImageBitmap(bmp);
-                    Log.d("State", "server contacted and has file");
-//                    boolean writtenToDisk = writeResponseBodyToDisk(response.body(),imgName);
-//                    Log.d("Download", "file download was a success? " + writtenToDisk);
+            protected Void doInBackground(Void... voids) {
+                Call<ResponseBody> call = downloadService.downloadImage(url);
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        Bitmap bitmap = null;
+                        if (response.isSuccessful()) {
+                            Log.d("Download", "server contacted and has file");
+                            boolean writtenToDisk = writeResponseBodyToDisk(response.body(),imgName);
+                            if(writtenToDisk){bitmap = loadImageFromCache(imgName);}
+                            vh.imagen.setImageBitmap(bitmap);
+                            Log.d("Download", "file download was a success? " + writtenToDisk);
+                        }
+                        else {
+                            Log.d("Download", "server contact failed");
+                        }
+                    }
 
-                } else {
-                    Log.d("State", "server contact failed");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.v("Failure", t.toString());
+                    }
+                });
+                return null;
+            };
+        }.execute();
     }
 
-    private boolean writeResponseBodyToDisk(ResponseBody body, String fileName) {
+    private Bitmap loadImageFromCache(String imageURI) {
+        Bitmap bitmap = null;
+        File file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageURI);
+        if (file.exists()){
+            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        }
+        return bitmap;
+    }
+
+    private boolean writeResponseBodyToDisk(ResponseBody body, String imgName) {
         try {
-            // todo change the file location/name according to your needs
-            File futureStudioIconFile = new File(mContext.getCacheDir() + File.separator + fileName);
+            File futureStudioIconFile = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imgName);
             InputStream inputStream = null;
             OutputStream outputStream = null;
-
             try {
                 byte[] fileReader = new byte[4096];
                 long fileSize = body.contentLength();
                 long fileSizeDownloaded = 0;
                 inputStream = body.byteStream();
                 outputStream = new FileOutputStream(futureStudioIconFile);
-
                 while (true) {
                     int read = inputStream.read(fileReader);
                     if (read == -1) {break;}
                     outputStream.write(fileReader, 0, read);
                     fileSizeDownloaded += read;
-                    Log.d("Image", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                    Log.d("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
                 }
-
                 outputStream.flush();
-
                 return true;
-            } catch (IOException e) {return false;
-            }
-            finally {
+
+            } catch (IOException e) {
+                return false;
+            } finally {
                 if (inputStream != null) {inputStream.close();}
                 if (outputStream != null) {outputStream.close();}
             }
-        }catch (IOException e) {return false;}
+        } catch (IOException e) {return false;}
     }
-
-    private Bitmap loadImageFromCache(String imageURI) {
-        Bitmap bitmap = null;
-        try {
-            Uri uri = Uri.parse(mContext.getCacheDir() + File.separator + imageURI);
-            bitmap = BitmapFactory.decodeStream(mContext.getContentResolver().openInputStream(uri));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return bitmap;
-    }
-
 }

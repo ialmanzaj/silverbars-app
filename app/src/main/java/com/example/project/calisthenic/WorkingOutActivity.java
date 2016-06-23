@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 
 public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener {
@@ -59,9 +60,12 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private TextView CurrentSet;
     private TextView TotalSet;
     private TextView CurrentExercise;
-    private CountDownTimer timer2;
+    private TextView startCounter;
+    private TextView headerText;
+    private CountDownTimer timer2, restTimer;
     private FrameLayout prvLayout;
     private FrameLayout nxtLayout;
+    private FrameLayout ModalLayout;
     private Button PauseButton;
     private boolean SelectedSongs = false, finish = false;
     private RecyclerView recycler;
@@ -73,6 +77,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private JsonExercise[] Exercises;
     private int[] Exercises_reps;
     private boolean VibrationPerSet = false,VibrationPerRep = false;
+    private static final String FORMAT = "%2d";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,12 +106,16 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         CurrentSet = (TextView) findViewById(R.id.CurrentSet);
         TotalSet = (TextView) findViewById(R.id.TotalSet);
         CurrentExercise = (TextView) findViewById(R.id.CurrentExercise);
+        ModalLayout = (FrameLayout) findViewById(R.id.ModalLayout);
+        headerText = (TextView) findViewById(R.id.headerText);
+        startCounter = (TextView) findViewById(R.id.startCounter);
         final TextView totalExercise = (TextView) findViewById(R.id.TotalExercise);
 
         ImageButton prvExercise = (ImageButton) findViewById(R.id.prvExercise);
         ImageButton nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
         prvLayout = (FrameLayout) findViewById(R.id.prvLayout);
         nxtLayout = (FrameLayout) findViewById(R.id.nxtLayout);
+        nxtLayout.setVisibility(View.VISIBLE);
         RelativeLayout playerLayout = (RelativeLayout) findViewById(R.id.PlayerLayout);
         PauseButton = (Button) findViewById(R.id.PauseButton);
         timer = (TextView) findViewById(R.id.timer);
@@ -123,7 +132,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 if (actualReps == 0){
                     if (y+1 < elements){
                         y++;
-                        PlayAudio("frontlever");
+
                         prvLayout.setVisibility(View.VISIBLE);
                         if((y+1)==elements){
                             nxtLayout.setVisibility(View.GONE);
@@ -132,9 +141,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         CurrentExercise.setText(String.valueOf(y+1));
                         ActivateVibrationPerSet();
                         timer.setText(String.valueOf(Exercises_reps[y]));
-                        timer2.cancel();
-                        RepsTime(y);
-                        Timer(totalTime,1);
+                        RestModal("Rest",15,false);
                     }
                     else{
                         if (ActualSets+1 <= 4){
@@ -145,9 +152,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             recycler.smoothScrollToPosition(y);
                             finish = true;
                             timer.setText(String.valueOf(Exercises_reps[y]));
-                            timer2.cancel();
-                            RepsTime(y);
-                            Timer(totalTime,1);
+                            RestModal("Rest",30,true);
                             nxtLayout.setVisibility(View.VISIBLE);
                             prvLayout.setVisibility(View.GONE);
                         }
@@ -406,20 +411,20 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             Log.d("WorkingOutActivity", (String) song_name.getText());
         }
 
-        alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle("Get Ready!");
-        alertDialog.setMessage("4");
-        alertDialog.show();   //
+//        alertDialog = new AlertDialog.Builder(this).create();
+//        alertDialog.setTitle("Get Ready!");
+//        alertDialog.setMessage("4");
+//        alertDialog.show();   //
 
         new CountDownTimer(4000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                alertDialog.setMessage(""+ (millisUntilFinished/1000));
+                    startCounter.setText(String.format(FORMAT,
+                            TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(
+                                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
             }
 
-            @Override
             public void onFinish() {
-//                info.setVisibility(View.GONE);
                 timer.setText(String.valueOf(Exercises_reps[0]));
                 TotalSet.setText(String.valueOf(TotalSets));
                 CurrentSet.setText("0");
@@ -427,8 +432,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 if (SelectedSongs){
                     mp.start();
                 }
-                alertDialog.dismiss();
+                ModalLayout.setVisibility(View.GONE);
             }
+
         }.start();
     }
 
@@ -636,5 +642,37 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             Log.v("Exception",e.toString());
         }
         return artist;
+    }
+
+    public void RestModal(String header,int Time,final boolean Sets){
+        ModalLayout.setVisibility(View.VISIBLE);
+        headerText.setText(header);
+        int TotalTime = (Time+1)*1000;
+        restTimer = new CountDownTimer(TotalTime, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                startCounter.setText(String.format(FORMAT,
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(
+                                TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+            }
+
+            public void onFinish() {
+                if (!Sets){
+                    PlayAudio("frontlever");
+                    timer2.cancel();
+                    restTimer.cancel();
+                    RepsTime(y);
+                    Timer(totalTime,1);
+                    ModalLayout.setVisibility(View.GONE);
+                }
+                else{
+                    timer2.cancel();
+                    restTimer.cancel();
+                    RepsTime(y);
+                    Timer(totalTime,1);
+                    ModalLayout.setVisibility(View.GONE);
+                }
+            }
+        }.start();
     }
 }
