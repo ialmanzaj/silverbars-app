@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Build;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -77,7 +79,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         String Parsedurl = "exercises"+imageDir[1];
         String[] imagesName = Parsedurl.split("/");
         String imgName = imagesName[2];
-        DownloadImage(Parsedurl,viewHolder,imgName);
+        bmp = loadImageFromCache(imgName);
         viewHolder.imagen.setImageBitmap(bmp);
         viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
         viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
@@ -122,5 +124,14 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
             }
         });
+    }
+
+    private Bitmap loadImageFromCache(String imageURI) {
+        Bitmap bitmap = null;
+        File file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageURI);
+        if (file.exists()){
+            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        }
+        return bitmap;
     }
 }
