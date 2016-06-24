@@ -155,7 +155,6 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
 //                    vh.img.setImageBitmap(bmp);
                     Bitmap bitmap = null;
                     if (response.isSuccessful()) {
-                        Log.v("Response","success");
                         boolean writtenToDisk = writeResponseBodyToDisk(response.body(),imgName);
                         if(writtenToDisk){bitmap = loadImageFromCache(imgName);}
                         vh.img.setImageBitmap(bitmap);
@@ -196,7 +195,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
             InputStream inputStream = null;
             OutputStream outputStream = null;
             boolean success = true;
-            if (!Folder.exists()) {
+            if (!Folder.isDirectory()) {
                 Log.v("Dir","Creating Dir");
                 success = Folder.mkdir();
             }
