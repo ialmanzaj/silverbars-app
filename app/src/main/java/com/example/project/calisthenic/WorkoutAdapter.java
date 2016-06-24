@@ -197,6 +197,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
             OutputStream outputStream = null;
             boolean success = true;
             if (!Folder.exists()) {
+                Log.v("Dir","Creating Dir");
                 success = Folder.mkdir();
             }
             if (success) {
