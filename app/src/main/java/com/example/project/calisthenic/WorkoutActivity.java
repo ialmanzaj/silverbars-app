@@ -182,11 +182,10 @@ public class WorkoutActivity extends AppCompatActivity {
 
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
-        if (!level.equals(null)) {
-            int spinnerPosition = arrayAdapter.getPosition(level);
-            spinner.setSelection(spinnerPosition);
-        }
-
+//        if (!level.equals(null)) {
+//            int spinnerPosition = arrayAdapter.getPosition("NORMAL");
+//            spinner.setSelection(spinnerPosition);
+//        }
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
