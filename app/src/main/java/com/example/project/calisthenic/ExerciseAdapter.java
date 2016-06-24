@@ -91,6 +91,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             DownloadImage(Parsedurl,viewHolder,imgName);
         }
         viewHolder.nombre.setText(workout.ParsedExercises[a].getExercise_name());
+        viewHolder.repetitions.setText(String.valueOf(workout.Exercises_reps[a]));
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             private TextView DialogName, Reps;
             private Button plusRep, minusRep;
