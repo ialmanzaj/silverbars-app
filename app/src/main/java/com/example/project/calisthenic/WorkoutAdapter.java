@@ -121,6 +121,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                         i.putExtra("name",workouts[position].getWorkout_name());
                         i.putExtra("sets",workouts[position].getSets());
                         i.putExtra("exercises",workouts[position].getExercises());
+                        i.putExtra("level",workouts[position].getLevel());
                         context.startActivity(i);
                     }
                 });
@@ -190,31 +191,42 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
     }
     private boolean writeResponseBodyToDisk(ResponseBody body, String imgName) {
         try {
+            File Folder = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/");
             File futureStudioIconFile = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imgName);
             InputStream inputStream = null;
             OutputStream outputStream = null;
-            try {
-                byte[] fileReader = new byte[4096];
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
-                inputStream = body.byteStream();
-                outputStream = new FileOutputStream(futureStudioIconFile);
-                while (true) {
-                    int read = inputStream.read(fileReader);
-                    if (read == -1) {break;}
-                    outputStream.write(fileReader, 0, read);
-                    fileSizeDownloaded += read;
-                    Log.d("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
-                }
-                outputStream.flush();
-                return true;
-
-            } catch (IOException e) {
-                return false;
-            } finally {
-                if (inputStream != null) {inputStream.close();}
-                if (outputStream != null) {outputStream.close();}
+            boolean success = true;
+            if (!Folder.exists()) {
+                success = Folder.mkdir();
             }
+            if (success) {
+                try {
+                    byte[] fileReader = new byte[4096];
+                    long fileSize = body.contentLength();
+                    long fileSizeDownloaded = 0;
+                    inputStream = body.byteStream();
+                    outputStream = new FileOutputStream(futureStudioIconFile);
+                    while (true) {
+                        int read = inputStream.read(fileReader);
+                        if (read == -1) {break;}
+                        outputStream.write(fileReader, 0, read);
+                        fileSizeDownloaded += read;
+                        Log.d("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                    }
+                    outputStream.flush();
+                    return true;
+
+                } catch (IOException e) {
+                    return false;
+                } finally {
+                    if (inputStream != null) {inputStream.close();}
+                    if (outputStream != null) {outputStream.close();}
+                }
+            } else {
+                Log.v("Error","Error while creating dir");
+            }
+
         } catch (IOException e) {return false;}
+        return false;
     }
 }

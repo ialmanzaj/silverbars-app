@@ -64,7 +64,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private ArrayList<File> mySongs;
     static public int[] Exercises_reps;
     private String[] exercises;
-    private String workout_name;
+    private String workout_name, level;
     private int workout_id = 0, workout_sets = 0;
     private List<WorkoutInfo> items = new ArrayList<>();
     public static JsonExercise[] ParsedExercises;
@@ -85,6 +85,7 @@ public class WorkoutActivity extends AppCompatActivity {
         exercises = intent.getStringArrayExtra("exercises");
         Log.v("Exercises",Arrays.toString(exercises));
         workout_name = intent.getStringExtra("name");
+        level = intent.getStringExtra("level");
         workout_id = intent.getIntExtra("id",0);
         workout_sets = intent.getIntExtra("sets",0);
         exercises_id = new int[exercises.length];
@@ -100,11 +101,6 @@ public class WorkoutActivity extends AppCompatActivity {
         lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
         Log.v("Item size test", String.valueOf(items.size()));
-//        adapter = new ExerciseAdapter(items);
-//        recycler.setAdapter(adapter);
-//        Log.v("Url",Arrays.toString(ParsedExercises));
-//        Workout_name = (TextView) findViewById(R.id.Workout_name);
-//        Workout_name.setText(workout_name);
 
         // ======= TOOL BAR - BACK BUTTON  ADDED
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -114,11 +110,7 @@ public class WorkoutActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(workout_name);
         }
-
-
-
         Button startButton = (Button) findViewById(R.id.start_button);
-
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,29 +118,6 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
-
-        // ACTIVAR VIBRACION POR SET O POR REPETICION
-
-//        Switch VibrationRep = (Switch) findViewById(R.id.vibration_rep);
-//        Switch VibrationSet = (Switch) findViewById(R.id.vibration_set);
-
-
-//        VibrationRep.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                VibrationIsActivePerRep = isChecked;
-//            }
-//        });
-//
-//        VibrationSet.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                VibrationIsActivePerSet = isChecked;
-//            }
-//        });
-
-
-//
 //        Tab 2
 
         Reps = (TextView) findViewById(R.id.Reps);
@@ -213,6 +182,11 @@ public class WorkoutActivity extends AppCompatActivity {
 
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
+        if (!level.equals(null)) {
+            int spinnerPosition = arrayAdapter.getPosition(level);
+            spinner.setSelection(spinnerPosition);
+        }
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
