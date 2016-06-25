@@ -103,11 +103,11 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:id="@+id/Positive"
                                 android:textColor="@color/colorPrimaryText"
                                 android:layout_gravity="center"
-                                android:textSize="35sp"
+
                                 android:text="3" />
 
                             <Button
@@ -150,11 +150,11 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:id="@+id/Isometric"
                                 android:textColor="@color/colorPrimaryText"
                                 android:layout_gravity="center"
-                                android:textSize="35sp"
+
                                 android:text="1" />
 
                             <Button
@@ -197,11 +197,11 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:id="@+id/Negative"
                                 android:textColor="@color/colorPrimaryText"
                                 android:layout_gravity="center"
-                                android:textSize="35sp"
+
                                 android:text="3" />
 
                             <Button
@@ -254,7 +254,7 @@
 
                                     />
 
-                                <EditText
+                                <TextView
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
