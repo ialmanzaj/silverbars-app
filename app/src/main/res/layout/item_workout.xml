@@ -62,11 +62,13 @@
             <Button
                     android:id="@+id/btn"
                     android:layout_width="wrap_content"
-                    android:layout_height="32dp"
+                    android:layout_height="35dp"
                     android:text="START"
                     android:background="#602C8D"
                     android:textColor="@color/white"
-                    android:layout_gravity="left" />
+                    android:layout_gravity="left"
+
+                />
 
         <com.like.LikeButton
             android:layout_marginTop="7dp"

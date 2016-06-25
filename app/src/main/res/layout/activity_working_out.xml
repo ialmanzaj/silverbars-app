@@ -457,6 +457,7 @@
         </LinearLayout>
 
         <FrameLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#c81f1f1f"
@@ -470,7 +471,7 @@
                 android:id="@+id/startCounter"
                 android:layout_gravity="center"
                 android:textColor="#ffffff"
-                android:textSize="200dp" />
+                android:textSize="200sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -480,8 +481,9 @@
                 android:id="@+id/headerText"
                 android:layout_gravity="top|center"
                 android:layout_marginTop="50dp"
-                android:textSize="70dp"
-                android:textColor="#ffffff" />
+                android:textSize="70sp"
+                android:textColor="#ffffff"
+                />
         </FrameLayout>
     </FrameLayout>
 </LinearLayout>
