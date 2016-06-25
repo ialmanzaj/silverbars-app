@@ -10,13 +10,14 @@
     android:paddingEnd="10dp"
     android:paddingBottom="10dp">
 
-    <com.tuesda.walker.circlerefresh.CircleRefreshLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        app:AniBackColor="#ff8b90af"
-        app:AniForeColor="#ffffffff"
-        app:CircleSmaller="6"
-        android:id="@+id/refresh_layout"
+    <android.support.v4.widget.SwipeRefreshLayout
+
+        xmlns:android="http://schemas.android.com/apk/res/android"
+
+        android:id="@+id/swipeContainer"
+
         android:layout_width="match_parent"
+
         android:layout_height="match_parent">
 
 
@@ -57,6 +58,6 @@
         <!--</LinearLayout>-->
 
 
-    </com.tuesda.walker.circlerefresh.CircleRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

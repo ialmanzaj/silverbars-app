@@ -7,6 +7,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,7 @@ public class MainFragment extends Fragment {
     private TwoWayView recyclerView;
     private Button songs;
     public static JsonWorkout[] Workouts;
-    private CircleRefreshLayout refreshLayout;
+    private SwipeRefreshLayout swipeContainer;
 
 
     private View rootView;
@@ -52,7 +53,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        refreshLayout = (CircleRefreshLayout) rootView.findViewById(R.id.refresh_layout);
         recyclerView = (TwoWayView) getView().findViewById(R.id.list);
         Intent intent = this.getActivity().getIntent();
         email = intent.getStringExtra("Email");
@@ -64,23 +64,30 @@ public class MainFragment extends Fragment {
             toast("Please check your internet conection.");
         }
 
-        refreshLayout.setOnRefreshListener(new CircleRefreshLayout.OnCircleRefreshListener() {
+        swipeContainer = (SwipeRefreshLayout) getView().findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void completeRefresh() {
-
-            }
-
-            @Override
-            public void refreshing() {
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
                 if (CheckInternet(getContext())){
                     Task();
                 }
                 else{
-                    toast("Please check your internet connection.");
-                    this.completeRefresh();
+                    toast("Please check your internet conection.");
+                    swipeContainer.setRefreshing(false);
                 }
             }
         });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+
     }
 
     public void Task(){
@@ -118,7 +125,7 @@ public class MainFragment extends Fragment {
                 if (response.isSuccessful()) {
                     Workouts = response.body();
                     recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
-                    refreshLayout.finishRefreshing();
+                    swipeContainer.setRefreshing(false);
                 } else {
                     int statusCode = response.code();
                     // handle request errors yourself
