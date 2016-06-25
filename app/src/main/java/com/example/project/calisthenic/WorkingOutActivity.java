@@ -67,7 +67,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private FrameLayout nxtLayout;
     private FrameLayout ModalLayout;
     private Button PauseButton;
-    private boolean SelectedSongs = false, finish = false;
+    private boolean SelectedSongs = false, finish = false, start = false;
     private RecyclerView recycler;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
@@ -565,8 +565,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     public void onTimerPause(){
         String value = timer.getText().toString();
         if (!finish){
-            time = Integer.valueOf(value);
-            timer2.cancel();
+            if (start){
+                time = Integer.valueOf(value);
+                timer2.cancel();
+            }
         }
     }
 
@@ -610,7 +612,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onDestroy() {
-        timer2.cancel();
+        if (start){
+            timer2.cancel();
+        }
         if (media!=null)
             media.release();
         super.onDestroy();
