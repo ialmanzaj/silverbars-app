@@ -264,7 +264,7 @@
                                     android:focusableInTouchMode="true"
                                     android:textColor="@color/black"
                                     android:gravity="center_vertical|center_horizontal"
-                                    android:id="@+id/editText2"
+                                    android:id="@+id/Sets"
                                     android:textAlignment="center"
                                     android:hint="0" />
 

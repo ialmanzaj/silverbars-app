@@ -53,7 +53,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private Button plusNegative;
     private Button minusNegative;
     private Button SelectMusic;
-    private TextView Positive, Negative, Isometric, Reps, Workout_name;
+    private TextView Positive, Negative, Isometric, Reps, Workout_name, Sets;
     private String[] position;
     private List<String> spinnerArray = new ArrayList<String>();
     private int value = 0;
@@ -101,6 +101,9 @@ public class WorkoutActivity extends AppCompatActivity {
         lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
         Log.v("Item size test", String.valueOf(items.size()));
+
+        Sets = (TextView) findViewById(R.id.Sets);
+        Sets.setText(String.valueOf(workout_sets));
 
         // ======= TOOL BAR - BACK BUTTON  ADDED
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -345,18 +348,19 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private void LaunchWorkingOutActivity() {
-        int positive,isometric,negative;
-            if (Positive.getText().toString() != "" && Isometric.getText().toString() != "" && Negative.getText().toString() != ""){
+        int positive,isometric,negative,sets;
+            if (Positive.getText().toString() != "" && Isometric.getText().toString() != "" && Negative.getText().toString() != "" && Sets.getText().toString() != ""){
                 positive = Integer.parseInt(Positive.getText().toString());
                 isometric = Integer.parseInt(Isometric.getText().toString());
                 negative = Integer.parseInt(Negative.getText().toString());
+                sets = Integer.parseInt(Sets.getText().toString());
                 int tempoTotal = positive + isometric + negative;
                 Intent intent = new Intent(this, WorkingOutActivity.class);
                 intent.putExtra("ExercisesReps",Exercises_reps);
                 intent.putExtra("tempo", tempoTotal);
                 intent.putExtra("pos",position);
                 intent.putExtra("songlist",mySongs);
-                intent.putExtra("Sets",workout_sets);
+                intent.putExtra("Sets",sets);
                 intent.putExtra("VibrationPerSet",VibrationIsActivePerSet);
                 intent.putExtra("VibrationPerRep",VibrationIsActivePerRep);
                 startActivity(intent);
