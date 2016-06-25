@@ -252,7 +252,7 @@
 
                                     android:text="-"
 
-                                    />
+                                    android:id="@+id/minusSets" />
 
                                 <EditText
                                     android:layout_width="0dp"
@@ -277,7 +277,7 @@
                                     android:text="+"
 
 
-                                    />
+                                    android:id="@+id/plusSets" />
                             </LinearLayout>
 
                         </RelativeLayout>

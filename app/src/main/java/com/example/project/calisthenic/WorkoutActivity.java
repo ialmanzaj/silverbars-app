@@ -52,6 +52,8 @@ public class WorkoutActivity extends AppCompatActivity {
     private Button minusIsometric;
     private Button plusNegative;
     private Button minusNegative;
+    private Button plusSets;
+    private Button minusSets;
     private Button SelectMusic;
     private TextView Positive, Negative, Isometric, Reps, Workout_name, Sets;
     private String[] position;
@@ -102,9 +104,6 @@ public class WorkoutActivity extends AppCompatActivity {
         recycler.setLayoutManager(lManager);
         Log.v("Item size test", String.valueOf(items.size()));
 
-        Sets = (TextView) findViewById(R.id.Sets);
-        Sets.setText(String.valueOf(workout_sets));
-
         // ======= TOOL BAR - BACK BUTTON  ADDED
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
@@ -124,6 +123,9 @@ public class WorkoutActivity extends AppCompatActivity {
 //        Tab 2
 
         Reps = (TextView) findViewById(R.id.Reps);
+
+        Sets = (TextView) findViewById(R.id.Sets);
+        Sets.setText(String.valueOf(workout_sets));
 
         Positive = (TextView) findViewById(R.id.Positive);
         Isometric = (TextView) findViewById(R.id.Isometric);
@@ -171,6 +173,32 @@ public class WorkoutActivity extends AppCompatActivity {
                 minusTempo(Negative,minusNegative,plusNegative);
             }
         });
+        plusSets = (Button) findViewById(R.id.plusSets);
+        plusSets.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                plusTempo(Sets,plusSets,minusSets);
+            }
+        });
+        minusSets = (Button) findViewById(R.id.minusSets);
+        minusSets.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                minusTempo(Sets,minusSets,plusSets);
+            }
+        });
+        int setsValue = Integer.parseInt(Sets.getText().toString());
+        if (setsValue <= 1){
+            plusSets.setEnabled(true);
+            plusSets.setClickable(true);
+            minusSets.setEnabled(false);
+            minusSets.setClickable(false);
+        }else if(setsValue >=10){
+            plusSets.setEnabled(false);
+            plusSets.setClickable(false);
+            minusSets.setEnabled(true);
+            minusSets.setClickable(true);
+        }
         minusIsometric.setEnabled(false);
         minusIsometric.setClickable(false);
 
