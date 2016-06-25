@@ -313,7 +313,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:inputType="numberSigned"
-                                    android:text="5"
+                                    android:text="0:30"
                                     android:minWidth="45dp"
                                     android:focusableInTouchMode="true"
                                     android:textColor="@color/black"
@@ -362,19 +362,18 @@
 
                                     />
 
-                                <EditText
+                                <TextView
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:inputType="numberSigned"
-                                    android:text="5"
                                     android:minWidth="45dp"
-                                    android:focusableInTouchMode="true"
+                                    android:text="1:00"
+
                                     android:textColor="@color/black"
                                     android:gravity="center_vertical|center_horizontal"
 
                                     android:textAlignment="center"
-                                    android:hint="0" />
+                                    />
 
 
 
@@ -394,7 +393,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Vibration per rep"
+                            android:textColor="@color/black"
+
                             android:checked="false" />
+
 
                     </LinearLayout>
 
