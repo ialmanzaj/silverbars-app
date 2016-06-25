@@ -10,6 +10,15 @@
     android:paddingEnd="10dp"
     android:paddingBottom="10dp">
 
+    <com.tuesda.walker.circlerefresh.CircleRefreshLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:AniBackColor="#ff8b90af"
+        app:AniForeColor="#ffffffff"
+        app:CircleSmaller="6"
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
 
         <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/list"
@@ -21,33 +30,33 @@
             app:twowayview_numColumns="2"
             android:orientation="vertical" />
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:id="@+id/NoInternet"
-            android:visibility="gone">
+        <!--<LinearLayout-->
+            <!--android:orientation="vertical"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:id="@+id/NoInternet"-->
+            <!--android:visibility="gone">-->
 
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/RefreshInternet"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_refresh_black_36dp"
-                android:background="#fff"
-                android:contentDescription="Imagen refresh" />
+            <!--<ImageButton-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/RefreshInternet"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:src="@drawable/ic_refresh_black_36dp"-->
+                <!--android:background="#fff"-->
+                <!--android:contentDescription="Imagen refresh" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="No Internet Conection"
-                android:id="@+id/textView"
-                android:layout_gravity="center" />
-        </LinearLayout>
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+                <!--android:text="No Internet Conection"-->
+                <!--android:id="@+id/textView"-->
+                <!--android:layout_gravity="center" />-->
+        <!--</LinearLayout>-->
 
 
-
+    </com.tuesda.walker.circlerefresh.CircleRefreshLayout>
 
 </RelativeLayout>

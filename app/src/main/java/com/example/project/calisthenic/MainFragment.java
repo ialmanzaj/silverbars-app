@@ -12,6 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.tuesda.walker.circlerefresh.CircleRefreshLayout;
 
 import org.lucasr.twowayview.widget.TwoWayView;
 
@@ -35,6 +38,7 @@ public class MainFragment extends Fragment {
     private TwoWayView recyclerView;
     private Button songs;
     public static JsonWorkout[] Workouts;
+    private CircleRefreshLayout refreshLayout;
 
 
     private View rootView;
@@ -42,14 +46,14 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_fmain, container, false);
-
         return rootView;
-
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        refreshLayout = (CircleRefreshLayout) rootView.findViewById(R.id.refresh_layout);
+        recyclerView = (TwoWayView) getView().findViewById(R.id.list);
         Intent intent = this.getActivity().getIntent();
         email = intent.getStringExtra("Email");
         name = intent.getStringExtra("Name");
@@ -57,8 +61,26 @@ public class MainFragment extends Fragment {
             Task();
         }
         else{
-
+            toast("Please check your internet conection.");
         }
+
+        refreshLayout.setOnRefreshListener(new CircleRefreshLayout.OnCircleRefreshListener() {
+            @Override
+            public void completeRefresh() {
+
+            }
+
+            @Override
+            public void refreshing() {
+                if (CheckInternet(getContext())){
+                    Task();
+                }
+                else{
+                    toast("Please check your internet connection.");
+                    this.completeRefresh();
+                }
+            }
+        });
     }
 
     public void Task(){
@@ -95,8 +117,8 @@ public class MainFragment extends Fragment {
             public void onResponse(Call<JsonWorkout[]> call, Response<JsonWorkout[]> response) {
                 if (response.isSuccessful()) {
                     Workouts = response.body();
-                    recyclerView = (TwoWayView) getView().findViewById(R.id.list);
                     recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
+                    refreshLayout.finishRefreshing();
                 } else {
                     int statusCode = response.code();
                     // handle request errors yourself
@@ -115,9 +137,18 @@ public class MainFragment extends Fragment {
 
     public boolean CheckInternet(Context context){
         ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork.isConnectedOrConnecting();
-        return isConnected;
+        NetworkInfo i = cm.getActiveNetworkInfo();
+        if (i == null)
+            return false;
+        if (!i.isConnected())
+            return false;
+        if (!i.isAvailable())
+            return false;
+        return true;
+    }
+
+    public void toast(String text){
+        Toast.makeText(this.getActivity(),text,Toast.LENGTH_SHORT).show();
     }
 
 }
