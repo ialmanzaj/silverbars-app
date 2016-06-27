@@ -76,7 +76,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private MediaPlayer media;
     private JsonExercise[] Exercises;
     private int[] Exercises_reps;
-    private boolean VibrationPerSet = false,VibrationPerRep = false;
+    private boolean VibrationPerSet = false,VibrationPerRep = false, pause=false;
     private static final String FORMAT = "%2d";
 
     @Override
@@ -227,24 +227,20 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         PauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String state = PauseButton.getText().toString();
-                switch (state){
-                    case "PAUSE":
-                        PauseButton.setText("RESUME");
-                        onTimerPause();
-                        if (SelectedSongs){
-                            mp.pause();
-                        }
-                        break;
-                    case "RESUME":
-                        PauseButton.setText("PAUSE");
-                        onTimerResume();
-                        if (SelectedSongs) {
-                            mp.start();
-                        }
-                        break;
-                    default:
-                        break;
+                if (!pause){
+                    pause = true;
+                    PauseButton.setText("RESUME WORKOUT");
+                    onTimerPause();
+                    if (SelectedSongs){
+                        mp.pause();
+                    }
+                }else{
+                    pause = false;
+                    PauseButton.setText("PAUSE WORKOUT");
+                    onTimerResume();
+                    if (SelectedSongs) {
+                        mp.start();
+                    }
                 }
             }
         });
@@ -310,20 +306,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         nxtLayout.setVisibility(View.VISIBLE);
                     }
                 }
-                switch (state){
-                    case "PAUSE":
-//                        if (SelectedSongs){
-//                            mp.start();
-//                        }
-                        break;
-                    case "RESUME":
-                        onTimerPause();
-                        if (SelectedSongs) {
-                            mp.pause();
-                        }
-                        break;
-                    default:
-                        break;
+                if (pause){
+                    onTimerPause();
+                    if (SelectedSongs) {
+                        mp.pause();
+                    }
                 }
             }
         });
@@ -347,23 +334,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         prvLayout.setVisibility(View.VISIBLE);
                     }
                 }
-                switch (state){
-                    case "PAUSE":
-//                        PauseButton.setText("RESUME");
-//                        onTimerResume();
-//                        if (SelectedSongs){
-//                            mp.start();
-//                        }
-                        break;
-                    case "RESUME":
-//                        PauseButton.setText("PAUSE");
-                        onTimerPause();
-                        if (SelectedSongs) {
-                            mp.pause();
-                        }
-                        break;
-                    default:
-                        break;
+                if (pause){
+                    onTimerPause();
+                    if (SelectedSongs) {
+                        mp.pause();
+                    }
                 }
             }
         });
@@ -619,7 +594,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             media.release();
         super.onDestroy();
     }
-
     public void RepsTime(int position){
         totalTime = Exercises_reps[position] * tempo + 5;
     }
