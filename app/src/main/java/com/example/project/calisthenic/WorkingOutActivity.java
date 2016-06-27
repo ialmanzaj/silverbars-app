@@ -38,6 +38,7 @@ import org.w3c.dom.Text;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Time;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,7 +54,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private ImageButton btPause;
     private Uri u;
     private String[] position;
-    private int x = 0, y=0, elements = 0, time=0, tempo = 0, actualReps;
+    private int x = 0, y=0, elements = 0, time=0, tempo = 0, actualReps, Format_Time;
     private int totalTime;
     private TextView timer;
     private TextView song_name, artist_name;
@@ -62,7 +63,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private TextView CurrentExercise;
     private TextView startCounter;
     private TextView headerText;
-    private CountDownTimer timer2, restTimer;
+    private CountDownTimer timer2, restTimer, startTimer;
     private FrameLayout prvLayout;
     private FrameLayout nxtLayout;
     private FrameLayout ModalLayout;
@@ -127,7 +128,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                toast("Cambio"+charSequence);
                 actualReps = Integer.valueOf(charSequence.toString());
                 if (actualReps == 0){
                     if (y+1 < elements){
@@ -283,6 +283,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         CurrentExercise.setText("1");
         totalExercise.setText(String.valueOf(elements));
         TotalSet.setText(String.valueOf(TotalSets));
+        timer.setText(String.valueOf(Exercises_reps[0]));
+        TotalSet.setText(String.valueOf(TotalSets));
+        CurrentSet.setText("0");
 
 
 
@@ -297,7 +300,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 timer2.cancel();
                 timer.setText(String.valueOf(Exercises_reps[y]));
                 RepsTime(y);
-                Timer(totalTime,1);
+                Timer(totalTime,1,totalTime);
                 if (y == 0){
                     prvLayout.setVisibility(View.GONE);
                 }
@@ -325,7 +328,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 timer2.cancel();
                 timer.setText(String.valueOf(Exercises_reps[y]));
                 RepsTime(y);
-                Timer(totalTime,1);
+                Timer(totalTime,1,totalTime);
                 if (y == elements-1){
                     nxtLayout.setVisibility(View.GONE);
                 }
@@ -386,12 +389,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             Log.d("WorkingOutActivity", (String) song_name.getText());
         }
 
-//        alertDialog = new AlertDialog.Builder(this).create();
-//        alertDialog.setTitle("Get Ready!");
-//        alertDialog.setMessage("4");
-//        alertDialog.show();   //
-
-        new CountDownTimer(4000, 1000) {
+         startTimer = new CountDownTimer(4000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                     startCounter.setText(String.format(FORMAT,
@@ -400,11 +398,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             }
 
             public void onFinish() {
-                timer.setText(String.valueOf(Exercises_reps[0]));
-                TotalSet.setText(String.valueOf(TotalSets));
-                CurrentSet.setText("0");
-                Timer(totalTime,1);
-                if (SelectedSongs){
+                start = true;
+                Timer(totalTime,1,totalTime);
+                if (SelectedSongs && start){
                     mp.start();
                 }
                 ModalLayout.setVisibility(View.GONE);
@@ -431,6 +427,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 dialog.dismiss();
+                startTimer.cancel();
                 if (media!=null){
                     media.release();
                 }
@@ -477,10 +474,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
-    public void Timer(int seconds,int interval){
+    public void Timer(int seconds,int interval, int Total){
         int totalsecs= seconds * 1000;
         int sec_interval= interval * 1000 ;
-        Time_aux = totalTime;
+        Time_aux = Total;
+        Format_Time = 0;
 
         timer2 = new CountDownTimer(totalsecs, sec_interval) {
             public void onTick(long millisUntilFinished) {performTick(millisUntilFinished);}
@@ -490,8 +488,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     // CONTADOR DE REPETICIONES
     void performTick(long millisUntilFinished) {
-
-        int Format_Time = Math.round(millisUntilFinished * 0.001f);
+        Format_Time = Math.round(millisUntilFinished * 0.001f);
         if (Time_aux-tempo == Format_Time){
             Time_aux = Time_aux - tempo;
             actualReps--;
@@ -538,18 +535,16 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void onTimerPause(){
-        String value = timer.getText().toString();
         if (!finish){
             if (start){
-                time = Integer.valueOf(value);
+                time = Format_Time;
                 timer2.cancel();
             }
         }
     }
 
-
     public void onTimerResume(){
-        Timer(time,1);
+        Timer(time,1,Time_aux);
     }
 
     public void PlayAudio (String file){
@@ -640,14 +635,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     timer2.cancel();
                     restTimer.cancel();
                     RepsTime(y);
-                    Timer(totalTime,1);
+                    Timer(totalTime,1,totalTime);
                     ModalLayout.setVisibility(View.GONE);
                 }
                 else{
                     timer2.cancel();
                     restTimer.cancel();
                     RepsTime(y);
-                    Timer(totalTime,1);
+                    Timer(totalTime,1,totalTime);
                     ModalLayout.setVisibility(View.GONE);
                 }
             }
