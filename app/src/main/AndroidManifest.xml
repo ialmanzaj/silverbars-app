@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.project.calisthenic">
+    package="com.app.project.silverbars">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
 
@@ -14,9 +14,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
-        android:name=".MyApp"
+        android:name="com.app.project.silverbars.MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -28,7 +29,7 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".MainScreenActivity">
+        <activity android:name="com.app.project.silverbars.MainScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,36 +37,36 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".WorkoutActivity"
-            android:parentActivityName=".MainScreenActivity">
+            android:name="com.app.project.silverbars.WorkoutActivity"
+            android:parentActivityName="com.app.project.silverbars.MainScreenActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainScreenActivity" />
+                android:value="com.app.project.silverbars.MainScreenActivity" />
         </activity>
         <activity
-            android:name=".MusicActivity"
-            android:parentActivityName=".WorkoutActivity">
+            android:name="com.app.project.silverbars.MusicActivity"
+            android:parentActivityName="com.app.project.silverbars.WorkoutActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".WorkoutActivity" />
+                android:value="com.app.project.silverbars.WorkoutActivity" />
         </activity>
         <activity
-            android:name=".WorkingOutActivity"
+            android:name="com.app.project.silverbars.WorkingOutActivity"
             android:launchMode="singleTask" />
         <!-- <activity android:name=".Myworkouts" /> -->
-        <activity android:name=".PlaylistPickerActivity" />
+        <activity android:name="com.app.project.silverbars.PlaylistPickerActivity" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
              />
         <activity
-            android:name=".LoginActivity"
+            android:name="com.app.project.silverbars.LoginActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".SplashScreen"
+            android:name="com.app.project.silverbars.SplashScreen"
             android:theme="@style/SplashTheme" />
-        <activity android:name=".SearchActivity">
+        <activity android:name="com.app.project.silverbars.SearchActivity">
 
             <!--
             <intent-filter>
