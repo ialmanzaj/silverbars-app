@@ -218,7 +218,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         new AsyncTask<Void, Long, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                Call<ResponseBody> call = downloadService.downloadImage(url);
+                Call<ResponseBody> call = downloadService.downloadFile(url);
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -280,5 +280,38 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                 if (outputStream != null) {outputStream.close();}
             }
         } catch (IOException e) {return false;}
+    }
+
+    public void DownloadMp3(final String url, final ExerciseViewHolder vh, final String imgName) {
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
+                .build();
+        final SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
+
+        new AsyncTask<Void, Long, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                Call<ResponseBody> call = downloadService.downloadFile(url);
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        Bitmap bitmap = null;
+                        if (response.isSuccessful()) {
+                            boolean writtenToDisk = writeResponseBodyToDisk(response.body(),imgName);
+                            if(writtenToDisk){bitmap = loadImageFromCache(imgName);}
+                            vh.imagen.setImageBitmap(bitmap);
+                        }
+                        else {
+                            Log.d("Download", "server contact failed");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.v("Failure", t.toString());
+                    }
+                });
+                return null;
+            };
+        }.execute();
     }
 }

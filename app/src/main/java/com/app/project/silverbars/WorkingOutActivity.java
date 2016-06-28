@@ -8,6 +8,7 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -131,18 +132,17 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         recycler.smoothScrollToPosition(y);
                         CurrentExercise.setText(String.valueOf(y+1));
                         ActivateVibrationPerSet();
-                        timer.setText(String.valueOf(Exercises_reps[y]));
+
                         RestModal("Rest",15,false);
                     }
                     else{
-                        if (ActualSets+1 <= 4){
+                        if (ActualSets+1 <= TotalSets){
                             ActualSets++;
                             CurrentSet.setText(String.valueOf(ActualSets));
                             CurrentExercise.setText(String.valueOf("1"));
                             y = 0;
                             recycler.smoothScrollToPosition(y);
                             finish = true;
-                            timer.setText(String.valueOf(Exercises_reps[y]));
                             RestModal("Rest",30,true);
                             nxtLayout.setVisibility(View.VISIBLE);
                             prvLayout.setVisibility(View.GONE);
@@ -252,13 +252,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         recycler.addOnItemTouchListener(disable);        // disables scolling
 
-
         // Usar un administrador para LinearLayout
         lManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
 
         recycler.setLayoutManager(lManager);
-
-
 
         // Crear un nuevo adaptador
         adapter = new WorkoutsAdapter(items,getApplicationContext());
@@ -269,7 +266,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             nxtLayout.setVisibility(View.GONE);
         }
 
-
         elements = adapter.getItemCount();
         CurrentExercise.setText("1");
         totalExercise.setText(String.valueOf(elements));
@@ -277,9 +273,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         timer.setText(String.valueOf(Exercises_reps[0]));
         TotalSet.setText(String.valueOf(TotalSets));
         CurrentSet.setText("0");
-
-
-
 
         prvExercise.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -480,6 +473,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     // CONTADOR DE REPETICIONES
     void performTick(long millisUntilFinished) {
         Format_Time = Math.round(millisUntilFinished * 0.001f);
+        Log.v("Time",String.valueOf(Time_aux-tempo)+" / "+Format_Time);
         if (Time_aux-tempo == Format_Time){
             Time_aux = Time_aux - tempo;
             actualReps--;
@@ -549,9 +543,13 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             media = new MediaPlayer();
         }
         try {
-            AssetFileDescriptor descriptor = getAssets().openFd("audios/"+file+".mp3");
-            media.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
-            descriptor.close();
+            String[] audioDir = file.split("exercises");;
+            String Parsedurl = "exercises"+audioDir[1];
+            String[] splitName = Parsedurl.split("/");
+            String mp3Name = splitName[2];
+            File Dir = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+mp3Name);
+            Uri uri = Uri.parse(Dir.toString());
+            media = MediaPlayer.create(getApplicationContext(),uri);
             media.prepare();
         } catch (Exception e) {
             e.printStackTrace();
@@ -609,6 +607,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void RestModal(String header,int Time,final boolean Sets){
+        timer2.cancel();
         ModalLayout.setVisibility(View.VISIBLE);
         headerText.setText(header);
         int TotalTime = (Time+1)*1000;
@@ -622,18 +621,18 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
             public void onFinish() {
                 if (!Sets){
-                    PlayAudio("frontlever");
-                    timer2.cancel();
+                    PlayAudio(Exercises[y].getExercise_audio());
                     restTimer.cancel();
                     RepsTime(y);
                     Timer(totalTime,1,totalTime);
+                    timer.setText(String.valueOf(Exercises_reps[y]));
                     ModalLayout.setVisibility(View.GONE);
                 }
                 else{
-                    timer2.cancel();
                     restTimer.cancel();
                     RepsTime(y);
                     Timer(totalTime,1,totalTime);
+                    timer.setText(String.valueOf(Exercises_reps[y]));
                     ModalLayout.setVisibility(View.GONE);
                 }
             }

@@ -141,7 +141,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                 .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
         SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
-        Call<ResponseBody> call = downloadService.downloadImage(url);
+        Call<ResponseBody> call = downloadService.downloadFile(url);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

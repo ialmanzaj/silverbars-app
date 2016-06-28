@@ -60,6 +60,7 @@ dependencies {
     compile 'com.github.jd-alexander:LikeButton:0.2.0'
     compile 'com.pnikosis:materialish-progress:1.7'
 //    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.anjlab.android.iab.v3:library:1.0.+'
     compile 'io.reactivex:rxjava:1.0.17'
     compile 'io.reactivex:rxandroid:0.23.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'

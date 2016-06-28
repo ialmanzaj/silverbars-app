@@ -2,6 +2,9 @@ package com.app.project.silverbars;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,8 +23,13 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,8 +55,12 @@ public class WorkoutActivity extends AppCompatActivity {
     private Button minusNegative;
     private Button plusSets;
     private Button minusSets;
+    private Button plusRest;
+    private Button minusRest;
+    private Button plusRestSets;
+    private Button minusRestSets;
     private Button SelectMusic;
-    private TextView Positive, Negative, Isometric, Reps, Workout_name, Sets;
+    private TextView Positive, Negative, Isometric, Reps, Workout_name, Sets, Rest, RestSets;
     private String[] position;
     private List<String> spinnerArray = new ArrayList<String>();
     private int value = 0;
@@ -123,6 +135,8 @@ public class WorkoutActivity extends AppCompatActivity {
         Positive = (TextView) findViewById(R.id.Positive);
         Isometric = (TextView) findViewById(R.id.Isometric);
         Negative = (TextView) findViewById(R.id.Negative);
+        Rest = (TextView) findViewById(R.id.Rest);
+        RestSets = (TextView) findViewById(R.id.RestSets);
 
         plusPositive = (Button) findViewById(R.id.plusPositive);
         plusPositive.setOnClickListener(new View.OnClickListener() {
@@ -178,6 +192,34 @@ public class WorkoutActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 minusTempo(Sets,minusSets,plusSets);
+            }
+        });
+        plusRest = (Button) findViewById(R.id.plusRest);
+        plusRest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                plusTempo(Rest,plusRest,minusRest);
+            }
+        });
+        minusRest = (Button) findViewById(R.id.minusRest);
+        minusRest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                minusTempo(Rest,minusRest,plusRest);
+            }
+        });
+        plusRestSets = (Button) findViewById(R.id.plusRestSets);
+        plusRestSets.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                plusTempo(RestSets,plusRestSets,minusRestSets);
+            }
+        });
+        minusRestSets = (Button) findViewById(R.id.minusRestSets);
+        minusRestSets.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                minusTempo(RestSets,minusRestSets,plusRestSets);
             }
         });
         int setsValue = Integer.parseInt(Sets.getText().toString());
@@ -401,10 +443,10 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     public void plusTempo(TextView view, Button button, Button button2){
-        value = Integer.parseInt(view.getText().toString());
-        view.setText(String.valueOf(value+1));
-        value++;
         if (view == Reps){
+            value = Integer.parseInt(view.getText().toString());
+            view.setText(String.valueOf(value+1));
+            value++;
             if (value == 20){
                 button.setEnabled(false);
                 button.setClickable(false);
@@ -414,7 +456,38 @@ public class WorkoutActivity extends AppCompatActivity {
                     button2.setClickable(true);
                 }
             }
+        }else if(view == Rest){
+            String[] elements = view.getText().toString().split("s");
+            value = Integer.parseInt(elements[0]);
+            value = value + 5;
+            view.setText(String.valueOf(value+"s"));
+            if (value == 60){
+                button.setEnabled(false);
+                button.setClickable(false);
+            }else{
+                if(value > 0){
+                    button2.setEnabled(true);
+                    button2.setClickable(true);
+                }
+            }
+        }else if(view == RestSets){
+            String[] elements = view.getText().toString().split("s");
+            value = Integer.parseInt(elements[0]);
+            value = value + 10;
+            view.setText(String.valueOf(value+"s"));
+            if (value == 180){
+                button.setEnabled(false);
+                button.setClickable(false);
+            }else{
+                if(value > 0){
+                    button2.setEnabled(true);
+                    button2.setClickable(true);
+                }
+            }
         }else{
+            value = Integer.parseInt(view.getText().toString());
+            view.setText(String.valueOf(value+1));
+            value++;
             if (value == 10){
                 button.setEnabled(false);
                 button.setClickable(false);
@@ -429,10 +502,10 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     public void minusTempo(TextView view, Button button, Button button2){
-        value = Integer.parseInt(view.getText().toString());
-        view.setText(String.valueOf(value-1));
-        value--;
         if (view == Reps){
+            value = Integer.parseInt(view.getText().toString());
+            view.setText(String.valueOf(value-1));
+            value--;
             if ((value)==1){
                 button.setEnabled(false);
                 button.setClickable(false);
@@ -442,7 +515,38 @@ public class WorkoutActivity extends AppCompatActivity {
                     button2.setClickable(true);
                 }
             }
+        }else if(view == Rest){
+            String[] elements = view.getText().toString().split("s");
+            value = Integer.parseInt(elements[0]);
+            value = value - 5;
+            view.setText(String.valueOf(value+"s"));
+            if (value == 0){
+                button.setEnabled(false);
+                button.setClickable(false);
+            }else{
+                if(value < 60){
+                    button2.setEnabled(true);
+                    button2.setClickable(true);
+                }
+            }
+        }else if(view == RestSets){
+            String[] elements = view.getText().toString().split("s");
+            value = Integer.parseInt(elements[0]);
+            value = value - 10;
+            view.setText(String.valueOf(value+"s"));
+            if (value == 0){
+                button.setEnabled(false);
+                button.setClickable(false);
+            }else{
+                if(value < 180){
+                    button2.setEnabled(true);
+                    button2.setClickable(true);
+                }
+            }
         }else{
+            value = Integer.parseInt(view.getText().toString());
+            view.setText(String.valueOf(value-1));
+            value--;
             if ((value)==1){
                 button.setEnabled(false);
                 button.setClickable(false);
@@ -560,6 +664,24 @@ public class WorkoutActivity extends AppCompatActivity {
                     }
                     Exercises_reps = new int[items.size()];
                     for (int i = 0; i <items.size() ; i++){
+                        String[] audioDir = ParsedExercises[i].getExercise_audio().split("exercises");;
+                        String Parsedurl = "exercises"+audioDir[1];
+                        String[] splitName = Parsedurl.split("/");
+                        String mp3Name = splitName[2];
+                        File Dir = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3");
+                        if (Dir.isDirectory()){
+                            File file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+mp3Name);
+                            if (!file.exists()){
+                                DownloadMp3(Parsedurl,mp3Name);
+                            }
+                        }else{
+                            boolean success = Dir.mkdir();
+                            if (success)
+                                DownloadMp3(Parsedurl,mp3Name);
+                            else
+                                Log.v("Dir","Error creating dir");
+                        }
+
                         Exercises_reps[i] = ParsedReps[i].getRepetition();
                     }
                     adapter = new ExerciseAdapter(items,WorkoutActivity.this);
@@ -579,7 +701,56 @@ public class WorkoutActivity extends AppCompatActivity {
         });
     }
 
-    public void Dialog(){
+    public void DownloadMp3(final String url, final String audioName) {
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
+                .build();
+        final SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
 
+        new AsyncTask<Void, Long, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                Call<ResponseBody> call = downloadService.downloadFile(url);
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {boolean writtenToDisk = writeResponseBodyToDisk(response.body(),audioName);}
+                        else {Log.d("Download", "server contact failed");}
+                    }
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {Log.v("Failure", t.toString());}
+                });
+                return null;
+            };
+        }.execute();
+    }
+
+    private boolean writeResponseBodyToDisk(ResponseBody body, String audioName) {
+        try {
+            File futureStudioIconFile = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+audioName);
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+            try {
+                byte[] fileReader = new byte[4096];
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+                inputStream = body.byteStream();
+                outputStream = new FileOutputStream(futureStudioIconFile);
+                while (true) {
+                    int read = inputStream.read(fileReader);
+                    if (read == -1) {break;}
+                    outputStream.write(fileReader, 0, read);
+                    fileSizeDownloaded += read;
+                    Log.d("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+                outputStream.flush();
+                return true;
+
+            } catch (IOException e) {
+                return false;
+            } finally {
+                if (inputStream != null) {inputStream.close();}
+                if (outputStream != null) {outputStream.close();}
+            }
+        } catch (IOException e) {return false;}
     }
 }

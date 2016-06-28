@@ -19,5 +19,5 @@ public interface SilverbarsService {
     Call<JsonReps[]> getReps();
 
     @GET
-    Call<ResponseBody> downloadImage(@Url String fileUrl);
+    Call<ResponseBody> downloadFile(@Url String fileUrl);
 }
