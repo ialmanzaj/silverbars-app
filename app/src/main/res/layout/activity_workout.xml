@@ -58,162 +58,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:paddingTop="20dp"
-                    android:focusable="false"
-                    android:focusableInTouchMode="true">
+                    android:paddingTop="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tempo in Reps"
-                        android:textSize="20sp"
-                        android:textColor="@color/colorPrimaryText"
-                        android:layout_gravity="center" />
 
-                    <Spinner
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/spinner"
-                        android:layout_gravity="center_horizontal"
-                        android:spinnerMode="dialog"
-                        android:background="@color/BarColor" />
 
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center">
 
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center">
 
-                            <Button
-                                style="?android:attr/buttonStyleSmall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="40dp"
-                                android:text="+"
-                                android:id="@+id/plusPositive"
-                                android:layout_gravity="center" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:id="@+id/Positive"
-                                android:textColor="@color/colorPrimaryText"
-                                android:layout_gravity="center"
 
-                                android:text="3" />
-
-                            <Button
-                                style="?android:attr/buttonStyleSmall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="40dp"
-                                android:text="-"
-                                android:id="@+id/minusPositive"
-                                android:layout_gravity="center" />
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text=":"
-                            android:id="@+id/textView26"
-                            android:layout_gravity="center"
-                            android:textColor="@color/colorPrimaryText"
-                            android:layout_marginBottom="10dp"
-                            android:textStyle="bold"
-                            android:textSize="35sp" />
-
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center">
-
-                            <Button
-                                style="?android:attr/buttonStyleSmall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="40dp"
-                                android:text="+"
-                                android:id="@+id/plusIsometric"
-                                android:layout_gravity="center" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:id="@+id/Isometric"
-                                android:textColor="@color/colorPrimaryText"
-                                android:layout_gravity="center"
-
-                                android:text="1" />
-
-                            <Button
-                                style="?android:attr/buttonStyleSmall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="40dp"
-                                android:text="-"
-                                android:id="@+id/minusIsometric"
-                                android:layout_gravity="center" />
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text=":"
-                            android:id="@+id/textView27"
-                            android:layout_gravity="center"
-                            android:textColor="@color/colorPrimaryText"
-                            android:layout_marginBottom="10dp"
-                            android:textStyle="bold"
-                            android:textSize="35sp" />
-
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center">
-
-                            <Button
-                                style="?android:attr/buttonStyleSmall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="40dp"
-                                android:text="+"
-                                android:id="@+id/plusNegative"
-                                android:layout_gravity="center" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:id="@+id/Negative"
-                                android:textColor="@color/colorPrimaryText"
-                                android:layout_gravity="center"
-
-                                android:text="3" />
-
-                            <Button
-                                style="?android:attr/buttonStyleSmall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="40dp"
-                                android:text="-"
-                                android:id="@+id/minusNegative"
-                                android:layout_gravity="center" />
-
-                        </LinearLayout>
-                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -409,12 +261,168 @@
                             android:textSize="18sp"
 
                             android:checked="true" />
+                    </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_marginTop="15dp"
+                        android:layout_width="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tempo in Reps"
+                            android:textSize="20sp"
+                            android:textColor="@color/colorPrimaryText"
+                            android:layout_gravity="center" />
+
+                        <Spinner
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/spinner"
+                            android:layout_gravity="center_horizontal"
+                            android:spinnerMode="dialog"
+                            android:background="@color/BarColor" />
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center">
+
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center">
+
+                                <Button
+                                    style="?android:attr/buttonStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:text="+"
+                                    android:id="@+id/plusPositive"
+                                    android:layout_gravity="center" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:id="@+id/Positive"
+                                    android:textColor="@color/colorPrimaryText"
+                                    android:layout_gravity="center"
+
+                                    android:text="3" />
+
+                                <Button
+                                    style="?android:attr/buttonStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:text="-"
+                                    android:id="@+id/minusPositive"
+                                    android:layout_gravity="center" />
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text=":"
+                                android:id="@+id/textView26"
+                                android:layout_gravity="center"
+                                android:textColor="@color/colorPrimaryText"
+                                android:layout_marginBottom="10dp"
+                                android:textStyle="bold"
+                                android:textSize="35sp" />
+
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center">
+
+                                <Button
+                                    style="?android:attr/buttonStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:text="+"
+                                    android:id="@+id/plusIsometric"
+                                    android:layout_gravity="center" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:id="@+id/Isometric"
+                                    android:textColor="@color/colorPrimaryText"
+                                    android:layout_gravity="center"
+
+                                    android:text="1" />
+
+                                <Button
+                                    style="?android:attr/buttonStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:text="-"
+                                    android:id="@+id/minusIsometric"
+                                    android:layout_gravity="center" />
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text=":"
+                                android:id="@+id/textView27"
+                                android:layout_gravity="center"
+                                android:textColor="@color/colorPrimaryText"
+                                android:layout_marginBottom="10dp"
+                                android:textStyle="bold"
+                                android:textSize="35sp" />
+
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center">
+
+                                <Button
+                                    style="?android:attr/buttonStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:text="+"
+                                    android:id="@+id/plusNegative"
+                                    android:layout_gravity="center" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:id="@+id/Negative"
+                                    android:textColor="@color/colorPrimaryText"
+                                    android:layout_gravity="center"
+
+                                    android:text="3" />
+
+                                <Button
+                                    style="?android:attr/buttonStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:text="-"
+                                    android:id="@+id/minusNegative"
+                                    android:layout_gravity="center" />
+
+                            </LinearLayout>
+                        </LinearLayout>
 
                     </LinearLayout>
 
-
-                </LinearLayout>
+                </LinearLayout><!--  cierre de setup -->
 
                 <LinearLayout
                     android:id="@+id/overview"

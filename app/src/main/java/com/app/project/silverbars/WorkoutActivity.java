@@ -374,7 +374,8 @@ public class WorkoutActivity extends AppCompatActivity {
         SelectMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ShowMusicDialog();
+                Intent i = new Intent(WorkoutActivity.this, SelectionMusicActivity.class);
+                startActivity(i);
             }
         });
 
