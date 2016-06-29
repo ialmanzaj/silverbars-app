@@ -20,6 +20,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -132,7 +133,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         recycler.smoothScrollToPosition(y);
                         CurrentExercise.setText(String.valueOf(y+1));
                         ActivateVibrationPerSet();
-
+                        timer.setEnabled(false);
                         RestModal("Rest",15,false);
                     }
                     else{
@@ -147,7 +148,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             nxtLayout.setVisibility(View.VISIBLE);
                             prvLayout.setVisibility(View.GONE);
                         }
-                        else{timer2.cancel();}
+                        else{
+                            timer2.cancel();
+                            ScreenOff();
+                        }
                     }
                 }
             }
@@ -219,6 +223,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onClick(View view) {
                 if (!pause){
+                    ScreenOff();
                     pause = true;
                     PauseButton.setText("RESUME WORKOUT");
                     onTimerPause();
@@ -226,6 +231,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         mp.pause();
                     }
                 }else{
+                    ScreenOn();
                     pause = false;
                     PauseButton.setText("PAUSE WORKOUT");
                     onTimerResume();
@@ -382,6 +388,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             }
 
             public void onFinish() {
+                ScreenOn();
                 start = true;
                 Timer(totalTime,1,totalTime);
                 if (SelectedSongs && start){
@@ -411,8 +418,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 dialog.dismiss();
+                ScreenOff();
                 startTimer.cancel();
                 if (media!=null){
+                    timer2.cancel();
                     media.release();
                 }
                 if (SelectedSongs) {
@@ -571,6 +580,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onDestroy() {
+        ScreenOff();
         if (start){
             timer2.cancel();
         }
@@ -637,5 +647,13 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 }
             }
         }.start();
+    }
+
+    private void ScreenOn(){
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    private void ScreenOff(){
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 }
