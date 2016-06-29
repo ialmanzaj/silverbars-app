@@ -62,7 +62,7 @@
             <Button
                     android:id="@+id/btn"
                     android:layout_width="wrap_content"
-                    android:layout_height="35dp"
+                    android:layout_height="wrap_content"
                     android:text="START"
                     android:background="#602C8D"
                     android:textColor="@color/white"

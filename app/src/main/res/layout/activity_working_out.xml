@@ -320,12 +320,12 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
+                    android:minHeight="42dp"
                     android:gravity="center"
                     >
 
                     <Button
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:text="PAUSE WORKOUT"
@@ -334,7 +334,7 @@
                         android:background="@color/gray_active_icon" />
 
                     <Button
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:text="END WORKOUT"
@@ -359,7 +359,7 @@
 
 
                 <RelativeLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="5dp"
                     android:background="#000"
@@ -422,6 +422,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/btnPlay"
+                            android:minHeight="30dp"
                             android:src="@android:drawable/ic_media_play"
                             android:background="#00ffffff"
 

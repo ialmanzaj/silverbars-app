@@ -238,8 +238,9 @@ public class WorkoutActivity extends AppCompatActivity {
         minusIsometric.setClickable(false);
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        spinnerArray.add("Easy");
+
         spinnerArray.add("Normal");
+        spinnerArray.add("Easy");
         spinnerArray.add("Hard");
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
@@ -269,9 +270,10 @@ public class WorkoutActivity extends AppCompatActivity {
                         minusIsometric.setClickable(false);
                         minusNegative.setEnabled(true);
                         minusNegative.setClickable(true);
-                        Positive.setText("3");
+                        Positive.setText("2");
                         Isometric.setText("1");
-                        Negative.setText("3");
+                        Negative.setText("2");
+
                         break;
                     case 1:
                         plusPositive.setEnabled(true);
@@ -286,9 +288,9 @@ public class WorkoutActivity extends AppCompatActivity {
                         minusIsometric.setClickable(false);
                         minusNegative.setEnabled(true);
                         minusNegative.setClickable(true);
-                        Positive.setText("2");
+                        Positive.setText("3");
                         Isometric.setText("1");
-                        Negative.setText("2");
+                        Negative.setText("3");
                         break;
                     case 2:
                         plusPositive.setEnabled(true);

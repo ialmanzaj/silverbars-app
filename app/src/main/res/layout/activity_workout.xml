@@ -237,6 +237,7 @@
                                 android:text="Number of Sets"
                                 android:textColor="@color/black"
                                 android:textSize="18sp"
+
                                 android:layout_marginTop="5dp"
 
                                 />
@@ -258,15 +259,15 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:inputType="numberSigned"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
                                     android:text="5"
                                     android:minWidth="45dp"
-                                    android:focusableInTouchMode="true"
+
                                     android:textColor="@color/black"
                                     android:gravity="center_vertical|center_horizontal"
                                     android:id="@+id/Sets"
                                     android:textAlignment="center"
-                                    android:hint="0" />
+                                     />
 
 
 
@@ -318,7 +319,7 @@
                                     android:focusableInTouchMode="true"
                                     android:textColor="@color/black"
                                     android:gravity="center_vertical|center_horizontal"
-
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
                                     android:textAlignment="center"
                                     android:hint="0"
                                     android:id="@+id/Rest" />
@@ -369,7 +370,7 @@
                                     android:layout_weight="1"
                                     android:minWidth="45dp"
                                     android:text="60s"
-
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
                                     android:textColor="@color/black"
                                     android:gravity="center_vertical|center_horizontal"
 
@@ -391,17 +392,21 @@
                         </RelativeLayout>
 
                         <Switch
+                            android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Vibration per rep"
                             android:textColor="@color/black"
+                            android:textSize="18sp"
                             android:checked="true" />
 
                         <Switch
+                            android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Vibration per Set"
                             android:textColor="@color/black"
+                            android:textSize="18sp"
 
                             android:checked="true" />
 
@@ -431,10 +436,10 @@
                             android:layout_height="wrap_content"
                             android:text="Select your music"
                             android:id="@+id/SelectMusic"
-                            android:paddingStart="20dp"
-                            android:paddingEnd="20dp"
-                            android:background="@color/white"
-                            android:textColor="@color/black"
+                            android:paddingStart="25dp"
+                            android:paddingEnd="25dp"
+                            android:background="@color/thirdColor"
+                            android:textColor="@color/white"
 
                             style="@android:style/MediaButton"
                             />
