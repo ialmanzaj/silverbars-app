@@ -239,9 +239,9 @@ public class WorkoutActivity extends AppCompatActivity {
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
 
-        spinnerArray.add("Normal");
-        spinnerArray.add("Easy");
-        spinnerArray.add("Hard");
+        spinnerArray.add("NORMAL");
+        spinnerArray.add("EASY");
+        spinnerArray.add("HARD");
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 this, R.layout.spinner_item,spinnerArray
@@ -249,10 +249,29 @@ public class WorkoutActivity extends AppCompatActivity {
 
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(arrayAdapter);
-//        if (!level.equals(null)) {
-//            int spinnerPosition = arrayAdapter.getPosition("NORMAL");
-//            spinner.setSelection(spinnerPosition);
-//        }
+        if (!level.equals(null)) {
+            int spinnerPosition = arrayAdapter.getPosition(level);
+            spinner.setSelection(spinnerPosition);
+            switch (spinnerPosition){
+                case 0:
+                    Positive.setText("2");
+                    Isometric.setText("1");
+                    Negative.setText("2");
+                    break;
+                case 1:
+                    Positive.setText("3");
+                    Isometric.setText("1");
+                    Negative.setText("3");
+                    break;
+                case 2:
+                    Positive.setText("1");
+                    Isometric.setText("3");
+                    Negative.setText("1");
+                    break;
+
+
+            }
+        }
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
