@@ -563,7 +563,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (mp!=null && mp.isPlaying()){
+        if (mp!=null || mp.isPlaying()){
             mp.setVolume(0.04f,0.04f);
         }
         media.start();
