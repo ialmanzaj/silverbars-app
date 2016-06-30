@@ -1,40 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:numColumns="auto_fit"
-   android:id="@+id/gridlayout"
-    android:stretchMode="spacingWidthUniform"
+    android:gravity="center"
+    tools:context="com.app.project.silverbars.SelectionMusicActivity">
 
-    tools:context="com.app.project.silverbars.SelectionMusicActivity"
-    android:columnCount="2"
-    android:orientation="vertical"
-    android:rowCount="2"
-    android:useDefaultMargins="true">
+    <GridLayout
+        android:id="@+id/gridlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:orientation="vertical"
+        android:rowCount="2"
+        android:useDefaultMargins="true">
 
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="150dp"
-            android:id="@+id/songs"
-            android:layout_height="200dp">
 
             <RelativeLayout
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+
+                android:orientation="vertical"
+                android:layout_width="150dp"
                 android:background="@color/black"
                 android:padding="10dp"
-                >
+                android:gravity="center"
+                android:id="@+id/songs"
+                android:layout_height="200dp">
+
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:alpha="0.8"
+                        android:id="@+id/img"
+                        android:contentDescription="Workout Name" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:textColor="@color/white"
+                       android:layout_centerVertical="true"
+                        android:text="SONGS"
+                        android:textSize="18sp"
+
+                        />
+
+            </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/spotify"
+            android:orientation="vertical"
+            android:layout_width="150dp"
+            android:layout_height="200dp"
+            android:gravity="center"
+            android:background="@color/black"
+            android:padding="10dp">
+
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:alpha="0.8"
-                    android:id="@+id/img"
+
                     android:contentDescription="Workout Name" />
 
                 <TextView
@@ -42,118 +70,69 @@
                     android:layout_height="wrap_content"
 
                     android:textColor="@color/white"
-                   android:layout_centerVertical="true"
-                    android:text="SONGS"
+                    android:layout_centerVertical="true"
+                    android:text="SPOTIFY"
                     android:textSize="18sp"
 
                     />
-            </RelativeLayout>
-        </LinearLayout>
-    <LinearLayout
-        android:id="@+id/spotify"
-        android:orientation="vertical"
-        android:layout_width="150dp"
-        android:layout_height="200dp">
 
+        </RelativeLayout>
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:id="@+id/playlist"
+            android:orientation="vertical"
+            android:layout_width="150dp"
+            android:layout_height="200dp"
             android:gravity="center"
             android:background="@color/black"
-            android:padding="10dp"
-            >
+            android:padding="10dp">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:alpha="0.8"
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:alpha="0.8"
 
-                android:contentDescription="Workout Name" />
+                    android:contentDescription="Workout Name" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-                android:textColor="@color/white"
-                android:layout_centerVertical="true"
-                android:text="SPOTIFY"
-                android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:layout_centerVertical="true"
+                    android:text="PLAYLIST"
+                    android:textSize="18sp" />
 
-                />
         </RelativeLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/playlist"
-        android:orientation="vertical"
-        android:layout_width="150dp"
-        android:layout_height="200dp">
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:id="@+id/soundcloud"
+            android:orientation="vertical"
+            android:layout_width="150dp"
+            android:layout_height="200dp"
             android:gravity="center"
             android:background="@color/black"
-            android:padding="10dp"
-            >
+            android:padding="10dp">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:alpha="0.8"
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:alpha="0.8"
 
-                android:contentDescription="Workout Name" />
+                    android:contentDescription="Workout Name" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-                android:textColor="@color/white"
-                android:layout_centerVertical="true"
-                android:text="PLAYLIST"
-                android:textSize="18sp"
+                    android:textColor="@color/white"
+                    android:layout_centerVertical="true"
+                    android:text="SOUNDCLOUD"
+                    android:textSize="18sp"
+                    android:id="@+id/text" />
 
-                />
         </RelativeLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/soundcloud"
-        android:orientation="vertical"
-        android:layout_width="150dp"
-        android:layout_height="200dp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:background="@color/black"
-            android:padding="10dp"
-            >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:alpha="0.8"
-
-                android:contentDescription="Workout Name" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:textColor="@color/white"
-                android:layout_centerVertical="true"
-                android:text="SOUNDCLOUD"
-                android:textSize="18sp"
-                android:id="@+id/text"
-                />
-        </RelativeLayout>
-    </LinearLayout>
 
 
+    </GridLayout>
 
-
-</GridLayout>
+</RelativeLayout>

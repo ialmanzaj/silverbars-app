@@ -3,12 +3,11 @@ package com.app.project.silverbars;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridLayout;
 import android.widget.GridView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class SelectionMusicActivity extends AppCompatActivity {
@@ -19,12 +18,11 @@ public class SelectionMusicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_selection_music);
 
 
-        GridLayout grid = (GridLayout) findViewById(R.id.gridlayout);
 
-        LinearLayout songsButton = (LinearLayout) findViewById(R.id.songs);
-        LinearLayout playlistButton = (LinearLayout) findViewById(R.id.playlist);
-        LinearLayout spotifyButton = (LinearLayout) findViewById(R.id.spotify);
-        LinearLayout soundcloudButton = (LinearLayout) findViewById(R.id.soundcloud);
+        RelativeLayout songsButton = (RelativeLayout) findViewById(R.id.songs);
+        RelativeLayout playlistButton = (RelativeLayout) findViewById(R.id.playlist);
+        RelativeLayout spotifyButton = (RelativeLayout) findViewById(R.id.spotify);
+        RelativeLayout soundcloudButton = (RelativeLayout) findViewById(R.id.soundcloud);
 
         songsButton.setOnClickListener(new View.OnClickListener() {
             @Override
