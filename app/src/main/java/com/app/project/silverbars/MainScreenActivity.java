@@ -70,6 +70,7 @@ public class MainScreenActivity extends AppCompatActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView) findViewById(R.id.left_drawer);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.bringToFront();
 
         ArrayList<DrawerItem> items = new ArrayList<DrawerItem>();
         items.add(new DrawerItem(tagTitles[0],R.mipmap.home));
@@ -85,7 +86,6 @@ public class MainScreenActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toast("Click");
                 if (drawerLayout.isDrawerOpen(drawerList)){
                     drawerLayout.closeDrawer(drawerList);
                 }
