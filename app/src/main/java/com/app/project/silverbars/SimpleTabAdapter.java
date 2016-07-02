@@ -21,11 +21,11 @@ public class SimpleTabAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                return new MainFragment();
+//                return new MainFragment();
             case 1:
-                return new WorkoutsFragment();
+//                return new WorkoutsFragment();
             case 2:
-                return new ProfileFragment();
+//                return new ProfileFragment();
             default:
                 return null;
         }

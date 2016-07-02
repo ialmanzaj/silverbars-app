@@ -22,6 +22,9 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.spotify.sdk.android.authentication.AuthenticationClient;
+import com.spotify.sdk.android.authentication.AuthenticationRequest;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 import org.w3c.dom.Text;
 
@@ -33,6 +36,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -77,6 +81,15 @@ public class WorkoutActivity extends AppCompatActivity {
     public static JsonExercise[] ParsedExercises;
     public static JsonReps[] ParsedReps;
     private int[] exercises_id;
+
+    private static final String TAG = LoginActivity.class.getSimpleName();
+
+    @SuppressWarnings("SpellCheckingInspection")
+    private static final String CLIENT_ID = "8a91678afa49446c9aff1beaabe9c807";
+    @SuppressWarnings("SpellCheckingInspection")
+    private static final String REDIRECT_URI = "testschema://callback";
+
+    private static final int REQUEST_CODE = 1337;
 
 
     private static boolean VibrationIsActivePerRep=true;
@@ -395,6 +408,26 @@ public class WorkoutActivity extends AppCompatActivity {
             position = null;
             toast("No result");
         }
+        else if (requestCode == REQUEST_CODE) {
+            AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
+            switch (response.getType()) {
+                // Response was successful and contains auth token
+                case TOKEN:
+                    logMessage("Got token: " + response.getAccessToken());
+                    CredentialsHandler.setToken(this, response.getAccessToken(), response.getExpiresIn(), TimeUnit.SECONDS);
+                    startMainActivity(response.getAccessToken());
+                    break;
+
+                // Auth flow returned an error
+                case ERROR:
+                    logError("Auth error: " + response.getError());
+                    break;
+
+                // Most likely auth flow was cancelled
+                default:
+                    logError("Auth result: " + response.getType());
+            }
+        }
     }
 
     @Override
@@ -417,7 +450,15 @@ public class WorkoutActivity extends AppCompatActivity {
                                 LaunchMusicActivity();
                                 break;
                             case 1:
-                                startActivity(new Intent(getApplicationContext(), SearchActivity.class));
+//                                String token = CredentialsHandler.getToken(WorkoutActivity.this);
+//                                if (token == null) {
+////                                    setContentView(R.layout.activity_login);
+//                                    SpotifyLogin();
+//                                } else {
+//                                    startMainActivity(token);
+//                                }
+//                                startActivity(new Intent(getApplicationContext(), SpotifyMusic.class));
+//                                startActivity(new Intent(getApplicationContext(), SearchActivity.class));
                                 break;
                             case 2:
                                 break;
@@ -773,5 +814,32 @@ public class WorkoutActivity extends AppCompatActivity {
                 if (outputStream != null) {outputStream.close();}
             }
         } catch (IOException e) {return false;}
+    }
+
+    public void SpotifyLogin(){
+        final AuthenticationRequest request = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
+                .setScopes(new String[]{"playlist-read","user-library-read"})
+                .build();
+
+        AuthenticationClient.openLoginActivity(WorkoutActivity.this, REQUEST_CODE, request);
+    }
+
+    private void startMainActivity(String token) {
+//        Intent intent = new Intent(this, SpotifyMusic.class);
+//        startActivityForResult(intent,1);
+        Intent intent = SpotifyMusic.createIntent(this);
+        intent.putExtra(SpotifyMusic.EXTRA_TOKEN, token);
+        startActivity(intent);
+        finish();
+    }
+
+    private void logError(String msg) {
+        Toast.makeText(this, "Error: " + msg, Toast.LENGTH_SHORT).show();
+        Log.e(TAG, msg);
+    }
+
+    private void logMessage(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        Log.d(TAG, msg);
     }
 }

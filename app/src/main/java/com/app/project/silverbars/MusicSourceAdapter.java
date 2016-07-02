@@ -13,8 +13,10 @@ import android.widget.TextView;
  */
 public class MusicSourceAdapter extends ArrayAdapter<String> {
 
-    private static final String[] SOURCES = {"Musica Local", "Musica de SoundCloud", "Musica de Spotify"};
-    private static final int[] IMG = {R.drawable.local48, R.drawable.soundcloud48, R.drawable.spotify48};
+//    private static final String[] SOURCES = {"Musica Local", "Musica de SoundCloud", "Musica de Spotify"};
+//    private static final int[] IMG = {R.drawable.local48, R.drawable.soundcloud48, R.drawable.spotify48};
+private static final String[] SOURCES = {"Musica Local"};
+    private static final int[] IMG = {R.drawable.local48};
 
     private final AppCompatActivity context;
 
@@ -35,8 +37,12 @@ public class MusicSourceAdapter extends ArrayAdapter<String> {
         return row;
     }
 
+//    @Override
+//    public int getCount() {
+//        return 3;
+//    }
     @Override
     public int getCount() {
-        return 3;
-    }
+    return 1;
+}
 }

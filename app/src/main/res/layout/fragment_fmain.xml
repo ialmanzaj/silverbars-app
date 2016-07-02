@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingRight="10dp"
-    android:paddingLeft="10dp"
-   android:paddingTop="10dp"
-    android:paddingEnd="10dp"
-    android:paddingBottom="10dp">
+    android:layout_height="match_parent">
 
     <android.support.v4.widget.SwipeRefreshLayout
 
@@ -16,7 +11,11 @@
 
         android:layout_width="match_parent"
 
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="60dp"
+        android:paddingEnd="10dp">
 
 
         <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -57,5 +56,29 @@
 
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <!--<android.support.design.widget.AppBarLayout xmlns:app="http://schemas.android.com/apk/res-auto"-->
+        <!--android:id="@+id/appbarlayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--app:elevation="2dp">-->
+
+        <!--<android.support.v7.widget.Toolbar-->
+            <!--android:id="@+id/toolbar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:minHeight="?android:attr/actionBarSize"-->
+            <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
+            <!--android:background="@color/primary_dark_material_dark"-->
+            <!--android:fitsSystemWindows="false">-->
+
+            <!--<Spinner-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/spinner" />-->
+
+        <!--</android.support.v7.widget.Toolbar>-->
+
+    <!--</android.support.design.widget.AppBarLayout>-->
 
 </RelativeLayout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:checked="true"
+            android:id="@+id/item_navigation_drawer_home"
+            android:icon="@mipmap/home"
+            android:title="Inbox" />
+        <item
+            android:id="@+id/item_navigation_drawer_myworkouts"
+            android:icon="@mipmap/acrobatics"
+            android:title="Starred" />
+        <item
+            android:id="@+id/item_navigation_drawer_profile"
+            android:icon="@mipmap/profile"
+            android:title="Sent mail" />
+    </group>
+
+</menu>

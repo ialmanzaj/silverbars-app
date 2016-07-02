@@ -20,4 +20,7 @@ public interface SilverbarsService {
 
     @GET
     Call<ResponseBody> downloadFile(@Url String fileUrl);
+
+    @GET
+    Call<SpotifyAdapter[]> SpotifyTracks();
 }

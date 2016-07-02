@@ -1,23 +1,32 @@
 package com.app.project.silverbars;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.lucasr.twowayview.widget.TwoWayView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -38,6 +47,9 @@ public class MainFragment extends Fragment {
     private Button songs;
     public static JsonWorkout[] Workouts;
     private SwipeRefreshLayout swipeContainer;
+    private List<String> spinnerArray = new ArrayList<String>();
+    private String muscle = "ALL";
+    public Toolbar myToolbar;
 
 
     private View rootView;
@@ -51,16 +63,45 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+//        Toolbar myToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+//        if (myToolbar != null)
+//            ((AppCompatActivity)getActivity()).setSupportActionBar(myToolbar);
         recyclerView = (TwoWayView) getView().findViewById(R.id.list);
         Intent intent = this.getActivity().getIntent();
         email = intent.getStringExtra("Email");
         name = intent.getStringExtra("Name");
-        if (CheckInternet(getContext())){
-            Task();
+        if (CheckInternet(getActivity().getApplicationContext())){
+            Task(muscle);
         }
         else{
             toast("Please check your internet conection.");
         }
+//        final Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner);
+//
+//        spinnerArray.add("ALL");
+//        spinnerArray.add("ABS/CORE");
+//        spinnerArray.add("UPPER BODY");
+//        spinnerArray.add("LOWER BODY");
+//
+//        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item_secondary,spinnerArray);
+//
+//        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinner.setAdapter(arrayAdapter);
+//
+//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                recyclerView.setAdapter(null);
+//                String element = spinner.getItemAtPosition(position).toString();
+//                muscle = element;
+//                Task(muscle);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
         swipeContainer = (SwipeRefreshLayout) getView().findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
@@ -70,8 +111,8 @@ public class MainFragment extends Fragment {
                 // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
-                if (CheckInternet(getContext())){
-                    Task();
+                if (CheckInternet(getActivity().getApplicationContext())){
+                    Task(muscle);
                 }
                 else{
                     toast("Please check your internet conection.");
@@ -88,7 +129,7 @@ public class MainFragment extends Fragment {
 
     }
 
-    public void Task(){
+    public void Task(final String muscle){
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -122,7 +163,7 @@ public class MainFragment extends Fragment {
             public void onResponse(Call<JsonWorkout[]> call, Response<JsonWorkout[]> response) {
                 if (response.isSuccessful()) {
                     Workouts = response.body();
-                    recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
+                    recyclerView.setAdapter(new WorkoutAdapter(getActivity(),muscle));
                     swipeContainer.setRefreshing(false);
                 } else {
                     int statusCode = response.code();

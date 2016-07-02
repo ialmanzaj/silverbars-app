@@ -25,5 +25,10 @@
     </string>
 
     <string name="facebook_app_id">438629419640939</string>
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
+    <string name="action_websearch">Web search</string>
+
+    <string name="app_not_available">Sorry, there\'s no web browser available</string>
 
 </resources>

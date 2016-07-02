@@ -1,5 +1,6 @@
 package com.app.project.silverbars;
 
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,11 +55,11 @@ public class ProfileFragment extends Fragment {
         }
 
         // Usar un administrador para LinearLayout
-        lManager = new LinearLayoutManager(this.getContext());
+        lManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recycler.setLayoutManager(lManager);
 
         // Crear un nuevo adaptador
-        adapter = new ProgressAdapter(items,getContext());
+        adapter = new ProgressAdapter(items,getActivity().getApplicationContext());
         recycler.setAdapter(adapter);
 
         return rootView;

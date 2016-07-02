@@ -17,7 +17,7 @@
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
-        android:name="com.app.project.silverbars.MyApp"
+        android:name=".MyApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher_app"
         android:label="@string/app_name"
@@ -29,7 +29,7 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name="com.app.project.silverbars.MainScreenActivity">
+        <activity android:name=".MainScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,36 +37,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.app.project.silverbars.WorkoutActivity"
-            android:parentActivityName="com.app.project.silverbars.MainScreenActivity">
+            android:name=".WorkoutActivity"
+            android:parentActivityName=".MainScreenActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.app.project.silverbars.MainScreenActivity" />
         </activity>
         <activity
-            android:name="com.app.project.silverbars.MusicActivity"
-            android:parentActivityName="com.app.project.silverbars.WorkoutActivity">
+            android:name=".MusicActivity"
+            android:parentActivityName=".WorkoutActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.app.project.silverbars.WorkoutActivity" />
         </activity>
         <activity
-            android:name="com.app.project.silverbars.WorkingOutActivity"
+            android:name=".WorkingOutActivity"
             android:launchMode="singleTask" />
         <!-- <activity android:name=".Myworkouts" /> -->
-        <activity android:name="com.app.project.silverbars.PlaylistPickerActivity" />
+        <activity android:name=".PlaylistPickerActivity" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"
-             />
-        <activity
-            android:name="com.app.project.silverbars.LoginActivity"
             android:label="@string/app_name" />
         <activity
-            android:name="com.app.project.silverbars.SplashScreen"
+            android:name=".LoginActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".SplashScreen"
             android:theme="@style/SplashTheme" />
-        <activity android:name="com.app.project.silverbars.SearchActivity">
+        <activity android:name=".SearchActivity">
 
             <!--
             <intent-filter>
@@ -85,7 +84,11 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-
+        <activity
+            android:name="com.spotify.sdk.android.authentication.LoginActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".SpotifyMusic" />
+        <activity android:name=".DrawerListAdapter"></activity>
     </application>
 
 </manifest>
