@@ -31,4 +31,46 @@
 
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
 
+    <!-- Strings related to activity_exercise_cards -->
+
+    <string name="description_img_workout">Workout Image</string>
+    <string name="workout_name">Workout Name</string>
+    <string name="reps_value">1</string>
+    <string name="reps_text">Reps</string>
+
+    <!-- Strings related to activity_myworkouts -->
+    <string name="blank_text_my_workouts">THERE&apos;S NO WORKOUT YET</string>
+    <string name="blank_text_my_workouts_saved">THERE&apos;S NO SAVED WORKOUTS YET</string>
+    <string name="text_create_workout">Create a new one</string>
+    <string name="explore_button">EXPLORE</string>
+
+    <!-- Strings related to activity_playlist picker -->
+    <string name="clean_button_picker">Limpiar</string>
+    <string name="ready_button_picker">Listo</string>
+
+    <!-- Strings related to activity_workingout -->
+    <string name="zero">0</string>
+    <string name="set_text">SET</string>
+    <string name="exercise_text">EXERCISE</string>
+    <string name="pause_button">PAUSE WORKOUT</string>
+    <string name="end_button">END WORKOUT</string>
+    <string name="song_name">Song Name</string>
+    <string name="artist_name">Artist name</string>
+    <string name="number_five">5</string>
+    <string name="get_ready_text">Get Ready!</string>
+
+
+    <!-- Strings related to activity_workouts -->
+    <string name="number_sets_text">Number of Sets</string>
+    <string name="number_sets">5</string>
+    <string name="rest_exercise_text">Rest between exercise</string>
+    <string name="rest_exercise">30s</string>
+    <string name="rest_sets_text">Rest between Sets</string>
+    <string name="rest_sets">60s</string>
+    <string name="vibration_rep_text">Vibration per rep</string>
+    <string name="vibration_set_text">Vibration per set</string>
+    <string name="tempo_text">Tempo in Reps</string>
+
+
+
 </resources>

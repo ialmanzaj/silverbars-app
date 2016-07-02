@@ -15,7 +15,7 @@ import android.widget.SearchView.OnQueryTextListener;
 import android.util.Log;
 import android.view.View;
 
-import com.spotify.sdk.android.authentication.AuthenticationClient;
+/*import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import com.spotify.sdk.android.player.Config;
@@ -23,7 +23,7 @@ import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Player;
 import com.spotify.sdk.android.player.PlayerNotificationCallback;
 import com.spotify.sdk.android.player.PlayerState;
-import com.spotify.sdk.android.player.Spotify;
+import com.spotify.sdk.android.player.Spotify;*/
 
 import java.io.File;
 import java.io.IOException;

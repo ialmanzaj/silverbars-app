@@ -22,9 +22,9 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.spotify.sdk.android.authentication.AuthenticationClient;
+/*import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
-import com.spotify.sdk.android.authentication.AuthenticationResponse;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;*/
 
 import org.w3c.dom.Text;
 
@@ -409,7 +409,7 @@ public class WorkoutActivity extends AppCompatActivity {
             position = null;
             toast("No result");
         }
-        else if (requestCode == REQUEST_CODE) {
+        /*else if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
             switch (response.getType()) {
                 // Response was successful and contains auth token
@@ -428,7 +428,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 default:
                     logError("Auth result: " + response.getType());
             }
-        }
+        }*/
     }
 
     @Override
@@ -817,14 +817,14 @@ public class WorkoutActivity extends AppCompatActivity {
         } catch (IOException e) {return false;}
     }
 
-    public void SpotifyLogin(){
+   /* public void SpotifyLogin(){
         final AuthenticationRequest request = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
                 .setScopes(new String[]{"playlist-read","user-library-read"})
                 .build();
 
         AuthenticationClient.openLoginActivity(WorkoutActivity.this, REQUEST_CODE, request);
     }
-
+*/
     private void startMainActivity(String token) {
 //        Intent intent = new Intent(this, SpotifyMusic.class);
 //        startActivityForResult(intent,1);

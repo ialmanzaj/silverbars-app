@@ -102,7 +102,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
 
-                                android:text="0"
+                                android:text="@string/zero"
                                 android:id="@+id/timer"
                                 android:textColor="@color/black"
                                 android:textSize="85sp"
@@ -116,7 +116,7 @@
                                 android:layout_height="wrap_content"
 
                                 android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:text="Reps"
+                                android:text="@string/reps_text"
                                 android:id="@+id/textView16"
                                 android:textSize="20sp"
                                 android:layout_gravity="center_horizontal"
@@ -184,7 +184,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="SET"
+                            android:text="@string/set_text"
                             android:id="@+id/textView19"
                             android:textSize="20sp"
                             android:layout_alignParentTop="true"
@@ -205,7 +205,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:text="0"
+                                android:text="@string/zero"
                                 android:id="@+id/CurrentSet"
                                 android:gravity="center"
                                 android:textColor="@color/colorAccent"
@@ -232,7 +232,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:text="0"
+                                android:text="@string/zero"
                                 android:id="@+id/TotalSet"
                                 android:textSize="28sp"
                                 android:textColor="@color/colorAccent"
@@ -254,7 +254,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="EXERCISE"
+                            android:text="exercise_text"
                             android:id="@+id/textView21"
                             android:textColor="@color/colorAccent"
 
@@ -277,7 +277,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:text="0"
+                                android:text="@string/zero"
                                 android:id="@+id/CurrentExercise"
                                 android:gravity="center"
                                 android:textColor="@color/colorAccent"
@@ -293,7 +293,7 @@
                                 android:id="@+id/textView20"
                                 android:gravity="center"
                                 android:textColor="@color/colorAccent"
-                                android:textSize="25dp"
+                                android:textSize="25sp"
                                 android:layout_gravity="center_horizontal|top"
                                  />
 
@@ -301,7 +301,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:text="0"
+                                android:text="@string/zero"
                                 android:id="@+id/TotalExercise"
                                 android:gravity="center"
                                 android:textColor="@color/colorAccent"
@@ -328,7 +328,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="PAUSE WORKOUT"
+                        android:text="@string/pause_button"
                         android:id="@+id/PauseButton"
                          android:textColor="@color/white"
                         android:background="@color/gray_active_icon" />
@@ -337,7 +337,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="END WORKOUT"
+                        android:text="@string/end_button"
                         android:id="@+id/button11"
                         android:background="@color/secondColor"
                         android:textColor="#ffffff"
@@ -384,7 +384,7 @@
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:id="@+id/song_name"
                             android:textColor="#ffff"
-                            android:text="Song Name Label"
+                            android:text="@string/song_name"
                             android:textStyle="bold"
                             android:singleLine="true"
                             android:ellipsize="marquee"
@@ -396,7 +396,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="Artist Label"
+                            android:text="@string/artist_name"
 
                             android:id="@+id/artist_name"
 
@@ -427,7 +427,7 @@
                             android:background="#00ffffff"
 
                             android:layout_centerVertical="true"
-                            />
+                            android:contentDescription="" />
 
                         <ImageButton
                             android:layout_width="wrap_content"
@@ -439,7 +439,8 @@
 
                             android:layout_centerVertical="true"
 
-                            android:visibility="gone" />
+                            android:visibility="gone"
+                            android:contentDescription="" />
                     </RelativeLayout>
 
                 </RelativeLayout>
@@ -460,7 +461,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="3"
+                android:text="@string/number_five"
                 android:id="@+id/startCounter"
                 android:layout_gravity="center"
                 android:textColor="#ffffff"
@@ -470,7 +471,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Get Ready!"
+                android:text="@string/get_ready_text"
                 android:id="@+id/headerText"
                 android:layout_gravity="top|center"
                 android:layout_marginTop="50dp"

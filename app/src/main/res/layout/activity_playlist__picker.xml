@@ -9,9 +9,7 @@
     <TabHost
         android:layout_width="match_parent"
         android:layout_height="519dp"
-        android:id="@+id/tabHost4"
-        android:layout_below="@+id/clean"
-        android:layout_centerHorizontal="true">
+        android:id="@+id/tabHost4">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,9 +36,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="match_parent"
                         android:id="@+id/SavedPlaylist"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentBottom="true"
+
                         android:choiceMode="multipleChoice" />
                 </LinearLayout>
 
@@ -54,9 +50,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="match_parent"
                         android:id="@+id/lvPlaylist"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentBottom="true"
+
                         android:choiceMode="multipleChoice" />
                 </LinearLayout>
 
@@ -73,21 +67,17 @@
         <Button
             android:layout_width="192dp"
             android:layout_height="wrap_content"
-            android:text="Limpiar"
+            android:text="@string/clean_button_picker"
             android:id="@+id/clean"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+
             android:background="@color/colorAccent" />
 
         <Button
             android:layout_width="192dp"
             android:layout_height="wrap_content"
-            android:text="Listo"
+            android:text="@string/ready_button_picker"
             android:id="@+id/done"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
+
             android:background="#537755" />
     </LinearLayout>
 

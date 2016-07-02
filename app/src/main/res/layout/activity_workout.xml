@@ -86,7 +86,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Number of Sets"
+                                android:text="@string/number_sets_text"
                                 android:textColor="@color/black"
                                 android:textSize="18sp"
 
@@ -94,7 +94,7 @@
 
                                 />
                             <LinearLayout
-                                android:layout_alignParentEnd="true"
+
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
 
@@ -112,7 +112,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:textAppearance="?android:attr/textAppearanceMedium"
-                                    android:text="5"
+                                    android:text="@string/number_sets"
                                     android:minWidth="45dp"
 
                                     android:textColor="@color/black"
@@ -141,7 +141,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Rest between exercise "
+                                android:text="@string/rest_exercise_text"
                                 android:textColor="@color/black"
                                 android:textSize="18sp"
                                 android:layout_marginTop="5dp"
@@ -162,18 +162,18 @@
                                     android:id="@+id/minusRest" />
 
                                 <TextView
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:inputType="numberSigned"
-                                    android:text="30s"
+
+                                    android:text="@string/rest_exercise"
                                     android:minWidth="45dp"
-                                    android:focusableInTouchMode="true"
+
                                     android:textColor="@color/black"
                                     android:gravity="center_vertical|center_horizontal"
                                     android:textAppearance="?android:attr/textAppearanceMedium"
                                     android:textAlignment="center"
-                                    android:hint="0"
+                                    android:hint="@string/zero"
                                     android:id="@+id/Rest" />
 
 
@@ -196,7 +196,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Rest between Sets"
+                                android:text="@string/rest_sets_text"
                                 android:textColor="@color/black"
                                 android:textSize="18sp"
                                 android:layout_marginTop="5dp"
@@ -221,7 +221,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:minWidth="45dp"
-                                    android:text="60s"
+                                    android:text="@string/rest_sets"
                                     android:textAppearance="?android:attr/textAppearanceMedium"
                                     android:textColor="@color/black"
                                     android:gravity="center_vertical|center_horizontal"
@@ -247,7 +247,7 @@
                             android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Vibration per rep"
+                            android:text="@string/vibration_rep_text"
                             android:textColor="@color/black"
                             android:textSize="18sp"
                             android:checked="true" />
@@ -256,7 +256,7 @@
                             android:layout_marginTop="5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Vibration per Set"
+                            android:text="@string/vibration_set_text"
                             android:textColor="@color/black"
                             android:textSize="18sp"
 
@@ -271,7 +271,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tempo in Reps"
+                            android:text="@string/tempo_text"
                             android:textSize="20sp"
                             android:textColor="@color/colorPrimaryText"
                             android:layout_gravity="center" />
