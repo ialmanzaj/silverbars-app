@@ -7,8 +7,8 @@
     <string name="reps_text">Reps</string>
 
     <!-- Strings related to activity_myworkouts -->
-    <string name="blank_text_my_workouts">NO HAY WORKOUT AUN</string>
-    <string name="blank_text_my_workouts_saved">NO HAY WORKOUTS GUARDADOS AUN</string>
+    <string name="blank_text_my_workouts">NO HAY WORKOUT AÚN</string>
+    <string name="blank_text_my_workouts_saved">NO HAY WORKOUTS GUARDADOS AÚN</string>
     <string name="text_create_workout">CREAR UN NUEVO WORKOUT</string>
     <string name="explore_button">EXPLORAR</string>
 
@@ -41,11 +41,11 @@
     <string name="tempo_positive">3</string>
     <string name="tempo_isometric">1</string>
     <string name="tempo_negative">3</string>
-    <string name="select_music_text">Seleccionar tu musica</string>
+    <string name="select_music_text">Seleccionar tu música</string>
     <string name="exercises_text">Ejercicios</string>
     <string name="start_button">EMPEZAR</string>
 
-    <string name="no_song">No hay cancion</string>
+    <string name="no_song">No hay canción</string>
     <!-- Strings related to item workouts -->
     <string name="workout_name">NOMBRE DE WORKOUT</string>
 
