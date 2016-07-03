@@ -364,19 +364,19 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-        TabHost.TabSpec overview = tabHost2.newTabSpec("Overview");
-        TabHost.TabSpec setup = tabHost2.newTabSpec("Setup");
-        TabHost.TabSpec muscles = tabHost2.newTabSpec("Muscles");
+        TabHost.TabSpec overview = tabHost2.newTabSpec(getResources().getString(R.string.tab_overview));
+        TabHost.TabSpec setup = tabHost2.newTabSpec(getResources().getString(R.string.tab_setup));
+        TabHost.TabSpec muscles = tabHost2.newTabSpec(getResources().getString(R.string.tab_muscles));
 
 
 
-        setup.setIndicator("Setup");
+        setup.setIndicator(getResources().getString(R.string.tab_setup));
         setup.setContent(R.id.setup);
 
-        overview.setIndicator("Overview");
+        overview.setIndicator(getResources().getString(R.string.tab_overview));
         overview.setContent(R.id.overview);
 
-        muscles.setIndicator("Muscles");
+        muscles.setIndicator(getResources().getString(R.string.tab_muscles));
         muscles.setContent(R.id.muscles);
 
         tabHost2.addTab(overview);

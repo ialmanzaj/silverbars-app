@@ -20,8 +20,8 @@
     <string name="zero">0</string>
     <string name="set_text">SET</string>
     <string name="exercise_text">EJERCICIO</string>
-    <string name="pause_button">PAUSAR WORKOUT</string>
-    <string name="end_button">TERMINAR WORKOUT</string>
+    <string name="pause_button">PAUSAR Rutina</string>
+    <string name="end_button">TERMINAR Rutina</string>
     <string name="song_name">NOMBRE DE CANCION</string>
     <string name="artist_name">NOMBRE DE ARTISTA</string>
     <string name="number_five">5</string>
@@ -29,9 +29,9 @@
 
 
     <!-- Strings related to activity_workouts -->
-    <string name="number_sets_text">Cantidad de Sets</string>
+    <string name="number_sets_text">Sets en total</string>
     <string name="number_sets">5</string>
-    <string name="rest_exercise_text">Descanso entre ejercicios</string>
+    <string name="rest_exercise_text">Descanso entre ejercicio</string>
     <string name="rest_exercise">30s</string>
     <string name="rest_sets_text">Descanso entre Sets</string>
     <string name="rest_sets">60s</string>
@@ -45,7 +45,17 @@
     <string name="exercises_text">Ejercicios</string>
     <string name="start_button">EMPEZAR</string>
 
-
+    <string name="no_song">No hay cancion</string>
     <!-- Strings related to item workouts -->
     <string name="workout_name">NOMBRE DE WORKOUT</string>
+
+    <string name="resume_workout_text">SEGUIR RUTINA</string>
+    <string name="pause_workout_text">PAUSAR RUTINA</string>
+    <string name="rest_text">Descanso</string>
+    <string name="tab_overview">General</string>
+    <string name="tab_setup">Preparar</string>
+    <string name="tab_muscles">Musculos</string>
+
+
+
 </resources>

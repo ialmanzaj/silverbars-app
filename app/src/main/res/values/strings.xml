@@ -42,8 +42,8 @@
     <string name="reps_text">Reps</string>
 
     <!-- Strings related to activity_myworkouts -->
-    <string name="blank_text_my_workouts">THERE&apos;S NO WORKOUT YET</string>
-    <string name="blank_text_my_workouts_saved">THERE&apos;S NO SAVED WORKOUTS YET</string>
+    <string name="blank_text_my_workouts">THERE\'S NO WORKOUT YET</string>
+    <string name="blank_text_my_workouts_saved">THERE\'S NO SAVED WORKOUTS YET</string>
     <string name="text_create_workout">Create a new one</string>
     <string name="explore_button">EXPLORE</string>
 
@@ -80,10 +80,15 @@
     <string name="exercises_text">Exercises</string>
     <string name="start_button">START</string>
 
-
+    <string name="no_song">There\'s no song</string>
     <!-- Strings related to item workouts -->
     <string name="workout_name">Workout Name</string>
 
-
+    <string name="resume_workout_text">RESUME WORKOUT</string>
+    <string name="pause_workout_text">PAUSE WORKOUT</string>
+    <string name="rest_text">Rest</string>
+    <string name="tab_overview">Overview</string>
+    <string name="tab_setup">Setup</string>
+    <string name="tab_muscles">Muscles</string>
 
 </resources>
