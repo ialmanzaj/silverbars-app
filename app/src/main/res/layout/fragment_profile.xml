@@ -27,49 +27,6 @@
             android:layout_gravity="left|center_vertical" />
     </FrameLayout>
 
-    <TabHost
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/tabHost3"
-        android:layout_below="@+id/FrameLayout"
-        android:layout_centerHorizontal="true">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"></TabWidget>
-
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:id="@+id/ProgressLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <android.support.v7.widget.RecyclerView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/RecyclerProgress" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/HistoryLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"></LinearLayout>
-
-            </FrameLayout>
-        </LinearLayout>
-    </TabHost>
 
 </RelativeLayout>

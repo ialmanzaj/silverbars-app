@@ -27,22 +27,19 @@
                 android:layout_height="match_parent"
                 android:alpha="0.8"
                 android:id="@+id/img"
-                android:contentDescription="Workout Name" />
+                android:contentDescription="@string/workout_name" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Routine Name"
+                android:text="@string/workout_name"
                 android:textColor="@color/white"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="5dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
-
-
-                android:id="@+id/text"
-                />
+                android:id="@+id/text" />
         </RelativeLayout>
 
 
@@ -63,7 +60,7 @@
                     android:id="@+id/btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="START"
+                    android:text="@string/start_button"
                     android:background="#602C8D"
                     android:textColor="@color/white"
                     android:layout_gravity="left"

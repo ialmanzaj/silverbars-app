@@ -313,7 +313,7 @@
                                     android:textColor="@color/colorPrimaryText"
                                     android:layout_gravity="center"
 
-                                    android:text="3" />
+                                    android:text="@string/tempo_positive" />
 
                                 <Button
                                     style="?android:attr/buttonStyleSmall"
@@ -360,7 +360,7 @@
                                     android:textColor="@color/colorPrimaryText"
                                     android:layout_gravity="center"
 
-                                    android:text="1" />
+                                    android:text="@string/tempo_isometric" />
 
                                 <Button
                                     style="?android:attr/buttonStyleSmall"
@@ -407,7 +407,7 @@
                                     android:textColor="@color/colorPrimaryText"
                                     android:layout_gravity="center"
 
-                                    android:text="3" />
+                                    android:text="@string/tempo_negative" />
 
                                 <Button
                                     style="?android:attr/buttonStyleSmall"
@@ -442,7 +442,7 @@
                         <Button
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Select your music"
+                            android:text="@string/select_music_text"
                             android:id="@+id/SelectMusic"
                             android:paddingStart="25dp"
                             android:paddingEnd="25dp"
@@ -459,7 +459,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Exercises"
+                        android:text="@string/exercises_text"
                         android:textColor="@color/gray_active_icon"
                         android:layout_marginStart="15dp"
                         />
@@ -490,7 +490,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="START"
+            android:text="@string/start_button"
             android:textSize="18sp"
             android:id="@+id/start_button"
             android:layout_alignParentBottom="true"

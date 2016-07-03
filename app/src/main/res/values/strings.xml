@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Silverbars</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="title">Titulo</string>
     <string name="content">Contenido</string>
     <string name="agree">Aceptar</string>
@@ -31,10 +31,13 @@
 
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
 
-    <!-- Strings related to activity_exercise_cards -->
 
-    <string name="description_img_workout">Workout Image</string>
-    <string name="workout_name">Workout Name</string>
+
+
+
+
+    <!-- Strings related to activity_exercise_cards -->
+    <string name="exercise_name">Exercise Name</string>
     <string name="reps_value">1</string>
     <string name="reps_text">Reps</string>
 
@@ -45,8 +48,8 @@
     <string name="explore_button">EXPLORE</string>
 
     <!-- Strings related to activity_playlist picker -->
-    <string name="clean_button_picker">Limpiar</string>
-    <string name="ready_button_picker">Listo</string>
+    <string name="clean_button_picker">Clean</string>
+    <string name="ready_button_picker">OK</string>
 
     <!-- Strings related to activity_workingout -->
     <string name="zero">0</string>
@@ -70,6 +73,16 @@
     <string name="vibration_rep_text">Vibration per rep</string>
     <string name="vibration_set_text">Vibration per set</string>
     <string name="tempo_text">Tempo in Reps</string>
+    <string name="tempo_positive">3</string>
+    <string name="tempo_isometric">1</string>
+    <string name="tempo_negative">3</string>
+    <string name="select_music_text">Select your music</string>
+    <string name="exercises_text">Exercises</string>
+    <string name="start_button">START</string>
+
+
+    <!-- Strings related to item workouts -->
+    <string name="workout_name">Workout Name</string>
 
 
 

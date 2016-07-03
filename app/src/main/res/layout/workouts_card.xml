@@ -27,14 +27,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:maxHeight="250dp"
-                            android:contentDescription="Workout Image"
+                            android:contentDescription="@string/workout_name"
                             android:layout_above="@+id/nombre"
                             />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Workout Name"
+                            android:text="@string/workout_name"
                             android:textAlignment="center"
 
                             android:id="@+id/nombre"
