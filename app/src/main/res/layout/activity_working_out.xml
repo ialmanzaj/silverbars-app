@@ -170,29 +170,113 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="90dp"
-                    android:baselineAligned="false"
-                    >
 
+                    >
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="match_parent"
 
-                        android:layout_gravity="center_horizontal">
+                       android:gravity="center">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="@string/set_text"
-                            android:id="@+id/textView19"
+                            android:text="@string/exercise_text"
+                            android:id="@+id/textView21"
+                            android:textColor="@color/colorAccent"
                             android:textSize="20sp"
-                            android:layout_alignParentTop="true"
+
+                           android:layout_above="@+id/exercises_number"
                             android:layout_centerHorizontal="true"
 
+
+                            />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/exercises_number"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:text="@string/zero"
+                                android:id="@+id/CurrentExercise"
+                                android:gravity="center"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="30sp"
+                                android:layout_gravity="center_horizontal|top"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:text="/"
+                                android:id="@+id/textView20"
+                                android:gravity="center"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="30sp"
+                                android:layout_gravity="center_horizontal|top"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:text="@string/zero"
+                                android:id="@+id/TotalExercise"
+                                android:gravity="center"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="30sp"
+                                android:layout_gravity="center_horizontal|top"
+
+
+                                />
+                        </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="@string/done_text"
+
+                            android:textColor="@color/colorAccent"
+
+                            android:layout_marginTop="-5dp"
+                            android:layout_below="@+id/exercises_number"
+                            android:layout_centerHorizontal="true"
+
+
+                            />
+
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:text="@string/set_text"
+                            android:id="@+id/textView19"
+                            android:textSize="22sp"
+
+                            android:layout_centerHorizontal="true"
+                            android:layout_above="@+id/set_numbers"
                             android:textColor="@color/colorAccent" />
 
                         <LinearLayout
+                            android:id="@+id/set_numbers"
                             android:orientation="horizontal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -209,10 +293,7 @@
                                 android:id="@+id/CurrentSet"
                                 android:gravity="center"
                                 android:textColor="@color/colorAccent"
-                                android:textSize="28sp"
-
-
-
+                                android:textSize="30sp"
                                 />
 
                             <TextView
@@ -223,7 +304,7 @@
                                 android:id="@+id/textView18"
                                 android:gravity="center"
                                 android:textColor="@color/colorAccent"
-                                android:textSize="28sp"
+                                android:textSize="30sp"
 
 
                                 />
@@ -234,85 +315,30 @@
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:text="@string/zero"
                                 android:id="@+id/TotalSet"
-                                android:textSize="28sp"
+                                android:textSize="30sp"
                                 android:textColor="@color/colorAccent"
                                 />
                         </LinearLayout>
-
-                    </RelativeLayout>
-
-                    <!---    Layout SETS -->
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="match_parent"
-
-                        android:layout_gravity="center_horizontal">
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="exercise_text"
-                            android:id="@+id/textView21"
+                            android:text="@string/done_text"
+
                             android:textColor="@color/colorAccent"
 
-
-                            android:layout_alignParentTop="true"
+                            android:layout_marginTop="-5dp"
+                            android:layout_below="@id/set_numbers"
                             android:layout_centerHorizontal="true"
 
 
                             />
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            >
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:text="@string/zero"
-                                android:id="@+id/CurrentExercise"
-                                android:gravity="center"
-                                android:textColor="@color/colorAccent"
-                                android:textSize="25sp"
-                                android:layout_gravity="center_horizontal|top"
-                                 />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:text="/"
-                                android:id="@+id/textView20"
-                                android:gravity="center"
-                                android:textColor="@color/colorAccent"
-                                android:textSize="25sp"
-                                android:layout_gravity="center_horizontal|top"
-                                 />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:text="@string/zero"
-                                android:id="@+id/TotalExercise"
-                                android:gravity="center"
-                                android:textColor="@color/colorAccent"
-                                android:textSize="25sp"
-                                android:layout_gravity="center_horizontal|top"
-
-
-                                />
-                        </LinearLayout>
-
                     </RelativeLayout>
+
+                    <!---    Layout SETS -->
+
+
 
                 </LinearLayout>
 
@@ -321,8 +347,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="42dp"
-                    android:gravity="center"
-                    >
+                    android:gravity="center">
 
                     <Button
                         android:layout_width="wrap_content"
@@ -342,7 +367,7 @@
                         android:background="@color/secondColor"
                         android:textColor="#ffffff"
 
-                        android:layout_marginLeft="4dp" />
+                        android:layout_marginStart="4dp" />
                 </LinearLayout>
 
 
@@ -427,7 +452,7 @@
                             android:background="#00ffffff"
 
                             android:layout_centerVertical="true"
-                            android:contentDescription="" />
+                            android:contentDescription="@string/resume_workout_text" />
 
                         <ImageButton
                             android:layout_width="wrap_content"
@@ -440,7 +465,7 @@
                             android:layout_centerVertical="true"
 
                             android:visibility="gone"
-                            android:contentDescription="" />
+                            android:contentDescription="@string/pause_button" />
                     </RelativeLayout>
 
                 </RelativeLayout>
@@ -465,7 +490,7 @@
                 android:id="@+id/startCounter"
                 android:layout_gravity="center"
                 android:textColor="#ffffff"
-                android:textSize="200sp" />
+                android:textSize="180sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -475,7 +500,7 @@
                 android:id="@+id/headerText"
                 android:layout_gravity="top|center"
                 android:layout_marginTop="50dp"
-                android:textSize="70sp"
+                android:textSize="65sp"
                 android:textColor="#ffffff"
                 />
         </FrameLayout>

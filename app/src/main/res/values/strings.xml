@@ -91,4 +91,6 @@
     <string name="tab_setup">Setup</string>
     <string name="tab_muscles">Muscles</string>
 
+    <string name="done_text">DONE</string>
+
 </resources>
