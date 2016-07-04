@@ -182,8 +182,8 @@
                             android:text="@string/exercise_text"
                             android:id="@+id/textView21"
                             android:textColor="@color/colorAccent"
-                            android:textSize="20sp"
-
+                            android:textSize="18sp"
+                            android:layout_marginTop="-5dp"
                            android:layout_below="@+id/exercises_number"
                             android:layout_centerHorizontal="true"
 
@@ -248,10 +248,10 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-
+                            android:layout_marginTop="-5dp"
                             android:text="@string/set_text"
                             android:id="@+id/textView19"
-                            android:textSize="22sp"
+                            android:textSize="18sp"
 
                             android:layout_centerHorizontal="true"
                             android:layout_below="@+id/set_numbers"
