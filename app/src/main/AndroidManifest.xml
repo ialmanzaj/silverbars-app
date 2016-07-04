@@ -88,7 +88,8 @@
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name=".SpotifyMusic" />
-        <activity android:name=".DrawerListAdapter"></activity>
+        <activity android:name=".SelectionMusicActivity" />
+        <activity android:name=".SongsActivity" />
     </application>
 
 </manifest>

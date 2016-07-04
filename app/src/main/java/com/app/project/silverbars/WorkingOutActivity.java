@@ -563,8 +563,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (mp!=null || mp.isPlaying()){
-            mp.setVolume(0.04f,0.04f);
+        if (mp!=null){
+            if (mp.isPlaying())
+                mp.setVolume(0.04f,0.04f);
         }
         media.start();
         media.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -630,21 +631,21 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             }
 
             public void onFinish() {
-                if (!Sets){
+//                if (!Sets){
                     PlayAudio(Exercises[y].getExercise_audio());
                     restTimer.cancel();
                     RepsTime(y);
                     Timer(totalTime,1,totalTime);
                     timer.setText(String.valueOf(Exercises_reps[y]));
                     ModalLayout.setVisibility(View.GONE);
-                }
-                else{
-                    restTimer.cancel();
-                    RepsTime(y);
-                    Timer(totalTime,1,totalTime);
-                    timer.setText(String.valueOf(Exercises_reps[y]));
-                    ModalLayout.setVisibility(View.GONE);
-                }
+//                }
+//                else{
+//                    restTimer.cancel();
+//                    RepsTime(y);
+//                    Timer(totalTime,1,totalTime);
+//                    timer.setText(String.valueOf(Exercises_reps[y]));
+//                    ModalLayout.setVisibility(View.GONE);
+//                }
             }
         }.start();
     }

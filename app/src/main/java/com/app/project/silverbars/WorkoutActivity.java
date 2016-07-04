@@ -387,8 +387,9 @@ public class WorkoutActivity extends AppCompatActivity {
         SelectMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(WorkoutActivity.this, SelectionMusicActivity.class);
-                startActivity(i);
+                Intent i = new Intent(getBaseContext(), SelectionMusicActivity.class);
+                startActivityForResult(i,1);
+//                LaunchMusicActivity();
             }
         });
 
@@ -402,6 +403,8 @@ public class WorkoutActivity extends AppCompatActivity {
         if (requestCode == 1 && resultCode == RESULT_OK && data != null){
             mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
             position = data.getStringArrayExtra("positions");
+            Log.v("Position",Arrays.toString(position));
+            Log.v("Songs",mySongs.toString());
             toast("Activity result");
         }
         else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
@@ -497,7 +500,7 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     public void LaunchMusicActivity() {
-        Intent intent = new Intent(this, PlaylistPickerActivity.class);
+        Intent intent = new Intent(this, SelectionMusicActivity.class);
         startActivityForResult(intent,1);
     }
 

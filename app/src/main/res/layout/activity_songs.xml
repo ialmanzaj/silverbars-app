@@ -3,31 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlaylistPickerActivity">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="?android:attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:background="@color/primary_dark_material_dark"
-        android:fitsSystemWindows="true"
-        android:layout_alignParentTop="true"/>
+    tools:context="com.app.project.silverbars.SongsActivity">
 
     <LinearLayout
-        android:id="@+id/tab2"
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_above="@+id/Buttons"
-        android:layout_below="@+id/toolbar">
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/Buttons">
 
         <ListView
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/SavedPlaylist"
-            android:choiceMode="singleChoice" />
+            android:id="@+id/lvPlaylist"
+            android:choiceMode="multipleChoice"/>
     </LinearLayout>
 
     <LinearLayout
@@ -52,12 +42,4 @@
             android:id="@+id/done"
             android:background="#537755" />
     </LinearLayout>
-
-    <!--<Button-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="Seleccionar Lista de reproduccion"-->
-        <!--android:id="@+id/boton"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_centerHorizontal="true" />-->
 </RelativeLayout>
