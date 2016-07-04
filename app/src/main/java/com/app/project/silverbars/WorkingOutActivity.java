@@ -134,7 +134,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         CurrentExercise.setText(String.valueOf(y+1));
                         ActivateVibrationPerSet();
                         timer.setEnabled(false);
-                        RestModal("Rest",15,false);
+                        RestModal(getResources().getString(R.string.rest_text),15,false);
                     }
                     else{
                         if (ActualSets+1 <= TotalSets){
@@ -144,7 +144,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             y = 0;
                             recycler.smoothScrollToPosition(y);
                             finish = true;
-                            RestModal("Rest",30,true);
+                            RestModal(getResources().getString(R.string.rest_text),30,true);
                             nxtLayout.setVisibility(View.VISIBLE);
                             prvLayout.setVisibility(View.GONE);
                         }
@@ -225,7 +225,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 if (!pause){
                     ScreenOff();
                     pause = true;
-                    PauseButton.setText("RESUME WORKOUT");
+                    PauseButton.setText(getResources().getString(R.string.resume_workout_text));
                     onTimerPause();
                     if (SelectedSongs){
                         mp.pause();
@@ -233,7 +233,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 }else{
                     ScreenOn();
                     pause = false;
-                    PauseButton.setText("PAUSE WORKOUT");
+                    PauseButton.setText(getResources().getString(R.string.pause_workout_text));
                     onTimerResume();
                     if (SelectedSongs) {
                         mp.start();
@@ -371,7 +371,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             });
         }
         else{
-            song_name.setText("No Songs");
+            song_name.setText(getResources().getString(R.string.no_song));
             btPlay.setEnabled(false);
             btPlay.setClickable(false);
             btPause.setEnabled(false);

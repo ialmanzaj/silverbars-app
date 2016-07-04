@@ -11,7 +11,7 @@
 
     card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="2dp"
-    card_view:cardElevation="1dp">
+    card_view:cardElevation="0.5dp">
 
 
         <LinearLayout
@@ -33,7 +33,7 @@
                     android:scaleType="centerCrop"
 
 
-                    android:contentDescription="Workout Image" />
+                    android:contentDescription="@string/exercise_name" />
 
             </LinearLayout>
             <LinearLayout
@@ -50,7 +50,7 @@
                     android:gravity="center_vertical|center"
 
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Workout Name"
+                    android:text="@string/exercise_name"
 
                     android:textColor="#000"
 
@@ -69,7 +69,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical|center_horizontal"
-                    android:text="1"
+                    android:text="@string/reps_value"
                     android:id="@+id/repetitions"
                     android:textSize="30sp"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -79,7 +79,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="rep"
+                    android:text="@string/reps_text"
                     android:textColor="@color/colorPrimaryText"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:gravity="center_horizontal"

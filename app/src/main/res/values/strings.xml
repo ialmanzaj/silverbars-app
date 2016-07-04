@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Silverbars</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="title">Titulo</string>
     <string name="content">Contenido</string>
     <string name="agree">Aceptar</string>
@@ -30,5 +30,67 @@
     <string name="action_websearch">Web search</string>
 
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
+
+
+
+
+
+
+    <!-- Strings related to activity_exercise_cards -->
+    <string name="exercise_name">Exercise Name</string>
+    <string name="reps_value">1</string>
+    <string name="reps_text">Reps</string>
+
+    <!-- Strings related to activity_myworkouts -->
+    <string name="blank_text_my_workouts">THERE\'S NO WORKOUT YET</string>
+    <string name="blank_text_my_workouts_saved">THERE\'S NO SAVED WORKOUTS YET</string>
+    <string name="text_create_workout">Create a new one</string>
+    <string name="explore_button">EXPLORE</string>
+
+    <!-- Strings related to activity_playlist picker -->
+    <string name="clean_button_picker">Clean</string>
+    <string name="ready_button_picker">OK</string>
+
+    <!-- Strings related to activity_workingout -->
+    <string name="zero">0</string>
+    <string name="set_text">SET</string>
+    <string name="exercise_text">EXERCISE</string>
+    <string name="pause_button">PAUSE WORKOUT</string>
+    <string name="end_button">END WORKOUT</string>
+    <string name="song_name">Song Name</string>
+    <string name="artist_name">Artist name</string>
+    <string name="number_five">5</string>
+    <string name="get_ready_text">Get Ready!</string>
+
+
+    <!-- Strings related to activity_workouts -->
+    <string name="number_sets_text">Number of Sets</string>
+    <string name="number_sets">5</string>
+    <string name="rest_exercise_text">Rest between exercise</string>
+    <string name="rest_exercise">30s</string>
+    <string name="rest_sets_text">Rest between Sets</string>
+    <string name="rest_sets">60s</string>
+    <string name="vibration_rep_text">Vibration per rep</string>
+    <string name="vibration_set_text">Vibration per set</string>
+    <string name="tempo_text">Tempo in Reps</string>
+    <string name="tempo_positive">3</string>
+    <string name="tempo_isometric">1</string>
+    <string name="tempo_negative">3</string>
+    <string name="select_music_text">Select your music</string>
+    <string name="exercises_text">Exercises</string>
+    <string name="start_button">START</string>
+
+    <string name="no_song">There\'s no song</string>
+    <!-- Strings related to item workouts -->
+    <string name="workout_name">Workout Name</string>
+
+    <string name="resume_workout_text">RESUME WORKOUT</string>
+    <string name="pause_workout_text">PAUSE WORKOUT</string>
+    <string name="rest_text">Rest</string>
+    <string name="tab_overview">Overview</string>
+    <string name="tab_setup">Setup</string>
+    <string name="tab_muscles">Muscles</string>
+
+    <string name="done_text">DONE</string>
 
 </resources>

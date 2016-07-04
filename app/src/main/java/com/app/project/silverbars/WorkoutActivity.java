@@ -22,9 +22,9 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
-import com.spotify.sdk.android.authentication.AuthenticationClient;
+/*import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
-import com.spotify.sdk.android.authentication.AuthenticationResponse;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;*/
 
 import org.w3c.dom.Text;
 
@@ -364,19 +364,19 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-        TabHost.TabSpec overview = tabHost2.newTabSpec("Overview");
-        TabHost.TabSpec setup = tabHost2.newTabSpec("Setup");
-        TabHost.TabSpec muscles = tabHost2.newTabSpec("Muscles");
+        TabHost.TabSpec overview = tabHost2.newTabSpec(getResources().getString(R.string.tab_overview));
+        TabHost.TabSpec setup = tabHost2.newTabSpec(getResources().getString(R.string.tab_setup));
+        TabHost.TabSpec muscles = tabHost2.newTabSpec(getResources().getString(R.string.tab_muscles));
 
 
 
-        setup.setIndicator("Setup");
+        setup.setIndicator(getResources().getString(R.string.tab_setup));
         setup.setContent(R.id.setup);
 
-        overview.setIndicator("Overview");
+        overview.setIndicator(getResources().getString(R.string.tab_overview));
         overview.setContent(R.id.overview);
 
-        muscles.setIndicator("Muscles");
+        muscles.setIndicator(getResources().getString(R.string.tab_muscles));
         muscles.setContent(R.id.muscles);
 
         tabHost2.addTab(overview);
@@ -412,7 +412,7 @@ public class WorkoutActivity extends AppCompatActivity {
             position = null;
             toast("No result");
         }
-        else if (requestCode == REQUEST_CODE) {
+        /*else if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
             switch (response.getType()) {
                 // Response was successful and contains auth token
@@ -431,7 +431,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 default:
                     logError("Auth result: " + response.getType());
             }
-        }
+        }*/
     }
 
     @Override
@@ -820,14 +820,14 @@ public class WorkoutActivity extends AppCompatActivity {
         } catch (IOException e) {return false;}
     }
 
-    public void SpotifyLogin(){
+   /* public void SpotifyLogin(){
         final AuthenticationRequest request = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
                 .setScopes(new String[]{"playlist-read","user-library-read"})
                 .build();
 
         AuthenticationClient.openLoginActivity(WorkoutActivity.this, REQUEST_CODE, request);
     }
-
+*/
     private void startMainActivity(String token) {
 //        Intent intent = new Intent(this, SpotifyMusic.class);
 //        startActivityForResult(intent,1);

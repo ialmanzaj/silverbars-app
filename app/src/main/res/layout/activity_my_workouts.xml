@@ -39,16 +39,18 @@
                     android:gravity="center">
 
                     <TextView
+                        android:textColor="@color/black"
+                        android:textSize="22sp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="THERE&apos;S NO WORKOUT YET"
+                        android:text="@string/blank_text_my_workouts"
                         android:layout_gravity="center"
                         android:gravity="center" />
 
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Create a new one"
+                        android:text="@string/text_create_workout"
                         android:id="@+id/button7"
                         android:layout_gravity="center"
                         android:gravity="center" />
@@ -63,16 +65,18 @@
                     android:gravity="center">
 
                     <TextView
+                        android:textColor="@color/black"
+                        android:textSize="22sp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="THERE&apos;S NO SAVED WORKOUTS YET"
+                        android:text="@string/blank_text_my_workouts_saved"
                         android:layout_gravity="center"
                         android:gravity="center" />
 
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="EXPLORE"
+                        android:text="@string/explore_button"
                         android:id="@+id/button6"
                         android:layout_gravity="center"
                         android:gravity="center" />
