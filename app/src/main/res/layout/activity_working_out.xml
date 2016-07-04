@@ -111,7 +111,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="-16dp"
+                                android:layout_marginTop="-18dp"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:text="@string/reps_text"
                                 android:id="@+id/textView16"
@@ -184,7 +184,7 @@
                             android:textColor="@color/colorAccent"
                             android:textSize="20sp"
 
-                           android:layout_above="@+id/exercises_number"
+                           android:layout_below="@+id/exercises_number"
                             android:layout_centerHorizontal="true"
 
 
@@ -236,26 +236,14 @@
 
                                 />
                         </LinearLayout>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text="@string/done_text"
 
-                            android:textColor="@color/black"
-
-                            android:layout_marginTop="-5dp"
-                            android:layout_below="@+id/exercises_number"
-                            android:layout_centerHorizontal="true"
-
-
-                            />
 
                     </RelativeLayout>
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:gravity="top">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -266,7 +254,7 @@
                             android:textSize="22sp"
 
                             android:layout_centerHorizontal="true"
-                            android:layout_above="@+id/set_numbers"
+                            android:layout_below="@+id/set_numbers"
                             android:textColor="@color/colorAccent" />
 
                         <LinearLayout
@@ -313,17 +301,7 @@
                                 android:textColor="@color/black"
                                 />
                         </LinearLayout>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text="@string/done_text"
 
-                            android:textColor="@color/black"
-
-                            android:layout_marginTop="-5dp"
-                            android:layout_below="@id/set_numbers"
-                            android:layout_centerHorizontal="true" />
 
                     </RelativeLayout>
 
