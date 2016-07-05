@@ -28,6 +28,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import com.baoyz.actionsheet.ActionSheet;
 import com.facebook.FacebookSdk;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -53,11 +55,14 @@ public class MainScreenActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
-
+    public ImageView Sort;
     private CharSequence activityTitle;
     private CharSequence itemTitle;
     private String[] tagTitles;
     private Toolbar toolbar;
+    private List<String> spinnerArray = new ArrayList<String>();
+    private String muscle = "ALL";
+    public Spinner spinner;
 
 
     @Override
@@ -71,6 +76,7 @@ public class MainScreenActivity extends AppCompatActivity {
         drawerList = (ListView) findViewById(R.id.left_drawer);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.bringToFront();
+        Sort = (ImageView) findViewById(R.id.Sort);
 
         ArrayList<DrawerItem> items = new ArrayList<DrawerItem>();
         items.add(new DrawerItem(tagTitles[0],R.mipmap.home));
@@ -120,12 +126,15 @@ public class MainScreenActivity extends AppCompatActivity {
         switch (position){
             case 0:
                 fragment = new MainFragment();
+                Sort.setVisibility(View.VISIBLE);
                 break;
             case 1:
                 fragment = new WorkoutsFragment();
+                Sort.setVisibility(View.GONE);
                 break;
             case 2:
                 fragment = new ProfileFragment();
+                Sort.setVisibility(View.GONE);
                 break;
         }
 

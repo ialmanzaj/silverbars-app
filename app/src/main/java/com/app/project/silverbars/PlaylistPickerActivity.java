@@ -52,7 +52,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_playlist__picker);
         ListPlaylist = (ListView)findViewById(R.id.SavedPlaylist);
-
+        done = (Button)findViewById(R.id.done);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_add_white_36dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -102,78 +102,33 @@ public class PlaylistPickerActivity extends AppCompatActivity {
             for (int i = 0; i < mySongs.size(); i++) {
                 items[i] = SongName(mySongs.get(i));
             }
-
             getUsersPlaylist(1);
-            done = (Button)findViewById(R.id.done);
-            done.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    final int spa2 = ListPlaylist.getCheckedItemPosition();
-                        if(spa2 != -1){
-                            MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
-                            int pos = ListPlaylist.getCheckedItemPosition();
-                            String[] result = database.getPlaylist(pos+1);
-                            String[] songs = convertStringToArray(result[2]);
-                            Intent returnIntent = new Intent();
-                            returnIntent.putExtra("positions",songs);
-                            returnIntent.putExtra("songs",mySongs);
-                            setResult(RESULT_OK, returnIntent);
-                            finish();
-                        }
-                        else
-                            mySongs = null;
-//                    else {
-//                        Log.v("Songs",Arrays.toString(playlist));
-//                        new MaterialDialog.Builder(PlaylistPickerActivity.this)
-//                                .title("Create a Playlist")
-//                                .content("Would you like to create a playlist with the selected songs?")
-//                                .negativeText("No")
-//                                .onNegative(new MaterialDialog.SingleButtonCallback() {
-//                                    @Override
-//                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                                        dialog.dismiss();
-//                                        Intent returnIntent = new Intent();
-//                                        returnIntent.putExtra("positions",playlist);
-//                                        returnIntent.putExtra("songs",mySongs);
-//                                        setResult(RESULT_OK, returnIntent);
-//                                        finish();
-//                                        toast("Cancel");
-//                                    }
-//                                })
-//                                .inputType(InputType.TYPE_CLASS_TEXT)
-//                                .input("Playlist name",null, new MaterialDialog.InputCallback() {
-//                                    @Override
-//                                    public void onInput(MaterialDialog dialog, CharSequence input) {
-//                                       Playlist_name = input.toString(); // Do something
-//                                        if (Objects.equals(Playlist_name, "")){
-//                                            Playlist_name = "Playlist 1";
-//                                        }
-//                                        MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
-//                                        database.insertPlaylist(Playlist_name,convertArrayToString(playlist),1);
-//                                        Log.v("Playlist",Arrays.toString(playlist));
-//                                        toast(Playlist_name);
-//                                        Intent returnIntent = new Intent();
-//                                        returnIntent.putExtra("positions",playlist);
-//                                        returnIntent.putExtra("songs",mySongs);
-//                                        setResult(RESULT_OK, returnIntent);
-//                                        finish();
-//                                    }
-//                                }).show();
-//                    }
-                }
-            });
+
         }
-        else {
-            done = (Button)findViewById(R.id.done);
-            done.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final int spa2 = ListPlaylist.getCheckedItemPosition();
+                if(spa2 != -1){
+                    MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
+                    int pos = ListPlaylist.getCheckedItemPosition();
+                    String[] result = database.getPlaylist(pos+1);
+                    String[] songs = convertStringToArray(result[2]);
                     Intent returnIntent = new Intent();
+                    returnIntent.putExtra("positions",songs);
+                    returnIntent.putExtra("songs",mySongs);
                     setResult(RESULT_OK, returnIntent);
                     finish();
                 }
-            });
-        }
+                else{
+                    mySongs = null;
+                    finish();
+                }
+
+
+            }
+        });
     }
 
     @Override

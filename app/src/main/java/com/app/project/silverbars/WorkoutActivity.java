@@ -351,25 +351,13 @@ public class WorkoutActivity extends AppCompatActivity {
 
         // Tab 3 Inicializar Exercises en el RecyclerView
 
-//        items.add(new WorkoutInfo(R.mipmap.imagen1, "Upper Body", "core", String.valueOf(ExerciseReps)));
-//        items.add(new WorkoutInfo(R.mipmap.imagen2, "Core", "Arms and Back", String.valueOf(ExerciseReps)));
-//        items.add(new WorkoutInfo(R.mipmap.imagen3, "Arms and Back", "Legs", String.valueOf(ExerciseReps)));
-//        items.add(new WorkoutInfo(R.mipmap.imagen4, "Legs", "Full Body", String.valueOf(ExerciseReps)));
-//        items.add(new WorkoutInfo(R.mipmap.imagen5, "Full body", "End Workout", String.valueOf(ExerciseReps)));
-
-
         //Defining Tabs
         TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost2);
         tabHost2.setup();
 
-
-
         TabHost.TabSpec overview = tabHost2.newTabSpec(getResources().getString(R.string.tab_overview));
         TabHost.TabSpec setup = tabHost2.newTabSpec(getResources().getString(R.string.tab_setup));
         TabHost.TabSpec muscles = tabHost2.newTabSpec(getResources().getString(R.string.tab_muscles));
-
-
-
         setup.setIndicator(getResources().getString(R.string.tab_setup));
         setup.setContent(R.id.setup);
 
@@ -392,10 +380,7 @@ public class WorkoutActivity extends AppCompatActivity {
 //                LaunchMusicActivity();
             }
         });
-
     }
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

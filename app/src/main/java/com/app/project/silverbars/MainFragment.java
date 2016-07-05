@@ -43,7 +43,7 @@ public class MainFragment extends Fragment {
 
     private String email;
     private String name;
-    private TwoWayView recyclerView;
+    public TwoWayView recyclerView;
     private Button songs;
     public static JsonWorkout[] Workouts;
     private SwipeRefreshLayout swipeContainer;
@@ -195,6 +195,11 @@ public class MainFragment extends Fragment {
 
     public void toast(String text){
         Toast.makeText(this.getActivity(),text,Toast.LENGTH_SHORT).show();
+    }
+
+    public void Update(String muscle){
+        recyclerView.setAdapter(null);
+        Task(muscle);
     }
 
 }

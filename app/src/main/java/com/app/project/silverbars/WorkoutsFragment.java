@@ -9,12 +9,13 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 
 public class WorkoutsFragment extends Fragment {
 
-    View rootView;
+    View rootView, mainView;
 
     SearchView mSearchView;
     TabWidget tabs;

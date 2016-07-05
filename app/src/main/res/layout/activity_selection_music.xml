@@ -5,7 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    tools:context="com.app.project.silverbars.SelectionMusicActivity">
+    tools:context="com.app.project.silverbars.SelectionMusicActivity"
+    android:background="#fff">
+
+    activity_workout.xml
 
     <GridLayout
         android:id="@+id/gridlayout"

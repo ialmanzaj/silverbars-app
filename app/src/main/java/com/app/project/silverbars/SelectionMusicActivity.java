@@ -1,10 +1,15 @@
 package com.app.project.silverbars;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridLayout;
 import android.widget.GridView;
@@ -22,12 +27,30 @@ public class SelectionMusicActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selection_music);
 
-
+//        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(myToolbar);
+//
+//        if (myToolbar != null) {
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setTitle("Music selection");
+//        }
 
         RelativeLayout songsButton = (RelativeLayout) findViewById(R.id.songs);
         RelativeLayout playlistButton = (RelativeLayout) findViewById(R.id.playlist);
         RelativeLayout spotifyButton = (RelativeLayout) findViewById(R.id.spotify);
         RelativeLayout soundcloudButton = (RelativeLayout) findViewById(R.id.soundcloud);
+
+//        songsButton.getLayoutParams().width = deviceWidth(SelectionMusicActivity.this);
+//        songsButton.getLayoutParams().height = deviceHeight(SelectionMusicActivity.this);
+//
+//        playlistButton.getLayoutParams().width = deviceWidth(SelectionMusicActivity.this);
+//        playlistButton.getLayoutParams().height = deviceHeight(SelectionMusicActivity.this);
+//
+//        spotifyButton.getLayoutParams().width = deviceWidth(SelectionMusicActivity.this);
+//        spotifyButton.getLayoutParams().height = deviceHeight(SelectionMusicActivity.this);
+//
+//        soundcloudButton.getLayoutParams().width = deviceWidth(SelectionMusicActivity.this);
+//        soundcloudButton.getLayoutParams().height = deviceHeight(SelectionMusicActivity.this);
 
         songsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +99,22 @@ public class SelectionMusicActivity extends AppCompatActivity {
 
     public void toast(String text){
         Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
+    }
+
+    public static int deviceWidth(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return (size.x)/2;
+    }
+
+    public static int deviceHeight(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return (size.y)/2;
     }
 
 }
