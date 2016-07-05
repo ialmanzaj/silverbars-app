@@ -5,7 +5,7 @@
     android:id="@+id/layout"
     android:layout_width="wrap_content"
     android:minWidth="165dp"
-    android:layout_height="215dp"
+    android:layout_height="210dp"
 
     card_view:cardBackgroundColor="@color/black"
 
@@ -59,6 +59,8 @@
             android:background="@color/white">
 
             <Button
+
+
                     android:id="@+id/btn"
                     android:paddingRight="15dp"
                     android:paddingLeft="15dp"
