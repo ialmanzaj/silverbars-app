@@ -49,7 +49,7 @@ public class MainFragment extends Fragment {
     public static JsonWorkout[] Workouts;
     private SwipeRefreshLayout swipeContainer;
     private List<String> spinnerArray = new ArrayList<String>();
-    private String muscle = "ALL";
+    public String muscleData = "ALL";
     public Toolbar myToolbar;
 
 
@@ -72,7 +72,7 @@ public class MainFragment extends Fragment {
         email = intent.getStringExtra("Email");
         name = intent.getStringExtra("Name");
         if (CheckInternet(getActivity().getApplicationContext())){
-            Task(muscle);
+            Task(muscleData);
         }
         else{
             toast("Please check your internet conection.");
@@ -113,7 +113,7 @@ public class MainFragment extends Fragment {
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
                 if (CheckInternet(getActivity().getApplicationContext())){
-                    Task(muscle);
+                    Task(muscleData);
                 }
                 else{
                     toast("Please check your internet conection.");
@@ -131,6 +131,8 @@ public class MainFragment extends Fragment {
     }
 
     public void Task(final String muscle){
+
+        muscleData = muscle;
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -163,19 +165,31 @@ public class MainFragment extends Fragment {
             @Override
             public void onResponse(Call<JsonWorkout[]> call, Response<JsonWorkout[]> response) {
                 if (response.isSuccessful()) {
-                    Workouts = null;
-//                    recyclerView.setAdapter(null);
+//                    Workouts = null;
+                    recyclerView.removeAllViews();
+                    recyclerView.removeAllViewsInLayout();
+                    recyclerView.setAdapter(null);
                     if (Objects.equals(muscle,"ALL")){
                         Workouts = response.body();
                     }
                     else{
                         JsonWorkout[] auxWorkout = response.body();
+                        JsonWorkout[] workoutFlag = null;
                         int x = 0;
                         for (int i = 0; i < auxWorkout.length; i++){
                             String muscleData = auxWorkout[i].getMain_muscle();
                             if (Objects.equals(muscle, muscleData)){
-                                Workouts[x] = auxWorkout[i];
                                 x++;
+                            }
+                        }
+                        Workouts = new JsonWorkout[x];
+                        int y = 0;
+                        for (int i = 0; i < auxWorkout.length; i++){
+                            String muscleData = auxWorkout[i].getMain_muscle();
+                            if (Objects.equals(muscle, muscleData)){
+                                Workouts[y] = auxWorkout[i];
+                                Log.v("Workout",Workouts[y].getWorkout_name());
+                                y++;
                             }
                         }
                     }

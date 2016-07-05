@@ -31,7 +31,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 //import com.spotify.sdk.android.authentication.AuthenticationClient;
-//import com.spotify.sdk.android.authentication.AuthenticationResponse;
+//import com.spotify.sdk.android.authenticationl.AuthenticationResponse;
 
 public class PlaylistPickerActivity extends AppCompatActivity {
     private ListView ListMusic, ListPlaylist;

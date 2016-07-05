@@ -95,6 +95,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         vh.layout.getLayoutParams().height = height / 3;
         switch (vh.getItemViewType()) {
             case TYPE_WORKOUT:
+                    Log.v("Workouts Size",String.valueOf(position));
                     String[] parts = workouts[position].getWorkout_image().split("workouts");;
                     String Parsedurl = "workouts"+parts[1];
                     Log.v("Image",Parsedurl);

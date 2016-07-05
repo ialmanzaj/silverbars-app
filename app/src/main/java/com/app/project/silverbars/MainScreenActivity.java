@@ -8,6 +8,7 @@ import android.content.Intent;
 
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -117,8 +118,13 @@ public class MainScreenActivity extends AppCompatActivity {
                         .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                                 if (which != -1){
-
+                                    Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
+                                    if (currentFragment instanceof MainFragment) {
+                                        ((MainFragment) currentFragment).Task(text.toString());
+                                        //place your filtering logic here using currentFragment
+                                    }
                                 }
                                 return true;
                             }
@@ -146,27 +152,36 @@ public class MainScreenActivity extends AppCompatActivity {
 
     private void selectItem(int position) {
         // Reemplazar el contenido del layout principal por un fragmento
-        Fragment fragment = null;
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         switch (position){
             case 0:
-                fragment = new MainFragment();
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.content_frame, new MainFragment(), null)
+                        .addToBackStack(null)
+                        .commit();
                 Sort.setVisibility(View.VISIBLE);
                 toolbar.setTitle("Home");
                 break;
             case 1:
-                fragment = new WorkoutsFragment();
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.content_frame, new WorkoutsFragment(), null)
+                        .addToBackStack(null)
+                        .commit();
                 Sort.setVisibility(View.GONE);
                 toolbar.setTitle("My Workouts");
                 break;
             case 2:
-                fragment = new ProfileFragment();
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.content_frame, new ProfileFragment(), null)
+                        .addToBackStack(null)
+                        .commit();
                 Sort.setVisibility(View.GONE);
                 toolbar.setTitle("Profile");
                 break;
         }
-
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
         // Se actualiza el item seleccionado y el título, después de cerrar el drawer
         drawerList.setItemChecked(position, true);
