@@ -16,7 +16,6 @@ import android.widget.TabWidget;
 public class WorkoutsFragment extends Fragment {
 
     View rootView, mainView;
-
     SearchView mSearchView;
     TabWidget tabs;
     TabHost tabHost;
@@ -26,11 +25,8 @@ public class WorkoutsFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.activity_my_workouts, container, false);
 
-
         tabHost = (TabHost) rootView.findViewById(R.id.tabHost);
         tabHost.setup();
-
-
 
         TabHost.TabSpec spec1 = tabHost.newTabSpec("My Workouts");
         TabHost.TabSpec spec2 = tabHost.newTabSpec("Saved");
@@ -46,6 +42,4 @@ public class WorkoutsFragment extends Fragment {
 
         return rootView;
     }
-
-
 }

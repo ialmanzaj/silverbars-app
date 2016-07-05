@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,10 +34,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.baoyz.actionsheet.ActionSheet;
 import com.facebook.FacebookSdk;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -89,6 +92,7 @@ public class MainScreenActivity extends AppCompatActivity {
         // Crear ActionBarDrawerToggle para la apertura y cierre
 //        drawerToggle.setDrawerIndicatorEnabled(false);
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+        toolbar.setTitle("Home");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,6 +107,26 @@ public class MainScreenActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             selectItem(0);
         }
+
+        Sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new MaterialDialog.Builder(MainScreenActivity.this)
+                        .title(R.string.filtertitle)
+                        .items(R.array.filter_items)
+                        .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                            @Override
+                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                if (which != -1){
+
+                                }
+                                return true;
+                            }
+                        })
+                        .positiveText(R.string.choose)
+                        .show();
+            }
+        });
     }
 
     @Override
@@ -127,14 +151,17 @@ public class MainScreenActivity extends AppCompatActivity {
             case 0:
                 fragment = new MainFragment();
                 Sort.setVisibility(View.VISIBLE);
+                toolbar.setTitle("Home");
                 break;
             case 1:
                 fragment = new WorkoutsFragment();
                 Sort.setVisibility(View.GONE);
+                toolbar.setTitle("My Workouts");
                 break;
             case 2:
                 fragment = new ProfileFragment();
                 Sort.setVisibility(View.GONE);
+                toolbar.setTitle("Profile");
                 break;
         }
 

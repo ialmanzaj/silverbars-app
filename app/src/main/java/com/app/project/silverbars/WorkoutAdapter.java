@@ -47,7 +47,6 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
 //    private static final int[] IMG = {R.mipmap.imagen1, R.mipmap.imagen2, R.mipmap.imagen3, R.mipmap.imagen4, R.mipmap.imagen5};
     private MainFragment outerClass = new MainFragment();
     private JsonWorkout[] workouts = outerClass.Workouts;
-    private String muscleFilter;
 
     private final Activity context;
 
@@ -74,10 +73,9 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         }
     }
 
-    public WorkoutAdapter(Activity context, String muscleFilter) {
+    public WorkoutAdapter(Activity context) {
 //        Log.v("Workouts:", String.valueOf(workouts));
         this.context = context;
-        this.muscleFilter = muscleFilter;
     }
 
     @Override
@@ -97,7 +95,6 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         vh.layout.getLayoutParams().height = height / 3;
         switch (vh.getItemViewType()) {
             case TYPE_WORKOUT:
-                if (Objects.equals(muscleFilter, "ALL")){
                     String[] parts = workouts[position].getWorkout_image().split("workouts");;
                     String Parsedurl = "workouts"+parts[1];
                     Log.v("Image",Parsedurl);
@@ -127,57 +124,12 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                         }
                     });
                     break;
-                }
-                else{
-                    String muscle = workouts[position].getMain_muscle();
-                    if (Objects.equals(muscleFilter, muscle)){
-                        String[] parts = workouts[position].getWorkout_image().split("workouts");;
-                        String Parsedurl = "workouts"+parts[1];
-                        Log.v("Image",Parsedurl);
-//                DownloadImage(Parsedurl,vh);
-                        String[] imagesName = Parsedurl.split("/");
-                        String imgName = imagesName[2];
-                        Log.v("Image Name",imgName);
-                        Bitmap bmp = loadImageFromCache(imgName);
-                        if (bmp != null){
-                            vh.img.setImageBitmap(bmp);
-                        }
-                        else{
-                            DownloadImage(Parsedurl,vh,imgName);
-                        }
-//                vh.img.setImageBitmap(bmp);
-                        vh.text.setText(workouts[position].getWorkout_name());
-                        vh.btn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent i = new Intent(context, WorkoutActivity.class);
-                                i.putExtra("id",workouts[position].getId());
-                                i.putExtra("name",workouts[position].getWorkout_name());
-                                i.putExtra("sets",workouts[position].getSets());
-                                i.putExtra("exercises",workouts[position].getExercises());
-                                i.putExtra("level",workouts[position].getLevel());
-                                context.startActivity(i);
-                            }
-                        });
-                        break;
-                    }
-                }
         }
     }
 
     @Override
     public int getItemCount() {
-        int x = 0, i = 0;
-        for (i = 0; i < workouts.length; i++){
-            String muscle = workouts[i].getMain_muscle();
-            if (Objects.equals(muscle, muscleFilter)){
-                x++;
-            }
-            else
-                x++;
-
-        }
-        return x;
+        return workouts.length;
     }
 
     @Override

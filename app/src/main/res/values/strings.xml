@@ -3,10 +3,11 @@
 
 
     <string name="title">Titulo</string>
+    <string name="filtertitle">Workout filter</string>
     <string name="content">Contenido</string>
     <string name="agree">Aceptar</string>
     <string name="disagree">Cerrar</string>
-    <string name="choose">Escoger</string>
+    <string name="choose">Choose</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_login">Sign in</string>
     <string name="search_hint">Search artist</string>

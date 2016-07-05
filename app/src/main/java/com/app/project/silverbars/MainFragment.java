@@ -27,6 +27,7 @@ import org.lucasr.twowayview.widget.TwoWayView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -162,8 +163,23 @@ public class MainFragment extends Fragment {
             @Override
             public void onResponse(Call<JsonWorkout[]> call, Response<JsonWorkout[]> response) {
                 if (response.isSuccessful()) {
-                    Workouts = response.body();
-                    recyclerView.setAdapter(new WorkoutAdapter(getActivity(),muscle));
+                    Workouts = null;
+//                    recyclerView.setAdapter(null);
+                    if (Objects.equals(muscle,"ALL")){
+                        Workouts = response.body();
+                    }
+                    else{
+                        JsonWorkout[] auxWorkout = response.body();
+                        int x = 0;
+                        for (int i = 0; i < auxWorkout.length; i++){
+                            String muscleData = auxWorkout[i].getMain_muscle();
+                            if (Objects.equals(muscle, muscleData)){
+                                Workouts[x] = auxWorkout[i];
+                                x++;
+                            }
+                        }
+                    }
+                    recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
                     swipeContainer.setRefreshing(false);
                 } else {
                     int statusCode = response.code();
@@ -195,11 +211,6 @@ public class MainFragment extends Fragment {
 
     public void toast(String text){
         Toast.makeText(this.getActivity(),text,Toast.LENGTH_SHORT).show();
-    }
-
-    public void Update(String muscle){
-        recyclerView.setAdapter(null);
-        Task(muscle);
     }
 
 }
