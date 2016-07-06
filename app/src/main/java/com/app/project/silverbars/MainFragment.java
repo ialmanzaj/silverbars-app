@@ -51,7 +51,7 @@ public class MainFragment extends Fragment {
     private List<String> spinnerArray = new ArrayList<String>();
     public String muscleData = "ALL";
     public Toolbar myToolbar;
-
+    private boolean opened;
 
     private View rootView;
 
@@ -61,22 +61,47 @@ public class MainFragment extends Fragment {
         return rootView;
     }
 
+    public boolean isOpened() {
+        return opened;
+    }
+
+    public void setOpened(boolean opened) {
+        this.opened = opened;
+    }
+
+    public String getMuscleData() {
+        return muscleData;
+    }
+
+    public void setMuscleData(String muscleData) {
+        this.muscleData = muscleData;
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 //        Toolbar myToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
 //        if (myToolbar != null)
 //            ((AppCompatActivity)getActivity()).setSupportActionBar(myToolbar);
+
+        muscleData = getArguments().getString("Muscle");
+        opened = getArguments().getBoolean("Opened");
+//        toast(muscleData);
         recyclerView = (TwoWayView) getView().findViewById(R.id.list);
         Intent intent = this.getActivity().getIntent();
         email = intent.getStringExtra("Email");
         name = intent.getStringExtra("Name");
-        if (CheckInternet(getActivity().getApplicationContext())){
-            Task(muscleData);
+
+        if (!opened){
+            opened = true;
+            if (CheckInternet(getActivity().getApplicationContext())){
+                Task(muscleData);
+            }
+            else{
+                toast("Please check your internet conection.");
+            }
         }
-        else{
-            toast("Please check your internet conection.");
-        }
+
 //        final Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner);
 //
 //        spinnerArray.add("ALL");

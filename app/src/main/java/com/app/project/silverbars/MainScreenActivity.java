@@ -67,7 +67,7 @@ public class MainScreenActivity extends AppCompatActivity {
     private List<String> spinnerArray = new ArrayList<String>();
     private String muscle = "ALL";
     public Spinner spinner;
-
+    private boolean Opened = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +133,7 @@ public class MainScreenActivity extends AppCompatActivity {
                         .show();
             }
         });
+
     }
 
     @Override
@@ -150,20 +151,42 @@ public class MainScreenActivity extends AppCompatActivity {
         }
     }
 
+    public String getMuscle() {
+        return muscle;
+    }
+
     private void selectItem(int position) {
+
         // Reemplazar el contenido del layout principal por un fragmento
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
         switch (position){
             case 0:
-                fragmentManager
-                        .beginTransaction()
-                        .replace(R.id.content_frame, new MainFragment(), null)
-                        .addToBackStack(null)
-                        .commit();
-                Sort.setVisibility(View.VISIBLE);
-                toolbar.setTitle("Home");
+                if (currentFragment instanceof MainFragment) {
+                    break;//place your filtering logic here using currentFragment
+                }else{
+//                    toast("Yes");
+                    MainFragment main = new MainFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("Muscle",muscle);
+                    bundle.putBoolean("Opened",Opened);
+                    main.setArguments(bundle);
+                    fragmentManager
+                            .beginTransaction()
+                            .replace(R.id.content_frame, main, null)
+                            .addToBackStack(null)
+                            .commit();
+                    Sort.setVisibility(View.VISIBLE);
+                    toolbar.setTitle("Home");
+                    Opened = main.isOpened();
+                }
+
                 break;
             case 1:
+                if (currentFragment instanceof MainFragment) {
+                    muscle = ((MainFragment) currentFragment).getMuscleData();
+                    //place your filtering logic here using currentFragment
+                }
                 fragmentManager
                         .beginTransaction()
                         .replace(R.id.content_frame, new WorkoutsFragment(), null)
@@ -173,6 +196,10 @@ public class MainScreenActivity extends AppCompatActivity {
                 toolbar.setTitle("My Workouts");
                 break;
             case 2:
+                if (currentFragment instanceof MainFragment) {
+                    muscle = ((MainFragment) currentFragment).getMuscleData();
+                    //place your filtering logic here using currentFragment
+                }
                 fragmentManager
                         .beginTransaction()
                         .replace(R.id.content_frame, new ProfileFragment(), null)
@@ -209,5 +236,12 @@ public class MainScreenActivity extends AppCompatActivity {
         finish();
     }
 
-
+    public void fragmentLoaded(){
+        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
+        if (currentFragment instanceof MainFragment) {
+            muscle = ((MainFragment) currentFragment).getMuscleData();
+            //place your filtering logic here using currentFragment
+        }
+    }
 }
