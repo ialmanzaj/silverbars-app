@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.content.res.Configuration;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -68,6 +69,7 @@ public class MainScreenActivity extends AppCompatActivity {
     private String muscle = "ALL";
     public Spinner spinner;
     private boolean Opened = false;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +82,18 @@ public class MainScreenActivity extends AppCompatActivity {
         drawerList = (ListView) findViewById(R.id.left_drawer);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.bringToFront();
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.bringToFront();
+
         Sort = (ImageView) findViewById(R.id.Sort);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainScreenActivity.this,CreateWorkout.class);
+                startActivityForResult(i,1);
+            }
+        });
 
         ArrayList<DrawerItem> items = new ArrayList<DrawerItem>();
         items.add(new DrawerItem(tagTitles[0],R.mipmap.home));

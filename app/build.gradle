@@ -79,10 +79,14 @@ dependencies {
     //    compile 'com.parse.bolts:bolts-applinks:1.4.0'
     compile 'com.github.inaka:tinytask:v1'
     // This library handles authentication and authorization
-//    compile 'com.spotify.sdk:spotify-auth:1.0.0-beta12@aar'
-//    // This library handles music playback
-//    compile 'com.spotify.sdk:spotify-player:1.0.0-beta12@aar'
+
+    //    compile 'com.spotify.sdk:spotify-auth:1.0.0-beta12@aar'
+
+    //    // This library handles music playback
+
+    //    compile 'com.spotify.sdk:spotify-player:1.0.0-beta12@aar'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.jfeinstein10:SlidingMenu:4254feca3e'
     compile 'com.heinrichreimersoftware:material-drawer:2.3.2'
+//    compile 'com.github.arimorty:floatingsearchview:2.0.1'
 }

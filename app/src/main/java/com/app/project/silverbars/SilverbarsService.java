@@ -18,6 +18,9 @@ public interface SilverbarsService {
     @GET("/workout/?format=json")
     Call<JsonReps[]> getReps();
 
+    @GET("/exercises/?format=json")
+    Call<JsonExercise[]> getAllExercises();
+
     @GET
     Call<ResponseBody> downloadFile(@Url String fileUrl);
 

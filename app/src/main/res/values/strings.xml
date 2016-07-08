@@ -33,10 +33,6 @@
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
 
 
-
-
-
-
     <!-- Strings related to activity_exercise_cards -->
     <string name="exercise_name">Exercise Name</string>
     <string name="reps_value">1</string>
@@ -93,5 +89,11 @@
     <string name="tab_muscles">Muscles</string>
 
     <string name="done_text">DONE</string>
+    <string name="title_activity_navigation">navigation</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 
 </resources>
