@@ -81,7 +81,9 @@ public class exerciseList extends AppCompatActivity {
                 public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
                     if (response.isSuccessful()) {
                         Exercises = response.body();
-
+                        for (int i = 0; i < Exercises.length; i++){
+                            Log.v("Name",Exercises[i].getExercise_name());
+                        }
                         adapter = new AllExercisesAdapter(Exercises,exerciseList.this);
                     } else {
                         int statusCode = response.code();
