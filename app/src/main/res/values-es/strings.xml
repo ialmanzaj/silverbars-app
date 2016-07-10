@@ -47,13 +47,13 @@
 
     <string name="no_song">No hay canción</string>
     <!-- Strings related to item workouts -->
-    <string name="workout_name">NOMBRE DE WORKOUT</string>
+    <string name="workout_name">NOMBRE DE RUTINA</string>
 
     <string name="resume_workout_text">SEGUIR RUTINA</string>
     <string name="pause_workout_text">PAUSAR RUTINA</string>
     <string name="rest_text">Descanso</string>
-    <string name="tab_overview">General</string>
-    <string name="tab_setup">Preparar</string>
+    <string name="tab_overview">RUTINA</string>
+
     <string name="tab_muscles">Musculos</string>
 
 

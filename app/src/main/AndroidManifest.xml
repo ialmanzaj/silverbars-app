@@ -90,7 +90,7 @@
         <activity android:name=".SpotifyMusic" />
         <activity android:name=".SelectionMusicActivity" />
         <activity android:name=".SongsActivity" />
-        <activity android:name=".CreateWorkout" />
+        <activity android:name=".CreateWorkout"  android:windowSoftInputMode="stateHidden" />
         <activity android:name=".exerciseList"></activity>
     </application>
 

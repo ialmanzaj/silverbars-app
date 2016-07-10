@@ -84,8 +84,8 @@
     <string name="resume_workout_text">RESUME WORKOUT</string>
     <string name="pause_workout_text">PAUSE WORKOUT</string>
     <string name="rest_text">Rest</string>
-    <string name="tab_overview">Overview</string>
-    <string name="tab_setup">Setup</string>
+    <string name="tab_overview">Workout</string>
+
     <string name="tab_muscles">Muscles</string>
 
     <string name="done_text">DONE</string>

@@ -116,7 +116,9 @@ public class WorkoutActivity extends AppCompatActivity {
         recycler = (RecyclerView) findViewById(R.id.reciclador);
         if (recycler != null) {
             recycler.setHasFixedSize(true);
+
         }
+
         // Usar un administrador para LinearLayout
         lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
@@ -356,10 +358,9 @@ public class WorkoutActivity extends AppCompatActivity {
         tabHost2.setup();
 
         TabHost.TabSpec overview = tabHost2.newTabSpec(getResources().getString(R.string.tab_overview));
-        TabHost.TabSpec setup = tabHost2.newTabSpec(getResources().getString(R.string.tab_setup));
+
         TabHost.TabSpec muscles = tabHost2.newTabSpec(getResources().getString(R.string.tab_muscles));
-        setup.setIndicator(getResources().getString(R.string.tab_setup));
-        setup.setContent(R.id.setup);
+
 
         overview.setIndicator(getResources().getString(R.string.tab_overview));
         overview.setContent(R.id.overview);
@@ -368,7 +369,7 @@ public class WorkoutActivity extends AppCompatActivity {
         muscles.setContent(R.id.muscles);
 
         tabHost2.addTab(overview);
-        tabHost2.addTab(setup);
+
         tabHost2.addTab(muscles);
 
         SelectMusic = (Button) findViewById(R.id.SelectMusic);
