@@ -25,7 +25,7 @@
     <string name="song_name">NOMBRE DE CANCION</string>
     <string name="artist_name">NOMBRE DE ARTISTA</string>
     <string name="number_five">5</string>
-    <string name="get_ready_text">VE PREPARANDOTE!</string>
+    <string name="get_ready_text">Prepárarate!</string>
 
 
     <!-- Strings related to activity_workouts -->
@@ -54,7 +54,7 @@
     <string name="rest_text">Descanso</string>
     <string name="tab_overview">RUTINA</string>
 
-    <string name="tab_muscles">Musculos</string>
+    <string name="tab_muscles">Músculos</string>
 
 
 

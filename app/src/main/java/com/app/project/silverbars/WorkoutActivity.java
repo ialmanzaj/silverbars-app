@@ -36,6 +36,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -464,12 +465,14 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private void LaunchWorkingOutActivity() {
         int positive,isometric,negative,sets;
-            if (Positive.getText().toString() != "" && Isometric.getText().toString() != "" && Negative.getText().toString() != "" && Sets.getText().toString() != ""){
+            if (!Objects.equals(Positive.getText().toString(), "") && !Objects.equals(Isometric.getText().toString(), "") && !Objects.equals(Negative.getText().toString(), "") && !Objects.equals(Sets.getText().toString(), "")){
                 positive = Integer.parseInt(Positive.getText().toString());
                 isometric = Integer.parseInt(Isometric.getText().toString());
                 negative = Integer.parseInt(Negative.getText().toString());
                 sets = Integer.parseInt(Sets.getText().toString());
+
                 int tempoTotal = positive + isometric + negative;
+
                 Intent intent = new Intent(this, WorkingOutActivity.class);
                 intent.putExtra("ExercisesReps",Exercises_reps);
                 intent.putExtra("tempo", tempoTotal);

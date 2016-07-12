@@ -444,7 +444,7 @@
         </LinearLayout>
 
         <FrameLayout
-            android:visibility="gone"
+
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#c81f1f1f"
@@ -468,7 +468,7 @@
                 android:id="@+id/headerText"
                 android:layout_gravity="top|center"
                 android:layout_marginTop="50dp"
-                android:textSize="65sp"
+                android:textSize="50sp"
                 android:textColor="#ffffff"
                 />
         </FrameLayout>

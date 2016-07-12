@@ -44,8 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/primary_dark_material_dark"
-                android:baselineAligned="false"
-                android:tabStripEnabled="false" />
+                />
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
@@ -54,18 +53,22 @@
                 android:measureAllChildren="false">
 
 
-                <LinearLayout
+                <RelativeLayout
+                   android:gravity="center_horizontal"
+                  android:layout_marginTop="20dp"
                     android:id="@+id/muscles"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content">
                     <ImageView
-                        android:layout_width="wrap_content"
+
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:src="@drawable/cuerpos"
-                        />
+                        android:contentDescription="@null" />
 
-                </LinearLayout>
+
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:id="@+id/overview"
