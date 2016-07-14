@@ -15,6 +15,7 @@
 
 
     <LinearLayout
+        android:id="@+id/itemSelected"
         android:baselineAligned="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -24,7 +25,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
 
-            >
+            android:id="@+id/imageLayout">
 
             <ImageView
                 android:id="@+id/imagen"
@@ -40,7 +41,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            >
+            android:id="@+id/nameLayout">
 
             <TextView
 
@@ -58,33 +59,35 @@
         </LinearLayout>
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
             android:layout_gravity="center_vertical"
 
-            >
+            android:gravity="center"
+            android:id="@+id/repsLayout">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical|center_horizontal"
+                android:gravity="center"
                 android:text="@string/reps_value"
                 android:id="@+id/repetitions"
                 android:textSize="30sp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
 
                 android:textColor="@color/colorPrimaryText"
-                />
+                android:layout_gravity="center" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/reps_text"
                 android:textColor="@color/colorPrimaryText"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:gravity="center_horizontal"
 
-                />
+                android:layout_gravity="center"
+                android:gravity="center" />
         </LinearLayout>
 
 

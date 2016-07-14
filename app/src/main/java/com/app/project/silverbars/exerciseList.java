@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Button;
 
+//import com.davidecirillo.multichoicerecyclerview.MultiChoiceRecyclerView;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -25,9 +27,10 @@ public class exerciseList extends AppCompatActivity {
     Toolbar toolbar;
     RecyclerView recycler;
     Button add_button;
-    private JsonExercise[] Exercises;
+    public static JsonExercise[] Exercises;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
+//    private MultiChoiceRecyclerView mMultiChoiceRecyclerView;
 
 
     @Override
@@ -37,6 +40,7 @@ public class exerciseList extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         recycler = (RecyclerView) findViewById(R.id.recycler);
+//        mMultiChoiceRecyclerView = (MultiChoiceRecyclerView) findViewById(R.id.multiChoiceRecyclerView);
         add_button = (Button) findViewById(R.id.add_button);
         lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
@@ -81,10 +85,11 @@ public class exerciseList extends AppCompatActivity {
                 public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
                     if (response.isSuccessful()) {
                         Exercises = response.body();
-                        for (int i = 0; i < Exercises.length; i++){
-                            Log.v("Name",Exercises[i].getExercise_name());
-                        }
-                        adapter = new AllExercisesAdapter(Exercises,exerciseList.this);
+//                        for (int i = 0; i < Exercises.length; i++){
+//                            Log.v("Name",Exercises[i].getExercise_name());
+//                        }
+                        adapter = new AllExercisesAdapter(exerciseList.this);
+                        recycler.setAdapter(adapter);
                     } else {
                         int statusCode = response.code();
                         // handle request errors yourself

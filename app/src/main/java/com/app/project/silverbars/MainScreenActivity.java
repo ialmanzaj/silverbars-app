@@ -82,18 +82,18 @@ public class MainScreenActivity extends AppCompatActivity {
         drawerList = (ListView) findViewById(R.id.left_drawer);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.bringToFront();
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.bringToFront();
+//        fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.bringToFront();
 
         Sort = (ImageView) findViewById(R.id.Sort);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainScreenActivity.this,CreateWorkout.class);
-                startActivityForResult(i,1);
-            }
-        });
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent i = new Intent(MainScreenActivity.this,CreateWorkout.class);
+//                startActivityForResult(i,1);
+//            }
+//        });
 
         ArrayList<DrawerItem> items = new ArrayList<DrawerItem>();
         items.add(new DrawerItem(tagTitles[0],R.mipmap.home));

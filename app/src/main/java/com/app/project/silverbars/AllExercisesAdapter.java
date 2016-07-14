@@ -3,9 +3,11 @@ package com.app.project.silverbars;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -37,7 +40,7 @@ import retrofit2.Retrofit;
 public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapter.AllExercisesViewHolder> {
 
     private Context mContext;
-    private JsonExercise[] Exercises;
+    public exerciseList exerciseList = new exerciseList();
 
     public static class AllExercisesViewHolder extends RecyclerView.ViewHolder {
 
@@ -46,6 +49,7 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
         public TextView nombre;
         public TextView next;
         public TextView repetitions;
+        public LinearLayout itemSelected;
 
 
         public AllExercisesViewHolder(View v) {
@@ -54,39 +58,59 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
             nombre = (TextView) v.findViewById(R.id.nombre);
 //            next = (TextView) v.findViewById(R.id.next);
             repetitions = (TextView) v.findViewById(R.id.repetitions);
+            itemSelected = (LinearLayout) v.findViewById(R.id.itemSelected);
         }
     }
 
-    public AllExercisesAdapter(JsonExercise[] exercises, Context context) {
-        this.Exercises = exercises;
+    public AllExercisesAdapter(Context context) {
         mContext = context;
 
     }
 
     @Override
-    public AllExercisesAdapter.AllExercisesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.exercises, parent, false);
+    public int getItemCount() {
+        return exerciseList.Exercises.length;
+    }
+
+    @Override
+    public AllExercisesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        View v = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.exercises, viewGroup, false);
         return new AllExercisesViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(final AllExercisesAdapter.AllExercisesViewHolder holder, int position) {
-        final int a = position;
+    public void onBindViewHolder(final AllExercisesViewHolder viewHolder, int i) {
+        final int a = i;
+        final boolean[] selected = {false};
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!selected[0]){
+                    selected[0] = true;
+                    Log.v("Seleccionado",String.valueOf(selected[0]));
+                    viewHolder.itemSelected.setBackgroundColor(Color.parseColor(String.valueOf(R.color.itemSelected)));
+                }else{
+                    selected[0] = false;
+                    viewHolder.itemSelected.setBackgroundColor(Color.parseColor(String.valueOf(R.color.Whitetheme)));
+                }
+            }
+        });
         //Setting values to each recylerView Element
-        String[] imageDir = Exercises[a].getExercise_image().split("exercises");;
-        String Parsedurl = "exercises"+imageDir[1];
+        Log.v("Exercise",exerciseList.Exercises[a].getExercise_name());
+        String[] imageDir = exerciseList.Exercises[a].getExercise_image().split("exercises");
+        ;
+        String Parsedurl = "exercises" + imageDir[1];
         String[] imagesName = Parsedurl.split("/");
         String imgName = imagesName[2];
         Bitmap bmp = loadImageFromCache(imgName);
-        if (bmp != null){
-            holder.imagen.setImageBitmap(bmp);
+        if (bmp != null) {
+            viewHolder.imagen.setImageBitmap(bmp);
+        } else {
+            DownloadImage(Parsedurl, viewHolder, imgName);
         }
-        else{
-            DownloadImage(Parsedurl,holder,imgName);
-        }
-        holder.nombre.setText(Exercises[a].getExercise_name());
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+        viewHolder.nombre.setText(exerciseList.Exercises[a].getExercise_name());
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             private TextView DialogName, Reps;
             private Button plusRep, minusRep;
             private int value = 0;
@@ -104,7 +128,7 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 dialog.dismiss();
                                 //On Dialog "Done" ClickListener
-                                holder.repetitions.setText(String.valueOf(NewRepValue()));
+                                viewHolder.repetitions.setText(String.valueOf(NewRepValue()));
                                 WorkoutActivity workout = new WorkoutActivity();
                                 workout.Exercises_reps[a] = NewRepValue();
                             }
@@ -113,16 +137,16 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
                         .getCustomView();
                 //Dialog elements
                 DialogName = (TextView) v.findViewById(R.id.ExerciseName);
-                DialogName.setText(Exercises[a].getExercise_name());
+                DialogName.setText(exerciseList.Exercises[a].getExercise_name());
                 Reps = (TextView) v.findViewById(R.id.Reps);
-                ActualRepValue = Integer.valueOf(holder.repetitions.getText().toString());
+                ActualRepValue = Integer.valueOf(viewHolder.repetitions.getText().toString());
                 Reps.setText(String.valueOf(ActualRepValue));
                 plusRep = (Button) v.findViewById(R.id.plusRep);
                 plusRep.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //Increasing Reps Button
-                        plusTempo(Reps,plusRep,minusRep);
+                        plusTempo(Reps, plusRep, minusRep);
                     }
                 });
 
@@ -131,14 +155,14 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
                     @Override
                     public void onClick(View view) {
                         //Decreasing Reps Button
-                        minusTempo(Reps,minusRep,plusRep);
+                        minusTempo(Reps, minusRep, plusRep);
                     }
                 });
                 //Check if actual rep value is 1 or 20 on Dialog open
-                if (ActualRepValue == 1){
+                if (ActualRepValue == 1) {
                     minusRep.setEnabled(false);
                     minusRep.setClickable(false);
-                }else if(ActualRepValue == 20){
+                } else if (ActualRepValue == 20) {
                     plusRep.setEnabled(false);
                     plusRep.setClickable(false);
                 }
@@ -146,30 +170,30 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
                 return false;
             }
 
-            public int NewRepValue(){
+            public int NewRepValue() {
                 return Integer.valueOf(Reps.getText().toString());
             }
 
-            public void plusTempo(TextView view, Button button, Button button2){
+            public void plusTempo(TextView view, Button button, Button button2) {
                 value = Integer.parseInt(view.getText().toString());
-                view.setText(String.valueOf(value+1));
+                view.setText(String.valueOf(value + 1));
                 value++;
-                if (view == Reps){
-                    if (value == 20){
+                if (view == Reps) {
+                    if (value == 20) {
                         button.setEnabled(false);
                         button.setClickable(false);
-                    }else{
-                        if(value > 1){
+                    } else {
+                        if (value > 1) {
                             button2.setEnabled(true);
                             button2.setClickable(true);
                         }
                     }
-                }else{
-                    if (value == 10){
+                } else {
+                    if (value == 10) {
                         button.setEnabled(false);
                         button.setClickable(false);
-                    }else{
-                        if(value > 1){
+                    } else {
+                        if (value > 1) {
                             button2.setEnabled(true);
                             button2.setClickable(true);
                         }
@@ -177,26 +201,26 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
                 }
             }
 
-            public void minusTempo(TextView view, Button button, Button button2){
+            public void minusTempo(TextView view, Button button, Button button2) {
                 value = Integer.parseInt(view.getText().toString());
-                view.setText(String.valueOf(value-1));
+                view.setText(String.valueOf(value - 1));
                 value--;
-                if (view == Reps){
-                    if ((value)==1){
+                if (view == Reps) {
+                    if ((value) == 1) {
                         button.setEnabled(false);
                         button.setClickable(false);
-                    }else{
-                        if(value < 20){
+                    } else {
+                        if (value < 20) {
                             button2.setEnabled(true);
                             button2.setClickable(true);
                         }
                     }
-                }else{
-                    if ((value)==1){
+                } else {
+                    if ((value) == 1) {
                         button.setEnabled(false);
                         button.setClickable(false);
-                    }else{
-                        if(value < 10){
+                    } else {
+                        if (value < 10) {
                             button2.setEnabled(true);
                             button2.setClickable(true);
                         }
@@ -204,11 +228,6 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
                 }
             }
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return Exercises.length;
     }
 
     public void DownloadImage(final String url, final AllExercisesViewHolder vh, final String imgName) {
