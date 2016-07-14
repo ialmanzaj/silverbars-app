@@ -76,6 +76,7 @@
                 </FrameLayout>
 
                 <LinearLayout
+
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -94,11 +95,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPersonName"
-                        android:text="Name"
+                        android:text=""
+                        android:hint="Workout name"
                         android:ems="10"
+                        android:maxLength="20"
                         android:id="@+id/editText"
                         android:layout_gravity="center_horizontal"
-                        android:textColor="@color/colorPrimaryText" />
+                        android:textColor="@color/colorPrimaryDark" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

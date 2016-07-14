@@ -36,6 +36,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -116,7 +117,9 @@ public class WorkoutActivity extends AppCompatActivity {
         recycler = (RecyclerView) findViewById(R.id.reciclador);
         if (recycler != null) {
             recycler.setHasFixedSize(true);
+
         }
+
         // Usar un administrador para LinearLayout
         lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
@@ -356,10 +359,9 @@ public class WorkoutActivity extends AppCompatActivity {
         tabHost2.setup();
 
         TabHost.TabSpec overview = tabHost2.newTabSpec(getResources().getString(R.string.tab_overview));
-        TabHost.TabSpec setup = tabHost2.newTabSpec(getResources().getString(R.string.tab_setup));
+
         TabHost.TabSpec muscles = tabHost2.newTabSpec(getResources().getString(R.string.tab_muscles));
-        setup.setIndicator(getResources().getString(R.string.tab_setup));
-        setup.setContent(R.id.setup);
+
 
         overview.setIndicator(getResources().getString(R.string.tab_overview));
         overview.setContent(R.id.overview);
@@ -368,7 +370,7 @@ public class WorkoutActivity extends AppCompatActivity {
         muscles.setContent(R.id.muscles);
 
         tabHost2.addTab(overview);
-        tabHost2.addTab(setup);
+
         tabHost2.addTab(muscles);
 
         SelectMusic = (Button) findViewById(R.id.SelectMusic);
@@ -463,12 +465,14 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private void LaunchWorkingOutActivity() {
         int positive,isometric,negative,sets;
-            if (Positive.getText().toString() != "" && Isometric.getText().toString() != "" && Negative.getText().toString() != "" && Sets.getText().toString() != ""){
+            if (!Objects.equals(Positive.getText().toString(), "") && !Objects.equals(Isometric.getText().toString(), "") && !Objects.equals(Negative.getText().toString(), "") && !Objects.equals(Sets.getText().toString(), "")){
                 positive = Integer.parseInt(Positive.getText().toString());
                 isometric = Integer.parseInt(Isometric.getText().toString());
                 negative = Integer.parseInt(Negative.getText().toString());
                 sets = Integer.parseInt(Sets.getText().toString());
+
                 int tempoTotal = positive + isometric + negative;
+
                 Intent intent = new Intent(this, WorkingOutActivity.class);
                 intent.putExtra("ExercisesReps",Exercises_reps);
                 intent.putExtra("tempo", tempoTotal);
