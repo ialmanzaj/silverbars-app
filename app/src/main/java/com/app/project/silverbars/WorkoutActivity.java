@@ -116,13 +116,14 @@ public class WorkoutActivity extends AppCompatActivity {
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
         if (recycler != null) {
-            recycler.setHasFixedSize(true);
-
+            recycler.setNestedScrollingEnabled(false);
 
         }
 
         // Usar un administrador para LinearLayout
-        lManager = new LinearLayoutManager(this);
+        lManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+
+
         recycler.setLayoutManager(lManager);
         Log.v("Item size test", String.valueOf(items.size()));
 

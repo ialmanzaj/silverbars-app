@@ -4,28 +4,9 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/lib/com.mikhaellopez.circularimageview.CircularImageView"
     tools:context=".ProfileFragment">
+ <!-- TODO: Update blank fragment layout -->
 
-    <!-- TODO: Update blank fragment layout -->
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:background="#eee"
-        android:id="@+id/FrameLayout">
-
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@mipmap/images"
-            app:civ_border_color="#EEEEEE"
-            app:civ_border_width="4dp"
-            app:civ_shadow="true"
-            app:civ_shadow_radius="10"
-            app:civ_shadow_color="#8BC34A"
-            android:id="@+id/view2"
-            android:layout_gravity="left|center_vertical" />
-    </FrameLayout>
 
 
 

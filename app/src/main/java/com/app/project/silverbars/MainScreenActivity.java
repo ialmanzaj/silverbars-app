@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.content.res.Configuration;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +20,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -70,6 +73,8 @@ public class MainScreenActivity extends AppCompatActivity {
     public Spinner spinner;
     private boolean Opened = false;
     private FloatingActionButton fab;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,6 +249,7 @@ public class MainScreenActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
     }
 
+
     @Override
     public void onBackPressed(){
         finish();
@@ -257,4 +263,7 @@ public class MainScreenActivity extends AppCompatActivity {
             //place your filtering logic here using currentFragment
         }
     }
+
+
+
 }
