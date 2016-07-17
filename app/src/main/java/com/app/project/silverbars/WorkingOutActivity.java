@@ -78,10 +78,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_working_out);
 
-
         Intent i = getIntent();
         Bundle b = i.getExtras();
-
 
         Exercises_reps = b.getIntArray("ExercisesReps");
         tempo = b.getInt("tempo");

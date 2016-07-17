@@ -118,6 +118,7 @@ public class WorkoutActivity extends AppCompatActivity {
         if (recycler != null) {
             recycler.setHasFixedSize(true);
 
+
         }
 
         // Usar un administrador para LinearLayout
@@ -196,7 +197,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 minusTempo(Negative,minusNegative,plusNegative);
             }
         });
-        plusSets = (Button) findViewById(R.id.plusSets);
+       /* plusSets = (Button) findViewById(R.id.plusSets);
         plusSets.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -237,7 +238,7 @@ public class WorkoutActivity extends AppCompatActivity {
             public void onClick(View view) {
                 minusTempo(RestSets,minusRestSets,plusRestSets);
             }
-        });
+        });*/
         int setsValue = Integer.parseInt(Sets.getText().toString());
         if (setsValue <= 1){
             plusSets.setEnabled(true);

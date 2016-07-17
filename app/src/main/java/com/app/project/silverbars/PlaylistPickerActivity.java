@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.Toast;
@@ -54,8 +55,9 @@ public class PlaylistPickerActivity extends AppCompatActivity {
         ListPlaylist = (ListView)findViewById(R.id.SavedPlaylist);
         done = (Button)findViewById(R.id.done);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_add_white_36dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        ImageView create_button = (ImageView) findViewById(R.id.create_playlist);
+
+        create_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new MaterialDialog.Builder(PlaylistPickerActivity.this)
