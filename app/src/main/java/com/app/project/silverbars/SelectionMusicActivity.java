@@ -27,13 +27,13 @@ public class SelectionMusicActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selection_music);
 
-//        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(myToolbar);
-//
-//        if (myToolbar != null) {
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//            getSupportActionBar().setTitle("Music selection");
-//        }
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+
+        if (myToolbar != null) {
+
+            getSupportActionBar().setTitle("Music selection");
+        }
 
         RelativeLayout songsButton = (RelativeLayout) findViewById(R.id.songs);
         RelativeLayout playlistButton = (RelativeLayout) findViewById(R.id.playlist);
