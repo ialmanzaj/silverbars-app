@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -27,6 +25,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -36,19 +37,17 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
- * Created by andre_000 on 7/8/2016.
+ * Created by andre_000 on 7/15/2016.
  */
-public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapter.AllExercisesViewHolder> {
+public class OrderExerciseAdapter extends RecyclerView.Adapter<OrderExerciseAdapter.OrderExerciseViewHolder> {
 
     private Context mContext;
-    public static exerciseList exerciseList = new exerciseList();
-    public static boolean[] Selected = new boolean[getCount()];
+    public orderExercises exerciseList = new orderExercises();
+    public JsonExercise[] Exercises = orderExercises.Exercises;
 
-    public boolean[] getSelected() {
-        return Selected;
-    }
+    public ArrayList<Integer> mItems = new ArrayList<>();
 
-    public static class AllExercisesViewHolder extends RecyclerView.ViewHolder {
+    public static class OrderExerciseViewHolder extends RecyclerView.ViewHolder {
 
         // Campos respectivos de un item
         public ImageView imagen;
@@ -57,7 +56,8 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
         public TextView repetitions;
         public FrameLayout itemSelected;
 
-        public AllExercisesViewHolder(View v) {
+
+        public OrderExerciseViewHolder(View v) {
             super(v);
             imagen = (ImageView) v.findViewById(R.id.imagen);
             nombre = (TextView) v.findViewById(R.id.nombre);
@@ -65,22 +65,13 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
             repetitions = (TextView) v.findViewById(R.id.repetitions);
             itemSelected = (FrameLayout) v.findViewById(R.id.Selection);
             itemSelected.bringToFront();
+
         }
     }
 
-    public AllExercisesAdapter(Context context) {
+    public OrderExerciseAdapter(Context context) {
         mContext = context;
-
-    }
-
-    public void Reset(){
-        for(int x = 0; x < getCount(); x++){
-            Selected[x] = false;
-        }
-    }
-
-    public static int getCount() {
-        return exerciseList.Exercises.length;
+        mItems = orderExercises.sItems;
     }
 
     @Override
@@ -89,35 +80,34 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
     }
 
     @Override
-    public AllExercisesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public OrderExerciseViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.exercises, viewGroup, false);
-        Reset();
-        return new AllExercisesViewHolder(v);
+        return new OrderExerciseViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(final AllExercisesViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final OrderExerciseViewHolder viewHolder, int i) {
         final int a = i;
+        final boolean[] selected = {false};
         viewHolder.itemSelected.bringToFront();
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!Selected[a]){
-                    Selected[a] = true;
-                    Log.v("Seleccionado",String.valueOf(Selected[a]));
+                if (!selected[0]){
+                    selected[0] = true;
+                    Log.v("Seleccionado",String.valueOf(selected[0]));
                     viewHolder.itemSelected.setBackgroundResource(R.color.itemSelected);
                 }else{
-                    Selected[a] = false;
-                    Log.v("Seleccionado",String.valueOf(Selected[a]));
+                    selected[0] = false;
+                    Log.v("Seleccionado",String.valueOf(selected[0]));
                     viewHolder.itemSelected.setBackgroundColor(Color.TRANSPARENT);
                 }
             }
         });
         //Setting values to each recylerView Element
-        Log.v("Exercise",exerciseList.Exercises[a].getExercise_name());
-        String[] imageDir = exerciseList.Exercises[a].getExercise_image().split("exercises");
-        ;
+        Log.v("Exercise",Exercises[a].getExercise_name());
+        String[] imageDir = Exercises[a].getExercise_image().split("exercises");
         String Parsedurl = "exercises" + imageDir[1];
         String[] imagesName = Parsedurl.split("/");
         String imgName = imagesName[2];
@@ -127,7 +117,8 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
         } else {
             DownloadImage(Parsedurl, viewHolder, imgName);
         }
-        viewHolder.nombre.setText(exerciseList.Exercises[a].getExercise_name());
+        viewHolder.nombre.setText(Exercises[a].getExercise_name());
+//        viewHolder.nombre.setText(mItems.get(a).toString());
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             private TextView DialogName, Reps;
             private Button plusRep, minusRep;
@@ -248,7 +239,7 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
         });
     }
 
-    public void DownloadImage(final String url, final AllExercisesViewHolder vh, final String imgName) {
+    public void DownloadImage(final String url, final OrderExerciseViewHolder vh, final String imgName) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
         final SilverbarsService downloadService = retrofit.create(SilverbarsService.class);

@@ -6,17 +6,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
-//import com.davidecirillo.multichoicerecyclerview.MultiChoiceRecyclerView;
-
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -28,7 +23,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class exerciseList extends AppCompatActivity {
+public class orderExercises extends AppCompatActivity {
 
     Toolbar toolbar;
     RecyclerView recycler;
@@ -36,35 +31,18 @@ public class exerciseList extends AppCompatActivity {
     public static JsonExercise[] Exercises;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
-//    private MultiChoiceRecyclerView mMultiChoiceRecyclerView;
-    private ArrayList<Integer> sItems = new ArrayList<>();
+    public static ArrayList<Integer> sItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_exercise_list);
-
+        Intent intent = getIntent();
+        sItems = intent.getIntegerArrayListExtra("Items");
+        setContentView(R.layout.activity_order_exercises);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         recycler = (RecyclerView) findViewById(R.id.recycler);
 //        mMultiChoiceRecyclerView = (MultiChoiceRecyclerView) findViewById(R.id.multiChoiceRecyclerView);
         add_button = (Button) findViewById(R.id.add_button);
-        add_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (int i = 0; i < Exercises.length; i++){
-                    if (AllExercisesAdapter.Selected[i]){
-                        sItems.add(Exercises[i].getId());
-                    }
-                }
-                Intent intent = new Intent(exerciseList.this,orderExercises.class);
-                intent.putIntegerArrayListExtra("Items",sItems);
-                startActivity(intent);
-                for (int i = 0; i < Exercises.length; i++){
-                    Log.v("Elemento"+String.valueOf(i),String.valueOf(AllExercisesAdapter.Selected[i]));
-                }
-
-            }
-        });
         lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
         Exercises();
@@ -76,17 +54,6 @@ public class exerciseList extends AppCompatActivity {
         }
 
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == 1 && resultCode == RESULT_OK && data != null){
-//
-//        }
-//        else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
-//
-//        }
-//    }
 
     public void Exercises(){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -113,29 +80,51 @@ public class exerciseList extends AppCompatActivity {
                 .client(client)
                 .build();
         SilverbarsService service = retrofit.create(SilverbarsService.class);
-            Call<JsonExercise[]> call = service.getAllExercises();
-            call.enqueue(new Callback<JsonExercise[]>() {
-                @Override
-                public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
-                    if (response.isSuccessful()) {
-                        Exercises = response.body();
+        Call<JsonExercise[]> call = service.getAllExercises();
+        call.enqueue(new Callback<JsonExercise[]>() {
+            @Override
+            public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
+                if (response.isSuccessful()) {
+                    JsonExercise[] ParsedExercises;
+                    ParsedExercises = response.body();
+                    Exercises = new JsonExercise[sItems.size()];
+
+                    int x = 0;
+                    for (int i = 0; i < ParsedExercises.length; i++){
+//                        Log.v("Current Object position",String.valueOf(ParsedExercises.length)+"/"+String.valueOf(i));
+//                        Log.v("Compare Items Id",String.valueOf(sItems.get(x))+"/"+String.valueOf(ParsedExercises[i].getId()));
+                        if (x < sItems.size() && sItems.get(x) == ParsedExercises[i].getId()){
+//                            Log.v("Items and Object",String.valueOf(sItems.size())+"/"+String.valueOf(x)+" - "+String.valueOf(ParsedExercises.length)+"/"+String.valueOf(i));
+                            Exercises[x] = ParsedExercises[i];
+                            x++;
+                        }
+                    }
+                    Log.v("Size",String.valueOf(Exercises.length));
 //                        for (int i = 0; i < Exercises.length; i++){
 //                            Log.v("Name",Exercises[i].getExercise_name());
 //                        }
-                        adapter = new AllExercisesAdapter(exerciseList.this);
-                        recycler.setAdapter(adapter);
-                    } else {
-                        int statusCode = response.code();
-                        // handle request errors yourself
-                        ResponseBody errorBody = response.errorBody();
-                        Log.v("Error",errorBody.toString());
-                    }
+                    adapter = new OrderExerciseAdapter(orderExercises.this);
+                    recycler.setAdapter(adapter);
+                } else {
+                    int statusCode = response.code();
+                    // handle request errors yourself
+                    ResponseBody errorBody = response.errorBody();
+                    Log.v("Error",errorBody.toString());
                 }
+            }
 
-                @Override
-                public void onFailure(Call<JsonExercise[]> call, Throwable t) {
-                    Log.v("Exception",t.toString());
-                }
-            });
+            @Override
+            public void onFailure(Call<JsonExercise[]> call, Throwable t) {
+                Log.v("Exception",t.toString());
+            }
+        });
     }
+//
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        Intent returnIntent = new Intent();
+//        setResult(RESULT_OK, returnIntent);
+//        finish();
+//    }
 }
