@@ -92,5 +92,6 @@ dependencies {
     compile 'com.github.jfeinstein10:SlidingMenu:4254feca3e'
     compile 'com.heinrichreimersoftware:material-drawer:2.3.2'
     compile 'com.yqritc:recyclerview-flexibledivider:1.2.6'
+    compile 'com.android.support:design:23.3.0'
 
 }
