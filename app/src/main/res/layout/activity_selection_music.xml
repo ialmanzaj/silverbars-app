@@ -14,7 +14,9 @@
         android:layout_height="wrap_content"
         android:minHeight="?android:attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:background="@color/primary_dark_material_dark" />
+        android:background="@color/primary_dark_material_dark" >
+
+    </android.support.v7.widget.Toolbar>
 
 <RelativeLayout
     android:gravity="center_vertical"
