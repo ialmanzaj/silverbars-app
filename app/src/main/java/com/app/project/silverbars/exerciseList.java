@@ -12,11 +12,8 @@ import android.widget.Button;
 
 //import com.davidecirillo.multichoicerecyclerview.MultiChoiceRecyclerView;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -47,10 +44,11 @@ public class exerciseList extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         recycler = (RecyclerView) findViewById(R.id.recycler);
 //        mMultiChoiceRecyclerView = (MultiChoiceRecyclerView) findViewById(R.id.multiChoiceRecyclerView);
-        add_button = (Button) findViewById(R.id.add_button);
+        add_button = (Button) findViewById(R.id.done_button);
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sItems.clear();
                 for (int i = 0; i < Exercises.length; i++){
                     if (AllExercisesAdapter.Selected[i]){
                         sItems.add(Exercises[i].getId());
@@ -77,16 +75,16 @@ public class exerciseList extends AppCompatActivity {
 
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == 1 && resultCode == RESULT_OK && data != null){
-//
-//        }
-//        else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
-//
-//        }
-//    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null){
+            sItems.clear();
+        }
+        else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
+
+        }
+    }
 
     public void Exercises(){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
