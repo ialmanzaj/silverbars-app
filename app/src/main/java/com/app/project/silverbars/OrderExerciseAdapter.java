@@ -47,7 +47,8 @@ public class OrderExerciseAdapter extends RecyclerView.Adapter<OrderExerciseAdap
     public boolean[] Selected = new boolean[getItemCount()];
     public ArrayList<Integer> mItems = new ArrayList<>();
     public ArrayList<String> orderElements = new ArrayList<>();
-    public int count = 0;
+    public int count = 0, prevValue = 0, newValue = 0, prevPosition = 0, newPosition = 0;
+
 
     public static class OrderExerciseViewHolder extends RecyclerView.ViewHolder {
 

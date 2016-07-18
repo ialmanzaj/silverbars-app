@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -52,6 +53,7 @@ public class MainFragment extends Fragment {
     public String muscleData = "ALL";
     public Toolbar myToolbar;
     private boolean opened;
+    private RelativeLayout noConnection;
 
     private View rootView;
 
@@ -88,6 +90,7 @@ public class MainFragment extends Fragment {
         opened = getArguments().getBoolean("Opened");
 //        toast(muscleData);
         recyclerView = (TwoWayView) getView().findViewById(R.id.list);
+        noConnection = (RelativeLayout) getView().findViewById(R.id.noConnection);
         Intent intent = this.getActivity().getIntent();
         email = intent.getStringExtra("Email");
         name = intent.getStringExtra("Name");
@@ -96,9 +99,25 @@ public class MainFragment extends Fragment {
             opened = true;
             if (CheckInternet(getActivity().getApplicationContext())){
                 Task(muscleData);
+                recyclerView.setVisibility(View.VISIBLE);
+                noConnection.setVisibility(View.GONE);
             }
             else{
-                toast("Please check your internet conection.");
+                recyclerView.setVisibility(View.GONE);
+                noConnection.setVisibility(View.VISIBLE);
+
+            }
+        }
+        else{
+            if (CheckInternet(getActivity().getApplicationContext())){
+                Task(muscleData);
+                recyclerView.setVisibility(View.VISIBLE);
+                noConnection.setVisibility(View.GONE);
+            }
+            else{
+                recyclerView.setVisibility(View.GONE);
+                noConnection.setVisibility(View.VISIBLE);
+
             }
         }
 
@@ -141,7 +160,6 @@ public class MainFragment extends Fragment {
                     Task(muscleData);
                 }
                 else{
-                    toast("Please check your internet conection.");
                     swipeContainer.setRefreshing(false);
                 }
             }

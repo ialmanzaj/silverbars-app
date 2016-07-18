@@ -2,35 +2,58 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-
-
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent">
 
-        >
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical" android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:id="@+id/noConnection"
+                android:visibility="gone"
+                android:background="#454444">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Estás sin conexión"
+                    android:id="@+id/text_no_internet"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="20sp"/>
 
-        <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/list"
+                <TextView
+                    android:textSize="16sp"
+                    android:textColor="@color/gray_active_icon"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/text_no_internet"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Por Favor, Conectate a Internet y prueba de nuevo"/>
+            </RelativeLayout>
+            <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/list"
 
-            android:paddingTop="5dp"
+                android:paddingTop="5dp"
 
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:twowayview_layoutManager="GridLayoutManager"
-            app:twowayview_numColumns="2"
-            android:orientation="vertical" />
-
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:twowayview_layoutManager="GridLayoutManager"
+                app:twowayview_numColumns="2"
+                android:orientation="vertical" />
+        </FrameLayout>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
