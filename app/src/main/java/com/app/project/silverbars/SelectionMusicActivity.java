@@ -30,9 +30,18 @@ public class SelectionMusicActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
+
         if (myToolbar != null) {
 
             getSupportActionBar().setTitle("Music selection");
+            myToolbar.setNavigationIcon(R.drawable.ic_clear_white_24dp);
+            myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+
         }
 
         RelativeLayout songsButton = (RelativeLayout) findViewById(R.id.songs);
