@@ -62,64 +62,40 @@
 
                     />
             </LinearLayout>
-
             <FrameLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.63">
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.58"
-                    android:orientation="vertical"
-                    android:layout_gravity="center"
+                android:gravity="center"
+                android:id="@+id/repsLayout">
 
-                    android:gravity="center"
-                    android:id="@+id/repsLayout">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/reps_value"
-                        android:id="@+id/repetitions"
-                        android:textSize="30sp"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-
-                        android:textColor="@color/colorPrimaryText"
-                        android:layout_gravity="center" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/reps_text"
-                        android:textColor="@color/colorPrimaryText"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-
-                        android:layout_gravity="center"
-                        android:gravity="center" />
-                </LinearLayout>
-
-                <TextView
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/order"
-                    android:layout_gravity="right|top"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textStyle="bold"
-                    android:textSize="30dp" />
+                    android:id="@+id/unchecked"
+                    android:src="@drawable/unchecked"
+                    android:layout_gravity="center"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/checked"
+                    android:layout_gravity="center"
+                    android:src="@drawable/checked"
+                    android:visibility="gone" />
             </FrameLayout>
 
             <!--<ImageView-->
-                <!--android:id="@+id/handle"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_weight="1"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center_vertical|right"-->
-                <!--android:scaleType="center"-->
-                <!--android:src="@drawable/ic_reorder_grey" />-->
+            <!--android:id="@+id/handle"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_vertical|right"-->
+            <!--android:scaleType="center"-->
+            <!--android:src="@drawable/ic_reorder_grey" />-->
 
         </LinearLayout>
 

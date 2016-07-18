@@ -31,7 +31,18 @@
         android:layout_height="wrap_content"
         android:id="@+id/recycler"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/add_button"
+        android:layout_above="@+id/done_button"
         android:layout_below="@+id/appbarlayout" />
+
+    <Button
+        android:id="@+id/done_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DONE"
+        android:textSize="18sp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryDark"
+
+        />
 
 </RelativeLayout>

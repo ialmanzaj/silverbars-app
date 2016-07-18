@@ -44,8 +44,10 @@ public class OrderExerciseAdapter extends RecyclerView.Adapter<OrderExerciseAdap
     private Context mContext;
     public orderExercises exerciseList = new orderExercises();
     public JsonExercise[] Exercises = orderExercises.Exercises;
-
+    public boolean[] Selected = new boolean[getItemCount()];
     public ArrayList<Integer> mItems = new ArrayList<>();
+    public ArrayList<String> orderElements = new ArrayList<>();
+    public int count = 0;
 
     public static class OrderExerciseViewHolder extends RecyclerView.ViewHolder {
 
@@ -54,7 +56,7 @@ public class OrderExerciseAdapter extends RecyclerView.Adapter<OrderExerciseAdap
         public TextView nombre;
         public TextView next;
         public TextView repetitions;
-        public FrameLayout itemSelected;
+        public TextView order;
 
 
         public OrderExerciseViewHolder(View v) {
@@ -63,8 +65,7 @@ public class OrderExerciseAdapter extends RecyclerView.Adapter<OrderExerciseAdap
             nombre = (TextView) v.findViewById(R.id.nombre);
 //            next = (TextView) v.findViewById(R.id.next);
             repetitions = (TextView) v.findViewById(R.id.repetitions);
-            itemSelected = (FrameLayout) v.findViewById(R.id.Selection);
-            itemSelected.bringToFront();
+            order = (TextView) v.findViewById(R.id.order);
 
         }
     }
@@ -72,6 +73,12 @@ public class OrderExerciseAdapter extends RecyclerView.Adapter<OrderExerciseAdap
     public OrderExerciseAdapter(Context context) {
         mContext = context;
         mItems = orderExercises.sItems;
+    }
+
+    public void Reset(){
+        for(int x = 0; x < getItemCount(); x++){
+            Selected[x] = false;
+        }
     }
 
     @Override
@@ -83,25 +90,24 @@ public class OrderExerciseAdapter extends RecyclerView.Adapter<OrderExerciseAdap
     public OrderExerciseViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.exercises, viewGroup, false);
+        Reset();
         return new OrderExerciseViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(final OrderExerciseViewHolder viewHolder, int i) {
         final int a = i;
-        final boolean[] selected = {false};
-        viewHolder.itemSelected.bringToFront();
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!selected[0]){
-                    selected[0] = true;
-                    Log.v("Seleccionado",String.valueOf(selected[0]));
-                    viewHolder.itemSelected.setBackgroundResource(R.color.itemSelected);
+                if (!Selected[a]){
+                    Selected[a] = true;
+                    Log.v("Seleccionado",String.valueOf(Selected[a]));
+                    count++;
+                    viewHolder.order.setText(String.valueOf(count));
                 }else{
-                    selected[0] = false;
-                    Log.v("Seleccionado",String.valueOf(selected[0]));
-                    viewHolder.itemSelected.setBackgroundColor(Color.TRANSPARENT);
+                    Selected[a] = false;
+                    Log.v("Seleccionado",String.valueOf(Selected[a]));
                 }
             }
         });
@@ -118,7 +124,6 @@ public class OrderExerciseAdapter extends RecyclerView.Adapter<OrderExerciseAdap
             DownloadImage(Parsedurl, viewHolder, imgName);
         }
         viewHolder.nombre.setText(Exercises[a].getExercise_name());
-//        viewHolder.nombre.setText(mItems.get(a).toString());
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             private TextView DialogName, Reps;
             private Button plusRep, minusRep;
@@ -138,8 +143,8 @@ public class OrderExerciseAdapter extends RecyclerView.Adapter<OrderExerciseAdap
                                 dialog.dismiss();
                                 //On Dialog "Done" ClickListener
                                 viewHolder.repetitions.setText(String.valueOf(NewRepValue()));
-                                WorkoutActivity workout = new WorkoutActivity();
-                                workout.Exercises_reps[a] = NewRepValue();
+//                                WorkoutActivity workout = new WorkoutActivity();
+//                                workout.Exercises_reps[a] = NewRepValue();
                             }
                         })
                         .show()

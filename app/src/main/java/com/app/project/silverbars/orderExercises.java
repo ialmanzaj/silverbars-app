@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class orderExercises extends AppCompatActivity {
 
     Toolbar toolbar;
     RecyclerView recycler;
-    Button add_button;
+    Button done_button;
     public static JsonExercise[] Exercises;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
@@ -42,7 +42,13 @@ public class orderExercises extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         recycler = (RecyclerView) findViewById(R.id.recycler);
 //        mMultiChoiceRecyclerView = (MultiChoiceRecyclerView) findViewById(R.id.multiChoiceRecyclerView);
-        add_button = (Button) findViewById(R.id.add_button);
+        done_button = (Button) findViewById(R.id.done_button);
+        done_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
         Exercises();
@@ -91,18 +97,12 @@ public class orderExercises extends AppCompatActivity {
 
                     int x = 0;
                     for (int i = 0; i < ParsedExercises.length; i++){
-//                        Log.v("Current Object position",String.valueOf(ParsedExercises.length)+"/"+String.valueOf(i));
-//                        Log.v("Compare Items Id",String.valueOf(sItems.get(x))+"/"+String.valueOf(ParsedExercises[i].getId()));
                         if (x < sItems.size() && sItems.get(x) == ParsedExercises[i].getId()){
-//                            Log.v("Items and Object",String.valueOf(sItems.size())+"/"+String.valueOf(x)+" - "+String.valueOf(ParsedExercises.length)+"/"+String.valueOf(i));
                             Exercises[x] = ParsedExercises[i];
                             x++;
                         }
                     }
                     Log.v("Size",String.valueOf(Exercises.length));
-//                        for (int i = 0; i < Exercises.length; i++){
-//                            Log.v("Name",Exercises[i].getExercise_name());
-//                        }
                     adapter = new OrderExerciseAdapter(orderExercises.this);
                     recycler.setAdapter(adapter);
                 } else {
@@ -120,11 +120,14 @@ public class orderExercises extends AppCompatActivity {
         });
     }
 //
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        Intent returnIntent = new Intent();
-//        setResult(RESULT_OK, returnIntent);
-//        finish();
-//    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent returnIntent = new Intent();
+        setResult(RESULT_CANCELED, returnIntent);
+        sItems.clear();
+        finish();
+    }
+
+
 }

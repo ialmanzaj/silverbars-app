@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/recycler"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/add_button"
+        android:layout_above="@+id/done_button"
         android:layout_below="@+id/appbarlayout" />
 
     <!--<com.davidecirillo.multichoicesample.MultiChoiceRecyclerView-->
@@ -52,7 +52,7 @@
         <!--android:layout_below="@+id/appbarlayout"/>-->
 
     <Button
-        android:id="@+id/add_button"
+        android:id="@+id/done_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="ADD EXERCISES"
