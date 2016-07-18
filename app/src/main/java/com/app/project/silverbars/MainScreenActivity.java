@@ -66,7 +66,7 @@ public class MainScreenActivity extends AppCompatActivity {
     public ImageView Sort;
     private CharSequence activityTitle;
     private CharSequence itemTitle;
-    private String[] tagTitles;
+    private String[] tagTitles =  new String[3];;
     private Toolbar toolbar;
     private List<String> spinnerArray = new ArrayList<String>();
     private String muscle = "ALL";
@@ -82,13 +82,16 @@ public class MainScreenActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main_screen);
 
-        tagTitles = getResources().getStringArray(R.array.navigation_array);
+        tagTitles = this.getResources().getStringArray(R.array.navigation_array);
+        Log.i("MAIN SCREEN",tagTitles[0]);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView) findViewById(R.id.left_drawer);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.bringToFront();
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.bringToFront();
+        if (fab != null) {
+            fab.bringToFront();
+        }
 
         Sort = (ImageView) findViewById(R.id.Sort);
 
@@ -111,7 +114,7 @@ public class MainScreenActivity extends AppCompatActivity {
         // Crear ActionBarDrawerToggle para la apertura y cierre
 //        drawerToggle.setDrawerIndicatorEnabled(false);
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
-        toolbar.setTitle("Home");
+        toolbar.setTitle(tagTitles[0]);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -195,7 +198,7 @@ public class MainScreenActivity extends AppCompatActivity {
                             .addToBackStack(null)
                             .commit();
                     Sort.setVisibility(View.VISIBLE);
-                    toolbar.setTitle("Home");
+
                     Opened = main.isOpened();
                 }
 
@@ -211,7 +214,7 @@ public class MainScreenActivity extends AppCompatActivity {
                         .addToBackStack(null)
                         .commit();
                 Sort.setVisibility(View.GONE);
-                toolbar.setTitle("My Workouts");
+
                 break;
             case 2:
                 if (currentFragment instanceof MainFragment) {
@@ -224,13 +227,14 @@ public class MainScreenActivity extends AppCompatActivity {
                         .addToBackStack(null)
                         .commit();
                 Sort.setVisibility(View.GONE);
-                toolbar.setTitle("Profile");
+
                 break;
         }
 
         // Se actualiza el item seleccionado y el título, después de cerrar el drawer
         drawerList.setItemChecked(position, true);
-        setTitle(tagTitles[position]);
+        toolbar.setTitle(tagTitles[position]);
+
         drawerLayout.closeDrawer(drawerList);
     }
 

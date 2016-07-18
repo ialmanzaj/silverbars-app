@@ -97,4 +97,37 @@
 
     <string name="action_settings">Settings</string>
     <string name="set_edit">Total of Sets</string>
+
+
+    <string name="tab_saved">Saved Workouts</string>
+    <string name="tab_my_workouts">My Workouts</string>
+
+    <string name="tab_workouts_home">Workouts</string>
+    <string name="tab_myworkouts_home">My Workouts</string>
+    <string name="tab_profile">Profile</string>
+
+    <string-array name="navigation_array">
+        <item>Workouts</item>
+        <item>My Workouts</item>
+        <item>Profile</item>
+    </string-array>
+
+    <string-array name="filter_items">
+        <item>ALL</item>
+        <item>ABS/CORE</item>
+        <item>UPPER BODY</item>
+        <item>LOWER BODY</item>
+    </string-array>
+
+    <string-array name="preference_values">
+        <item>Twitter</item>
+        <item>Google</item>
+        <item>Instagram</item>
+        <item>Facebook</item>
+    </string-array>
+
+    <string name="error_title">No internet conexion</string>
+    <string name="error_message">Please, Connect to Internet and try again</string>
+
+
 </resources>

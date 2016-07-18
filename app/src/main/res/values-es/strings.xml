@@ -8,6 +8,9 @@
     <string name="reps_value">1</string>
     <string name="reps_text">Reps</string>
 
+
+    <string name="filtertitle">Filtrar Rutinas</string>
+    <string name="choose">Escoger</string>
     <!-- Strings related to activity_myworkouts -->
     <string name="blank_text_my_workouts">NO HAY WORKOUT AÚN</string>
     <string name="blank_text_my_workouts_saved">NO HAY WORKOUTS GUARDADOS AÚN</string>
@@ -60,4 +63,34 @@
 
     <string name="set_edit">Total de Sets</string>
 
+    <string name="tab_saved">Rutinas Guardadas</string>
+    <string name="tab_my_workouts">Mis Rutinas</string>
+
+    <string name="tab_workouts_home">Rutinas</string>
+    <string name="tab_myworkouts_home">Mis Rutinas</string>
+    <string name="tab_profile">Perfil</string>
+
+    <string-array name="navigation_array">
+        <item>Rutinas</item>
+        <item>Mis Rutinas</item>
+        <item>Perfil</item>
+    </string-array>
+
+    <string-array name="filter_items">
+        <item>Todo</item>
+        <item>ABS</item>
+        <item>Tren Superior</item>
+        <item>Tren Inferior</item>
+    </string-array>
+
+    <string-array name="preference_values">
+        <item>Twitter</item>
+        <item>Google</item>
+        <item>Instagram</item>
+        <item>Facebook</item>
+    </string-array>
+
+
+    <string name="error_title">"Estás sin conexión</string>
+    <string name="error_message">Por Favor, Conectate a Internet y prueba de nuevo</string>
 </resources>

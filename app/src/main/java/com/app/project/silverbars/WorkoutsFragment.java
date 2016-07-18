@@ -28,13 +28,13 @@ public class WorkoutsFragment extends Fragment {
         tabHost = (TabHost) rootView.findViewById(R.id.tabHost);
         tabHost.setup();
 
-        TabHost.TabSpec spec1 = tabHost.newTabSpec("My Workouts");
-        TabHost.TabSpec spec2 = tabHost.newTabSpec("Saved");
+        TabHost.TabSpec spec1 = tabHost.newTabSpec(getResources().getString(R.string.tab_my_workouts));
+        TabHost.TabSpec spec2 = tabHost.newTabSpec(getResources().getString(R.string.tab_saved));
 
-        spec1.setIndicator("My Workouts");
+        spec1.setIndicator(getResources().getString(R.string.tab_my_workouts));
         spec1.setContent(R.id.tab1);
 
-        spec2.setIndicator("Saved");
+        spec2.setIndicator(getResources().getString(R.string.tab_saved));
         spec2.setContent(R.id.tab2);
 
         tabHost.addTab(spec1);
