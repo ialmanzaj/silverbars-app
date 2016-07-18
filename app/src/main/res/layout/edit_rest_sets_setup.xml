@@ -31,7 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-
+                android:id="@+id/RestSets_dialog"
                 android:textColor="@color/white"
                 android:textSize="45sp"
                 android:text="1" />

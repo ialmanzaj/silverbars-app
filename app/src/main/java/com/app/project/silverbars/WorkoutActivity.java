@@ -2,7 +2,6 @@ package com.app.project.silverbars;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -23,12 +22,9 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.Theme;
 /*import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;*/
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -67,7 +62,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private Button plusRestSets;
     private Button minusRestSets;
     private Button SelectMusic;
-    private TextView Positive, Negative, Isometric, Reps, Workout_name, Sets, Rest, RestSets;
+    private TextView Positive, Negative, Isometric, Reps, Workout_name, Sets, Rest, RestSets,RestSets_dialog,Sets_dialog;
     private String[] position;
     private List<String> spinnerArray = new ArrayList<String>();
     private int value = 0;
@@ -160,7 +155,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 View v = new MaterialDialog.Builder(view.getContext())
                         .title(R.string.set_edit)
                         .customView(R.layout.edit_set_setup, true)
-                        .positiveText("Done").onPositive(new MaterialDialog.SingleButtonCallback() {
+                        .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 dialog.dismiss();
@@ -170,12 +165,74 @@ public class WorkoutActivity extends AppCompatActivity {
                         })
                         .show()
                         .getCustomView();
+                Sets_dialog = (TextView) v.findViewById(R.id.Sets_dialog);
+                Sets_dialog.setText(String.valueOf(Sets.getText()));
+
+                plusSets = (Button) v.findViewById(R.id.plusSets);
+                plusSets.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        plusTempo(Sets,plusSets,minusSets);
+                        plusTempo(Sets_dialog,plusSets,minusSets);
+
+                    }
+                });
+                minusSets = (Button) v.findViewById(R.id.minusSets);
+                minusSets.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        minusTempo(Sets,minusSets,plusSets);
+                        minusTempo(Sets_dialog,minusSets,plusSets);
+                    }
+                });
             }
         });
 
-        Positive = (TextView) findViewById(R.id.Positive);
-        Isometric = (TextView) findViewById(R.id.Isometric);
-        Negative = (TextView) findViewById(R.id.Negative);
+
+        RestSets = (TextView) findViewById(R.id.RestSets);
+
+        RestSets.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View v = new MaterialDialog.Builder(view.getContext())
+                        .title(R.string.set_edit)
+                        .customView(R.layout.edit_rest_sets_setup, true)
+                        .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                                //On Dialog "Done" ClickListener
+
+                            }
+                        })
+                        .show()
+                        .getCustomView();
+
+                RestSets_dialog = (TextView) v.findViewById(R.id.RestSets_dialog);
+                RestSets_dialog.setText(String.valueOf(RestSets.getText()));
+
+               /* plusRestSets = (Button) v.findViewById(R.id.plusRestSets);
+                plusRestSets.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                       // plusTempo(RestSets,plusRestSets,minusRestSets);
+
+
+
+                    }
+                });
+                minusRestSets = (Button) v.findViewById(R.id.minusRestSets);
+                minusRestSets.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //minusTempo(RestSets,minusRestSets,plusRestSets);
+
+                    }
+                });*/
+
+            }
+        });
+
 
         Rest = (TextView) findViewById(R.id.Rest);
         Rest.setOnClickListener(new View.OnClickListener() {
@@ -183,8 +240,8 @@ public class WorkoutActivity extends AppCompatActivity {
             public void onClick(View view) {
                 View v = new MaterialDialog.Builder(view.getContext())
                         .title(R.string.set_edit)
-                        .customView(R.layout.edit_set_setup, true)
-                        .positiveText("Done").onPositive(new MaterialDialog.SingleButtonCallback() {
+                        .customView(R.layout.edit_rest_exercise_setup, true)
+                        .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 dialog.dismiss();
@@ -194,30 +251,28 @@ public class WorkoutActivity extends AppCompatActivity {
                         })
                         .show()
                         .getCustomView();
+               /* plusRest = (Button) v.findViewById(R.id.plusRest);
+                plusRest.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        plusTempo(Rest,plusRest,minusRest);
+                    }
+                });
+                minusRest = (Button) v.findViewById(R.id.minusRest);
+                minusRest.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        minusTempo(Rest,minusRest,plusRest);
+                    }
+                });*/
 
             }
         });
 
-        RestSets = (TextView) findViewById(R.id.RestSets);
-        RestSets.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                View v = new MaterialDialog.Builder(view.getContext())
-                        .title(R.string.set_edit)
-                        .customView(R.layout.edit_rest_setup, true)
-                        .positiveText("Done").onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                dialog.dismiss();
-                                //On Dialog "Done" ClickListener
 
-                            }
-                        })
-                        .show()
-                        .getCustomView();
-
-            }
-        });
+        Positive = (TextView) findViewById(R.id.Positive);
+        Isometric = (TextView) findViewById(R.id.Isometric);
+        Negative = (TextView) findViewById(R.id.Negative);
 
         plusPositive = (Button) findViewById(R.id.plusPositive);
         plusPositive.setOnClickListener(new View.OnClickListener() {
@@ -262,49 +317,13 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
-        /*plusSets = (Button) findViewById(R.id.plusSets);
-        plusSets.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                plusTempo(Sets,plusSets,minusSets);
-            }
-        });
-        minusSets = (Button) findViewById(R.id.minusSets);
-        minusSets.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                minusTempo(Sets,minusSets,plusSets);
-            }
-        });
 
-        plusRest = (Button) findViewById(R.id.plusRest);
-        plusRest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                plusTempo(Rest,plusRest,minusRest);
-            }
-        });
-        minusRest = (Button) findViewById(R.id.minusRest);
-        minusRest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                minusTempo(Rest,minusRest,plusRest);
-            }
-        });
-        plusRestSets = (Button) findViewById(R.id.plusRestSets);
-        plusRestSets.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                plusTempo(RestSets,plusRestSets,minusRestSets);
-            }
-        });
-        minusRestSets = (Button) findViewById(R.id.minusRestSets);
-        minusRestSets.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                minusTempo(RestSets,minusRestSets,plusRestSets);
-            }
-        });*/
+
+
+
+
+
+
         int setsValue = Integer.parseInt(Sets.getText().toString());
         if (setsValue <= 1){
             plusSets.setEnabled(true);
