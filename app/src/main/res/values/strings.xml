@@ -2,11 +2,12 @@
     <string name="app_name">Silverbars</string>
 
 
-    <string name="title">Titulo</string>
+    <string name="rep_edit">Edit Repetitions</string>
+
     <string name="filtertitle">Workout filter</string>
-    <string name="content">Contenido</string>
+    <string name="content">Content</string>
     <string name="agree">Aceptar</string>
-    <string name="disagree">Cerrar</string>
+    <string name="disagree">Close</string>
     <string name="choose">Choose</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_login">Sign in</string>
@@ -95,5 +96,5 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-
+    <string name="set_edit">Edit total of Sets</string>
 </resources>

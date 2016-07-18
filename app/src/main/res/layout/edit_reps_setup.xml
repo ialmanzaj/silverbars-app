@@ -1,55 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
+        android:text="Title"
         android:id="@+id/ExerciseName"
         android:layout_gravity="center" />
 
     <LinearLayout
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
+        <RelativeLayout
+           android:gravity="end"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="+"
-            android:id="@+id/plusRep"
-            android:layout_gravity="center" />
+            android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/Reps"
-            android:textColor="@color/colorPrimaryText"
-            android:layout_gravity="center"
-            android:textSize="35dp"
-            android:text="1" />
+            <Button
+               android:layout_centerVertical="true"
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="-"
-            android:id="@+id/minusRep"
-            android:layout_gravity="center" />
+                android:text="+"
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Reps"
-            android:textColor="@color/colorPrimaryText"
-            android:id="@+id/textView13"
-            android:layout_gravity="center" />
+                android:id="@+id/plusRep"
+                />
+        </RelativeLayout>
+
+      <RelativeLayout
+          android:layout_weight="1"
+         android:gravity="center"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content">
+
+          <TextView
+
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textAppearance="?android:attr/textAppearanceLarge"
+              android:id="@+id/Reps"
+              android:textColor="@color/white"
+              android:textSize="40sp"
+              android:text="1" />
+          <TextView
+
+              android:layout_below="@+id/Reps"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textAppearance="?android:attr/textAppearanceMedium"
+              android:text="Reps"
+
+              android:textColor="@color/white"
+              android:id="@+id/textView13"
+               />
+
+      </RelativeLayout>
+
+       <RelativeLayout
+           android:layout_weight="1"
+           android:gravity="center_vertical"
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent">
+           <Button
+               style="?android:attr/buttonStyleSmall"
+               android:layout_width="wrap_content"
+               android:layout_height="45dp"
+               android:text="-"
+               android:id="@+id/minusRep" />
+       </RelativeLayout>
+
+
+
+
     </LinearLayout>
 
 </LinearLayout>

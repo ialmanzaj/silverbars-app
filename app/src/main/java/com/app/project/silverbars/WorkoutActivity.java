@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 /*import com.spotify.sdk.android.authentication.AuthenticationClient;
@@ -83,6 +85,8 @@ public class WorkoutActivity extends AppCompatActivity {
     public static JsonReps[] ParsedReps;
     private int[] exercises_id;
 
+
+
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     @SuppressWarnings("SpellCheckingInspection")
@@ -116,7 +120,7 @@ public class WorkoutActivity extends AppCompatActivity {
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
         if (recycler != null) {
-            recycler.setNestedScrollingEnabled(false);
+
 
         }
 
@@ -150,11 +154,70 @@ public class WorkoutActivity extends AppCompatActivity {
         Sets = (TextView) findViewById(R.id.Sets);
         Sets.setText(String.valueOf(workout_sets));
 
+        Sets.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View v = new MaterialDialog.Builder(view.getContext())
+                        .title(R.string.set_edit)
+                        .customView(R.layout.edit_set_setup, true)
+                        .positiveText("Done").onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                                //On Dialog "Done" ClickListener
+
+                            }
+                        })
+                        .show()
+                        .getCustomView();
+            }
+        });
+
         Positive = (TextView) findViewById(R.id.Positive);
         Isometric = (TextView) findViewById(R.id.Isometric);
         Negative = (TextView) findViewById(R.id.Negative);
+
         Rest = (TextView) findViewById(R.id.Rest);
+        Rest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View v = new MaterialDialog.Builder(view.getContext())
+                        .title(R.string.set_edit)
+                        .customView(R.layout.edit_set_setup, true)
+                        .positiveText("Done").onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                                //On Dialog "Done" ClickListener
+
+                            }
+                        })
+                        .show()
+                        .getCustomView();
+
+            }
+        });
+
         RestSets = (TextView) findViewById(R.id.RestSets);
+        RestSets.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View v = new MaterialDialog.Builder(view.getContext())
+                        .title(R.string.set_edit)
+                        .customView(R.layout.edit_rest_setup, true)
+                        .positiveText("Done").onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                                //On Dialog "Done" ClickListener
+
+                            }
+                        })
+                        .show()
+                        .getCustomView();
+
+            }
+        });
 
         plusPositive = (Button) findViewById(R.id.plusPositive);
         plusPositive.setOnClickListener(new View.OnClickListener() {
@@ -198,7 +261,8 @@ public class WorkoutActivity extends AppCompatActivity {
                 minusTempo(Negative,minusNegative,plusNegative);
             }
         });
-       /* plusSets = (Button) findViewById(R.id.plusSets);
+
+        /*plusSets = (Button) findViewById(R.id.plusSets);
         plusSets.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -212,6 +276,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 minusTempo(Sets,minusSets,plusSets);
             }
         });
+
         plusRest = (Button) findViewById(R.id.plusRest);
         plusRest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -428,42 +493,6 @@ public class WorkoutActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-
-
-    public void ShowMusicDialog(){
-        MaterialDialog dialog = new MaterialDialog.Builder(WorkoutActivity.this)
-                .theme(Theme.LIGHT)
-                .title("Choose source of your music")
-                .adapter(new MusicSourceAdapter(WorkoutActivity.this), new MaterialDialog.ListCallback() {
-                    @Override
-                    public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                        dialog.dismiss();
-                        switch (which){
-                            case 0:
-                                LaunchMusicActivity();
-                                break;
-                            case 1:
-//                                String token = CredentialsHandler.getToken(WorkoutActivity.this);
-//                                if (token == null) {
-////                                    setContentView(R.layout.activity_login);
-//                                    SpotifyLogin();
-//                                } else {
-//                                    startMainActivity(token);
-//                                }
-//                                startActivity(new Intent(getApplicationContext(), SpotifyMusic.class));
-//                                startActivity(new Intent(getApplicationContext(), SearchActivity.class));
-                                break;
-                            case 2:
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                })
-                .negativeText(android.R.string.cancel)
-                .build();
-        dialog.show();
-    }
 
     private void LaunchWorkingOutActivity() {
         int positive,isometric,negative,sets;

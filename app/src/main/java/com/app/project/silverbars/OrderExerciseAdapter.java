@@ -130,7 +130,7 @@ public class OrderExerciseAdapter extends RecyclerView.Adapter<OrderExerciseAdap
                 boolean wrapInScrollView = true;
                 //Dialog when LongClick on element
                 View v = new MaterialDialog.Builder(view.getContext())
-                        .title(R.string.title)
+                        .title(R.string.rep_edit)
                         .customView(R.layout.edit_reps_setup, wrapInScrollView)
                         .positiveText("Done").onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override

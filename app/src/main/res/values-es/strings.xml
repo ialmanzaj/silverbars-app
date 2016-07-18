@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="rep_edit">Editar Repeticiones</string>
+
     <!-- Strings related to activity_exercise_cards -->
     <string name="exercise_name">Nombre de Ejercicio</string>
     <string name="reps_value">1</string>
@@ -56,6 +58,6 @@
 
     <string name="tab_muscles">Músculos</string>
 
-
+    <string name="set_edit">Editar total de Sets</string>
 
 </resources>

@@ -168,15 +168,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
 
-                                <Button
-                                    android:visibility="gone"
-                                    style="?android:attr/buttonStyleSmall"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="40dp"
 
-                                    android:text="-"
-
-                                    android:id="@+id/minusRest" />
 
                                 <TextView
                                     android:height="45dp"
@@ -197,14 +189,6 @@
 
 
 
-                                <Button
-
-                                    android:visibility="gone"
-                                    style="?android:attr/buttonStyleSmall"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="40dp"
-                                    android:text="+"
-                                    android:id="@+id/plusRest" />
                             </LinearLayout>
 
                         </RelativeLayout>
