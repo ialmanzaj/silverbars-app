@@ -48,6 +48,7 @@ public class OrderExerciseAdapter extends RecyclerView.Adapter<OrderExerciseAdap
     public ArrayList<Integer> mItems = new ArrayList<>();
     public ArrayList<String> orderElements = new ArrayList<>();
     public int count = 0, prevValue = 0, newValue = 0, prevPosition = 0, newPosition = 0;
+    public int[] order = new int[getItemCount()];
 
 
     public static class OrderExerciseViewHolder extends RecyclerView.ViewHolder {
@@ -95,6 +96,25 @@ public class OrderExerciseAdapter extends RecyclerView.Adapter<OrderExerciseAdap
         return new OrderExerciseViewHolder(v);
     }
 
+    public int fillOrder(int elementId){
+        int position = 0;
+            for (int i = 0; i < getItemCount(); i++){
+                if (order[i]==0){
+                    order[i] = elementId;
+                    position = i+1;
+                    break;
+                }
+            }
+        return position;
+    }
+    public void unfillOrder(int elementId){
+        for (int i = 0; i < getItemCount(); i++){
+            if (order[i]==elementId){
+                order[i] = 0;
+            }
+        }
+    }
+
     @Override
     public void onBindViewHolder(final OrderExerciseViewHolder viewHolder, int i) {
         final int a = i;
@@ -104,11 +124,12 @@ public class OrderExerciseAdapter extends RecyclerView.Adapter<OrderExerciseAdap
                 if (!Selected[a]){
                     Selected[a] = true;
                     Log.v("Seleccionado",String.valueOf(Selected[a]));
-                    count++;
-                    viewHolder.order.setText(String.valueOf(count));
+                    viewHolder.order.setText(String.valueOf(fillOrder(Exercises[a].getId())));
                 }else{
                     Selected[a] = false;
                     Log.v("Seleccionado",String.valueOf(Selected[a]));
+                    viewHolder.order.setText("");
+                    unfillOrder(Exercises[a].getId());
                 }
             }
         });
