@@ -46,6 +46,14 @@ public class orderExercises extends AppCompatActivity {
         done_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                for(int i = 0; i < OrderExerciseAdapter.getOrder().length; i++){
+//                    Log.v("Order Exercises",String.valueOf(OrderExerciseAdapter.getOrder()[i]));
+//                }
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("Order",OrderExerciseAdapter.getOrder());
+                setResult(RESULT_OK, returnIntent);
+                sItems.clear();
+                finish();
 
             }
         });

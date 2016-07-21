@@ -67,12 +67,14 @@
                         android:id="@+id/imgProfile"
                         android:src="@mipmap/images" />
 
-                    <ImageView
+                    <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/imageView2"
+                        android:id="@+id/chageImg"
                         android:src="@android:drawable/ic_menu_edit"
-                        android:layout_gravity="right|bottom" />
+                        android:layout_gravity="right|bottom"
+                        android:background="#00ffffff" />
+
                 </FrameLayout>
 
                 <LinearLayout
@@ -254,6 +256,26 @@
                             android:textColor="@color/colorPrimaryDark"
                             android:textStyle="bold" />
                     </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|top"
+                        android:background="@drawable/create_workout"
+                        android:padding="10dp"
+                        android:layout_marginTop="20dp"
+                        android:id="@+id/reAdd"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/imageView"
+                            android:src="@drawable/add" />
+
+                    </LinearLayout>
+
                 </FrameLayout>
             </RelativeLayout>
         </LinearLayout>

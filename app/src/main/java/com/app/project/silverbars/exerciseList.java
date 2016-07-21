@@ -12,6 +12,7 @@ import android.widget.Button;
 
 //import com.davidecirillo.multichoicerecyclerview.MultiChoiceRecyclerView;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -56,7 +57,7 @@ public class exerciseList extends AppCompatActivity {
                 }
                 Intent intent = new Intent(exerciseList.this,orderExercises.class);
                 intent.putIntegerArrayListExtra("Items",sItems);
-                startActivity(intent);
+                startActivityForResult(intent,1);
                 for (int i = 0; i < Exercises.length; i++){
                     Log.v("Elemento"+String.valueOf(i),String.valueOf(AllExercisesAdapter.Selected[i]));
                 }
@@ -79,10 +80,15 @@ public class exerciseList extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK && data != null){
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("Order",data.getIntArrayExtra("Order"));
+            setResult(RESULT_OK, returnIntent);
+            finish();
+            Log.v("Result","Ok");
             sItems.clear();
         }
         else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
-
+            Log.v("Result","Cancel");
         }
     }
 
