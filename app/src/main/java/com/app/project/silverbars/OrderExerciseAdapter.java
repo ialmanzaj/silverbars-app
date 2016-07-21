@@ -42,13 +42,13 @@ import retrofit2.Retrofit;
 public class OrderExerciseAdapter extends RecyclerView.Adapter<OrderExerciseAdapter.OrderExerciseViewHolder> {
 
     private Context mContext;
-    public orderExercises exerciseList = new orderExercises();
+    public static orderExercises exerciseList = new orderExercises();
     public JsonExercise[] Exercises = orderExercises.Exercises;
     public boolean[] Selected = new boolean[getItemCount()];
     public ArrayList<Integer> mItems = new ArrayList<>();
     public ArrayList<String> orderElements = new ArrayList<>();
     public int count = 0, prevValue = 0, newValue = 0, prevPosition = 0, newPosition = 0;
-    public int[] order = new int[getItemCount()];
+    public static int[] order = new int[getCount()];
 
 
     public static class OrderExerciseViewHolder extends RecyclerView.ViewHolder {
@@ -81,6 +81,14 @@ public class OrderExerciseAdapter extends RecyclerView.Adapter<OrderExerciseAdap
         for(int x = 0; x < getItemCount(); x++){
             Selected[x] = false;
         }
+    }
+
+    public static int[] getOrder() {
+        return order;
+    }
+
+    public static int getCount() {
+        return exerciseList.Exercises.length;
     }
 
     @Override
