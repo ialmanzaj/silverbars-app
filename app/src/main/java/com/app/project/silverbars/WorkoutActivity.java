@@ -789,7 +789,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
                         Exercises_reps[i] = ParsedReps[i].getRepetition();
                     }
-                    adapter = new ExerciseAdapter(items,WorkoutActivity.this);
+                    adapter = new ExerciseAdapter(items,WorkoutActivity.this,getSupportFragmentManager());
                     recycler.setAdapter(adapter);
                 } else {
                     int statusCode = response.code();
