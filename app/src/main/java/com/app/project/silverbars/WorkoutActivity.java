@@ -786,7 +786,7 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
         webview.getSettings().setJavaScriptEnabled(true);
-        webview.loadUrl("http://192.168.1.119:8080");
+        webview.loadUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/html/index.html");
 
     }
     private static String removeLastChar(String str) {
