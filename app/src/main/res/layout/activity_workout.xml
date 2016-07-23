@@ -437,22 +437,21 @@
 
 
 
-                <RelativeLayout
+                <LinearLayout
                    android:gravity="center_horizontal"
-                  android:layout_marginTop="20dp"
                     android:id="@+id/muscles"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <ImageView
+                    android:layout_height="match_parent">
 
+                    <WebView
+                        android:id="@+id/webview"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/cuerpos"
-                        android:contentDescription="@null" />
+                        android:layout_height="match_parent">
+
+                    </WebView>
 
 
-
-                </RelativeLayout>
+                </LinearLayout>
 
 
             </FrameLayout>

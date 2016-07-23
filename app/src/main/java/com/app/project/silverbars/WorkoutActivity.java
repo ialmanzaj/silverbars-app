@@ -12,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,8 +35,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -61,28 +66,25 @@ public class WorkoutActivity extends AppCompatActivity {
     private Button minusRest;
     private Button plusRestSets;
     private Button minusRestSets;
-    private Button SelectMusic;
     private TextView Positive, Negative, Isometric, Reps, Workout_name, Sets, Rest, RestSets,RestSets_dialog,Sets_dialog;
     private String[] position;
     private List<String> spinnerArray = new ArrayList<String>();
     private int value = 0;
     private RecyclerView recycler;
     private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager lManager;
     private int ExerciseReps = 1;
     private ArrayList<File> mySongs;
     static public int[] Exercises_reps;
     private String[] exercises;
-    private String workout_name, level;
-    private int workout_id = 0, workout_sets = 0;
+    private int workout_id = 0;
     private List<WorkoutInfo> items = new ArrayList<>();
     public static JsonExercise[] ParsedExercises;
     public static JsonReps[] ParsedReps;
     private int[] exercises_id;
+    private List<String> Muscles_names = new ArrayList<String>();
 
 
-
-    private static final String TAG = LoginActivity.class.getSimpleName();
+    private static final String TAG = WorkoutActivity.class.getSimpleName();
 
     @SuppressWarnings("SpellCheckingInspection")
     private static final String CLIENT_ID = "8a91678afa49446c9aff1beaabe9c807";
@@ -95,6 +97,8 @@ public class WorkoutActivity extends AppCompatActivity {
     private static boolean VibrationIsActivePerRep=true;
     private static boolean VibrationIsActivePerSet=true;
 
+    private String partes = "";
+    private WebView webview;
 
 
     @Override
@@ -104,10 +108,10 @@ public class WorkoutActivity extends AppCompatActivity {
 
         exercises = intent.getStringArrayExtra("exercises");
         Log.v("Exercises",Arrays.toString(exercises));
-        workout_name = intent.getStringExtra("name");
-        level = intent.getStringExtra("level");
+        String workout_name = intent.getStringExtra("name");
+        String level = intent.getStringExtra("level");
         workout_id = intent.getIntExtra("id",0);
-        workout_sets = intent.getIntExtra("sets",0);
+        int workout_sets = intent.getIntExtra("sets", 0);
         exercises_id = new int[exercises.length];
         ParsedExercises = new JsonExercise[exercises.length];
         Exercises();
@@ -119,8 +123,11 @@ public class WorkoutActivity extends AppCompatActivity {
 
         }
 
+
+
+        //
         // Usar un administrador para LinearLayout
-        lManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        RecyclerView.LayoutManager lManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
 
         recycler.setLayoutManager(lManager);
@@ -148,6 +155,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         Sets = (TextView) findViewById(R.id.Sets);
         Sets.setText(String.valueOf(workout_sets));
+
 
         Sets.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -370,8 +378,6 @@ public class WorkoutActivity extends AppCompatActivity {
                     Isometric.setText("3");
                     Negative.setText("1");
                     break;
-
-
             }
         }
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -459,8 +465,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
         tabHost2.addTab(muscles);
 
-        SelectMusic = (Button) findViewById(R.id.SelectMusic);
-        SelectMusic.setOnClickListener(new View.OnClickListener() {
+        Button selectMusic = (Button) findViewById(R.id.SelectMusic);
+        selectMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getBaseContext(), SelectionMusicActivity.class);
@@ -468,7 +474,16 @@ public class WorkoutActivity extends AppCompatActivity {
 //                LaunchMusicActivity();
             }
         });
+
+
+        // Web view     ========================
+        webview = (WebView) findViewById(R.id.webview);
+
+
+
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -664,6 +679,8 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
+    private  List<String> muscles = new ArrayList<String>();
+
     public void Exercises(){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -688,7 +705,9 @@ public class WorkoutActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
+
         SilverbarsService service = retrofit.create(SilverbarsService.class);
+
         for (int i = 0; i < exercises.length; i++){
             final int a = i;
             String [] parts = exercises[i].split("exercises");
@@ -701,6 +720,22 @@ public class WorkoutActivity extends AppCompatActivity {
                         ParsedExercises[a] = response.body();
 //                        Log.v("Response",ParsedExercises[a].getExercise_name()+" / "+ExerciseReps);
                         items.add(new WorkoutInfo(ParsedExercises[a].exercise_name, String.valueOf(ExerciseReps)));
+
+                        // muscles
+
+                        //Collections.addAll(Muscles_names,name);
+                        for (int b = 0; b < ParsedExercises[a].muscle.length; b++){
+                            String name;
+                            name = "#"+ParsedExercises[a].muscle[b];
+
+                            muscles.add(name);
+                        }
+
+
+
+
+
+
 //                        Log.v("Items size",String.valueOf(items.size()));
                         exercises_id[a] = ParsedExercises[a].getId();
                         if ( items.size() == exercises.length){
@@ -721,8 +756,61 @@ public class WorkoutActivity extends AppCompatActivity {
                 }
             });
         }
-//
+
+
     }
+
+    private void setMusclesNames(List<String> muscles_names){
+        Muscles_names = muscles_names;
+        //Log.v("MUSCLES NAMES", String.valueOf(Muscles_names) );
+       /* Log.v(TAG," se ha asignado musculos");
+        Log.v(TAG, String.valueOf(Muscles_names.size()));*/
+
+
+        if ( Muscles_names.size() > 0 ){
+
+
+            for (String s : Muscles_names)
+            {
+                partes += s + ",";
+            }
+
+        }
+
+
+        webview.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                injectJS();
+                super.onPageFinished(view, url);
+            }
+        });
+        webview.getSettings().setJavaScriptEnabled(true);
+        webview.loadUrl("http://192.168.1.119:8080");
+
+    }
+    private static String removeLastChar(String str) {
+        return str.substring(0,str.length()-1);
+    }
+    private void injectJS() {
+        try {
+            partes = removeLastChar(partes);
+            Log.v("injectJS",partes);
+
+            webview.loadUrl("javascript: ("+ "window.onload = function () {"+
+
+                    "partes = Snap.selectAll('"+partes+"');"+
+                    "partes.forEach( function(elem,i) {"+
+                    "elem.attr({fill: '#602C8D',stroke: '#602C8D',});"+
+                    "});"+ "}"+  ")()");
+
+            //Log.v("MAIN ACTIVITY","HA EJECUTADO EL JAVASCRIPT");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 //    JsonReps[] RepsData = JsonData.getReps("http://api.silverbarsapp.com/workout/?format=json",workout_id,exercises.length);
 //    ParsedReps = RepsData;
     public void exercisesReps(){
@@ -762,13 +850,15 @@ public class WorkoutActivity extends AppCompatActivity {
                     int y = 0;
                     for (int z = 0; z < Reps.length; z++){
                         String workout = Reps[z].getWorkout_id();
-                        if (workout.indexOf("workouts/"+workout_id)>0){
+                        if (workout.indexOf("workouts/" + workout_id ) > 0){
                             ParsedReps[y] = Reps[z];
                             y++;
                         }
                     }
                     Exercises_reps = new int[items.size()];
                     for (int i = 0; i <items.size() ; i++){
+
+
                         String[] audioDir = ParsedExercises[i].getExercise_audio().split("exercises");;
                         String Parsedurl = "exercises"+audioDir[1];
                         String[] splitName = Parsedurl.split("/");
@@ -791,6 +881,14 @@ public class WorkoutActivity extends AppCompatActivity {
                     }
                     adapter = new ExerciseAdapter(items,WorkoutActivity.this,getSupportFragmentManager());
                     recycler.setAdapter(adapter);
+                    setMusclesNames(muscles);
+                    Log.v("EXERCISE METHOD", String.valueOf(muscles));
+
+
+
+
+
+
                 } else {
                     int statusCode = response.code();
                     // handle request errors yourself
@@ -805,6 +903,10 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
+
 
     public void DownloadMp3(final String url, final String audioName) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
