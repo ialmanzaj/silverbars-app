@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.androidifygeeks.library.fragment.TabDialogFragment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,6 +37,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     private List<WorkoutInfo> items;
     private Context mContext;
     private InputStream bmpInput;
+    private FragmentManager fragmentManager;
 
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
@@ -54,7 +57,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         }
     }
 
-    public ExerciseAdapter(List<WorkoutInfo> items, Context context) {
+    public ExerciseAdapter(List<WorkoutInfo> items, Context context,FragmentManager fragmentManager) {
+        this.fragmentManager = fragmentManager;
         this.items = items;
         mContext = context;
 
@@ -90,19 +94,28 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         }
         viewHolder.nombre.setText(workout.ParsedExercises[a].getExercise_name());
         viewHolder.repetitions.setText(String.valueOf(workout.Exercises_reps[a]));
-        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             private TextView DialogName, Reps;
             private Button plusRep, minusRep;
             private int value = 0;
             private int ActualRepValue = 0;
 
             @Override
-            public boolean onLongClick(View view) {
-                boolean wrapInScrollView = true;
-                //Dialog when LongClick on element
+            public void onClick(View view) {
+/*
+                TabDialogFragment.createBuilder(view.getContext(), fragmentManager)
+                        .setTitle("hello")
+                        .setSubTitle("Cuenta regresiva")
+                        .setTabButtonText(new CharSequence[]{"Por Repeticion", "Simple"})
+                        .setPositiveButtonText("ok")
+                        .show();*/
+
+
                 View v = new MaterialDialog.Builder(view.getContext())
                         .title(R.string.rep_edit)
-                        .customView(R.layout.edit_reps_setup, wrapInScrollView)
+                        .customView(R.layout.edit_reps_setup, true)
                         .positiveText("Done").onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -115,12 +128,16 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                         })
                         .show()
                         .getCustomView();
+
+
                 //Dialog elements
                 DialogName = (TextView) v.findViewById(R.id.ExerciseName);
                 DialogName.setText(items.get(a).getNombre());
                 Reps = (TextView) v.findViewById(R.id.Reps);
                 ActualRepValue = Integer.valueOf(viewHolder.repetitions.getText().toString());
                 Reps.setText(String.valueOf(ActualRepValue));
+
+
                 plusRep = (Button) v.findViewById(R.id.plusRep);
                 plusRep.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -130,6 +147,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                     }
                 });
 
+
                 minusRep = (Button) v.findViewById(R.id.minusRep);
                 minusRep.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -138,6 +156,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                         minusTempo(Reps,minusRep,plusRep);
                     }
                 });
+
+
                 //Check if actual rep value is 1 or 20 on Dialog open
                 if (ActualRepValue == 1){
                     minusRep.setEnabled(false);
@@ -146,8 +166,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                     plusRep.setEnabled(false);
                     plusRep.setClickable(false);
                 }
-
-                return false;
             }
 
             public int NewRepValue(){

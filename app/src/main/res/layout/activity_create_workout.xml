@@ -237,8 +237,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|top"
                         android:background="@drawable/create_workout"
-                        android:padding="10dp"
-                        android:layout_marginTop="20dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:paddingRight="15dp"
+                        android:paddingLeft="15dp"
+                        android:layout_marginTop="10dp"
                         android:id="@+id/addExercise">
 
                         <ImageView
