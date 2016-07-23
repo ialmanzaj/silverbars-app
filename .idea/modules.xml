@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Calisthenic.iml" filepath="$PROJECT_DIR$/Calisthenic.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../xamppfiles/htdocs/Silverbars/calisthenic-project/app/app.iml" filepath="$PROJECT_DIR$/../../../xamppfiles/htdocs/Silverbars/calisthenic-project/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/calisthenic-project.iml" filepath="$PROJECT_DIR$/calisthenic-project.iml" />
     </modules>
   </component>
 </project>

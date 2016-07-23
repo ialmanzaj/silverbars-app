@@ -3,11 +3,272 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/lib/com.mikhaellopez.circularimageview.CircularImageView"
-    tools:context=".ProfileFragment">
+    tools:context=".ProfileFragment"
+    android:background="#fff">
+
  <!-- TODO: Update blank fragment layout -->
 
+ <LinearLayout
+     android:orientation="vertical"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:layout_centerHorizontal="true"
+     android:id="@+id/LinearLayout">
 
+  <com.mikhaellopez.circularimageview.CircularImageView
+      android:layout_width="100dp"
+      android:layout_height="100dp"
+      android:src="@mipmap/images"
+      app:civ_border_color="#EEEEEE"
+      app:civ_border_width="4dp"
+      app:civ_shadow="true"
+      app:civ_shadow_radius="10"
+      app:civ_shadow_color="#8BC34A"
+      android:id="@+id/view2"
+      android:layout_gravity="center" />
 
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textAppearance="?android:attr/textAppearanceLarge"
+      android:text="User Name"
+      android:id="@+id/textView23"
+      android:layout_gravity="center"
+      android:textColor="@color/colorPrimaryText" />
 
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textAppearance="?android:attr/textAppearanceLarge"
+      android:text="User Tag"
+      android:id="@+id/textView31"
+      android:layout_gravity="center_horizontal"
+      android:textColor="@color/colorPrimaryText" />
+
+  <LinearLayout
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center">
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:textAppearance="?android:attr/textAppearanceLarge"
+       android:text="0"
+       android:id="@+id/textView24"
+       android:layout_marginRight="5dp"
+       android:textColor="@color/colorPrimaryText" />
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:textAppearance="?android:attr/textAppearanceLarge"
+       android:text="Seguidores"
+       android:id="@+id/textView25"
+       android:textColor="@color/colorPrimaryText" />
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:textAppearance="?android:attr/textAppearanceLarge"
+       android:id="@+id/textView28"
+       android:layout_marginLeft="10dp"
+       android:layout_marginRight="10dp"
+       android:text="l"
+       android:textColor="@color/colorPrimaryText" />
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:textAppearance="?android:attr/textAppearanceLarge"
+       android:text="0"
+       android:id="@+id/textView29"
+       android:layout_marginRight="5dp"
+       android:textColor="@color/colorPrimaryText" />
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:textAppearance="?android:attr/textAppearanceLarge"
+       android:text="Seguidores"
+       android:id="@+id/textView30"
+       android:textColor="@color/colorPrimaryText" />
+  </LinearLayout>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:layout_gravity="center"
+      android:paddingTop="7dp"
+      android:paddingBottom="7dp"
+      android:background="@drawable/custom_border"
+      android:id="@+id/myTeam">
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:textAppearance="?android:attr/textAppearanceLarge"
+       android:text="MY TEAM"
+       android:id="@+id/textView32"
+       android:textColor="@color/colorPrimaryText"
+       android:layout_gravity="center"
+       android:gravity="center"
+       android:layout_alignTop="@+id/textView37"
+       android:layout_alignParentStart="true"
+       android:textSize="20dp"
+       android:layout_centerVertical="true" />
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:textAppearance="?android:attr/textAppearanceLarge"
+       android:text="Team Name"
+       android:id="@+id/textView37"
+       android:layout_gravity="center"
+       android:layout_centerVertical="true"
+       android:layout_toStartOf="@+id/imageView2"
+       android:textColor="@color/colorPrimaryText"
+       android:textStyle="bold"
+       android:textSize="20dp" />
+
+   <ImageView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:id="@+id/imageView2"
+       android:src="@drawable/ic_keyboard_arrow_right_black_36dp"
+       android:layout_gravity="end"
+       android:layout_alignParentTop="true"
+       android:layout_alignParentEnd="true" />
+  </RelativeLayout>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:gravity="center"
+      android:paddingTop="7dp"
+      android:paddingBottom="7dp"
+      android:background="@drawable/custom_border"
+      android:id="@+id/Progression">
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:textAppearance="?android:attr/textAppearanceLarge"
+       android:text="Progression"
+       android:id="@+id/textView33"
+       android:textColor="@color/colorPrimaryText"
+       android:layout_gravity="center"
+       android:gravity="center"
+       android:textSize="20dp"
+       android:layout_centerVertical="true" />
+
+   <ImageView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:id="@+id/imageView3"
+       android:src="@drawable/ic_keyboard_arrow_right_black_36dp"
+       android:layout_gravity="right"
+       android:layout_alignParentTop="true"
+       android:layout_alignParentEnd="true" />
+  </RelativeLayout>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:gravity="center"
+      android:paddingTop="7dp"
+      android:paddingBottom="7dp"
+      android:background="@drawable/custom_border"
+      android:id="@+id/skillsProgression">
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:textAppearance="?android:attr/textAppearanceLarge"
+       android:text="My Skills Progression"
+       android:id="@+id/textView34"
+       android:textColor="@color/colorPrimaryText"
+       android:layout_gravity="center"
+       android:gravity="center"
+       android:textSize="20dp"
+       android:layout_centerVertical="true" />
+
+   <ImageView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:id="@+id/imageView4"
+       android:src="@drawable/ic_keyboard_arrow_right_black_36dp"
+       android:layout_gravity="right"
+       android:layout_alignParentTop="true"
+       android:layout_alignParentEnd="true" />
+  </RelativeLayout>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:gravity="center"
+      android:paddingTop="7dp"
+      android:paddingBottom="7dp"
+      android:background="@drawable/custom_border"
+      android:id="@+id/sharedWorkouts">
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:textAppearance="?android:attr/textAppearanceLarge"
+       android:text="Workouts Shared"
+       android:id="@+id/textView35"
+       android:textColor="@color/colorPrimaryText"
+       android:layout_gravity="center"
+       android:gravity="center"
+       android:textSize="20dp"
+       android:layout_centerVertical="true" />
+
+   <ImageView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:id="@+id/imageView5"
+       android:src="@drawable/ic_keyboard_arrow_right_black_36dp"
+       android:layout_gravity="right"
+       android:layout_alignParentTop="true"
+       android:layout_alignParentEnd="true" />
+  </RelativeLayout>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:gravity="center"
+      android:paddingTop="7dp"
+      android:paddingBottom="7dp"
+      android:background="@drawable/custom_border"
+      android:id="@+id/history">
+
+   <TextView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:textAppearance="?android:attr/textAppearanceLarge"
+       android:text="History of Workouts done"
+       android:id="@+id/textView36"
+       android:textColor="@color/colorPrimaryText"
+       android:layout_gravity="center"
+       android:gravity="center"
+       android:textSize="20dp"
+       android:layout_centerVertical="true" />
+
+   <ImageView
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:id="@+id/imageView6"
+       android:src="@drawable/ic_keyboard_arrow_right_black_36dp"
+       android:layout_alignParentTop="true"
+       android:layout_alignParentEnd="true" />
+  </RelativeLayout>
+ </LinearLayout>
 
 </RelativeLayout>
