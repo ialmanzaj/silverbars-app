@@ -734,9 +734,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-
-
-
 //                        Log.v("Items size",String.valueOf(items.size()));
                         exercises_id[a] = ParsedExercises[a].getId();
                         if ( items.size() == exercises.length){
@@ -757,8 +754,6 @@ public class WorkoutActivity extends AppCompatActivity {
                 }
             });
         }
-
-
     }
 
     private void setMusclesNames(List<String> muscles_names){
@@ -767,17 +762,12 @@ public class WorkoutActivity extends AppCompatActivity {
        /* Log.v(TAG," se ha asignado musculos");
         Log.v(TAG, String.valueOf(Muscles_names.size()));*/
 
-
         if ( Muscles_names.size() > 0 ){
-
-
             for (String s : Muscles_names)
             {
                 partes += s + ",";
             }
-
         }
-
 
         webview.setWebViewClient(new WebViewClient(){
             @Override
@@ -804,7 +794,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
                     "partes = Snap.selectAll('"+partes+"');"+
                     "partes.forEach( function(elem,i) {"+
-                    "elem.attr({fill: '#602C8D',stroke: '#602C8D',});"+
+                    "elem.attr({fill: '#F5515F',stroke: '#F5515F',});"+
                     "});"+ "}"+  ")()");
 
             //Log.v("MAIN ACTIVITY","HA EJECUTADO EL JAVASCRIPT");

@@ -115,7 +115,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
                 View v = new MaterialDialog.Builder(view.getContext())
                         .title(R.string.rep_edit)
-                        .customView(R.layout.edit_reps_setup, true)
+                        .customView(R.layout.edit_exercise_dialog, true)
                         .positiveText("Done").onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -131,31 +131,40 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
 
                 //Dialog elements
-                DialogName = (TextView) v.findViewById(R.id.ExerciseName);
-                DialogName.setText(items.get(a).getNombre());
-                Reps = (TextView) v.findViewById(R.id.Reps);
-                ActualRepValue = Integer.valueOf(viewHolder.repetitions.getText().toString());
-                Reps.setText(String.valueOf(ActualRepValue));
+                if (v != null) {
+
+                    DialogName = (TextView) v.findViewById(R.id.ExerciseName);
+                    DialogName.setText(items.get(a).getNombre());
+
+                    Reps = (TextView) v.findViewById(R.id.Reps);
+
+                    minusRep = (Button) v.findViewById(R.id.minusRep);
+                    minusRep.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //Decreasing Reps Button
+                            minusTempo(Reps,minusRep,plusRep);
+                        }
+                    });
+                    ActualRepValue = Integer.valueOf(viewHolder.repetitions.getText().toString());
+                    Reps.setText(String.valueOf(ActualRepValue));
 
 
-                plusRep = (Button) v.findViewById(R.id.plusRep);
-                plusRep.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //Increasing Reps Button
-                        plusTempo(Reps,plusRep,minusRep);
-                    }
-                });
+                    plusRep = (Button) v.findViewById(R.id.plusRep);
+                    plusRep.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //Increasing Reps Button
+                            plusTempo(Reps,plusRep,minusRep);
+                        }
+                    });
+                }
 
 
-                minusRep = (Button) v.findViewById(R.id.minusRep);
-                minusRep.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //Decreasing Reps Button
-                        minusTempo(Reps,minusRep,plusRep);
-                    }
-                });
+
+
+
+
 
 
                 //Check if actual rep value is 1 or 20 on Dialog open

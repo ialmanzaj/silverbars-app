@@ -75,7 +75,7 @@ public class ProgressionActivity extends AppCompatActivity {
 
                     "partes = Snap.selectAll('"+partes+"');"+
                     "partes.forEach( function(elem,i) {"+
-                    "elem.attr({fill: '#602C8D',stroke: '#602C8D',});"+
+                    "elem.attr({fill: '#F5515F',stroke: '#F5515F',});"+
                     "});"+ "}"+  ")()");
 
             //Log.v("MAIN ACTIVITY","HA EJECUTADO EL JAVASCRIPT");
