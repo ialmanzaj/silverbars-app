@@ -10,19 +10,68 @@
         android:background="@color/colorPrimaryDark"
         android:id="@+id/toolbar_"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content" />
 
-    </android.support.v7.widget.Toolbar>
+<ScrollView
+    android:layout_width="match_parent"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    android:layout_height="match_parent">
+
     <LinearLayout
         android:orientation="vertical"
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <WebView
 
+        <WebView
             android:id="@+id/WebView_progression"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></WebView>
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:text="BICEPS" />
+            <TextView
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:text="TRICEPS" />
+            <TextView
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:text="CUADRICEPS" />
+            <TextView
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:text="PECTORAL MAYOR" />
+            <TextView
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:text="CALVES" />
+
+        </LinearLayout>
+
+
+
+
     </LinearLayout>
+</ScrollView>
+
+
 
 </LinearLayout>
