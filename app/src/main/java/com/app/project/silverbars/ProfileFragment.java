@@ -57,6 +57,8 @@ public class ProfileFragment extends Fragment {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
+                        startActivity(new Intent(getActivity(),ProgressionActivity.class));
+
                         Progression.setBackgroundColor(getResources().getColor(R.color.onTouch));
                         Progression.setPadding(0,dpAsPixels,0,dpAsPixels);
                         break;

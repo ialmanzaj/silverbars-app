@@ -107,7 +107,7 @@ public class WorkoutActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         exercises = intent.getStringArrayExtra("exercises");
-        Log.v("Exercises",Arrays.toString(exercises));
+        Log.v(TAG,Arrays.toString(exercises));
         String workout_name = intent.getStringExtra("name");
         String level = intent.getStringExtra("level");
         workout_id = intent.getIntExtra("id",0);
@@ -682,6 +682,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private  List<String> muscles = new ArrayList<String>();
 
     public void Exercises(){
+
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
             @Override
@@ -694,7 +695,7 @@ public class WorkoutActivity extends AppCompatActivity {
                         .method(original.method(), original.body())
                         .build();
                 okhttp3.Response response = chain.proceed(request);
-                Log.v("Response",response.toString());
+                Log.v(TAG,response.toString());
                 // Customize or return the response
                 return response;
             }
@@ -746,13 +747,13 @@ public class WorkoutActivity extends AppCompatActivity {
                         int statusCode = response.code();
                         // handle request errors yourself
                         ResponseBody errorBody = response.errorBody();
-                        Log.v("Error",errorBody.toString());
+                        Log.e(TAG,errorBody.toString());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<JsonExercise> call, Throwable t) {
-                    Log.v("Exception",t.toString());
+                    Log.e(TAG,t.toString(),t);
                 }
             });
         }
@@ -786,7 +787,9 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
         webview.getSettings().setJavaScriptEnabled(true);
-        webview.loadUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/html/index.html");
+        String fileurl = "file://"+Environment.getExternalStorageDirectory()+"/html/"+"index.html";
+
+        webview.loadUrl(fileurl);
 
     }
     private static String removeLastChar(String str) {
@@ -795,7 +798,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private void injectJS() {
         try {
             partes = removeLastChar(partes);
-            Log.v("injectJS",partes);
+            Log.v(TAG,partes);
 
             webview.loadUrl("javascript: ("+ "window.onload = function () {"+
 
@@ -828,7 +831,7 @@ public class WorkoutActivity extends AppCompatActivity {
                         .build();
 
                 okhttp3.Response response = chain.proceed(request);
-                Log.v("Response",response.toString());
+                Log.v(TAG,response.toString());
                 // Customize or return the response
                 return response;
             }
@@ -874,7 +877,7 @@ public class WorkoutActivity extends AppCompatActivity {
                             if (success)
                                 DownloadMp3(Parsedurl,mp3Name);
                             else
-                                Log.v("Dir","Error creating dir");
+                                Log.v(TAG,"Error creating dir");
                         }
 
                         Exercises_reps[i] = ParsedReps[i].getRepetition();
@@ -882,7 +885,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     adapter = new ExerciseAdapter(items,WorkoutActivity.this,getSupportFragmentManager());
                     recycler.setAdapter(adapter);
                     setMusclesNames(muscles);
-                    Log.v("EXERCISE METHOD", String.valueOf(muscles));
+                    Log.v(TAG, String.valueOf(muscles));
 
 
 
@@ -893,13 +896,13 @@ public class WorkoutActivity extends AppCompatActivity {
                     int statusCode = response.code();
                     // handle request errors yourself
                     ResponseBody errorBody = response.errorBody();
-                    Log.v("Error",errorBody.toString());
+                    Log.v(TAG,errorBody.toString());
                 }
             }
 
             @Override
             public void onFailure(Call<JsonReps[]> call, Throwable t) {
-                Log.v("Exception",t.toString());
+                Log.v(TAG,t.toString());
             }
         });
     }
@@ -920,11 +923,15 @@ public class WorkoutActivity extends AppCompatActivity {
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if (response.isSuccessful()) {boolean writtenToDisk = writeResponseBodyToDisk(response.body(),audioName);}
-                        else {Log.d("Download", "server contact failed");}
+                        if (response.isSuccessful()) {
+                            boolean writtenToDisk = writeResponseBodyToDisk(response.body(),audioName);
+
+                            Log.v(TAG, String.valueOf(writtenToDisk));
+                        }
+                        else {Log.e(TAG, "Download server contact failed");}
                     }
                     @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {Log.v("Failure", t.toString());}
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {Log.v(TAG, t.toString(),t);}
                 });
                 return null;
             };
@@ -947,7 +954,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     if (read == -1) {break;}
                     outputStream.write(fileReader, 0, read);
                     fileSizeDownloaded += read;
-                    Log.d("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                    Log.d(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
                 }
                 outputStream.flush();
                 return true;

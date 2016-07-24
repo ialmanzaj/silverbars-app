@@ -26,4 +26,9 @@ public interface SilverbarsService {
 
     @GET
     Call<SpotifyAdapter[]> SpotifyTracks();
+
+    @GET("silverbarsmedias3/html/index.html")
+    Call<ResponseBody> getMusclesTemplate();
+
+
 }

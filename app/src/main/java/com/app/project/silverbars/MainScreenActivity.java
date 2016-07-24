@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.content.res.Configuration;
+import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -43,15 +45,26 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.baoyz.actionsheet.ActionSheet;
 import com.facebook.FacebookSdk;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainScreenActivity extends AppCompatActivity {
 
+    private static final String TAG = "MAIN SCREEN ACTIVITY" ;
     private ViewPager view;
     private SimpleTabAdapter adapter;
     private Button songs;
@@ -83,10 +96,30 @@ public class MainScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_screen);
 
         tagTitles = this.getResources().getStringArray(R.array.navigation_array);
-        Log.i("MAIN SCREEN",tagTitles[0]);
+
+        Log.v(TAG,tagTitles[0]);
+
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView) findViewById(R.id.left_drawer);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        File Dir = new File(Environment.getExternalStorageDirectory()+"/html/");
+
+        if (Dir.isDirectory()){
+            File file = new File(Environment.getExternalStorageDirectory()+"/html/"+"index.html");
+
+            if (!file.exists()){
+                MuscleTemplateDownload();
+            }
+        }else {
+
+            boolean success = Dir.mkdir();
+            if (success)
+                MuscleTemplateDownload();
+
+            else
+                Log.v(TAG,"Error creating dir");
+        }
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab != null) {
@@ -267,6 +300,96 @@ public class MainScreenActivity extends AppCompatActivity {
             //place your filtering logic here using currentFragment
         }
     }
+
+    public void MuscleTemplateDownload(){
+
+        Log.v(TAG, "METODO MUSCLE TEMPLATE LLAMADO");
+
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/")
+                .build();
+
+        final SilverbarsService downloadhtmlService = retrofit.create(SilverbarsService.class);
+
+        new AsyncTask<Void, Long, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                Call<ResponseBody> call = downloadhtmlService.getMusclesTemplate();
+
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+
+                            Boolean write = writeResponseBodyToDisk(response.body(),"index.html");
+
+
+                        }
+                        else {Log.d(TAG, "Download server contact failed");}
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    }
+                });
+                return null;
+            };
+        }.execute();
+
+
+    }
+
+
+
+
+    public boolean writeResponseBodyToDisk(ResponseBody body, String name) {
+        try {
+
+            File file = new File(Environment.getExternalStorageDirectory()+"/html/"+name);
+
+
+            Log.v(TAG, file.getPath());
+
+
+            InputStream input = null;
+            OutputStream output = null;
+
+            try {
+                input = body.byteStream();
+                output = new FileOutputStream(file);
+
+                int size = input.available();
+                //Log.d("size ", String.valueOf(size));
+
+                byte[] buffer = new byte[size];
+
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+
+                while (true) {
+                    int read = input.read(buffer);
+                    if (read == -1) {break;}
+                    output.write(buffer, 0, read);
+                    fileSizeDownloaded += read;
+                    //Log.d("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+
+
+                output.flush();
+                return true;
+
+            } catch (IOException e) {
+                Log.e(TAG,"IOEXEPTION",e);
+                return false;
+            } finally {
+                if (input != null) {input.close();}
+                if (output != null) {output.close();}
+            }
+        } catch (IOException e) { return false;}
+    }
+
 
 
 

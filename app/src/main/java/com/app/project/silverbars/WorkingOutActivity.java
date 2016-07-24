@@ -442,16 +442,25 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void MusicPlayList(final int playlist_size){
+
         if (playlist_size>1){
             x = (x+1)%playlist.size();
+
             u = Uri.parse(playlist.get(x).toString());
+
             String SongName = SongName(playlist.get(x)).replace(".mp3","");
+
             song_name.setText(SongName);
+
             String SongArtist = SongArtist(playlist.get(x));
+
             artist_name.setText(SongArtist);
+
             Log.d("WorkingOutActivity", (String) song_name.getText());
+
             mp = MediaPlayer.create(getApplicationContext(),u);
             mp.start();
+
         }else{
             u = Uri.parse(playlist.get(x).toString());
             mp = MediaPlayer.create(getApplicationContext(),u);
