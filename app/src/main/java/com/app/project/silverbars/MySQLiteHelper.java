@@ -8,11 +8,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 
 /**
  * Created by andre_000 on 5/18/2016.
@@ -28,6 +34,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String TABLE_USERS = "users";
     public static final String TABLE_PLAYLISTS = "playlists";
     public static final String TABLE_WORKOUTS = "workouts";
+    public static final String TABLE_WORKOUT = "workout";
     public static final String TABLE_EXERCISES = "exercises";
 
     //     Users Table Columns names
@@ -41,7 +48,18 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String KEY_SONGNAME = "songname";
     public static final String KEY_USERID = "user_id";
     //    Workouts table Columns names
+    public static final String KEY_IDWORKOUTS = "id";
+    public static final String KEY_WORKOUTNAME = "workout_name";
+    public static final String KEY_WORKOUTIMG = "workout_image";
+    public static final String KEY_SETS = "sets";
+    public static final String KEY_LEVEL = "level";
+    public static final String KEY_MAINMUSCLE = "main_muscle";
+    public static final String KEY_EXERCISES = "exercises";
+    //    Workout table Columns names
     public static final String KEY_IDWORKOUT = "id";
+    public static final String KEY_WORKOUTSID = "workout_id";
+    public static final String KEY_WORKOUTEX = "exercise";
+    public static final String KEY_REPETITION = "repetition";
     //    Exercises table Column names
     public static final String KEY_IDEXERCISE = "id";
 
@@ -61,12 +79,34 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             KEY_PNAME+" TEXT, " +
             KEY_SONGNAME+" varchar, " +
             KEY_USERID+" integer)";
+    private static final String CREATE_TABLE_WORKOUTS = "CREATE TABLE "+
+            TABLE_WORKOUTS+"(" +
+            KEY_IDWORKOUTS+" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            KEY_WORKOUTNAME+" TEXT, " +
+            KEY_USERID+"INTEGER REFERENCE"+TABLE_USERS+
+            KEY_WORKOUTIMG+" varchar, " +
+            KEY_SETS+" INTEGER, " +
+            KEY_LEVEL+" TEXT, " +
+            KEY_MAINMUSCLE+" TEXT, " +
+            KEY_EXERCISES+" varchar)";
+    private static final String CREATE_TABLE_WORKOUT = "CREATE TABLE "+
+            TABLE_WORKOUT+"(" +
+            KEY_IDWORKOUT+" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            KEY_WORKOUTSID+"INTEGER REFERENCE"+TABLE_WORKOUTS+"," +
+            KEY_WORKOUTEX+" varchar, " +
+            KEY_REPETITION+" integer)";
 //            "FOREIGN KEY("+KEY_USERID+") REFERENCES "+TABLE_USERS+"("+KEY_IDUSER+")";
 
     @Override
     public void onCreate(SQLiteDatabase database) {
         database.execSQL(CREATE_TABLE_USERS);
         database.execSQL(CREATE_TABLE_PLAYLISTS);
+        database.execSQL(CREATE_TABLE_WORKOUTS);
+        database.execSQL(CREATE_TABLE_WORKOUT);
+        if (!database.isReadOnly()) {
+            // Enable foreign key constraints
+            database.execSQL("PRAGMA foreign_keys=ON;");
+        }
     }
 
 
@@ -201,8 +241,67 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         return results;
     }
 
+    public void insertWorkouts(String name, String imgFile, int sets, String level, String mainMuscle, ArrayList<String> exercises, int usersid){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("uniqueArrays", new JSONArray(exercises.toArray()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String arrayList = json.toString();
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_WORKOUTNAME,name);
+        cv.put(KEY_WORKOUTIMG,imgFile);
+        cv.put(KEY_USERID,usersid);
+        cv.put(KEY_SETS,sets);
+        cv.put(KEY_LEVEL,level);
+        cv.put(KEY_MAINMUSCLE,mainMuscle);
+        cv.put(KEY_EXERCISES,arrayList);
+        db.insert(TABLE_PLAYLISTS,null,cv);
+        db.close();
+        try {
+            BD_backup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public int getWorkoutId(int usersid, String workoutname){
+        int workoutId = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_WORKOUTS+" WHERE "+KEY_USERID+" = "+usersid+" AND "+KEY_WORKOUTNAME+"="+workoutname,null);
+        String[] results = null;
+        if (row.moveToFirst()){
+            row.moveToFirst();
+            workoutId = row.getInt(row.getColumnIndex(KEY_IDWORKOUTS));
+        }
+        else
+            Log.v("Database Error","No results");
 
+        db.close();
+        try {
+            BD_backup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return workoutId;
+    }
+
+    public void insertWorkoutData(int workoutid, int exerciseid, int repetitions){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_WORKOUTSID,workoutid);
+        cv.put(KEY_WORKOUTEX,exerciseid);
+        cv.put(KEY_REPETITION,repetitions);
+        db.insert(TABLE_PLAYLISTS,null,cv);
+        db.close();
+        try {
+            BD_backup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 //    public MySQLiteHelper(Context context, String nombre, SQLiteDatabase.CursorFactory factory, int version) {
 //        super(context, nombre, factory, version);
