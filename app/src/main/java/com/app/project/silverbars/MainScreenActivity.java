@@ -231,7 +231,7 @@ public class MainScreenActivity extends AppCompatActivity {
                             .addToBackStack(null)
                             .commit();
                     Sort.setVisibility(View.VISIBLE);
-
+                    fab.setVisibility(View.VISIBLE);
                     Opened = main.isOpened();
                 }
 
@@ -247,7 +247,7 @@ public class MainScreenActivity extends AppCompatActivity {
                         .addToBackStack(null)
                         .commit();
                 Sort.setVisibility(View.GONE);
-
+                fab.setVisibility(View.GONE);
                 break;
             case 2:
                 if (currentFragment instanceof MainFragment) {
@@ -260,7 +260,7 @@ public class MainScreenActivity extends AppCompatActivity {
                         .addToBackStack(null)
                         .commit();
                 Sort.setVisibility(View.GONE);
-
+                fab.setVisibility(View.GONE);
                 break;
         }
 

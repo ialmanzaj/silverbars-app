@@ -98,7 +98,7 @@
     <string name="action_settings">Settings</string>
     <string name="set_edit">Total of Sets</string>
 
-
+    <string name="rest_text_set">Rest between Set</string>
     <string name="tab_saved">Saved Workouts</string>
     <string name="tab_my_workouts">My Workouts</string>
 
@@ -126,6 +126,7 @@
         <item>Facebook</item>
     </string-array>
 
+    <string name="rest_text_exercise">Rest between Exercise</string>
     <string name="error_title">No internet conexion</string>
     <string name="error_message">Please, Connect to Internet and try again</string>
 

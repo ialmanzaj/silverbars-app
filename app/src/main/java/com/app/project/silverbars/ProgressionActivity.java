@@ -36,10 +36,6 @@ public class ProgressionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progression);
 
-
-
-
-
         Toolbar toolbar;
         toolbar = (Toolbar) findViewById(R.id.toolbar_);
         setSupportActionBar(toolbar);

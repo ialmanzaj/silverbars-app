@@ -90,7 +90,9 @@
         <item>Facebook</item>
     </string-array>
 
+    <string name="rest_text_set">Descanso entre Set</string>
 
+    <string name="rest_text_exercise">Descanso entre Ejercicio</string>
     <string name="error_title">"Estás sin conexión</string>
     <string name="error_message">Por Favor, Conectate a Internet y prueba de nuevo</string>
 </resources>
