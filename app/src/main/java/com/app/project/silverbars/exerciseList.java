@@ -42,6 +42,10 @@ public class exerciseList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_list);
 
+        if (sItems.size() > 0 && AllExercisesAdapter.order.size() > 0){
+            sItems.clear();
+            AllExercisesAdapter.order.clear();
+        }
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         recycler = (RecyclerView) findViewById(R.id.recycler);
 //        mMultiChoiceRecyclerView = (MultiChoiceRecyclerView) findViewById(R.id.multiChoiceRecyclerView);
@@ -49,19 +53,18 @@ public class exerciseList extends AppCompatActivity {
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sItems.clear();
                 for (int i = 0; i < Exercises.length; i++){
                     if (AllExercisesAdapter.Selected[i]){
                         sItems.add(Exercises[i].getId());
                     }
                 }
-                Intent intent = new Intent(exerciseList.this,orderExercises.class);
-                intent.putIntegerArrayListExtra("Items",sItems);
-                startActivityForResult(intent,1);
-                for (int i = 0; i < Exercises.length; i++){
-                    Log.v("Elemento"+String.valueOf(i),String.valueOf(AllExercisesAdapter.Selected[i]));
-                }
-
+                Log.v("sItems", String.valueOf(sItems.size()));
+                Log.v("Order",String.valueOf(AllExercisesAdapter.getOrder().size()));
+                Intent returnIntent = new Intent();
+                returnIntent.putIntegerArrayListExtra("Order",AllExercisesAdapter.getOrder());
+                returnIntent.putExtra("Items",sItems);
+                setResult(RESULT_OK, returnIntent);
+                finish();
             }
         });
         lManager = new LinearLayoutManager(this);
@@ -74,22 +77,6 @@ public class exerciseList extends AppCompatActivity {
             getSupportActionBar().setTitle("Add Exercises");
         }
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null){
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("Order",data.getIntArrayExtra("Order"));
-            setResult(RESULT_OK, returnIntent);
-            finish();
-            Log.v("Result","Ok");
-            sItems.clear();
-        }
-        else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
-            Log.v("Result","Cancel");
-        }
     }
 
     public void Exercises(){

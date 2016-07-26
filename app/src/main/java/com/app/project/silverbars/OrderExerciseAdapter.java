@@ -3,7 +3,6 @@ package com.app.project.silverbars;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -13,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,9 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -182,7 +177,7 @@ public class OrderExerciseAdapter extends RecyclerView.Adapter<OrderExerciseAdap
                 //Dialog elements
                 DialogName = (TextView) v.findViewById(R.id.ExerciseName);
                 DialogName.setText(exerciseList.Exercises[a].getExercise_name());
-                Reps = (TextView) v.findViewById(R.id.Reps);
+                Reps = (TextView) v.findViewById(R.id.Sets);
                 ActualRepValue = Integer.valueOf(viewHolder.repetitions.getText().toString());
                 Reps.setText(String.valueOf(ActualRepValue));
                 plusRep = (Button) v.findViewById(R.id.plusRep);

@@ -35,11 +35,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -151,7 +148,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 //        Tab 2
 
-        Reps = (TextView) findViewById(R.id.Reps);
+        Reps = (TextView) findViewById(R.id.Sets);
 
         Sets = (TextView) findViewById(R.id.Sets);
         Sets.setText(String.valueOf(workout_sets));

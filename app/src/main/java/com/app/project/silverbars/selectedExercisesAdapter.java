@@ -5,13 +5,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,6 +50,7 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
         public TextView nombre;
         public TextView next;
         public ImageView unchecked, checked;
+        public TextView repetitions;
 
         public selectedExercisesViewHolder(View v) {
             super(v);
@@ -53,6 +59,7 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
 //            next = (TextView) v.findViewById(R.id.next);
             unchecked = (ImageView) v.findViewById(R.id.unchecked);
             checked = (ImageView) v.findViewById(R.id.checked);
+            repetitions = (TextView) v.findViewById(R.id.repetitions);
         }
     }
 
@@ -101,6 +108,124 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
             DownloadImage(Parsedurl, viewHolder, imgName);
         }
         viewHolder.nombre.setText(exerciseList.Exercises[a].getExercise_name());
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            private TextView DialogName, Reps;
+            private Button plusRep, minusRep;
+            private int value = 0;
+            private int ActualRepValue = 0;
+
+            @Override
+            public boolean onLongClick(View view) {
+                boolean wrapInScrollView = true;
+                //Dialog when LongClick on element
+                View v = new MaterialDialog.Builder(view.getContext())
+                        .title(R.string.rep_edit)
+                        .customView(R.layout.edit_reps_setup, wrapInScrollView)
+                        .positiveText("Done").onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                dialog.dismiss();
+                                //On Dialog "Done" ClickListener
+                                viewHolder.repetitions.setText(String.valueOf(NewRepValue()));
+//                                WorkoutActivity workout = new WorkoutActivity();
+//                                workout.Exercises_reps[a] = NewRepValue();
+                            }
+                        })
+                        .show()
+                        .getCustomView();
+                //Dialog elements
+                DialogName = (TextView) v.findViewById(R.id.ExerciseName);
+                DialogName.setText(exerciseList.Exercises[a].getExercise_name());
+                Reps = (TextView) v.findViewById(R.id.Sets);
+                ActualRepValue = Integer.valueOf(viewHolder.repetitions.getText().toString());
+                Reps.setText(String.valueOf(ActualRepValue));
+                plusRep = (Button) v.findViewById(R.id.plusRep);
+                plusRep.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Increasing Reps Button
+                        plusTempo(Reps, plusRep, minusRep);
+                    }
+                });
+
+                minusRep = (Button) v.findViewById(R.id.minusRep);
+                minusRep.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Decreasing Reps Button
+                        minusTempo(Reps, minusRep, plusRep);
+                    }
+                });
+                //Check if actual rep value is 1 or 20 on Dialog open
+                if (ActualRepValue == 1) {
+                    minusRep.setEnabled(false);
+                    minusRep.setClickable(false);
+                } else if (ActualRepValue == 20) {
+                    plusRep.setEnabled(false);
+                    plusRep.setClickable(false);
+                }
+
+                return false;
+            }
+
+            public int NewRepValue() {
+                return Integer.valueOf(Reps.getText().toString());
+            }
+
+            public void plusTempo(TextView view, Button button, Button button2) {
+                value = Integer.parseInt(view.getText().toString());
+                view.setText(String.valueOf(value + 1));
+                value++;
+                if (view == Reps) {
+                    if (value == 20) {
+                        button.setEnabled(false);
+                        button.setClickable(false);
+                    } else {
+                        if (value > 1) {
+                            button2.setEnabled(true);
+                            button2.setClickable(true);
+                        }
+                    }
+                } else {
+                    if (value == 10) {
+                        button.setEnabled(false);
+                        button.setClickable(false);
+                    } else {
+                        if (value > 1) {
+                            button2.setEnabled(true);
+                            button2.setClickable(true);
+                        }
+                    }
+                }
+            }
+
+            public void minusTempo(TextView view, Button button, Button button2) {
+                value = Integer.parseInt(view.getText().toString());
+                view.setText(String.valueOf(value - 1));
+                value--;
+                if (view == Reps) {
+                    if ((value) == 1) {
+                        button.setEnabled(false);
+                        button.setClickable(false);
+                    } else {
+                        if (value < 20) {
+                            button2.setEnabled(true);
+                            button2.setClickable(true);
+                        }
+                    }
+                } else {
+                    if ((value) == 1) {
+                        button.setEnabled(false);
+                        button.setClickable(false);
+                    } else {
+                        if (value < 10) {
+                            button2.setEnabled(true);
+                            button2.setClickable(true);
+                        }
+                    }
+                }
+            }
+        });
 
     }
 

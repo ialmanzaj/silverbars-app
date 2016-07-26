@@ -28,6 +28,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -48,6 +51,7 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
     public boolean[] getSelected() {
         return Selected;
     }
+    public static ArrayList<Integer> order = new ArrayList<>();
 
     public static class AllExercisesViewHolder extends RecyclerView.ViewHolder {
 
@@ -56,6 +60,7 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
         public TextView nombre;
         public TextView next;
         public ImageView unchecked, checked;
+        public TextView order;
 
         public AllExercisesViewHolder(View v) {
             super(v);
@@ -64,6 +69,7 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
 //            next = (TextView) v.findViewById(R.id.next);
             unchecked = (ImageView) v.findViewById(R.id.unchecked);
             checked = (ImageView) v.findViewById(R.id.checked);
+            order = (TextView) v.findViewById(R.id.order);
         }
     }
 
@@ -95,6 +101,45 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
         return new AllExercisesViewHolder(v);
     }
 
+    public static ArrayList<Integer> getOrder() {
+        return order;
+    }
+
+    public int fillOrder(int elementId){
+        int position = 0;
+        for (int i = 0; i < getItemCount(); i++){
+            try {
+                Log.v("Position / element",String.valueOf(i)+" / "+String.valueOf(order.get(i)));
+                order.get(i);
+                if (order.get(i) == 0){
+                    order.remove(i);
+                    order.add( i, elementId );
+                    position = i+1;
+                    Log.v("Elements", order.toString());
+                    break;
+                }
+            } catch ( IndexOutOfBoundsException e ) {
+                order.add( i, elementId );
+                position = i+1;
+                Log.v("Elements", order.toString());
+                break;
+            }
+        }
+        return position;
+    }
+    public void unfillOrder(int elementId){
+        Log.v("Order Size",String.valueOf(getItemCount()));
+        for (int i = 0; i < order.size(); i++){
+            if (order.get(i)==elementId){
+                Log.v("Order actual position",String.valueOf(i));
+                order.remove(i);
+                order.add(i,0);
+                Log.v("Elements", order.toString());
+                break;
+            }
+        }
+    }
+
     @Override
     public void onBindViewHolder(final AllExercisesViewHolder viewHolder, int i) {
         final int a = i;
@@ -106,11 +151,14 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
                     Log.v("Seleccionado",String.valueOf(Selected[a]));
                     viewHolder.unchecked.setVisibility(View.GONE);
                     viewHolder.checked.setVisibility(View.VISIBLE);
+                    viewHolder.order.setText(String.valueOf(fillOrder(exerciseList.Exercises[a].getId())));
                 }else{
                     Selected[a] = false;
                     Log.v("Seleccionado",String.valueOf(Selected[a]));
                     viewHolder.checked.setVisibility(View.GONE);
                     viewHolder.unchecked.setVisibility(View.VISIBLE);
+                    viewHolder.order.setText("");
+                    unfillOrder(exerciseList.Exercises[a].getId());
                 }
             }
         });

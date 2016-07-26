@@ -86,6 +86,16 @@
                     android:layout_gravity="center"
                     android:src="@drawable/checked"
                     android:visibility="gone" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/order"
+                    android:layout_gravity="right|top"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="30dp"
+                    android:textStyle="bold" />
             </FrameLayout>
 
             <!--<ImageView-->

@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.androidifygeeks.library.fragment.TabDialogFragment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -133,7 +132,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                 //Dialog elements
                 DialogName = (TextView) v.findViewById(R.id.ExerciseName);
                 DialogName.setText(items.get(a).getNombre());
-                Reps = (TextView) v.findViewById(R.id.Reps);
+                Reps = (TextView) v.findViewById(R.id.Sets);
                 ActualRepValue = Integer.valueOf(viewHolder.repetitions.getText().toString());
                 Reps.setText(String.valueOf(ActualRepValue));
 
