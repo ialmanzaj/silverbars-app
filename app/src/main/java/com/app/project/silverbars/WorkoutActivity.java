@@ -189,7 +189,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 plusSets.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        plusTempo(Sets,plusSets,minusSets);
+
                         plusTempo(Sets_dialog,plusSets,minusSets);
 
                     }
@@ -198,7 +198,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 minusSets.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        minusTempo(Sets,minusSets,plusSets);
+
                         minusTempo(Sets_dialog,minusSets,plusSets);
                     }
                 });
@@ -228,11 +228,11 @@ public class WorkoutActivity extends AppCompatActivity {
                 RestSets_dialog = (TextView) v.findViewById(R.id.RestSets_dialog);
                 RestSets_dialog.setText(String.valueOf(RestSets.getText()));
 
-               /* plusRestSets = (Button) v.findViewById(R.id.plusRestSets);
+               plusRestSets = (Button) v.findViewById(R.id.plusRestSets);
                 plusRestSets.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                       // plusTempo(RestSets,plusRestSets,minusRestSets);
+                       plusTempo(RestSets_dialog,plusRestSets,minusRestSets);
 
 
 
@@ -242,10 +242,10 @@ public class WorkoutActivity extends AppCompatActivity {
                 minusRestSets.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //minusTempo(RestSets,minusRestSets,plusRestSets);
+                        minusTempo(RestSets_dialog,minusRestSets,plusRestSets);
 
                     }
-                });*/
+                });
 
             }
         });
@@ -276,14 +276,14 @@ public class WorkoutActivity extends AppCompatActivity {
                 plusRest.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        plusTempo(Rest,plusRest,minusRest);
+                        plusTempo(Rest_exercise,plusRest,minusRest);
                     }
                 });
                 minusRest = (Button) v.findViewById(R.id.minusRest);
                 minusRest.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        minusTempo(Rest,minusRest,plusRest);
+                        minusTempo(Rest_exercise,minusRest,plusRest);
                     }
                 });
 
@@ -587,7 +587,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     button2.setClickable(true);
                 }
             }
-        }else if(view == Rest){
+        }else if(view == Rest_exercise){
             String[] elements = view.getText().toString().split("s");
             value = Integer.parseInt(elements[0]);
             value = value + 5;
@@ -646,7 +646,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     button2.setClickable(true);
                 }
             }
-        }else if(view == Rest){
+        }else if(view == RestSets_dialog){
             String[] elements = view.getText().toString().split("s");
             value = Integer.parseInt(elements[0]);
             value = value - 5;
