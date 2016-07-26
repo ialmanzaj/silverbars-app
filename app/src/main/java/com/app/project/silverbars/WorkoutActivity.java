@@ -3,6 +3,7 @@ package com.app.project.silverbars;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -11,12 +12,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -72,13 +75,16 @@ public class WorkoutActivity extends AppCompatActivity {
     private int ExerciseReps = 1;
     private ArrayList<File> mySongs;
     static public int[] Exercises_reps;
+    private LinearLayout primary_linear,secondary_linear;
+
+
+
     private String[] exercises;
     private int workout_id = 0;
     private List<WorkoutInfo> items = new ArrayList<>();
     public static JsonExercise[] ParsedExercises;
     public static JsonReps[] ParsedReps;
     private int[] exercises_id;
-    private List<String> Muscles_names = new ArrayList<String>();
 
 
     private static final String TAG = WorkoutActivity.class.getSimpleName();
@@ -96,6 +102,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private String partes = "";
     private WebView webview;
+    private TextView Rest_exercise;
 
 
     @Override
@@ -104,7 +111,7 @@ public class WorkoutActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         exercises = intent.getStringArrayExtra("exercises");
-        Log.v("Exercises",Arrays.toString(exercises));
+        Log.v(TAG,Arrays.toString(exercises));
         String workout_name = intent.getStringExtra("name");
         String level = intent.getStringExtra("level");
         workout_id = intent.getIntExtra("id",0);
@@ -119,6 +126,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
         }
+        primary_linear = (LinearLayout) findViewById(R.id.primary_muscles);
+        secondary_linear = (LinearLayout) findViewById(R.id.sec_muscles);
 
 
 
@@ -177,7 +186,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 plusSets.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        plusTempo(Sets,plusSets,minusSets);
+
                         plusTempo(Sets_dialog,plusSets,minusSets);
 
                     }
@@ -186,7 +195,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 minusSets.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        minusTempo(Sets,minusSets,plusSets);
+
                         minusTempo(Sets_dialog,minusSets,plusSets);
                     }
                 });
@@ -200,7 +209,7 @@ public class WorkoutActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 View v = new MaterialDialog.Builder(view.getContext())
-                        .title(R.string.set_edit)
+                        .title(R.string.rest_sets_text)
                         .customView(R.layout.edit_rest_sets_setup, true)
                         .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
@@ -216,11 +225,11 @@ public class WorkoutActivity extends AppCompatActivity {
                 RestSets_dialog = (TextView) v.findViewById(R.id.RestSets_dialog);
                 RestSets_dialog.setText(String.valueOf(RestSets.getText()));
 
-               /* plusRestSets = (Button) v.findViewById(R.id.plusRestSets);
+               plusRestSets = (Button) v.findViewById(R.id.plusRestSets);
                 plusRestSets.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                       // plusTempo(RestSets,plusRestSets,minusRestSets);
+                       plusTempo(RestSets_dialog,plusRestSets,minusRestSets);
 
 
 
@@ -230,10 +239,10 @@ public class WorkoutActivity extends AppCompatActivity {
                 minusRestSets.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //minusTempo(RestSets,minusRestSets,plusRestSets);
+                        minusTempo(RestSets_dialog,minusRestSets,plusRestSets);
 
                     }
-                });*/
+                });
 
             }
         });
@@ -244,7 +253,7 @@ public class WorkoutActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 View v = new MaterialDialog.Builder(view.getContext())
-                        .title(R.string.set_edit)
+                        .title(R.string.rest_exercise_text)
                         .customView(R.layout.edit_rest_exercise_setup, true)
                         .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
@@ -256,25 +265,29 @@ public class WorkoutActivity extends AppCompatActivity {
                         })
                         .show()
                         .getCustomView();
-               /* plusRest = (Button) v.findViewById(R.id.plusRest);
+                Rest_exercise = (TextView) v.findViewById(R.id.Rest_exercise);
+                Rest_exercise.setText(String.valueOf(Rest.getText()));
+
+
+                plusRest = (Button) v.findViewById(R.id.plusRest);
                 plusRest.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        plusTempo(Rest,plusRest,minusRest);
+                        plusTempo(Rest_exercise,plusRest,minusRest);
                     }
                 });
                 minusRest = (Button) v.findViewById(R.id.minusRest);
                 minusRest.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        minusTempo(Rest,minusRest,plusRest);
+                        minusTempo(Rest_exercise,minusRest,plusRest);
                     }
-                });*/
+                });
 
             }
         });
 
-
+/*
         Positive = (TextView) findViewById(R.id.Positive);
         Isometric = (TextView) findViewById(R.id.Isometric);
         Negative = (TextView) findViewById(R.id.Negative);
@@ -320,12 +333,7 @@ public class WorkoutActivity extends AppCompatActivity {
             public void onClick(View view) {
                 minusTempo(Negative,minusNegative,plusNegative);
             }
-        });
-
-
-
-
-
+        });*/
 
 
 
@@ -341,7 +349,10 @@ public class WorkoutActivity extends AppCompatActivity {
             minusSets.setEnabled(true);
             minusSets.setClickable(true);
         }
-        minusIsometric.setEnabled(false);
+
+
+
+        /*minusIsometric.setEnabled(false);
         minusIsometric.setClickable(false);
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
@@ -440,11 +451,12 @@ public class WorkoutActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}
         });
-
+*/
         // Tab 3 Inicializar Exercises en el RecyclerView
 
         //Defining Tabs
         TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost2);
+        
         tabHost2.setup();
 
         TabHost.TabSpec overview = tabHost2.newTabSpec(getResources().getString(R.string.tab_overview));
@@ -462,7 +474,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         tabHost2.addTab(muscles);
 
-        Button selectMusic = (Button) findViewById(R.id.SelectMusic);
+        LinearLayout selectMusic = (LinearLayout) findViewById(R.id.SelectMusic);
         selectMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -527,27 +539,26 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private void LaunchWorkingOutActivity() {
         int positive,isometric,negative,sets;
-            if (!Objects.equals(Positive.getText().toString(), "") && !Objects.equals(Isometric.getText().toString(), "") && !Objects.equals(Negative.getText().toString(), "") && !Objects.equals(Sets.getText().toString(), "")){
-                positive = Integer.parseInt(Positive.getText().toString());
-                isometric = Integer.parseInt(Isometric.getText().toString());
-                negative = Integer.parseInt(Negative.getText().toString());
-                sets = Integer.parseInt(Sets.getText().toString());
+        /*
+        positive = Integer.parseInt(Positive.getText().toString());
+        isometric = Integer.parseInt(Isometric.getText().toString());
+        negative = Integer.parseInt(Negative.getText().toString());
+        */
+        sets = Integer.parseInt(Sets.getText().toString());
 
-                int tempoTotal = positive + isometric + negative;
+        int tempoTotal = 5;
 
-                Intent intent = new Intent(this, WorkingOutActivity.class);
-                intent.putExtra("ExercisesReps",Exercises_reps);
-                intent.putExtra("tempo", tempoTotal);
-                intent.putExtra("pos",position);
-                intent.putExtra("songlist",mySongs);
-                intent.putExtra("Sets",sets);
-                intent.putExtra("VibrationPerSet",VibrationIsActivePerSet);
-                intent.putExtra("VibrationPerRep",VibrationIsActivePerRep);
-                startActivity(intent);
-            }
-            else{
-                toast("Must select a tempo");
-            }
+        Intent intent = new Intent(this, WorkingOutActivity.class);
+        intent.putExtra("ExercisesReps",Exercises_reps);
+        intent.putExtra("tempo", tempoTotal);
+        intent.putExtra("pos",position);
+        intent.putExtra("songlist",mySongs);
+        intent.putExtra("Sets",sets);
+        intent.putExtra("VibrationPerSet",VibrationIsActivePerSet);
+        intent.putExtra("VibrationPerRep",VibrationIsActivePerRep);
+        startActivity(intent);
+
+
     }
 
     public void LaunchMusicActivity() {
@@ -573,7 +584,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     button2.setClickable(true);
                 }
             }
-        }else if(view == Rest){
+        }else if(view == Rest_exercise){
             String[] elements = view.getText().toString().split("s");
             value = Integer.parseInt(elements[0]);
             value = value + 5;
@@ -632,7 +643,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     button2.setClickable(true);
                 }
             }
-        }else if(view == Rest){
+        }else if(view == RestSets_dialog){
             String[] elements = view.getText().toString().split("s");
             value = Integer.parseInt(elements[0]);
             value = value - 5;
@@ -679,6 +690,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private  List<String> muscles = new ArrayList<String>();
 
     public void Exercises(){
+
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
             @Override
@@ -691,7 +703,7 @@ public class WorkoutActivity extends AppCompatActivity {
                         .method(original.method(), original.body())
                         .build();
                 okhttp3.Response response = chain.proceed(request);
-                Log.v("Response",response.toString());
+                Log.v(TAG,response.toString());
                 // Customize or return the response
                 return response;
             }
@@ -723,13 +735,10 @@ public class WorkoutActivity extends AppCompatActivity {
                         //Collections.addAll(Muscles_names,name);
                         for (int b = 0; b < ParsedExercises[a].muscle.length; b++){
                             String name;
-                            name = "#"+ParsedExercises[a].muscle[b];
+                            name = ParsedExercises[a].muscle[b];
 
                             muscles.add(name);
                         }
-
-
-
 
 
 
@@ -743,37 +752,45 @@ public class WorkoutActivity extends AppCompatActivity {
                         int statusCode = response.code();
                         // handle request errors yourself
                         ResponseBody errorBody = response.errorBody();
-                        Log.v("Error",errorBody.toString());
+                        Log.e(TAG,errorBody.toString());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<JsonExercise> call, Throwable t) {
-                    Log.v("Exception",t.toString());
+                    Log.e(TAG,t.toString(),t);
                 }
             });
         }
-
-
     }
 
-    private void setMusclesNames(List<String> muscles_names){
-        Muscles_names = muscles_names;
+    private void setMusclesNames(List<String> muscle){
+        List<String> muscles_names = muscles;
         //Log.v("MUSCLES NAMES", String.valueOf(Muscles_names) );
        /* Log.v(TAG," se ha asignado musculos");
         Log.v(TAG, String.valueOf(Muscles_names.size()));*/
 
+        if ( muscles_names.size() > 0 ){
 
-        if ( Muscles_names.size() > 0 ){
-
-
-            for (String s : Muscles_names)
+            for (String s : muscles_names)
             {
-                partes += s + ",";
+                final TextView MuscleView = new TextView(this);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    MuscleView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));
+                }else {
+                    MuscleView.setTextColor(getResources().getColor(R.color.gray_active_icon));
+                }
+
+                partes += "#"+ s + ",";
+                MuscleView.setGravity(Gravity.CENTER);
+                MuscleView.setText(s);
+
+                //Log.v(TAG, (String) MuscleView.getText());
+                primary_linear.addView(MuscleView);
+
             }
-
         }
-
 
         webview.setWebViewClient(new WebViewClient(){
             @Override
@@ -781,9 +798,12 @@ public class WorkoutActivity extends AppCompatActivity {
                 injectJS();
                 super.onPageFinished(view, url);
             }
+
         });
         webview.getSettings().setJavaScriptEnabled(true);
-        webview.loadUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/html/index.html");
+        String fileurl = "file://"+Environment.getExternalStorageDirectory()+"/html/"+"index.html";
+
+        webview.loadUrl(fileurl);
 
     }
     private static String removeLastChar(String str) {
@@ -792,13 +812,13 @@ public class WorkoutActivity extends AppCompatActivity {
     private void injectJS() {
         try {
             partes = removeLastChar(partes);
-            Log.v("injectJS",partes);
+            Log.v(TAG,partes);
 
             webview.loadUrl("javascript: ("+ "window.onload = function () {"+
 
                     "partes = Snap.selectAll('"+partes+"');"+
                     "partes.forEach( function(elem,i) {"+
-                    "elem.attr({fill: '#602C8D',stroke: '#602C8D',});"+
+                    "elem.attr({fill: 'rgba(96%,44%,141%,50%)',stroke: 'rgba(96%,44%,141%,50%)',});"+
                     "});"+ "}"+  ")()");
 
             //Log.v("MAIN ACTIVITY","HA EJECUTADO EL JAVASCRIPT");
@@ -825,7 +845,7 @@ public class WorkoutActivity extends AppCompatActivity {
                         .build();
 
                 okhttp3.Response response = chain.proceed(request);
-                Log.v("Response",response.toString());
+                Log.v(TAG,response.toString());
                 // Customize or return the response
                 return response;
             }
@@ -871,7 +891,7 @@ public class WorkoutActivity extends AppCompatActivity {
                             if (success)
                                 DownloadMp3(Parsedurl,mp3Name);
                             else
-                                Log.v("Dir","Error creating dir");
+                                Log.v(TAG,"Error creating dir");
                         }
 
                         Exercises_reps[i] = ParsedReps[i].getRepetition();
@@ -879,7 +899,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     adapter = new ExerciseAdapter(items,WorkoutActivity.this,getSupportFragmentManager());
                     recycler.setAdapter(adapter);
                     setMusclesNames(muscles);
-                    Log.v("EXERCISE METHOD", String.valueOf(muscles));
+                    Log.v(TAG, String.valueOf(muscles));
 
 
 
@@ -890,13 +910,13 @@ public class WorkoutActivity extends AppCompatActivity {
                     int statusCode = response.code();
                     // handle request errors yourself
                     ResponseBody errorBody = response.errorBody();
-                    Log.v("Error",errorBody.toString());
+                    Log.v(TAG,errorBody.toString());
                 }
             }
 
             @Override
             public void onFailure(Call<JsonReps[]> call, Throwable t) {
-                Log.v("Exception",t.toString());
+                Log.v(TAG,t.toString());
             }
         });
     }
@@ -917,11 +937,15 @@ public class WorkoutActivity extends AppCompatActivity {
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if (response.isSuccessful()) {boolean writtenToDisk = writeResponseBodyToDisk(response.body(),audioName);}
-                        else {Log.d("Download", "server contact failed");}
+                        if (response.isSuccessful()) {
+                            boolean writtenToDisk = writeResponseBodyToDisk(response.body(),audioName);
+
+                            Log.v(TAG, String.valueOf(writtenToDisk));
+                        }
+                        else {Log.e(TAG, "Download server contact failed");}
                     }
                     @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {Log.v("Failure", t.toString());}
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {Log.v(TAG, t.toString(),t);}
                 });
                 return null;
             };
@@ -944,7 +968,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     if (read == -1) {break;}
                     outputStream.write(fileReader, 0, read);
                     fileSizeDownloaded += read;
-                    Log.d("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                    Log.d(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
                 }
                 outputStream.flush();
                 return true;

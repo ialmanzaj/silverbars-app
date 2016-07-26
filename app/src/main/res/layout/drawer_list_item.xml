@@ -1,11 +1,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:gravity="bottom"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp">
 
     <TextView
         android:id="@+id/name"
+        android:textSize="22sp"
+
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -15,6 +19,7 @@
         android:textColor="#fff" />
 
     <ImageView
+
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -94,9 +94,11 @@
             android:name=".CreateWorkout"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".exerciseList" />
-        <activity android:name=".orderExercises"></activity>
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Theme.AppCompat"/>
+        <activity android:name=".orderExercises" />
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Theme.AppCompat" />
+        <activity android:name=".ProgressionActivity"></activity>
     </application>
 
 </manifest>

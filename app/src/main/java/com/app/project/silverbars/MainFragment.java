@@ -43,6 +43,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainFragment extends Fragment {
 
+    private static final String TAG ="MAIN SCREEN FRAGMENT" ;
     private String email;
     private String name;
     public TwoWayView recyclerView;
@@ -191,7 +192,7 @@ public class MainFragment extends Fragment {
                         .build();
 
                 okhttp3.Response response = chain.proceed(request);
-                Log.v("Response",response.toString());
+                Log.v(TAG,response.toString());
                 // Customize or return the response
                 return response;
             }
@@ -205,6 +206,8 @@ public class MainFragment extends Fragment {
         SilverbarsService service = retrofit.create(SilverbarsService.class);
         Call<JsonWorkout[]> call = service.getWorkouts();
         call.enqueue(new Callback<JsonWorkout[]>() {
+
+
             @Override
             public void onResponse(Call<JsonWorkout[]> call, Response<JsonWorkout[]> response) {
                 if (response.isSuccessful()) {
@@ -242,14 +245,20 @@ public class MainFragment extends Fragment {
                     int statusCode = response.code();
                     // handle request errors yourself
                     ResponseBody errorBody = response.errorBody();
-                    Log.v("Error",errorBody.toString());
+                    Log.e(TAG,errorBody.toString());
 
                 }
+            }
+            @Override
+            protected void finalize() throws Throwable {
+                super.finalize();
+                Log.v(TAG,"ha finalizado ");
+
             }
 
             @Override
             public void onFailure(Call<JsonWorkout[]> call, Throwable t) {
-                Log.v("Exception",t.toString());
+                Log.e(TAG,t.toString());
             }
         });
     }
