@@ -157,7 +157,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 //        Tab 2
 
-        Reps = (TextView) findViewById(R.id.Sets);
+        Reps = (TextView) findViewById(R.id.Reps);
 
         Sets = (TextView) findViewById(R.id.Sets);
         Sets.setText(String.valueOf(workout_sets));
