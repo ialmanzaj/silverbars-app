@@ -130,5 +130,6 @@
     <string name="error_title">No internet conexion</string>
     <string name="error_message">Please, Connect to Internet and try again</string>
 
-
+    <string name="exercise_json_name"></string>
+    <string name="exercise_json_rep"></string>
 </resources>

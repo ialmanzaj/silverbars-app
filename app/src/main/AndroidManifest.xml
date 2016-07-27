@@ -98,7 +98,17 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Theme.AppCompat" />
-        <activity android:name=".ProgressionActivity"></activity>
+        <activity android:name=".ProgressionActivity" />
+
+
+
+        <activity android:name=".CreateWorkoutFinalActivity"
+            android:parentActivityName=".CreateWorkout">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.app.project.silverbars.CreateWorkout" />
+        </activity>
     </application>
+
 
 </manifest>

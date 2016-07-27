@@ -34,9 +34,7 @@ import retrofit2.Retrofit;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
     private List<WorkoutInfo> items;
-    private Context mContext;
     private InputStream bmpInput;
-    private FragmentManager fragmentManager;
 
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
@@ -57,9 +55,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     }
 
     public ExerciseAdapter(List<WorkoutInfo> items, Context context,FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
+        FragmentManager fragmentManager1 = fragmentManager;
         this.items = items;
-        mContext = context;
+        Context mContext = context;
 
     }
 
@@ -80,7 +78,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         final int a = i;
         WorkoutActivity workout = new WorkoutActivity();
         //Setting values to each recylerView Element
-        String[] imageDir = workout.ParsedExercises[a].getExercise_image().split("exercises");;
+        String[] imageDir = WorkoutActivity.ParsedExercises[a].getExercise_image().split("exercises");;
         String Parsedurl = "exercises"+imageDir[1];
         String[] imagesName = Parsedurl.split("/");
         String imgName = imagesName[2];
@@ -91,8 +89,10 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         else{
             DownloadImage(Parsedurl,viewHolder,imgName);
         }
-        viewHolder.nombre.setText(workout.ParsedExercises[a].getExercise_name());
-        viewHolder.repetitions.setText(String.valueOf(workout.Exercises_reps[a]));
+
+        viewHolder.nombre.setText(WorkoutActivity.ParsedExercises[a].getExercise_name());
+        viewHolder.repetitions.setText(String.valueOf(WorkoutActivity.Exercises_reps[a]));
+
 
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +122,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                                 //On Dialog "Done" ClickListener
                                 viewHolder.repetitions.setText(String.valueOf(NewRepValue()));
                                 WorkoutActivity workout = new WorkoutActivity();
-                                workout.Exercises_reps[a] = NewRepValue();
+                                WorkoutActivity.Exercises_reps[a] = NewRepValue();
                             }
                         })
                         .show()

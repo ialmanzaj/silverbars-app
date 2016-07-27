@@ -1,5 +1,7 @@
 package com.app.project.silverbars;
 
+
+
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,21 +36,31 @@ public class exerciseList extends AppCompatActivity {
     public static JsonExercise[] Exercises;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
-//    private MultiChoiceRecyclerView mMultiChoiceRecyclerView;
+    //private MultiChoiceRecyclerView mMultiChoiceRecyclerView;
     private ArrayList<Integer> sItems = new ArrayList<>();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_list);
 
+
+
         if (sItems.size() > 0 && AllExercisesAdapter.order.size() > 0){
             sItems.clear();
             AllExercisesAdapter.order.clear();
         }
+
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         recycler = (RecyclerView) findViewById(R.id.recycler);
 //        mMultiChoiceRecyclerView = (MultiChoiceRecyclerView) findViewById(R.id.multiChoiceRecyclerView);
+
+
+
+
         add_button = (Button) findViewById(R.id.done_button);
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +79,9 @@ public class exerciseList extends AppCompatActivity {
                 finish();
             }
         });
+
+
+
         lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
         Exercises();
@@ -75,7 +90,14 @@ public class exerciseList extends AppCompatActivity {
         if (toolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Add Exercises");
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
         }
+
 
     }
 
@@ -104,29 +126,29 @@ public class exerciseList extends AppCompatActivity {
                 .client(client)
                 .build();
         SilverbarsService service = retrofit.create(SilverbarsService.class);
-            Call<JsonExercise[]> call = service.getAllExercises();
-            call.enqueue(new Callback<JsonExercise[]>() {
-                @Override
-                public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
-                    if (response.isSuccessful()) {
-                        Exercises = response.body();
+        Call<JsonExercise[]> call = service.getAllExercises();
+        call.enqueue(new Callback<JsonExercise[]>() {
+            @Override
+            public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
+                if (response.isSuccessful()) {
+                    Exercises = response.body();
 //                        for (int i = 0; i < Exercises.length; i++){
 //                            Log.v("Name",Exercises[i].getExercise_name());
 //                        }
-                        adapter = new AllExercisesAdapter(exerciseList.this);
-                        recycler.setAdapter(adapter);
-                    } else {
-                        int statusCode = response.code();
-                        // handle request errors yourself
-                        ResponseBody errorBody = response.errorBody();
-                        Log.v("Error",errorBody.toString());
-                    }
+                    adapter = new AllExercisesAdapter(exerciseList.this);
+                    recycler.setAdapter(adapter);
+                } else {
+                    int statusCode = response.code();
+                    // handle request errors yourself
+                    ResponseBody errorBody = response.errorBody();
+                    Log.v("Error",errorBody.toString());
                 }
+            }
 
-                @Override
-                public void onFailure(Call<JsonExercise[]> call, Throwable t) {
-                    Log.v("Exception",t.toString());
-                }
-            });
+            @Override
+            public void onFailure(Call<JsonExercise[]> call, Throwable t) {
+                Log.v("Exception",t.toString());
+            }
+        });
     }
 }

@@ -112,8 +112,10 @@ public class WorkoutActivity extends AppCompatActivity {
 
         exercises = intent.getStringArrayExtra("exercises");
         Log.v(TAG,Arrays.toString(exercises));
+
         String workout_name = intent.getStringExtra("name");
         String level = intent.getStringExtra("level");
+
         workout_id = intent.getIntExtra("id",0);
         int workout_sets = intent.getIntExtra("sets", 0);
         exercises_id = new int[exercises.length];
@@ -123,7 +125,7 @@ public class WorkoutActivity extends AppCompatActivity {
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
         if (recycler != null) {
-
+                recycler.setHasFixedSize(true);
 
         }
         primary_linear = (LinearLayout) findViewById(R.id.primary_muscles);
@@ -147,6 +149,7 @@ public class WorkoutActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(workout_name);
         }
+
         Button startButton = (Button) findViewById(R.id.start_button);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,26 +182,30 @@ public class WorkoutActivity extends AppCompatActivity {
                         })
                         .show()
                         .getCustomView();
-                Sets_dialog = (TextView) v.findViewById(R.id.Sets_dialog);
-                Sets_dialog.setText(String.valueOf(Sets.getText()));
+                if (v != null) {
 
-                plusSets = (Button) v.findViewById(R.id.plusSets);
-                plusSets.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                    Sets_dialog = (TextView) v.findViewById(R.id.Sets_dialog);
+                    Sets_dialog.setText(String.valueOf(Sets.getText()));
 
-                        plusTempo(Sets_dialog,plusSets,minusSets);
+                    plusSets = (Button) v.findViewById(R.id.plusSets);
+                    plusSets.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
-                    }
-                });
-                minusSets = (Button) v.findViewById(R.id.minusSets);
-                minusSets.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                            plusTempo(Sets_dialog,plusSets,minusSets);
 
-                        minusTempo(Sets_dialog,minusSets,plusSets);
-                    }
-                });
+                        }
+                    });
+                    minusSets = (Button) v.findViewById(R.id.minusSets);
+                    minusSets.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            minusTempo(Sets_dialog,minusSets,plusSets);
+                        }
+                    });
+                }
+
             }
         });
 
@@ -219,24 +226,27 @@ public class WorkoutActivity extends AppCompatActivity {
                         })
                         .show()
                         .getCustomView();
-                Rest_exercise = (TextView) v.findViewById(R.id.Rest_exercise);
-                Rest_exercise.setText(String.valueOf(Rest.getText()));
+                if (v != null) {
+                    Rest_exercise = (TextView) v.findViewById(R.id.Rest_exercise);
+                    Rest_exercise.setText(String.valueOf(Rest.getText()));
 
 
-                plusRest = (Button) v.findViewById(R.id.plusRest);
-                plusRest.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        plusTempo(Rest_exercise,plusRest,minusRest);
-                    }
-                });
-                minusRest = (Button) v.findViewById(R.id.minusRest);
-                minusRest.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        minusTempo(Rest_exercise,minusRest,plusRest);
-                    }
-                });
+                    plusRest = (Button) v.findViewById(R.id.plusRest);
+                    plusRest.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            plusTempo(Rest_exercise,plusRest,minusRest);
+                        }
+                    });
+                    minusRest = (Button) v.findViewById(R.id.minusRest);
+                    minusRest.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            minusTempo(Rest_exercise,minusRest,plusRest);
+                        }
+                    });
+                }
+
 
             }
         });
@@ -260,27 +270,30 @@ public class WorkoutActivity extends AppCompatActivity {
                         .show()
                         .getCustomView();
 
-                RestSets_dialog = (TextView) v.findViewById(R.id.RestSets_dialog);
-                RestSets_dialog.setText(String.valueOf(RestSets.getText()));
+                if (v != null) {
+                    RestSets_dialog = (TextView) v.findViewById(R.id.RestSets_dialog);
+                    RestSets_dialog.setText(String.valueOf(RestSets.getText()));
 
-               plusRestSets = (Button) v.findViewById(R.id.plusRestSets);
-                plusRestSets.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                       plusTempo(RestSets_dialog,plusRestSets,minusRestSets);
+                    plusRestSets = (Button) v.findViewById(R.id.plusRestSets);
+                    plusRestSets.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            plusTempo(RestSets_dialog,plusRestSets,minusRestSets);
 
 
 
-                    }
-                });
-                minusRestSets = (Button) v.findViewById(R.id.minusRestSets);
-                minusRestSets.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        minusTempo(RestSets_dialog,minusRestSets,plusRestSets);
+                        }
+                    });
+                    minusRestSets = (Button) v.findViewById(R.id.minusRestSets);
+                    minusRestSets.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            minusTempo(RestSets_dialog,minusRestSets,plusRestSets);
 
-                    }
-                });
+                        }
+                    });
+                }
+
 
             }
         });
