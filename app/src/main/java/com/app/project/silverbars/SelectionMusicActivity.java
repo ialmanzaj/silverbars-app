@@ -32,9 +32,9 @@ public class SelectionMusicActivity extends AppCompatActivity {
 
 
         if (myToolbar != null) {
-
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Music selection");
-            myToolbar.setNavigationIcon(R.drawable.ic_clear_white_24dp);
+
             myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
