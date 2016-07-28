@@ -97,7 +97,7 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
         //Setting values to each recylerView Element
         Log.v("Exercise",exerciseList.Exercises[a].getExercise_name());
         String[] imageDir = exerciseList.Exercises[a].getExercise_image().split("exercises");
-        ;
+
         String Parsedurl = "exercises" + imageDir[1];
         String[] imagesName = Parsedurl.split("/");
         String imgName = imagesName[2];
