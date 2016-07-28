@@ -1,22 +1,29 @@
 package com.app.project.silverbars;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -35,119 +42,136 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class CreateWorkout extends AppCompatActivity implements View.OnClickListener{
+public class CreateWorkout extends AppCompatActivity {
 
-    Toolbar toolbar;
-    LinearLayout addExercise, reAdd;
-    ImageView addImg, imgProfile;
-    TextView addText, Sets, Rest, RestSets;
-    EditText workoutName;
-    Button plusSets, minusSets, plusRest, minusRest, plusRestSet, minusRestSet, Save;
-    private ImageButton changeImg;
-    public ArrayList<Integer> exerciseOrder = new ArrayList<>();
-    public ArrayList<Integer> sItems = new ArrayList<>();
-    private int value = 0;
+    private static final String TAG ="create workout activity" ;
+    private WebView webView;
     private RecyclerView recycler;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
+    private Button addExercise;
     public static JsonExercise[] Exercises;
+    public ArrayList<Integer> exerciseOrder = new ArrayList<>();
+    public ArrayList<Integer> sItems = new ArrayList<>();
+
+    private TextView empty_text;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_workout);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
         if (toolbar != null) {
+
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Create Workout");
+            toolbar.setNavigationIcon(R.drawable.ic_clear_white_24dp);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+
         }
-        workoutName = (EditText) findViewById(R.id.workoutName);
-        Save = (Button) findViewById(R.id.Save);
-        Save.setOnClickListener(new View.OnClickListener() {
+
+        empty_text = (TextView) findViewById(R.id.content_empty);
+
+
+        /// boton de siguiente
+        Button nextButton = (Button) findViewById(R.id.Next);
+        nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                    startActivity(new Intent(CreateWorkout.this, CreateWorkoutFinalActivity.class));
 //                String name = workoutName.getText().toString();
 //                MySQLiteHelper sqLiteHelper = new MySQLiteHelper(getApplicationContext());
 //                sqLiteHelper.insertWorkouts(name,);
             }
         });
-        recycler = (RecyclerView) findViewById(R.id.recycler);
-        lManager = new LinearLayoutManager(this);
-        recycler.setLayoutManager(lManager);
-        plusSets = (Button) findViewById(R.id.plusSets);
-        plusSets.setOnClickListener(this);
-        minusSets = (Button) findViewById(R.id.minusSets);
-        minusSets.setOnClickListener(this);
-        minusSets.setEnabled(false);
-        plusRest = (Button) findViewById(R.id.plusRest);
-        plusRest.setOnClickListener(this);
-        minusRest = (Button) findViewById(R.id.minusRest);
-        minusRest.setOnClickListener(this);
-        plusRestSet = (Button) findViewById(R.id.plusRestSets);
-        plusRestSet.setOnClickListener(this);
-        minusRestSet = (Button) findViewById(R.id.minusRestSets);
-        minusRestSet.setOnClickListener(this);
-        Sets = (TextView) findViewById(R.id.Sets);
-        Rest = (TextView) findViewById(R.id.Rest);
-        RestSets = (TextView) findViewById(R.id.RestSets);
-        imgProfile = (ImageView) findViewById(R.id.imgProfile);
-        changeImg = (ImageButton) findViewById(R.id.chageImg);
-        changeImg.setOnClickListener(new View.OnClickListener() {
+
+
+
+        //botton de agregar ejercicios
+        addExercise = (Button) findViewById(R.id.add_exercises);
+        addExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
+                Intent intent = new Intent(CreateWorkout.this,exerciseList.class);
+                startActivityForResult(intent,1);
             }
         });
-        addImg = (ImageView) findViewById(R.id.addImg);
-        addText = (TextView) findViewById(R.id.addText);
-        reAdd = (LinearLayout) findViewById(R.id.reAdd);
-        reAdd.setOnTouchListener(new View.OnTouchListener() {
+
+        // RECYCLER DONDE ESTAN LOS EJERCICIOS ELEGIDOS
+        recycler = (RecyclerView) findViewById(R.id.recycler_exercises_selected);
+        lManager = new LinearLayoutManager(this);
+        recycler.setLayoutManager(lManager);
+
+
+
+
+        //Defining Tabs
+        TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost3);
+
+        tabHost2.setup();
+
+        TabHost.TabSpec rutina = tabHost2.newTabSpec(getResources().getString(R.string.tab_overview));
+
+        TabHost.TabSpec muscles = tabHost2.newTabSpec(getResources().getString(R.string.tab_muscles));
+
+
+        rutina.setIndicator(getResources().getString(R.string.tab_overview));
+        rutina.setContent(R.id.rutina_);
+
+        muscles.setIndicator(getResources().getString(R.string.tab_muscles));
+        muscles.setContent(R.id.muscles_);
+
+        tabHost2.addTab(rutina);
+
+        tabHost2.addTab(muscles);
+
+        webView = (WebView) findViewById(R.id.WebView_create);
+        webView.setWebViewClient(new WebViewClient(){
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        addImg.setImageResource(R.drawable.add_white);
-                        addText.setTextColor(getResources().getColor(R.color.white));
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        addImg.setImageResource(R.drawable.add);
-                        addText.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                        Intent intent = new Intent(CreateWorkout.this,exerciseList.class);
-                        startActivityForResult(intent,1);
-                        break;
-                    default:
-                        break;
-                }
-                return false;
+            public void onPageFinished(WebView view, String url) {
+                injectJS();
+                super.onPageFinished(view, url);
             }
+
         });
-        addExercise = (LinearLayout) findViewById(R.id.addExercise);
-        addExercise.setClickable(true);
-        addExercise.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        addImg.setImageResource(R.drawable.add_white);
-                        addText.setTextColor(getResources().getColor(R.color.white));
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        addImg.setImageResource(R.drawable.add);
-                        addText.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                        Intent intent = new Intent(CreateWorkout.this,exerciseList.class);
-                        startActivityForResult(intent,1);
-                        break;
-                    default:
-                        break;
-                }
-                return false;
-            }
-        });
+        webView.getSettings().setJavaScriptEnabled(true);
+        String fileurl = "file://"+ Environment.getExternalStorageDirectory()+"/html/"+"index.html";
+
+        webView.loadUrl(fileurl);
+
+
+
+
+    }//  close create workout
+
+    private void injectJS() {
+        try {
+            String partes = "";
+
+
+            webView.loadUrl("javascript: ("+ "window.onload = function () {"+
+
+                    "partes = Snap.selectAll('"+partes+"');"+
+                    "partes.forEach( function(elem,i) {"+
+                    "elem.attr({fill: 'rgba(96%,44%,141%,50%)',stroke: 'rgba(96%,44%,141%,50%)',});"+
+                    "});"+ "}"+  ")()");
+
+            //Log.v("MAIN ACTIVITY","HA EJECUTADO EL JAVASCRIPT");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -160,40 +184,18 @@ public class CreateWorkout extends AppCompatActivity implements View.OnClickList
                     sItems = data.getIntegerArrayListExtra("Items");
                     Log.v("sItems", String.valueOf(sItems.size()));
                     Log.v("Order",String.valueOf(exerciseOrder.size()));
-                    addExercise.setVisibility(View.GONE);
+
+                    //addExercise.setVisibility(View.GONE);
+
                     Exercises(exerciseOrder,sItems);
                     Log.v("Order","Result");
-                } else {
-                    Log.v("Select", "Image Picker");
-                    if (data.getData() != null) {
-                        CropImage.activity(data.getData())
-                                .setGuidelines(CropImageView.Guidelines.ON)
-                                .setActivityTitle("Crop Image")
-                                .setAllowRotation(true)
-                                .setActivityMenuIconColor(R.color.white)
-                                .setFixAspectRatio(true)
-                                .setAspectRatio(4, 4)
-                                .start(this);
-                    }
                 }
-            }
-        }else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            Log.v("Crop","Result");
-            if (resultCode == RESULT_OK) {
-                Uri resultUri = result.getUri();
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUri);
-                    Log.d("Image", String.valueOf(bitmap));
-                    imgProfile.setImageBitmap(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
             }
         }
+
+
     }
+
 
     public void Exercises(final ArrayList<Integer> newOrder, final ArrayList<Integer> Items){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -230,6 +232,8 @@ public class CreateWorkout extends AppCompatActivity implements View.OnClickList
                     JsonExercise[] parsedExercises = response.body();
                     JsonExercise[] selectedExercises = new JsonExercise[Items.size()];
 
+
+
                     int y = 0;
                     for (int i = 0; i < parsedExercises.length; i++){
                         if (y < Items.size() && Items.get(y) == parsedExercises[i].getId()){
@@ -246,181 +250,42 @@ public class CreateWorkout extends AppCompatActivity implements View.OnClickList
                         }
                     }
                     for (int i = 0; i < Exercises.length; i++){
-                        Log.v("Element",String.valueOf(Exercises[i].getId()));
+                        Log.v(TAG,String.valueOf(Exercises[i].getId()));
                     }
+
+                    // ASIGNAR ADAPTER DE EJERCICIOS ELEGIDOS
 
                     adapter = new selectedExercisesAdapter(CreateWorkout.this);
                     recycler.setAdapter(adapter);
-                    addExercise.setVisibility(View.GONE);
-                    reAdd.setVisibility(View.VISIBLE);
+
+                    /*ItemTouchHelper.Callback callback =
+                            new SimpleItemTouchHelperCallback(adapter);
+                    ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+                    touchHelper.attachToRecyclerView(recycler);
+*/
+
+                    empty_text.setVisibility(View.GONE);
+                    recycler.setVisibility(View.VISIBLE);
+                    //addExercise.setVisibility(View.GONE);
+
                 } else {
                     int statusCode = response.code();
                     // handle request errors yourself
                     ResponseBody errorBody = response.errorBody();
-                    Log.v("Error",errorBody.toString());
+                    Log.v(TAG,errorBody.toString());
                 }
             }
 
             @Override
             public void onFailure(Call<JsonExercise[]> call, Throwable t) {
-                Log.v("Exception",t.toString());
+                Log.v(TAG,t.toString());
             }
         });
-    }
+    }// exercises method close
 
-    public void plusTempo(TextView view, Button button, Button button2){
-        if (view == Sets){
-            value = Integer.parseInt(view.getText().toString());
-            if (value+1 == 10)
-                view.setText(String.valueOf(value+1));
-            else
-                view.setText("0"+String.valueOf(value+1));
-            value++;
-            if (value == 10){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value > 1){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else if(view == Rest){
-            String[] elements = view.getText().toString().split("s");
-            value = Integer.parseInt(elements[0]);
-            value = value + 5;
-            if (value + 5 == 5)
-                view.setText("0"+String.valueOf(value+"s"));
-            else
-                view.setText(String.valueOf(value+"s"));
-            if (value == 60){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value > 0){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else if(view == RestSets){
-            String[] elements = view.getText().toString().split("s");
-            value = Integer.parseInt(elements[0]);
-            value = value + 10;
-            view.setText(String.valueOf(value+"s"));
-            if (value == 180){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value > 0){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else{
-            value = Integer.parseInt(view.getText().toString());
-            view.setText(String.valueOf(value+1));
-            value++;
-            if (value == 10){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value > 1){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }
 
-    }
 
-    public void minusTempo(TextView view, Button button, Button button2){
-        if (view == Sets){
-            value = Integer.parseInt(view.getText().toString());
-            view.setText("0"+String.valueOf(value-1));
-            value--;
-            if ((value)==1){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value < 10){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else if(view == Rest){
-            String[] elements = view.getText().toString().split("s");
-            value = Integer.parseInt(elements[0]);
-            value = value - 5;
-            if (value == 5)
-                view.setText("0"+String.valueOf(value+"s"));
-            else if(value == 0)
-                view.setText("0"+String.valueOf(value+"s"));
-            else
-                view.setText(String.valueOf(value+"s"));
-            if (value == 0){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value < 60){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else if(view == RestSets){
-            String[] elements = view.getText().toString().split("s");
-            value = Integer.parseInt(elements[0]);
-            value = value - 10;
-            if (value == 0)
-                view.setText("0"+String.valueOf(value+"s"));
-            else
-                view.setText(String.valueOf(value+"s"));
-            if (value == 0){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value < 180){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else{
-            value = Integer.parseInt(view.getText().toString());
-            view.setText(String.valueOf(value-1));
-            value--;
-            if ((value)==1){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value < 10){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }
-    }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.plusSets:
-                plusTempo(Sets,plusSets,minusSets);
-                break;
-            case R.id.minusSets:
-                minusTempo(Sets,minusSets,plusSets);
-                break;
-            case R.id.plusRest:
-                plusTempo(Rest,plusRest,minusRest);
-                break;
-            case R.id.minusRest:
-                minusTempo(Rest,minusRest,plusRest);
-                break;
-            case R.id.plusRestSets:
-                plusTempo(RestSets,plusRestSet,minusRestSet);
-                break;
-            case R.id.minusRestSets:
-                minusTempo(RestSets,minusRestSet,plusRestSet);
-                break;
 
-        }
-    }
+
 }

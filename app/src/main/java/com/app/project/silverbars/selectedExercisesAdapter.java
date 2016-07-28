@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -33,10 +34,9 @@ import retrofit2.Retrofit;
 /**
  * Created by andre_000 on 7/20/2016.
  */
-public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExercisesAdapter.selectedExercisesViewHolder> {
+public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExercisesAdapter.selectedExercisesViewHolder>  implements ItemTouchHelperAdapter {
 
     private Context mContext;
-    public static CreateWorkout exerciseList = new CreateWorkout();
     public static boolean[] Selected = new boolean[getCount()];
 
     public boolean[] getSelected() {
@@ -69,18 +69,18 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
     }
 
     public void Reset(){
-        for(int x = 0; x < getCount(); x++){
+        for(int x = 0; x < getItemCount(); x++){
             Selected[x] = false;
         }
     }
 
     public static int getCount() {
-        return exerciseList.Exercises.length;
+        return CreateWorkout.Exercises.length;
     }
 
     @Override
     public int getItemCount() {
-        return exerciseList.Exercises.length;
+        return CreateWorkout.Exercises.length;
     }
 
     @Override
@@ -95,8 +95,8 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
     public void onBindViewHolder(final selectedExercisesViewHolder viewHolder, int i) {
         final int a = i;
         //Setting values to each recylerView Element
-        Log.v("Exercise",exerciseList.Exercises[a].getExercise_name());
-        String[] imageDir = exerciseList.Exercises[a].getExercise_image().split("exercises");
+        Log.v("Exercise", CreateWorkout.Exercises[a].getExercise_name());
+        String[] imageDir = CreateWorkout.Exercises[a].getExercise_image().split("exercises");
 
         String Parsedurl = "exercises" + imageDir[1];
         String[] imagesName = Parsedurl.split("/");
@@ -134,28 +134,33 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
                         .show()
                         .getCustomView();
                 //Dialog elements
-                DialogName = (TextView) v.findViewById(R.id.ExerciseName);
-                DialogName.setText(exerciseList.Exercises[a].getExercise_name());
-                Reps = (TextView) v.findViewById(R.id.Sets);
-                ActualRepValue = Integer.valueOf(viewHolder.repetitions.getText().toString());
-                Reps.setText(String.valueOf(ActualRepValue));
-                plusRep = (Button) v.findViewById(R.id.plusRep);
-                plusRep.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //Increasing Reps Button
-                        plusTempo(Reps, plusRep, minusRep);
-                    }
-                });
+                if (v != null) {
 
-                minusRep = (Button) v.findViewById(R.id.minusRep);
-                minusRep.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //Decreasing Reps Button
-                        minusTempo(Reps, minusRep, plusRep);
-                    }
-                });
+                    DialogName = (TextView) v.findViewById(R.id.ExerciseName);
+                    DialogName.setText(CreateWorkout.Exercises[a].getExercise_name());
+                    Reps = (TextView) v.findViewById(R.id.Sets);
+                    ActualRepValue = Integer.valueOf(viewHolder.repetitions.getText().toString());
+                    Reps.setText(String.valueOf(ActualRepValue));
+                    plusRep = (Button) v.findViewById(R.id.plusRep);
+                    plusRep.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //Increasing Reps Button
+                            plusTempo(Reps, plusRep, minusRep);
+                        }
+                    });
+
+                    minusRep = (Button) v.findViewById(R.id.minusRep);
+                    minusRep.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //Decreasing Reps Button
+                            minusTempo(Reps, minusRep, plusRep);
+                        }
+                    });
+
+                }
+
                 //Check if actual rep value is 1 or 20 on Dialog open
                 if (ActualRepValue == 1) {
                     minusRep.setEnabled(false);
@@ -165,7 +170,7 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
                     plusRep.setClickable(false);
                 }
 
-                return false;
+
             }
 
             public int NewRepValue() {
@@ -300,4 +305,17 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
             }
         } catch (IOException e) {return false;}
     }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+
+        return true;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+
+    }
+
+
 }
