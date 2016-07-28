@@ -195,7 +195,7 @@ public class WorkoutActivity extends AppCompatActivity {
                             workout_options.setBackgroundColor(getResources().getColor(R.color.white));
                         }
 
-                        startActivity(new Intent(WorkoutActivity.this,SelectionMusicActivity.class));
+                        //startActivity(new Intent(WorkoutActivity.this,SelectionMusicActivity.class));
                         break;
                     default:
                         break;
@@ -542,13 +542,37 @@ public class WorkoutActivity extends AppCompatActivity {
 
         tabHost2.addTab(muscles);
 
-        LinearLayout selectMusic = (LinearLayout) findViewById(R.id.SelectMusic);
-        selectMusic.setOnClickListener(new View.OnClickListener() {
+        final RelativeLayout selectMusic = (RelativeLayout) findViewById(R.id.SelectMusic);
+
+        selectMusic.setClickable(true);
+
+        selectMusic.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getBaseContext(), SelectionMusicActivity.class);
-                startActivityForResult(i,1);
-//                LaunchMusicActivity();
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            selectMusic.setBackgroundColor(getResources().getColor(R.color.onTouch,null));
+                        }else {
+                            selectMusic.setBackgroundColor(getResources().getColor(R.color.onTouch));
+                        }
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            selectMusic.setBackgroundColor(getResources().getColor(R.color.white,null));
+                        }else {
+                            selectMusic.setBackgroundColor(getResources().getColor(R.color.white));
+                        }
+                        Intent i = new Intent(getBaseContext(), SelectionMusicActivity.class);
+                        startActivityForResult(i,1);
+                        //startActivity(new Intent(WorkoutActivity.this,SelectionMusicActivity.class));
+                        break;
+                    default:
+                        break;
+                }
+
+                return false;
             }
         });
 
