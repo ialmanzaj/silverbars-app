@@ -98,7 +98,9 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Theme.AppCompat" />
-        <activity android:name=".ProgressionActivity" />
+        <activity android:name=".ProgressionActivity" >
+
+        </activity>
 
 
 

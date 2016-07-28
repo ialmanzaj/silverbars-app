@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -20,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -132,7 +134,6 @@ public class WorkoutActivity extends AppCompatActivity {
         secondary_linear = (LinearLayout) findViewById(R.id.sec_muscles);
 
 
-
         //
         // Usar un administrador para LinearLayout
         RecyclerView.LayoutManager lManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -149,6 +150,38 @@ public class WorkoutActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(workout_name);
         }
+
+        final RelativeLayout workout_options = (RelativeLayout) findViewById(R.id.workout_options);
+
+        workout_options.setClickable(true);
+
+        workout_options.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            workout_options.setBackgroundColor(getResources().getColor(R.color.onTouch,null));
+                        }else {
+                            workout_options.setBackgroundColor(getResources().getColor(R.color.onTouch));
+                        }
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            workout_options.setBackgroundColor(getResources().getColor(R.color.white,null));
+                        }else {
+                            workout_options.setBackgroundColor(getResources().getColor(R.color.white));
+                        }
+
+                        startActivity(new Intent(WorkoutActivity.this,SelectionMusicActivity.class));
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
 
         Button startButton = (Button) findViewById(R.id.start_button);
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -913,7 +946,8 @@ public class WorkoutActivity extends AppCompatActivity {
                     adapter = new ExerciseAdapter(items,WorkoutActivity.this,getSupportFragmentManager());
                     recycler.setAdapter(adapter);
                     setMusclesNames(muscles);
-                    Log.v(TAG, String.valueOf(muscles));
+                    //Log.v(TAG, String.valueOf(muscles));
+
 
 
 

@@ -62,11 +62,11 @@
 
 
     <!-- Strings related to activity_workouts -->
-    <string name="number_sets_text">Number of Sets</string>
+    <string name="number_sets_text">Number of Sets:</string>
     <string name="number_sets">5</string>
-    <string name="rest_exercise_text">Rest between exercise</string>
+    <string name="rest_exercise_text">Rest between exercise:</string>
     <string name="rest_exercise">30s</string>
-    <string name="rest_sets_text">Rest between Sets</string>
+    <string name="rest_sets_text">Rest between Sets:</string>
     <string name="rest_sets">60s</string>
     <string name="vibration_rep_text">Vibration per rep</string>
     <string name="vibration_set_text">Vibration per set</string>
@@ -130,6 +130,5 @@
     <string name="error_title">No internet conexion</string>
     <string name="error_message">Please, Connect to Internet and try again</string>
 
-    <string name="exercise_json_name"></string>
-    <string name="exercise_json_rep"></string>
+
 </resources>
