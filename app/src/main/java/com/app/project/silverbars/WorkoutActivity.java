@@ -2,14 +2,17 @@ package com.app.project.silverbars;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.BoolRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,9 +23,11 @@ import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +67,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private Button minusIsometric;
     private Button plusNegative;
     private Button minusNegative;
+    private SwitchCompat enableLocal;
     private Button plusSets;
     private Button minusSets;
     private Button plusRest;
@@ -78,11 +84,16 @@ public class WorkoutActivity extends AppCompatActivity {
     private ArrayList<File> mySongs;
     static public int[] Exercises_reps;
     private LinearLayout primary_linear,secondary_linear;
+    private boolean isTouched = false;
 
+    private static String strSeparator = "__,__";
 
-
+//    Workout Data
+    private int workoutId = 0, workoutSets = 0;
+    private String workoutName, workoutLevel, mainMuscle, workoutImage;
     private String[] exercises;
-    private int workout_id = 0;
+
+
     private List<WorkoutInfo> items = new ArrayList<>();
     public static JsonExercise[] ParsedExercises;
     public static JsonReps[] ParsedReps;
@@ -98,7 +109,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE = 1337;
 
-
     private static boolean VibrationIsActivePerRep=true;
     private static boolean VibrationIsActivePerSet=true;
 
@@ -110,16 +120,16 @@ public class WorkoutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Intent intent = getIntent();
-
+        workoutId = intent.getIntExtra("id",0);
+        workoutName = intent.getStringExtra("name");
+        workoutImage = intent.getStringExtra("image");
+        workoutSets = intent.getIntExtra("sets", 0);
+        workoutLevel = intent.getStringExtra("level");
+        mainMuscle = intent.getStringExtra("muscle");
         exercises = intent.getStringArrayExtra("exercises");
-        Log.v(TAG,Arrays.toString(exercises));
-
-        String workout_name = intent.getStringExtra("name");
-        String level = intent.getStringExtra("level");
-
-        workout_id = intent.getIntExtra("id",0);
-        int workout_sets = intent.getIntExtra("sets", 0);
+        exercisesId(exercises);
         exercises_id = new int[exercises.length];
         ParsedExercises = new JsonExercise[exercises.length];
         Exercises();
@@ -132,7 +142,18 @@ public class WorkoutActivity extends AppCompatActivity {
         }
         primary_linear = (LinearLayout) findViewById(R.id.primary_muscles);
         secondary_linear = (LinearLayout) findViewById(R.id.sec_muscles);
-
+        enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
+        enableLocal.setEnabled(true);
+        enableLocal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked){
+                    saveExercises();
+                }else{
+                    logMessage("Switch off");
+                }
+            }
+        });
 
         //
         // Usar un administrador para LinearLayout
@@ -148,7 +169,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         if (myToolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(workout_name);
+            getSupportActionBar().setTitle(workoutName);
         }
 
         final RelativeLayout workout_options = (RelativeLayout) findViewById(R.id.workout_options);
@@ -196,7 +217,7 @@ public class WorkoutActivity extends AppCompatActivity {
         Reps = (TextView) findViewById(R.id.Reps);
 
         Sets = (TextView) findViewById(R.id.Sets);
-        Sets.setText(String.valueOf(workout_sets));
+        Sets.setText(String.valueOf(workoutSets));
 
 
         Sets.setOnClickListener(new View.OnClickListener() {
@@ -914,7 +935,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     int y = 0;
                     for (int z = 0; z < Reps.length; z++){
                         String workout = Reps[z].getWorkout_id();
-                        if (workout.indexOf("workouts/" + workout_id ) > 0){
+                        if (workout.indexOf("workouts/" + workoutId ) > 0){
                             ParsedReps[y] = Reps[z];
                             y++;
                         }
@@ -1048,12 +1069,110 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private void logError(String msg) {
-        Toast.makeText(this, "Error: " + msg, Toast.LENGTH_SHORT).show();
         Log.e(TAG, msg);
     }
 
     private void logMessage(String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-        Log.d(TAG, msg);
+        Log.v(TAG, msg);
+    }
+
+    public void saveExercises(){
+        MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
+        for (int i = 0; i < ParsedExercises.length; i++){
+            if (!database.checkExercise(ParsedExercises[i].getId())){
+                String imgDir = Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageName(i);
+                String mp3Dir = Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+audioName(i);
+                database.insertExercises(
+                        ParsedExercises[i].getId(),
+                        ParsedExercises[i].getExercise_name(),
+                        ParsedExercises[i].getLevel(),
+                        convertArrayToString(ParsedExercises[i].getType_exercise()),
+                        convertArrayToString(ParsedExercises[i].getMuscle()),
+                        mp3Dir,
+                        imgDir
+                );
+            }
+        }
+        saveWorkouts();
+    }
+
+    public void saveWorkouts(){
+        String[] ids = new String[ParsedExercises.length];
+        MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
+        String imgDir = Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+workoutImage;
+        for (int i = 0; i < ids.length; i++){
+            ids[i] = String.valueOf(ParsedExercises[i].getId());
+        }
+        if (!database.checkWorkouts(workoutId)) {
+            database.insertWorkouts(
+                    workoutId,
+                    workoutName,
+                    imgDir,
+                    workoutSets,
+                    workoutLevel,
+                    mainMuscle,
+                    convertArrayToString(ids),
+                    1
+            );
+        }
+        saveWorkout();
+    }
+
+    public void saveWorkout(){
+        MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
+        for (int i = 0; i < ParsedExercises.length; i++) {
+            if (!database.checkWorkout(workoutId,ParsedExercises[i].getId())) {
+                database.insertWorkout(
+                        workoutId,
+                        ParsedExercises[i].getId(),
+                        Exercises_reps[i]
+                );
+            }
+        }
+    }
+
+    public String imageName(int position){
+        String[] imageDir = ParsedExercises[position].getExercise_image().split("exercises");
+        String Parsedurl = "exercises" + imageDir[1];
+        String[] imagesName = Parsedurl.split("/");
+        String imgName = imagesName[2];
+        return imgName;
+    }
+
+    public String audioName(int position){
+        String[] audioDir = ParsedExercises[position].getExercise_audio().split("exercises");;
+        String Parsedurl = "exercises"+audioDir[1];
+        String[] splitName = Parsedurl.split("/");
+        String mp3Name = splitName[2];
+        return mp3Name;
+    }
+
+    public String[] exercisesId(String[] exercisesData){
+        String[] ids = new String[exercisesData.length];
+        for (int i = 0; i < exercisesData.length; i++){
+//            Log.v("String",exercisesData[i]);
+            String[] exerciseDir = exercisesData[i].split("exercises");
+            String Parsedurl = "exercises"+exerciseDir[1];
+            String[] splitName = Parsedurl.split("/");
+            String idValue = splitName[1];
+            Log.v("ID",idValue);
+        }
+        return ids;
+    }
+
+    public static String convertArrayToString(String[] array){
+        String str = "";
+        for (int i = 0;i<array.length; i++) {
+            str = str+array[i];
+            // Do not append comma at the end of last element
+            if(i<array.length-1){
+                str = str+strSeparator;
+            }
+        }
+        return str;
+    }
+
+    public static String[] convertStringToArray(String str){
+        return str.split(strSeparator);
     }
 }

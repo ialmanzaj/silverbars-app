@@ -43,9 +43,6 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
         return Selected;
     }
 
-
-
-
     public static class selectedExercisesViewHolder extends RecyclerView.ViewHolder {
 
         // Campos respectivos de un item
@@ -54,8 +51,6 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
         public TextView next;
         public ImageView unchecked, checked;
         public TextView repetitions;
-
-
 
         public selectedExercisesViewHolder(View v) {
             super(v);
@@ -99,7 +94,6 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
     @Override
     public void onBindViewHolder(final selectedExercisesViewHolder viewHolder, int i) {
         final int a = i;
-
         //Setting values to each recylerView Element
         Log.v("Exercise", CreateWorkout.Exercises[a].getExercise_name());
         String[] imageDir = CreateWorkout.Exercises[a].getExercise_image().split("exercises");
@@ -113,23 +107,20 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
         } else {
             DownloadImage(Parsedurl, viewHolder, imgName);
         }
-        viewHolder.nombre.setText(CreateWorkout.Exercises[a].getExercise_name());
-
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-
-
+        viewHolder.nombre.setText(exerciseList.Exercises[a].getExercise_name());
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             private TextView DialogName, Reps;
             private Button plusRep, minusRep;
             private int value = 0;
             private int ActualRepValue = 0;
 
             @Override
-            public void onClick(View view) {
-
+            public boolean onLongClick(View view) {
+                boolean wrapInScrollView = true;
                 //Dialog when LongClick on element
                 View v = new MaterialDialog.Builder(view.getContext())
                         .title(R.string.rep_edit)
-                        .customView(R.layout.edit_reps_setup, true)
+                        .customView(R.layout.edit_reps_setup, wrapInScrollView)
                         .positiveText("Done").onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -142,7 +133,6 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
                         })
                         .show()
                         .getCustomView();
-
                 //Dialog elements
                 if (v != null) {
 

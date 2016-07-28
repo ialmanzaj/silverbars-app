@@ -165,6 +165,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="55dp"
                                 />
+                                android:layout_height="45dp"
+                                android:checked="false"
+                                android:id="@+id/enableLocal" />
 
                         </RelativeLayout>
                         <RelativeLayout

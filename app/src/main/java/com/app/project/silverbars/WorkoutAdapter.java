@@ -101,7 +101,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                     Log.v("Image",Parsedurl);
 //                DownloadImage(Parsedurl,vh);
                     String[] imagesName = Parsedurl.split("/");
-                    String imgName = imagesName[2];
+                    final String imgName = imagesName[2];
                     Log.v("Image Name",imgName);
                     Bitmap bmp = loadImageFromCache(imgName);
                     if (bmp != null){
@@ -118,9 +118,11 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                             Intent i = new Intent(context, WorkoutActivity.class);
                             i.putExtra("id",workouts[position].getId());
                             i.putExtra("name",workouts[position].getWorkout_name());
+                            i.putExtra("image",imgName);
                             i.putExtra("sets",workouts[position].getSets());
-                            i.putExtra("exercises",workouts[position].getExercises());
                             i.putExtra("level",workouts[position].getLevel());
+                            i.putExtra("muscle",workouts[position].getMain_muscle());
+                            i.putExtra("exercises",workouts[position].getExercises());
                             context.startActivity(i);
                         }
                     });
