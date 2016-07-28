@@ -169,7 +169,7 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
                     plusRep.setEnabled(false);
                     plusRep.setClickable(false);
                 }
-
+                return false;
 
             }
 
