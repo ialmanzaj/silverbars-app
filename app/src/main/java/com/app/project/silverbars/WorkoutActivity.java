@@ -2,15 +2,12 @@ package com.app.project.silverbars;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.PictureDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.BoolRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -22,23 +19,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-/*import com.spotify.sdk.android.authentication.AuthenticationClient;
-import com.spotify.sdk.android.authentication.AuthenticationRequest;
-import com.spotify.sdk.android.authentication.AuthenticationResponse;*/
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -60,6 +50,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+/*import com.spotify.sdk.android.authentication.AuthenticationClient;
+import com.spotify.sdk.android.authentication.AuthenticationRequest;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;*/
 
 public class WorkoutActivity extends AppCompatActivity {
 
@@ -161,15 +155,20 @@ public class WorkoutActivity extends AppCompatActivity {
                 }
             }
         });
+
+
         recycler = (RecyclerView) findViewById(R.id.reciclador);
+
         if (recycler != null){
             recycler.setNestedScrollingEnabled(false);
             recycler.setHasFixedSize(false);
         }
         // Usar un administrador para LinearLayout
         RecyclerView.LayoutManager lManager = new WrappingLinearLayoutManager(this);
-
         recycler.setLayoutManager(lManager);
+
+
+
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
         Log.v("LocalState",database.checkLocal(workoutId));
         if (database.checkWorkouts(workoutId) && Objects.equals(database.checkLocal(workoutId), "true")){
@@ -178,11 +177,13 @@ public class WorkoutActivity extends AppCompatActivity {
             ParsedReps = database.getWorkout(workoutId);
             ParsedExercises = new JsonExercise[ParsedReps.length];
             Exercises_reps = new int[ParsedReps.length];
+
             for (int i = 0; i < ParsedReps.length; i++){
                 ParsedExercises[i] = database.getExercise(Integer.valueOf(ParsedReps[i].getExercise()));
                 items.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps)));
                 Exercises_reps[i] = ParsedReps[i].getRepetition();
             }
+
             Log.v("Exercises",String.valueOf(ParsedExercises.length));
             adapter = new ExerciseAdapter(items,WorkoutActivity.this,getSupportFragmentManager());
             recycler.setAdapter(adapter);
@@ -209,6 +210,12 @@ public class WorkoutActivity extends AppCompatActivity {
         if (myToolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(workoutName);
+            myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
         }
 
         final RelativeLayout workout_options = (RelativeLayout) findViewById(R.id.workout_options);
@@ -1233,8 +1240,7 @@ public class WorkoutActivity extends AppCompatActivity {
         return str.split(strSeparator);
     }
 
-    public class WrappingLinearLayoutManager extends LinearLayoutManager
-    {
+    public class WrappingLinearLayoutManager extends LinearLayoutManager {
 
         public WrappingLinearLayoutManager(Context context) {
             super(context);

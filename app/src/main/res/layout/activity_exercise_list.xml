@@ -20,7 +20,7 @@
             android:minHeight="50dp"
             app:elevation="2dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:background="@color/primary_dark_material_dark"
+            android:background="@color/colorPrimary"
             android:layout_above="@+id/content_frame"
             android:layout_alignParentStart="true">
             <ImageButton
@@ -58,7 +58,7 @@
         android:text="ADD EXERCISES"
         android:textSize="18sp"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/colorSecondary"
 
         />
 

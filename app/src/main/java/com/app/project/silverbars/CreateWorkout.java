@@ -1,33 +1,19 @@
 package com.app.project.silverbars;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
-import android.widget.TextView;
-
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,12 +35,12 @@ public class CreateWorkout extends AppCompatActivity {
     private RecyclerView recycler;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
-    private Button addExercise;
+    private Button addExercise,readdExercise;
     public static JsonExercise[] Exercises;
     public ArrayList<Integer> exerciseOrder = new ArrayList<>();
     public ArrayList<Integer> sItems = new ArrayList<>();
 
-    private TextView empty_text;
+    private LinearLayout empty_content;
 
 
 
@@ -81,7 +67,7 @@ public class CreateWorkout extends AppCompatActivity {
 
         }
 
-        empty_text = (TextView) findViewById(R.id.content_empty);
+        empty_content = (LinearLayout) findViewById(R.id.content_empty);
 
 
         /// boton de siguiente
@@ -101,6 +87,16 @@ public class CreateWorkout extends AppCompatActivity {
         //botton de agregar ejercicios
         addExercise = (Button) findViewById(R.id.add_exercises);
         addExercise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CreateWorkout.this,exerciseList.class);
+                startActivityForResult(intent,1);
+            }
+        });
+
+        // boton para volver agregar mas ejercicios
+        readdExercise = (Button) findViewById(R.id.reAdd);
+        readdExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CreateWorkout.this,exerciseList.class);
@@ -264,8 +260,10 @@ public class CreateWorkout extends AppCompatActivity {
                     touchHelper.attachToRecyclerView(recycler);
 */
 
-                    empty_text.setVisibility(View.GONE);
+                    empty_content.setVisibility(View.GONE);
+
                     recycler.setVisibility(View.VISIBLE);
+                    readdExercise.setVisibility(View.VISIBLE);
                     //addExercise.setVisibility(View.GONE);
 
                 } else {

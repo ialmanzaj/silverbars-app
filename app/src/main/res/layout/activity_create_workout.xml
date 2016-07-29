@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.app.project.silverbars.CreateWorkout">
@@ -34,6 +35,7 @@
 
         </android.support.v7.widget.Toolbar>
 
+
     </android.support.design.widget.AppBarLayout>
 
     <TabHost
@@ -62,40 +64,57 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <LinearLayout
+                <RelativeLayout
                     android:background="@color/white"
                     android:id="@+id/rutina_"
-                    android:gravity="center_vertical"
+
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <TextView
+                    <LinearLayout
                         android:id="@+id/content_empty"
-                        android:textColor="@color/black"
-                        android:textSize="24sp"
-                        android:layout_gravity="center_horizontal"
-                        android:text="La  rutina esta vacia:("
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        />
-                    <Button
-                        android:id="@+id/add_exercises"
-                        android:layout_gravity="center_horizontal"
-                        android:text="Agregar ejercicios"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <TextView
+                            android:textColor="@color/black"
+                            android:textSize="24sp"
+                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:text="La  rutina esta vacia:("
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                        <Button
+                            android:id="@+id/add_exercises"
+                            android:layout_gravity="center_horizontal"
+                            android:text="Agregar ejercicios"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
 
 
                     <android.support.v7.widget.RecyclerView
                         android:visibility="gone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:id="@+id/recycler_exercises_selected"
                         android:layout_gravity="center" />
 
+                    <Button
+                        android:visibility="gone"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/secondColor"
+                        android:id="@+id/reAdd"
+                        android:layout_gravity="bottom"
+                        android:text="Agregar mas ejercicios"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
-                </LinearLayout>
+
+                </RelativeLayout>
 
                 <LinearLayout
                     android:background="@color/white"
@@ -167,8 +186,10 @@
                 </LinearLayout>
 
             </FrameLayout>
+
         </LinearLayout>
+
     </TabHost>
 
 
-</RelativeLayout>
+</LinearLayout>
