@@ -132,23 +132,32 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutLevel = intent.getStringExtra("level");
         mainMuscle = intent.getStringExtra("muscle");
         exercises = intent.getStringArrayExtra("exercises");
-        exercisesId(exercises);
         exercises_id = new int[exercises.length];
         ParsedExercises = new JsonExercise[exercises.length];
         setContentView(R.layout.activity_workout);
 
         enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
         enableLocal.setEnabled(true);
+        enableLocal.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                isTouched = true;
+                return false;
+            }
+        });
         enableLocal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked && !loadLocal){
-                    saveExercises();
-                }else{
-                    MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
-                    loadLocal = false;
-                    database.updateLocal(workoutId,"false");
-                    logMessage("Switch off");
+                if (isTouched) {
+                    isTouched = false;
+                    if (isChecked && !loadLocal){
+                        saveExercises();
+                    }else{
+                        MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
+                        loadLocal = false;
+                        database.updateLocal(workoutId,"false");
+                        logMessage("Switch off");
+                    }
                 }
             }
         });
@@ -1206,19 +1215,6 @@ public class WorkoutActivity extends AppCompatActivity {
         String[] splitName = Parsedurl.split("/");
         String mp3Name = splitName[2];
         return mp3Name;
-    }
-
-    public String[] exercisesId(String[] exercisesData){
-        String[] ids = new String[exercisesData.length];
-        for (int i = 0; i < exercisesData.length; i++){
-//            Log.v("String",exercisesData[i]);
-            String[] exerciseDir = exercisesData[i].split("exercises");
-            String Parsedurl = "exercises"+exerciseDir[1];
-            String[] splitName = Parsedurl.split("/");
-            String idValue = splitName[1];
-            Log.v("ID",idValue);
-        }
-        return ids;
     }
 
     public static String convertArrayToString(String[] array){

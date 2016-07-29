@@ -351,6 +351,38 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         }
     }
 
+    public JsonWorkout[] getWorkouts(int id){
+        JsonWorkout[] workouts = null;
+        String local = "true";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_WORKOUTS+" WHERE "+KEY_USERID+"='"+id+"' AND "+KEY_LOCAL+"='true'",null);
+        String[] results = null;
+        int i = 0;
+        if (row.moveToFirst()){
+            row.moveToFirst();
+            workouts = new JsonWorkout[row.getCount()];
+            workouts[i] = new JsonWorkout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5),convertStringToArray(row.getString(6)));
+            Log.v("Database","1 result");
+            Log.v("Database",Arrays.toString(workouts));
+            while(row.moveToNext()){
+                i++;
+                workouts[i] = new JsonWorkout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5),convertStringToArray(row.getString(6)));
+                Log.v("Database","More than 1 result");
+            }
+
+        }
+        else{
+            Log.v("Database Error","No results");
+        }
+        db.close();
+        try {
+            BD_backup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return workouts;
+    }
+
     public void updateLocal(int id, String local){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
