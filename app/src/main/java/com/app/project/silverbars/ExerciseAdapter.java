@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -79,16 +80,25 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         WorkoutActivity workout = new WorkoutActivity();
         //Setting values to each recylerView Element
         String[] imageDir = WorkoutActivity.ParsedExercises[a].getExercise_image().split("exercises");;
-        String Parsedurl = "exercises"+imageDir[1];
-        String[] imagesName = Parsedurl.split("/");
-        String imgName = imagesName[2];
-        Bitmap bmp = loadImageFromCache(imgName);
-        if (bmp != null){
+        Log.v("Image Array", Arrays.toString(imageDir));
+        Bitmap bmp = null;
+        if (imageDir.length < 2){
+            bmp = loadImageFromCache(WorkoutActivity.ParsedExercises[a].getExercise_image());
             viewHolder.imagen.setImageBitmap(bmp);
+        }else{
+            String Parsedurl = "exercises"+imageDir[1];
+            String[] imagesName = Parsedurl.split("/");
+            String imgName = imagesName[2];
+            bmp = loadImageFromCache(imgName);
+            if (bmp != null){
+                viewHolder.imagen.setImageBitmap(bmp);
+            }
+            else{
+                DownloadImage(Parsedurl,viewHolder,imgName);
+            }
         }
-        else{
-            DownloadImage(Parsedurl,viewHolder,imgName);
-        }
+
+
 
         viewHolder.nombre.setText(WorkoutActivity.ParsedExercises[a].getExercise_name());
         viewHolder.repetitions.setText(String.valueOf(WorkoutActivity.Exercises_reps[a]));
@@ -271,10 +281,19 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     private Bitmap loadImageFromCache(String imageURI) {
         Bitmap bitmap = null;
-        File file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageURI);
-        if (file.exists()){
-            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        String[] imageDir = imageURI.split("SilverbarsImg");
+        if (imageDir.length < 2){
+            File file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageURI);
+            if (file.exists()){
+                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            }
+        }else{
+            File file = new File(imageURI);
+            if (file.exists()){
+                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            }
         }
+
         return bitmap;
     }
 

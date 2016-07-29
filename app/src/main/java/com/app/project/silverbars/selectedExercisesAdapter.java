@@ -34,9 +34,10 @@ import retrofit2.Retrofit;
 /**
  * Created by andre_000 on 7/20/2016.
  */
-public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExercisesAdapter.selectedExercisesViewHolder>  implements ItemTouchHelperAdapter {
+public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExercisesAdapter.selectedExercisesViewHolder> {
 
     private Context mContext;
+    public static CreateWorkout exerciseList = new CreateWorkout();
     public static boolean[] Selected = new boolean[getCount()];
 
     public boolean[] getSelected() {
@@ -170,7 +171,7 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
                     plusRep.setClickable(false);
                 }
 
-
+                return false;
             }
 
             public int NewRepValue() {
@@ -305,17 +306,4 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
             }
         } catch (IOException e) {return false;}
     }
-
-    @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
-
-        return true;
-    }
-
-    @Override
-    public void onItemDismiss(int position) {
-
-    }
-
-
 }

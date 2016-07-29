@@ -84,6 +84,7 @@ public class WorkoutActivity extends AppCompatActivity {
     static public int[] Exercises_reps;
     private LinearLayout primary_linear,secondary_linear;
     private boolean isTouched = false;
+    private boolean loadLocal = false;
 
     private static String strSeparator = "__,__";
 
@@ -131,36 +132,53 @@ public class WorkoutActivity extends AppCompatActivity {
         exercisesId(exercises);
         exercises_id = new int[exercises.length];
         ParsedExercises = new JsonExercise[exercises.length];
-        Exercises();
         setContentView(R.layout.activity_workout);
-        // Obtener el Recycler
-        recycler = (RecyclerView) findViewById(R.id.reciclador);
-        if (recycler != null) {
-                recycler.setHasFixedSize(true);
-
-        }
-        primary_linear = (LinearLayout) findViewById(R.id.primary_muscles);
-        secondary_linear = (LinearLayout) findViewById(R.id.sec_muscles);
         enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
         enableLocal.setEnabled(true);
         enableLocal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked){
+                if (isChecked && !loadLocal){
                     saveExercises();
                 }else{
+                    loadLocal = false;
                     logMessage("Switch off");
                 }
             }
         });
+        recycler = (RecyclerView) findViewById(R.id.reciclador);
+        if (recycler != null) {
+            recycler.setHasFixedSize(true);
 
-
-        //
-        // Usar un administrador para LinearLayout
+        }
         RecyclerView.LayoutManager lManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-
-
         recycler.setLayoutManager(lManager);
+        MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
+        if (database.checkWorkouts(workoutId)){
+            loadLocal = true;
+            enableLocal.setChecked(true);
+            ParsedReps = database.getWorkout(workoutId);
+            ParsedExercises = new JsonExercise[ParsedReps.length];
+            Exercises_reps = new int[ParsedReps.length];
+            for (int i = 0; i < ParsedReps.length; i++){
+                ParsedExercises[i] = database.getExercise(Integer.valueOf(ParsedReps[i].getExercise()));
+                items.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps)));
+                Exercises_reps[i] = ParsedReps[i].getRepetition();
+            }
+            Log.v("Exercises",String.valueOf(ParsedExercises.length));
+            adapter = new ExerciseAdapter(items,WorkoutActivity.this,getSupportFragmentManager());
+            recycler.setAdapter(adapter);
+        }else{
+            Exercises();
+        }
+
+
+        // Obtener el Recycler
+
+        primary_linear = (LinearLayout) findViewById(R.id.primary_muscles);
+        secondary_linear = (LinearLayout) findViewById(R.id.sec_muscles);
+        // Usar un administrador para LinearLayout
+
         Log.v("Item size test", String.valueOf(items.size()));
 
         // ======= TOOL BAR - BACK BUTTON  ADDED
@@ -1078,7 +1096,8 @@ public class WorkoutActivity extends AppCompatActivity {
                     workoutLevel,
                     mainMuscle,
                     convertArrayToString(ids),
-                    1
+                    1,
+                    "true"
             );
         }
         saveWorkout();

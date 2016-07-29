@@ -8,7 +8,6 @@ public class JsonExercise {
     public int id;
     public String exercise_name;
     public String level;
-    public String audio_url;
     public String[] type_exercise;
     public String[] muscle;
     public String exercise_audio;
@@ -42,14 +41,6 @@ public class JsonExercise {
 
     public void setLevel(String level) {
         this.level = level;
-    }
-
-    public String getAudio_url() {
-        return audio_url;
-    }
-
-    public void setAudio_url(String audio_url) {
-        this.audio_url = audio_url;
     }
 
     public String[] getType_exercise() {
@@ -87,11 +78,10 @@ public class JsonExercise {
     public JsonExercise() {
     }
 
-    public JsonExercise(int id, String exercise_name, String level, String audio_url, String[] type_exercise, String[] muscle, String exercise_audio, String exercise_image) {
+    public JsonExercise(int id, String exercise_name, String level, String[] type_exercise, String[] muscle, String exercise_audio, String exercise_image) {
         this.id = id;
         this.exercise_name = exercise_name;
         this.level = level;
-        this.audio_url = audio_url;
         this.type_exercise = type_exercise;
         this.muscle = muscle;
         this.exercise_audio = exercise_audio;
