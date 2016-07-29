@@ -112,6 +112,13 @@
         <item>Profile</item>
     </string-array>
 
+    <string-array name="filter_items_text">
+        <item>ALL</item>
+        <item>ABS/CORE</item>
+        <item>UPPER BODY</item>
+        <item>LOWER BODY</item>
+    </string-array>
+
     <string-array name="filter_items">
         <item>ALL</item>
         <item>ABS/CORE</item>

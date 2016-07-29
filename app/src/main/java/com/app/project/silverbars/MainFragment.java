@@ -43,7 +43,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainFragment extends Fragment {
 
-    private static final String TAG ="MAIN SCREEN FRAGMENT" ;
+    private static final String TAG ="MAIN SCREEN FRAGMENT";
     private String email;
     private String name;
     public TwoWayView recyclerView;
@@ -198,6 +198,7 @@ public class MainFragment extends Fragment {
             }
         });
 
+
         OkHttpClient client = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -252,7 +253,7 @@ public class MainFragment extends Fragment {
             @Override
             protected void finalize() throws Throwable {
                 super.finalize();
-                Log.v(TAG,"ha finalizado ");
+                Log.v(TAG,"ha finalizado TASK() ");
 
             }
 
