@@ -136,6 +136,7 @@ public class WorkoutActivity extends AppCompatActivity {
         exercises_id = new int[exercises.length];
         ParsedExercises = new JsonExercise[exercises.length];
         setContentView(R.layout.activity_workout);
+
         enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
         enableLocal.setEnabled(true);
         enableLocal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -144,12 +145,14 @@ public class WorkoutActivity extends AppCompatActivity {
                 if (isChecked && !loadLocal){
                     saveExercises();
                 }else{
+                    MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
                     loadLocal = false;
+                    database.updateLocal(workoutId,"false");
                     logMessage("Switch off");
                 }
             }
         });
-        recycler = (RecyclerView) findViewById(R.id.recycler);
+        recycler = (RecyclerView) findViewById(R.id.reciclador);
         if (recycler != null){
             recycler.setNestedScrollingEnabled(false);
             recycler.setHasFixedSize(false);
@@ -159,7 +162,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
         recycler.setLayoutManager(lManager);
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
-        if (database.checkWorkouts(workoutId)){
+        Log.v("LocalState",database.checkLocal(workoutId));
+        if (database.checkWorkouts(workoutId) && Objects.equals(database.checkLocal(workoutId), "true")){
             loadLocal = true;
             enableLocal.setChecked(true);
             ParsedReps = database.getWorkout(workoutId);
@@ -175,6 +179,8 @@ public class WorkoutActivity extends AppCompatActivity {
             recycler.setAdapter(adapter);
         }else{
             Exercises();
+            loadLocal = false;
+            enableLocal.setChecked(false);
         }
 
 
@@ -1143,6 +1149,8 @@ public class WorkoutActivity extends AppCompatActivity {
                         mp3Dir,
                         imgDir
                 );
+            }else{
+                database.updateLocal(workoutId,"true");
             }
         }
         saveWorkouts();

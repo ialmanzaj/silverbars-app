@@ -391,7 +391,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         Cursor row = db.rawQuery("SELECT * FROM "+TABLE_WORKOUTS+" WHERE "+KEY_IDWORKOUTS+" = "+id,null);
         String[] results = null;
         if (row.moveToFirst()){
-            check = row.getString(7);
+            check = row.getString(8);
         }
         else{
             Log.v("Database Error","No results");
