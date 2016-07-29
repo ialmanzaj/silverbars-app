@@ -149,7 +149,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 }
             }
         });
-
+        recycler = (RecyclerView) findViewById(R.id.recycler);
         if (recycler != null){
             recycler.setNestedScrollingEnabled(false);
             recycler.setHasFixedSize(false);
