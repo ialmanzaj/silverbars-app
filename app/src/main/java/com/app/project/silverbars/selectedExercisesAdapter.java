@@ -34,7 +34,7 @@ import retrofit2.Retrofit;
 /**
  * Created by andre_000 on 7/20/2016.
  */
-public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExercisesAdapter.selectedExercisesViewHolder> {
+public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExercisesAdapter.selectedExercisesViewHolder>  implements ItemTouchHelperAdapter {
 
     private Context mContext;
     public static CreateWorkout exerciseList = new CreateWorkout();
@@ -306,4 +306,17 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
             }
         } catch (IOException e) {return false;}
     }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+
+        return true;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+
+    }
+
+
 }

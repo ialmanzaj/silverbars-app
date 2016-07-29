@@ -3,6 +3,7 @@ package com.app.project.silverbars;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.PictureDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
@@ -25,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TabHost;
@@ -146,12 +149,14 @@ public class WorkoutActivity extends AppCompatActivity {
                 }
             }
         });
-        recycler = (RecyclerView) findViewById(R.id.reciclador);
-        if (recycler != null) {
-            recycler.setHasFixedSize(true);
 
+        if (recycler != null){
+            recycler.setNestedScrollingEnabled(false);
+            recycler.setHasFixedSize(false);
         }
-        RecyclerView.LayoutManager lManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        // Usar un administrador para LinearLayout
+        RecyclerView.LayoutManager lManager = new WrappingLinearLayoutManager(this);
+
         recycler.setLayoutManager(lManager);
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
         if (database.checkWorkouts(workoutId)){
@@ -179,6 +184,7 @@ public class WorkoutActivity extends AppCompatActivity {
         secondary_linear = (LinearLayout) findViewById(R.id.sec_muscles);
         // Usar un administrador para LinearLayout
 
+
         Log.v("Item size test", String.valueOf(items.size()));
 
         // ======= TOOL BAR - BACK BUTTON  ADDED
@@ -189,6 +195,39 @@ public class WorkoutActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(workoutName);
         }
+
+        final RelativeLayout workout_options = (RelativeLayout) findViewById(R.id.workout_options);
+
+        workout_options.setClickable(true);
+
+        workout_options.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            workout_options.setBackgroundColor(getResources().getColor(R.color.onTouch,null));
+                        }else {
+                            workout_options.setBackgroundColor(getResources().getColor(R.color.onTouch));
+                        }
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            workout_options.setBackgroundColor(getResources().getColor(R.color.white,null));
+                        }else {
+                            workout_options.setBackgroundColor(getResources().getColor(R.color.white));
+                        }
+
+                        //startActivity(new Intent(WorkoutActivity.this,SelectionMusicActivity.class));
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
+
         Button startButton = (Button) findViewById(R.id.start_button);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -527,13 +566,37 @@ public class WorkoutActivity extends AppCompatActivity {
 
         tabHost2.addTab(muscles);
 
-        LinearLayout selectMusic = (LinearLayout) findViewById(R.id.SelectMusic);
-        selectMusic.setOnClickListener(new View.OnClickListener() {
+        final RelativeLayout selectMusic = (RelativeLayout) findViewById(R.id.SelectMusic);
+
+        selectMusic.setClickable(true);
+
+        selectMusic.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getBaseContext(), SelectionMusicActivity.class);
-                startActivityForResult(i,1);
-//                LaunchMusicActivity();
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            selectMusic.setBackgroundColor(getResources().getColor(R.color.onTouch,null));
+                        }else {
+                            selectMusic.setBackgroundColor(getResources().getColor(R.color.onTouch));
+                        }
+
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            selectMusic.setBackgroundColor(getResources().getColor(R.color.white,null));
+                        }else {
+                            selectMusic.setBackgroundColor(getResources().getColor(R.color.white));
+                        }
+                        Intent i = new Intent(getBaseContext(), SelectionMusicActivity.class);
+                        startActivityForResult(i,1);
+                        //startActivity(new Intent(WorkoutActivity.this,SelectionMusicActivity.class));
+                        break;
+                    default:
+                        break;
+                }
+
+                return false;
             }
         });
 
@@ -949,10 +1012,15 @@ public class WorkoutActivity extends AppCompatActivity {
 
                         Exercises_reps[i] = ParsedReps[i].getRepetition();
                     }
+
+
                     adapter = new ExerciseAdapter(items,WorkoutActivity.this,getSupportFragmentManager());
                     recycler.setAdapter(adapter);
+
+
                     setMusclesNames(muscles);
-                    Log.v(TAG, String.valueOf(muscles));
+                    //Log.v(TAG, String.valueOf(muscles));
+
 
 
 
@@ -1159,5 +1227,100 @@ public class WorkoutActivity extends AppCompatActivity {
 
     public static String[] convertStringToArray(String str){
         return str.split(strSeparator);
+    }
+
+    public class WrappingLinearLayoutManager extends LinearLayoutManager
+    {
+
+        public WrappingLinearLayoutManager(Context context) {
+            super(context);
+        }
+
+        private int[] mMeasuredDimension = new int[2];
+
+        @Override
+        public boolean canScrollVertically() {
+            return false;
+        }
+
+        @Override
+        public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state,
+                              int widthSpec, int heightSpec) {
+            final int widthMode = View.MeasureSpec.getMode(widthSpec);
+            final int heightMode = View.MeasureSpec.getMode(heightSpec);
+
+            final int widthSize = View.MeasureSpec.getSize(widthSpec);
+            final int heightSize = View.MeasureSpec.getSize(heightSpec);
+
+            int width = 0;
+            int height = 0;
+            for (int i = 0; i < getItemCount(); i++) {
+                if (getOrientation() == HORIZONTAL) {
+                    measureScrapChild(recycler, i,
+                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                            heightSpec,
+                            mMeasuredDimension);
+
+                    width = width + mMeasuredDimension[0];
+                    if (i == 0) {
+                        height = mMeasuredDimension[1];
+                    }
+                } else {
+                    measureScrapChild(recycler, i,
+                            widthSpec,
+                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                            mMeasuredDimension);
+
+                    height = height + mMeasuredDimension[1];
+                    if (i == 0) {
+                        width = mMeasuredDimension[0];
+                    }
+                }
+            }
+
+            switch (widthMode) {
+                case View.MeasureSpec.EXACTLY:
+                    width = widthSize;
+                case View.MeasureSpec.AT_MOST:
+                case View.MeasureSpec.UNSPECIFIED:
+            }
+
+            switch (heightMode) {
+                case View.MeasureSpec.EXACTLY:
+                    height = heightSize;
+                case View.MeasureSpec.AT_MOST:
+                case View.MeasureSpec.UNSPECIFIED:
+            }
+
+            setMeasuredDimension(width, height);
+        }
+
+        private void measureScrapChild(RecyclerView.Recycler recycler, int position, int widthSpec,
+                                       int heightSpec, int[] measuredDimension) {
+
+            View view = recycler.getViewForPosition(position);
+            if (view.getVisibility() == View.GONE) {
+                measuredDimension[0] = 0;
+                measuredDimension[1] = 0;
+                return;
+            }
+            // For adding Item Decor Insets to view
+            super.measureChildWithMargins(view, 0, 0);
+            RecyclerView.LayoutParams p = (RecyclerView.LayoutParams) view.getLayoutParams();
+            int childWidthSpec = ViewGroup.getChildMeasureSpec(
+                    widthSpec,
+                    getPaddingLeft() + getPaddingRight() + getDecoratedLeft(view) + getDecoratedRight(view),
+                    p.width);
+            int childHeightSpec = ViewGroup.getChildMeasureSpec(
+                    heightSpec,
+                    getPaddingTop() + getPaddingBottom() + getDecoratedTop(view) + getDecoratedBottom(view),
+                    p.height);
+            view.measure(childWidthSpec, childHeightSpec);
+
+            // Get decorated measurements
+            measuredDimension[0] = getDecoratedMeasuredWidth(view) + p.leftMargin + p.rightMargin;
+            measuredDimension[1] = getDecoratedMeasuredHeight(view) + p.bottomMargin + p.topMargin;
+            recycler.recycleView(view);
+        }
     }
 }

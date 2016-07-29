@@ -488,16 +488,20 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     // CONTADOR DE REPETICIONES
     void performTick(long millisUntilFinished) {
+
         Format_Time = Math.round(millisUntilFinished * 0.001f);
         Log.v("Time",String.valueOf(Time_aux-tempo)+" / "+Format_Time);
+
         if (Time_aux-tempo == Format_Time){
             Time_aux = Time_aux - tempo;
-            actualReps--;
+            actualReps--;// restar repeticiones
+
             timer.setText(String.valueOf(actualReps));
             if (VibrationPerRep){
                 ActivateVibrationPerRep();
             }
         }
+
     }
 
     public void toast(String text){
@@ -599,6 +603,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     public void RepsTime(int position){
         totalTime = Exercises_reps[position] * tempo + 5;
     }
+
+
     private String SongName(File file){
         String title = null;
         try{
@@ -611,6 +617,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         }
         return title;
     }
+
     private String SongArtist(File file){
         String artist = null;
         try{

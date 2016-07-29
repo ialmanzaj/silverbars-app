@@ -7,13 +7,13 @@
         <item name="colorSwitchThumbNormal">@color/white</item>
 
         <!-- inactive track color (30% transparency) -->
-        <item name="android:colorForeground">@color/dark_gray</item>
+        <item name="android:colorForeground">@color/light_gray</item>
     </style>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actionSheetStyle">@style/ActionSheetStyleiOS7</item>
     </style>

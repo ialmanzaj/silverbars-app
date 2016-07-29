@@ -14,8 +14,7 @@
      android:layout_height="match_parent"
      android:layout_centerHorizontal="true"
      android:paddingTop="8dp"
-     android:paddingLeft="10dp"
-     android:paddingRight="10dp"
+
      android:id="@+id/LinearLayout">
 
   <com.mikhaellopez.circularimageview.CircularImageView
@@ -31,25 +30,19 @@
       android:layout_gravity="center" />
 
   <TextView
+      android:layout_marginBottom="5dp"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:textAppearance="?android:attr/textAppearanceLarge"
-      android:text="User Name"
+      android:text="Isaac Almanza"
       android:id="@+id/textView23"
       android:layout_gravity="center"
       android:textColor="@color/colorPrimaryText" />
 
-  <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:textAppearance="?android:attr/textAppearanceLarge"
-      android:text="User Tag"
-      android:id="@+id/textView31"
-      android:layout_gravity="center_horizontal"
-      android:textColor="@color/colorPrimaryText" />
+
 
   <LinearLayout
-      android:layout_marginBottom="8dp"
+      android:layout_marginBottom="10dp"
       android:orientation="horizontal"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -111,6 +104,7 @@
       android:id="@+id/myTeam">
 
    <TextView
+       android:layout_marginStart="10dp"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:textAppearance="?android:attr/textAppearanceLarge"
@@ -158,6 +152,7 @@
       android:id="@+id/Progression">
 
    <TextView
+       android:layout_marginStart="10dp"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:textAppearance="?android:attr/textAppearanceLarge"
@@ -190,6 +185,7 @@
       android:id="@+id/skillsProgression">
 
    <TextView
+       android:layout_marginStart="10dp"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:textAppearance="?android:attr/textAppearanceLarge"
@@ -222,6 +218,7 @@
       android:id="@+id/sharedWorkouts">
 
    <TextView
+       android:layout_marginStart="10dp"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:textAppearance="?android:attr/textAppearanceLarge"
@@ -254,6 +251,7 @@
       android:id="@+id/history">
 
    <TextView
+       android:layout_marginStart="10dp"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:textAppearance="?android:attr/textAppearanceLarge"

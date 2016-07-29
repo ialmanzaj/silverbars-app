@@ -34,6 +34,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
+    private static final String TAG = "EXERCISE ADAPTER";
     private List<WorkoutInfo> items;
     private InputStream bmpInput;
 

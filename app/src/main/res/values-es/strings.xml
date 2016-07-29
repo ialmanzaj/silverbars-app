@@ -34,11 +34,11 @@
 
 
     <!-- Strings related to activity_workouts -->
-    <string name="number_sets_text">Sets en total</string>
+    <string name="number_sets_text">Sets en total:</string>
     <string name="number_sets">5</string>
-    <string name="rest_exercise_text">Descanso entre ejercicio</string>
+    <string name="rest_exercise_text">Descanso entre ejercicio:</string>
     <string name="rest_exercise">30s</string>
-    <string name="rest_sets_text">Descanso entre Sets</string>
+    <string name="rest_sets_text">Descanso entre Sets:</string>
     <string name="rest_sets">60s</string>
     <string name="vibration_rep_text">Vibracion por rep</string>
     <string name="vibration_set_text">Vibracion por set</string>
@@ -76,7 +76,7 @@
         <item>Perfil</item>
     </string-array>
 
-    <string-array name="filter_items">
+    <string-array name="filter_items_text">
         <item>Todo</item>
         <item>ABS</item>
         <item>Tren Superior</item>

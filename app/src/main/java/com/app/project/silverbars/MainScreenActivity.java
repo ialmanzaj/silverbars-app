@@ -64,7 +64,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainScreenActivity extends AppCompatActivity {
 
-    private static final String TAG = "MAIN SCREEN ACTIVITY" ;
+    private static final String TAG = "MAIN SCREEN ACTIVITY";
     private ViewPager view;
     private SimpleTabAdapter adapter;
     private Button songs;
@@ -136,7 +136,7 @@ public class MainScreenActivity extends AppCompatActivity {
             }
         });
 
-        ArrayList<DrawerItem> items = new ArrayList<DrawerItem>();
+        final ArrayList<DrawerItem> items = new ArrayList<DrawerItem>();
         items.add(new DrawerItem(tagTitles[0],R.mipmap.home));
         items.add(new DrawerItem(tagTitles[1],R.mipmap.acrobatics));
         items.add(new DrawerItem(tagTitles[2],R.mipmap.profile));
@@ -168,16 +168,23 @@ public class MainScreenActivity extends AppCompatActivity {
             public void onClick(View v) {
                 new MaterialDialog.Builder(MainScreenActivity.this)
                         .title(R.string.filtertitle)
-                        .items(R.array.filter_items)
+                        .items(R.array.filter_items_text)
                         .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+
                                 if (which != -1){
+
+                                    Log.v(TAG, String.valueOf(which));
+                                    String[] Items = getResources().getStringArray(R.array.filter_items);
+
+                                    Log.v(TAG,Items[which]);
                                     Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
                                     if (currentFragment instanceof MainFragment) {
-                                        ((MainFragment) currentFragment).Task(text.toString());
+                                        ((MainFragment) currentFragment).Task(Items[which]);
                                         //place your filtering logic here using currentFragment
+
                                     }
                                 }
                                 return true;
@@ -389,6 +396,7 @@ public class MainScreenActivity extends AppCompatActivity {
             }
         } catch (IOException e) { return false;}
     }
+
 
 
 

@@ -2,6 +2,7 @@ package com.app.project.silverbars;
 
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,20 +52,31 @@ public class ProfileFragment extends Fragment {
             }
         });
         Progression = (RelativeLayout) rootView.findViewById(R.id.Progression);
+
         Progression.setClickable(true);
+
         Progression.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
-                        startActivity(new Intent(getActivity(),ProgressionActivity.class));
 
-                        Progression.setBackgroundColor(getResources().getColor(R.color.onTouch));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                Progression.setBackgroundColor(getResources().getColor(R.color.onTouch,null));
+                        }else {
+                            Progression.setBackgroundColor(getResources().getColor(R.color.onTouch));
+                        }
                         Progression.setPadding(0,dpAsPixels,0,dpAsPixels);
                         break;
                     case MotionEvent.ACTION_UP:
-                        Progression.setBackground(getResources().getDrawable(R.drawable.custom_border));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            Progression.setBackground(getResources().getDrawable(R.drawable.custom_border,null));
+                        }else {
+                            Progression.setBackground(getResources().getDrawable(R.drawable.custom_border));
+                        }
                         Progression.setPadding(0,dpAsPixels,0,dpAsPixels);
+
+                        startActivity(new Intent(getActivity(),ProgressionActivity.class));
                         break;
                     default:
                         break;
@@ -72,6 +84,8 @@ public class ProfileFragment extends Fragment {
                 return false;
             }
         });
+
+
         skillsProgression = (RelativeLayout) rootView.findViewById(R.id.skillsProgression);
         skillsProgression.setClickable(true);
         skillsProgression.setOnTouchListener(new View.OnTouchListener() {

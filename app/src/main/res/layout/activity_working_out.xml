@@ -5,9 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".WorkingOutActivity"
-    android:weightSum="1"
-    android:background="#fff"
-    android:animateLayoutChanges="true">
+
+    android:background="#fff">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -25,17 +24,17 @@
                 android:minHeight="150dp">
 
                 <android.support.v7.widget.RecyclerView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/reciclador"
                     android:orientation="horizontal" />
 
             </RelativeLayout>
-
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:layout_marginBottom="5dp"
                 android:id="@+id/linearLayout">
 
@@ -313,137 +312,143 @@
 
 
             </LinearLayout>
-            <LinearLayout
-                android:layout_marginBottom="5dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="42dp"
-                android:gravity="center">
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/pause_button"
-                    android:id="@+id/PauseButton"
-                    android:textColor="@color/white"
-                    android:background="@color/gray_active_icon" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/end_button"
-                    android:id="@+id/button11"
-                    android:background="@color/secondColor"
-                    android:textColor="#ffffff"
-                    android:layout_marginStart="4dp" />
-            </LinearLayout>
 
             <LinearLayout
-                android:orientation="horizontal"
+                android:layout_gravity="bottom"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="#c8000000"
+                android:layout_height="wrap_content">
 
-                android:id="@+id/bottom">
-
-
-
-                <RelativeLayout
+                <LinearLayout
+                    android:layout_marginBottom="2dp"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:background="#000"
-                    android:id="@+id/PlayerLayout">
+                    android:layout_height="wrap_content"
+                    android:minHeight="42dp"
+                    android:gravity="center">
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@string/pause_button"
+                        android:id="@+id/PauseButton"
+                        android:textColor="@color/white"
+                        android:background="@color/gray_active_icon" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@string/end_button"
+                        android:id="@+id/button11"
+                        android:background="@color/secondColor"
+                        android:textColor="#ffffff"
+                        android:layout_marginStart="2dp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="#c8000000"
+                    android:id="@+id/bottom">
 
 
                     <RelativeLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
+                        android:padding="5dp"
+                        android:background="#000"
+                        android:id="@+id/PlayerLayout">
 
 
-                        android:layout_marginStart="25dp"
-                        android:layout_alignParentTop="true"
-
-                        android:id="@+id/container_text_song"
-                        android:layout_gravity="center">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:id="@+id/song_name"
-                            android:textColor="#ffff"
-                            android:text="@string/song_name"
-                            android:textStyle="bold"
-                            android:singleLine="true"
-                            android:ellipsize="marquee"
-                            android:marqueeRepeatLimit="marquee_forever"
-                            android:scrollHorizontally="true"
-                           />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="@string/artist_name"
-
-                            android:id="@+id/artist_name"
-
-                            android:textColor="#fff"
-                            android:textSize="15sp"
-
-
-                            android:layout_below="@+id/song_name"
-                            android:layout_alignParentStart="true" />
-
-
-                    </RelativeLayout>
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="15dp"
-
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true">
-
-
-                        <ImageButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/btnPlay"
-                            android:minHeight="30dp"
-                            android:src="@android:drawable/ic_media_play"
-                            android:background="#00ffffff"
-
-                            android:layout_centerVertical="true"
-                            android:contentDescription="@string/resume_workout_text" />
-
-                        <ImageButton
+                        <RelativeLayout
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:minHeight="30dp"
-                            android:id="@+id/btnPause"
-                            android:src="@android:drawable/ic_media_pause"
-                            android:background="#00ffffff"
+                            android:orientation="vertical"
 
-                            android:layout_centerVertical="true"
 
-                            android:visibility="gone"
-                            android:contentDescription="@string/pause_button" />
+                            android:layout_marginStart="25dp"
+                            android:layout_alignParentTop="true"
+
+                            android:id="@+id/container_text_song"
+                            android:layout_gravity="center">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:id="@+id/song_name"
+                                android:textColor="#ffff"
+                                android:text="@string/song_name"
+                                android:textStyle="bold"
+                                android:singleLine="true"
+                                android:ellipsize="marquee"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:scrollHorizontally="true"
+                                />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="@string/artist_name"
+
+                                android:id="@+id/artist_name"
+
+                                android:textColor="#fff"
+                                android:textSize="15sp"
+
+
+                                android:layout_below="@+id/song_name"
+                                android:layout_alignParentStart="true" />
+
+
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="15dp"
+
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true">
+
+
+                            <ImageButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/btnPlay"
+                                android:minHeight="30dp"
+                                android:src="@android:drawable/ic_media_play"
+                                android:background="#00ffffff"
+
+                                android:layout_centerVertical="true"
+                                android:contentDescription="@string/resume_workout_text" />
+
+                            <ImageButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:minHeight="30dp"
+                                android:id="@+id/btnPause"
+                                android:src="@android:drawable/ic_media_pause"
+                                android:background="#00ffffff"
+
+                                android:layout_centerVertical="true"
+
+                                android:visibility="gone"
+                                android:contentDescription="@string/pause_button" />
+                        </RelativeLayout>
+
                     </RelativeLayout>
-
-                </RelativeLayout>
-
-
+                </LinearLayout>
             </LinearLayout>
+
 
         </LinearLayout>
 
         <FrameLayout
+            android:gravity="center_vertical"
+            android:layout_marginBottom="110dp"
 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -451,16 +456,7 @@
             android:id="@+id/ModalLayout">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/number_five"
-                android:id="@+id/startCounter"
-                android:layout_gravity="center"
-                android:textColor="#ffffff"
-                android:textSize="180sp" />
 
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -469,9 +465,23 @@
                 android:layout_gravity="top|center"
                 android:layout_marginTop="50dp"
                 android:textSize="50sp"
-                android:textColor="#ffffff"
+                android:textColor="#fff"
                 />
+
+            <TextView
+                android:id="@+id/startCounter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/number_five"
+
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:textColor="#fff"
+                android:textSize="180sp" />
+
         </FrameLayout>
+
+
 
     </FrameLayout>
 

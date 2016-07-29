@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -30,7 +31,6 @@ public class ProgressionActivity extends AppCompatActivity {
     private static final String TAG = "PROGRESSION ACTIVITY";
     private WebView webview;
 
-    private String fileUrl = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +43,12 @@ public class ProgressionActivity extends AppCompatActivity {
         if (toolbar != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("My Progression ");
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
         }
 
 
@@ -56,8 +62,8 @@ public class ProgressionActivity extends AppCompatActivity {
         });
         webview.getSettings().setJavaScriptEnabled(true);
 
-        fileUrl ="file://"+Environment.getExternalStorageDirectory()+"/html/"+"index.html";
-        Log.v(TAG,fileUrl);
+        String fileUrl = "file://" + Environment.getExternalStorageDirectory() + "/html/" + "index.html";
+        Log.v(TAG, fileUrl);
         webview.loadUrl(fileUrl);
 
 
