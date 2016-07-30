@@ -98,7 +98,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private int[] exercises_id;
     private NestedScrollView nestedScrollView;
 
-    private static final String TAG = WorkoutActivity.class.getSimpleName();
+    private static final String TAG ="WORKOUT ACTIVITY";
 
     @SuppressWarnings("SpellCheckingInspection")
     private static final String CLIENT_ID = "8a91678afa49446c9aff1beaabe9c807";
@@ -131,12 +131,22 @@ public class WorkoutActivity extends AppCompatActivity {
         ParsedExercises = new JsonExercise[exercises.length];
         setContentView(R.layout.activity_workout);
 
+
+        recycler = (RecyclerView) findViewById(R.id.reciclador);
+
+        if (recycler != null){
+            recycler.setNestedScrollingEnabled(false);
+            recycler.setHasFixedSize(false);
+        }
+
+
         enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
         enableLocal.setEnabled(true);
         enableLocal.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 isTouched = true;
+
                 return false;
             }
         });
@@ -144,10 +154,12 @@ public class WorkoutActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isTouched) {
+
                     isTouched = false;
                     if (isChecked && !loadLocal){
                         saveExercises();
                     }else{
+
                         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
                         loadLocal = false;
                         database.updateLocal(workoutId,"false");
@@ -158,13 +170,6 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
 
-        recycler = (RecyclerView) findViewById(R.id.reciclador);
-
-        if (recycler != null){
-            recycler.setNestedScrollingEnabled(false);
-            recycler.setHasFixedSize(false);
-        }
-
 
         // Usar un administrador para LinearLayout
         RecyclerView.LayoutManager lManager = new WrappingLinearLayoutManager(this);
@@ -173,15 +178,18 @@ public class WorkoutActivity extends AppCompatActivity {
 
         nestedScrollView = (NestedScrollView) findViewById(R.id.overview);
 
-        nestedScrollView.scrollTo(0,0);
-
+        //Log.v(TAG, String.valueOf(nestedScrollView.isNestedScrollingEnabled()));
 
 
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
         Log.v("LocalState",database.checkLocal(workoutId));
+
+
         if (database.checkWorkouts(workoutId) && Objects.equals(database.checkLocal(workoutId), "true")){
             loadLocal = true;
             enableLocal.setChecked(true);
+
+
             ParsedReps = database.getWorkout(workoutId);
             ParsedExercises = new JsonExercise[ParsedReps.length];
             Exercises_reps = new int[ParsedReps.length];
@@ -195,6 +203,8 @@ public class WorkoutActivity extends AppCompatActivity {
             Log.v("Exercises",String.valueOf(ParsedExercises.length));
             adapter = new ExerciseAdapter(items,WorkoutActivity.this,getSupportFragmentManager());
             recycler.setAdapter(adapter);
+
+
         }else{
             Exercises();
             loadLocal = false;
@@ -707,10 +717,10 @@ public class WorkoutActivity extends AppCompatActivity {
 
     }
 
-    public void LaunchMusicActivity() {
+    /*public void LaunchMusicActivity() {
         Intent intent = new Intent(this, SelectionMusicActivity.class);
         startActivityForResult(intent,1);
-    }
+    }*/
 
     public void toast(String text){
         Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
@@ -833,7 +843,7 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
-    private  List<String> muscles = new ArrayList<String>();
+    private  List<String> muscles = new ArrayList<>();
 
     public void Exercises(){
 

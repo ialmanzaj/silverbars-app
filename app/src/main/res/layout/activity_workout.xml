@@ -62,28 +62,17 @@
 
 
                 <android.support.v4.widget.NestedScrollView
-
-                    android:orientation="vertical"
-
                     android:id="@+id/overview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
 
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <!-- lINEAS OF REPS PER EXERCISE -->
-
-
-                            <RelativeLayout
+                        <RelativeLayout
+                                android:minHeight="55dp"
                                 android:background="@color/colorSecondary"
                                 android:paddingStart="15dp"
                                 android:paddingEnd="15dp"
@@ -93,28 +82,23 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
 
-                                <TextView
-                                    android:id="@+id/disponible"
-                                    android:layout_centerVertical="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Disponible sin internet"
-                                    android:textColor="@color/white"
-                                    android:textSize="18sp" />
-
                                 <android.support.v7.widget.SwitchCompat
-                                    android:theme="@style/MySwitch"
 
+                                    android:textSize="18sp"
+                                    android:textColor="@color/white"
+                                    android:text="Disponible sin internet"
+                                    android:theme="@style/MySwitch"
+                                    android:layout_height="match_parent"
                                     android:layout_marginEnd="20dp"
                                     android:layout_alignParentEnd="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="55dp"
+                                    android:layout_width="match_parent"
+
 
                                     android:checked="false"
                                     android:id="@+id/enableLocal" />
 
                             </RelativeLayout>
-                            <RelativeLayout
+                        <RelativeLayout
                                 android:paddingStart="15dp"
                                 android:paddingEnd="15dp"
 
@@ -162,7 +146,7 @@
                                 </LinearLayout>
 
                             </RelativeLayout>
-                            <RelativeLayout
+                        <RelativeLayout
                                 android:paddingStart="15dp"
                                 android:paddingEnd="15dp"
 
@@ -212,7 +196,7 @@
                                 </LinearLayout>
 
                             </RelativeLayout>
-                            <RelativeLayout
+                        <RelativeLayout
                                 android:paddingStart="15dp"
                                 android:paddingEnd="15dp"
 
@@ -257,9 +241,7 @@
                                 </LinearLayout>
 
                             </RelativeLayout>
-
-
-                            <RelativeLayout
+                        <RelativeLayout
                                 android:id="@+id/SelectMusic"
                                 android:minHeight="45dp"
                                 android:paddingTop="5dp"
@@ -310,7 +292,7 @@
 
 
                             </RelativeLayout>
-                            <RelativeLayout
+                        <RelativeLayout
                                 android:paddingTop="5dp"
                                 android:paddingBottom="5dp"
                                 android:minHeight="45dp"
@@ -344,9 +326,6 @@
 
                             </RelativeLayout>
 
-
-
-                        </LinearLayout>
                         <TextView
                             android:layout_marginTop="5dp"
                             android:layout_width="wrap_content"
@@ -361,7 +340,6 @@
 
                             android:id="@+id/reciclador"
                             android:layout_gravity="center_horizontal" />
-
 
                     </LinearLayout>
 
