@@ -35,11 +35,9 @@
         </android.support.design.widget.AppBarLayout>
 
     <TabHost
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/tabHost2"
-
         android:layout_gravity="center_horizontal">
 
         <LinearLayout
@@ -425,12 +423,7 @@
         </LinearLayout>
     </TabHost>
 
-
-
-
-
-
-    </LinearLayout>
+</LinearLayout>
 
 
 

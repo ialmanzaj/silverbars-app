@@ -130,10 +130,10 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 dialog.dismiss();
-                                //On Dialog "Done" ClickListener
+                               /* //On Dialog "Done" ClickListener
                                 viewHolder.repetitions.setText(String.valueOf(NewRepValue()));
                                 WorkoutActivity workout = new WorkoutActivity();
-                                WorkoutActivity.Exercises_reps[a] = NewRepValue();
+                                WorkoutActivity.Exercises_reps[a] = NewRepValue();*/
                             }
                         })
                         .show()
@@ -143,7 +143,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                 //Dialog elements
                 if (v != null) {
 
-                    DialogName = (TextView) v.findViewById(R.id.ExerciseName);
+                   /* DialogName = (TextView) v.findViewById(R.id.ExerciseName);
                     DialogName.setText(items.get(a).getNombre());
 
                     Reps = (TextView) v.findViewById(R.id.Reps);
@@ -167,7 +167,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                             //Increasing Reps Button
                             plusTempo(Reps,plusRep,minusRep);
                         }
-                    });
+                    });*/
                 }
 
 

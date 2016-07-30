@@ -2,18 +2,17 @@ package com.app.project.silverbars;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -246,9 +245,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         // Inicializar Workouts
         List<WorkoutInfo> items = new ArrayList<>();
 
-        for (int a = 0; a < Exercises.length; a++){
-            items.add(new WorkoutInfo(Exercises[a].getExercise_name(),null));
+        for (JsonExercise Exercise : Exercises) {
+            items.add(new WorkoutInfo(Exercise.getExercise_name(), null));
         }
+
+
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
 

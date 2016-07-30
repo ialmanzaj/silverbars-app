@@ -10,66 +10,7 @@
         android:textSize="20sp"
 
         />
-    <LinearLayout
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:layout_weight="1"
-            android:gravity="end"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-            <Button
-                android:layout_centerVertical="true"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="45dp"
-                android:text="-"
-                android:id="@+id/minusRep" />
-        </RelativeLayout>
-
-
-
-        <RelativeLayout
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/Reps"
-                android:textColor="@color/white"
-                android:textSize="45sp"
-                android:text="1" />
-
-
-        </RelativeLayout>
-
-        <RelativeLayout
-
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-
-            <Button
-                android:layout_centerVertical="true"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:text="+"
-
-                android:id="@+id/plusRep"
-                />
-        </RelativeLayout>
-    </LinearLayout>
     <LinearLayout
 
         android:layout_marginTop="15dp"
@@ -84,13 +25,6 @@
             android:textColor="@color/white"
             android:layout_gravity="center" />
 
-        <Spinner
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinner"
-            android:layout_gravity="center_horizontal"
-            android:spinnerMode="dialog"
-            android:background="@color/black" />
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
