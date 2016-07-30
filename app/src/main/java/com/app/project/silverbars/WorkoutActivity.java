@@ -14,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,6 +113,8 @@ public class WorkoutActivity extends AppCompatActivity {
     private WebView webview;
     private TextView Rest_exercise;
 
+    private  List<String> MusclesArray = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,22 +132,79 @@ public class WorkoutActivity extends AppCompatActivity {
         ParsedExercises = new JsonExercise[exercises.length];
         setContentView(R.layout.activity_workout);
 
+        // ======= TOOL BAR - BACK BUTTON  ADDED
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
 
-        recycler = (RecyclerView) findViewById(R.id.reciclador);
-
-        if (recycler != null){
-            recycler.setNestedScrollingEnabled(false);
-            recycler.setHasFixedSize(false);
+        if (myToolbar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(workoutName);
+            myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
         }
 
 
+        // MUSCLES TEXT VIEW
+        primary_linear = (LinearLayout) findViewById(R.id.primary_muscles);
+        secondary_linear = (LinearLayout) findViewById(R.id.sec_muscles);
+
+        nestedScrollView = (NestedScrollView) findViewById(R.id.overview);
         enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
+        recycler = (RecyclerView) findViewById(R.id.reciclador);
+
+        final RelativeLayout workout_options = (RelativeLayout) findViewById(R.id.workout_options);
+
+        //TEXTVIEW OF REPS,SETS AND REST
+        Reps = (TextView) findViewById(R.id.Reps);
+        Sets = (TextView) findViewById(R.id.Sets);
+        Sets.setText(String.valueOf(workoutSets));
+        Rest = (TextView) findViewById(R.id.Rest);
+        RestSets = (TextView) findViewById(R.id.RestSets);
+
+        // Web view     ========================
+        webview = (WebView) findViewById(R.id.webview);
+
+        //Defining Tabs
+        TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost2);
+        tabHost2.setup();
+
+        TabHost.TabSpec overview = tabHost2.newTabSpec(getResources().getString(R.string.tab_overview));
+        TabHost.TabSpec muscles = tabHost2.newTabSpec(getResources().getString(R.string.tab_muscles));
+
+        overview.setIndicator(getResources().getString(R.string.tab_overview));
+        overview.setContent(R.id.overview);
+
+        muscles.setIndicator(getResources().getString(R.string.tab_muscles));
+        muscles.setContent(R.id.muscles);
+
+        tabHost2.addTab(overview);
+
+        tabHost2.addTab(muscles);
+
+        final RelativeLayout selectMusic = (RelativeLayout) findViewById(R.id.SelectMusic);
+
+        //START WORKOUT BUTTON
+        Button startButton = (Button) findViewById(R.id.start_button);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LaunchWorkingOutActivity();
+            }
+        });
+
+
+
+
+
         enableLocal.setEnabled(true);
         enableLocal.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 isTouched = true;
-
                 return false;
             }
         });
@@ -170,21 +228,22 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
 
-
         // Usar un administrador para LinearLayout
+        if (recycler != null){
+            recycler.setNestedScrollingEnabled(false);
+            recycler.setHasFixedSize(false);
+        }
+
         RecyclerView.LayoutManager lManager = new WrappingLinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
 
-
-        nestedScrollView = (NestedScrollView) findViewById(R.id.overview);
-
-        //Log.v(TAG, String.valueOf(nestedScrollView.isNestedScrollingEnabled()));
 
 
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
         Log.v("LocalState",database.checkLocal(workoutId));
 
 
+        //COMPROBAR SI EL WORKOUT ESTA ACTIVADO EN LA BASE DE DATOS
         if (database.checkWorkouts(workoutId) && Objects.equals(database.checkLocal(workoutId), "true")){
             loadLocal = true;
             enableLocal.setChecked(true);
@@ -198,48 +257,35 @@ public class WorkoutActivity extends AppCompatActivity {
                 ParsedExercises[i] = database.getExercise(Integer.valueOf(ParsedReps[i].getExercise()));
                 items.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps)));
                 Exercises_reps[i] = ParsedReps[i].getRepetition();
+
+
+                //RECORRER CADA EJECICIOS BUSCANDO MUSCULOS
+                for (int b = 0; b < ParsedExercises[i].muscle.length; b++){
+                    String name;
+                    name = ParsedExercises[i].muscle[b];
+                    MusclesArray.add(name);
+                }
             }
 
-            Log.v("Exercises",String.valueOf(ParsedExercises.length));
+            Log.v(TAG,"Exercises"+ParsedExercises.length);
+
             adapter = new ExerciseAdapter(items,WorkoutActivity.this,getSupportFragmentManager());
             recycler.setAdapter(adapter);
+            setMusclesToView(MusclesArray);
 
 
         }else{
+
             Exercises();
             loadLocal = false;
             enableLocal.setChecked(false);
+            Log.v(TAG,"loadLocal"+loadLocal);
         }
 
 
-        // Obtener el Recycler
 
-        primary_linear = (LinearLayout) findViewById(R.id.primary_muscles);
-        secondary_linear = (LinearLayout) findViewById(R.id.sec_muscles);
-        // Usar un administrador para LinearLayout
-
-
-        Log.v("Item size test", String.valueOf(items.size()));
-
-        // ======= TOOL BAR - BACK BUTTON  ADDED
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
-
-        if (myToolbar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(workoutName);
-            myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
-        }
-
-        final RelativeLayout workout_options = (RelativeLayout) findViewById(R.id.workout_options);
-
+        // WORKOUT OPTIONS
         workout_options.setClickable(true);
-
         workout_options.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -268,20 +314,6 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
-        Button startButton = (Button) findViewById(R.id.start_button);
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LaunchWorkingOutActivity();
-            }
-        });
-
-//        Tab 2
-
-        Reps = (TextView) findViewById(R.id.Reps);
-
-        Sets = (TextView) findViewById(R.id.Sets);
-        Sets.setText(String.valueOf(workoutSets));
 
 
         Sets.setOnClickListener(new View.OnClickListener() {
@@ -327,7 +359,7 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
-        Rest = (TextView) findViewById(R.id.Rest);
+
         Rest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -369,7 +401,7 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
-        RestSets = (TextView) findViewById(R.id.RestSets);
+
 
         RestSets.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -586,30 +618,9 @@ public class WorkoutActivity extends AppCompatActivity {
 */
         // Tab 3 Inicializar Exercises en el RecyclerView
 
-        //Defining Tabs
-        TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost2);
-        
-        tabHost2.setup();
 
-        TabHost.TabSpec overview = tabHost2.newTabSpec(getResources().getString(R.string.tab_overview));
-
-        TabHost.TabSpec muscles = tabHost2.newTabSpec(getResources().getString(R.string.tab_muscles));
-
-
-        overview.setIndicator(getResources().getString(R.string.tab_overview));
-        overview.setContent(R.id.overview);
-
-        muscles.setIndicator(getResources().getString(R.string.tab_muscles));
-        muscles.setContent(R.id.muscles);
-
-        tabHost2.addTab(overview);
-
-        tabHost2.addTab(muscles);
-
-        final RelativeLayout selectMusic = (RelativeLayout) findViewById(R.id.SelectMusic);
 
         selectMusic.setClickable(true);
-
         selectMusic.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -640,9 +651,6 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
-
-        // Web view     ========================
-        webview = (WebView) findViewById(R.id.webview);
 
 
 
@@ -843,7 +851,7 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
-    private  List<String> muscles = new ArrayList<>();
+
 
     public void Exercises(){
 
@@ -892,8 +900,7 @@ public class WorkoutActivity extends AppCompatActivity {
                         for (int b = 0; b < ParsedExercises[a].muscle.length; b++){
                             String name;
                             name = ParsedExercises[a].muscle[b];
-
-                            muscles.add(name);
+                            MusclesArray.add(name);
                         }
 
 
@@ -920,17 +927,15 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
-    private void setMusclesNames(List<String> muscle){
-        List<String> muscles_names = muscles;
-        //Log.v("MUSCLES NAMES", String.valueOf(Muscles_names) );
-       /* Log.v(TAG," se ha asignado musculos");
-        Log.v(TAG, String.valueOf(Muscles_names.size()));*/
+    private void setMusclesToView(List<String> musculos){
 
-        if ( muscles_names.size() > 0 ){
 
-            for (String s : muscles_names)
+        if ( musculos.size() > 0 ){
+
+            // asignar musculos a text view si es primario o secundario
+            for (String s : musculos)
             {
-                final TextView MuscleView = new TextView(this);
+                final TextView MuscleView = new TextView(WorkoutActivity.this);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     MuscleView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));
@@ -939,11 +944,11 @@ public class WorkoutActivity extends AppCompatActivity {
                 }
 
                 partes += "#"+ s + ",";
-                MuscleView.setGravity(Gravity.CENTER);
-                MuscleView.setText(s);
+                //MuscleView.setGravity(Gravity.CENTER);
+                //MuscleView.setText(s);
 
                 //Log.v(TAG, (String) MuscleView.getText());
-                primary_linear.addView(MuscleView);
+                //primary_linear.addView(MuscleView);
 
             }
         }
@@ -958,10 +963,10 @@ public class WorkoutActivity extends AppCompatActivity {
         });
         webview.getSettings().setJavaScriptEnabled(true);
         String fileurl = "file://"+Environment.getExternalStorageDirectory()+"/html/"+"index.html";
-
         webview.loadUrl(fileurl);
 
     }
+
     private static String removeLastChar(String str) {
         return str.substring(0,str.length()-1);
     }
@@ -1056,9 +1061,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
                     adapter = new ExerciseAdapter(items,WorkoutActivity.this,getSupportFragmentManager());
                     recycler.setAdapter(adapter);
+                    setMusclesToView(MusclesArray);
 
-
-                    setMusclesNames(muscles);
                     //Log.v(TAG, String.valueOf(muscles));
 
 
@@ -1081,8 +1085,6 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
 
 
