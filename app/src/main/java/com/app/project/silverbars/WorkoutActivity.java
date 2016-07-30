@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -95,7 +96,7 @@ public class WorkoutActivity extends AppCompatActivity {
     public static JsonExercise[] ParsedExercises;
     public static JsonReps[] ParsedReps;
     private int[] exercises_id;
-
+    private NestedScrollView nestedScrollView;
 
     private static final String TAG = WorkoutActivity.class.getSimpleName();
 
@@ -163,9 +164,16 @@ public class WorkoutActivity extends AppCompatActivity {
             recycler.setNestedScrollingEnabled(false);
             recycler.setHasFixedSize(false);
         }
+
+
         // Usar un administrador para LinearLayout
         RecyclerView.LayoutManager lManager = new WrappingLinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
+
+
+        nestedScrollView = (NestedScrollView) findViewById(R.id.overview);
+
+        nestedScrollView.scrollTo(0,0);
 
 
 

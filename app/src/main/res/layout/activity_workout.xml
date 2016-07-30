@@ -62,7 +62,9 @@
 
 
                 <android.support.v4.widget.NestedScrollView
+
                     android:orientation="vertical"
+
                     android:id="@+id/overview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -355,7 +357,6 @@
                             />
                         <android.support.v7.widget.RecyclerView
                             android:layout_height="wrap_content"
-                            app:layout_behavior="@string/appbar_scrolling_view_behavior"
                             android:layout_width="match_parent"
 
                             android:id="@+id/reciclador"
@@ -366,11 +367,6 @@
 
 
                 </android.support.v4.widget.NestedScrollView>
-
-
-
-
-
 
 
 
