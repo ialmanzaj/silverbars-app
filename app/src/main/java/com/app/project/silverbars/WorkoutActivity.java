@@ -198,37 +198,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
+        // CONFIGURACIONES DEL RECYCLER
 
-
-        enableLocal.setEnabled(true);
-        enableLocal.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                isTouched = true;
-                return false;
-            }
-        });
-        enableLocal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isTouched) {
-
-                    isTouched = false;
-                    if (isChecked && !loadLocal){
-                        saveExercises();
-                    }else{
-
-                        MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
-                        loadLocal = false;
-                        database.updateLocal(workoutId,"false");
-                        logMessage("Switch off");
-                    }
-                }
-            }
-        });
-
-
-        // Usar un administrador para LinearLayout
         if (recycler != null){
             recycler.setNestedScrollingEnabled(false);
             recycler.setHasFixedSize(false);
@@ -239,6 +210,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
+        // CREAR BASE DE DATOS
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
         Log.v("LocalState",database.checkLocal(workoutId));
 
@@ -283,6 +255,33 @@ public class WorkoutActivity extends AppCompatActivity {
         }
 
 
+        //SWITCH BUTTON CONFIGURACIONES
+        enableLocal.setEnabled(true);
+        enableLocal.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                isTouched = true;
+                return false;
+            }
+        });
+        enableLocal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isTouched) {
+
+                    isTouched = false;
+                    if (isChecked && !loadLocal){
+                        saveExercises();
+                    }else{
+
+                        MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
+                        loadLocal = false;
+                        database.updateLocal(workoutId,"false");
+                        logMessage("Switch off");
+                    }
+                }
+            }
+        });
 
         // WORKOUT OPTIONS
         workout_options.setClickable(true);
