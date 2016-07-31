@@ -77,10 +77,10 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
 
     @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = null;
+
         switch (viewType) {
             case TYPE_WORKOUT:
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_workout, parent, false);
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_workout, parent, false);
                 return new VH(v);
         }
         return null;
@@ -93,15 +93,19 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         switch (vh.getItemViewType()) {
             case TYPE_WORKOUT:
                     Log.v(TAG,"Workouts Size"+position);
-                    String[] parts = workouts[position].getWorkout_image().split("workouts");;
+                    String[] parts = workouts[position].getWorkout_image().split("workouts");
                     String Parsedurl = "workouts"+parts[1];
+
                     Log.v(TAG,"Image "+Parsedurl);
 //                DownloadImage(Parsedurl,vh);
                     String[] imagesName = Parsedurl.split("/");
                     final String imgName = imagesName[2];
                     Log.v(TAG,"Image Name "+imgName);
+
+                    // asignar imagen a view
                     Bitmap bmp = loadImageFromCache(imgName);
                     if (bmp != null){
+                        //Bitmap resized = Bitmap.createScaledBitmap(bmp, 300, 300, true);
                         vh.img.setImageBitmap(bmp);
                     }
                     else{
@@ -165,7 +169,9 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {}
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG,"onFAILURE",t);
+            }
         });
     }
 
