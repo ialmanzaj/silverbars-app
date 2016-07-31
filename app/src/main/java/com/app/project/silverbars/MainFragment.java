@@ -39,8 +39,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainFragment extends Fragment {
 
     private static final String TAG ="MAIN SCREEN FRAGMENT";
-    private String email;
-    private String name;
     public TwoWayView recyclerView;
     private Button songs;
     public static JsonWorkout[] Workouts;
@@ -84,8 +82,10 @@ public class MainFragment extends Fragment {
         recyclerView = (TwoWayView) getView().findViewById(R.id.list);
         RelativeLayout noConnection = (RelativeLayout) getView().findViewById(R.id.noConnection);
         Intent intent = this.getActivity().getIntent();
-        email = intent.getStringExtra("Email");
-        name = intent.getStringExtra("Name");
+        String email = intent.getStringExtra("Email");
+        String name = intent.getStringExtra("Name");
+
+
 
         if (!opened){
             opened = true;
@@ -250,7 +250,7 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onFailure(Call<JsonWorkout[]> call, Throwable t) {
-                Log.e(TAG,t.toString());
+                Log.e(TAG,"onFailure",t);
             }
         });
     }
