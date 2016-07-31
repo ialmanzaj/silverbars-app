@@ -80,6 +80,8 @@ public class WorkoutActivity extends AppCompatActivity {
     private ArrayList<File> mySongs;
     static public int[] Exercises_reps;
     private LinearLayout primary_linear,secondary_linear;
+
+
     private boolean isTouched = false;
     private boolean loadLocal = false;
 
@@ -150,7 +152,7 @@ public class WorkoutActivity extends AppCompatActivity {
         //TEXTVIEW OF REPS,SETS AND REST
 
         Sets = (TextView) findViewById(R.id.Sets);
-        Sets.setText(String.valueOf(workoutSets));
+
 
 
         Rest = (TextView) findViewById(R.id.Rest);
@@ -210,7 +212,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
         // CREAR BASE DE DATOS
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
-        Log.v("LocalState",database.checkLocal(workoutId));
+        Log.v(TAG,"LocalState"+database.checkLocal(workoutId));
+
 
         //SWITCH BUTTON CONFIGURACIONES
         enableLocal.setEnabled(true);
@@ -242,6 +245,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
         //COMPROBAR SI EL WORKOUT ESTA ACTIVADO EN LA BASE DE DATOS
         if (database.checkWorkouts(workoutId) && Objects.equals(database.checkLocal(workoutId), "true")){
+
+            Log.v(TAG,"entro en workout database");
             loadLocal = true;
             enableLocal.setChecked(true);
 
@@ -251,6 +256,7 @@ public class WorkoutActivity extends AppCompatActivity {
             Exercises_reps = new int[ParsedReps.length];
 
             for (int i = 0; i < ParsedReps.length; i++){
+
                 ParsedExercises[i] = database.getExercise(Integer.valueOf(ParsedReps[i].getExercise()));
                 items.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps)));
                 Exercises_reps[i] = ParsedReps[i].getRepetition();
@@ -313,7 +319,7 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
 
-
+        Sets.setText(String.valueOf(workoutSets));
         Sets.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1154,24 +1160,23 @@ public class WorkoutActivity extends AppCompatActivity {
         AuthenticationClient.openLoginActivity(WorkoutActivity.this, REQUEST_CODE, request);
     }
 */
-    private void startMainActivity(String token) {
+ /*   private void startMainActivity(String token) {
 //        Intent intent = new Intent(this, SpotifyMusic.class);
 //        startActivityForResult(intent,1);
         Intent intent = SpotifyMusic.createIntent(this);
         intent.putExtra(SpotifyMusic.EXTRA_TOKEN, token);
         startActivity(intent);
         finish();
-    }
+    }*/
 
-    private void logError(String msg) {
-        Log.e(TAG, msg);
-    }
+
 
     private void logMessage(String msg) {
         Log.v(TAG, msg);
     }
 
     public void saveExercises(){
+
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
         for (int i = 0; i < ParsedExercises.length; i++){
             if (!database.checkExercise(ParsedExercises[i].getId())){
@@ -1194,6 +1199,7 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     public void saveWorkouts(){
+
         String[] ids = new String[ParsedExercises.length];
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
         String imgDir = Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+workoutImage;
