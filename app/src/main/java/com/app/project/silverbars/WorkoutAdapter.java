@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Environment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,7 +27,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -36,14 +34,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-/**
- * Created by roberto on 5/24/2016.
- */
+
 public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
 
     private static final int TYPE_WORKOUT = 0;
     private static final int TYPE_VIEW_MORE = 1;
-//    private static final String[] WORKOUTS = {"Chest", "Upper Body", "Core", "Back Destruction", "Chest"};
+    private static final String TAG = "WORKOUT ADAPTER";
+    //    private static final String[] WORKOUTS = {"Chest", "Upper Body", "Core", "Back Destruction", "Chest"};
 //    private static final int[] IMG = {R.mipmap.imagen1, R.mipmap.imagen2, R.mipmap.imagen3, R.mipmap.imagen4, R.mipmap.imagen5};
     private MainFragment outerClass = new MainFragment();
     private JsonWorkout[] workouts = outerClass.Workouts;
@@ -95,14 +92,14 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         vh.layout.getLayoutParams().height = height / 3;
         switch (vh.getItemViewType()) {
             case TYPE_WORKOUT:
-                    Log.v("Workouts Size",String.valueOf(position));
+                    Log.v(TAG,"Workouts Size"+position);
                     String[] parts = workouts[position].getWorkout_image().split("workouts");;
                     String Parsedurl = "workouts"+parts[1];
-                    Log.v("Image",Parsedurl);
+                    Log.v(TAG,"Image "+Parsedurl);
 //                DownloadImage(Parsedurl,vh);
                     String[] imagesName = Parsedurl.split("/");
                     final String imgName = imagesName[2];
-                    Log.v("Image Name",imgName);
+                    Log.v(TAG,"Image Name "+imgName);
                     Bitmap bmp = loadImageFromCache(imgName);
                     if (bmp != null){
                         vh.img.setImageBitmap(bmp);
@@ -160,10 +157,10 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                         vh.img.setImageBitmap(bitmap);
                     }
                     else {
-                        Log.v("Download", "server contact failed");
+                        Log.v(TAG, "Download server contact failed");
                     }
                 } else {
-                    Log.v("State", "server contact failed");
+                    Log.v(TAG,"State server contact failed");
                 }
             }
 
@@ -196,7 +193,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
             OutputStream outputStream = null;
             boolean success = true;
             if (!Folder.isDirectory()) {
-                Log.v("Dir","Creating Dir");
+                Log.v(TAG,"Creating Dir");
                 success = Folder.mkdir();
             }
             if (success) {
@@ -223,7 +220,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                     if (outputStream != null) {outputStream.close();}
                 }
             } else {
-                Log.v("Error","Error while creating dir");
+                Log.v(TAG,"Error while creating dir");
             }
 
         } catch (IOException e) {return false;}

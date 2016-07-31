@@ -70,6 +70,8 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
     public void onBindViewHolder(WorkoutsViewHolder viewHolder, int i) {
         WorkoutActivity workout = new WorkoutActivity();
         Bitmap bmp = null;
+
+
         //Setting values to each recylerView Element
         String[] imageDir = workout.ParsedExercises[i].getExercise_image().split("exercises");;
         String Parsedurl = "exercises"+imageDir[1];

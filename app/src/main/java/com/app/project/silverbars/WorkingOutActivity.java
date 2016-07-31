@@ -262,6 +262,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         recycler.setLayoutManager(lManager);
 
+
         // Crear un nuevo adaptador
         adapter = new WorkoutsAdapter(items,getApplicationContext());
         recycler.setAdapter(adapter);

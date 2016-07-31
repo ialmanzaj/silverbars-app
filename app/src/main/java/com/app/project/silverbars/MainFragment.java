@@ -7,20 +7,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.lucasr.twowayview.widget.TwoWayView;
@@ -54,14 +49,10 @@ public class MainFragment extends Fragment {
     public String muscleData = "ALL";
     public Toolbar myToolbar;
     private boolean opened;
-    private RelativeLayout noConnection;
-
-    private View rootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_fmain, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_fmain, container, false);
     }
 
     public boolean isOpened() {
@@ -91,7 +82,7 @@ public class MainFragment extends Fragment {
         opened = getArguments().getBoolean("Opened");
 //        toast(muscleData);
         recyclerView = (TwoWayView) getView().findViewById(R.id.list);
-        noConnection = (RelativeLayout) getView().findViewById(R.id.noConnection);
+        RelativeLayout noConnection = (RelativeLayout) getView().findViewById(R.id.noConnection);
         Intent intent = this.getActivity().getIntent();
         email = intent.getStringExtra("Email");
         name = intent.getStringExtra("Name");
@@ -223,19 +214,19 @@ public class MainFragment extends Fragment {
                         JsonWorkout[] auxWorkout = response.body();
                         JsonWorkout[] workoutFlag = null;
                         int x = 0;
-                        for (int i = 0; i < auxWorkout.length; i++){
-                            String muscleData = auxWorkout[i].getMain_muscle();
-                            if (Objects.equals(muscle, muscleData)){
+                        for (JsonWorkout anAuxWorkout : auxWorkout) {
+                            String muscleData = anAuxWorkout.getMain_muscle();
+                            if (Objects.equals(muscle, muscleData)) {
                                 x++;
                             }
                         }
                         Workouts = new JsonWorkout[x];
                         int y = 0;
-                        for (int i = 0; i < auxWorkout.length; i++){
-                            String muscleData = auxWorkout[i].getMain_muscle();
-                            if (Objects.equals(muscle, muscleData)){
-                                Workouts[y] = auxWorkout[i];
-                                Log.v("Workout",Workouts[y].getWorkout_name());
+                        for (JsonWorkout anAuxWorkout : auxWorkout) {
+                            String muscleData = anAuxWorkout.getMain_muscle();
+                            if (Objects.equals(muscle, muscleData)) {
+                                Workouts[y] = anAuxWorkout;
+                                Log.v("Workout", Workouts[y].getWorkout_name());
                                 y++;
                             }
                         }
