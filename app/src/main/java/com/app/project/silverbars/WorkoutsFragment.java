@@ -34,23 +34,22 @@ public class WorkoutsFragment extends Fragment {
         tabHost = (TabHost) rootView.findViewById(R.id.tabHost);
         tabHost.setup();
 
-        TabHost.TabSpec spec1 = tabHost.newTabSpec(getResources().getString(R.string.tab_my_workouts));
-        TabHost.TabSpec spec2 = tabHost.newTabSpec(getResources().getString(R.string.tab_saved));
+        TabHost.TabSpec myworkouts = tabHost.newTabSpec(getResources().getString(R.string.tab_my_workouts));
+        TabHost.TabSpec savedworkout = tabHost.newTabSpec(getResources().getString(R.string.tab_saved));
 
-        spec1.setIndicator(getResources().getString(R.string.tab_my_workouts));
-        spec1.setContent(R.id.tab1);
+        myworkouts.setIndicator(getResources().getString(R.string.tab_my_workouts));
+        myworkouts.setContent(R.id.tab1);
 
-        spec2.setIndicator(getResources().getString(R.string.tab_saved));
-        spec2.setContent(R.id.tab2);
+        savedworkout.setIndicator(getResources().getString(R.string.tab_saved));
+        savedworkout.setContent(R.id.tab2);
 
-        tabHost.addTab(spec1);
-        tabHost.addTab(spec2);
+        tabHost.addTab(savedworkout);
+        tabHost.addTab(myworkouts);
 
         TwoWayView recyclerView = (TwoWayView) rootView.findViewById(R.id.list);
         LinearLayout EmpyState = (LinearLayout) rootView.findViewById(R.id.empty_state);
 
         MySQLiteHelper database = new MySQLiteHelper(getContext());
-
 
         if (database.getWorkouts(1) != null){
 
@@ -65,7 +64,7 @@ public class WorkoutsFragment extends Fragment {
         }
         //Log.v("Saved Workouts",String.valueOf(database.getWorkouts(1).length));
 
-
         return rootView;
     }
+
 }

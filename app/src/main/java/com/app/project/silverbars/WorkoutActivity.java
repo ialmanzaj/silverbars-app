@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -99,7 +98,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
     private int[] exercises_id;
-    private NestedScrollView nestedScrollView;
+
 
     private static final String TAG ="WORKOUT ACTIVITY";
 
@@ -141,7 +140,7 @@ public class WorkoutActivity extends AppCompatActivity {
         primary_linear = (LinearLayout) findViewById(R.id.primary_muscles);
         secondary_linear = (LinearLayout) findViewById(R.id.sec_muscles);
 
-        nestedScrollView = (NestedScrollView) findViewById(R.id.overview);
+
         enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
         recycler = (RecyclerView) findViewById(R.id.reciclador);
 
@@ -185,6 +184,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         TabHost.TabSpec overview = tabHost2.newTabSpec(getResources().getString(R.string.tab_overview));
         TabHost.TabSpec muscles = tabHost2.newTabSpec(getResources().getString(R.string.tab_muscles));
+        TabHost.TabSpec exercises = tabHost2.newTabSpec(getResources().getString(R.string.tab_exercises));
 
         overview.setIndicator(getResources().getString(R.string.tab_overview));
         overview.setContent(R.id.overview);
@@ -192,8 +192,12 @@ public class WorkoutActivity extends AppCompatActivity {
         muscles.setIndicator(getResources().getString(R.string.tab_muscles));
         muscles.setContent(R.id.muscles);
 
-        tabHost2.addTab(overview);
+        exercises.setIndicator(getResources().getString(R.string.tab_exercises));
+        exercises.setContent(R.id.exercises);
 
+
+        tabHost2.addTab(overview);
+        tabHost2.addTab(exercises);
         tabHost2.addTab(muscles);
 
 
@@ -205,7 +209,7 @@ public class WorkoutActivity extends AppCompatActivity {
             recycler.setHasFixedSize(false);
         }
 
-        RecyclerView.LayoutManager lManager = new WrappingLinearLayoutManager(this);
+        RecyclerView.LayoutManager lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
 
 

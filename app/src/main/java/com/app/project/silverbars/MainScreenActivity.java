@@ -1,37 +1,22 @@
 package com.app.project.silverbars;
 
 
-import android.app.FragmentManager;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
-
-import android.content.res.Configuration;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -40,9 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.baoyz.actionsheet.ActionSheet;
 import com.facebook.FacebookSdk;
 
 import java.io.File;
@@ -51,16 +34,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+//import com.afollestad.materialdialogs.MaterialDialog;
 
 public class MainScreenActivity extends AppCompatActivity {
 
@@ -137,9 +119,9 @@ public class MainScreenActivity extends AppCompatActivity {
         });
 
         final ArrayList<DrawerItem> items = new ArrayList<DrawerItem>();
-        items.add(new DrawerItem(tagTitles[0],R.mipmap.home));
+        items.add(new DrawerItem(tagTitles[0],R.drawable.ic_home_white_24dp));
         items.add(new DrawerItem(tagTitles[1],R.mipmap.acrobatics));
-        items.add(new DrawerItem(tagTitles[2],R.mipmap.profile));
+        items.add(new DrawerItem(tagTitles[2],R.drawable.ic_person_outline_white_24dp));
 
         drawerList.setAdapter(new DrawerListAdapter(this, items));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());

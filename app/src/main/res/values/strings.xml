@@ -105,6 +105,7 @@
     <string name="tab_workouts_home">Workouts</string>
     <string name="tab_myworkouts_home">My Workouts</string>
     <string name="tab_profile">Profile</string>
+    <string name="tab_exercises">Exercises</string>
 
     <string-array name="navigation_array">
         <item>Workouts</item>

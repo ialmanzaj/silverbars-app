@@ -69,6 +69,7 @@
     <string name="tab_workouts_home">Rutinas</string>
     <string name="tab_myworkouts_home">Mis Rutinas</string>
     <string name="tab_profile">Perfil</string>
+    <string name="tab_exercises">Ejercicios</string>
 
     <string-array name="navigation_array">
         <item>Rutinas</item>
