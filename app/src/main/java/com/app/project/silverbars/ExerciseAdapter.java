@@ -77,14 +77,16 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     @Override
     public void onBindViewHolder(final ExerciseViewHolder viewHolder, int i) {
-        final int a = i;
-        WorkoutActivity workout = new WorkoutActivity();
-        //Setting values to each recylerView Element
-        String[] imageDir = WorkoutActivity.ParsedExercises[a].getExercise_image().split("exercises");;
-        Log.v("Image Array", Arrays.toString(imageDir));
         Bitmap bmp = null;
+
+
+        //Setting values to each recylerView Element
+        String[] imageDir = WorkoutActivity.ParsedExercises[i].getExercise_image().split("exercises");
+
+        Log.v("Image Array", Arrays.toString(imageDir));
+
         if (imageDir.length < 2){
-            bmp = loadImageFromCache(WorkoutActivity.ParsedExercises[a].getExercise_image());
+            bmp = loadImageFromCache(WorkoutActivity.ParsedExercises[i].getExercise_image());
             viewHolder.imagen.setImageBitmap(bmp);
         }else{
             String Parsedurl = "exercises"+imageDir[1];
@@ -101,8 +103,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
 
 
-        viewHolder.nombre.setText(WorkoutActivity.ParsedExercises[a].getExercise_name());
-        viewHolder.repetitions.setText(String.valueOf(WorkoutActivity.Exercises_reps[a]));
+        viewHolder.nombre.setText(WorkoutActivity.ParsedExercises[i].getExercise_name());
+        viewHolder.repetitions.setText(String.valueOf(WorkoutActivity.Exercises_reps[i]));
 
 
 

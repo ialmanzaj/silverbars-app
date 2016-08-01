@@ -17,18 +17,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by andre_000 on 4/12/2016.
  */
 public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.WorkoutsViewHolder> {
+    private static final String TAG = "Workout Adapter";
     private List<WorkoutInfo> items;
     private Context context;
 
@@ -68,20 +64,36 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
     @Override
     public void onBindViewHolder(WorkoutsViewHolder viewHolder, int i) {
-        WorkoutActivity workout = new WorkoutActivity();
         Bitmap bmp = null;
-
-
         //Setting values to each recylerView Element
-        String[] imageDir = workout.ParsedExercises[i].getExercise_image().split("exercises");;
-        String Parsedurl = "exercises"+imageDir[1];
-        String[] imagesName = Parsedurl.split("/");
-        String imgName = imagesName[2];
-        bmp = loadImageFromCache(imgName);
-        viewHolder.imagen.setImageBitmap(bmp);
-        viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
-        viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
-        viewHolder.nombre.setText(items.get(i).getNombre());
+        String[] imageDir = WorkoutActivity.ParsedExercises[i].getExercise_image().split("exercises");
+
+        Log.v(TAG, Arrays.toString(imageDir));
+
+        if (imageDir.length < 2){
+            Log.v(TAG, "ha entrado en IF imageDir.length < 2");
+            bmp = loadImageFromCache(WorkoutActivity.ParsedExercises[i].getExercise_image());
+            viewHolder.imagen.setImageBitmap(bmp);
+            viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
+            viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
+            viewHolder.nombre.setText(items.get(i).getNombre());
+
+        }else{
+
+            String Parsedurl = "exercises"+imageDir[1];
+            String[] imagesName = Parsedurl.split("/");
+            String imgName = imagesName[2];
+            bmp = loadImageFromCache(imgName);
+
+            if (bmp != null){
+                Log.v(TAG, "ha entrado en if bmp != null");
+                viewHolder.imagen.setImageBitmap(bmp);
+                viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
+                viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
+                viewHolder.nombre.setText(items.get(i).getNombre());
+            }
+        }
+
 //        viewHolder.next.setText("Visitas:"+String.valueOf(items.get(i).getVisitas()));
     }
 
@@ -94,42 +106,23 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         return width;
     }
 
-    public void DownloadImage(final String url, final WorkoutsViewHolder vh, final String imgName) {
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
-                .build();
-        SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
-        Call<ResponseBody> call = downloadService.downloadFile(url);
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Bitmap bmp = BitmapFactory.decodeStream(response.body().byteStream());
-                    vh.imagen.setImageBitmap(bmp);
-                    Log.d("State", "server contacted and has file");
-//                    boolean writtenToDisk = writeResponseBodyToDisk(response.body(),imgName);
-//                    Log.d("Download", "file download was a success? " + writtenToDisk);
-
-                } else {
-                    Log.d("State", "server contact failed");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
-    }
 
     private Bitmap loadImageFromCache(String imageURI) {
         Bitmap bitmap = null;
-        File file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageURI);
-        if (file.exists()){
-            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        String[] imageDir = imageURI.split("SilverbarsImg");
+        if (imageDir.length < 2){
+            File file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageURI);
+            if (file.exists()){
+                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            }
+        }else{
+            File file = new File(imageURI);
+            if (file.exists()){
+                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            }
         }
+
         return bitmap;
     }
+
 }

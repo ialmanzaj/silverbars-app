@@ -139,13 +139,13 @@
                             android:visibility="gone">
 
                             <ImageButton
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:id="@+id/nxtExercise"
-                                android:src="@mipmap/ic_keyboard_arrow_right_black_36dp"
-                                android:background="#fff"
+                                android:src="@drawable/ic_skip_next_black_24dp"
                                 android:layout_gravity="center"
-                                android:contentDescription="" />
+                                android:background="@color/white"
+                                android:contentDescription="@null" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -341,7 +341,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:text="@string/end_button"
-                        android:id="@+id/button11"
+                        android:id="@+id/Endbutton"
                         android:background="@color/secondColor"
                         android:textColor="#ffffff"
                         android:layout_marginStart="2dp" />

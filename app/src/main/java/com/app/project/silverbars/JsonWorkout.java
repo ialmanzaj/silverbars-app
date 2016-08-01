@@ -13,6 +13,17 @@ public class JsonWorkout {
     public String main_muscle;
     public String[] exercises;
 
+    public JsonWorkout(int id, String workout_name, String workout_image, int sets, String level, String main_muscle, String[] exercises) {
+        this.id = id;
+        this.workout_name = workout_name;
+        this.workout_image = workout_image;
+        this.sets = sets;
+        this.level = level;
+        this.main_muscle = main_muscle;
+        this.exercises = exercises;
+    }
+
+
     public int getId() {
         return id;
     }
@@ -69,17 +80,6 @@ public class JsonWorkout {
         this.exercises = exercises;
     }
 
-    public JsonWorkout() {
-    }
 
-    public JsonWorkout(int id, String workout_name, String workout_image, int sets, String level, String main_muscle, String[] exercises) {
-        this.id = id;
-        this.workout_name = workout_name;
-        this.workout_image = workout_image;
-        this.sets = sets;
-        this.level = level;
-        this.main_muscle = main_muscle;
-        this.exercises = exercises;
-    }
 
 }

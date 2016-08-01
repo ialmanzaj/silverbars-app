@@ -40,7 +40,8 @@ import java.util.concurrent.TimeUnit;
 
 public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener {
 
-     static MediaPlayer mp;
+    private static final String TAG ="WORKINGOUT ACTIVITY" ;
+    static MediaPlayer mp;
     ArrayList<File> mySongs, playlist;
     private ImageButton btPlay;
     private ImageButton btPause;
@@ -59,11 +60,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private FrameLayout prvLayout;
     private FrameLayout nxtLayout;
     private FrameLayout ModalLayout;
-    private Button PauseButton;
+    private Button PauseButton,Endbutton;
     private boolean SelectedSongs = false, finish = false, start = false;
     private RecyclerView recycler;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager lManager;
     private int TotalSets = 0, ActualSets = 0, Time_aux = 0;
     AlertDialog alertDialog;
     private MediaPlayer media;
@@ -84,32 +83,42 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         tempo = b.getInt("tempo");
         VibrationPerRep = b.getBoolean("VibrationPerRep");
         VibrationPerSet =  b.getBoolean("VibrationPerSet");
-        TotalSets = b.getInt("Sets");
+
         Exercises = WorkoutActivity.ParsedExercises;
-        RepsTime(y);
+
+        TotalSets = b.getInt("Sets");
+        //RepsTime(y);
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
         position = b.getStringArray("pos");
         Log.v("Songs", Arrays.toString(position));
         playlist = new ArrayList<>();
+
+
         actualReps = Exercises_reps[0];
         artist_name = (TextView) findViewById(R.id.artist_name);
 
         CurrentSet = (TextView) findViewById(R.id.CurrentSet);
         TotalSet = (TextView) findViewById(R.id.TotalSet);
         CurrentExercise = (TextView) findViewById(R.id.CurrentExercise);
+
+        // Rest modal
         ModalLayout = (FrameLayout) findViewById(R.id.ModalLayout);
         headerText = (TextView) findViewById(R.id.headerText);
         startCounter = (TextView) findViewById(R.id.startCounter);
         final TextView totalExercise = (TextView) findViewById(R.id.TotalExercise);
 
+        // next and preview button for exercise
         ImageButton prvExercise = (ImageButton) findViewById(R.id.prvExercise);
         ImageButton nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
         prvLayout = (FrameLayout) findViewById(R.id.prvLayout);
         nxtLayout = (FrameLayout) findViewById(R.id.nxtLayout);
         nxtLayout.setVisibility(View.VISIBLE);
+
         RelativeLayout playerLayout = (RelativeLayout) findViewById(R.id.PlayerLayout);
+
         PauseButton = (Button) findViewById(R.id.PauseButton);
         timer = (TextView) findViewById(R.id.timer);
+        Endbutton = (Button) findViewById(R.id.Endbutton);
 
 
         timer.addTextChangedListener(new TextWatcher() {
@@ -118,6 +127,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
                 actualReps = Integer.valueOf(charSequence.toString());
                 if (actualReps == 0){
                     if (y+1 < elements){
@@ -128,6 +138,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             nxtLayout.setVisibility(View.GONE);
                         }
                         recycler.smoothScrollToPosition(y);
+
                         CurrentExercise.setText(String.valueOf(y+1));
                         ActivateVibrationPerSet();
                         timer.setEnabled(false);
@@ -141,7 +152,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             y = 0;
                             recycler.smoothScrollToPosition(y);
                             finish = true;
+
                             RestModal(getResources().getString(R.string.rest_text),30,true);
+
+
                             nxtLayout.setVisibility(View.VISIBLE);
                             prvLayout.setVisibility(View.GONE);
                         }
@@ -219,9 +233,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         PauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.v(TAG,"BUTTON PAUSE: CLICK");
                 if (!pause){
                     ScreenOff();
                     pause = true;
+                    Log.v(TAG,"BUTTON PAUSE: ACTIVADO");
                     PauseButton.setText(getResources().getString(R.string.resume_workout_text));
                     onTimerPause();
                     if (SelectedSongs){
@@ -230,6 +246,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 }else{
                     ScreenOn();
                     pause = false;
+                    Log.v(TAG,"BUTTON PAUSE: DESACTIVADO");
                     PauseButton.setText(getResources().getString(R.string.pause_workout_text));
                     onTimerResume();
                     if (SelectedSongs) {
@@ -239,32 +256,39 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
+        Endbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v(TAG,"BUTTON END WORKOUT: CLICK");
+                DialogFinalize();
+            }
+        });
+
         song_name = (TextView) findViewById(R.id.song_name);
         song_name.setSelected(true);
+
+
 
         // Inicializar Workouts
         List<WorkoutInfo> items = new ArrayList<>();
 
         for (JsonExercise Exercise : Exercises) {
-            items.add(new WorkoutInfo(Exercise.getExercise_name(), null));
+            items.add(new WorkoutInfo(Exercise.getExercise_name(), null,Exercise.getExercise_image()));
         }
-
 
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
 
         RecyclerView.OnItemTouchListener disable = new RecyclerViewTouch();
+        recycler.addOnItemTouchListener(disable); // disables scolling
 
-        recycler.addOnItemTouchListener(disable);        // disables scolling
-
-        // Usar un administrador para LinearLayout
-        lManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
-
+        // recycler en linear
+        RecyclerView.LayoutManager lManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recycler.setLayoutManager(lManager);
 
 
         // Crear un nuevo adaptador
-        adapter = new WorkoutsAdapter(items,getApplicationContext());
+        RecyclerView.Adapter adapter = new WorkoutsAdapter(items, getApplicationContext());
         recycler.setAdapter(adapter);
 
         if (adapter.getItemCount() == 1){
@@ -336,12 +360,13 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-
+        // music controls
         btPlay = (ImageButton)findViewById(R.id.btnPlay);
         btPause = (ImageButton)findViewById(R.id.btnPause);
-
         btPlay.setOnClickListener(this);
         btPause.setOnClickListener(this);
+
+
 
         if (mySongs != null && mySongs.size() > 0){
             SelectedSongs = true;
@@ -357,7 +382,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             song_name.setText(SongName);
             String SongArtist = SongArtist(playlist.get(x));
             artist_name.setText(SongArtist);
-            Log.d("WorkingOutActivity", (String) song_name.getText());
+
+            Log.v(TAG, (String) song_name.getText());
 
             mp = MediaPlayer.create(getApplicationContext(),u);
             btPlay.setVisibility(View.GONE);
@@ -376,7 +402,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             btPlay.setClickable(false);
             btPause.setEnabled(false);
             btPause.setClickable(false);
-            Log.d("WorkingOutActivity", (String) song_name.getText());
+            Log.v(TAG, (String) song_name.getText());
         }
 
          startTimer = new CountDownTimer(4000, 1000) {
@@ -394,6 +420,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 if (SelectedSongs && start){
                     mp.start();
                 }
+                Log.v(TAG,"onFinish TIMER:ACTIVADO");
                 ModalLayout.setVisibility(View.GONE);
             }
 
@@ -402,45 +429,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onBackPressed(){
-        if (SelectedSongs) {
-            mp.pause();
-        }
-        onTimerPause();
-        new MaterialDialog.Builder(this)
-                .title("End Working Out?")
-                .titleColor(getResources().getColor(R.color.colorPrimaryText))
-                .contentColor(getResources().getColor(R.color.colorPrimaryText))
-                .positiveColor(getResources().getColor(R.color.colorPrimaryText))
-                .negativeColor(getResources().getColor(R.color.colorPrimaryText))
-                .backgroundColor(Color.WHITE)
-                .content("Are you sure you want to exit?")
-                .positiveText("Yes").onPositive(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                dialog.dismiss();
-                ScreenOff();
-                startTimer.cancel();
-                if (media!=null){
-                    timer2.cancel();
-                    media.release();
-                }
-                if (SelectedSongs) {
-                    mp.release();
-                }
-                finish();
-            }
-        })
-                .negativeText("No").onNegative(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                dialog.dismiss();
-                if (SelectedSongs) {
-                    mp.start();
-                }
-                onTimerResume();
-            }
-        })
-                .show();
+        Log.v(TAG,"BUTTON BACK PRESSED: CLICK");
+        DialogFinalize();
     }
 
     public void MusicPlayList(final int playlist_size){
@@ -458,7 +448,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
             artist_name.setText(SongArtist);
 
-            Log.d("WorkingOutActivity", (String) song_name.getText());
+            Log.v(TAG, (String) song_name.getText());
 
             mp = MediaPlayer.create(getApplicationContext(),u);
             mp.start();
@@ -483,25 +473,29 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Format_Time = 0;
 
         timer2 = new CountDownTimer(totalsecs, sec_interval) {
+
             public void onTick(long millisUntilFinished) {performTick(millisUntilFinished);}
             public void onFinish() {}
         }.start();
+        Log.v(TAG,"TIMER: START");
     }
 
     // CONTADOR DE REPETICIONES
     void performTick(long millisUntilFinished) {
-
+        Log.v(TAG,"performTick: EMPEZO");
         Format_Time = Math.round(millisUntilFinished * 0.001f);
         Log.v("Time",String.valueOf(Time_aux-tempo)+" / "+Format_Time);
 
         if (Time_aux-tempo == Format_Time){
             Time_aux = Time_aux - tempo;
             actualReps--;// restar repeticiones
+            Log.v(TAG,"RESTAR REPS: START");
+            Log.v(TAG,"REPS:"+actualReps);
 
             timer.setText(String.valueOf(actualReps));
-            if (VibrationPerRep){
-                ActivateVibrationPerRep();
-            }
+
+            ActivateVibrationPerRep();//activar vibracion por reps
+
         }
 
     }
@@ -512,13 +506,17 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     public void ActivateVibrationPerRep(){
         if (VibrationPerRep) {
-            Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
+            Log.v(TAG, "ActivateVibrationPerRep: activado");
+            Vibrator vb = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             vb.vibrate(250);
         }
+
     }
 
     public void ActivateVibrationPerSet(){
+
         if (VibrationPerSet){
+            Log.v(TAG,"ActivateVibrationPerSet: activado");
             Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
             vb.vibrate(1000);
         }
@@ -548,6 +546,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 timer2.cancel();
             }
         }
+    }
+
+    public void RepsTime(int position){
+        totalTime = Exercises_reps[position] * tempo + 5;
     }
 
     public void onTimerResume(){
@@ -592,21 +594,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        ScreenOff();
-        if (start){
-            timer2.cancel();
-        }
-        if (media!=null)
-            media.release();
-        super.onDestroy();
-    }
-    public void RepsTime(int position){
-        totalTime = Exercises_reps[position] * tempo + 5;
-    }
-
-
     private String SongName(File file){
         String title = null;
         try{
@@ -632,6 +619,18 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         }
         return artist;
     }
+
+    @Override
+    protected void onDestroy() {
+        ScreenOff();
+        if (start){
+            timer2.cancel();
+        }
+        if (media!=null)
+            media.release();
+        super.onDestroy();
+    }
+
 
     public void RestModal(String header,int Time,final boolean Sets){
         timer2.cancel();
@@ -666,6 +665,50 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         }.start();
     }
 
+    private void DialogFinalize(){
+        if (SelectedSongs) {
+            mp.pause();
+        }
+        onTimerPause();
+        new MaterialDialog.Builder(this)
+                .title("End Working Out?")
+                .titleColor(getResources().getColor(R.color.colorPrimaryText))
+                .contentColor(getResources().getColor(R.color.colorPrimaryText))
+                .positiveColor(getResources().getColor(R.color.colorPrimaryText))
+                .negativeColor(getResources().getColor(R.color.colorPrimaryText))
+                .backgroundColor(Color.WHITE)
+                .content("Are you sure you want to exit?")
+                .positiveText("Yes").onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
+                ScreenOff();
+                startTimer.cancel();
+                if (media!=null){
+                    timer2.cancel();
+                    media.release();
+                }
+                if (SelectedSongs) {
+                    mp.release();
+                }
+                finish();
+            }
+        })
+                .negativeText("No").onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                if(pause) {
+                    dialog.dismiss();
+                    if (SelectedSongs) {
+                        mp.start();
+                    }
+                    onTimerResume();
+                }
+
+            }
+        })
+                .show();
+    }
     private void ScreenOn(){
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }

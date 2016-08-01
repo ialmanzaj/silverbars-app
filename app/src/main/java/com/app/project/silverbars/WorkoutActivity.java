@@ -62,7 +62,6 @@ public class WorkoutActivity extends AppCompatActivity {
     private Button minusIsometric;
     private Button plusNegative;
     private Button minusNegative;
-    private SwitchCompat enableLocal;
     private Button plusSets;
     private Button minusSets;
     private Button plusRest;
@@ -141,7 +140,7 @@ public class WorkoutActivity extends AppCompatActivity {
         secondary_linear = (LinearLayout) findViewById(R.id.sec_muscles);
 
 
-        enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
+        SwitchCompat enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
         recycler = (RecyclerView) findViewById(R.id.reciclador);
 
         final RelativeLayout workout_options = (RelativeLayout) findViewById(R.id.workout_options);
@@ -150,19 +149,21 @@ public class WorkoutActivity extends AppCompatActivity {
 
         //TEXTVIEW OF REPS,SETS AND REST
 
+        // cantidad de sets
         Sets = (TextView) findViewById(R.id.Sets);
 
-
-
+        //descanso entre ejercicio
         Rest = (TextView) findViewById(R.id.Rest);
+
+        // descanso entre sets
         RestSets = (TextView) findViewById(R.id.RestSets);
 
-        // Web view     ========================
+        // Web view
         webview = (WebView) findViewById(R.id.webview);
 
 
 
-        // ======= TOOL BAR - BACK BUTTON  ADDED
+        //  TOOL BAR - BACK BUTTON  ADDED
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
@@ -232,8 +233,8 @@ public class WorkoutActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isTouched) {
-
                     isTouched = false;
+
                     if (isChecked && !loadLocal){
                         saveExercises();
                     }else{
@@ -250,7 +251,7 @@ public class WorkoutActivity extends AppCompatActivity {
         //COMPROBAR SI EL WORKOUT ESTA ACTIVADO EN LA BASE DE DATOS
         if (database.checkWorkouts(workoutId) && Objects.equals(database.checkLocal(workoutId), "true")){
 
-            Log.v(TAG,"entro en workout database");
+            Log.v(TAG,"Entro en workout database");
             loadLocal = true;
             enableLocal.setChecked(true);
 
@@ -262,7 +263,9 @@ public class WorkoutActivity extends AppCompatActivity {
             for (int i = 0; i < ParsedReps.length; i++){
 
                 ParsedExercises[i] = database.getExercise(Integer.valueOf(ParsedReps[i].getExercise()));
-                items.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps)));
+                //agregar json a array items
+                items.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[i].getExercise_image()));
+
                 Exercises_reps[i] = ParsedReps[i].getRepetition();
 
 
@@ -662,6 +665,7 @@ public class WorkoutActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.v(TAG,"START BUTTON: ACTIVADO");
                 LaunchWorkingOutActivity();
             }
         });
@@ -724,8 +728,8 @@ public class WorkoutActivity extends AppCompatActivity {
         negative = Integer.parseInt(Negative.getText().toString());
         */
         sets = Integer.parseInt(Sets.getText().toString());
-
         int tempoTotal = 5;
+
 
         Intent intent = new Intent(this, WorkingOutActivity.class);
         intent.putExtra("ExercisesReps",Exercises_reps);
@@ -736,7 +740,6 @@ public class WorkoutActivity extends AppCompatActivity {
         intent.putExtra("VibrationPerSet",VibrationIsActivePerSet);
         intent.putExtra("VibrationPerRep",VibrationIsActivePerRep);
         startActivity(intent);
-
 
     }
 
@@ -907,7 +910,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         ParsedExercises[a] = response.body();
 //                        Log.v("Response",ParsedExercises[a].getExercise_name()+" / "+ExerciseReps);
-                        items.add(new WorkoutInfo(ParsedExercises[a].exercise_name, String.valueOf(ExerciseReps)));
+                        items.add(new WorkoutInfo(ParsedExercises[a].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[a].getExercise_image()));
 
                         // muscles
 
@@ -988,10 +991,8 @@ public class WorkoutActivity extends AppCompatActivity {
     private void injectJS() {
         try {
             partes = removeLastChar(partes);
-            Log.v(TAG,partes);
-
+            //Log.v(TAG,partes);
             webview.loadUrl("javascript: ("+ "window.onload = function () {"+
-
                     "partes = Snap.selectAll('"+partes+"');"+
                     "partes.forEach( function(elem,i) {"+
                     "elem.attr({fill: 'rgba(96%,44%,141%,80%)',stroke: 'rgba(96%,44%,141%,80%)',});"+
