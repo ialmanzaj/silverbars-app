@@ -100,7 +100,7 @@ public class MainScreenActivity extends AppCompatActivity {
                 MuscleTemplateDownload();
 
             else
-                Log.v(TAG,"Error creating dir");
+                Log.e(TAG,"Error creating dir");
         }
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -292,7 +292,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
     public void MuscleTemplateDownload(){
 
-        Log.v(TAG, "METODO MUSCLE TEMPLATE LLAMADO");
+        //Log.v(TAG, "METODO MUSCLE TEMPLATE LLAMADO");
 
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/")
@@ -314,13 +314,13 @@ public class MainScreenActivity extends AppCompatActivity {
 
 
                         }
-                        else {Log.d(TAG, "Download server contact failed");}
+                        else {Log.e(TAG, "Download server contact failed");}
 
                     }
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                        Log.e(TAG, "Download server contact failed",t);
                     }
                 });
                 return null;

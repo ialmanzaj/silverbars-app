@@ -226,7 +226,7 @@ public class MainFragment extends Fragment {
                             String muscleData = anAuxWorkout.getMain_muscle();
                             if (Objects.equals(muscle, muscleData)) {
                                 Workouts[y] = anAuxWorkout;
-                                Log.v("Workout", Workouts[y].getWorkout_name());
+                                //Log.v("Workout", Workouts[y].getWorkout_name());
                                 y++;
                             }
                         }
@@ -244,7 +244,7 @@ public class MainFragment extends Fragment {
             @Override
             protected void finalize() throws Throwable {
                 super.finalize();
-                Log.v(TAG,"ha finalizado TASK() ");
+                //Log.v(TAG,"ha finalizado TASK() ");
 
             }
 

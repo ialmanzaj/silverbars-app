@@ -22,8 +22,6 @@ public class WorkoutsFragment extends Fragment {
     TabWidget tabs;
     TabHost tabHost;
 
-
-
     public static JsonWorkout[] ParsedWorkouts;
 
     @Override

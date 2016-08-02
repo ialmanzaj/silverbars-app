@@ -155,7 +155,6 @@ public class CreateWorkout extends AppCompatActivity {
         try {
             String partes = "";
 
-
             webView.loadUrl("javascript: ("+ "window.onload = function () {"+
 
                     "partes = Snap.selectAll('"+partes+"');"+
@@ -270,13 +269,13 @@ public class CreateWorkout extends AppCompatActivity {
                     int statusCode = response.code();
                     // handle request errors yourself
                     ResponseBody errorBody = response.errorBody();
-                    Log.v(TAG,errorBody.toString());
+                    Log.e(TAG,errorBody.toString());
                 }
             }
 
             @Override
             public void onFailure(Call<JsonExercise[]> call, Throwable t) {
-                Log.v(TAG,t.toString());
+                Log.e(TAG,"onFailure",t);
             }
         });
     }// exercises method close

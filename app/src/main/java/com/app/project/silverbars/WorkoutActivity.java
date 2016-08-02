@@ -217,7 +217,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         // CREAR BASE DE DATOS
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
-        Log.v(TAG,"LocalState"+database.checkLocal(workoutId));
+        //Log.v(TAG,"LocalState"+database.checkLocal(workoutId));
 
 
         //SWITCH BUTTON CONFIGURACIONES
@@ -251,7 +251,7 @@ public class WorkoutActivity extends AppCompatActivity {
         //COMPROBAR SI EL WORKOUT ESTA ACTIVADO EN LA BASE DE DATOS
         if (database.checkWorkouts(workoutId) && Objects.equals(database.checkLocal(workoutId), "true")){
 
-            Log.v(TAG,"Entro en workout database");
+            //Log.v(TAG,"Entro en workout database");
             loadLocal = true;
             enableLocal.setChecked(true);
 
@@ -277,7 +277,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 }
             }
 
-            Log.v(TAG,"Exercises"+ParsedExercises.length);
+            //Log.v(TAG,"Exercises"+ParsedExercises.length);
 
             adapter = new ExerciseAdapter(items,WorkoutActivity.this,getSupportFragmentManager());
             recycler.setAdapter(adapter);
@@ -289,7 +289,7 @@ public class WorkoutActivity extends AppCompatActivity {
             Exercises();
             loadLocal = false;
             enableLocal.setChecked(false);
-            Log.v(TAG,"loadLocal"+loadLocal);
+            //Log.v(TAG,"loadLocal"+loadLocal);
         }
 
 
