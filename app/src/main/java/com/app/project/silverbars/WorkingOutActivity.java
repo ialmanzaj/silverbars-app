@@ -140,17 +140,17 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         recycler.smoothScrollToPosition(y);
 
                         CurrentExercise.setText(String.valueOf(y+1));
-                        
+
                         ActivateVibrationPerSet();
-                        
+
                         Rep_timer_text.setEnabled(false);
 
-                        //cuando termina el contador empieza el descanso
-                        RestModal(15);
+
+                        RestModal(15);// descanso por ejercicio
 
                     }
                     else{
-                        
+                        // contar sets
                         if (ActualSets+1 <= TotalSets){
                             ActualSets++;
                             CurrentSet.setText(String.valueOf(ActualSets));
@@ -159,7 +159,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             recycler.smoothScrollToPosition(y);
                             finish = true;
 
-                            RestModal(30);
+                            RestModal(30);//descanso por set
 
 
                             nxtLayout.setVisibility(View.VISIBLE);
@@ -168,6 +168,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         else{
                             main_timer.cancel();
                             ScreenOff();
+                            Log.v(TAG,"results activity here");
                         }
                     }
                 }
@@ -327,7 +328,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 main_timer.cancel();
                 Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
                 RepsTime(y);
-                MainCountDown(totalTime,1,totalTime);
+                startMainCountDown(totalTime,1,totalTime);
                 if (y == 0){
                     prvLayout.setVisibility(View.GONE);
                 }
@@ -348,14 +349,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         nxtExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // String state = PauseButton.getText().toString();
+                // String state = PauseButton.getText().toString();
                 recycler.smoothScrollToPosition(y+1);
                 y++;
                 CurrentExercise.setText(String.valueOf(y+1));
                 main_timer.cancel();
                 Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
                 RepsTime(y);
-                MainCountDown(totalTime,1,totalTime);
+                startMainCountDown(totalTime,1,totalTime);
                 if (y == elements-1){
                     nxtLayout.setVisibility(View.GONE);
                 }
@@ -420,24 +421,22 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         }
 
         // TIMER INICIAL - 5,4,3,2,1
-         startTimer = new CountDownTimer(4000, 1000) {
+        startTimer = new CountDownTimer(4000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                    RestCounter_text.setText(String.format(FORMAT,
-                            TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(
-                                    TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+                RestCounter_text.setText(String.format(FORMAT,
+                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(
+                                TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
             }
 
             public void onFinish() {
                 Log.v(TAG,"START TIMER: INICIADO");
                 ScreenOn();
                 start = true;
-                MainCountDown(totalTime,1,totalTime);
+                startMainCountDown(totalTime,1,totalTime);
 
                 if (SelectedSongs && start){
                     mp.start();
-                    Log.v(TAG,"MUSICA: EMPEZO");
-
                 }
 
                 ModalLayout.setVisibility(View.GONE);
@@ -485,8 +484,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
-    private void MainCountDown(int seconds,int interval, int Total){
-        Log.v(TAG,"Main CountDown: ACTIVADO");
+    private void startMainCountDown(int seconds,int interval, int Total){
+        Log.v(TAG,"Main CountDown: activado");
         int totalsecs= seconds * 1000;
         int sec_interval= interval * 1000 ;
         Time_aux = Total;
@@ -504,13 +503,13 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     public void performTick(long millisUntilFinished) {
 
         Format_Time = Math.round(millisUntilFinished * 0.001f);
-        Log.v("Time",String.valueOf(Time_aux-tempo)+" / "+Format_Time);
-        Log.v(TAG,"RESTAR REPETICIONES: EMPEZO");
+        //Log.v("Time",String.valueOf(Time_aux-tempo)+" / "+Format_Time);
 
         if (Time_aux-tempo == Format_Time){
             Time_aux = Time_aux - tempo;
             actualReps--;// restar repeticiones
-
+            Log.v(TAG,"RESTAR REPETICIONES: EMPEZO");
+            
             Rep_timer_text.setText(String.valueOf(actualReps));//restar reps de texto mostrado
             ActivateVibrationPerRep();//activar vibracion por reps
 
@@ -557,7 +556,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private void PauseCountDown(){
         if (!finish){
             if (start){
-                Log.v(TAG,"Pausar countdown: activado");
+                Log.v(TAG,"Pausar: activado");
                 time = Format_Time;
                 main_timer.cancel();
             }
@@ -565,16 +564,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void RepsTime(int position){
-
-        Log.v(TAG,"RepsTime: ACTIVADO");
         totalTime = Exercises_reps[position] * tempo + 5;
-        Log.v(TAG,"RepsTime: "+totalTime);
+       
 
     }
 
     private void ResumeCountDown(){
-        Log.v(TAG,"Resume CountDown: ACTIVADO");
-        MainCountDown(time,1,Time_aux);
+        Log.v(TAG,"Resume: ACTIVADO");
+        startMainCountDown(time,1,Time_aux);
     }
 
     private void PlayAudio (String file){
@@ -604,7 +601,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 mp.setVolume(0.04f,0.04f);
         }
         media.start();
-        Log.v(TAG,"MUSICA START");
+       
         media.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
@@ -624,7 +621,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             mediaMetadataRetriever.setDataSource(this, uri);
             title = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
         }catch(Exception e){
-            Log.v("Exception",e.toString());
+            Log.e(TAG,"Exception",e);
         }
         return title;
     }
@@ -675,15 +672,15 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 Log.v(TAG,"Descanso: Terminado");
                 restTimer.cancel();
                 rest = false;
-                
+
                 PlayAudio(Exercises[y].getExercise_audio());
                 RepsTime(y);
 
-                
+
                 //seguir contando repeticiones del siguiente ejercicio
-                MainCountDown(totalTime,1,totalTime);
+                startMainCountDown(totalTime,1,totalTime);
                 Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
-        
+
                 //quitar modal
                 ModalLayout.setVisibility(View.GONE);
 
@@ -692,7 +689,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void DialogFinalize(){
-        //pausar 
+        //pausar
         PauseCountDown();
         pause = true;
         Log.v(TAG,"PAUSA activada: "+ pause);
@@ -712,22 +709,22 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
-                    Log.v(TAG,"dialog finish workout: SI");
-                    dialog.dismiss();
-                    ScreenOff();
+                Log.v(TAG,"dialog finish workout: SI");
+                dialog.dismiss();
+                ScreenOff();
 
-                    startTimer.cancel();
-                    if (main_timer != null){
-                        main_timer.cancel();
-                    }
+                startTimer.cancel();
+                if (main_timer != null){
+                    main_timer.cancel();
+                }
 
-                    if (media!=null){
-                        media.release();
-                    }
-                    if (SelectedSongs) {
-                        mp.release();
-                    }
-                    finish();
+                if (media!=null){
+                    media.release();
+                }
+                if (SelectedSongs) {
+                    mp.release();
+                }
+                finish();
 
             }
         })
