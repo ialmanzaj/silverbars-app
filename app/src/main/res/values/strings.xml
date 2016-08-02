@@ -139,4 +139,9 @@
     <string name="error_message">Please, Connect to Internet and try again</string>
 
 
+    <string name="title_dialog">Do you want to finish the workout?</string>
+    <string name="content_dialog">You \'ll lose the workout progress</string>
+    <string name="positive_dialog">YES</string>
+    <string name="negative_dialog">NO</string>
+
 </resources>

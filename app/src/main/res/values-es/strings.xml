@@ -96,4 +96,10 @@
     <string name="rest_text_exercise">Descanso entre Ejercicio</string>
     <string name="error_title">"Estás sin conexión</string>
     <string name="error_message">Por Favor, Conectate a Internet y prueba de nuevo</string>
+
+    <string name="title_dialog">Estas seguro de terminar rutina?</string>
+    <string name="content_dialog">Vas a perder el progreso de tu rutina</string>
+    <string name="positive_dialog">SI</string>
+    <string name="negative_dialog">NO</string>
+
 </resources>

@@ -20,8 +20,8 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:minHeight="150dp">
+                android:layout_weight="2"
+                android:minHeight="200dp">
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
@@ -31,6 +31,7 @@
 
             </RelativeLayout>
             <LinearLayout
+                android:layout_weight="0.1"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,10 +44,10 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="15dp"
-                    android:gravity="top">
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center_vertical"
+                    android:baselineAligned="false">
 
                     <LinearLayout
                         android:orientation="vertical"
@@ -83,15 +84,16 @@
                     </LinearLayout>
 
                     <LinearLayout
+
                         android:orientation="vertical"
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
                         android:layout_height="match_parent">
 
                         <LinearLayout
+                            android:gravity="center_horizontal|center_vertical"
                             android:layout_width="match_parent"
                             android:orientation="vertical"
-
                             android:layout_height="match_parent">
 
                             <TextView
@@ -99,10 +101,10 @@
                                 android:layout_height="wrap_content"
 
                                 android:text="@string/zero"
-                                android:id="@+id/timer"
+                                android:id="@+id/Rep_timer_text"
                                 android:textColor="@color/black"
                                 android:textSize="90sp"
-                                android:layout_gravity="center_horizontal"
+
 
                                 android:textStyle="bold"
                                 android:gravity="bottom" />
@@ -121,7 +123,6 @@
 
                         </LinearLayout>
                     </LinearLayout>
-
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="0dp"
@@ -172,7 +173,7 @@
                         android:layout_weight="1"
                         android:layout_height="match_parent"
 
-                       android:gravity="top">
+                       android:gravity="center_vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -185,8 +186,6 @@
                             android:layout_marginTop="-5dp"
                            android:layout_below="@+id/exercises_number"
                             android:layout_centerHorizontal="true"
-
-
                             />
 
                         <LinearLayout
@@ -242,7 +241,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="match_parent"
-                        android:gravity="top">
+                        android:gravity="center_vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -393,12 +392,9 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:text="@string/artist_name"
-
                                 android:id="@+id/artist_name"
-
                                 android:textColor="#fff"
                                 android:textSize="15sp"
-
 
                                 android:layout_below="@+id/song_name"
                                 android:layout_alignParentStart="true" />
@@ -447,6 +443,7 @@
         </LinearLayout>
 
         <FrameLayout
+
             android:gravity="center_vertical"
             android:layout_marginBottom="110dp"
 
@@ -469,7 +466,7 @@
                 />
 
             <TextView
-                android:id="@+id/startCounter"
+                android:id="@+id/RestCounter_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"

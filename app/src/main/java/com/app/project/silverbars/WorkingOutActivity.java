@@ -47,14 +47,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private String[] position;
     private int x = 0, y=0, elements = 0, time=0, tempo = 0, actualReps, Format_Time;
     private int totalTime;
-    private TextView timer;
+    private TextView Rep_timer_text;
     private TextView song_name, artist_name;
     private TextView CurrentSet;
     private TextView TotalSet;
     private TextView CurrentExercise;
-    private TextView startCounter;
+    private TextView RestCounter_text;
     private TextView headerText;
-    private CountDownTimer timer2, restTimer, startTimer;
+    private CountDownTimer main_timer, restTimer, startTimer;
     private FrameLayout prvLayout;
     private FrameLayout nxtLayout;
     private FrameLayout ModalLayout;
@@ -102,7 +102,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         // Rest modal
         ModalLayout = (FrameLayout) findViewById(R.id.ModalLayout);
         headerText = (TextView) findViewById(R.id.headerText);
-        startCounter = (TextView) findViewById(R.id.startCounter);
+        RestCounter_text = (TextView) findViewById(R.id.RestCounter_text);
         final TextView totalExercise = (TextView) findViewById(R.id.TotalExercise);
 
         // next and preview button for exercise
@@ -114,13 +114,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         RelativeLayout playerLayout = (RelativeLayout) findViewById(R.id.PlayerLayout);
 
-
+        // pause and finish workout controls
         PauseButton = (Button) findViewById(R.id.PauseButton);
-        timer = (TextView) findViewById(R.id.timer);
         Endbutton = (Button) findViewById(R.id.Endbutton);
 
 
-        timer.addTextChangedListener(new TextWatcher() {
+        //repetiton text
+        Rep_timer_text = (TextView) findViewById(R.id.Rep_timer_text);
+        Rep_timer_text.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
@@ -139,11 +140,17 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         recycler.smoothScrollToPosition(y);
 
                         CurrentExercise.setText(String.valueOf(y+1));
+                        
                         ActivateVibrationPerSet();
-                        timer.setEnabled(false);
-                        RestModal(getResources().getString(R.string.rest_text),15,false);
+                        
+                        Rep_timer_text.setEnabled(false);
+
+                        //cuando termina el contador empieza el descanso
+                        RestModal(15);
+
                     }
                     else{
+                        
                         if (ActualSets+1 <= TotalSets){
                             ActualSets++;
                             CurrentSet.setText(String.valueOf(ActualSets));
@@ -152,14 +159,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             recycler.smoothScrollToPosition(y);
                             finish = true;
 
-                            RestModal(getResources().getString(R.string.rest_text),30,true);
+                            RestModal(30);
 
 
                             nxtLayout.setVisibility(View.VISIBLE);
                             prvLayout.setVisibility(View.GONE);
                         }
                         else{
-                            timer2.cancel();
+                            main_timer.cancel();
                             ScreenOff();
                         }
                     }
@@ -170,6 +177,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             public void afterTextChanged(Editable editable) {}
         });
 
+        //change to next music with swipe
         playerLayout.setOnTouchListener(new OnSwipeTouchListener(this){
             public void onSwipeRight() {
                 if (SelectedSongs){
@@ -201,7 +209,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             }
 
             public void onSwipeLeft() {
-
                 if (SelectedSongs) {
                     int playlist_size = playlist.size();
                     if (playlist_size > 1 && x + 1 < playlist_size) {
@@ -283,7 +290,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
-
         RecyclerView.OnItemTouchListener disable = new RecyclerViewTouch();
         recycler.addOnItemTouchListener(disable); // disables scolling
 
@@ -305,21 +311,23 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         CurrentExercise.setText("1");
         totalExercise.setText(String.valueOf(elements));
         TotalSet.setText(String.valueOf(TotalSets));
-        timer.setText(String.valueOf(Exercises_reps[0]));
+
+        Rep_timer_text.setText(String.valueOf(Exercises_reps[0]));
+
         TotalSet.setText(String.valueOf(TotalSets));
         CurrentSet.setText("0");
 
         prvExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String state = PauseButton.getText().toString();
+                //String state = PauseButton.getText().toString();
                 recycler.smoothScrollToPosition(y-1);
                 y--;
                 CurrentExercise.setText(String.valueOf(y+1));
-                timer2.cancel();
-                timer.setText(String.valueOf(Exercises_reps[y]));
+                main_timer.cancel();
+                Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
                 RepsTime(y);
-                StartCountDown(totalTime,1,totalTime);
+                MainCountDown(totalTime,1,totalTime);
                 if (y == 0){
                     prvLayout.setVisibility(View.GONE);
                 }
@@ -344,10 +352,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 recycler.smoothScrollToPosition(y+1);
                 y++;
                 CurrentExercise.setText(String.valueOf(y+1));
-                timer2.cancel();
-                timer.setText(String.valueOf(Exercises_reps[y]));
+                main_timer.cancel();
+                Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
                 RepsTime(y);
-                StartCountDown(totalTime,1,totalTime);
+                MainCountDown(totalTime,1,totalTime);
                 if (y == elements-1){
                     nxtLayout.setVisibility(View.GONE);
                 }
@@ -402,6 +410,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             });
         }
         else{
+
             song_name.setText(getResources().getString(R.string.no_song));
             btPlay.setEnabled(false);
             btPlay.setClickable(false);
@@ -410,19 +419,20 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             Log.v(TAG, (String) song_name.getText());
         }
 
+        // TIMER INICIAL - 5,4,3,2,1
          startTimer = new CountDownTimer(4000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                    startCounter.setText(String.format(FORMAT,
+                    RestCounter_text.setText(String.format(FORMAT,
                             TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(
                                     TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
             }
 
             public void onFinish() {
-
+                Log.v(TAG,"START TIMER: INICIADO");
                 ScreenOn();
                 start = true;
-                StartCountDown(totalTime,1,totalTime);
+                MainCountDown(totalTime,1,totalTime);
 
                 if (SelectedSongs && start){
                     mp.start();
@@ -475,14 +485,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
-    private void StartCountDown(int seconds,int interval, int Total){
-        Log.v(TAG,"Start CountDown: ACTIVADO");
+    private void MainCountDown(int seconds,int interval, int Total){
+        Log.v(TAG,"Main CountDown: ACTIVADO");
         int totalsecs= seconds * 1000;
         int sec_interval= interval * 1000 ;
         Time_aux = Total;
         Format_Time = 0;
 
-        timer2 = new CountDownTimer(totalsecs, sec_interval) {
+        main_timer = new CountDownTimer(totalsecs, sec_interval) {
             public void onTick(long millisUntilFinished) {performTick(millisUntilFinished);}
             public void onFinish() {}
         }.start();
@@ -501,7 +511,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             Time_aux = Time_aux - tempo;
             actualReps--;// restar repeticiones
 
-            timer.setText(String.valueOf(actualReps));//restar reps de texto mostrado
+            Rep_timer_text.setText(String.valueOf(actualReps));//restar reps de texto mostrado
             ActivateVibrationPerRep();//activar vibracion por reps
 
         }
@@ -549,7 +559,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             if (start){
                 Log.v(TAG,"Pausar countdown: activado");
                 time = Format_Time;
-                timer2.cancel();
+                main_timer.cancel();
             }
         }
     }
@@ -564,7 +574,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     private void ResumeCountDown(){
         Log.v(TAG,"Resume CountDown: ACTIVADO");
-        StartCountDown(time,1,Time_aux);
+        MainCountDown(time,1,Time_aux);
     }
 
     private void PlayAudio (String file){
@@ -636,7 +646,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     protected void onDestroy() {
         ScreenOff();
         if (start){
-            timer2.cancel();
+            main_timer.cancel();
         }
         if (media!=null)
             media.release();
@@ -644,20 +654,19 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
 
-    public void RestModal(String header,int Time,final boolean Sets){
+    private void RestModal(int rest_time){
         Log.v(TAG,"Descanso: Empezo");
 
-        timer2.cancel();
+        main_timer.cancel();
         rest = true;
         ModalLayout.setVisibility(View.VISIBLE);
-        headerText.setText(header);
-        int TotalTime = (Time+1)*1000;
+        headerText.setText(getResources().getString(R.string.rest_text));
+        int TotalRestTime = (rest_time+1)*1000;
 
-        restTimer = new CountDownTimer(TotalTime, 1000) {
+        restTimer = new CountDownTimer(TotalRestTime, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.v(TAG,"Descanso: Empezo");
-                startCounter.setText(String.format(FORMAT,
+                RestCounter_text.setText(String.format(FORMAT,
                         TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(
                                 TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
             }
@@ -665,14 +674,16 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             public void onFinish() {
                 Log.v(TAG,"Descanso: Terminado");
                 restTimer.cancel();
-
+                rest = false;
+                
                 PlayAudio(Exercises[y].getExercise_audio());
                 RepsTime(y);
 
-                //empezar contador de repeticiones
-                StartCountDown(totalTime,1,totalTime);
-                timer.setText(String.valueOf(Exercises_reps[y]));
-
+                
+                //seguir contando repeticiones del siguiente ejercicio
+                MainCountDown(totalTime,1,totalTime);
+                Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
+        
                 //quitar modal
                 ModalLayout.setVisibility(View.GONE);
 
@@ -681,50 +692,58 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void DialogFinalize(){
+        //pausar 
+        PauseCountDown();
+        pause = true;
+        Log.v(TAG,"PAUSA activada: "+ pause);
 
         if (SelectedSongs) {
             mp.pause();
         }
-
-        PauseCountDown();
         new MaterialDialog.Builder(this)
-                .title("End Working Out?")
+                .title(getResources().getString(R.string.title_dialog))
                 .titleColor(getResources().getColor(R.color.colorPrimaryText))
                 .contentColor(getResources().getColor(R.color.colorPrimaryText))
                 .positiveColor(getResources().getColor(R.color.colorPrimaryText))
                 .negativeColor(getResources().getColor(R.color.colorPrimaryText))
                 .backgroundColor(Color.WHITE)
-                .content("Are you sure you want to exit?")
-                .positiveText("Yes").onPositive(new MaterialDialog.SingleButtonCallback() {
+                .content(getResources().getString(R.string.content_dialog))
+                .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                Log.v(TAG,"dialog finish workout: SI");
-                dialog.dismiss();
-                ScreenOff();
 
-                startTimer.cancel();
-                if (media!=null){
-                    timer2.cancel();
-                    media.release();
-                }
-                if (SelectedSongs) {
-                    mp.release();
-                }
-                finish();
+                    Log.v(TAG,"dialog finish workout: SI");
+                    dialog.dismiss();
+                    ScreenOff();
+
+                    startTimer.cancel();
+                    if (main_timer != null){
+                        main_timer.cancel();
+                    }
+
+                    if (media!=null){
+                        media.release();
+                    }
+                    if (SelectedSongs) {
+                        mp.release();
+                    }
+                    finish();
+
             }
         })
-                .negativeText("No").onNegative(new MaterialDialog.SingleButtonCallback() {
+                .negativeText(getResources().getString(R.string.negative_dialog)).onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 Log.v(TAG,"dialog finish workout: NO");
-                if(pause) {
-                    dialog.dismiss();
-                    if (SelectedSongs) {
-                        mp.start();
-                    }
-                    ResumeCountDown();
-                }
 
+                dialog.dismiss();
+                pause = false;
+                Log.v(TAG,"PAUSA activada: "+ pause);
+
+                ResumeCountDown();
+                if (SelectedSongs) {
+                    mp.start();
+                }
             }
         })
                 .show();

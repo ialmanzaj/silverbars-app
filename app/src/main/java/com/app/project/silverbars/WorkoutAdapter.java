@@ -213,7 +213,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                         if (read == -1) {break;}
                         outputStream.write(fileReader, 0, read);
                         fileSizeDownloaded += read;
-                        Log.d("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                        Log.v("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
                     }
                     outputStream.flush();
                     return true;
@@ -225,7 +225,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                     if (outputStream != null) {outputStream.close();}
                 }
             } else {
-                Log.v(TAG,"Error while creating dir");
+                Log.e(TAG,"Error while creating dir");
             }
 
         } catch (IOException e) {return false;}

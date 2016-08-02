@@ -71,7 +71,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         Log.v(TAG, Arrays.toString(imageDir));
 
         if (imageDir.length < 2){
-            Log.v(TAG, "ha entrado en IF imageDir.length < 2");
+            //Log.v(TAG, "ha entrado en IF imageDir.length < 2");
             bmp = loadImageFromCache(WorkoutActivity.ParsedExercises[i].getExercise_image());
             viewHolder.imagen.setImageBitmap(bmp);
             viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
@@ -86,7 +86,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
             bmp = loadImageFromCache(imgName);
 
             if (bmp != null){
-                Log.v(TAG, "ha entrado en if bmp != null");
+                //Log.v(TAG, "ha entrado en if bmp != null");
                 viewHolder.imagen.setImageBitmap(bmp);
                 viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
                 viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
