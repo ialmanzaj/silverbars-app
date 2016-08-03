@@ -486,16 +486,20 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void startMainCountDown(int seconds,int interval, int Total){
-        Log.v(TAG,"Main CountDown: activado");
-        int totalsecs= seconds * 1000;
-        int sec_interval= interval * 1000 ;
-        Time_aux = Total;
-        Format_Time = 0;
 
-        main_timer = new CountDownTimer(totalsecs, sec_interval) {
-            public void onTick(long millisUntilFinished) {performTick(millisUntilFinished);}
-            public void onFinish() {}
-        }.start();
+        if (!pause && start){
+            Log.v(TAG,"Main CountDown: activado");
+            int totalsecs= seconds * 1000;
+            int sec_interval= interval * 1000 ;
+            Time_aux = Total;
+            Format_Time = 0;
+
+            main_timer = new CountDownTimer(totalsecs, sec_interval) {
+                public void onTick(long millisUntilFinished) {performTick(millisUntilFinished);}
+                public void onFinish() {}
+            }.start();
+        }
+
 
     }
 
@@ -524,8 +528,16 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         if (VibrationPerRep) {
             Log.v(TAG, "Vibration Por Rep: activado");
             Vibrator vb = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            vb.vibrate(250);
+            if (!pause){
+                vb.vibrate(250);
+            }else {
+                vb.cancel();
+                Log.v(TAG, "Vibration Por Rep: cancelado");
+            }
+
+
         }
+
 
     }
 
@@ -533,7 +545,12 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         if (VibrationPerSet){
             Log.v(TAG,"Vibration Por Set: activado");
             Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
-            vb.vibrate(1000);
+            if (!pause){
+                vb.vibrate(1000);
+            }else {
+                vb.cancel();
+                Log.v(TAG, "Vibration Por Set: cancelado");
+            }
         }
     }
 
@@ -560,18 +577,20 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 Log.v(TAG,"Pausar: activado");
                 time = Format_Time;
                 main_timer.cancel();
+
             }
         }
     }
+    private void ResumeCountDown(){
+        Log.v(TAG,"Resume: ACTIVADO");
 
+        startMainCountDown(time,1,Time_aux);
+    }
     private void RepsTime(int position){
         totalTime = Exercises_reps[position] * tempo + 5;
     }
 
-    private void ResumeCountDown(){
-        Log.v(TAG,"Resume: ACTIVADO");
-        startMainCountDown(time,1,Time_aux);
-    }
+
 
     private void playExerciseAudio(String file){
 
@@ -600,7 +619,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 File Dir = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+mp3Name);
                 Uri uri = Uri.parse(Dir.toString());
                 media = MediaPlayer.create(getApplicationContext(),uri);
-                media.prepare();
+                //media.prepare();
 
             }else {
 
@@ -622,11 +641,21 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         } catch (Exception e) {
             Log.e(TAG,"Exception",e);
         }
-        if (mp!=null){
-            if (mp.isPlaying())
-                mp.setVolume(0.04f,0.04f);
-        }
-        media.start();
+
+
+        media.setOnPreparedListener(new MediaPlayer.OnPreparedListener(){
+
+            public void onPrepared(MediaPlayer arg0) {
+                Log.e("ready!","ready!");
+
+                if (mp!=null){
+                    if (mp.isPlaying())
+                        mp.setVolume(0.04f,0.04f);
+                }
+                media.start();
+
+            }} );
+
        
         media.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
