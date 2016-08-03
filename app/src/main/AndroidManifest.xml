@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.app.project.silverbars">
+    package="com.app.proj.silverbars">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
 
@@ -17,7 +17,7 @@
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
-        android:name=".MyApp"
+        android:name="com.app.proj.silverbars.MyApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher_app"
         android:label="@string/app_name"
@@ -29,7 +29,7 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".MainScreenActivity">
+        <activity android:name="com.app.proj.silverbars.MainScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,31 +37,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".WorkoutActivity">
+            android:name="com.app.proj.silverbars.WorkoutActivity">
         </activity>
         <activity
-            android:name=".MusicActivity"
-            android:parentActivityName=".WorkoutActivity">
+            android:name="com.app.proj.silverbars.MusicActivity"
+            android:parentActivityName="com.app.proj.silverbars.WorkoutActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.app.project.silverbars.WorkoutActivity" />
+                android:value="com.app.proj.silverbars.WorkoutActivity" />
         </activity>
         <activity
-            android:name=".WorkingOutActivity"
+            android:name="com.app.proj.silverbars.WorkingOutActivity"
             android:launchMode="singleTask" />
         <!-- <activity android:name=".Myworkouts" /> -->
-        <activity android:name=".PlaylistPickerActivity" />
+        <activity android:name="com.app.proj.silverbars.PlaylistPickerActivity" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
         <activity
-            android:name=".LoginActivity"
+            android:name="com.app.proj.silverbars.LoginActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".SplashScreen"
+            android:name="com.app.proj.silverbars.SplashScreen"
             android:theme="@style/SplashTheme" />
-        <activity android:name=".SearchActivity">
+        <activity android:name="com.app.proj.silverbars.SearchActivity">
 
             <!--
             <intent-filter>
@@ -83,26 +83,26 @@
         <activity
             android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".SpotifyMusic" />
-        <activity android:name=".SelectionMusicActivity" />
-        <activity android:name=".SongsActivity" />
+        <activity android:name="com.app.proj.silverbars.SpotifyMusic" />
+        <activity android:name="com.app.proj.silverbars.SelectionMusicActivity" />
+        <activity android:name="com.app.proj.silverbars.SongsActivity" />
         <activity
-            android:name=".CreateWorkout"
+            android:name="com.app.proj.silverbars.CreateWorkout"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".exerciseList" />
-        <activity android:name=".orderExercises" />
+        <activity android:name="com.app.proj.silverbars.exerciseList" />
+        <activity android:name="com.app.proj.silverbars.orderExercises" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Theme.AppCompat" />
-        <activity android:name=".ProgressionActivity"></activity>
+        <activity android:name="com.app.proj.silverbars.ProgressionActivity"></activity>
         <activity
-            android:name=".CreateWorkoutFinalActivity"
-            android:parentActivityName=".CreateWorkout">
+            android:name="com.app.proj.silverbars.CreateWorkoutFinalActivity"
+            android:parentActivityName="com.app.proj.silverbars.CreateWorkout">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.app.project.silverbars.CreateWorkout" />
+                android:value="com.app.proj.silverbars.CreateWorkout" />
         </activity>
-        <activity android:name=".WorkoutOptionsActivity"></activity>
+        <activity android:name="com.app.proj.silverbars.WorkoutOptionsActivity"></activity>
     </application>
 
 </manifest>

@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.app.project.silverbars.LoginActivity">
+    tools:context="com.app.proj.silverbars.LoginActivity">
 
     <!-- Login progress -->
     <com.facebook.login.widget.LoginButton

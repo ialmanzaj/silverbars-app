@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
 
-    tools:context="com.app.project.silverbars.ProgressionActivity">
+    tools:context="com.app.proj.silverbars.ProgressionActivity">
     <android.support.v7.widget.Toolbar
         android:background="@color/colorPrimary"
         android:id="@+id/toolbar_"

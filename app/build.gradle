@@ -17,7 +17,7 @@ android {
     buildToolsVersion '24.0.1'
 
     defaultConfig {
-        applicationId "com.app.project.silverbars"
+        applicationId "com.app.proj.silverbars"
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 3

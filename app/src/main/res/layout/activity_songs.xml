@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.app.project.silverbars.SongsActivity">
+    tools:context="com.app.proj.silverbars.SongsActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout2"
