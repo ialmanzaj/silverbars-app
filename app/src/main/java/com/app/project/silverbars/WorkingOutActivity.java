@@ -31,6 +31,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -146,7 +147,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         Rep_timer_text.setEnabled(false);
 
 
-                        RestModal(15);// descanso por ejercicio
+                        showRestModal(15);// descanso por ejercicio
 
                     }
                     else{
@@ -159,7 +160,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             recycler.smoothScrollToPosition(y);
                             finish = true;
 
-                            RestModal(30);//descanso por set
+                            showRestModal(30);//descanso por set
 
 
                             nxtLayout.setVisibility(View.VISIBLE);
@@ -565,8 +566,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     private void RepsTime(int position){
         totalTime = Exercises_reps[position] * tempo + 5;
-       
-
     }
 
     private void ResumeCountDown(){
@@ -574,7 +573,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         startMainCountDown(time,1,Time_aux);
     }
 
-    private void PlayAudio (String file){
+    private void playExerciseAudio(String file){
+
         media = new MediaPlayer();
         int maxVolume = 100;
         final float volumeFull = (float)(Math.log(maxVolume)/Math.log(maxVolume));;
@@ -585,16 +585,42 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             media = new MediaPlayer();
         }
         try {
-            String[] audioDir = file.split("exercises");;
-            String Parsedurl = "exercises"+audioDir[1];
-            String[] splitName = Parsedurl.split("/");
-            String mp3Name = splitName[2];
-            File Dir = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+mp3Name);
-            Uri uri = Uri.parse(Dir.toString());
-            media = MediaPlayer.create(getApplicationContext(),uri);
-            media.prepare();
+            String[] audioDir = file.split("exercises");
+
+            if (audioDir.length < 2){
+                audioDir = file.split("SilverbarsMp3");
+                String Parsedurl = "exercises"+audioDir[1];
+                Log.v(TAG,"Parsedurl: "+Parsedurl);
+                String[] splitName = Parsedurl.split("/");
+                Log.v(TAG,"splitName: "+ Arrays.toString(splitName));
+                String mp3Name = splitName[1];
+                Log.v(TAG,"mp3Name: "+ mp3Name);
+
+
+                File Dir = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+mp3Name);
+                Uri uri = Uri.parse(Dir.toString());
+                media = MediaPlayer.create(getApplicationContext(),uri);
+                media.prepare();
+
+            }else {
+
+                String Parsedurl = "exercises"+audioDir[1];
+                Log.v(TAG,"Parsedurl: "+Parsedurl);
+                String[] splitName = Parsedurl.split("/");
+                Log.v(TAG,"splitName: "+ Arrays.toString(splitName));
+                String mp3Name = splitName[2];
+                Log.v(TAG,"mp3Name: "+ mp3Name);
+
+                
+                File Dir = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+mp3Name);
+                Uri uri = Uri.parse(Dir.toString());
+                media = MediaPlayer.create(getApplicationContext(),uri);
+                media.prepare();
+            }
+
+
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG,"Exception",e);
         }
         if (mp!=null){
             if (mp.isPlaying())
@@ -651,14 +677,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
 
-    private void RestModal(int rest_time){
+    private void showRestModal(int rest_time){
         Log.v(TAG,"Descanso: Empezo");
 
         main_timer.cancel();
         rest = true;
         ModalLayout.setVisibility(View.VISIBLE);
         headerText.setText(getResources().getString(R.string.rest_text));
-        int TotalRestTime = (rest_time+1)*1000;
+        final int TotalRestTime = (rest_time+1)*1000;
 
         restTimer = new CountDownTimer(TotalRestTime, 1000) {
             @Override
@@ -672,8 +698,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 Log.v(TAG,"Descanso: Terminado");
                 restTimer.cancel();
                 rest = false;
+                Log.v(TAG,Exercises[y].getExercise_audio());
+                playExerciseAudio(Exercises[y].getExercise_audio());
 
-                PlayAudio(Exercises[y].getExercise_audio());
+
+
                 RepsTime(y);
 
 
@@ -753,4 +782,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private void ScreenOff(){
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
+
+
 }
