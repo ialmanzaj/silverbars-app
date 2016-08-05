@@ -5,9 +5,13 @@
     <string name="rep_edit">Total of Repetitions</string>
 
     <string name="filtertitle">Workout filter</string>
+
+
     <string name="content">Content</string>
-    <string name="agree">Aceptar</string>
-    <string name="disagree">Close</string>
+    <string name="agree">Agree</string>
+    <string name="disagree">Disagree</string>
+
+
     <string name="choose">Choose</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_login">Sign in</string>
@@ -25,6 +29,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
 
     <string name="facebook_app_id">438629419640939</string>
     <string name="drawer_open">Open Drawer</string>
@@ -143,5 +148,8 @@
     <string name="content_dialog">You \'ll lose the workout progress</string>
     <string name="positive_dialog">YES</string>
     <string name="negative_dialog">NO</string>
+
+    <string name="create_text">Create Workout</string>
+
 
 </resources>

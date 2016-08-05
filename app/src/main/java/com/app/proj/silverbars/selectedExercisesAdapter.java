@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -30,18 +31,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-/**
- * Created by andre_000 on 7/20/2016.
- */
+
 public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExercisesAdapter.selectedExercisesViewHolder>  implements ItemTouchHelperAdapter {
 
-    private Context mContext;
-    public static CreateWorkout exerciseList = new CreateWorkout();
-    public static boolean[] Selected = new boolean[getCount()];
+    private static final String TAG = "ExercisesAdapter";
+    private List<JsonExercise> mSelectedExercises;
 
-    public boolean[] getSelected() {
-        return Selected;
-    }
 
     public static class selectedExercisesViewHolder extends RecyclerView.ViewHolder {
 
@@ -60,43 +55,42 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
             unchecked = (ImageView) v.findViewById(R.id.unchecked);
             checked = (ImageView) v.findViewById(R.id.checked);
             repetitions = (TextView) v.findViewById(R.id.repetitions);
+
         }
     }
 
-    public selectedExercisesAdapter(Context context) {
-        mContext = context;
 
+    public selectedExercisesAdapter(Context context,List<JsonExercise> exercises) {
+        Context mContext = context;
+        mSelectedExercises = exercises;
     }
 
-    public void Reset(){
-        for(int x = 0; x < getItemCount(); x++){
-            Selected[x] = false;
-        }
-    }
-
-    public static int getCount() {
-        return CreateWorkout.Exercises.length;
-    }
 
     @Override
     public int getItemCount() {
-        return CreateWorkout.Exercises.length;
+        return mSelectedExercises.size();
     }
 
     @Override
     public selectedExercisesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.exercises, viewGroup, false);
-        Reset();
+        //Reset();
         return new selectedExercisesViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(final selectedExercisesViewHolder viewHolder, int i) {
-        final int a = i;
+
+        final int a = viewHolder.getAdapterPosition();
+
+
         //Setting values to each recylerView Element
-        Log.v("Exercise", CreateWorkout.Exercises[a].getExercise_name());
-        String[] imageDir = CreateWorkout.Exercises[a].getExercise_image().split("exercises");
+        Log.v(TAG,"mSelectedExercises: "+mSelectedExercises.get(a).getExercise_name());
+
+
+        String[] imageDir = mSelectedExercises.get(a).getExercise_image().split("exercises");
+
 
         String Parsedurl = "exercises" + imageDir[1];
         String[] imagesName = Parsedurl.split("/");
@@ -107,7 +101,8 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
         } else {
             DownloadImage(Parsedurl, viewHolder, imgName);
         }
-        viewHolder.nombre.setText(exerciseList.Exercises[a].getExercise_name());
+
+        viewHolder.nombre.setText(mSelectedExercises.get(a).getExercise_name());
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             private TextView DialogName, Reps;
             private Button plusRep, minusRep;
@@ -116,11 +111,11 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
 
             @Override
             public boolean onLongClick(View view) {
-                boolean wrapInScrollView = true;
-                //Dialog when LongClick on element
+
+
                 View v = new MaterialDialog.Builder(view.getContext())
                         .title(R.string.rep_edit)
-                        .customView(R.layout.edit_reps_setup, wrapInScrollView)
+                        .customView(R.layout.edit_reps_setup, true)
                         .positiveText("Done").onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -133,11 +128,14 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
                         })
                         .show()
                         .getCustomView();
-                //Dialog elements
+
                 if (v != null) {
 
                     DialogName = (TextView) v.findViewById(R.id.ExerciseName);
-                    DialogName.setText(CreateWorkout.Exercises[a].getExercise_name());
+                    DialogName.setText( mSelectedExercises.get(a).getExercise_name() );
+
+
+
                     Reps = (TextView) v.findViewById(R.id.Sets);
                     ActualRepValue = Integer.valueOf(viewHolder.repetitions.getText().toString());
                     Reps.setText(String.valueOf(ActualRepValue));
@@ -275,6 +273,8 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
         }
         return bitmap;
     }
+
+
 
     private boolean writeResponseBodyToDisk(ResponseBody body, String imgName) {
         try {

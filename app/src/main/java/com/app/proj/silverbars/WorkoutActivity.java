@@ -1180,6 +1180,8 @@ public class WorkoutActivity extends AppCompatActivity {
         Log.v(TAG, msg);
     }
 
+
+    //guardar ejercicios en la base de datos
     public void saveExercises(){
 
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);

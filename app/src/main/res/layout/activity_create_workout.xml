@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.app.proj.silverbars.CreateWorkout">
+    tools:context=".CreateWorkoutActivity">
 
     <android.support.design.widget.AppBarLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/appbarlayout"
@@ -64,7 +64,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <RelativeLayout
+                <LinearLayout
                     android:background="@color/white"
                     android:id="@+id/rutina_"
 
@@ -91,30 +91,42 @@
                             android:text="Agregar ejercicios"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:padding="10dp"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <Button
+                            android:visibility="gone"
+
+                            android:background="@color/secondColor"
+                            android:id="@+id/reAdd"
+
+                            android:text="Agregar mas ejercicios"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+
+                            />
 
                     </LinearLayout>
 
 
 
                     <android.support.v7.widget.RecyclerView
-                        android:visibility="gone"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/recycler_exercises_selected"
-                        android:layout_gravity="center" />
-
-                    <Button
-                        android:visibility="gone"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/secondColor"
-                        android:id="@+id/reAdd"
-                        android:layout_gravity="bottom"
-                        android:text="Agregar mas ejercicios"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                            android:visibility="gone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/recycler_exercises_selected"
+                            android:layout_gravity="center" />
 
 
-                </RelativeLayout>
+
+
+
+
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:background="@color/white"

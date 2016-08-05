@@ -19,7 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -58,7 +58,7 @@ public class MainScreenActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
-    public ImageView Sort;
+    public LinearLayout Sort;
     private CharSequence activityTitle;
     private CharSequence itemTitle;
     private String[] tagTitles =  new String[3];;
@@ -108,12 +108,14 @@ public class MainScreenActivity extends AppCompatActivity {
             fab.bringToFront();
         }
 
-        Sort = (ImageView) findViewById(R.id.Sort);
+        Sort = (LinearLayout) toolbar.findViewById(R.id.Sort);
+
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainScreenActivity.this,CreateWorkout.class);
+                Intent i = new Intent(MainScreenActivity.this,CreateWorkoutActivity.class);
                 startActivityForResult(i,1);
             }
         });
@@ -130,6 +132,7 @@ public class MainScreenActivity extends AppCompatActivity {
 //        drawerToggle.setDrawerIndicatorEnabled(false);
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
         toolbar.setTitle(tagTitles[0]);
+        setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,7 +148,9 @@ public class MainScreenActivity extends AppCompatActivity {
             selectItem(0);
         }
 
-        Sort.setOnClickListener(new View.OnClickListener() {
+        Sort.setClickable(true);
+        Sort.setOnClickListener(new View.OnClickListener(){
+
             @Override
             public void onClick(View v) {
                 new MaterialDialog.Builder(MainScreenActivity.this)
@@ -156,12 +161,12 @@ public class MainScreenActivity extends AppCompatActivity {
                             public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 
-                                if (which != -1){
+                                if (which != -1) {
 
                                     Log.v(TAG, String.valueOf(which));
                                     String[] Items = getResources().getStringArray(R.array.filter_items);
 
-                                    Log.v(TAG,Items[which]);
+                                    Log.v(TAG, Items[which]);
                                     Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
                                     if (currentFragment instanceof MainFragment) {
                                         ((MainFragment) currentFragment).Task(Items[which]);
@@ -177,7 +182,10 @@ public class MainScreenActivity extends AppCompatActivity {
             }
         });
 
-    }
+
+
+
+    }//oncreate
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

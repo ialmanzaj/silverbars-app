@@ -87,9 +87,9 @@
         <activity android:name="com.app.proj.silverbars.SelectionMusicActivity" />
         <activity android:name="com.app.proj.silverbars.SongsActivity" />
         <activity
-            android:name="com.app.proj.silverbars.CreateWorkout"
+            android:name=".CreateWorkoutActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name="com.app.proj.silverbars.exerciseList" />
+        <activity android:name=".ExerciseListActivity" />
         <activity android:name="com.app.proj.silverbars.orderExercises" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
@@ -97,10 +97,10 @@
         <activity android:name="com.app.proj.silverbars.ProgressionActivity"></activity>
         <activity
             android:name="com.app.proj.silverbars.CreateWorkoutFinalActivity"
-            android:parentActivityName="com.app.proj.silverbars.CreateWorkout">
+            android:parentActivityName=".CreateWorkoutActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.app.proj.silverbars.CreateWorkout" />
+                android:value=".CreateWorkoutActivity" />
         </activity>
         <activity android:name="com.app.proj.silverbars.WorkoutOptionsActivity"></activity>
     </application>

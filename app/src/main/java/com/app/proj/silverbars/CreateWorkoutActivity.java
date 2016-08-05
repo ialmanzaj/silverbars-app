@@ -17,6 +17,9 @@ import android.widget.TabHost;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -28,21 +31,20 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class CreateWorkout extends AppCompatActivity {
+public class CreateWorkoutActivity extends AppCompatActivity {
 
-    private static final String TAG ="create workout activity" ;
+    private static final String TAG ="Create Workout activity" ;
     private WebView webView;
     private RecyclerView recycler;
     private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager lManager;
-    private Button addExercise,readdExercise;
-    public static JsonExercise[] Exercises;
-    public ArrayList<Integer> exerciseOrder = new ArrayList<>();
-    public ArrayList<Integer> sItems = new ArrayList<>();
+    private Button re_addExercise;
 
     private LinearLayout empty_content;
 
+    ArrayList<String> sItems;
+    private  List<String> MusclesArray = new ArrayList<>();
 
+    public static boolean active = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +77,7 @@ public class CreateWorkout extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    startActivity(new Intent(CreateWorkout.this, CreateWorkoutFinalActivity.class));
+                    //startActivity(new Intent(CreateWorkoutActivity.this, CreateWorkoutFinalActivity.class));
 //                String name = workoutName.getText().toString();
 //                MySQLiteHelper sqLiteHelper = new MySQLiteHelper(getApplicationContext());
 //                sqLiteHelper.insertWorkouts(name,);
@@ -85,28 +87,35 @@ public class CreateWorkout extends AppCompatActivity {
 
 
         //botton de agregar ejercicios
-        addExercise = (Button) findViewById(R.id.add_exercises);
+        Button addExercise = (Button) findViewById(R.id.add_exercises);
         addExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CreateWorkout.this,exerciseList.class);
+                Intent intent = new Intent(CreateWorkoutActivity.this,ExerciseListActivity.class);
                 startActivityForResult(intent,1);
             }
         });
 
         // boton para volver agregar mas ejercicios
-        readdExercise = (Button) findViewById(R.id.reAdd);
-        readdExercise.setOnClickListener(new View.OnClickListener() {
+        re_addExercise = (Button) findViewById(R.id.reAdd);
+        re_addExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CreateWorkout.this,exerciseList.class);
+                Intent intent = new Intent(CreateWorkoutActivity.this,ExerciseListActivity.class);
+
+                if (sItems != null){
+                    intent.putExtra("items_selected",sItems);
+                    Log.v(TAG,"items_selected"+sItems);
+                }
+
                 startActivityForResult(intent,1);
             }
         });
 
+
         // RECYCLER DONDE ESTAN LOS EJERCICIOS ELEGIDOS
         recycler = (RecyclerView) findViewById(R.id.recycler_exercises_selected);
-        lManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
 
 
@@ -133,6 +142,73 @@ public class CreateWorkout extends AppCompatActivity {
         tabHost2.addTab(muscles);
 
         webView = (WebView) findViewById(R.id.WebView_create);
+
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+            }
+
+        });
+        webView.getSettings().setJavaScriptEnabled(true);
+        String fileurl = "file://"+Environment.getExternalStorageDirectory()+"/html/"+"index.html";
+        webView.loadUrl(fileurl);
+
+
+
+
+
+    }//  close create workout
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if (requestCode == 1 ) {
+            if (resultCode == RESULT_OK && data != null){
+
+                if (data.hasExtra("Items")) {
+                    sItems = data.getStringArrayListExtra("Items");
+
+                    Log.v(TAG,"NAMES ID: "+sItems);
+                    Exercises(sItems);
+
+                }
+            }
+        }
+
+
+    }
+    private String partes = "";
+
+    private void setMusclesToView(List<String> musculos){
+
+        if ( musculos.size() > 0 ){
+
+            // asignar musculos a text view si es primario o secundario
+            for (String s : musculos)
+            {
+                /*final TextView MuscleView = new TextView(WorkoutActivity.this);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    MuscleView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));
+                }else {
+                    MuscleView.setTextColor(getResources().getColor(R.color.gray_active_icon));
+                }*/
+
+                partes += "#"+ s + ",";
+                //MuscleView.setGravity(Gravity.CENTER);
+                //MuscleView.setText(s);
+
+                //Log.v(TAG, (String) MuscleView.getText());
+                //primary_linear.addView(MuscleView);
+
+            }
+        }
+
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -142,19 +218,18 @@ public class CreateWorkout extends AppCompatActivity {
 
         });
         webView.getSettings().setJavaScriptEnabled(true);
-        String fileurl = "file://"+ Environment.getExternalStorageDirectory()+"/html/"+"index.html";
-
+        String fileurl = "file://"+Environment.getExternalStorageDirectory()+"/html/"+"index.html";
         webView.loadUrl(fileurl);
 
-
-
-
-    }//  close create workout
+    }
+    private static String removeLastChar(String str) {
+        return str.substring(0,str.length()-1);
+    }
 
     private void injectJS() {
         try {
-            String partes = "";
 
+            partes = removeLastChar(partes);
             webView.loadUrl("javascript: ("+ "window.onload = function () {"+
 
                     "partes = Snap.selectAll('"+partes+"');"+
@@ -169,30 +244,8 @@ public class CreateWorkout extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 ) {
-            if (resultCode == RESULT_OK && data != null){
-                if (data.hasExtra("Order") && data.hasExtra("Items")) {
-                    exerciseOrder = data.getIntegerArrayListExtra("Order");
-                    sItems = data.getIntegerArrayListExtra("Items");
-                    Log.v("sItems", String.valueOf(sItems.size()));
-                    Log.v("Order",String.valueOf(exerciseOrder.size()));
 
-                    //addExercise.setVisibility(View.GONE);
-
-                    Exercises(exerciseOrder,sItems);
-                    Log.v("Order","Result");
-                }
-            }
-        }
-
-
-    }
-
-
-    public void Exercises(final ArrayList<Integer> newOrder, final ArrayList<Integer> Items){
+    public void Exercises(final ArrayList<String> sItems_selected){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
             @Override
@@ -221,48 +274,52 @@ public class CreateWorkout extends AppCompatActivity {
         call.enqueue(new Callback<JsonExercise[]>() {
             @Override
             public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
+
                 if (response.isSuccessful()) {
-                    Log.v("sItems", String.valueOf(Items.size()));
-                    Log.v("Order",String.valueOf(newOrder.size()));
                     JsonExercise[] parsedExercises = response.body();
-                    JsonExercise[] selectedExercises = new JsonExercise[Items.size()];
+                    List<JsonExercise> selectedExercises = new ArrayList<>();
+                    List<JsonExercise> CompleteExercises = new ArrayList<>();
+                    Collections.addAll(CompleteExercises, parsedExercises);
 
 
 
-                    int y = 0;
-                    for (int i = 0; i < parsedExercises.length; i++){
-                        if (y < Items.size() && Items.get(y) == parsedExercises[i].getId()){
-                            selectedExercises[y] = parsedExercises[i];
-                            y++;
-                        }
-                    }
-                    Exercises = new JsonExercise[newOrder.size()];
-                    for(int i = 0; i < newOrder.size(); i++){
-                        for (int j = 0; j < selectedExercises.length; j++){
-                            if (newOrder.get(i) == selectedExercises[j].getId()){
-                                Exercises[i] = selectedExercises[j];
+                    for (int c = 0;c < sItems_selected.size();c++){
+                        for (int a = 0; a < CompleteExercises.size(); a++){
+                            if (Objects.equals(CompleteExercises.get(a).getExercise_name(), sItems_selected.get(c))){
+                                selectedExercises.add(CompleteExercises.get(a));
+
+                                for (int b = 0; b < selectedExercises.get(c).muscle.length; b++){
+                                    String name;
+                                    name = selectedExercises.get(c).muscle[b];
+                                    MusclesArray.add(name);
+
+                                    Log.v(TAG,"MusclesArray: "+MusclesArray);
+                                }
+
+                                Log.v(TAG,"selectedExercises: "+selectedExercises.get(c).getExercise_name());
                             }
                         }
                     }
-                    for (int i = 0; i < Exercises.length; i++){
-                        Log.v(TAG,String.valueOf(Exercises[i].getId()));
-                    }
+
+                    Log.v(TAG,"selectedExercises: "+selectedExercises);
 
                     // ASIGNAR ADAPTER DE EJERCICIOS ELEGIDOS
 
-                    adapter = new selectedExercisesAdapter(CreateWorkout.this);
+                    adapter = new selectedExercisesAdapter(CreateWorkoutActivity.this,selectedExercises);
                     recycler.setAdapter(adapter);
+                    setMusclesToView(MusclesArray);
+
 
                     /*ItemTouchHelper.Callback callback =
                             new SimpleItemTouchHelperCallback(adapter);
                     ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
                     touchHelper.attachToRecyclerView(recycler);
-*/
+                    */
 
                     empty_content.setVisibility(View.GONE);
-
+                    re_addExercise.setVisibility(View.VISIBLE);
                     recycler.setVisibility(View.VISIBLE);
-                    readdExercise.setVisibility(View.VISIBLE);
+
                     //addExercise.setVisibility(View.GONE);
 
                 } else {
@@ -280,7 +337,22 @@ public class CreateWorkout extends AppCompatActivity {
         });
     }// exercises method close
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        active = true;
 
+
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        active = false;
+
+
+    }
 
 
 

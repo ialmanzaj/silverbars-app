@@ -103,7 +103,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.example.project.calisthenic",
+                    "com.app.proj.silverbars",
                     PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
