@@ -28,7 +28,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="0.8"
 
                 android:id="@+id/imageLayout">
 
@@ -43,83 +43,66 @@
 
             </LinearLayout>
             <LinearLayout
+                android:paddingStart="10dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:id="@+id/nameLayout">
+                android:layout_weight="1.2"
+                android:id="@+id/workout_layout">
 
                 <TextView
-
                     android:id="@+id/nombre"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical|center"
-
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/exercise_name"
-
-                    android:textColor="#000"
-
-                    />
-            </LinearLayout>
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0.63">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.58"
-                    android:orientation="vertical"
-                    android:layout_gravity="center"
-
-                    android:gravity="center"
-                    android:id="@+id/repsLayout">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/reps_value"
-                        android:id="@+id/repetitions"
-                        android:textSize="30sp"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-
-                        android:textColor="@color/colorPrimaryText"
-                        android:layout_gravity="center" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/reps_text"
-                        android:textColor="@color/colorPrimaryText"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-
-                        android:layout_gravity="center"
-                        android:gravity="center" />
-                </LinearLayout>
-
-                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/order"
-                    android:layout_gravity="right|top"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textStyle="bold"
-                    android:textSize="30dp" />
-            </FrameLayout>
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/exercise_name"
+                    android:textColor="#000" />
 
-            <!--<ImageView-->
-                <!--android:id="@+id/handle"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_weight="1"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center_vertical|right"-->
-                <!--android:scaleType="center"-->
-                <!--android:src="@drawable/ic_reorder_grey" />-->
+                    <LinearLayout
+                        android:layout_marginTop="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/reps_value"
+                            android:id="@+id/repetitions"
+                            android:textSize="30sp"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="@color/colorPrimaryText"
+                            android:layout_gravity="center" />
+
+                        <TextView
+                            android:layout_marginStart="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/reps_text"
+                            android:textColor="@color/colorPrimaryText"
+                            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                    </LinearLayout>
+
+
+            </LinearLayout>
+        <LinearLayout
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_weight="0.8"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+            <ImageView
+
+                android:id="@+id/handle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="center"
+                android:src="@drawable/ic_reorder_grey_500_24dp"
+                android:contentDescription="@null" />
+
+        </LinearLayout>
 
         </LinearLayout>
 

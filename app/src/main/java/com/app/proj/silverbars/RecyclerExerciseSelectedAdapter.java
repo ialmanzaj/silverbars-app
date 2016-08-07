@@ -3,16 +3,20 @@ package com.app.proj.silverbars;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -23,6 +27,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -32,86 +38,180 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 
-public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExercisesAdapter.selectedExercisesViewHolder>  implements ItemTouchHelperAdapter {
+public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<RecyclerExerciseSelectedAdapter.selectedExercisesViewHolder>  implements ItemTouchHelperAdapter {
 
     private static final String TAG = "ExercisesAdapter";
     private List<JsonExercise> mSelectedExercises;
 
+    private final OnStartDragListener mDragStartListener;
 
-    public static class selectedExercisesViewHolder extends RecyclerView.ViewHolder {
+
+
+    public static class selectedExercisesViewHolder extends RecyclerView.ViewHolder implements
+            ItemTouchHelperViewHolder {
 
         // Campos respectivos de un item
-        public ImageView imagen;
-        public TextView nombre;
-        public TextView next;
-        public ImageView unchecked, checked;
-        public TextView repetitions;
+        private ImageView imagen_exercise,img_handle;
+        private TextView nombre;
+        private TextView next;
+        private ImageView unchecked, checked;
+        private TextView repetitions;
+        private LinearLayout workout_layout;
 
-        public selectedExercisesViewHolder(View v) {
-            super(v);
-            imagen = (ImageView) v.findViewById(R.id.imagen);
-            nombre = (TextView) v.findViewById(R.id.nombre);
-//            next = (TextView) v.findViewById(R.id.next);
-            unchecked = (ImageView) v.findViewById(R.id.unchecked);
-            checked = (ImageView) v.findViewById(R.id.checked);
-            repetitions = (TextView) v.findViewById(R.id.repetitions);
 
+        public selectedExercisesViewHolder(View itemView) {
+            super(itemView);
+            imagen_exercise = (ImageView) itemView.findViewById(R.id.imagen);
+            nombre = (TextView) itemView.findViewById(R.id.nombre);
+
+            img_handle = (ImageView) itemView.findViewById(R.id.handle);
+            unchecked = (ImageView) itemView.findViewById(R.id.unchecked);
+            checked = (ImageView) itemView.findViewById(R.id.checked);
+            repetitions = (TextView) itemView.findViewById(R.id.repetitions);
+            workout_layout = (LinearLayout) itemView.findViewById(R.id.workout_layout);
+
+        }
+
+        @Override
+        public void onItemSelected() {
+            itemView.setBackgroundColor(Color.LTGRAY);
+        }
+
+        @Override
+        public void onItemClear() {
+            itemView.setBackgroundColor(0);
         }
     }
 
 
-    public selectedExercisesAdapter(Context context,List<JsonExercise> exercises) {
+    public RecyclerExerciseSelectedAdapter(Context context, List<JsonExercise> exercises,OnStartDragListener dragStartListener) {
+
+
+        mDragStartListener = dragStartListener;
         Context mContext = context;
         mSelectedExercises = exercises;
+
     }
 
 
     @Override
     public int getItemCount() {
+
+        //Log.v(TAG,"getItemCount, size: "+mSelectedExercises.size());
         return mSelectedExercises.size();
+
     }
+
+    public List<JsonExercise> getSelectedExercisesJson(){
+        return mSelectedExercises;
+    }
+
+
+
+    public ArrayList<String> getSelectedExercisesArrayList(){
+        ArrayList<String> exercises = new ArrayList<>();
+        for (int a = 0;a<mSelectedExercises.size();a++){
+            exercises.add(mSelectedExercises.get(a).getExercise_name());
+        }
+        return exercises;
+    }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+
+        try {
+            //Log.v(TAG,"onItemMove, size: "+mSelectedExercises.size());
+            Collections.swap(mSelectedExercises,fromPosition, toPosition);
+            notifyItemMoved(fromPosition, toPosition);
+
+
+            notifyDataSetChanged();
+        }catch (IndexOutOfBoundsException e){
+            Log.e(TAG,"IndexOutOfBoundsException",e);
+        }
+
+        return true;
+    }
+
+
+    @Override
+    public void onItemDismiss(int position) {
+
+
+       try {
+
+            mSelectedExercises.remove(position);
+            notifyItemRemoved(position);
+
+           notifyItemRangeChanged(position, getItemCount());
+
+
+            Log.v(TAG,"item eliminado de lista");
+            Log.v(TAG,"size: "+mSelectedExercises.size());
+
+        }catch (IndexOutOfBoundsException e){
+           Log.e(TAG,"IndexOutOfBoundsException",e);
+       }
+
+
+
+    }
+
+
 
     @Override
     public selectedExercisesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.exercises, viewGroup, false);
-        //Reset();
         return new selectedExercisesViewHolder(v);
     }
 
+
     @Override
-    public void onBindViewHolder(final selectedExercisesViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final selectedExercisesViewHolder viewHolder,int i) {
 
         final int a = viewHolder.getAdapterPosition();
-
-
-        //Setting values to each recylerView Element
-        Log.v(TAG,"mSelectedExercises: "+mSelectedExercises.get(a).getExercise_name());
-
+        //Log.v(TAG,"Exercises selected: "+mSelectedExercises.get(a).getExercise_name());
 
         String[] imageDir = mSelectedExercises.get(a).getExercise_image().split("exercises");
-
-
         String Parsedurl = "exercises" + imageDir[1];
         String[] imagesName = Parsedurl.split("/");
         String imgName = imagesName[2];
         Bitmap bmp = loadImageFromCache(imgName);
+
+
         if (bmp != null) {
-            viewHolder.imagen.setImageBitmap(bmp);
+            viewHolder.imagen_exercise.setImageBitmap(bmp);
         } else {
             DownloadImage(Parsedurl, viewHolder, imgName);
         }
 
         viewHolder.nombre.setText(mSelectedExercises.get(a).getExercise_name());
-        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+
+        // Start a drag whenever the handle view it touched
+        viewHolder.img_handle.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                    mDragStartListener.onStartDrag(viewHolder);
+                }
+                return false;
+            }
+        });
+
+
+        viewHolder.workout_layout.setOnClickListener(new View.OnClickListener() {
+
             private TextView DialogName, Reps;
             private Button plusRep, minusRep;
             private int value = 0;
             private int ActualRepValue = 0;
 
             @Override
-            public boolean onLongClick(View view) {
+            public void onClick(View view) {
 
+                //Log.v(TAG,"value of a: "+a);
+                //Log.v(TAG,"item: "+mSelectedExercises.get(a).getExercise_name());
 
                 View v = new MaterialDialog.Builder(view.getContext())
                         .title(R.string.rep_edit)
@@ -132,7 +232,14 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
                 if (v != null) {
 
                     DialogName = (TextView) v.findViewById(R.id.ExerciseName);
-                    DialogName.setText( mSelectedExercises.get(a).getExercise_name() );
+                    DialogName.setText(mSelectedExercises.get(a).getExercise_name());
+
+                   /* for (int indice = 0;indice < mSelectedExercises.size();indice++){
+                        Log.v(TAG,"mSelectedExercises: "+mSelectedExercises.get(indice).getExercise_name());
+                        Log.v(TAG,"position in list: "+indice);
+                    }
+*/
+
 
 
 
@@ -168,7 +275,7 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
                     plusRep.setClickable(false);
                 }
 
-                return false;
+
             }
 
             public int NewRepValue() {
@@ -233,6 +340,7 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
     }
 
     public void DownloadImage(final String url, final selectedExercisesViewHolder vh, final String imgName) {
+        Log.v(TAG,"DownloadImage()");
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
         final SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
@@ -248,10 +356,10 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
                         if (response.isSuccessful()) {
                             boolean writtenToDisk = writeResponseBodyToDisk(response.body(),imgName);
                             if(writtenToDisk){bitmap = loadImageFromCache(imgName);}
-                            vh.imagen.setImageBitmap(bitmap);
+                            vh.imagen_exercise.setImageBitmap(bitmap);
                         }
                         else {
-                            Log.d("Download", "server contact failed");
+                            Log.e(TAG, "Download server contact failed");
                         }
                     }
 
@@ -306,16 +414,7 @@ public class selectedExercisesAdapter extends RecyclerView.Adapter<selectedExerc
         } catch (IOException e) {return false;}
     }
 
-    @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
 
-        return true;
-    }
-
-    @Override
-    public void onItemDismiss(int position) {
-
-    }
 
 
 }

@@ -1,9 +1,13 @@
 package com.app.proj.silverbars;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,8 +16,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class CreateWorkoutFinalActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private static final String TAG = "CreateWorkoutFinal";
     Toolbar toolbar;
     LinearLayout addExercise, reAdd;
     ImageView addImg, imgProfile;
@@ -22,20 +42,31 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Vie
     Button plusSets, minusSets, plusRest, minusRest, plusRestSet, minusRestSet, Save;
     private ImageButton changeImg;
 
+    private RecyclerView recycler;
+    private RecyclerView.Adapter adapter;
+
     private int value = 0;
 
-
+    ArrayList<String> Exercises = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_workout);
+        setContentView(R.layout.activity_create_workout_final);
+
+        Intent i = getIntent();
+        Bundle b = i.getExtras();
+        Exercises = b.getStringArrayList("exercises");
+        Log.v(TAG,"exercises"+Exercises);
+
+
+
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (toolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Create Workout");
+            getSupportActionBar().setTitle("Save Workout");
         }
 
 
@@ -49,6 +80,11 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Vie
 //                sqLiteHelper.insertWorkouts(name,);
             }
         });
+
+        // RECYCLER DONDE ESTAN LOS EJERCICIOS ELEGIDOS
+        recycler = (RecyclerView) findViewById(R.id.final_recycler);
+        RecyclerView.LayoutManager lManager = new LinearLayoutManager(this);
+        recycler.setLayoutManager(lManager);
 
 
 
@@ -228,6 +264,71 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Vie
         }
     }
 
+    private void putExercisesinRecycler(){
+
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                // Customize the request
+                Request request = original.newBuilder()
+                        .header("Accept", "application/json")
+                        .header("Authorization", "auth-token")
+                        .method(original.method(), original.body())
+                        .build();
+                okhttp3.Response response = chain.proceed(request);
+                Log.v("Response",response.toString());
+                // Customize or return the response
+                return response;
+            }
+        });
+
+        OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        SilverbarsService service = retrofit.create(SilverbarsService.class);
+        Call<JsonExercise[]> call = service.getAllExercises();
+        call.enqueue(new Callback<JsonExercise[]>() {
+            @Override
+            public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
+
+                if (response.isSuccessful()) {
+                    JsonExercise[] parsedExercises = response.body();
+                    List<JsonExercise> AllExercisesList = new ArrayList<>();
+
+                    Collections.addAll(AllExercisesList, parsedExercises);
+
+
+
+
+                    Context context = CreateWorkoutFinalActivity.this;
+
+                    //adapter = new RecyclerExerciseSelectedAdapter(context,ExercisesToAdapter,CreateWorkoutActivity.this);
+
+
+
+                    recycler.setAdapter(adapter);
+
+
+                } else {
+                    int statusCode = response.code();
+                    // handle request errors yourself
+                    ResponseBody errorBody = response.errorBody();
+                    Log.e(TAG,errorBody.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonExercise[]> call, Throwable t) {
+                Log.e(TAG,"onFailure: ",t);
+            }
+        });
+
+    }
     @Override
     public void onClick(View view) {
         switch (view.getId()){

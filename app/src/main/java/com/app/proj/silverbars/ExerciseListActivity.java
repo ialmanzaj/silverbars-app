@@ -42,7 +42,7 @@ public class ExerciseListActivity extends AppCompatActivity {
     private ArrayList<String> sItemsComplete = new ArrayList<>();
     List<JsonExercise> OriginalExerciseListAll = new ArrayList<>();
 
-    List<JsonExercise> NewExercisesList = new ArrayList<>();
+    List<JsonExercise> ExercisesNoSelected = new ArrayList<>();
 
 
     ArrayList<String> SelectedItemsIds = new ArrayList<>();
@@ -84,17 +84,19 @@ public class ExerciseListActivity extends AppCompatActivity {
 
                         sItems.add(OriginalExerciseListAll.get(i).getExercise_name());
 
-                        try {
-                            sItemsComplete = SelectedItemsIds;
-                            sItemsComplete.add(OriginalExerciseListAll.get(i).getExercise_name());
 
-                            Log.v(TAG,"SelectedItemsIds 1: "+sItemsComplete);
+                            if (!SelectedItemsIds.isEmpty()){
 
 
-                        } catch (NullPointerException e){
-                            //Log.e(TAG, "no se ha seleccionado nada todavia");
-                        }
+                                sItemsComplete.add(OriginalExerciseListAll.get(i).getExercise_name());
 
+                                Log.v(TAG,"sItemsComplete: "+sItemsComplete);
+                            }
+
+
+
+
+                        Log.v(TAG,"sItems: "+sItemsComplete);
 
                     }
                 }
@@ -104,13 +106,15 @@ public class ExerciseListActivity extends AppCompatActivity {
                 // enviar items a la actividad anterior
                 Intent return_Intent = new Intent();
 
-                    if (sItemsComplete.isEmpty()){
-                        return_Intent.putExtra("Items",sItems);
+                if (sItemsComplete.isEmpty()){
+                    return_Intent.putExtra("Items",sItems);
                         
-                    }else {
-                        return_Intent.putExtra("Items",sItemsComplete);
+                }else {
 
-                    }
+                    return_Intent.putExtra("Items",sItemsComplete);
+
+
+                }
 
 
 
@@ -169,48 +173,49 @@ public class ExerciseListActivity extends AppCompatActivity {
         call.enqueue(new Callback<JsonExercise[]>() {
             @Override
             public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
+
                 if (response.isSuccessful()) {
 
                     Exercises = response.body();
 
-                        for (int i = 0; i < Exercises.length; i++){
-                            OriginalExerciseListAll.add(i,Exercises[i]);
+                    for (int i = 0; i < Exercises.length; i++){
+                        OriginalExerciseListAll.add(i,Exercises[i]);
 
-                        }
+                    }
 
 
-                    Intent i = getIntent();
-                    Bundle b = i.getExtras();
+                    
                     try {
+                        Intent i = getIntent();
+                        Bundle b = i.getExtras();
                         
                         SelectedItemsIds = b.getStringArrayList("items_selected");
                         Log.v(TAG,"items recibido: "+SelectedItemsIds);
 
-                        NewExercisesList = OriginalExerciseListAll;
+                        ExercisesNoSelected = OriginalExerciseListAll;
 
                         for (int c = 0;c < SelectedItemsIds.size();c++){
                             for (int a = 0; a < OriginalExerciseListAll.size(); a++){
+
                                 if (Objects.equals(OriginalExerciseListAll.get(a).getExercise_name(), SelectedItemsIds.get(c))){
-                                    NewExercisesList.remove(a);
+                                    ExercisesNoSelected.remove(a);
                                     
-                                    Log.v(TAG,"nueva lista: "+OriginalExerciseListAll);
+
                                 }
                             }
                         }
-
-
 
                     }catch (NullPointerException e){
                         Log.e(TAG, "no se ha seleccionado nada todavia");
                     }
 
 
-                    if (NewExercisesList.isEmpty()){
+                    if (ExercisesNoSelected.isEmpty()){
                         adapter = new AllExercisesAdapter(ExerciseListActivity.this,OriginalExerciseListAll);
                         Log.v(TAG,"OriginalExerciseListAll: active");
                     }else {
-                        adapter = new AllExercisesAdapter(ExerciseListActivity.this,NewExercisesList);
-                        Log.v(TAG,"NewExercisesList: active");
+                        adapter = new AllExercisesAdapter(ExerciseListActivity.this,ExercisesNoSelected);
+                        Log.v(TAG,"ExercisesNoSelected: active");
                     }
 
                     recycler.setAdapter(adapter);

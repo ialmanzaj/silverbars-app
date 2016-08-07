@@ -21,6 +21,7 @@ import java.util.Arrays;
 
 public class MySQLiteHelper extends SQLiteOpenHelper {
 
+    private static final String TAG = "MySQLiteHelper";
     private static String strSeparator = "__,__";
     // Database Version
     public static final int DATABASE_VERSION = 1;
@@ -217,7 +218,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             results[3] = row.getString(3);
         }
         else
-            Log.v("Database Error","No results");
+            Log.e(TAG,"Database Error: No results");
         db.close();
         try {
             BD_backup();
@@ -245,7 +246,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             }
         }
         else
-            Log.v("Database Error","No results");
+            Log.e(TAG,"Database Error: No results");
 
         db.close();
         try {
@@ -279,7 +280,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         JsonExercise exercises = new JsonExercise();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor row = db.rawQuery("SELECT * FROM "+TABLE_EXERCISES+" WHERE "+KEY_IDEXERCISE+" = "+exerciseId,null);
-        String[] results = null;
+
         if (row.moveToFirst()){
             if (convertStringToArray(row.getString(3)) == null){
                 String[] type = new String[1];
@@ -292,7 +293,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             }
         }
         else{
-            Log.v("Database Error","No results");
+            Log.e(TAG,"Database Error: No results");
         }
         db.close();
         try {
@@ -303,6 +304,19 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         return exercises;
     }
 
+    /*public JsonExercise[] getAllExercises(int id){
+        JsonExercise[] exercises = null;
+        String local = "true";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_EXERCISES+" WHERE "+KEY_USERID+"='"+id+"' AND "+KEY_LOCAL+"='true'",null);
+
+
+        return exercises;
+
+    }*/
+
+
+
     public boolean checkExercise(int id){
         boolean check = false;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -312,7 +326,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             check = true;
         }
         else{
-            Log.v("Database Error","No results");
+            Log.e(TAG,"Database Error: No results");
             check = false;
         }
         db.close();
@@ -356,17 +370,16 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             row.moveToFirst();
             workouts = new JsonWorkout[row.getCount()];
             workouts[i] = new JsonWorkout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5),convertStringToArray(row.getString(6)));
-            Log.v("Database","1 result");
-            Log.v("Database",Arrays.toString(workouts));
+            Log.v(TAG,"Database: 1 result");
+            Log.v(TAG,"Database workouts: "+ Arrays.toString(workouts));
             while(row.moveToNext()){
                 i++;
                 workouts[i] = new JsonWorkout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5),convertStringToArray(row.getString(6)));
-                Log.v("Database","More than 1 result");
+                Log.v(TAG,"Database: More than 1 result");
             }
-
         }
-        else{
-            Log.v("Database Error","No results");
+        else {
+            Log.e(TAG,"Database Error: No results");
         }
         db.close();
         try {
@@ -399,7 +412,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             check = true;
         }
         else{
-            Log.v("Database Error","No results");
+            Log.e(TAG,"Database Error: No results");
             check = false;
         }
         db.close();
@@ -420,7 +433,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             check = row.getString(8);
         }
         else{
-            Log.v("Database Error","No results");
+            Log.e(TAG,"Database Error: No results");
             check = "false";
         }
         db.close();
@@ -470,7 +483,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             }
         }
         else{
-            Log.v("Database Error","No results");
+            Log.e(TAG,"Database Error: No results");
         }
         db.close();
         try {
@@ -491,7 +504,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             check = true;
         }
         else{
-            Log.v("Database Error","No results");
+            Log.e(TAG,"Database Error: No results");
             check = false;
         }
         db.close();
@@ -513,7 +526,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             workoutId = row.getInt(row.getColumnIndex(KEY_IDWORKOUTS));
         }
         else
-            Log.v("Database Error","No results");
+            Log.e(TAG,"Database Error: No results");
 
         db.close();
         try {
@@ -550,7 +563,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static void BD_backup() throws IOException {
 //        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
 
-        final String inFileName = "/data/data/com.app.proj.silverbars/databases/"+DATABASE_NAME;
+        String URL = "/data/data/com.app.proj.silverbars/databases/";
+
+        final String inFileName = URL+DATABASE_NAME;
         File dbFile = new File(inFileName);
         FileInputStream fis = null;
 

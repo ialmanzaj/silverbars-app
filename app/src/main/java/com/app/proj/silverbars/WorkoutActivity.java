@@ -236,7 +236,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     isTouched = false;
 
                     if (isChecked && !loadLocal){
-                        saveExercises();
+                        saveExercisesinDatabase();
                     }else{
 
                         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
@@ -1182,7 +1182,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
     //guardar ejercicios en la base de datos
-    public void saveExercises(){
+    public void saveExercisesinDatabase(){
 
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
         for (int i = 0; i < ParsedExercises.length; i++){
