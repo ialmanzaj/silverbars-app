@@ -937,11 +937,12 @@ public class WorkoutActivity extends AppCompatActivity {
                 webview.loadUrl("javascript: ("+ "window.onload = function () {"+
                         "partes = Snap.selectAll('"+partes+"');"+
                         "partes.forEach( function(elem,i) {"+
-                        "elem.attr({fill: 'rgba(96%,44%,141%,80%)',stroke: 'rgba(96%,44%,141%,80%)',});"+
+                        "elem.attr({fill: '#602C8D',stroke: '#602C8D',});"+
                         "});"+ "}"+  ")()");
 
                 Log.v(TAG,"HA EJECUTADO EL JAVASCRIPT");
             }
+
 
         } catch (Exception e) {
             Log.e(TAG,"JAVASCRIPT Exception",e);

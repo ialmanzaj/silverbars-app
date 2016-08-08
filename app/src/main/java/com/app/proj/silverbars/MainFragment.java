@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +19,6 @@ import android.widget.LinearLayout;
 import org.lucasr.twowayview.widget.TwoWayView;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import okhttp3.Interceptor;
@@ -39,16 +36,12 @@ public class MainFragment extends Fragment {
 
     private static final String TAG ="MAIN SCREEN FRAGMENT";
     public TwoWayView recyclerView;
-    private Button songs;
     public static JsonWorkout[] Workouts;
     private SwipeRefreshLayout swipeContainer;
-    private List<String> spinnerArray = new ArrayList<String>();
     public String muscleData = "ALL";
-    public Toolbar myToolbar;
     private boolean opened;
     LinearLayout noInternetConnectionLayout,failedServerLayout;
 
-    private Button Button_reload_no_internet,Button_failed_server;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_fmain, container, false);
@@ -89,9 +82,9 @@ public class MainFragment extends Fragment {
         swipeContainer = (SwipeRefreshLayout) getView().findViewById(R.id.swipeContainer);
 
 
-        Button_reload_no_internet = (Button) getView().findViewById(R.id.button_reload_no_internet);
 
-        Button_reload_no_internet.setOnClickListener(new View.OnClickListener() {
+        Button button_reload_no_internet = (Button) getView().findViewById(R.id.button_reload_no_internet);
+        button_reload_no_internet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -99,16 +92,14 @@ public class MainFragment extends Fragment {
                     swipeContainer.setVisibility(View.VISIBLE);
                     Task(muscleData);
                     noInternetConnectionLayout.setVisibility(View.GONE);
-
                 }else {
-
                     noInternetConnectionLayout.setVisibility(View.VISIBLE);
                 }
 
             }
         });
-        Button_failed_server = (Button) getView().findViewById(R.id.button_reload_failed_server);
-        Button_failed_server.setOnClickListener(new View.OnClickListener() {
+        Button button_failed_server = (Button) getView().findViewById(R.id.button_reload_failed_server);
+        button_failed_server.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -116,7 +107,6 @@ public class MainFragment extends Fragment {
                     swipeContainer.setVisibility(View.VISIBLE);
                     Task(muscleData);
                     failedServerLayout.setVisibility(View.GONE);
-
                 }else {
                     failedServerLayout.setVisibility(View.VISIBLE);
                 }
@@ -125,6 +115,7 @@ public class MainFragment extends Fragment {
         });
 
         if (!opened){
+
             opened = true;
             if (CheckInternet(getActivity().getApplicationContext())){
                 Task(muscleData);
@@ -290,7 +281,7 @@ public class MainFragment extends Fragment {
             public void onFailure(Call<JsonWorkout[]> call, Throwable t) {
                 Log.e(TAG,"Task, onFailure",t);
                 swipeContainer.setVisibility(View.GONE);
-                noInternetConnectionLayout.setVisibility(View.VISIBLE);
+                failedServerLayout.setVisibility(View.VISIBLE);
 
             }
         });

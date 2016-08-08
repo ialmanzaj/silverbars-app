@@ -625,8 +625,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
                 if (!rest){
 
-                    Log.v(TAG,"Pausar main: activado");
-                    Log.v(TAG,"Format_Time: "+Format_Time);
+                    //Log.v(TAG,"Pausar main: activado");
+                    //Log.v(TAG,"Format_Time: "+Format_Time);
                     ActualTimeMain = Format_Time;
                     main_timer.cancel();
 
@@ -656,9 +656,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         }else {
 
             //Log.v(TAG,"Resume main: ACTIVADO");
-            Log.v(TAG,"time: "+ActualTimeMain);
-            Log.v(TAG,"Time_aux: "+Time_aux);
-
+            //Log.v(TAG,"time: "+ActualTimeMain);
+            //Log.v(TAG,"Time_aux: "+Time_aux);
 
             startMainCountDown(ActualTimeMain,1,Time_aux);
         }
@@ -698,7 +697,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 File Dir = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+mp3Name);
                 Uri uri = Uri.parse(Dir.toString());
                 media = MediaPlayer.create(getApplicationContext(),uri);
-                //media.prepare();
+
 
             }else {
 
@@ -713,7 +712,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 File Dir = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+mp3Name);
                 Uri uri = Uri.parse(Dir.toString());
                 media = MediaPlayer.create(getApplicationContext(),uri);
-                //media.prepare();
+
             }
 
 
@@ -755,7 +754,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             mediaMetadataRetriever.setDataSource(this, uri);
             title = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
         }catch(Exception e){
-            Log.e(TAG,"Exception",e);
+            Log.e(TAG,"SongName, Exception",e);
         }
         return title;
     }
@@ -768,7 +767,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             mediaMetadataRetriever.setDataSource(this, uri);
             artist = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
         }catch(Exception e){
-            Log.e(TAG,"Exception",e);
+            Log.e(TAG,"SongArtist, Exception",e);
         }
         return artist;
     }
@@ -795,10 +794,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         ModalLayout.setVisibility(View.VISIBLE);
         headerText.setText(getResources().getString(R.string.rest_text));
 
+
         startRestTimer(rest_time);
-
-
-
     }
 
     private void startRestTimer(int actualrest){
@@ -813,9 +810,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onTick(long millisUntilFinished) {
 
-                Log.v(TAG,"millisUntilFinished:"+millisUntilFinished);
+                //Log.v(TAG,"millisUntilFinished:"+millisUntilFinished);
                 Format_Time_Rest =  Math.round(millisUntilFinished * 0.001f);
-                Log.v(TAG,"Format_Time_Rest:"+Format_Time_Rest);
+                //Log.v(TAG,"Format_Time_Rest:"+Format_Time_Rest);
 
                 actualRest--;
                 RestCounter_text.setText(String.valueOf(actualRest));
@@ -828,7 +825,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
     private void DialogFinalize(){
-        //pausar
+
         PauseCountDown();
         Log.v(TAG,"PAUSA activada: "+ pause);
 
@@ -883,6 +880,30 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 .show();
     }
 
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Log.v(TAG,"onStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        ResumeCountDown();
+        Log.v(TAG,"onResume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        PauseCountDown();
+        Log.v(TAG,"onPause");
+    }
 
     private void ScreenOn(){
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
