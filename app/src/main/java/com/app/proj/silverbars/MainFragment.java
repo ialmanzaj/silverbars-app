@@ -15,8 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import org.lucasr.twowayview.widget.TwoWayView;
 
@@ -47,8 +46,9 @@ public class MainFragment extends Fragment {
     public String muscleData = "ALL";
     public Toolbar myToolbar;
     private boolean opened;
-    RelativeLayout noConnection;
+    LinearLayout noInternetConnectionLayout,failedServerLayout;
 
+    private Button Button_reload_no_internet,Button_failed_server;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_fmain, container, false);
@@ -74,39 +74,78 @@ public class MainFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        muscleData = getArguments().getString("Muscle");
-        opened = getArguments().getBoolean("Opened");
-//        toast(muscleData);
-        recyclerView = (TwoWayView) getView().findViewById(R.id.list);
-        noConnection = (RelativeLayout) getView().findViewById(R.id.noConnection);
         Intent intent = this.getActivity().getIntent();
         String email = intent.getStringExtra("Email");
         String name = intent.getStringExtra("Name");
 
+        muscleData = getArguments().getString("Muscle");
+        opened = getArguments().getBoolean("Opened");
 
+
+        recyclerView = (TwoWayView) getView().findViewById(R.id.list);
+
+        noInternetConnectionLayout = (LinearLayout) getView().findViewById(R.id.noInternetConnection_layout);
+        failedServerLayout = (LinearLayout) getView().findViewById(R.id.failed_conection_layout);
+        swipeContainer = (SwipeRefreshLayout) getView().findViewById(R.id.swipeContainer);
+
+
+        Button_reload_no_internet = (Button) getView().findViewById(R.id.button_reload_no_internet);
+
+        Button_reload_no_internet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (CheckInternet(getActivity().getApplicationContext())){
+                    swipeContainer.setVisibility(View.VISIBLE);
+                    Task(muscleData);
+                    noInternetConnectionLayout.setVisibility(View.GONE);
+
+                }else {
+
+                    noInternetConnectionLayout.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+        Button_failed_server = (Button) getView().findViewById(R.id.button_reload_failed_server);
+        Button_failed_server.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (CheckInternet(getActivity().getApplicationContext())){
+                    swipeContainer.setVisibility(View.VISIBLE);
+                    Task(muscleData);
+                    failedServerLayout.setVisibility(View.GONE);
+
+                }else {
+                    failedServerLayout.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
 
         if (!opened){
             opened = true;
             if (CheckInternet(getActivity().getApplicationContext())){
                 Task(muscleData);
-                recyclerView.setVisibility(View.VISIBLE);
-                noConnection.setVisibility(View.GONE);
+                swipeContainer.setVisibility(View.VISIBLE);
+                noInternetConnectionLayout.setVisibility(View.GONE);
             }
             else{
-                recyclerView.setVisibility(View.GONE);
-                noConnection.setVisibility(View.VISIBLE);
+                swipeContainer.setVisibility(View.GONE);
+                noInternetConnectionLayout.setVisibility(View.VISIBLE);
 
             }
         }
         else{
             if (CheckInternet(getActivity().getApplicationContext())){
                 Task(muscleData);
-                recyclerView.setVisibility(View.VISIBLE);
-                noConnection.setVisibility(View.GONE);
+                swipeContainer.setVisibility(View.VISIBLE);
+                noInternetConnectionLayout.setVisibility(View.GONE);
             }
             else{
-                recyclerView.setVisibility(View.GONE);
-                noConnection.setVisibility(View.VISIBLE);
+                swipeContainer.setVisibility(View.GONE);
+                noInternetConnectionLayout.setVisibility(View.VISIBLE);
 
             }
         }
@@ -138,7 +177,8 @@ public class MainFragment extends Fragment {
 //            }
 //        });
 
-        swipeContainer = (SwipeRefreshLayout) getView().findViewById(R.id.swipeContainer);
+
+
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -248,9 +288,9 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onFailure(Call<JsonWorkout[]> call, Throwable t) {
-                Log.e(TAG,"onFailure",t);
-                recyclerView.setVisibility(View.GONE);
-                noConnection.setVisibility(View.VISIBLE);
+                Log.e(TAG,"Task, onFailure",t);
+                swipeContainer.setVisibility(View.GONE);
+                noInternetConnectionLayout.setVisibility(View.VISIBLE);
 
             }
         });
@@ -268,8 +308,6 @@ public class MainFragment extends Fragment {
         return true;
     }
 
-    public void toast(String text){
-        Toast.makeText(this.getActivity(),text,Toast.LENGTH_SHORT).show();
-    }
+
 
 }

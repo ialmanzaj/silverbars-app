@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,7 +34,7 @@ import retrofit2.Retrofit;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
 
-    private static final String TAG = "EXERCISE ADAPTER ";
+    private static final String TAG = "EXERCISE ADAPTER";
     private List<WorkoutInfo> items;
     private InputStream bmpInput;
 
@@ -65,10 +64,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     }
 
-    public ExerciseAdapter(List<WorkoutInfo> items, Context context,FragmentManager fragmentManager) {
-        FragmentManager fragmentManager1 = fragmentManager;
-        this.items = items;
+    public ExerciseAdapter(List<WorkoutInfo> items, Context context) {
         Context mContext = context;
+        this.items = items;
 
     }
 
@@ -278,13 +276,13 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                             vh.imagen.setImageBitmap(bitmap);
                         }
                         else {
-                            Log.d("Download", "server contact failed");
+                            Log.e(TAG, "DownloadImage, Download failed :(");
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Log.v("Failure", t.toString());
+                        Log.e(TAG,"DownloadImage, onFailure :(",t);
                     }
                 });
                 return null;
@@ -326,7 +324,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                     if (read == -1) {break;}
                     outputStream.write(fileReader, 0, read);
                     fileSizeDownloaded += read;
-                    Log.d("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                    Log.v(TAG, "writeResponseBodyToDisk: Download, file download: " + fileSizeDownloaded + " of " + fileSize);
                 }
                 outputStream.flush();
                 return true;
@@ -340,36 +338,4 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         } catch (IOException e) {return false;}
     }
 
-    public void DownloadMp3(final String url, final ExerciseViewHolder vh, final String imgName) {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
-                .build();
-        final SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
-
-        new AsyncTask<Void, Long, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                Call<ResponseBody> call = downloadService.downloadFile(url);
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        Bitmap bitmap = null;
-                        if (response.isSuccessful()) {
-                            boolean writtenToDisk = writeResponseBodyToDisk(response.body(),imgName);
-                            if(writtenToDisk){bitmap = loadImageFromCache(imgName);}
-                            vh.imagen.setImageBitmap(bitmap);
-                        }
-                        else {
-                            Log.d("Download", "server contact failed");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Log.v("Failure", t.toString());
-                    }
-                });
-                return null;
-            };
-        }.execute();
-    }
 }

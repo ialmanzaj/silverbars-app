@@ -103,7 +103,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".CreateWorkoutActivity" />
         </activity>
-        <activity android:name="com.app.proj.silverbars.WorkoutOptionsActivity"></activity>
     </application>
 
 </manifest>

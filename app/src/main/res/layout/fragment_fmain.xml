@@ -5,32 +5,79 @@
     android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical" android:layout_width="match_parent"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:id="@+id/noConnection"
+        android:id="@+id/noInternetConnection_layout"
+
         android:visibility="gone"
-        android:background="#454444">
+        android:background="@color/white">
 
         <TextView
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Estás sin conexión"
             android:id="@+id/text_no_internet"
-            android:layout_centerHorizontal="true"
+
             android:textSize="20sp"/>
 
         <TextView
-            android:textSize="16sp"
-            android:textColor="@color/gray_active_icon"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/text_no_internet"
-            android:layout_centerVertical="true"
+            android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/gray_active_icon"
+            android:id="@+id/noConnection_text"
             android:text="Por Favor, Conectate a Internet y prueba de nuevo"/>
-    </RelativeLayout>
+
+            <Button
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/button_reload_no_internet"
+                android:text="Recargar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+    </LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:id="@+id/failed_conection_layout"
+        android:visibility="gone"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fallo conexion con el servidor"
+            android:id="@+id/failed_conection_text"
+
+            android:textSize="20sp"/>
+
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/gray_active_icon"
+            android:text="Por Favor, intenta de nuevo"/>
+
+        <Button
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/button_reload_failed_server"
+            android:text="Recargar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipeContainer"
@@ -43,12 +90,9 @@
 
             <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/list"
-
                 android:paddingTop="5dp"
-
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:twowayview_layoutManager="GridLayoutManager"

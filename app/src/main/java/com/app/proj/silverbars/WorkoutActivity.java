@@ -294,7 +294,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
             //Log.v(TAG,"Exercises"+ParsedExercises.length);
 
-            adapter = new ExerciseAdapter(items,WorkoutActivity.this,getSupportFragmentManager());
+            adapter = new ExerciseAdapter(items,WorkoutActivity.this);
             recycler.setAdapter(adapter);
             setMusclesToView(MusclesArray);
 
@@ -848,7 +848,9 @@ public class WorkoutActivity extends AppCompatActivity {
                 public void onResponse(Call<JsonExercise> call, Response<JsonExercise> response) {
                     if (response.isSuccessful()) {
                         ParsedExercises[a] = response.body();
+
 //                        Log.v("Response",ParsedExercises[a].getExercise_name()+" / "+ExerciseReps);
+
                         items.add(new WorkoutInfo(ParsedExercises[a].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[a].getExercise_image()));
 
                         // muscles
@@ -878,7 +880,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<JsonExercise> call, Throwable t) {
-                    Log.e(TAG,t.toString(),t);
+                    Log.e(TAG,"putExercisesinRecycler, onFailure",t);
                 }
             });
         }
@@ -886,8 +888,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private void setMusclesToView(List<String> musculos){
 
-
-        if ( musculos.size() > 0 ){
+        if (musculos.size() > 0){
 
             // asignar musculos a text view si es primario o secundario
             for (String s : musculos)
@@ -909,7 +910,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
             }
         }
-
         webview.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -921,7 +921,6 @@ public class WorkoutActivity extends AppCompatActivity {
         webview.getSettings().setJavaScriptEnabled(true);
         String fileurl = "file://"+Environment.getExternalStorageDirectory()+"/html/"+"index.html";
         webview.loadUrl(fileurl);
-
     }
 
     private static String removeLastChar(String str) {
@@ -941,7 +940,7 @@ public class WorkoutActivity extends AppCompatActivity {
                         "elem.attr({fill: 'rgba(96%,44%,141%,80%)',stroke: 'rgba(96%,44%,141%,80%)',});"+
                         "});"+ "}"+  ")()");
 
-                Log.v("MAIN ACTIVITY","HA EJECUTADO EL JAVASCRIPT");
+                Log.v(TAG,"HA EJECUTADO EL JAVASCRIPT");
             }
 
         } catch (Exception e) {
@@ -1021,7 +1020,7 @@ public class WorkoutActivity extends AppCompatActivity {
                         Exercises_reps[i] = ParsedReps[i].getRepetition();
                     }
 
-                    adapter = new ExerciseAdapter(items,WorkoutActivity.this,getSupportFragmentManager());
+                    adapter = new ExerciseAdapter(items,WorkoutActivity.this);
                     recycler.setAdapter(adapter);
                     setMusclesToView(MusclesArray);
 
@@ -1032,13 +1031,13 @@ public class WorkoutActivity extends AppCompatActivity {
                     int statusCode = response.code();
                     // handle request errors yourself
                     ResponseBody errorBody = response.errorBody();
-                    Log.v(TAG,errorBody.toString());
+                    Log.e(TAG, String.valueOf(errorBody));
                 }
             }
 
             @Override
             public void onFailure(Call<JsonReps[]> call, Throwable t) {
-                Log.e(TAG,"onfailure",t);
+                Log.e(TAG,"getExercisesfromJson, onfailure",t);
             }
         });
     }
@@ -1088,7 +1087,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     if (read == -1) {break;}
                     outputStream.write(fileReader, 0, read);
                     fileSizeDownloaded += read;
-                    Log.d(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
+                    Log.v(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
                 }
                 outputStream.flush();
                 return true;
