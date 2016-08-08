@@ -149,7 +149,11 @@
     <string name="positive_dialog">YES</string>
     <string name="negative_dialog">NO</string>
 
-    <string name="create_text">Create Workout</string>
+    <string name="create_text">Create new workout</string>
+    <string name="music_selection">Select your music</string>
+
+
+
 
 
 </resources>

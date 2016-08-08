@@ -141,9 +141,11 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
         SwitchCompat enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
+        SwitchCompat vibration_per_rep = (SwitchCompat) findViewById(R.id.vibration_per_rep);
+        SwitchCompat vibration_per_set = (SwitchCompat) findViewById(R.id.vibration_per_set);
+
         recycler = (RecyclerView) findViewById(R.id.reciclador);
 
-        final RelativeLayout workout_options = (RelativeLayout) findViewById(R.id.workout_options);
 
         final RelativeLayout selectMusic = (RelativeLayout) findViewById(R.id.SelectMusic);
 
@@ -201,14 +203,13 @@ public class WorkoutActivity extends AppCompatActivity {
         tabHost2.addTab(exercises);
         tabHost2.addTab(muscles);
 
-
-
         // CONFIGURACIONES DEL RECYCLER
 
         if (recycler != null){
             recycler.setNestedScrollingEnabled(false);
             recycler.setHasFixedSize(false);
         }
+
 
         RecyclerView.LayoutManager lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
@@ -220,7 +221,27 @@ public class WorkoutActivity extends AppCompatActivity {
         //Log.v(TAG,"LocalState"+database.checkLocal(workoutId));
 
 
-        //SWITCH BUTTON CONFIGURACIONES
+        // vibracion por repeticion y por set colocado cada switch
+        vibration_per_rep.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                VibrationIsActivePerRep = isChecked;
+                Log.v(TAG,"VibrationIsActivePerRep: "+VibrationIsActivePerRep);
+            }
+        });
+
+
+        vibration_per_set.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                VibrationIsActivePerSet = isChecked;
+                Log.v(TAG,"VibrationIsActivePerSet: "+VibrationIsActivePerSet);
+            }
+        });
+
+
+
+        //SWITCH save local workout BUTTON CONFIGURACIONES
         enableLocal.setEnabled(true);
         enableLocal.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -295,35 +316,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-        // WORKOUT OPTIONS
-        workout_options.setClickable(true);
-        workout_options.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            workout_options.setBackgroundColor(getResources().getColor(R.color.onTouch,null));
-                        }else {
-                            workout_options.setBackgroundColor(getResources().getColor(R.color.onTouch));
-                        }
-
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            workout_options.setBackgroundColor(getResources().getColor(R.color.white,null));
-                        }else {
-                            workout_options.setBackgroundColor(getResources().getColor(R.color.white));
-                        }
-
-                        //startActivity(new Intent(WorkoutActivity.this,SelectionMusicActivity.class));
-                        break;
-                    default:
-                        break;
-                }
-                return false;
-            }
-        });
 
 
         Sets.setText(String.valueOf(workoutSets));
@@ -338,6 +330,7 @@ public class WorkoutActivity extends AppCompatActivity {
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 dialog.dismiss();
                                 //On Dialog "Done" ClickListener
+                                Sets.setText(Sets_dialog.getText());
 
                             }
                         })
@@ -382,7 +375,7 @@ public class WorkoutActivity extends AppCompatActivity {
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 dialog.dismiss();
                                 //On Dialog "Done" ClickListener
-
+                                RestbyExercise.setText(Rest_by_exercise_dialog.getText());
                             }
                         })
                         .show()
@@ -425,13 +418,14 @@ public class WorkoutActivity extends AppCompatActivity {
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 dialog.dismiss();
                                 //On Dialog "Done" ClickListener
-
+                                RestbySet.setText(RestSets_dialog.getText());
                             }
                         })
                         .show()
                         .getCustomView();
 
                 if (v != null) {
+
                     RestSets_dialog = (TextView) v.findViewById(R.id.RestSets_dialog);
                     RestSets_dialog.setText(String.valueOf(RestbySet.getText()));
 
@@ -460,6 +454,18 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
 
+        int setsValue = Integer.parseInt(Sets.getText().toString());
+        if (setsValue <= 1){
+            plusSets.setEnabled(true);
+            plusSets.setClickable(true);
+            minusSets.setEnabled(false);
+            minusSets.setClickable(false);
+        }else if(setsValue >=10){
+            plusSets.setEnabled(false);
+            plusSets.setClickable(false);
+            minusSets.setEnabled(true);
+            minusSets.setClickable(true);
+        }
 
 
 /*
@@ -512,18 +518,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-        int setsValue = Integer.parseInt(Sets.getText().toString());
-        if (setsValue <= 1){
-            plusSets.setEnabled(true);
-            plusSets.setClickable(true);
-            minusSets.setEnabled(false);
-            minusSets.setClickable(false);
-        }else if(setsValue >=10){
-            plusSets.setEnabled(false);
-            plusSets.setClickable(false);
-            minusSets.setEnabled(true);
-            minusSets.setClickable(true);
-        }
 
 
 
@@ -670,9 +664,6 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
-
-
-
     }// on create close
 
 
@@ -747,10 +738,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     }
 
-    /*public void LaunchMusicActivity() {
-        Intent intent = new Intent(this, SelectionMusicActivity.class);
-        startActivityForResult(intent,1);
-    }*/
+
 
     public void toast(String text){
         Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();

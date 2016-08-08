@@ -98,6 +98,57 @@
 
                             </RelativeLayout>
                         <RelativeLayout
+                            android:id="@+id/SelectMusic"
+                            android:minHeight="45dp"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp"
+                            android:gravity="center_vertical"
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+
+                                android:layout_centerVertical="true"
+                                android:orientation="horizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/music_selection"
+                                    android:textColor="@color/black"
+                                    android:textSize="18sp" />
+                                <ImageView
+                                    android:layout_marginStart="3dp"
+                                    android:id="@+id/music_img"
+                                    android:layout_width="20dp"
+                                    android:src="@drawable/musica_img"
+                                    android:layout_height="20dp"
+                                    android:text="@string/select_music_text"
+
+                                    android:textColor="@color/white"
+                                    android:contentDescription=""/>
+
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentEnd="true"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:src="@drawable/ic_keyboard_arrow_right_black_36dp"
+                                />
+
+
+                        </RelativeLayout>
+                        <RelativeLayout
                                 android:paddingStart="15dp"
                                 android:paddingEnd="15dp"
 
@@ -240,90 +291,40 @@
                                 </LinearLayout>
 
                             </RelativeLayout>
-                        <RelativeLayout
-                                android:id="@+id/SelectMusic"
-                                android:minHeight="45dp"
-                                android:paddingTop="5dp"
-                                android:paddingBottom="5dp"
-
-                                android:paddingStart="15dp"
-                                android:paddingEnd="15dp"
-                                android:gravity="center_vertical"
-
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                                <LinearLayout
-
-                                    android:layout_centerVertical="true"
-                                    android:orientation="horizontal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content">
-
-                                    <TextView
-
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Music Selection"
-                                        android:textColor="@color/black"
-                                        android:textSize="18sp" />
-                                    <ImageView
-                                        android:layout_marginStart="3dp"
-                                        android:id="@+id/music_img"
-                                        android:layout_width="20dp"
-                                        android:src="@drawable/musica_img"
-                                        android:layout_height="20dp"
-                                        android:text="@string/select_music_text"
-
-                                        android:textColor="@color/white"
-                                        android:contentDescription=""/>
-
-                                </LinearLayout>
-
-                                <ImageView
-                                    android:layout_centerVertical="true"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-
-                                    android:src="@drawable/ic_keyboard_arrow_right_black_36dp"
-                                    />
 
 
-                            </RelativeLayout>
-                        <RelativeLayout
-                                android:paddingTop="5dp"
-                                android:paddingBottom="5dp"
-                                android:minHeight="45dp"
-                                android:paddingStart="15dp"
-                                android:paddingEnd="15dp"
+                        <android.support.v7.widget.SwitchCompat
+                            android:minHeight="45dp"
+                            android:textSize="18sp"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp"
+                            android:id="@+id/vibration_per_rep"
+                            android:theme="@style/MySwitch2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/vibration_rep_text"
+                            android:textColor="@color/black"
 
-                                android:id="@+id/workout_options"
+                            android:checked="true" />
 
-                                android:gravity="center_vertical"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                        <android.support.v7.widget.SwitchCompat
+                            android:id="@+id/vibration_per_set"
+                            android:minHeight="45dp"
+                            android:theme="@style/MySwitch2"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp"
 
-                                <TextView
-                                    android:layout_centerVertical="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Workout Options"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/vibration_set_text"
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
 
-                                    />
-                                <ImageView
-                                    android:layout_centerVertical="true"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:id="@+id/imageView4"
-                                    android:src="@drawable/ic_keyboard_arrow_right_black_36dp"
-                                    />
-
-
-                            </RelativeLayout>
+                            android:checked="true" />
 
                     </LinearLayout>
 
