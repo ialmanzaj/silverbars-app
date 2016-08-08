@@ -45,7 +45,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     private LinearLayout empty_content;
     private ItemTouchHelper mItemTouchHelper;
 
-    private ArrayList<String> Items_ids_from_activity,new_Items_id;
     private  List<String> MusclesArray = new ArrayList<>();
     private static String strSeparator = "__,__";
 
@@ -79,6 +78,8 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
         }
 
+
+
         empty_content = (LinearLayout) findViewById(R.id.content_empty);
 
 
@@ -93,7 +94,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
                     Intent intent = new Intent(CreateWorkoutActivity.this, CreateWorkoutFinalActivity.class);
                     intent.putExtra("exercises", adapter.getSelectedExercisesArrayList());
-                    startActivity(intent);
+                    startActivityForResult(intent,3);
 
                 }else {
                     Toast.makeText(CreateWorkoutActivity.this, "No ha seleccionado ningun ejercicio",
@@ -128,12 +129,10 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             public void onClick(View v) {
 
                 Intent intent = new Intent(CreateWorkoutActivity.this,ExerciseListActivity.class);
-
                 intent.putExtra("items_selected",adapter.getSelectedExercisesArrayList() );
                 Log.v(TAG,"items_selected"+adapter.getSelectedExercisesArrayList() );
-
-                    
                 startActivityForResult(intent,2);
+                
             }
         });
 
@@ -142,6 +141,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         recycler = (RecyclerView) findViewById(R.id.recycler_exercises_selected);
         RecyclerView.LayoutManager lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
+
 
 
         //Defining Tabs
@@ -174,6 +174,15 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         webView.loadUrl(fileurl);
 
 
+        if (adapter != null){
+
+            if (adapter.getItemCount() > 0) {
+                Log.v(TAG,"hay algo:"+adapter.getSelectedExercisesArrayList());
+            }
+
+
+
+        }
 
 
 
@@ -192,21 +201,19 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
 
                     if (data.hasExtra("Items")) {
-                        Items_ids_from_activity = data.getStringArrayListExtra("Items");
+                        ArrayList<String> items_ids_from_activity = data.getStringArrayListExtra("Items");
 
-                        Log.v(TAG, "NAMES ID: " + Items_ids_from_activity);
+                        Log.v(TAG, "NAMES ID: " + items_ids_from_activity);
 
 
 
-                        if (Items_ids_from_activity.size() > 0){
-                            putExercisesinRecycler(Items_ids_from_activity);
-                            Log.v(TAG, "primeros items añadidos: " + Items_ids_from_activity);
+                        if (items_ids_from_activity.size() > 0){
+                            putExercisesinRecycler(items_ids_from_activity);
+                            Log.v(TAG, "primeros items añadidos: " + items_ids_from_activity);
                         }
 
 
                     }
-
-
             }
         }if (requestCode == 2 ) {
             Log.v(TAG, "requestCode: 2");
@@ -215,17 +222,23 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
                 if (data.hasExtra("Items")) {
 
-                    new_Items_id = data.getStringArrayListExtra("Items");
+                    ArrayList<String> new_Items_id = data.getStringArrayListExtra("Items");
                     Log.v(TAG, "NAMES ID: " + new_Items_id);
 
-
                     putExercisesinRecycler(new_Items_id);
-
                 }
 
             }
 
+        } if (requestCode == 3 ){
+            if (resultCode == RESULT_OK && data != null){
+
+                ArrayList<String> exercises_id = data.getStringArrayListExtra("exercises");
+
+                //putExercisesinRecycler(exercises_id);
+            }
         }
+
 
 
     }

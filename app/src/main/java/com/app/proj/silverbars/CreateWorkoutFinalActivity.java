@@ -2,7 +2,10 @@ package com.app.proj.silverbars;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +18,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,7 +46,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Vie
     TextView addText, Sets, Rest, RestSets;
     EditText workoutName;
     Button plusSets, minusSets, plusRest, minusRest, plusRestSet, minusRestSet, Save;
-    private ImageButton changeImg;
+
 
     private RecyclerView recycler;
     private RecyclerView.Adapter adapter;
@@ -67,6 +73,16 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Vie
         if (toolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Save Workout");
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent return_Intent = new Intent();
+
+                    return_Intent.putExtra("exercises",Exercises);
+                    setResult(RESULT_OK, return_Intent);
+                    finish();
+                }
+            });
         }
 
 
@@ -108,8 +124,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Vie
         imgProfile = (ImageView) findViewById(R.id.imgProfile);
 
 
-
-        changeImg = (ImageButton) findViewById(R.id.chageImg);
+        ImageButton changeImg = (ImageButton) findViewById(R.id.chageImg);
         changeImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +142,50 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Vie
 
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 ) {
+            if (resultCode == RESULT_OK && data != null){
+
+                if (data.getData() != null) {
+
+                        Log.v("Select", "Image Picker");
+                        CropImage.activity(data.getData())
+                                .setGuidelines(CropImageView.Guidelines.ON)
+                                .setActivityTitle("Crop Image")
+                                .setAllowRotation(true)
+                                .setActivityMenuIconColor(R.color.white)
+                                .setFixAspectRatio(true)
+                                .setAspectRatio(4, 4)
+                                .start(this);
+                    }
+                }
+
+            }
+            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+            Log.v(TAG,"Crop Result");
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUri);
+                    Log.d("Image", String.valueOf(bitmap));
+                    imgProfile.setImageBitmap(bitmap);
+
+                } catch (IOException e) {
+                    Log.e(TAG,"IOException",e);
+                }
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+
+                Log.e(TAG,"error",error);
+            }
+        }
     }
 
 

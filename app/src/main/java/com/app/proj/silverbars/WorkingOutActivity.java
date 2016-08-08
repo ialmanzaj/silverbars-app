@@ -64,7 +64,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private Button PauseButton,Endbutton;
     private boolean SelectedSongs = false, finish = false, start = false;
     private RecyclerView recycler;
-    private int TotalSets = 0, ActualSets = 0, Time_aux = 0,ActualRest = 0;
+    private int TotalSets = 0, ActualSets = 0, Time_aux = 0,actualRest = 0;
     AlertDialog alertDialog;
     private MediaPlayer media;
     private JsonExercise[] Exercises;
@@ -82,31 +82,28 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Intent i = getIntent();
         Bundle b = i.getExtras();
 
-
-
-        RestByExercise = 20;
-        RestBySet = 35;
-
-
-
+        RestByExercise =  b.getInt("RestByExercise");
+        RestBySet = b.getInt("RestBySet");
         Exercises_reps = b.getIntArray("ExercisesReps");
         tempo = b.getInt("tempo");
         VibrationPerRep = b.getBoolean("VibrationPerRep");
         VibrationPerSet =  b.getBoolean("VibrationPerSet");
-
-        Exercises = WorkoutActivity.ParsedExercises;
-
         TotalSets = b.getInt("Sets");
-        RepsTime(y);
-
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
         position = b.getStringArray("pos");
+
+
+        Exercises = WorkoutActivity.ParsedExercises;
+        RepsTime(y);
+
         //Log.v("Songs", Arrays.toString(position));
         playlist = new ArrayList<>();
 
         actualReps = Exercises_reps[0];
-        artist_name = (TextView) findViewById(R.id.artist_name);
 
+        actualRest = RestByExercise;
+
+        artist_name = (TextView) findViewById(R.id.artist_name);
         CurrentSet = (TextView) findViewById(R.id.CurrentSet);
         TotalSet = (TextView) findViewById(R.id.TotalSet);
         CurrentExercise = (TextView) findViewById(R.id.CurrentExercise);
@@ -115,6 +112,39 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         ModalLayout = (FrameLayout) findViewById(R.id.ModalLayout);
         headerText = (TextView) findViewById(R.id.headerText);
         RestCounter_text = (TextView) findViewById(R.id.RestCounter_text);
+        RestCounter_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+
+                if (actualRest == 0){
+
+                    Log.v(TAG,"Descanso: Terminado");
+
+                    restTimer.cancel();
+                    rest = false;
+
+
+                    playExerciseAudio(Exercises[y].getExercise_audio());
+                    RepsTime(y);
+
+                    startMainCountDown(totalTime,1,totalTime);
+                    Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
+
+                    ModalLayout.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         final TextView totalExercise = (TextView) findViewById(R.id.TotalExercise);
 
         // next and preview button for exercise
@@ -501,14 +531,16 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         if (!pause && start){
             Log.v(TAG,"Main CountDown: activado");
 
-
+            
             int totalsecs= seconds * 1000;
             int sec_interval= interval * 1000 ;
             Time_aux = time_aux;
             Format_Time = 0;
 
             main_timer = new CountDownTimer(totalsecs, sec_interval) {
-                public void onTick(long millisUntilFinished) {performTick(millisUntilFinished);}
+                public void onTick(long millisUntilFinished) {
+                    performTick(millisUntilFinished);
+                }
                 public void onFinish() {}
             }.start();
         }
@@ -757,15 +789,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         main_timer.cancel();
         rest = true;
 
-        Log.v(TAG, String.valueOf(rest_time));
-
-        ActualRest = rest_time;//inicializar actual rest
-
-
+        actualRest = rest_time;
         ModalLayout.setVisibility(View.VISIBLE);
         headerText.setText(getResources().getString(R.string.rest_text));
 
-        startRestTimer(ActualRest);
+        startRestTimer(rest_time);
 
 
 
@@ -774,7 +802,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private void startRestTimer(int actualrest){
         Log.v(TAG, "startRestTimer: activado");
 
-        int totalsecs = actualrest * 1000;
+        int totalsecs = (actualrest + 5) * 1000;
         int sec_interval = 1000;
         Format_Time_Rest = 0;
 
@@ -783,37 +811,18 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onTick(long millisUntilFinished) {
 
+                Log.v(TAG,"millisUntilFinished:"+millisUntilFinished);
                 Format_Time_Rest =  Math.round(millisUntilFinished * 0.001f);
+                Log.v(TAG,"Format_Time_Rest:"+Format_Time_Rest);
 
-                Log.v(TAG,"onTick: YES");
-                ActualRest--;
-                Log.v(TAG, String.valueOf(ActualRest));
-                RestCounter_text.setText(String.valueOf(ActualRest));
+                actualRest--;
+                RestCounter_text.setText(String.valueOf(actualRest));
             }
-            public void onFinish() {
-                if (ActualRest == 0){
-                    onFinishRest();
-                }
-            }
+            public void onFinish() {}
         }.start();
 
     }
 
-    private void onFinishRest(){
-        Log.v(TAG,"Descanso: Terminado");
-
-        restTimer.cancel();
-        rest = false;
-
-
-        playExerciseAudio(Exercises[y].getExercise_audio());
-        RepsTime(y);
-
-        startMainCountDown(totalTime,1,totalTime);
-        Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
-
-        ModalLayout.setVisibility(View.GONE);
-    }
 
 
     private void DialogFinalize(){
@@ -871,6 +880,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         })
                 .show();
     }
+
 
     private void ScreenOn(){
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);

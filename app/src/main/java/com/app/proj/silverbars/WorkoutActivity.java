@@ -68,7 +68,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private Button minusRest;
     private Button plusRestSets;
     private Button minusRestSets;
-    private TextView Positive, Negative, Isometric, Reps, Workout_name, Sets, Rest, RestSets,RestSets_dialog,Sets_dialog;
+    private TextView Positive, Negative, Isometric, Reps, Workout_name, Sets, RestbySet, RestbyExercise,RestSets_dialog,Sets_dialog;
     private String[] position;
     private List<String> spinnerArray = new ArrayList<String>();
     private int value = 0;
@@ -113,7 +113,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private String partes = "";
     private WebView webview;
-    private TextView Rest_exercise;
+    private TextView Rest_by_exercise_dialog;
 
     private  List<String> MusclesArray = new ArrayList<>();
 
@@ -153,10 +153,10 @@ public class WorkoutActivity extends AppCompatActivity {
         Sets = (TextView) findViewById(R.id.Sets);
 
         //descanso entre ejercicio
-        Rest = (TextView) findViewById(R.id.Rest);
+        RestbyExercise = (TextView) findViewById(R.id.RestbyExercise);
 
         // descanso entre sets
-        RestSets = (TextView) findViewById(R.id.RestSets);
+        RestbySet = (TextView) findViewById(R.id.RestbySet);
 
         // Web view
         webview = (WebView) findViewById(R.id.webview);
@@ -371,7 +371,7 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
 
-        Rest.setOnClickListener(new View.OnClickListener() {
+        RestbyExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 View v = new MaterialDialog.Builder(view.getContext())
@@ -388,22 +388,22 @@ public class WorkoutActivity extends AppCompatActivity {
                         .show()
                         .getCustomView();
                 if (v != null) {
-                    Rest_exercise = (TextView) v.findViewById(R.id.Rest_exercise);
-                    Rest_exercise.setText(String.valueOf(Rest.getText()));
+                    Rest_by_exercise_dialog = (TextView) v.findViewById(R.id.Rest_exercise);
+                    Rest_by_exercise_dialog.setText(String.valueOf(RestbyExercise.getText()));
 
 
                     plusRest = (Button) v.findViewById(R.id.plusRest);
                     plusRest.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            plusTempo(Rest_exercise,plusRest,minusRest);
+                            plusTempo(Rest_by_exercise_dialog,plusRest,minusRest);
                         }
                     });
                     minusRest = (Button) v.findViewById(R.id.minusRest);
                     minusRest.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            minusTempo(Rest_exercise,minusRest,plusRest);
+                            minusTempo(Rest_by_exercise_dialog,minusRest,plusRest);
                         }
                     });
                 }
@@ -414,7 +414,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-        RestSets.setOnClickListener(new View.OnClickListener() {
+        RestbySet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 View v = new MaterialDialog.Builder(view.getContext())
@@ -433,7 +433,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
                 if (v != null) {
                     RestSets_dialog = (TextView) v.findViewById(R.id.RestSets_dialog);
-                    RestSets_dialog.setText(String.valueOf(RestSets.getText()));
+                    RestSets_dialog.setText(String.valueOf(RestbySet.getText()));
 
                     plusRestSets = (Button) v.findViewById(R.id.plusRestSets);
                     plusRestSets.setOnClickListener(new View.OnClickListener() {
@@ -721,13 +721,15 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
     private void LaunchWorkingOutActivity() {
-        int positive,isometric,negative,sets;
+        int positive,isometric,negative,sets,restbyexercise,restbyset;
         /*
         positive = Integer.parseInt(Positive.getText().toString());
         isometric = Integer.parseInt(Isometric.getText().toString());
         negative = Integer.parseInt(Negative.getText().toString());
         */
         sets = Integer.parseInt(Sets.getText().toString());
+        restbyexercise = Integer.parseInt(removeLastChar(RestbyExercise.getText().toString()));
+        restbyset = Integer.parseInt(removeLastChar(RestbySet.getText().toString()));
         int tempoTotal = 5;
 
 
@@ -737,6 +739,8 @@ public class WorkoutActivity extends AppCompatActivity {
         intent.putExtra("pos",position);
         intent.putExtra("songlist",mySongs);
         intent.putExtra("Sets",sets);
+        intent.putExtra("RestByExercise",restbyexercise);
+        intent.putExtra("RestBySet",restbyset);
         intent.putExtra("VibrationPerSet",VibrationIsActivePerSet);
         intent.putExtra("VibrationPerRep",VibrationIsActivePerRep);
         startActivity(intent);
@@ -766,7 +770,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     button2.setClickable(true);
                 }
             }
-        }else if(view == Rest_exercise){
+        }else if(view == Rest_by_exercise_dialog){
             String[] elements = view.getText().toString().split("s");
             value = Integer.parseInt(elements[0]);
             value = value + 5;
@@ -825,7 +829,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     button2.setClickable(true);
                 }
             }
-        }else if(view == Rest_exercise){
+        }else if(view == Rest_by_exercise_dialog){
             String[] elements = view.getText().toString().split("s");
             value = Integer.parseInt(elements[0]);
             value = value - 5;

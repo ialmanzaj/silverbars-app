@@ -37,9 +37,8 @@ public class ExerciseListActivity extends AppCompatActivity {
     public static JsonExercise[] Exercises;
     private RecyclerView.Adapter adapter;
 
-    private ArrayList<String> sItems = new ArrayList<>();
-
-    private ArrayList<String> sItemsComplete = new ArrayList<>();
+    private ArrayList<String> sExercises_Id = new ArrayList<>();
+    
     List<JsonExercise> OriginalExerciseListAll = new ArrayList<>();
 
     List<JsonExercise> ExercisesNoSelected = new ArrayList<>();
@@ -81,22 +80,7 @@ public class ExerciseListActivity extends AppCompatActivity {
 
                 for (int i = 0; i < OriginalExerciseListAll.size(); i++){
                     if (AllExercisesAdapter.selectedItems.get(i)){
-
-                        sItems.add(OriginalExerciseListAll.get(i).getExercise_name());
-
-
-                            if (!SelectedItemsIds.isEmpty()){
-
-
-                                sItemsComplete.add(OriginalExerciseListAll.get(i).getExercise_name());
-
-                                Log.v(TAG,"sItemsComplete: "+sItemsComplete);
-                            }
-
-
-
-
-                        Log.v(TAG,"sItems: "+sItemsComplete);
+                        sExercises_Id.add(OriginalExerciseListAll.get(i).getExercise_name());
 
                     }
                 }
@@ -105,20 +89,7 @@ public class ExerciseListActivity extends AppCompatActivity {
 
                 // enviar items a la actividad anterior
                 Intent return_Intent = new Intent();
-
-                if (sItemsComplete.isEmpty()){
-                    return_Intent.putExtra("Items",sItems);
-                        
-                }else {
-
-                    return_Intent.putExtra("Items",sItemsComplete);
-
-
-                }
-
-
-
-
+                return_Intent.putExtra("Items",sExercises_Id);
                 setResult(RESULT_OK, return_Intent);
                 finish();
 

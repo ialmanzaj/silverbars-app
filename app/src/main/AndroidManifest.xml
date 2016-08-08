@@ -88,7 +88,7 @@
         <activity android:name="com.app.proj.silverbars.SongsActivity" />
         <activity
             android:name=".CreateWorkoutActivity"
-            android:windowSoftInputMode="stateHidden" />
+            />
         <activity android:name=".ExerciseListActivity" />
         <activity android:name="com.app.proj.silverbars.orderExercises" />
         <activity
@@ -97,6 +97,7 @@
         <activity android:name="com.app.proj.silverbars.ProgressionActivity"></activity>
         <activity
             android:name="com.app.proj.silverbars.CreateWorkoutFinalActivity"
+            android:windowSoftInputMode="stateHidden"
             android:parentActivityName=".CreateWorkoutActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

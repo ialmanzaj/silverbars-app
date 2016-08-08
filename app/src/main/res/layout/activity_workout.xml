@@ -188,7 +188,7 @@
                                         android:textAppearance="?android:attr/textAppearanceMedium"
                                         android:textAlignment="center"
                                         android:hint="@string/zero"
-                                        android:id="@+id/Rest" />
+                                        android:id="@+id/RestbyExercise" />
 
 
 
@@ -233,7 +233,7 @@
                                         android:gravity="center_vertical|center_horizontal"
 
                                         android:textAlignment="center"
-                                        android:id="@+id/RestSets" />
+                                        android:id="@+id/RestbySet" />
 
 
 

@@ -44,6 +44,7 @@
         android:background="#fff">
 
         <LinearLayout
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,18 +52,15 @@
             android:layout_centerHorizontal="true"
             android:id="@+id/linearLayout3">
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+
 
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
+                        android:layout_width="110dp"
+                        android:layout_height="110dp"
                         android:id="@+id/imgProfile"
                          />
 
@@ -104,14 +102,16 @@
                         android:textColor="@color/colorPrimaryDark" />
                 </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
+
+
+
+
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/linearLayout3"
-            android:paddingTop="20dp">
+            android:layout_below="@+id/linearLayout3">
 
             <RelativeLayout
                 android:layout_width="match_parent"
