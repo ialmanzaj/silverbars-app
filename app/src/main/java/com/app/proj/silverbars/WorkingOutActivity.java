@@ -72,6 +72,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private boolean VibrationPerSet = false,VibrationPerRep = false, pause=false,rest = false;
     private static final String FORMAT = "%2d";
 
+    private int exercises_size = 0;
     private int RestByExercise = 0,RestBySet = 0;
 
     @Override
@@ -95,6 +96,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         Exercises = WorkoutActivity.ParsedExercises;
         RepsTime(y);
+
+        exercises_size = Exercises.length;
 
         //Log.v("Songs", Arrays.toString(position));
         playlist = new ArrayList<>();
@@ -125,14 +128,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 if (actualRest == 0){
 
                     Log.v(TAG,"Descanso: Terminado");
-
                     restTimer.cancel();
                     rest = false;
-
-
                     playExerciseAudio(Exercises[y].getExercise_audio());
                     RepsTime(y);
-
                     startMainCountDown(totalTime,1,totalTime);
                     Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
 
@@ -172,22 +171,24 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
                 actualReps = Integer.valueOf(charSequence.toString());
                 if (actualReps == 0){
-                    if (y+1 < elements){
+                    if (y+1 < elements ){
                         y++;
 
-                        prvLayout.setVisibility(View.VISIBLE);
-                        if((y+1)==elements){
-                            nxtLayout.setVisibility(View.GONE);
-                        }
-                        recycler.smoothScrollToPosition(y);
+                        if (exercises_size > 1){
 
+                            prvLayout.setVisibility(View.VISIBLE);
+                            if((y+1)==elements){
+                                nxtLayout.setVisibility(View.GONE);
+                            }
+
+                        }
+
+                        recycler.smoothScrollToPosition(y);
                         CurrentExercise.setText(String.valueOf(y+1));
 
+
                         ActivateVibrationPerSet();
-
                         Rep_timer_text.setEnabled(false);
-
-
                         showRestModal(RestByExercise);// descanso por ejercicio
 
                     }
@@ -204,9 +205,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
                             showRestModal(RestBySet);//descanso por set
 
-
-                            nxtLayout.setVisibility(View.VISIBLE);
-                            prvLayout.setVisibility(View.GONE);
+                            if (exercises_size > 1){
+                                nxtLayout.setVisibility(View.VISIBLE);
+                                prvLayout.setVisibility(View.GONE);
+                            }
                         }
                         else{
                             main_timer.cancel();
@@ -375,7 +377,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     prvLayout.setVisibility(View.GONE);
                 }
                 else{
-                    if(y < elements-1){
+                    if(y < elements-1 && exercises_size > 1){
                         nxtLayout.setVisibility(View.VISIBLE);
                     }
                 }
@@ -403,7 +405,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     nxtLayout.setVisibility(View.GONE);
                 }
                 else{
-                    if (y > 0){
+                    if (y > 0 && exercises_size > 1){
                         prvLayout.setVisibility(View.VISIBLE);
                     }
                 }

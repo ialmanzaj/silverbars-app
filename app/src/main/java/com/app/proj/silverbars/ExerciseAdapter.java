@@ -34,9 +34,18 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
-    private static final String TAG = "EXERCISE ADAPTER";
+
+    private static final String TAG = "EXERCISE ADAPTER ";
     private List<WorkoutInfo> items;
     private InputStream bmpInput;
+
+    private Button plusPositive;
+    private Button minusPositive;
+    private Button plusIsometric;
+    private Button minusIsometric;
+    private Button plusNegative;
+    private Button minusNegative;
+    private TextView Positive, Negative, Isometric;
 
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
@@ -51,9 +60,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             super(v);
             imagen = (ImageView) v.findViewById(R.id.imagen);
             nombre = (TextView) v.findViewById(R.id.nombre);
-//            next = (TextView) v.findViewById(R.id.next);
             repetitions = (TextView) v.findViewById(R.id.repetitions);
         }
+
     }
 
     public ExerciseAdapter(List<WorkoutInfo> items, Context context,FragmentManager fragmentManager) {
@@ -76,18 +85,21 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     }
 
     @Override
-    public void onBindViewHolder(final ExerciseViewHolder viewHolder, int i) {
+    public void onBindViewHolder(ExerciseViewHolder viewHolder, int i) {
         Bitmap bmp = null;
 
+        int a = viewHolder.getAdapterPosition();
 
         //Setting values to each recylerView Element
-        String[] imageDir = WorkoutActivity.ParsedExercises[i].getExercise_image().split("exercises");
+        String[] imageDir = WorkoutActivity.ParsedExercises[a].getExercise_image().split("exercises");
 
         Log.v("Image Array", Arrays.toString(imageDir));
 
         if (imageDir.length < 2){
-            bmp = loadImageFromCache(WorkoutActivity.ParsedExercises[i].getExercise_image());
+
+            bmp = loadImageFromCache(WorkoutActivity.ParsedExercises[a].getExercise_image());
             viewHolder.imagen.setImageBitmap(bmp);
+
         }else{
             String Parsedurl = "exercises"+imageDir[1];
             String[] imagesName = Parsedurl.split("/");
@@ -103,9 +115,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
 
 
-        viewHolder.nombre.setText(WorkoutActivity.ParsedExercises[i].getExercise_name());
-        viewHolder.repetitions.setText(String.valueOf(WorkoutActivity.Exercises_reps[i]));
-
+        viewHolder.nombre.setText(WorkoutActivity.ParsedExercises[a].getExercise_name());
+        viewHolder.repetitions.setText(String.valueOf(WorkoutActivity.Exercises_reps[a]));
 
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -145,38 +156,55 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                 //Dialog elements
                 if (v != null) {
 
-                   /* DialogName = (TextView) v.findViewById(R.id.ExerciseName);
-                    DialogName.setText(items.get(a).getNombre());
+                        Positive = (TextView) v.findViewById(R.id.Positive);
+                        Isometric = (TextView) v.findViewById(R.id.Isometric);
+                        Negative = (TextView) v.findViewById(R.id.Negative);
 
-                    Reps = (TextView) v.findViewById(R.id.Reps);
+                        plusPositive = (Button) v.findViewById(R.id.plusPositive);
+                        plusPositive.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                plusTempo(Positive,plusPositive,minusPositive);
+                            }
+                        });
+                        minusPositive = (Button) v.findViewById(R.id.minusPositive);
+                        minusPositive.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                minusTempo(Positive,minusPositive,plusPositive);
+                            }
+                        });
+                        plusIsometric = (Button) v.findViewById(R.id.plusIsometric);
+                        plusIsometric.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                plusTempo(Isometric,plusIsometric,minusIsometric);
+                            }
+                        });
+                        minusIsometric = (Button) v.findViewById(R.id.minusIsometric);
+                        minusIsometric.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                minusTempo(Isometric,minusIsometric,plusIsometric);
+                            }
+                        });
+                        plusNegative = (Button) v.findViewById(R.id.plusNegative);
+                        plusNegative.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                plusTempo(Negative,plusNegative,minusNegative);
+                            }
+                        });
+                        minusNegative = (Button) v.findViewById(R.id.minusNegative);
+                        minusNegative.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                minusTempo(Negative,minusNegative,plusNegative);
+                            }
+                        });
 
-                    minusRep = (Button) v.findViewById(R.id.minusRep);
-                    minusRep.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //Decreasing Reps Button
-                            minusTempo(Reps,minusRep,plusRep);
-                        }
-                    });
-                    ActualRepValue = Integer.valueOf(viewHolder.repetitions.getText().toString());
-                    Reps.setText(String.valueOf(ActualRepValue));
 
-
-                    plusRep = (Button) v.findViewById(R.id.plusRep);
-                    plusRep.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //Increasing Reps Button
-                            plusTempo(Reps,plusRep,minusRep);
-                        }
-                    });*/
                 }
-
-
-
-
-
-
 
 
                 //Check if actual rep value is 1 or 20 on Dialog open
@@ -194,58 +222,40 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             }
 
             public void plusTempo(TextView view, Button button, Button button2){
+
                 value = Integer.parseInt(view.getText().toString());
                 view.setText(String.valueOf(value+1));
                 value++;
-                if (view == Reps){
-                    if (value == 20){
+                if (value == 10){
                         button.setEnabled(false);
                         button.setClickable(false);
-                    }else{
-                        if(value > 1){
-                            button2.setEnabled(true);
-                            button2.setClickable(true);
-                        }
-                    }
                 }else{
-                    if (value == 10){
-                        button.setEnabled(false);
-                        button.setClickable(false);
-                    }else{
-                        if(value > 1){
-                            button2.setEnabled(true);
-                            button2.setClickable(true);
-                        }
+                    if(value > 1){
+                        button2.setEnabled(true);
+                        button2.setClickable(true);
                     }
                 }
+
+
             }
 
             public void minusTempo(TextView view, Button button, Button button2){
                 value = Integer.parseInt(view.getText().toString());
-                view.setText(String.valueOf(value-1));
-                value--;
-                if (view == Reps){
-                    if ((value)==1){
+                view.setText(String.valueOf(value = value-1));
+                Log.v(TAG,"value:"+value);
+                if (value == 0){
                         button.setEnabled(false);
                         button.setClickable(false);
-                    }else{
-                        if(value < 20){
-                            button2.setEnabled(true);
-                            button2.setClickable(true);
-                        }
-                    }
-                }else{
-                    if ((value)==1){
-                        button.setEnabled(false);
-                        button.setClickable(false);
-                    }else{
-                        if(value < 10){
-                            button2.setEnabled(true);
-                            button2.setClickable(true);
-                        }
-                    }
+                }else {
+                    button.setEnabled(true);
+                    button.setClickable(true);
+                    value--;
                 }
+
+
             }
+
+
         });
     }
 

@@ -56,12 +56,6 @@ import com.spotify.sdk.android.authentication.AuthenticationResponse;*/
 
 public class WorkoutActivity extends AppCompatActivity {
 
-    private Button plusPositive;
-    private Button minusPositive;
-    private Button plusIsometric;
-    private Button minusIsometric;
-    private Button plusNegative;
-    private Button minusNegative;
     private Button plusSets;
     private Button minusSets;
     private Button plusRest;
@@ -307,7 +301,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         }else{
 
-            Exercises();
+           putExercisesinRecycler();
             loadLocal = false;
             enableLocal.setChecked(false);
             //Log.v(TAG,"loadLocal"+loadLocal);
@@ -468,53 +462,6 @@ public class WorkoutActivity extends AppCompatActivity {
         }
 
 
-/*
-        Positive = (TextView) findViewById(R.id.Positive);
-        Isometric = (TextView) findViewById(R.id.Isometric);
-        Negative = (TextView) findViewById(R.id.Negative);
-
-        plusPositive = (Button) findViewById(R.id.plusPositive);
-        plusPositive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                plusTempo(Positive,plusPositive,minusPositive);
-            }
-        });
-        minusPositive = (Button) findViewById(R.id.minusPositive);
-        minusPositive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                minusTempo(Positive,minusPositive,plusPositive);
-            }
-        });
-        plusIsometric = (Button) findViewById(R.id.plusIsometric);
-        plusIsometric.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                plusTempo(Isometric,plusIsometric,minusIsometric);
-            }
-        });
-        minusIsometric = (Button) findViewById(R.id.minusIsometric);
-        minusIsometric.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                minusTempo(Isometric,minusIsometric,plusIsometric);
-            }
-        });
-        plusNegative = (Button) findViewById(R.id.plusNegative);
-        plusNegative.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                plusTempo(Negative,plusNegative,minusNegative);
-            }
-        });
-        minusNegative = (Button) findViewById(R.id.minusNegative);
-        minusNegative.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                minusTempo(Negative,minusNegative,plusNegative);
-            }
-        });*/
 
 
 
@@ -740,11 +687,11 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-    public void toast(String text){
+    private void toast(String text){
         Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
     }
 
-    public void plusTempo(TextView view, Button button, Button button2){
+    private void plusTempo(TextView view, Button button, Button button2){
         if (view == Reps){
             value = Integer.parseInt(view.getText().toString());
             view.setText(String.valueOf(value+1));
@@ -803,7 +750,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     }
 
-    public void minusTempo(TextView view, Button button, Button button2){
+    private void minusTempo(TextView view, Button button, Button button2){
         if (view == Reps){
             value = Integer.parseInt(view.getText().toString());
             view.setText(String.valueOf(value-1));
@@ -863,7 +810,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-    public void Exercises(){
+    public void putExercisesinRecycler(){
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -918,7 +865,7 @@ public class WorkoutActivity extends AppCompatActivity {
 //                        Log.v("Items size",String.valueOf(items.size()));
                         exercises_id[a] = ParsedExercises[a].getId();
                         if ( items.size() == exercises.length){
-                            exercisesReps();
+                            getExercisesfromJson();
                         }
 //                    Workouts = response.body();
                     } else {
@@ -980,26 +927,32 @@ public class WorkoutActivity extends AppCompatActivity {
     private static String removeLastChar(String str) {
         return str.substring(0,str.length()-1);
     }
+
     private void injectJS() {
         try {
-            partes = removeLastChar(partes);
-            //Log.v(TAG,partes);
-            webview.loadUrl("javascript: ("+ "window.onload = function () {"+
-                    "partes = Snap.selectAll('"+partes+"');"+
-                    "partes.forEach( function(elem,i) {"+
-                    "elem.attr({fill: 'rgba(96%,44%,141%,80%)',stroke: 'rgba(96%,44%,141%,80%)',});"+
-                    "});"+ "}"+  ")()");
 
-            //Log.v("MAIN ACTIVITY","HA EJECUTADO EL JAVASCRIPT");
+            if (!Objects.equals(partes, "")){
+
+                partes = removeLastChar(partes);
+                //Log.v(TAG,partes);
+                webview.loadUrl("javascript: ("+ "window.onload = function () {"+
+                        "partes = Snap.selectAll('"+partes+"');"+
+                        "partes.forEach( function(elem,i) {"+
+                        "elem.attr({fill: 'rgba(96%,44%,141%,80%)',stroke: 'rgba(96%,44%,141%,80%)',});"+
+                        "});"+ "}"+  ")()");
+
+                Log.v("MAIN ACTIVITY","HA EJECUTADO EL JAVASCRIPT");
+            }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG,"JAVASCRIPT Exception",e);
         }
+
     }
 
 //    JsonReps[] RepsData = JsonData.getReps("http://api.silverbarsapp.com/workout/?format=json",workout_id,exercises.length);
 //    ParsedReps = RepsData;
-    public void exercisesReps(){
+    private void getExercisesfromJson(){
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
             @Override
@@ -1092,7 +1045,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-    public void DownloadMp3(final String url, final String audioName) {
+    private void DownloadMp3(final String url, final String audioName) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
         final SilverbarsService downloadService = retrofit.create(SilverbarsService.class);

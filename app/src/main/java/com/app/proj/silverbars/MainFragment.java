@@ -47,6 +47,7 @@ public class MainFragment extends Fragment {
     public String muscleData = "ALL";
     public Toolbar myToolbar;
     private boolean opened;
+    RelativeLayout noConnection;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -72,15 +73,12 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        Toolbar myToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-//        if (myToolbar != null)
-//            ((AppCompatActivity)getActivity()).setSupportActionBar(myToolbar);
 
         muscleData = getArguments().getString("Muscle");
         opened = getArguments().getBoolean("Opened");
 //        toast(muscleData);
         recyclerView = (TwoWayView) getView().findViewById(R.id.list);
-        RelativeLayout noConnection = (RelativeLayout) getView().findViewById(R.id.noConnection);
+        noConnection = (RelativeLayout) getView().findViewById(R.id.noConnection);
         Intent intent = this.getActivity().getIntent();
         String email = intent.getStringExtra("Email");
         String name = intent.getStringExtra("Name");
@@ -251,6 +249,9 @@ public class MainFragment extends Fragment {
             @Override
             public void onFailure(Call<JsonWorkout[]> call, Throwable t) {
                 Log.e(TAG,"onFailure",t);
+                recyclerView.setVisibility(View.GONE);
+                noConnection.setVisibility(View.VISIBLE);
+
             }
         });
     }
