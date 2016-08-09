@@ -37,9 +37,6 @@
       android:layout_gravity="center"
       android:textColor="@color/colorPrimaryText" />
 
-
-
-
   <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -55,7 +52,7 @@
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:textAppearance="?android:attr/textAppearanceLarge"
-       android:text="MY TEAM"
+       android:text="@string/team"
        android:id="@+id/textView32"
        android:textColor="@color/colorPrimaryText"
        android:layout_gravity="center"
@@ -103,7 +100,7 @@
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:textAppearance="?android:attr/textAppearanceLarge"
-       android:text="Progression"
+       android:text="@string/progression_"
        android:id="@+id/textView33"
        android:textColor="@color/colorPrimaryText"
        android:layout_gravity="center"
@@ -136,7 +133,7 @@
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:textAppearance="?android:attr/textAppearanceLarge"
-       android:text="My Skills Progression"
+       android:text="@string/skill_progress"
        android:id="@+id/textView34"
        android:textColor="@color/colorPrimaryText"
        android:layout_gravity="center"
@@ -169,7 +166,7 @@
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:textAppearance="?android:attr/textAppearanceLarge"
-       android:text="Workouts Shared"
+       android:text="@string/workout_shared"
        android:id="@+id/textView35"
        android:textColor="@color/colorPrimaryText"
        android:layout_gravity="center"
@@ -202,7 +199,7 @@
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:textAppearance="?android:attr/textAppearanceLarge"
-       android:text="History of Workouts done"
+       android:text="@string/history_workouts_done"
        android:id="@+id/textView36"
        android:textColor="@color/colorPrimaryText"
        android:layout_gravity="center"

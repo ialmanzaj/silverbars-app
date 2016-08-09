@@ -152,6 +152,13 @@
     <string name="create_text">Create new workout</string>
     <string name="music_selection">Select your music</string>
 
+    <string name="progression_">My Progression</string>
+    <string name="team">MY TEAMS</string>
+    <string name="skill_progress">My Skill Progression</string>
+    <string name="workout_shared">Workout Shared</string>
+    <string name="history_workouts_done">Historial of my workouts done</string>
+
+
 
 
 

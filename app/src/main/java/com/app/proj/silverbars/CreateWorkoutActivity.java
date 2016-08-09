@@ -295,7 +295,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
                         "partes = Snap.selectAll('"+partes+"');"+
                         "partes.forEach( function(elem,i) {"+
-                        "elem.attr({fill: 'rgba(96%,44%,141%,50%)',stroke: 'rgba(96%,44%,141%,50%)',});"+
+                        "elem.attr({fill: '#602C8D',stroke: '#602C8D',});"+
                         "});"+ "}"+  ")()");
             }
 

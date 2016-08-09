@@ -2,11 +2,10 @@
 <resources>
     <string name="app_name">Silverbars</string>
 
-
+    <string name="title_activity_navigation">navegacion</string>
     <string name="content">Contentido</string>
     <string name="agree">De acuerdo</string>
     <string name="disagree">Desacuerdo</string>
-
 
     <string name="hello_blank_fragment">Hola fragmento en blanco</string>
     <string name="title_activity_login">Ingresar</string>
@@ -25,6 +24,9 @@
     completions.</string>
 
 
+    <string name="navigation_drawer_open">Abrir navegacion </string>
+    <string name="navigation_drawer_close">Cerrar navegacion</string>
+    <string name="action_settings">Configuraciones</string>
 
     <string name="rep_edit">Total de Repeticiones</string>
 
@@ -111,6 +113,13 @@
         <item>Perfil</item>
     </string-array>
 
+    <string-array name="filter_items">
+        <item>ALL</item>
+        <item>ABS/CORE</item>
+        <item>UPPER BODY</item>
+        <item>LOWER BODY</item>
+    </string-array>
+
     <string-array name="filter_items_text">
         <item>Todo</item>
         <item>ABS</item>
@@ -125,6 +134,7 @@
         <item>Facebook</item>
     </string-array>
 
+    <string name="facebook_app_id">438629419640939</string>
     <string name="rest_text_set">Descanso entre Serie</string>
 
     <string name="rest_text_exercise">Descanso entre Ejercicio</string>
@@ -139,5 +149,10 @@
     <string name="create_text">Crear una nueva rutina</string>
     <string name="music_selection">Selecciona tu música</string>
 
+    <string name="progression_">Mi Progresión</string>
+    <string name="team">Mis equipos</string>
+    <string name="skill_progress">El Progreso de mis Habilidades</string>
+    <string name="workout_shared">Rutinas Compartidas</string>
+    <string name="history_workouts_done">Historial de mis rutinas terminadas</string>
 
 </resources>

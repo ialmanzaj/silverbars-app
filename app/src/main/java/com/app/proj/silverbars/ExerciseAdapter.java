@@ -53,6 +53,12 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         public TextView nombre;
         public TextView next;
         public TextView repetitions;
+        public TextView positive;
+        public TextView negative;
+        public TextView isometric;
+
+
+
 
 
         public ExerciseViewHolder(View v) {
@@ -60,6 +66,11 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             imagen = (ImageView) v.findViewById(R.id.imagen);
             nombre = (TextView) v.findViewById(R.id.nombre);
             repetitions = (TextView) v.findViewById(R.id.repetitions);
+
+            positive = (TextView) v.findViewById(R.id.positive);
+            isometric = (TextView) v.findViewById(R.id.isometric);
+            negative = (TextView) v.findViewById(R.id.negative);
+
         }
 
     }
@@ -83,13 +94,14 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     }
 
     @Override
-    public void onBindViewHolder(ExerciseViewHolder viewHolder, int i) {
+    public void onBindViewHolder(final ExerciseViewHolder viewHolder, final int i) {
         Bitmap bmp = null;
 
-        int a = viewHolder.getAdapterPosition();
+         final int a = viewHolder.getAdapterPosition();
 
         //Setting values to each recylerView Element
         String[] imageDir = WorkoutActivity.ParsedExercises[a].getExercise_image().split("exercises");
+
 
         Log.v("Image Array", Arrays.toString(imageDir));
 
@@ -145,6 +157,21 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                                 viewHolder.repetitions.setText(String.valueOf(NewRepValue()));
                                 WorkoutActivity workout = new WorkoutActivity();
                                 WorkoutActivity.Exercises_reps[a] = NewRepValue();*/
+                                viewHolder.positive.setText(Positive.getText());
+                                viewHolder.isometric.setText(Isometric.getText());
+                                viewHolder.negative.setText(Negative.getText());
+
+                                //colocar nuevos valores a cada parte del tempo
+                                WorkoutActivity.Positive_Exercises[a] = getIntValuefromTextView(Positive);
+                                WorkoutActivity.Negative_Exercises[a] = getIntValuefromTextView(Negative);
+                                WorkoutActivity.Isometric_Exercises[a] = getIntValuefromTextView(Isometric);
+
+
+                                Log.v(TAG,"Positive_Exercises"+i+":"+WorkoutActivity.Positive_Exercises[i]);
+                                Log.v(TAG,"Isometric"+i+":"+WorkoutActivity.Isometric_Exercises[i]);
+                                Log.v(TAG,"Negative"+i+":"+WorkoutActivity.Negative_Exercises[i]);
+
+
                             }
                         })
                         .show()
@@ -157,6 +184,13 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                         Positive = (TextView) v.findViewById(R.id.Positive);
                         Isometric = (TextView) v.findViewById(R.id.Isometric);
                         Negative = (TextView) v.findViewById(R.id.Negative);
+
+                        Positive.setText(viewHolder.positive.getText());
+                        Isometric.setText(viewHolder.isometric.getText());
+                        Negative.setText(viewHolder.negative.getText());
+
+
+
 
                         plusPositive = (Button) v.findViewById(R.id.plusPositive);
                         plusPositive.setOnClickListener(new View.OnClickListener() {
@@ -215,8 +249,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                 }
             }
 
-            public int NewRepValue(){
-                return Integer.valueOf(Reps.getText().toString());
+            public int getIntValuefromTextView(TextView textView){
+                return Integer.valueOf(textView.getText().toString());
             }
 
             public void plusTempo(TextView view, Button button, Button button2){
@@ -260,11 +294,13 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     public void DownloadImage(final String url, final ExerciseViewHolder vh, final String imgName) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
+
         final SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
 
         new AsyncTask<Void, Long, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
+
                 Call<ResponseBody> call = downloadService.downloadFile(url);
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override

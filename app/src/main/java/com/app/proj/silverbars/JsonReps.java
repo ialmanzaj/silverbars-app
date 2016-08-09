@@ -9,6 +9,9 @@ public class JsonReps {
     public String workout_id;
     public String exercise;
     public int repetition;
+    public int positive;
+    public int isometric;
+    public int negative;
 
     public int getId() {
         return id;

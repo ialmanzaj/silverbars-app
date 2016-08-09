@@ -23,8 +23,9 @@ public class ProgressionActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         if (toolbar != null){
+
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("My Progression ");
+            getSupportActionBar().setTitle(getResources().getString(R.string.progression_));
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -59,7 +60,7 @@ public class ProgressionActivity extends AppCompatActivity {
 
                     "partes = Snap.selectAll('"+partes+"');"+
                     "partes.forEach( function(elem,i) {"+
-                    "elem.attr({fill: '#F5515F',stroke: '#F5515F',});"+
+                    "elem.attr({fill: '#602C8D',stroke: '#602C8D',});"+
                     "});"+ "}"+  ")()");
 
             //Log.v("MAIN ACTIVITY","HA EJECUTADO EL JAVASCRIPT");

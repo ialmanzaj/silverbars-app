@@ -198,6 +198,7 @@ public class MainFragment extends Fragment {
 
         muscleData = muscle;
 
+
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
             @Override

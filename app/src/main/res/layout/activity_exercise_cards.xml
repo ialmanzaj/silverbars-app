@@ -78,14 +78,72 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:gravity="center_horizontal" />
                 </LinearLayout>
-                <TextView
-                    android:layout_marginTop="5dp"
-                    android:textSize="18sp"
+                <LinearLayout
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tempo: 1s - 5s - 1s"
-                    android:textColor="@color/black"
-                    />
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_marginTop="5dp"
+                        android:textSize="18sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tempo: "
+                        android:textColor="@color/black" />
+                    <TextView
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:text="1"
+                        android:id="@+id/positive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:text="s"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:text=" - "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:text="1"
+                        android:id="@+id/isometric"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:text="s"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:text=" - "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:text="1"
+                        android:id="@+id/negative"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:text="s"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
 

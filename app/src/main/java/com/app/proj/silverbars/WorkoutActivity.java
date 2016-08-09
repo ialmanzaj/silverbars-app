@@ -71,6 +71,11 @@ public class WorkoutActivity extends AppCompatActivity {
     private int ExerciseReps = 1;
     private ArrayList<File> mySongs;
     static public int[] Exercises_reps;
+    static public int [] Positive_Exercises;
+    static public int [] Isometric_Exercises;
+    static public int [] Negative_Exercises;
+    
+    
     private LinearLayout primary_linear,secondary_linear;
 
 
@@ -85,9 +90,10 @@ public class WorkoutActivity extends AppCompatActivity {
     private String[] exercises;
 
 
-    private List<WorkoutInfo> items = new ArrayList<>();
+    private List<WorkoutInfo> exercisesToRecycler = new ArrayList<>();
     public static JsonExercise[] ParsedExercises;
     public static JsonReps[] ParsedReps;
+
 
 
     private int[] exercises_id;
@@ -274,14 +280,29 @@ public class WorkoutActivity extends AppCompatActivity {
             ParsedReps = database.getWorkout(workoutId);
             ParsedExercises = new JsonExercise[ParsedReps.length];
             Exercises_reps = new int[ParsedReps.length];
+            
+            // inicializar tempo arrays por ejercicio
+            Positive_Exercises = new int[ParsedReps.length];
+            Isometric_Exercises = new int[ParsedReps.length];
+            Negative_Exercises = new int[ParsedReps.length];
 
+            
             for (int i = 0; i < ParsedReps.length; i++){
 
                 ParsedExercises[i] = database.getExercise(Integer.valueOf(ParsedReps[i].getExercise()));
-                //agregar json a array items
-                items.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[i].getExercise_image()));
+                //agregar json a array exercisesToRecycler
+                exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[i].getExercise_image()));
 
                 Exercises_reps[i] = ParsedReps[i].getRepetition();
+
+                // inicializar cada parte del tempo
+                WorkoutActivity.Positive_Exercises[i] = 3;
+                WorkoutActivity.Negative_Exercises[i] = 1;
+                WorkoutActivity.Isometric_Exercises[i] = 3;
+
+                Log.v(TAG,"Positive_Exercises"+i+":"+WorkoutActivity.Positive_Exercises[i]);
+                Log.v(TAG,"Isometric"+i+":"+WorkoutActivity.Isometric_Exercises[i]);
+                Log.v(TAG,"Negative"+i+":"+WorkoutActivity.Negative_Exercises[i]);
 
 
                 //RECORRER CADA EJECICIOS BUSCANDO MUSCULOS
@@ -294,14 +315,15 @@ public class WorkoutActivity extends AppCompatActivity {
 
             //Log.v(TAG,"Exercises"+ParsedExercises.length);
 
-            adapter = new ExerciseAdapter(items,WorkoutActivity.this);
+            adapter = new ExerciseAdapter(exercisesToRecycler,WorkoutActivity.this);
             recycler.setAdapter(adapter);
             setMusclesToView(MusclesArray);
 
 
         }else{
 
-           putExercisesinRecycler();
+            //usar json stream
+            getExercisesFromJson();
             loadLocal = false;
             enableLocal.setChecked(false);
             //Log.v(TAG,"loadLocal"+loadLocal);
@@ -618,17 +640,23 @@ public class WorkoutActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+
         if (requestCode == 1 && resultCode == RESULT_OK && data != null){
+
             mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
             position = data.getStringArrayExtra("positions");
             Log.v("Position",Arrays.toString(position));
             Log.v("Songs",mySongs.toString());
             toast("Activity result");
+
         }
         else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
+
             mySongs = null;
             position = null;
             toast("No result");
+
         }
         /*else if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
@@ -673,7 +701,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, WorkingOutActivity.class);
         intent.putExtra("ExercisesReps",Exercises_reps);
-        intent.putExtra("tempo", tempoTotal);
         intent.putExtra("pos",position);
         intent.putExtra("songlist",mySongs);
         intent.putExtra("Sets",sets);
@@ -681,6 +708,11 @@ public class WorkoutActivity extends AppCompatActivity {
         intent.putExtra("RestBySet",restbyset);
         intent.putExtra("VibrationPerSet",VibrationIsActivePerSet);
         intent.putExtra("VibrationPerRep",VibrationIsActivePerRep);
+        intent.putExtra("Array_Positive_Exercises",Positive_Exercises);
+        intent.putExtra("Array_Isometric_Exercises",Isometric_Exercises);
+        intent.putExtra("Array_Negative_Exercises",Negative_Exercises);
+
+
         startActivity(intent);
 
     }
@@ -810,7 +842,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-    public void putExercisesinRecycler(){
+    public void getExercisesFromJson(){
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -849,27 +881,21 @@ public class WorkoutActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         ParsedExercises[a] = response.body();
 
-//                        Log.v("Response",ParsedExercises[a].getExercise_name()+" / "+ExerciseReps);
+                        exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[a].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[a].getExercise_image()));
 
-                        items.add(new WorkoutInfo(ParsedExercises[a].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[a].getExercise_image()));
 
-                        // muscles
-
-                        //Collections.addAll(Muscles_names,name);
+                        //Asignar cuales son los musculos de cada ejercicio
                         for (int b = 0; b < ParsedExercises[a].muscle.length; b++){
                             String name;
                             name = ParsedExercises[a].muscle[b];
                             MusclesArray.add(name);
                         }
-
-
-
-//                        Log.v("Items size",String.valueOf(items.size()));
+//
                         exercises_id[a] = ParsedExercises[a].getId();
-                        if ( items.size() == exercises.length){
+                        if ( exercisesToRecycler.size() == exercises.length){
                             getExercisesfromJson();
                         }
-//                    Workouts = response.body();
+//
                     } else {
                         int statusCode = response.code();
                         // handle request errors yourself
@@ -880,12 +906,14 @@ public class WorkoutActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<JsonExercise> call, Throwable t) {
-                    Log.e(TAG,"putExercisesinRecycler, onFailure",t);
+                    Log.e(TAG,"getExercisesFromJson, onFailure",t);
                 }
             });
         }
     }
 
+    
+    
     private void setMusclesToView(List<String> musculos){
 
         if (musculos.size() > 0){
@@ -953,6 +981,8 @@ public class WorkoutActivity extends AppCompatActivity {
 //    JsonReps[] RepsData = JsonData.getReps("http://api.silverbarsapp.com/workout/?format=json",workout_id,exercises.length);
 //    ParsedReps = RepsData;
     private void getExercisesfromJson(){
+
+
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
             @Override
@@ -979,68 +1009,103 @@ public class WorkoutActivity extends AppCompatActivity {
                 .client(client)
                 .build();
 
+        final SilverbarsService service = retrofit.create(SilverbarsService.class);
 
-        SilverbarsService service = retrofit.create(SilverbarsService.class);
-        Call<JsonReps[]> call = service.getReps();
-        call.enqueue(new Callback<JsonReps[]>() {
+
+
+
+        new AsyncTask<Void, Void, Void>() {
             @Override
-            public void onResponse(Call<JsonReps[]> call, Response<JsonReps[]> response) {
-                if (response.isSuccessful()) {
-                    JsonReps[] Reps = response.body();
-                    ParsedReps = new JsonReps[items.size()];
-                    int y = 0;
-                    for (JsonReps Rep : Reps) {
-                        String workout = Rep.getWorkout_id();
-                        if (workout.indexOf("workouts/" + workoutId) > 0) {
-                            ParsedReps[y] = Rep;
-                            y++;
-                        }
-                    }
-                    Exercises_reps = new int[items.size()];
-                    for (int i = 0; i <items.size() ; i++){
+            protected Void doInBackground(Void... params) {
+
+                Call<JsonReps[]> call = service.getReps();
+                call.enqueue(new Callback<JsonReps[]>() {
+                    @Override
+                    public void onResponse(Call<JsonReps[]> call, Response<JsonReps[]> response) {
 
 
-                        String[] audioDir = ParsedExercises[i].getExercise_audio().split("exercises");;
-                        String Parsedurl = "exercises"+audioDir[1];
-                        String[] splitName = Parsedurl.split("/");
-                        String mp3Name = splitName[2];
-                        File Dir = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3");
-                        if (Dir.isDirectory()){
-                            File file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+mp3Name);
-                            if (!file.exists()){
-                                DownloadMp3(Parsedurl,mp3Name);
+
+                        if (response.isSuccessful()) {
+
+                            JsonReps[] Reps = response.body();
+                            ParsedReps = new JsonReps[exercisesToRecycler.size()];
+
+                            int y = 0;
+                            for (JsonReps Rep : Reps) {
+                                String workout = Rep.getWorkout_id();
+                                if (workout.indexOf("workouts/" + workoutId) > 0) {
+                                    ParsedReps[y] = Rep;
+                                    y++;
+                                }
                             }
-                        }else{
-                            boolean success = Dir.mkdir();
-                            if (success)
-                                DownloadMp3(Parsedurl,mp3Name);
-                            else
-                                Log.e(TAG,"Error creating dir");
-                        }
+                            Exercises_reps = new int[exercisesToRecycler.size()];
 
-                        Exercises_reps[i] = ParsedReps[i].getRepetition();
+                            // inicializar tempo arrays por ejercicio
+                            Positive_Exercises = new int[exercisesToRecycler.size()];
+                            Isometric_Exercises = new int[exercisesToRecycler.size()];
+                            Negative_Exercises = new int[exercisesToRecycler.size()];
+
+                            for (int i = 0; i <exercisesToRecycler.size() ; i++){
+
+
+                                String[] audioDir = ParsedExercises[i].getExercise_audio().split("exercises");;
+                                String Parsedurl = "exercises"+audioDir[1];
+                                String[] splitName = Parsedurl.split("/");
+                                String mp3Name = splitName[2];
+                                File Dir = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3");
+                                if (Dir.isDirectory()){
+                                    File file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+mp3Name);
+                                    if (!file.exists()){
+                                        DownloadMp3(Parsedurl,mp3Name);
+                                    }
+                                }else{
+                                    boolean success = Dir.mkdir();
+                                    if (success)
+                                        DownloadMp3(Parsedurl,mp3Name);
+                                    else
+                                        Log.e(TAG,"Error creating dir");
+                                }
+
+                                Exercises_reps[i] = ParsedReps[i].getRepetition();
+
+                                // inicializar cada parte del tempo
+                                WorkoutActivity.Positive_Exercises[i] = 1;
+                                WorkoutActivity.Isometric_Exercises[i] = 1;
+                                WorkoutActivity.Negative_Exercises[i] = 1;
+
+                                Log.v(TAG,"Positive_Exercises"+i+":"+WorkoutActivity.Positive_Exercises[i]);
+                                Log.v(TAG,"Isometric"+i+":"+WorkoutActivity.Isometric_Exercises[i]);
+                                Log.v(TAG,"Negative"+i+":"+WorkoutActivity.Negative_Exercises[i]);
+
+                            }
+
+                            adapter = new ExerciseAdapter(exercisesToRecycler,WorkoutActivity.this);
+                            recycler.setAdapter(adapter);
+                            setMusclesToView(MusclesArray);
+
+                            //Log.v(TAG, String.valueOf(muscles));
+
+
+                        } else {
+                            int statusCode = response.code();
+                            // handle request errors yourself
+                            ResponseBody errorBody = response.errorBody();
+                            Log.e(TAG, String.valueOf(errorBody));
+                        }
                     }
 
-                    adapter = new ExerciseAdapter(items,WorkoutActivity.this);
-                    recycler.setAdapter(adapter);
-                    setMusclesToView(MusclesArray);
+                    @Override
+                    public void onFailure(Call<JsonReps[]> call, Throwable t) {
+                        Log.e(TAG,"getExercisesfromJson, onfailure",t);
+                    }
+                });
 
-                    //Log.v(TAG, String.valueOf(muscles));
-
-
-                } else {
-                    int statusCode = response.code();
-                    // handle request errors yourself
-                    ResponseBody errorBody = response.errorBody();
-                    Log.e(TAG, String.valueOf(errorBody));
-                }
+                return null;
             }
+        }.execute();
 
-            @Override
-            public void onFailure(Call<JsonReps[]> call, Throwable t) {
-                Log.e(TAG,"getExercisesfromJson, onfailure",t);
-            }
-        });
+
+
     }
 
 

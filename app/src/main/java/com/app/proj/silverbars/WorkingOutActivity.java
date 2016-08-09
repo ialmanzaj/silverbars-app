@@ -45,13 +45,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private ImageButton btPlay;
     private ImageButton btPause;
     private Uri u;
-    private String[] position;
     private int x = 0, y=0, elements = 0, ActualTimeMain=0, tempo = 0, actualReps, Format_Time,Format_Time_Rest,ActualTimeRest=0;
     private int totalTime;
     private TextView Rep_timer_text;
     private TextView song_name, artist_name;
     private TextView CurrentSet;
-    private TextView TotalSet;
     private TextView CurrentExercise;
     private TextView RestCounter_text;
     private TextView headerText;
@@ -61,7 +59,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private FrameLayout prvLayout;
     private FrameLayout nxtLayout;
     private FrameLayout ModalLayout;
-    private Button PauseButton,Endbutton;
+    private Button PauseButton;
     private boolean SelectedSongs = false, finish = false, start = false;
     private RecyclerView recycler;
     private int TotalSets = 0, ActualSets = 0, Time_aux = 0,actualRest = 0;
@@ -74,6 +72,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     private int exercises_size = 0;
     private int RestByExercise = 0,RestBySet = 0;
+    private int [] Positive,Negative,Isometric;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,29 +85,31 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         RestByExercise =  b.getInt("RestByExercise");
         RestBySet = b.getInt("RestBySet");
         Exercises_reps = b.getIntArray("ExercisesReps");
-        tempo = b.getInt("tempo");
         VibrationPerRep = b.getBoolean("VibrationPerRep");
         VibrationPerSet =  b.getBoolean("VibrationPerSet");
         TotalSets = b.getInt("Sets");
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
-        position = b.getStringArray("pos");
-
-
+        String[] position = b.getStringArray("pos");
+        Positive = b.getIntArray("Array_Positive_Exercises");
+        Isometric =  b.getIntArray("Array_Isometric_Exercises");
+        Negative =  b.getIntArray("Array_Negative_Exercises");
         Exercises = WorkoutActivity.ParsedExercises;
-        RepsTime(y);
-
         exercises_size = Exercises.length;
+
+
+        tempo = Positive[y] + Isometric[y] + Negative[y];
 
         //Log.v("Songs", Arrays.toString(position));
         playlist = new ArrayList<>();
 
+        // contadores de descanso y repeticiones actuales
         actualReps = Exercises_reps[0];
-
         actualRest = RestByExercise;
+
 
         artist_name = (TextView) findViewById(R.id.artist_name);
         CurrentSet = (TextView) findViewById(R.id.CurrentSet);
-        TotalSet = (TextView) findViewById(R.id.TotalSet);
+        TextView totalSet = (TextView) findViewById(R.id.TotalSet);
         CurrentExercise = (TextView) findViewById(R.id.CurrentExercise);
 
         // Rest modal
@@ -118,7 +119,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         RestCounter_text.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                
+
             }
 
             @Override
@@ -131,7 +132,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     restTimer.cancel();
                     rest = false;
                     playExerciseAudio(Exercises[y].getExercise_audio());
-                    RepsTime(y);
+                    asignTotalTime(y);
                     startMainCountDown(totalTime,1,totalTime);
                     Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
 
@@ -157,7 +158,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         // pause and finish workout controls
         PauseButton = (Button) findViewById(R.id.PauseButton);
-        Endbutton = (Button) findViewById(R.id.Endbutton);
+        Button endbutton = (Button) findViewById(R.id.Endbutton);
 
 
         //repetiton text
@@ -313,7 +314,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        Endbutton.setOnClickListener(new View.OnClickListener() {
+        endbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.v(TAG,"BUTTON END WORKOUT: CLICK");
@@ -355,11 +356,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         elements = adapter.getItemCount();
         CurrentExercise.setText("1");
         totalExercise.setText(String.valueOf(elements));
-        TotalSet.setText(String.valueOf(TotalSets));
+        totalSet.setText(String.valueOf(TotalSets));
 
         Rep_timer_text.setText(String.valueOf(Exercises_reps[0]));
 
-        TotalSet.setText(String.valueOf(TotalSets));
+        totalSet.setText(String.valueOf(TotalSets));
         CurrentSet.setText("0");
 
         prvExercise.setOnClickListener(new View.OnClickListener() {
@@ -371,7 +372,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 CurrentExercise.setText(String.valueOf(y+1));
                 main_timer.cancel();
                 Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
-                RepsTime(y);
+                asignTotalTime(y);
                 startMainCountDown(totalTime,1,totalTime);
                 if (y == 0){
                     prvLayout.setVisibility(View.GONE);
@@ -399,7 +400,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 CurrentExercise.setText(String.valueOf(y+1));
                 main_timer.cancel();
                 Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
-                RepsTime(y);
+                asignTotalTime(y);
                 startMainCountDown(totalTime,1,totalTime);
                 if (y == elements-1){
                     nxtLayout.setVisibility(View.GONE);
@@ -477,6 +478,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 Log.v(TAG,"START TIMER: INICIADO");
                 ScreenOn();
                 start = true;
+                asignTotalTime(y);
+
                 startMainCountDown(totalTime,1,totalTime);
 
                 if (SelectedSongs && start){
@@ -533,7 +536,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         if (!pause && start){
             Log.v(TAG,"Main CountDown: activado");
 
-            
+
             int totalsecs= seconds * 1000;
             int sec_interval= interval * 1000 ;
             Time_aux = time_aux;
@@ -555,12 +558,13 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     public void performTick(long millisUntilFinished) {
 
         Format_Time = Math.round(millisUntilFinished * 0.001f);
+        Log.v(TAG,"Format_Time: "+Format_Time);
         //Log.v("Time",String.valueOf(Time_aux-tempo)+" / "+Format_Time);
+
 
         if (Time_aux-tempo == Format_Time){
             Time_aux = Time_aux - tempo;
             actualReps--;// restar repeticiones
-
 
             Rep_timer_text.setText(String.valueOf(actualReps));//restar reps de texto mostrado
             ActivateVibrationPerRep();//activar vibracion por reps
@@ -621,23 +625,23 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Log.v(TAG,"PauseCountDown: activado");
         Log.v(TAG,"rest flag: "+rest);
 
-            if (start){
+        if (start){
 
-                if (!rest){
+            if (!rest){
 
-                    //Log.v(TAG,"Pausar main: activado");
-                    //Log.v(TAG,"Format_Time: "+Format_Time);
-                    ActualTimeMain = Format_Time;
-                    main_timer.cancel();
+                //Log.v(TAG,"Pausar main: activado");
+                //Log.v(TAG,"Format_Time: "+Format_Time);
+                ActualTimeMain = Format_Time;
+                main_timer.cancel();
 
-                }else {
-                    Log.v(TAG,"Pausar rest: activado");
-                    ActualTimeRest = Format_Time_Rest;
+            }else {
+                Log.v(TAG,"Pausar rest: activado");
+                ActualTimeRest = Format_Time_Rest;
 
-                    restTimer.cancel();
-                }
-
+                restTimer.cancel();
             }
+
+        }
 
     }// PauseCountDown
 
@@ -664,8 +668,12 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
     }
-    private void RepsTime(int position){
-        totalTime = Exercises_reps[position] * tempo + 5;
+    private void asignTotalTime(int position){
+        totalTime = (Exercises_reps[position] * tempo) + 5;
+
+        Log.v(TAG,"totalTime: "+totalTime);
+        Log.v(TAG,"Exercises_reps[position]: "+Exercises_reps[position]);
+        Log.v(TAG,"tempo: "+tempo);
     }
 
 
@@ -708,7 +716,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 String mp3Name = splitName[2];
                 Log.v(TAG,"mp3Name: "+ mp3Name);
 
-                
+
                 File Dir = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+mp3Name);
                 Uri uri = Uri.parse(Dir.toString());
                 media = MediaPlayer.create(getApplicationContext(),uri);
@@ -734,7 +742,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
             }} );
 
-       
+
         media.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
@@ -893,7 +901,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     protected void onResume() {
         super.onResume();
 
-        ResumeCountDown();
+        if (pause){
+            ResumeCountDown();
+        }
+        
         Log.v(TAG,"onResume");
     }
 
