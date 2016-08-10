@@ -15,6 +15,10 @@ import android.widget.TabWidget;
 
 import org.lucasr.twowayview.widget.TwoWayView;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class WorkoutsFragment extends Fragment {
 
     View rootView, mainView;
@@ -22,7 +26,7 @@ public class WorkoutsFragment extends Fragment {
     TabWidget tabs;
     TabHost tabHost;
 
-    public static JsonWorkout[] ParsedWorkouts;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,12 +54,15 @@ public class WorkoutsFragment extends Fragment {
         MySQLiteHelper database = new MySQLiteHelper(getContext());
 
         if (database.getWorkouts(1) != null){
+            List<JsonWorkout> workouts = new ArrayList<>();
+            JsonWorkout[] ParsedWorkouts = database.getWorkouts(1);
+            Collections.addAll(workouts, ParsedWorkouts);
 
-            ParsedWorkouts = database.getWorkouts(1);
+
             recyclerView.removeAllViews();
             recyclerView.removeAllViewsInLayout();
             recyclerView.setAdapter(null);
-            recyclerView.setAdapter(new savedWorkoutAdapter(getActivity()));
+            recyclerView.setAdapter(new savedWorkoutAdapter(getActivity(),workouts));
 
         }else {
             EmpyState.setVisibility(View.VISIBLE);

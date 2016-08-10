@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -41,11 +42,12 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
 
     private static final int TYPE_WORKOUT = 0;
     private static final int TYPE_VIEW_MORE = 1;
+    private static final String TAG = "savedWorkoutAdapter";
     //    private static final String[] WORKOUTS = {"Chest", "Upper Body", "Core", "Back Destruction", "Chest"};
 //    private static final int[] IMG = {R.mipmap.imagen1, R.mipmap.imagen2, R.mipmap.imagen3, R.mipmap.imagen4, R.mipmap.imagen5};
     private WorkoutsFragment outerClass = new WorkoutsFragment();
-    private JsonWorkout[] workouts = outerClass.ParsedWorkouts;
 
+    private List<JsonWorkout> workouts;
     private final Activity context;
 
     public static class VH extends RecyclerView.ViewHolder {
@@ -71,9 +73,10 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
         }
     }
 
-    public savedWorkoutAdapter(Activity context) {
-//        Log.v("Workouts:", String.valueOf(workouts));
+
+    public savedWorkoutAdapter(Activity context, List<JsonWorkout> workouts) {
         this.context = context;
+        this.workouts = workouts;
     }
 
     @Override
@@ -94,23 +97,29 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
 
         int height = containerDimensions(context);
         vh.layout.getLayoutParams().height = height / 3;
+
+
         switch (vh.getItemViewType()) {
             case TYPE_WORKOUT:
-                Log.v("Workouts Size",String.valueOf(position));
-                String[] parts = workouts[position].getWorkout_image().split("workouts");
+                Log.v(TAG,"Workouts Size"+position);
+
+                String[] parts = workouts.get(position).getWorkout_image().split("workouts");
                 Bitmap bmp;
                 String imgName = null;
+
                 if (parts.length < 2){
-                    Log.v("Image",workouts[position].getWorkout_image());
-                    bmp = loadImageFromCache(workouts[position].getWorkout_image());
+
+                    Log.v(TAG,"Image"+ workouts.get(position).getWorkout_image());
+                    bmp = loadImageFromCache(workouts.get(position).getWorkout_image());
                     vh.img.setImageBitmap(bmp);
                 }else{
                     String Parsedurl = "workouts"+parts[1];
-                    Log.v("Image",Parsedurl);
+                    Log.v(TAG,"Image"+Parsedurl);
 //                DownloadImage(Parsedurl,vh);
                     String[] imagesName = Parsedurl.split("/");
                     imgName = imagesName[2];
-                    Log.v("Image Name",imgName);
+                    Log.v(TAG,"Image Name"+imgName);
+
                     bmp = loadImageFromCache(imgName);
                     if (bmp != null){
                         vh.img.setImageBitmap(bmp);
@@ -121,18 +130,18 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
                 }
 //                vh.img.setImageBitmap(bmp);
                 final String imagen = imgName;
-                vh.text.setText(workouts[position].getWorkout_name());
+                vh.text.setText(workouts.get(position).getWorkout_name());
                 vh.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(context, WorkoutActivity.class);
-                        i.putExtra("id",workouts[position].getId());
-                        i.putExtra("name",workouts[position].getWorkout_name());
+                        i.putExtra("id", workouts.get(position).getId());
+                        i.putExtra("name", workouts.get(position).getWorkout_name());
                         i.putExtra("image",imagen);
-                        i.putExtra("sets",workouts[position].getSets());
-                        i.putExtra("level",workouts[position].getLevel());
-                        i.putExtra("muscle",workouts[position].getMain_muscle());
-                        i.putExtra("exercises",workouts[position].getExercises());
+                        i.putExtra("sets", workouts.get(position).getSets());
+                        i.putExtra("level", workouts.get(position).getLevel());
+                        i.putExtra("muscle", workouts.get(position).getMain_muscle());
+                        i.putExtra("exercises", workouts.get(position).getExercises());
                         context.startActivity(i);
                     }
                 });
@@ -142,7 +151,7 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
 
     @Override
     public int getItemCount() {
-        return workouts.length;
+        return workouts.size();
     }
 
     @Override
@@ -150,7 +159,7 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
         return position < getItemCount() ? TYPE_WORKOUT : TYPE_VIEW_MORE;
     }
 
-    public void DownloadImage(String url, final VH vh, final String imgName){
+    private void DownloadImage(String url, final VH vh, final String imgName){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
@@ -170,10 +179,10 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
                         vh.img.setImageBitmap(bitmap);
                     }
                     else {
-                        Log.v("Download", "server contact failed");
+                        Log.v(TAG, "Download server contact failed");
                     }
                 } else {
-                    Log.v("State", "server contact failed");
+                    Log.v(TAG, "State: server contact failed");
                 }
             }
 
@@ -182,7 +191,8 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
         });
     }
 
-    public static int containerDimensions(Context context) {
+    private static int containerDimensions(Context context) {
+
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
@@ -192,6 +202,7 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
     }
 
     private Bitmap loadImageFromCache(String imageURI) {
+
         Bitmap bitmap = null;
         String[] imageDir = imageURI.split("workouts");
         if (imageDir.length < 2){
@@ -209,6 +220,7 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
     }
 
     private boolean writeResponseBodyToDisk(ResponseBody body, String imgName) {
+
         try {
             File Folder = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/");
             File futureStudioIconFile = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imgName);
@@ -231,7 +243,7 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
                         if (read == -1) {break;}
                         outputStream.write(fileReader, 0, read);
                         fileSizeDownloaded += read;
-                        Log.d("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                        Log.v("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
                     }
                     outputStream.flush();
                     return true;
@@ -243,7 +255,7 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
                     if (outputStream != null) {outputStream.close();}
                 }
             } else {
-                Log.v("Error","Error while creating dir");
+                Log.e("Error","Error while creating dir");
             }
 
         } catch (IOException e) {return false;}

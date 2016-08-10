@@ -304,9 +304,9 @@ public class WorkoutActivity extends AppCompatActivity {
                 Exercises_reps[i] = ParsedReps[i].getRepetition();
 
                 // inicializar cada parte del tempo
-                WorkoutActivity.Positive_Exercises[i] = 3;
+                WorkoutActivity.Positive_Exercises[i] = 1;
                 WorkoutActivity.Negative_Exercises[i] = 1;
-                WorkoutActivity.Isometric_Exercises[i] = 3;
+                WorkoutActivity.Isometric_Exercises[i] = 1;
 
                 Log.v(TAG,"Positive_Exercises"+i+":"+WorkoutActivity.Positive_Exercises[i]);
                 Log.v(TAG,"Isometric"+i+":"+WorkoutActivity.Isometric_Exercises[i]);
@@ -1225,10 +1225,10 @@ public class WorkoutActivity extends AppCompatActivity {
                 database.updateLocal(workoutId,"true");
             }
         }
-        saveWorkouts();
+        checkTableWorkouts();
     }
 
-    public void saveWorkouts(){
+    public void checkTableWorkouts(){
 
         String[] ids = new String[ParsedExercises.length];
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
@@ -1236,6 +1236,7 @@ public class WorkoutActivity extends AppCompatActivity {
         for (int i = 0; i < ids.length; i++){
             ids[i] = String.valueOf(ParsedExercises[i].getId());
         }
+
         if (!database.checkWorkouts(workoutId)) {
             database.insertWorkouts(
                     workoutId,
@@ -1253,6 +1254,7 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     public void saveWorkout(){
+
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
         for (int i = 0; i < ParsedExercises.length; i++) {
             if (!database.checkWorkout(workoutId,ParsedExercises[i].getId())) {
