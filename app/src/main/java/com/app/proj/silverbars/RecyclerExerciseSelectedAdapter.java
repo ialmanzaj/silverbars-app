@@ -81,7 +81,6 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
 
     public RecyclerExerciseSelectedAdapter(Context context, List<JsonExercise> exercises,OnStartDragListener dragStartListener) {
 
-
         mDragStartListener = dragStartListener;
         Context mContext = context;
         mSelectedExercises = exercises;

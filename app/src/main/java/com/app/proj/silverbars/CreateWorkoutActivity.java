@@ -88,16 +88,23 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             @Override
             public void onClick(View view) {
 
-                if ( adapter.getItemCount() > 0 ){
 
+                if ( adapter != null ){
 
-                    Intent intent = new Intent(CreateWorkoutActivity.this, CreateWorkoutFinalActivity.class);
-                    intent.putExtra("exercises", adapter.getSelectedExercisesArrayList());
-                    startActivityForResult(intent,3);
+                    if (adapter.getItemCount() > 0){
+                        Intent intent = new Intent(CreateWorkoutActivity.this, CreateWorkoutFinalActivity.class);
+                        intent.putExtra("exercises", adapter.getSelectedExercisesArrayList());
+                        startActivityForResult(intent,3);
+
+                    }else {
+                        Toast.makeText(CreateWorkoutActivity.this, getResources().getString(R.string.exercises_no_selected),
+                                Toast.LENGTH_SHORT).show();
+                    }
 
                 }else {
-                    Toast.makeText(CreateWorkoutActivity.this, "No ha seleccionado ningun ejercicio",
+                    Toast.makeText(CreateWorkoutActivity.this, getResources().getString(R.string.exercises_no_selected),
                             Toast.LENGTH_SHORT).show();
+
                 }
 
 

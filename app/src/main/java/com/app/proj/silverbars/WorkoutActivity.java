@@ -74,6 +74,8 @@ public class WorkoutActivity extends AppCompatActivity {
     static public int [] Positive_Exercises;
     static public int [] Isometric_Exercises;
     static public int [] Negative_Exercises;
+
+    Button startButton;
     
     
     private LinearLayout primary_linear,secondary_linear;
@@ -133,6 +135,9 @@ public class WorkoutActivity extends AppCompatActivity {
 
         ParsedExercises = new JsonExercise[exercises.length];
         setContentView(R.layout.activity_workout);
+
+        startButton = (Button) findViewById(R.id.start_button);
+        startButton.setEnabled(false);
 
 
         // MUSCLES TEXT VIEW
@@ -314,6 +319,8 @@ public class WorkoutActivity extends AppCompatActivity {
                     name = ParsedExercises[i].muscle[b];
                     MusclesArray.add(name);
                 }
+
+                startButton.setEnabled(true);
             }
 
             //Log.v(TAG,"Exercises"+ParsedExercises.length);
@@ -627,7 +634,8 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
         //START WORKOUT BUTTON
-        Button startButton = (Button) findViewById(R.id.start_button);
+
+
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1085,6 +1093,7 @@ public class WorkoutActivity extends AppCompatActivity {
                             adapter = new ExerciseAdapter(exercisesToRecycler,WorkoutActivity.this);
                             recycler.setAdapter(adapter);
                             setMusclesToView(MusclesArray);
+                            startButton.setEnabled(true);
 
                             //Log.v(TAG, String.valueOf(muscles));
 

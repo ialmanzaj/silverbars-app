@@ -1,11 +1,8 @@
 <resources>
     <string name="app_name">Silverbars</string>
 
-
     <string name="rep_edit">Total of Repetitions</string>
-
     <string name="filtertitle">Workout filter</string>
-
 
     <string name="content">Content</string>
     <string name="agree">Agree</string>
@@ -140,7 +137,7 @@
     </string-array>
 
     <string name="rest_text_exercise">Rest between Exercise</string>
-    <string name="error_title">No internet conexion</string>
+    <string name="error_title">No internet connexion</string>
     <string name="error_message">Please, Connect to Internet and try again</string>
 
 
@@ -156,11 +153,11 @@
     <string name="team">MY TEAMS</string>
     <string name="skill_progress">My Skill Progression</string>
     <string name="workout_shared">Workout Shared</string>
-    <string name="history_workouts_done">Historial of my workouts done</string>
+    <string name="history_workouts_done">My workouts done</string>
 
 
 
-
+    <string name="exercises_no_selected">You haven\'t selected any exercise</string>
 
 
 </resources>

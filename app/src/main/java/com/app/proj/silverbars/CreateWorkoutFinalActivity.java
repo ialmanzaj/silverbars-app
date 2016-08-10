@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -24,20 +25,10 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-public class CreateWorkoutFinalActivity extends AppCompatActivity implements View.OnClickListener{
+public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateWorkoutFinal";
     Toolbar toolbar;
@@ -99,29 +90,9 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Vie
 
         // RECYCLER DONDE ESTAN LOS EJERCICIOS ELEGIDOS
         recycler = (RecyclerView) findViewById(R.id.final_recycler);
-        RecyclerView.LayoutManager lManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager lManager = new WrappingLinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
 
-
-
-
-        plusSets = (Button) findViewById(R.id.plusSets);
-        plusSets.setOnClickListener(this);
-        minusSets = (Button) findViewById(R.id.minusSets);
-        minusSets.setOnClickListener(this);
-        minusSets.setEnabled(false);
-        plusRest = (Button) findViewById(R.id.plusRest);
-        plusRest.setOnClickListener(this);
-        minusRest = (Button) findViewById(R.id.minusRest);
-        minusRest.setOnClickListener(this);
-        plusRestSet = (Button) findViewById(R.id.plusRestSets);
-        plusRestSet.setOnClickListener(this);
-        minusRestSet = (Button) findViewById(R.id.minusRestSets);
-        minusRestSet.setOnClickListener(this);
-        Sets = (TextView) findViewById(R.id.Sets);
-        Rest = (TextView) findViewById(R.id.Rest);
-        RestSets = (TextView) findViewById(R.id.RestSets);
-        imgProfile = (ImageView) findViewById(R.id.imgProfile);
 
 
         ImageButton changeImg = (ImageButton) findViewById(R.id.chageImg);
@@ -140,7 +111,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Vie
         //addText = (TextView) findViewById(R.id.addText);
 
 
-
+        putExercisesinRecycler();
 
     }
 
@@ -189,227 +160,136 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Vie
     }
 
 
-
-
-
-    public void plusTempo(TextView view, Button button, Button button2){
-        if (view == Sets){
-            value = Integer.parseInt(view.getText().toString());
-            if (value+1 == 10)
-                view.setText(String.valueOf(value+1));
-            else
-                view.setText("0"+String.valueOf(value+1));
-            value++;
-            if (value == 10){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value > 1){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else if(view == Rest){
-            String[] elements = view.getText().toString().split("s");
-            value = Integer.parseInt(elements[0]);
-            value = value + 5;
-            if (value + 5 == 5)
-                view.setText("0"+String.valueOf(value+"s"));
-            else
-                view.setText(String.valueOf(value+"s"));
-            if (value == 60){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value > 0){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else if(view == RestSets){
-            String[] elements = view.getText().toString().split("s");
-            value = Integer.parseInt(elements[0]);
-            value = value + 10;
-            view.setText(String.valueOf(value+"s"));
-            if (value == 180){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value > 0){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else{
-            value = Integer.parseInt(view.getText().toString());
-            view.setText(String.valueOf(value+1));
-            value++;
-            if (value == 10){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value > 1){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }
-
-    }
-
-    public void minusTempo(TextView view, Button button, Button button2){
-        if (view == Sets){
-            value = Integer.parseInt(view.getText().toString());
-            view.setText("0"+String.valueOf(value-1));
-            value--;
-            if ((value)==1){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value < 10){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else if(view == Rest){
-            String[] elements = view.getText().toString().split("s");
-            value = Integer.parseInt(elements[0]);
-            value = value - 5;
-            if (value == 5)
-                view.setText("0"+String.valueOf(value+"s"));
-            else if(value == 0)
-                view.setText("0"+String.valueOf(value+"s"));
-            else
-                view.setText(String.valueOf(value+"s"));
-            if (value == 0){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value < 60){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else if(view == RestSets){
-            String[] elements = view.getText().toString().split("s");
-            value = Integer.parseInt(elements[0]);
-            value = value - 10;
-            if (value == 0)
-                view.setText("0"+String.valueOf(value+"s"));
-            else
-                view.setText(String.valueOf(value+"s"));
-            if (value == 0){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value < 180){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else{
-            value = Integer.parseInt(view.getText().toString());
-            view.setText(String.valueOf(value-1));
-            value--;
-            if ((value)==1){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value < 10){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }
-    }
-
     private void putExercisesinRecycler(){
 
+        MySQLiteHelper database = new MySQLiteHelper(CreateWorkoutFinalActivity.this);
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
-                // Customize the request
-                Request request = original.newBuilder()
-                        .header("Accept", "application/json")
-                        .header("Authorization", "auth-token")
-                        .method(original.method(), original.body())
-                        .build();
-                okhttp3.Response response = chain.proceed(request);
-                Log.v("Response",response.toString());
-                // Customize or return the response
-                return response;
+
+        List<JsonExercise> AllExercisesList = new ArrayList<>();
+        List<JsonExercise> SelectedExercises = new ArrayList<>();
+
+
+            for (int a = 0; a < database.getAllExercises().length;a++){
+                AllExercisesList.add(database.getExercise(database.getExercisesIds()[a]));
             }
-        });
-
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-        SilverbarsService service = retrofit.create(SilverbarsService.class);
-        Call<JsonExercise[]> call = service.getAllExercises();
-        call.enqueue(new Callback<JsonExercise[]>() {
-            @Override
-            public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
-
-                if (response.isSuccessful()) {
-                    JsonExercise[] parsedExercises = response.body();
-                    List<JsonExercise> AllExercisesList = new ArrayList<>();
-
-                    Collections.addAll(AllExercisesList, parsedExercises);
 
 
+        for (int c = 0;c < Exercises.size();c++){
+            for (int a = 0; a < AllExercisesList.size();a++){
 
+                if (Objects.equals(AllExercisesList.get(a).getExercise_name(), Exercises.get(c))){
 
-                    Context context = CreateWorkoutFinalActivity.this;
-
-                    //adapter = new RecyclerExerciseSelectedAdapter(context,ExercisesToAdapter,CreateWorkoutActivity.this);
-
-
-
-                    recycler.setAdapter(adapter);
-
-
-                } else {
-                    int statusCode = response.code();
-                    // handle request errors yourself
-                    ResponseBody errorBody = response.errorBody();
-                    Log.e(TAG,errorBody.toString());
+                    SelectedExercises.add(AllExercisesList.get(a));
                 }
             }
 
-            @Override
-            public void onFailure(Call<JsonExercise[]> call, Throwable t) {
-                Log.e(TAG,"onFailure: ",t);
-            }
-        });
+        }
+
+
+            Context context = CreateWorkoutFinalActivity.this;
+            adapter = new FinalExercisesAdapter(context,SelectedExercises);
+            recycler.setAdapter(adapter);
+
+
+
 
     }
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.plusSets:
-                plusTempo(Sets,plusSets,minusSets);
-                break;
-            case R.id.minusSets:
-                minusTempo(Sets,minusSets,plusSets);
-                break;
-            case R.id.plusRest:
-                plusTempo(Rest,plusRest,minusRest);
-                break;
-            case R.id.minusRest:
-                minusTempo(Rest,minusRest,plusRest);
-                break;
-            case R.id.plusRestSets:
-                plusTempo(RestSets,plusRestSet,minusRestSet);
-                break;
-            case R.id.minusRestSets:
-                minusTempo(RestSets,minusRestSet,plusRestSet);
-                break;
 
+
+    public class WrappingLinearLayoutManager extends LinearLayoutManager {
+
+        public WrappingLinearLayoutManager(Context context) {
+            super(context);
+        }
+
+        private int[] mMeasuredDimension = new int[2];
+
+        @Override
+        public boolean canScrollVertically() {
+            return false;
+        }
+
+        @Override
+        public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state,
+                              int widthSpec, int heightSpec) {
+            final int widthMode = View.MeasureSpec.getMode(widthSpec);
+            final int heightMode = View.MeasureSpec.getMode(heightSpec);
+
+            final int widthSize = View.MeasureSpec.getSize(widthSpec);
+            final int heightSize = View.MeasureSpec.getSize(heightSpec);
+
+            int width = 0;
+            int height = 0;
+            for (int i = 0; i < getItemCount(); i++) {
+                if (getOrientation() == HORIZONTAL) {
+                    measureScrapChild(recycler, i,
+                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                            heightSpec,
+                            mMeasuredDimension);
+
+                    width = width + mMeasuredDimension[0];
+                    if (i == 0) {
+                        height = mMeasuredDimension[1];
+                    }
+                } else {
+                    measureScrapChild(recycler, i,
+                            widthSpec,
+                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                            mMeasuredDimension);
+
+                    height = height + mMeasuredDimension[1];
+                    if (i == 0) {
+                        width = mMeasuredDimension[0];
+                    }
+                }
+            }
+
+            switch (widthMode) {
+                case View.MeasureSpec.EXACTLY:
+                    width = widthSize;
+                case View.MeasureSpec.AT_MOST:
+                case View.MeasureSpec.UNSPECIFIED:
+            }
+
+            switch (heightMode) {
+                case View.MeasureSpec.EXACTLY:
+                    height = heightSize;
+                case View.MeasureSpec.AT_MOST:
+                case View.MeasureSpec.UNSPECIFIED:
+            }
+
+            setMeasuredDimension(width, height);
+        }
+
+        private void measureScrapChild(RecyclerView.Recycler recycler, int position, int widthSpec,
+                                       int heightSpec, int[] measuredDimension) {
+
+            View view = recycler.getViewForPosition(position);
+            if (view.getVisibility() == View.GONE) {
+                measuredDimension[0] = 0;
+                measuredDimension[1] = 0;
+                return;
+            }
+            // For adding Item Decor Insets to view
+            super.measureChildWithMargins(view, 0, 0);
+            RecyclerView.LayoutParams p = (RecyclerView.LayoutParams) view.getLayoutParams();
+            int childWidthSpec = ViewGroup.getChildMeasureSpec(
+                    widthSpec,
+                    getPaddingLeft() + getPaddingRight() + getDecoratedLeft(view) + getDecoratedRight(view),
+                    p.width);
+            int childHeightSpec = ViewGroup.getChildMeasureSpec(
+                    heightSpec,
+                    getPaddingTop() + getPaddingBottom() + getDecoratedTop(view) + getDecoratedBottom(view),
+                    p.height);
+            view.measure(childWidthSpec, childHeightSpec);
+
+            // Get decorated measurements
+            measuredDimension[0] = getDecoratedMeasuredWidth(view) + p.leftMargin + p.rightMargin;
+            measuredDimension[1] = getDecoratedMeasuredHeight(view) + p.bottomMargin + p.topMargin;
+            recycler.recycleView(view);
         }
     }
+
+
 }
+

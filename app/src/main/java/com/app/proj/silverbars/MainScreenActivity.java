@@ -115,7 +115,6 @@ public class MainScreenActivity extends AppCompatActivity {
         });
 
         Button_filter = (LinearLayout) toolbar.findViewById(R.id.Sort);
-        
 
         final ArrayList<DrawerItem> items_drawer = new ArrayList<DrawerItem>();
         items_drawer.add(new DrawerItem(tagTitles[0],R.drawable.ic_home_white_24dp));
@@ -179,9 +178,6 @@ public class MainScreenActivity extends AppCompatActivity {
                         .show();
             }
         });
-
-
-
 
     }//oncreate
 
