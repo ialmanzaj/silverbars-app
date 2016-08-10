@@ -417,7 +417,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
                         //.v(TAG,""+AllExercisesList.get(a).getExercise_name()+":"+Items_ids_from_activity.get(c));
 
-
                         if (adapter == null){
                             ExercisesToAdapter.add(AllExercisesList.get(a));
 
@@ -447,7 +446,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
             mItemTouchHelper  = new ItemTouchHelper(callback);
             mItemTouchHelper.attachToRecyclerView(recycler);
-
 
 
     }

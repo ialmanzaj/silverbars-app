@@ -58,7 +58,7 @@ public class MainScreenActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
-    public LinearLayout Sort;
+    public LinearLayout Button_filter;
     private CharSequence activityTitle;
     private CharSequence itemTitle;
     private String[] tagTitles =  new String[3];;
@@ -67,8 +67,7 @@ public class MainScreenActivity extends AppCompatActivity {
     private String muscle = "ALL";
     public Spinner spinner;
     private boolean Opened = false;
-    private FloatingActionButton fab;
-
+    private FloatingActionButton fab_create_new_workout;
 
 
     @Override
@@ -84,17 +83,15 @@ public class MainScreenActivity extends AppCompatActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView) findViewById(R.id.left_drawer);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        
+        //guardar html de svg en el celular
         File Dir = new File(Environment.getExternalStorageDirectory()+"/html/");
-
         if (Dir.isDirectory()){
             File file = new File(Environment.getExternalStorageDirectory()+"/html/"+"index.html");
-
             if (!file.exists()){
                 MuscleTemplateDownload();
             }
         }else {
-
             boolean success = Dir.mkdir();
             if (success)
                 MuscleTemplateDownload();
@@ -103,16 +100,13 @@ public class MainScreenActivity extends AppCompatActivity {
                 Log.e(TAG,"Error creating dir");
         }
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        if (fab != null) {
-            fab.bringToFront();
+        fab_create_new_workout = (FloatingActionButton) findViewById(R.id.fab);
+        
+        if (fab_create_new_workout != null) {
+            fab_create_new_workout.bringToFront();
         }
 
-        Sort = (LinearLayout) toolbar.findViewById(R.id.Sort);
-
-
-
-        fab.setOnClickListener(new View.OnClickListener() {
+        fab_create_new_workout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainScreenActivity.this,CreateWorkoutActivity.class);
@@ -120,16 +114,19 @@ public class MainScreenActivity extends AppCompatActivity {
             }
         });
 
-        final ArrayList<DrawerItem> items = new ArrayList<DrawerItem>();
-        items.add(new DrawerItem(tagTitles[0],R.drawable.ic_home_white_24dp));
-        items.add(new DrawerItem(tagTitles[1],R.mipmap.acrobatics));
-        items.add(new DrawerItem(tagTitles[2],R.drawable.ic_person_outline_white_24dp));
+        Button_filter = (LinearLayout) toolbar.findViewById(R.id.Sort);
+        
 
-        drawerList.setAdapter(new DrawerListAdapter(this, items));
+        final ArrayList<DrawerItem> items_drawer = new ArrayList<DrawerItem>();
+        items_drawer.add(new DrawerItem(tagTitles[0],R.drawable.ic_home_white_24dp));
+        items_drawer.add(new DrawerItem(tagTitles[1],R.drawable.ic_my_workouts));
+       /* items.add(new DrawerItem(tagTitles[2],R.drawable.ic_person_outline_white_24dp));*/
+
+        drawerList.setAdapter(new DrawerListAdapter(this, items_drawer));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        // Crear ActionBarDrawerToggle para la apertura y cierre
-//        drawerToggle.setDrawerIndicatorEnabled(false);
+
+
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
         toolbar.setTitle(tagTitles[0]);
         setSupportActionBar(toolbar);
@@ -144,12 +141,13 @@ public class MainScreenActivity extends AppCompatActivity {
             }
         });
 
+
         if (savedInstanceState == null) {
             selectItem(0);
         }
 
-        Sort.setClickable(true);
-        Sort.setOnClickListener(new View.OnClickListener(){
+        Button_filter.setClickable(true);
+        Button_filter.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
@@ -227,8 +225,8 @@ public class MainScreenActivity extends AppCompatActivity {
                             .replace(R.id.content_frame, main, null)
                             .addToBackStack(null)
                             .commit();
-                    Sort.setVisibility(View.VISIBLE);
-                    fab.setVisibility(View.VISIBLE);
+                    Button_filter.setVisibility(View.VISIBLE);
+                    fab_create_new_workout.setVisibility(View.VISIBLE);
                     Opened = main.isOpened();
                 }
 
@@ -243,11 +241,11 @@ public class MainScreenActivity extends AppCompatActivity {
                         .replace(R.id.content_frame, new WorkoutsFragment(), null)
                         .addToBackStack(null)
                         .commit();
-                Sort.setVisibility(View.GONE);
-                fab.setVisibility(View.GONE);
+                Button_filter.setVisibility(View.GONE);
+                fab_create_new_workout.setVisibility(View.GONE);
                 break;
             case 2:
-                if (currentFragment instanceof MainFragment) {
+                /*if (currentFragment instanceof MainFragment) {
                     muscle = ((MainFragment) currentFragment).getMuscleData();
                     //place your filtering logic here using currentFragment
                 }
@@ -256,8 +254,8 @@ public class MainScreenActivity extends AppCompatActivity {
                         .replace(R.id.content_frame, new ProfileFragment(), null)
                         .addToBackStack(null)
                         .commit();
-                Sort.setVisibility(View.GONE);
-                fab.setVisibility(View.GONE);
+                Button_filter.setVisibility(View.GONE);
+                fab_create_new_workout.setVisibility(View.GONE);*/
                 break;
         }
 
