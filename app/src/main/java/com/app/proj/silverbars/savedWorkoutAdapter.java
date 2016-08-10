@@ -88,7 +88,10 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
     }
 
     @Override
-    public void onBindViewHolder(VH vh, final int position) {
+    public void onBindViewHolder(VH vh,  int i) {
+
+        final int position = vh.getAdapterPosition();
+
         int height = containerDimensions(context);
         vh.layout.getLayoutParams().height = height / 3;
         switch (vh.getItemViewType()) {

@@ -11,20 +11,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 
@@ -102,109 +91,62 @@ public class ExerciseListActivity extends AppCompatActivity {
             }
         });
 
-
         Exercises();
-
-
-
 
 
     }
 
-    public void Exercises(){
+    public void Exercises() {
 
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
-                // Customize the request
-                Request request = original.newBuilder()
-                        .header("Accept", "application/json")
-                        .header("Authorization", "auth-token")
-                        .method(original.method(), original.body())
-                        .build();
-                okhttp3.Response response = chain.proceed(request);
-                Log.v("Response",response.toString());
-                // Customize or return the response
-                return response;
+        MySQLiteHelper database = new MySQLiteHelper(ExerciseListActivity.this);
+
+        for (int i = 0; i < database.getAllExercises().length; i++){
+                Log.v(TAG,"exercises:"+database.getExercise(database.getExercisesIds()[i]).getExercise_name() );
+                OriginalExerciseListAll.add( database.getExercise(database.getExercisesIds()[i]) );
+
             }
-        });
 
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-        SilverbarsService service = retrofit.create(SilverbarsService.class);
+            Log.v(TAG,"OriginalExerciseListAll size: "+OriginalExerciseListAll.size());
 
+            try {
 
-        Call<JsonExercise[]> call = service.getAllExercises();
-        call.enqueue(new Callback<JsonExercise[]>() {
-            @Override
-            public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
+                Intent i = getIntent();
+                Bundle b = i.getExtras();
 
-                if (response.isSuccessful()) {
+                SelectedItemsIds = b.getStringArrayList("items_selected");
+                Log.v(TAG,"items recibido: "+SelectedItemsIds);
 
-                    Exercises = response.body();
+                ExercisesNoSelected = OriginalExerciseListAll;
 
-                    for (int i = 0; i < Exercises.length; i++){
-                        OriginalExerciseListAll.add(i,Exercises[i]);
+                for (int c = 0;c < SelectedItemsIds.size();c++){
+                    for (int a = 0; a < OriginalExerciseListAll.size(); a++){
 
-                    }
+                        if (Objects.equals(OriginalExerciseListAll.get(a).getExercise_name(), SelectedItemsIds.get(c))){
+                            ExercisesNoSelected.remove(a);
 
 
-                    
-                    try {
-                        Intent i = getIntent();
-                        Bundle b = i.getExtras();
-                        
-                        SelectedItemsIds = b.getStringArrayList("items_selected");
-                        Log.v(TAG,"items recibido: "+SelectedItemsIds);
-
-                        ExercisesNoSelected = OriginalExerciseListAll;
-
-                        for (int c = 0;c < SelectedItemsIds.size();c++){
-                            for (int a = 0; a < OriginalExerciseListAll.size(); a++){
-
-                                if (Objects.equals(OriginalExerciseListAll.get(a).getExercise_name(), SelectedItemsIds.get(c))){
-                                    ExercisesNoSelected.remove(a);
-                                    
-
-                                }
-                            }
                         }
-
-                    }catch (NullPointerException e){
-                        Log.e(TAG, "no se ha seleccionado nada todavia");
                     }
-
-
-                    if (ExercisesNoSelected.isEmpty()){
-                        adapter = new AllExercisesAdapter(ExerciseListActivity.this,OriginalExerciseListAll);
-                        Log.v(TAG,"OriginalExerciseListAll: active");
-                    }else {
-                        adapter = new AllExercisesAdapter(ExerciseListActivity.this,ExercisesNoSelected);
-                        Log.v(TAG,"ExercisesNoSelected: active");
-                    }
-
-                    recycler.setAdapter(adapter);
-
-
-
-                } else {
-                    int statusCode = response.code();
-                    // handle request errors yourself
-                    ResponseBody errorBody = response.errorBody();
-                    Log.v("Error",errorBody.toString());
                 }
+
+
+            }catch (NullPointerException e){
+                Log.e(TAG, "no se ha seleccionado ningun ejercicio todavia");
             }
 
-            @Override
-            public void onFailure(Call<JsonExercise[]> call, Throwable t) {
-                Log.v("Exception",t.toString());
+
+            if (ExercisesNoSelected.isEmpty()){
+                adapter = new AllExercisesAdapter(ExerciseListActivity.this,OriginalExerciseListAll);
+                Log.v(TAG,"OriginalExerciseListAll: active");
+            }else {
+                adapter = new AllExercisesAdapter(ExerciseListActivity.this,ExercisesNoSelected);
+                Log.v(TAG,"ExercisesNoSelected: active");
             }
-        });
+
+            recycler.setAdapter(adapter);
+
+
+
     }
 }

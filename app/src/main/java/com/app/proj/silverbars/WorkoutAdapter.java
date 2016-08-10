@@ -92,41 +92,41 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         vh.layout.getLayoutParams().height = height / 3;
         switch (vh.getItemViewType()) {
             case TYPE_WORKOUT:
-                    //Log.v(TAG,"Workouts Size"+position);
-                    String[] parts = workouts[position].getWorkout_image().split("workouts");
-                    String Parsedurl = "workouts"+parts[1];
+                //Log.v(TAG,"Workouts Size"+position);
+                String[] parts = workouts[position].getWorkout_image().split("workouts");
+                String Parsedurl = "workouts"+parts[1];
 
-                    //Log.v(TAG,"Image "+Parsedurl);
-                    String[] imagesName = Parsedurl.split("/");
-                    final String imgName = imagesName[2];
-                    //Log.v(TAG,"Image Name "+imgName);
+                //Log.v(TAG,"Image "+Parsedurl);
+                String[] imagesName = Parsedurl.split("/");
+                final String imgName = imagesName[2];
+                //Log.v(TAG,"Image Name "+imgName);
 
-                    // asignar imagen a view
-                    Bitmap bmp = loadImageFromCache(imgName);
-                    if (bmp != null){
-                        //Bitmap resized = Bitmap.createScaledBitmap(bmp, 300, 300, true);
-                        vh.img.setImageBitmap(bmp);
-                    }
-                    else{
-                        DownloadImage(Parsedurl,vh,imgName);
-                    }
+                // asignar imagen a view
+                Bitmap bmp = loadImageFromCache(imgName);
+                if (bmp != null){
+                    //Bitmap resized = Bitmap.createScaledBitmap(bmp, 300, 300, true);
+                    vh.img.setImageBitmap(bmp);
+                }
+                else{
+                    DownloadImage(Parsedurl,vh,imgName);
+                }
 //                vh.img.setImageBitmap(bmp);
-                    vh.text.setText(workouts[position].getWorkout_name());
-                    vh.btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent i = new Intent(context, WorkoutActivity.class);
-                            i.putExtra("id",workouts[position].getId());
-                            i.putExtra("name",workouts[position].getWorkout_name());
-                            i.putExtra("image",imgName);
-                            i.putExtra("sets",workouts[position].getSets());
-                            i.putExtra("level",workouts[position].getLevel());
-                            i.putExtra("muscle",workouts[position].getMain_muscle());
-                            i.putExtra("exercises",workouts[position].getExercises());
-                            context.startActivity(i);
-                        }
-                    });
-                    break;
+                vh.text.setText(workouts[position].getWorkout_name());
+                vh.btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(context, WorkoutActivity.class);
+                        i.putExtra("id",workouts[position].getId());
+                        i.putExtra("name",workouts[position].getWorkout_name());
+                        i.putExtra("image",imgName);
+                        i.putExtra("sets",workouts[position].getSets());
+                        i.putExtra("level",workouts[position].getLevel());
+                        i.putExtra("muscle",workouts[position].getMain_muscle());
+                        i.putExtra("exercises",workouts[position].getExercises());
+                        context.startActivity(i);
+                    }
+                });
+                break;
         }
     }
 

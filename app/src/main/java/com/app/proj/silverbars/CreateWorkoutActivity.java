@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -180,10 +179,9 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                 Log.v(TAG,"hay algo:"+adapter.getSelectedExercisesArrayList());
             }
 
-
-
         }
 
+        getExercisesFromJson();
 
 
     }//  close create workout
@@ -195,23 +193,18 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         if (requestCode == 1 ) {
             if (resultCode == RESULT_OK && data != null){
 
-
                     if (data.hasExtra("Items")) {
                         ArrayList<String> items_ids_from_activity = data.getStringArrayListExtra("Items");
-
                         Log.v(TAG, "NAMES ID: " + items_ids_from_activity);
-
 
 
                         if (items_ids_from_activity.size() > 0){
                             putExercisesinRecycler(items_ids_from_activity);
                             Log.v(TAG, "primeros items añadidos: " + items_ids_from_activity);
                         }
-
 
                     }
             }
@@ -235,7 +228,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
                 ArrayList<String> exercises_id = data.getStringArrayListExtra("exercises");
 
-                //putExercisesinRecycler(exercises_id);
+                //getExercisesFromJson(exercises_id);
             }
         }
 
@@ -247,7 +240,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     private void setMusclesToView(List<String> musculos){
 
         if ( musculos.size() > 0 ){
-
             for (String s : musculos)
             {
                 /*final TextView MuscleView = new TextView(WorkoutActivity.this);
@@ -308,13 +300,12 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     }
 
 
-    private void putExercisesinRecycler(final ArrayList<String> new_items_to_list){
+    private void getExercisesFromJson(){
 
-            Log.v(TAG,"putExercisesinRecycler: "+new_items_to_list);
-        
-            empty_content.setVisibility(View.GONE);
-            re_addExercise.setVisibility(View.VISIBLE);
-            recycler.setVisibility(View.VISIBLE);
+        MySQLiteHelper database = new MySQLiteHelper(CreateWorkoutActivity.this);
+
+        int total_of_exercises = 5;
+        if (database.getAllExercises().length != total_of_exercises){
 
             OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
             httpClient.addInterceptor(new Interceptor() {
@@ -340,78 +331,38 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                     .client(client)
                     .build();
             SilverbarsService service = retrofit.create(SilverbarsService.class);
+
             Call<JsonExercise[]> call = service.getAllExercises();
             call.enqueue(new Callback<JsonExercise[]>() {
                 @Override
                 public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
 
                     if (response.isSuccessful()) {
+
                         parsedExercises = response.body();
-                        List<JsonExercise> AllExercisesList = new ArrayList<>();
 
-                        Collections.addAll(AllExercisesList, parsedExercises);
+                        MySQLiteHelper database = new MySQLiteHelper(CreateWorkoutActivity.this);
 
+                        for (int i = 0; i < parsedExercises.length; i++) {
 
+                            if (!database.checkExercise(parsedExercises[i].getId())) {
 
-                        for (int c = 0;c < new_items_to_list.size();c++){
-                            for (int a = 0; a < AllExercisesList.size(); a++){
+                                String imgDir = Environment.getExternalStorageDirectory() + "/SilverbarsImg/" + imageName(i);
+                                String mp3Dir = Environment.getExternalStorageDirectory() + "/SilverbarsMp3/" + audioName(i);
+                                database.insertExercises(
+                                        parsedExercises[i].getId(),
+                                        parsedExercises[i].getExercise_name(),
+                                        parsedExercises[i].getLevel(),
+                                        convertArrayToString(parsedExercises[i].getType_exercise()),
+                                        convertArrayToString(parsedExercises[i].getMuscle()),
+                                        mp3Dir,
+                                        imgDir
+                                );
 
-                                // si el item seleccionado esta en  la lista principal agregalo
-                                //Log.v(TAG,""+AllExercisesList.get(a).getExercise_name()+" : "+new_items_to_list.get(c));
-
-                                if (Objects.equals(AllExercisesList.get(a).getExercise_name(), new_items_to_list.get(c))){
-
-                                    //.v(TAG,""+AllExercisesList.get(a).getExercise_name()+":"+Items_ids_from_activity.get(c));
-
-
-                                    if (adapter == null){
-
-                                        ExercisesToAdapter.add(AllExercisesList.get(a));
-
-
-                                    }else {
-
-                                        ExercisesToAdapter.add(AllExercisesList.get(a));
-                                        Log.v(TAG,"ITEM INSERTED:"+( ExercisesToAdapter.size()));
-                                        adapter.notifyItemInserted(ExercisesToAdapter.size());
-
-
-                                    }
-
-                                    for (int b = 0; b < ExercisesToAdapter.get(c).muscle.length; b++){
-                                        String name;
-                                        name = ExercisesToAdapter.get(c).muscle[b];
-                                        MusclesArray.add(name);
-                                    }
-
-                                }
+                            }else {
+                                Log.v(TAG,"ya se ha agregado ejercicio: "+ parsedExercises[i].getId()+""+parsedExercises[i].getExercise_name());
                             }
                         }
-
-
-
-
-
-
-
-
-
-                        Context context = CreateWorkoutActivity.this;
-                        adapter = new RecyclerExerciseSelectedAdapter(context,ExercisesToAdapter,CreateWorkoutActivity.this);
-
-
-
-                        recycler.setAdapter(adapter);
-
-                        setMusclesToView(MusclesArray);
-
-
-                        
-                        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
-                        mItemTouchHelper  = new ItemTouchHelper(callback);
-                        mItemTouchHelper.attachToRecyclerView(recycler);
-
-
 
 
                     } else {
@@ -428,20 +379,79 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                 }
             });
 
+        }else {
+            Log.v(TAG,"ya se ha agregado todos los ejercicios: " +database.getAllExercises().length);
+        }
 
 
-        
-
-
-    }// exercises method close
-
-
-    
-    private void putMuscles(int selected_exercise_list_size){
-        
-        
-        
     }
+
+    private void putExercisesinRecycler(final ArrayList<String> new_items_to_list){
+
+        Log.v(TAG,"putExercisesinRecycler: "+new_items_to_list);
+
+        empty_content.setVisibility(View.GONE);
+        re_addExercise.setVisibility(View.VISIBLE);
+        recycler.setVisibility(View.VISIBLE);
+
+
+            MySQLiteHelper database = new MySQLiteHelper(CreateWorkoutActivity.this);
+
+            List<JsonExercise> AllExercisesList = new ArrayList<>();
+
+            for(int a = 0; a < database.getAllExercises().length;a++){
+                AllExercisesList.add(database.getExercise(database.getExercisesIds()[a]));
+            }
+
+
+            Log.v(TAG,"AllExercisesList"+AllExercisesList.size());
+
+
+            for (int c = 0;c < new_items_to_list.size();c++){
+                for (int a = 0; a < AllExercisesList.size(); a++){
+
+                    // si el item seleccionado esta en  la lista principal agregalo
+                    //Log.v(TAG,""+AllExercisesList.get(a).getExercise_name()+" : "+new_items_to_list.get(c));
+
+                    if (Objects.equals(AllExercisesList.get(a).getExercise_name(), new_items_to_list.get(c))){
+
+                        //.v(TAG,""+AllExercisesList.get(a).getExercise_name()+":"+Items_ids_from_activity.get(c));
+
+
+                        if (adapter == null){
+                            ExercisesToAdapter.add(AllExercisesList.get(a));
+
+                        }else {
+                            ExercisesToAdapter.add(AllExercisesList.get(a));
+                            Log.v(TAG,"ITEM INSERTED:"+( ExercisesToAdapter.size()));
+                            adapter.notifyItemInserted(ExercisesToAdapter.size());
+                        }
+
+                        for (int b = 0; b < ExercisesToAdapter.get(c).muscle.length; b++){
+                            String name;
+                            name = ExercisesToAdapter.get(c).muscle[b];
+                            MusclesArray.add(name);
+                        }
+
+                    }
+                }
+            }
+
+
+            Context context = CreateWorkoutActivity.this;
+            adapter = new RecyclerExerciseSelectedAdapter(context,ExercisesToAdapter,CreateWorkoutActivity.this);
+            recycler.setAdapter(adapter);
+
+            setMusclesToView(MusclesArray);
+
+            ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+            mItemTouchHelper  = new ItemTouchHelper(callback);
+            mItemTouchHelper.attachToRecyclerView(recycler);
+
+
+
+    }
+
 
     public static String convertArrayToString(String[] array){
         String str = "";
@@ -486,7 +496,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     @Override
     protected void onStop() {
         super.onStop();
-
 
 
     }

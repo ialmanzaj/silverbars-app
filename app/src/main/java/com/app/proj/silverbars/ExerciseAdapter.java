@@ -2,9 +2,7 @@ package com.app.proj.silverbars;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,11 +16,7 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +25,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import static com.app.proj.silverbars.AdaptersUtilities.loadImageFromCache;
+import static com.app.proj.silverbars.AdaptersUtilities.writeResponseBodyToDisk;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
 
@@ -48,7 +45,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
-        // Campos respectivos de un item
         public ImageView imagen;
         public TextView nombre;
         public TextView next;
@@ -56,10 +52,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         public TextView positive;
         public TextView negative;
         public TextView isometric;
-
-
-
-
 
         public ExerciseViewHolder(View v) {
             super(v);
@@ -124,7 +116,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         }
 
 
-
         viewHolder.nombre.setText(WorkoutActivity.ParsedExercises[a].getExercise_name());
         viewHolder.repetitions.setText(String.valueOf(WorkoutActivity.Exercises_reps[a]));
 
@@ -167,9 +158,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                                 WorkoutActivity.Isometric_Exercises[a] = getIntValuefromTextView(Isometric);
 
 
-                                Log.v(TAG,"Positive_Exercises"+i+":"+WorkoutActivity.Positive_Exercises[i]);
-                                Log.v(TAG,"Isometric"+i+":"+WorkoutActivity.Isometric_Exercises[i]);
-                                Log.v(TAG,"Negative"+i+":"+WorkoutActivity.Negative_Exercises[i]);
+                                Log.v(TAG,"Positive_Exercises"+a+":"+WorkoutActivity.Positive_Exercises[a]);
+                                Log.v(TAG,"Isometric"+a+":"+WorkoutActivity.Isometric_Exercises[a]);
+                                Log.v(TAG,"Negative"+a+":"+WorkoutActivity.Negative_Exercises[a]);
 
 
                             }
@@ -291,7 +282,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         });
     }
 
-    public void DownloadImage(final String url, final ExerciseViewHolder vh, final String imgName) {
+    private void DownloadImage(final String url, final ExerciseViewHolder vh, final String imgName) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
 
@@ -326,52 +317,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         }.execute();
     }
 
-    private Bitmap loadImageFromCache(String imageURI) {
-        Bitmap bitmap = null;
-        String[] imageDir = imageURI.split("SilverbarsImg");
-        if (imageDir.length < 2){
-            File file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageURI);
-            if (file.exists()){
-                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            }
-        }else{
-            File file = new File(imageURI);
-            if (file.exists()){
-                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            }
-        }
 
-        return bitmap;
-    }
-
-    private boolean writeResponseBodyToDisk(ResponseBody body, String imgName) {
-        try {
-            File futureStudioIconFile = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imgName);
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
-            try {
-                byte[] fileReader = new byte[4096];
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
-                inputStream = body.byteStream();
-                outputStream = new FileOutputStream(futureStudioIconFile);
-                while (true) {
-                    int read = inputStream.read(fileReader);
-                    if (read == -1) {break;}
-                    outputStream.write(fileReader, 0, read);
-                    fileSizeDownloaded += read;
-                    Log.v(TAG, "writeResponseBodyToDisk: Download, file download: " + fileSizeDownloaded + " of " + fileSize);
-                }
-                outputStream.flush();
-                return true;
-
-            } catch (IOException e) {
-                return false;
-            } finally {
-                if (inputStream != null) {inputStream.close();}
-                if (outputStream != null) {outputStream.close();}
-            }
-        } catch (IOException e) {return false;}
-    }
 
 }

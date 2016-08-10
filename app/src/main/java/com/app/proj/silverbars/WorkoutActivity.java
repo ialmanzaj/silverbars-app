@@ -96,7 +96,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-    private int[] exercises_id;
+
 
 
     private static final String TAG ="WORKOUT ACTIVITY";
@@ -130,7 +130,7 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutLevel = intent.getStringExtra("level");
         mainMuscle = intent.getStringExtra("muscle");
         exercises = intent.getStringArrayExtra("exercises");
-        exercises_id = new int[exercises.length];
+
         ParsedExercises = new JsonExercise[exercises.length];
         setContentView(R.layout.activity_workout);
 
@@ -290,6 +290,9 @@ public class WorkoutActivity extends AppCompatActivity {
             for (int i = 0; i < ParsedReps.length; i++){
 
                 ParsedExercises[i] = database.getExercise(Integer.valueOf(ParsedReps[i].getExercise()));
+                Log.v(TAG,"value: "+Integer.valueOf(ParsedReps[i].getExercise()));
+
+
                 //agregar json a array exercisesToRecycler
                 exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[i].getExercise_image()));
 
@@ -891,7 +894,7 @@ public class WorkoutActivity extends AppCompatActivity {
                             MusclesArray.add(name);
                         }
 //
-                        exercises_id[a] = ParsedExercises[a].getId();
+
                         if ( exercisesToRecycler.size() == exercises.length){
                             getExercisesfromJson();
                         }
@@ -1196,7 +1199,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
         for (int i = 0; i < ParsedExercises.length; i++){
-            if (!database.checkExercise(ParsedExercises[i].getId())){
+            if (!database.checkExercise(ParsedExercises[i].getId()) ){
+
                 String imgDir = Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageName(i);
                 String mp3Dir = Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+audioName(i);
                 database.insertExercises(

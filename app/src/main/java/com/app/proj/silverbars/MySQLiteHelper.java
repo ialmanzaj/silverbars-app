@@ -206,47 +206,47 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
 
     public String[] getPlaylist(int id){
-        String[] results = new String[4] ;
+        String[] playlist = new String[4] ;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor row = db.rawQuery("SELECT * FROM "+TABLE_PLAYLISTS+" WHERE "+KEY_IDPLIST+" = "+id,null);
         Log.v("Row Count",String.valueOf(row.getCount()));
         if (row.moveToFirst()){
             row.moveToFirst();
-            results[0] = String.valueOf(row.getInt(0));
-            results[1] = row.getString(1);
-            results[2] = row.getString(2);
-            results[3] = row.getString(3);
+            playlist[0] = String.valueOf(row.getInt(0));
+            playlist[1] = row.getString(1);
+            playlist[2] = row.getString(2);
+            playlist[3] = row.getString(3);
         }
         else
-            Log.e(TAG,"Database Error: No results");
+            Log.e(TAG,"getPlaylist, Database Error: No results");
         db.close();
         try {
             BD_backup();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return results;
+        return playlist;
     }
 
     public String[] getUserPlaylists(int id){
         String songName;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor row = db.rawQuery("SELECT * FROM "+TABLE_PLAYLISTS+" WHERE "+KEY_USERID+" = "+id,null);
-        String[] results = null;
+        String[] playlists = null;
         if (row.moveToFirst()){
             row.moveToFirst();
-            results = new String[row.getCount()];
+            playlists = new String[row.getCount()];
             int i = 0;
             songName = row.getString(row.getColumnIndex(KEY_PNAME));
-            results[i] = songName;
+            playlists[i] = songName;
             while(row.moveToNext()){
                 i++;
                 songName = row.getString(row.getColumnIndex(KEY_PNAME));
-                results[i] = songName;
+                playlists[i] = songName;
             }
         }
         else
-            Log.e(TAG,"Database Error: No results");
+            Log.e(TAG,"getUserPlaylists, Database Error: No results");
 
         db.close();
         try {
@@ -254,7 +254,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return results;
+        return playlists;
     }
 
     public void insertExercises(int id, String name, String level, String typeExercise, String typeMuscle, String audio, String Image){
@@ -276,24 +276,17 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         }
     }
 
-    public JsonExercise getExercise(int exerciseId){
-        JsonExercise exercises = new JsonExercise();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_EXERCISES+" WHERE "+KEY_IDEXERCISE+" = "+exerciseId,null);
+    public JsonExercise getExercise(int exerciseId) {
 
-        if (row.moveToFirst()){
-            if (convertStringToArray(row.getString(3)) == null){
-                String[] type = new String[1];
-                type[0] = row.getString(3);
-                exercises.setType_exercise(type);
-                exercises = new JsonExercise(row.getInt(0),row.getString(1),row.getString(2),type,convertStringToArray(row.getString(4)),row.getString(5),row.getString(6));
-            }
-            else{
-                exercises = new JsonExercise(row.getInt(0),row.getString(1),row.getString(2),convertStringToArray(row.getString(3)),convertStringToArray(row.getString(4)),row.getString(5),row.getString(6));
-            }
-        }
-        else{
-            Log.e(TAG,"Database Error: No results");
+        JsonExercise exercise = new JsonExercise();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor row = db.rawQuery("SELECT * FROM " + TABLE_EXERCISES + " WHERE " + KEY_IDEXERCISE + " = " + exerciseId, null);
+
+        if (row.moveToFirst()) {
+
+            exercise = new JsonExercise(row.getInt(0), row.getString(1), row.getString(2), convertStringToArray(row.getString(3)), convertStringToArray(row.getString(4)), row.getString(5), row.getString(6));
+        } else {
+            Log.e(TAG, "getExercise, Database Error: No exercises found");
         }
         db.close();
         try {
@@ -301,32 +294,88 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return exercises;
+        return exercise;
     }
 
-    /*public JsonExercise[] getAllExercises(int id){
-        JsonExercise[] exercises = null;
-        String local = "true";
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_EXERCISES+" WHERE "+KEY_USERID+"='"+id+"' AND "+KEY_LOCAL+"='true'",null);
+    public int[] getExercisesIds(){
 
+        int[] exercisesids = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_EXERCISES+"",null);
+
+        int i = 0;
+        if (row.moveToFirst()){
+
+            exercisesids = new int[row.getCount()];
+            exercisesids[i] = row.getInt(0);
+            //Log.v(TAG,"i:"+i+"id:"+exercisesids[i]+row.getString(1));
+            while(row.moveToNext()){
+                i++;
+                exercisesids[i] = row.getInt(0);
+                //Log.v(TAG,"i:"+i+"id:"+exercisesids[i]+row.getString(1));
+
+            }
+        } else {
+            Log.e(TAG,"getExercisesIds, Database Error: No exercises found");
+        }
+        db.close();
+        try {
+            BD_backup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return exercisesids;
+    }
+
+    public JsonExercise[] getAllExercises(){
+
+        JsonExercise[] exercises = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_EXERCISES+"",null);
+         int i = 0;
+         if (row.moveToFirst()){
+             exercises = new JsonExercise[row.getCount()];
+
+             while(row.moveToNext()){
+                 i++;
+                 if (convertStringToArray(row.getString(3)) == null){
+                     String[] type = new String[1];
+                     type[0] = row.getString(3);
+                     exercises[i].setType_exercise(type);
+                     exercises[i] = new JsonExercise(row.getInt(0),row.getString(1),row.getString(2),type,convertStringToArray(row.getString(4)),row.getString(5),row.getString(6));
+                 }else{
+                     exercises[i] = new JsonExercise(row.getInt(0),row.getString(1),row.getString(2),convertStringToArray(row.getString(3)),convertStringToArray(row.getString(4)),row.getString(5),row.getString(6));
+                 }
+
+            }
+        } else {
+            Log.e(TAG,"getAllExercises, Database Error: No exercises found");
+        }
+        db.close();
+        try {
+            BD_backup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return exercises;
 
-    }*/
+    }
 
 
 
     public boolean checkExercise(int id){
-        boolean check = false;
+        boolean check;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor row = db.rawQuery("SELECT * FROM "+TABLE_EXERCISES+" WHERE "+KEY_IDEXERCISE+" = "+id,null);
-        String[] results = null;
+
         if (row.moveToFirst()){
             check = true;
+            Log.v(TAG,"checkExercise, yes we found that exercise in database");
         }
         else{
-            Log.e(TAG,"Database Error: No results");
+            Log.e(TAG,"checkExercise, Database error:  exercise not found in database");
             check = false;
         }
         db.close();
@@ -364,22 +413,22 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         String local = "true";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor row = db.rawQuery("SELECT * FROM "+TABLE_WORKOUTS+" WHERE "+KEY_USERID+"='"+id+"' AND "+KEY_LOCAL+"='true'",null);
-        String[] results = null;
         int i = 0;
         if (row.moveToFirst()){
             row.moveToFirst();
             workouts = new JsonWorkout[row.getCount()];
             workouts[i] = new JsonWorkout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5),convertStringToArray(row.getString(6)));
-            Log.v(TAG,"Database: 1 result");
-            Log.v(TAG,"Database workouts: "+ Arrays.toString(workouts));
+
+            Log.v(TAG,"getWorkouts, Database: 1 result");
+            Log.v(TAG,"getWorkouts, Database workouts: "+ Arrays.toString(workouts));
             while(row.moveToNext()){
                 i++;
                 workouts[i] = new JsonWorkout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5),convertStringToArray(row.getString(6)));
-                Log.v(TAG,"Database: More than 1 result");
+                Log.v(TAG,"getWorkouts,Database: More than 1 result");
             }
         }
         else {
-            Log.e(TAG,"Database Error: No results");
+            Log.e(TAG,"getWorkouts, Database Error: No workout found");
         }
         db.close();
         try {
@@ -404,15 +453,15 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
 
     public boolean checkWorkouts(int id){
-        boolean check = false;
+        boolean check;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor row = db.rawQuery("SELECT * FROM "+TABLE_WORKOUTS+" WHERE "+KEY_IDWORKOUTS+" = "+id,null);
-        String[] results = null;
+
         if (row.moveToFirst()){
             check = true;
         }
         else{
-            Log.e(TAG,"Database Error: No results");
+            Log.e(TAG,"checkWorkouts, Database Error: No workouts found");
             check = false;
         }
         db.close();
@@ -424,16 +473,16 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         return check;
     }
 
-    public String checkLocal (int id){
+    public String checkLocal(int id){
         String check = "false";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor row = db.rawQuery("SELECT * FROM "+TABLE_WORKOUTS+" WHERE "+KEY_IDWORKOUTS+" = "+id,null);
-        String[] results = null;
+
         if (row.moveToFirst()){
             check = row.getString(8);
         }
         else{
-            Log.e(TAG,"Database Error: No results");
+            Log.e(TAG,"checkLocal, Database Error: Not found");
             check = "false";
         }
         db.close();
@@ -461,21 +510,21 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
 
     public JsonReps[] getWorkout(int workoutId){
-        JsonReps[] workout = null;
+        JsonReps[] workouts = null;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor row = db.rawQuery("SELECT * FROM "+TABLE_WORKOUT+" WHERE "+KEY_WORKOUTSID+" = "+workoutId,null);
         int i = 0;
         if (row.moveToFirst()){
-            workout = new JsonReps[row.getCount()];
+            workouts = new JsonReps[row.getCount()];
             row.moveToFirst();
-            workout[i] = new JsonReps(row.getInt(0),String.valueOf(row.getInt(1)),String.valueOf(row.getInt(2)),row.getInt(3));
+            workouts[i] = new JsonReps(row.getInt(0),String.valueOf(row.getInt(1)),String.valueOf(row.getInt(2)),row.getInt(3));
 //            workout[i].setId(row.getInt(0));
 //            workout[i].setWorkout_id(String.valueOf(row.getInt(1)));
 //            workout[i].setExercise(String.valueOf(row.getInt(2)));
 //            workout[i].setRepetition(row.getInt(3));
             while(row.moveToNext()){
                 i++;
-                workout[i] = new JsonReps(row.getInt(0),String.valueOf(row.getInt(1)),String.valueOf(row.getInt(2)),row.getInt(3));
+                workouts[i] = new JsonReps(row.getInt(0),String.valueOf(row.getInt(1)),String.valueOf(row.getInt(2)),row.getInt(3));
 //                workout[i].setId(row.getInt(0));
 //                workout[i].setWorkout_id(String.valueOf(row.getInt(1)));
 //                workout[i].setExercise(String.valueOf(row.getInt(2)));
@@ -483,7 +532,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             }
         }
         else{
-            Log.e(TAG,"Database Error: No results");
+            Log.e(TAG,"getWorkout, Database error: Not found");
         }
         db.close();
         try {
@@ -492,7 +541,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             e.printStackTrace();
         }
 
-        return workout;
+        return workouts;
     }
 
     public boolean checkWorkout(int workoutId, int exerciseId){
@@ -504,7 +553,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             check = true;
         }
         else{
-            Log.e(TAG,"Database Error: No results");
+            Log.e(TAG,"checkWorkout, Database Error: No results");
             check = false;
         }
         db.close();
@@ -526,7 +575,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             workoutId = row.getInt(row.getColumnIndex(KEY_IDWORKOUTS));
         }
         else
-            Log.e(TAG,"Database Error: No results");
+            Log.e(TAG,"getWorkoutId, Database Error: No results");
 
         db.close();
         try {

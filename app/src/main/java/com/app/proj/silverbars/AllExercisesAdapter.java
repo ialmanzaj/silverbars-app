@@ -2,9 +2,7 @@ package com.app.proj.silverbars;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -14,11 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +20,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import static com.app.proj.silverbars.AdaptersUtilities.loadImageFromCache;
+import static com.app.proj.silverbars.AdaptersUtilities.writeResponseBodyToDisk;
 
 
 public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapter.AllExercisesViewHolder> {
@@ -118,20 +114,28 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
 
 
         //Setting values to each recylerView Element
-        Log.v("Exercise", mExercises.get(a).getExercise_name());
+
+        Bitmap bmp = null;
         String[] imageDir = mExercises.get(a).getExercise_image().split("exercises");
 
-        String Parsedurl = "exercises" + imageDir[1];
-        String[] imagesName = Parsedurl.split("/");
-        String imgName = imagesName[2];
-        Bitmap bmp = loadImageFromCache(imgName);
+        if (imageDir.length < 2){
 
-
-        if (bmp != null) {
+            bmp = loadImageFromCache(mExercises.get(a).getExercise_image());
             viewHolder.imagen.setImageBitmap(bmp);
-        } else {
-            DownloadImage(Parsedurl, viewHolder, imgName);
+
+        }else {
+            String Parsedurl = "exercises" + imageDir[1];
+            String[] imagesName = Parsedurl.split("/");
+            String imgName = imagesName[2];
+            bmp = loadImageFromCache(imgName);
+
+            if (bmp != null) {
+                viewHolder.imagen.setImageBitmap(bmp);
+            } else {
+                DownloadImage(Parsedurl, viewHolder, imgName);
+            }
         }
+
         viewHolder.nombre.setText(mExercises.get(a).getExercise_name());
 
     }
@@ -169,42 +173,6 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
         }.execute();
     }
 
-    private Bitmap loadImageFromCache(String imageURI) {
-        Bitmap bitmap = null;
-        File file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageURI);
-        if (file.exists()){
-            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-        }
-        return bitmap;
-    }
 
-    private boolean writeResponseBodyToDisk(ResponseBody body, String imgName) {
-        try {
-            File futureStudioIconFile = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imgName);
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
-            try {
-                byte[] fileReader = new byte[4096];
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
-                inputStream = body.byteStream();
-                outputStream = new FileOutputStream(futureStudioIconFile);
-                while (true) {
-                    int read = inputStream.read(fileReader);
-                    if (read == -1) {break;}
-                    outputStream.write(fileReader, 0, read);
-                    fileSizeDownloaded += read;
-                    Log.d("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
-                }
-                outputStream.flush();
-                return true;
 
-            } catch (IOException e) {
-                return false;
-            } finally {
-                if (inputStream != null) {inputStream.close();}
-                if (outputStream != null) {outputStream.close();}
-            }
-        } catch (IOException e) {return false;}
-    }
 }
