@@ -98,6 +98,8 @@ public class MainFragment extends Fragment {
 
             }
         });
+
+
         Button button_failed_server = (Button) getView().findViewById(R.id.button_reload_failed_server);
         button_failed_server.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,34 +142,6 @@ public class MainFragment extends Fragment {
 
             }
         }
-
-//        final Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner);
-//
-//        spinnerArray.add("ALL");
-//        spinnerArray.add("ABS/CORE");
-//        spinnerArray.add("UPPER BODY");
-//        spinnerArray.add("LOWER BODY");
-//
-//        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item_secondary,spinnerArray);
-//
-//        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinner.setAdapter(arrayAdapter);
-//
-//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                recyclerView.setAdapter(null);
-//                String element = spinner.getItemAtPosition(position).toString();
-//                muscle = element;
-//                Task(muscle);
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
-
 
 
         // Setup refresh listener which triggers new data loading

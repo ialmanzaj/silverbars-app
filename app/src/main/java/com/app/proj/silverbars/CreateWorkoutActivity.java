@@ -1,5 +1,6 @@
 package com.app.proj.silverbars;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -49,15 +50,17 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     private int Items_size = 0;
     JsonExercise[] parsedExercises;
+    public static Activity create;
     
     private List<JsonExercise> ExercisesToAdapter = new ArrayList<>();
 
 
-    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_workout);
+
+        create = this;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -93,7 +96,9 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
                     if (adapter.getItemCount() > 0){
                         Intent intent = new Intent(CreateWorkoutActivity.this, CreateWorkoutFinalActivity.class);
-                        intent.putExtra("exercises", adapter.getSelectedExercisesArrayList());
+                        intent.putExtra("exercises", adapter.getSelectedExercisesName());
+                        intent.putExtra("reps",adapter.getExerciseReps());
+
                         startActivityForResult(intent,3);
 
                     }else {
@@ -135,8 +140,8 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             public void onClick(View v) {
 
                 Intent intent = new Intent(CreateWorkoutActivity.this,ExerciseListActivity.class);
-                intent.putExtra("items_selected",adapter.getSelectedExercisesArrayList() );
-                Log.v(TAG,"items_selected"+adapter.getSelectedExercisesArrayList() );
+                intent.putExtra("items_selected",adapter.getSelectedExercisesName() );
+                Log.v(TAG,"items_selected"+adapter.getSelectedExercisesName() );
                 startActivityForResult(intent,2);
                 
             }
@@ -183,7 +188,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         if (adapter != null){
 
             if (adapter.getItemCount() > 0) {
-                Log.v(TAG,"hay algo:"+adapter.getSelectedExercisesArrayList());
+                Log.v(TAG,"hay algo: "+adapter.getSelectedExercisesName());
             }
 
         }
@@ -312,84 +317,91 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         MySQLiteHelper database = new MySQLiteHelper(CreateWorkoutActivity.this);
 
         int total_of_exercises = 5;
-        if (database.getAllExercises().length != total_of_exercises){
 
-            OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-            httpClient.addInterceptor(new Interceptor() {
-                @Override
-                public okhttp3.Response intercept(Chain chain) throws IOException {
-                    Request original = chain.request();
-                    // Customize the request
-                    Request request = original.newBuilder()
-                            .header("Accept", "application/json")
-                            .header("Authorization", "auth-token")
-                            .method(original.method(), original.body())
-                            .build();
-                    okhttp3.Response response = chain.proceed(request);
-                    Log.v("Response",response.toString());
-                    // Customize or return the response
-                    return response;
-                }
-            });
-
-            OkHttpClient client = httpClient.build();
-            Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(client)
-                    .build();
-            SilverbarsService service = retrofit.create(SilverbarsService.class);
-
-            Call<JsonExercise[]> call = service.getAllExercises();
-            call.enqueue(new Callback<JsonExercise[]>() {
-                @Override
-                public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
-
-                    if (response.isSuccessful()) {
-
-                        parsedExercises = response.body();
-
-                        MySQLiteHelper database = new MySQLiteHelper(CreateWorkoutActivity.this);
-
-                        for (int i = 0; i < parsedExercises.length; i++) {
-
-                            if (!database.checkExercise(parsedExercises[i].getId())) {
-
-                                String imgDir = Environment.getExternalStorageDirectory() + "/SilverbarsImg/" + imageName(i);
-                                String mp3Dir = Environment.getExternalStorageDirectory() + "/SilverbarsMp3/" + audioName(i);
-                                database.insertExercises(
-                                        parsedExercises[i].getId(),
-                                        parsedExercises[i].getExercise_name(),
-                                        parsedExercises[i].getLevel(),
-                                        convertArrayToString(parsedExercises[i].getType_exercise()),
-                                        convertArrayToString(parsedExercises[i].getMuscle()),
-                                        mp3Dir,
-                                        imgDir
-                                );
-
-                            }else {
-                                Log.v(TAG,"ya se ha agregado ejercicio: "+ parsedExercises[i].getId()+""+parsedExercises[i].getExercise_name());
-                            }
-                        }
-
-
-                    } else {
-                        int statusCode = response.code();
-                        // handle request errors yourself
-                        ResponseBody errorBody = response.errorBody();
-                        Log.e(TAG,errorBody.toString());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<JsonExercise[]> call, Throwable t) {
-                    Log.e(TAG,"onFailure: ",t);
-                }
-            });
-
+        if (database.getAllExercises() == null){
+            insertExercisesInDataBase();
+        }else if (database.getAllExercises().length != total_of_exercises){
+            insertExercisesInDataBase();
         }else {
             Log.v(TAG,"ya se ha agregado todos los ejercicios: " +database.getAllExercises().length);
         }
 
+
+    }
+
+    private void insertExercisesInDataBase(){
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                // Customize the request
+                Request request = original.newBuilder()
+                        .header("Accept", "application/json")
+                        .header("Authorization", "auth-token")
+                        .method(original.method(), original.body())
+                        .build();
+                okhttp3.Response response = chain.proceed(request);
+                Log.v("Response",response.toString());
+                // Customize or return the response
+                return response;
+            }
+        });
+
+        OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        SilverbarsService service = retrofit.create(SilverbarsService.class);
+
+        Call<JsonExercise[]> call = service.getAllExercises();
+        call.enqueue(new Callback<JsonExercise[]>() {
+            @Override
+            public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
+
+                if (response.isSuccessful()) {
+
+                    parsedExercises = response.body();
+
+                    MySQLiteHelper database = new MySQLiteHelper(CreateWorkoutActivity.this);
+
+                    for (int i = 0; i < parsedExercises.length; i++) {
+
+                        if (!database.checkExercise(parsedExercises[i].getId())) {
+
+                            String imgDir = Environment.getExternalStorageDirectory() + "/SilverbarsImg/" + imageName(i);
+                            String mp3Dir = Environment.getExternalStorageDirectory() + "/SilverbarsMp3/" + audioName(i);
+                            database.insertExercises(
+                                    parsedExercises[i].getId(),
+                                    parsedExercises[i].getExercise_name(),
+                                    parsedExercises[i].getLevel(),
+                                    convertArrayToString(parsedExercises[i].getType_exercise()),
+                                    convertArrayToString(parsedExercises[i].getMuscle()),
+                                    mp3Dir,
+                                    imgDir
+                            );
+
+                        }else {
+                            Log.v(TAG,"ya se ha agregado ejercicio: "+ parsedExercises[i].getId()+""+parsedExercises[i].getExercise_name());
+                        }
+                    }
+
+
+                } else {
+                    int statusCode = response.code();
+                    // handle request errors yourself
+                    ResponseBody errorBody = response.errorBody();
+                    Log.e(TAG,errorBody.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonExercise[]> call, Throwable t) {
+                Log.e(TAG,"onFailure: ",t);
+            }
+        });
 
     }
 
@@ -442,7 +454,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                     }
                 }
             }
-
 
             Context context = CreateWorkoutActivity.this;
             adapter = new RecyclerExerciseSelectedAdapter(context,ExercisesToAdapter,CreateWorkoutActivity.this);

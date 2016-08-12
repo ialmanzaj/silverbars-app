@@ -15,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -56,12 +55,10 @@ import com.spotify.sdk.android.authentication.AuthenticationResponse;*/
 
 public class WorkoutActivity extends AppCompatActivity {
 
-    private Button plusSets;
-    private Button minusSets;
-    private Button plusRest;
-    private Button minusRest;
-    private Button plusRestSets;
-    private Button minusRestSets;
+    private Button plusSets,minusSets,plusRest,minusRest,plusRestSets,minusRestSets;
+
+    TabHost Tab_layout;
+
     private TextView Positive, Negative, Isometric, Reps, Workout_name, Sets, RestbySet, RestbyExercise,RestSets_dialog,Sets_dialog;
     private String[] position;
     private List<String> spinnerArray = new ArrayList<String>();
@@ -75,9 +72,10 @@ public class WorkoutActivity extends AppCompatActivity {
     static public int [] Isometric_Exercises;
     static public int [] Negative_Exercises;
 
+    RelativeLayout togle_no_internet;
+    private Boolean respuesta_recibida = false;
+
     Button startButton;
-    
-    
     private LinearLayout primary_linear,secondary_linear;
 
 
@@ -94,14 +92,13 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private List<WorkoutInfo> exercisesToRecycler = new ArrayList<>();
     public static JsonExercise[] ParsedExercises;
-    public static JsonReps[] ParsedReps;
-
-
-
-
+    public static JsonWorkoutReps[] ParsedReps;
 
 
     private static final String TAG ="WORKOUT ACTIVITY";
+
+    private LinearLayout error_layout;
+
 
     @SuppressWarnings("SpellCheckingInspection")
     private static final String CLIENT_ID = "8a91678afa49446c9aff1beaabe9c807";
@@ -119,7 +116,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private  List<String> MusclesArray = new ArrayList<>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,10 +124,12 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutId = intent.getIntExtra("id",0);
         workoutName = intent.getStringExtra("name");
         workoutImage = intent.getStringExtra("image");
-        workoutSets = intent.getIntExtra("sets", 0);
+        workoutSets = intent.getIntExtra("sets", 1);
         workoutLevel = intent.getStringExtra("level");
         mainMuscle = intent.getStringExtra("muscle");
         exercises = intent.getStringArrayExtra("exercises");
+        Boolean user_workout = intent.getBooleanExtra("user_workout", false);
+
 
         ParsedExercises = new JsonExercise[exercises.length];
         setContentView(R.layout.activity_workout);
@@ -144,13 +142,14 @@ public class WorkoutActivity extends AppCompatActivity {
         primary_linear = (LinearLayout) findViewById(R.id.primary_muscles);
         secondary_linear = (LinearLayout) findViewById(R.id.sec_muscles);
 
+        error_layout = (LinearLayout) findViewById(R.id.error_layout);
+
 
         SwitchCompat enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
         SwitchCompat vibration_per_rep = (SwitchCompat) findViewById(R.id.vibration_per_rep);
         SwitchCompat vibration_per_set = (SwitchCompat) findViewById(R.id.vibration_per_set);
 
         recycler = (RecyclerView) findViewById(R.id.reciclador);
-
 
         final RelativeLayout selectMusic = (RelativeLayout) findViewById(R.id.SelectMusic);
 
@@ -168,13 +167,15 @@ public class WorkoutActivity extends AppCompatActivity {
         // Web view
         webview = (WebView) findViewById(R.id.webview);
 
-
+        // layout to put local workouts
+        togle_no_internet = (RelativeLayout) findViewById(R.id.togle_no_internet);
 
         //  TOOL BAR - BACK BUTTON  ADDED
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
 
         if (myToolbar != null) {
+
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(workoutName);
             myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -187,12 +188,12 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
         //Defining Tabs
-        TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost2);
-        tabHost2.setup();
+        Tab_layout = (TabHost) findViewById(R.id.tabHost2);
+        Tab_layout.setup();
 
-        TabHost.TabSpec overview = tabHost2.newTabSpec(getResources().getString(R.string.tab_overview));
-        TabHost.TabSpec muscles = tabHost2.newTabSpec(getResources().getString(R.string.tab_muscles));
-        TabHost.TabSpec exercises = tabHost2.newTabSpec(getResources().getString(R.string.tab_exercises));
+        TabHost.TabSpec overview = Tab_layout.newTabSpec(getResources().getString(R.string.tab_overview));
+        TabHost.TabSpec muscles = Tab_layout.newTabSpec(getResources().getString(R.string.tab_muscles));
+        TabHost.TabSpec exercises = Tab_layout.newTabSpec(getResources().getString(R.string.tab_exercises));
 
         overview.setIndicator(getResources().getString(R.string.tab_overview));
         overview.setContent(R.id.overview);
@@ -204,11 +205,10 @@ public class WorkoutActivity extends AppCompatActivity {
         exercises.setContent(R.id.exercises);
 
 
-        tabHost2.addTab(overview);
-        tabHost2.addTab(exercises);
-        tabHost2.addTab(muscles);
+        Tab_layout.addTab(overview);
+        Tab_layout.addTab(exercises);
+        Tab_layout.addTab(muscles);
 
-        // CONFIGURACIONES DEL RECYCLER
 
         if (recycler != null){
             recycler.setNestedScrollingEnabled(false);
@@ -223,27 +223,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
         // CREAR BASE DE DATOS
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
-        //Log.v(TAG,"LocalState"+database.checkLocal(workoutId));
-
-
-        // vibracion por repeticion y por set colocado cada switch
-        vibration_per_rep.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                VibrationIsActivePerRep = isChecked;
-                Log.v(TAG,"VibrationIsActivePerRep: "+VibrationIsActivePerRep);
-            }
-        });
-
-
-        vibration_per_set.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                VibrationIsActivePerSet = isChecked;
-                Log.v(TAG,"VibrationIsActivePerSet: "+VibrationIsActivePerSet);
-            }
-        });
-
 
 
         //SWITCH save local workout BUTTON CONFIGURACIONES
@@ -262,6 +241,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     isTouched = false;
 
                     if (isChecked && !loadLocal){
+                        Log.v(TAG,"respuesta:"+respuesta_recibida);
                         saveExercisesinDatabase();
                     }else{
 
@@ -274,10 +254,9 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
-        //COMPROBAR SI EL WORKOUT ESTA ACTIVADO EN LA BASE DE DATOS
-        if (database.checkWorkouts(workoutId) && Objects.equals(database.checkLocal(workoutId), "true")){
 
-            //Log.v(TAG,"Entro en workout database");
+        //COMPROBAR SI EL WORKOUT ESTA ACTIVADO EN LA BASE DE DATOS
+        if (database.checkWorkouts(workoutId) && Objects.equals(database.checkWorkoutLocal(workoutId), "true")){
             loadLocal = true;
             enableLocal.setChecked(true);
 
@@ -293,10 +272,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
             
             for (int i = 0; i < ParsedReps.length; i++){
-
                 ParsedExercises[i] = database.getExercise(Integer.valueOf(ParsedReps[i].getExercise()));
-                Log.v(TAG,"value: "+Integer.valueOf(ParsedReps[i].getExercise()));
-
 
                 //agregar json a array exercisesToRecycler
                 exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[i].getExercise_image()));
@@ -308,9 +284,55 @@ public class WorkoutActivity extends AppCompatActivity {
                 WorkoutActivity.Negative_Exercises[i] = 1;
                 WorkoutActivity.Isometric_Exercises[i] = 1;
 
-                Log.v(TAG,"Positive_Exercises"+i+":"+WorkoutActivity.Positive_Exercises[i]);
-                Log.v(TAG,"Isometric"+i+":"+WorkoutActivity.Isometric_Exercises[i]);
-                Log.v(TAG,"Negative"+i+":"+WorkoutActivity.Negative_Exercises[i]);
+
+                //RECORRER CADA EJECICIOS BUSCANDO MUSCULOS
+                for (int b = 0; b < ParsedExercises[i].muscle.length; b++){
+                    String name;
+                    name = ParsedExercises[i].muscle[b];
+                    MusclesArray.add(name);
+                }
+
+
+            }
+
+            startButton.setEnabled(true);
+            adapter = new ExerciseAdapter(exercisesToRecycler,WorkoutActivity.this);
+            recycler.setAdapter(adapter);
+            setMusclesToView(MusclesArray);
+
+        }else if (user_workout && database.checkUserWorkouts(workoutId) ){
+
+            togle_no_internet.setVisibility(View.GONE);
+
+            Log.v(TAG,"workoutId: "+workoutId);
+            Log.v(TAG, Arrays.toString(database.getUserWorkout(workoutId)));
+
+
+             ParsedReps = database.getUserWorkout(workoutId);
+            Log.v(TAG, Arrays.toString(ParsedReps));
+
+
+            ParsedExercises = new JsonExercise[ParsedReps.length];
+            Exercises_reps = new int[ParsedReps.length];
+
+            // inicializar tempo arrays por ejercicio
+            Positive_Exercises = new int[ParsedReps.length];
+            Isometric_Exercises = new int[ParsedReps.length];
+            Negative_Exercises = new int[ParsedReps.length];
+
+            for (int i = 0; i < ParsedReps.length; i++){
+
+                ParsedExercises[i] = database.getExercise(Integer.valueOf(ParsedReps[i].getExercise()));
+
+                //agregar json a array exercisesToRecycler
+                exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[i].getExercise_image()));
+
+                Exercises_reps[i] = ParsedReps[i].getRepetition();
+
+                // inicializar cada parte del tempo
+                WorkoutActivity.Positive_Exercises[i] = 1;
+                WorkoutActivity.Negative_Exercises[i] = 1;
+                WorkoutActivity.Isometric_Exercises[i] = 1;
 
 
                 //RECORRER CADA EJECICIOS BUSCANDO MUSCULOS
@@ -320,28 +342,19 @@ public class WorkoutActivity extends AppCompatActivity {
                     MusclesArray.add(name);
                 }
 
-                startButton.setEnabled(true);
             }
-
-            //Log.v(TAG,"Exercises"+ParsedExercises.length);
-
+            startButton.setEnabled(true);
             adapter = new ExerciseAdapter(exercisesToRecycler,WorkoutActivity.this);
             recycler.setAdapter(adapter);
             setMusclesToView(MusclesArray);
 
 
-        }else{
+        } else {
 
-            //usar json stream
             getExercisesFromJson();
             loadLocal = false;
             enableLocal.setChecked(false);
-            //Log.v(TAG,"loadLocal"+loadLocal);
         }
-
-
-
-
 
 
         Sets.setText(String.valueOf(workoutSets));
@@ -384,6 +397,19 @@ public class WorkoutActivity extends AppCompatActivity {
                             minusTempo(Sets_dialog,minusSets,plusSets);
                         }
                     });
+                }
+
+                int setsValue = Integer.parseInt(Sets.getText().toString());
+                if (setsValue <= 1){
+                    plusSets.setEnabled(true);
+                    plusSets.setClickable(true);
+                    minusSets.setEnabled(false);
+                    minusSets.setClickable(false);
+                }else if(setsValue >=10){
+                    plusSets.setEnabled(false);
+                    plusSets.setClickable(false);
+                    minusSets.setEnabled(true);
+                    minusSets.setClickable(true);
                 }
 
             }
@@ -479,129 +505,6 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
-
-        int setsValue = Integer.parseInt(Sets.getText().toString());
-        if (setsValue <= 1){
-            plusSets.setEnabled(true);
-            plusSets.setClickable(true);
-            minusSets.setEnabled(false);
-            minusSets.setClickable(false);
-        }else if(setsValue >=10){
-            plusSets.setEnabled(false);
-            plusSets.setClickable(false);
-            minusSets.setEnabled(true);
-            minusSets.setClickable(true);
-        }
-
-
-
-
-
-
-
-
-        /*minusIsometric.setEnabled(false);
-        minusIsometric.setClickable(false);
-
-        Spinner spinner = (Spinner) findViewById(R.id.spinner);
-
-        spinnerArray.add("NORMAL");
-        spinnerArray.add("EASY");
-        spinnerArray.add("HARD");
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                this, R.layout.spinner_item,spinnerArray
-        );
-
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(arrayAdapter);
-        if (!level.equals(null)) {
-            int spinnerPosition = arrayAdapter.getPosition(level);
-            spinner.setSelection(spinnerPosition);
-            switch (spinnerPosition){
-                case 0:
-                    Positive.setText("2");
-                    Isometric.setText("1");
-                    Negative.setText("2");
-                    break;
-                case 1:
-                    Positive.setText("3");
-                    Isometric.setText("1");
-                    Negative.setText("3");
-                    break;
-                case 2:
-                    Positive.setText("1");
-                    Isometric.setText("3");
-                    Negative.setText("1");
-                    break;
-            }
-        }
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                switch (i){
-                    case 0:
-                        plusPositive.setEnabled(true);
-                        plusPositive.setClickable(true);
-                        plusIsometric.setEnabled(true);
-                        plusIsometric.setClickable(true);
-                        plusNegative.setEnabled(true);
-                        plusNegative.setClickable(true);
-                        minusPositive.setEnabled(true);
-                        minusPositive.setClickable(true);
-                        minusIsometric.setEnabled(false);
-                        minusIsometric.setClickable(false);
-                        minusNegative.setEnabled(true);
-                        minusNegative.setClickable(true);
-                        Positive.setText("2");
-                        Isometric.setText("1");
-                        Negative.setText("2");
-
-                        break;
-                    case 1:
-                        plusPositive.setEnabled(true);
-                        plusPositive.setClickable(true);
-                        plusIsometric.setEnabled(true);
-                        plusIsometric.setClickable(true);
-                        plusNegative.setEnabled(true);
-                        plusNegative.setClickable(true);
-                        minusPositive.setEnabled(true);
-                        minusPositive.setClickable(true);
-                        minusIsometric.setEnabled(false);
-                        minusIsometric.setClickable(false);
-                        minusNegative.setEnabled(true);
-                        minusNegative.setClickable(true);
-                        Positive.setText("3");
-                        Isometric.setText("1");
-                        Negative.setText("3");
-                        break;
-                    case 2:
-                        plusPositive.setEnabled(true);
-                        plusPositive.setClickable(true);
-                        plusIsometric.setEnabled(true);
-                        plusIsometric.setClickable(true);
-                        plusNegative.setEnabled(true);
-                        plusNegative.setClickable(true);
-                        minusPositive.setEnabled(false);
-                        minusPositive.setClickable(false);
-                        minusIsometric.setEnabled(true);
-                        minusIsometric.setClickable(true);
-                        minusNegative.setEnabled(false);
-                        minusNegative.setClickable(false);
-                        Positive.setText("1");
-                        Isometric.setText("3");
-                        Negative.setText("1");
-                        break;
-                    default:
-                        break;
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
-        });
-*/
-
-
         selectMusic.setClickable(true);
         selectMusic.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -644,6 +547,26 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
+
+        // vibracion por repeticion y por set colocado cada switch
+        vibration_per_rep.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                VibrationIsActivePerRep = isChecked;
+                Log.v(TAG,"VibrationIsActivePerRep: "+VibrationIsActivePerRep);
+            }
+        });
+
+
+        vibration_per_set.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                VibrationIsActivePerSet = isChecked;
+                Log.v(TAG,"VibrationIsActivePerSet: "+VibrationIsActivePerSet);
+            }
+        });
+
+
     }// on create close
 
 
@@ -663,7 +586,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
         }
         else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
-
             mySongs = null;
             position = null;
             toast("No result");
@@ -698,16 +620,11 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
     private void LaunchWorkingOutActivity() {
-        int positive,isometric,negative,sets,restbyexercise,restbyset;
-        /*
-        positive = Integer.parseInt(Positive.getText().toString());
-        isometric = Integer.parseInt(Isometric.getText().toString());
-        negative = Integer.parseInt(Negative.getText().toString());
-        */
+        int sets,restbyexercise,restbyset;
+
         sets = Integer.parseInt(Sets.getText().toString());
         restbyexercise = Integer.parseInt(removeLastChar(RestbyExercise.getText().toString()));
         restbyset = Integer.parseInt(removeLastChar(RestbySet.getText().toString()));
-        int tempoTotal = 5;
 
 
         Intent intent = new Intent(this, WorkingOutActivity.class);
@@ -722,12 +639,9 @@ public class WorkoutActivity extends AppCompatActivity {
         intent.putExtra("Array_Positive_Exercises",Positive_Exercises);
         intent.putExtra("Array_Isometric_Exercises",Isometric_Exercises);
         intent.putExtra("Array_Negative_Exercises",Negative_Exercises);
-
-
         startActivity(intent);
 
     }
-
 
 
     private void toast(String text){
@@ -851,79 +765,6 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
-
-
-    public void getExercisesFromJson(){
-
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
-                // Customize the request
-                Request request = original.newBuilder()
-                        .header("Accept", "application/json")
-                        .header("Authorization", "auth-token")
-                        .method(original.method(), original.body())
-                        .build();
-                okhttp3.Response response = chain.proceed(request);
-                Log.v(TAG,response.toString());
-                // Customize or return the response
-                return response;
-            }
-        });
-
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-
-        SilverbarsService service = retrofit.create(SilverbarsService.class);
-
-        for (int i = 0; i < exercises.length; i++){
-            final int a = i;
-            String [] parts = exercises[i].split("exercises");
-            exercises[i] = "/exercises"+parts[1];
-            Call<JsonExercise> call = service.getExercises(exercises[i]);
-            call.enqueue(new Callback<JsonExercise>() {
-                @Override
-                public void onResponse(Call<JsonExercise> call, Response<JsonExercise> response) {
-                    if (response.isSuccessful()) {
-                        ParsedExercises[a] = response.body();
-
-                        exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[a].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[a].getExercise_image()));
-
-
-                        //Asignar cuales son los musculos de cada ejercicio
-                        for (int b = 0; b < ParsedExercises[a].muscle.length; b++){
-                            String name;
-                            name = ParsedExercises[a].muscle[b];
-                            MusclesArray.add(name);
-                        }
-//
-
-                        if ( exercisesToRecycler.size() == exercises.length){
-                            getExercisesfromJson();
-                        }
-//
-                    } else {
-                        int statusCode = response.code();
-                        // handle request errors yourself
-                        ResponseBody errorBody = response.errorBody();
-                        Log.e(TAG,errorBody.toString());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<JsonExercise> call, Throwable t) {
-                    Log.e(TAG,"getExercisesFromJson, onFailure",t);
-                }
-            });
-        }
-    }
-
-    
     
     private void setMusclesToView(List<String> musculos){
 
@@ -967,6 +808,7 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private void injectJS() {
+
         try {
 
             if (!Objects.equals(partes, "")){
@@ -979,9 +821,7 @@ public class WorkoutActivity extends AppCompatActivity {
                         "elem.attr({fill: '#602C8D',stroke: '#602C8D',});"+
                         "});"+ "}"+  ")()");
 
-                Log.v(TAG,"HA EJECUTADO EL JAVASCRIPT");
             }
-
 
         } catch (Exception e) {
             Log.e(TAG,"JAVASCRIPT Exception",e);
@@ -989,9 +829,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
     }
 
-//    JsonReps[] RepsData = JsonData.getReps("http://api.silverbarsapp.com/workout/?format=json",workout_id,exercises.length);
-//    ParsedReps = RepsData;
-    private void getExercisesfromJson(){
+
+    private void getRepsfromJson(){
 
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -1000,7 +839,7 @@ public class WorkoutActivity extends AppCompatActivity {
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request original = chain.request();
 
-                // Customize the request
+
                 Request request = original.newBuilder()
                         .header("Accept", "application/json")
                         .header("Authorization", "auth-token")
@@ -1009,7 +848,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
                 okhttp3.Response response = chain.proceed(request);
                 Log.v(TAG,response.toString());
-                // Customize or return the response
                 return response;
             }
         });
@@ -1022,27 +860,24 @@ public class WorkoutActivity extends AppCompatActivity {
 
         final SilverbarsService service = retrofit.create(SilverbarsService.class);
 
-
-
-
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
 
-                Call<JsonReps[]> call = service.getReps();
-                call.enqueue(new Callback<JsonReps[]>() {
+                Call<JsonWorkoutReps[]> call = service.getReps();
+                call.enqueue(new Callback<JsonWorkoutReps[]>() {
                     @Override
-                    public void onResponse(Call<JsonReps[]> call, Response<JsonReps[]> response) {
+                    public void onResponse(Call<JsonWorkoutReps[]> call, Response<JsonWorkoutReps[]> response) {
 
 
 
                         if (response.isSuccessful()) {
 
-                            JsonReps[] Reps = response.body();
-                            ParsedReps = new JsonReps[exercisesToRecycler.size()];
+                            JsonWorkoutReps[] Reps = response.body();
+                            ParsedReps = new JsonWorkoutReps[exercisesToRecycler.size()];
 
                             int y = 0;
-                            for (JsonReps Rep : Reps) {
+                            for (JsonWorkoutReps Rep : Reps) {
                                 String workout = Rep.getWorkout_id();
                                 if (workout.indexOf("workouts/" + workoutId) > 0) {
                                     ParsedReps[y] = Rep;
@@ -1058,24 +893,34 @@ public class WorkoutActivity extends AppCompatActivity {
 
                             for (int i = 0; i <exercisesToRecycler.size() ; i++){
 
+                                try {
 
-                                String[] audioDir = ParsedExercises[i].getExercise_audio().split("exercises");;
-                                String Parsedurl = "exercises"+audioDir[1];
-                                String[] splitName = Parsedurl.split("/");
-                                String mp3Name = splitName[2];
-                                File Dir = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3");
-                                if (Dir.isDirectory()){
-                                    File file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+mp3Name);
-                                    if (!file.exists()){
-                                        DownloadMp3(Parsedurl,mp3Name);
+                                    String[] audioDir = ParsedExercises[i].getExercise_audio().split("exercises");
+                                    String Parsedurl = "exercises" + audioDir[1];
+                                    String[] splitName = Parsedurl.split("/");
+                                    String mp3Name = splitName[2];
+                                    File Dir = new File(Environment.getExternalStorageDirectory() + "/SilverbarsMp3");
+                                    if (Dir.isDirectory()) {
+                                        File file = new File(Environment.getExternalStorageDirectory() + "/SilverbarsMp3/" + mp3Name);
+                                        if (!file.exists()) {
+                                            DownloadMp3(Parsedurl, mp3Name);
+                                        }
+                                    } else {
+                                        boolean success = Dir.mkdir();
+                                        if (success)
+                                            DownloadMp3(Parsedurl, mp3Name);
+                                        else
+                                            Log.e(TAG, "Error creating dir");
+
                                     }
-                                }else{
-                                    boolean success = Dir.mkdir();
-                                    if (success)
-                                        DownloadMp3(Parsedurl,mp3Name);
-                                    else
-                                        Log.e(TAG,"Error creating dir");
+
+                                }catch (NullPointerException e){
+                                    Tab_layout.setVisibility(View.GONE);
+                                    error_layout.setVisibility(View.VISIBLE);
+                                    Log.e(TAG,"NullPointerException",e);
                                 }
+
+
 
                                 Exercises_reps[i] = ParsedReps[i].getRepetition();
 
@@ -1084,10 +929,6 @@ public class WorkoutActivity extends AppCompatActivity {
                                 WorkoutActivity.Isometric_Exercises[i] = 1;
                                 WorkoutActivity.Negative_Exercises[i] = 1;
 
-                                Log.v(TAG,"Positive_Exercises"+i+":"+WorkoutActivity.Positive_Exercises[i]);
-                                Log.v(TAG,"Isometric"+i+":"+WorkoutActivity.Isometric_Exercises[i]);
-                                Log.v(TAG,"Negative"+i+":"+WorkoutActivity.Negative_Exercises[i]);
-
                             }
 
                             adapter = new ExerciseAdapter(exercisesToRecycler,WorkoutActivity.this);
@@ -1095,19 +936,22 @@ public class WorkoutActivity extends AppCompatActivity {
                             setMusclesToView(MusclesArray);
                             startButton.setEnabled(true);
 
-                            //Log.v(TAG, String.valueOf(muscles));
-
 
                         } else {
+
+                            error_layout.setVisibility(View.VISIBLE);
                             int statusCode = response.code();
-                            // handle request errors yourself
+
                             ResponseBody errorBody = response.errorBody();
-                            Log.e(TAG, String.valueOf(errorBody));
+                            Log.e(TAG, "getRepsfromJson: "+errorBody);
+                            Log.e(TAG, "statusCode: "+statusCode);
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<JsonReps[]> call, Throwable t) {
+                    public void onFailure(Call<JsonWorkoutReps[]> call, Throwable t) {
+
+                        error_layout.setVisibility(View.VISIBLE);
                         Log.e(TAG,"getExercisesfromJson, onfailure",t);
                     }
                 });
@@ -1117,10 +961,7 @@ public class WorkoutActivity extends AppCompatActivity {
         }.execute();
 
 
-
     }
-
-
 
     private void DownloadMp3(final String url, final String audioName) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
@@ -1129,7 +970,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         new AsyncTask<Void, Long, Void>() {
             @Override
-            protected Void doInBackground(Void... voids) {
+            protected Void doInBackground(Void... voworkouts_ids) {
                 Call<ResponseBody> call = downloadService.downloadFile(url);
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -1225,16 +1066,19 @@ public class WorkoutActivity extends AppCompatActivity {
                 database.updateLocal(workoutId,"true");
             }
         }
-        checkTableWorkouts();
+        saveWorkoutinTableWorkouts();
     }
 
-    public void checkTableWorkouts(){
+    private void saveWorkoutinTableWorkouts(){
 
-        String[] ids = new String[ParsedExercises.length];
+        String[] exercises_ids = new String[ParsedExercises.length];
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
         String imgDir = Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+workoutImage;
-        for (int i = 0; i < ids.length; i++){
-            ids[i] = String.valueOf(ParsedExercises[i].getId());
+
+        Log.v(TAG,"imgdir: "+workoutImage);
+
+        for (int i = 0; i < exercises_ids.length; i++){
+            exercises_ids[i] = String.valueOf(ParsedExercises[i].getId());
         }
 
         if (!database.checkWorkouts(workoutId)) {
@@ -1245,7 +1089,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     workoutSets,
                     workoutLevel,
                     mainMuscle,
-                    convertArrayToString(ids),
+                    convertArrayToString(exercises_ids),
                     1,
                     "true"
             );
@@ -1253,8 +1097,7 @@ public class WorkoutActivity extends AppCompatActivity {
         saveWorkout();
     }
 
-    public void saveWorkout(){
-
+    private void saveWorkout(){
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
         for (int i = 0; i < ParsedExercises.length; i++) {
             if (!database.checkWorkout(workoutId,ParsedExercises[i].getId())) {
@@ -1265,6 +1108,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 );
             }
         }
+
     }
 
     public String imageName(int position){
@@ -1295,101 +1139,86 @@ public class WorkoutActivity extends AppCompatActivity {
         return str;
     }
 
-    public static String[] convertStringToArray(String str){
-        return str.split(strSeparator);
-    }
 
-    public class WrappingLinearLayoutManager extends LinearLayoutManager {
+    public void getExercisesFromJson(){
 
-        public WrappingLinearLayoutManager(Context context) {
-            super(context);
-        }
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
 
-        private int[] mMeasuredDimension = new int[2];
+                Request request = original.newBuilder()
+                        .header("Accept", "application/json")
+                        .header("Authorization", "auth-token")
+                        .method(original.method(), original.body())
+                        .build();
+                okhttp3.Response response = chain.proceed(request);
+                Log.v(TAG,response.toString());
+                // Customize or return the response
+                return response;
+            }
+        });
 
-        @Override
-        public boolean canScrollVertically() {
-            return false;
-        }
+        OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
 
-        @Override
-        public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state,
-                              int widthSpec, int heightSpec) {
-            final int widthMode = View.MeasureSpec.getMode(widthSpec);
-            final int heightMode = View.MeasureSpec.getMode(heightSpec);
+        SilverbarsService service = retrofit.create(SilverbarsService.class);
 
-            final int widthSize = View.MeasureSpec.getSize(widthSpec);
-            final int heightSize = View.MeasureSpec.getSize(heightSpec);
+        for (int i = 0; i < exercises.length; i++){
+            final int a = i;
+            String [] parts = exercises[i].split("exercises");
+            exercises[i] = "/exercises"+parts[1];
 
-            int width = 0;
-            int height = 0;
-            for (int i = 0; i < getItemCount(); i++) {
-                if (getOrientation() == HORIZONTAL) {
-                    measureScrapChild(recycler, i,
-                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                            heightSpec,
-                            mMeasuredDimension);
 
-                    width = width + mMeasuredDimension[0];
-                    if (i == 0) {
-                        height = mMeasuredDimension[1];
-                    }
-                } else {
-                    measureScrapChild(recycler, i,
-                            widthSpec,
-                            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                            mMeasuredDimension);
+            Call<JsonExercise> call = service.getExercises(exercises[i]);
+            call.enqueue(new Callback<JsonExercise>() {
+                @Override
+                public void onResponse(Call<JsonExercise> call, Response<JsonExercise> response) {
+                    if (response.isSuccessful()) {
+                        ParsedExercises[a] = response.body();
 
-                    height = height + mMeasuredDimension[1];
-                    if (i == 0) {
-                        width = mMeasuredDimension[0];
+                        exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[a].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[a].getExercise_image()));
+
+
+                        //Asignar cuales son los musculos de cada ejercicio
+                        for (int b = 0; b < ParsedExercises[a].muscle.length; b++){
+                            String name;
+                            name = ParsedExercises[a].muscle[b];
+                            MusclesArray.add(name);
+                        }
+//
+
+                        if ( exercisesToRecycler.size() == exercises.length){
+                            getRepsfromJson();
+                        }
+//
+                    } else {
+                        error_layout.setVisibility(View.VISIBLE);
+                        Tab_layout.setVisibility(View.GONE);
+
+                        int statusCode = response.code();
+                        error_layout.setVisibility(View.VISIBLE);
+                        ResponseBody errorBody = response.errorBody();
+                        Log.e(TAG, "getExercisesFromJson: "+errorBody);
+                        Log.e(TAG, "statusCode: "+statusCode);
                     }
                 }
-            }
 
-            switch (widthMode) {
-                case View.MeasureSpec.EXACTLY:
-                    width = widthSize;
-                case View.MeasureSpec.AT_MOST:
-                case View.MeasureSpec.UNSPECIFIED:
-            }
-
-            switch (heightMode) {
-                case View.MeasureSpec.EXACTLY:
-                    height = heightSize;
-                case View.MeasureSpec.AT_MOST:
-                case View.MeasureSpec.UNSPECIFIED:
-            }
-
-            setMeasuredDimension(width, height);
-        }
-
-        private void measureScrapChild(RecyclerView.Recycler recycler, int position, int widthSpec,
-                                       int heightSpec, int[] measuredDimension) {
-
-            View view = recycler.getViewForPosition(position);
-            if (view.getVisibility() == View.GONE) {
-                measuredDimension[0] = 0;
-                measuredDimension[1] = 0;
-                return;
-            }
-            // For adding Item Decor Insets to view
-            super.measureChildWithMargins(view, 0, 0);
-            RecyclerView.LayoutParams p = (RecyclerView.LayoutParams) view.getLayoutParams();
-            int childWidthSpec = ViewGroup.getChildMeasureSpec(
-                    widthSpec,
-                    getPaddingLeft() + getPaddingRight() + getDecoratedLeft(view) + getDecoratedRight(view),
-                    p.width);
-            int childHeightSpec = ViewGroup.getChildMeasureSpec(
-                    heightSpec,
-                    getPaddingTop() + getPaddingBottom() + getDecoratedTop(view) + getDecoratedBottom(view),
-                    p.height);
-            view.measure(childWidthSpec, childHeightSpec);
-
-            // Get decorated measurements
-            measuredDimension[0] = getDecoratedMeasuredWidth(view) + p.leftMargin + p.rightMargin;
-            measuredDimension[1] = getDecoratedMeasuredHeight(view) + p.bottomMargin + p.topMargin;
-            recycler.recycleView(view);
+                @Override
+                public void onFailure(Call<JsonExercise> call, Throwable t) {
+                    Tab_layout.setVisibility(View.GONE);
+                    error_layout.setVisibility(View.VISIBLE);
+                    Log.e(TAG,"getExercisesFromJson, onFailure",t);
+                }
+            });
         }
     }
+
+
+
+
 }

@@ -23,6 +23,7 @@ import static com.app.proj.silverbars.AdaptersUtilities.loadImageFromCache;
  * Created by andre_000 on 4/12/2016.
  */
 public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.WorkoutsViewHolder> {
+
     private static final String TAG = "Workout Adapter";
     private List<WorkoutInfo> items;
     private Context context;
@@ -63,6 +64,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
     @Override
     public void onBindViewHolder(WorkoutsViewHolder viewHolder, int i) {
+
         Bitmap bmp = null;
         //Setting values to each recylerView Element
         String[] imageDir = WorkoutActivity.ParsedExercises[i].getExercise_image().split("exercises");

@@ -57,7 +57,7 @@ public class JsonParser {
             return exercise;
         }
 
-        JsonReps[] getReps(String urlString, int workout_id, int exercises) throws Exception {
+        JsonWorkoutReps[] getReps(String urlString, int workout_id, int exercises) throws Exception {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url(urlString)
@@ -70,8 +70,8 @@ public class JsonParser {
             }
             String jsonData = responses.body().string();
             Gson gson = new Gson();
-            JsonReps[] reps = gson.fromJson(jsonData, JsonReps[].class);
-            JsonReps[] ParsedReps = new JsonReps[exercises];
+            JsonWorkoutReps[] reps = gson.fromJson(jsonData, JsonWorkoutReps[].class);
+            JsonWorkoutReps[] ParsedReps = new JsonWorkoutReps[exercises];
             int y = 0;
             for (int z = 0; z < reps.length; z++){
                 String workout = reps[z].workout_id;

@@ -31,25 +31,64 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:id="@+id/tab2"
+                    android:id="@+id/my_workouts_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:gravity="center_vertical"
+                        android:background="@color/white"
+                        android:visibility="gone"
+                        android:id="@+id/empty_state_my_workouts"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:textColor="@color/black"
+                            android:textSize="22sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/blank_text_my_workouts"
+                            android:layout_gravity="center"
+                            android:gravity="center" />
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_create_workout"
+                            android:id="@+id/button7"
+                            android:layout_gravity="center"
+                            android:gravity="center" />
+                    </LinearLayout>
+                    <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/recycler_my_workouts"
+                        android:visibility="invisible"
+                        android:paddingTop="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:twowayview_layoutManager="GridLayoutManager"
+                        app:twowayview_numColumns="2"
+                        android:orientation="vertical" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/saved_workouts_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:gravity="center">
-
-
-
-                        <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <LinearLayout
+                    <LinearLayout
                                 android:orientation="vertical"
 
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center_vertical"
-                                android:id="@+id/empty_state"
+                                android:id="@+id/empty_state_saved_workouts"
                                 android:visibility="gone"
                                 android:background="@color/white">
 
@@ -70,49 +109,17 @@
                                     android:layout_gravity="center"
                                     android:gravity="center" />
                             </LinearLayout>
-                            <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
-                                android:id="@+id/list"
-
-                                android:paddingTop="5dp"
-
-                                android:paddingStart="5dp"
-                                android:paddingEnd="5dp"
-
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:twowayview_layoutManager="GridLayoutManager"
-                                app:twowayview_numColumns="2"
-                                android:orientation="vertical" />
-                        </FrameLayout>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/tab1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_gravity="center"
-                    android:gravity="center">
-
-                    <TextView
-                        android:textColor="@color/black"
-                        android:textSize="22sp"
+                    <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/recycler_saved_workouts"
+                        android:paddingTop="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:visibility="invisible"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/blank_text_my_workouts"
-                        android:layout_gravity="center"
-                        android:gravity="center" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_create_workout"
-                        android:id="@+id/button7"
-                        android:layout_gravity="center"
-                        android:gravity="center" />
-
+                        android:layout_height="match_parent"
+                        app:twowayview_layoutManager="GridLayoutManager"
+                        app:twowayview_numColumns="2"
+                        android:orientation="vertical" />
                 </LinearLayout>
 
 

@@ -11,7 +11,6 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:id="@+id/noInternetConnection_layout"
-
         android:visibility="gone"
         android:background="@color/white">
 
@@ -20,7 +19,7 @@
             android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Estás sin conexión"
+            android:text="@string/error_title_internet"
             android:id="@+id/text_no_internet"
 
             android:textSize="20sp"/>
@@ -32,12 +31,12 @@
             android:textSize="16sp"
             android:textColor="@color/gray_active_icon"
             android:id="@+id/noConnection_text"
-            android:text="Por Favor, Conectate a Internet y prueba de nuevo"/>
+            android:text="@string/error_message_internet"/>
 
             <Button
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/button_reload_no_internet"
-                android:text="Recargar"
+                android:text="@string/reload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -56,7 +55,7 @@
             android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fallo conexion con el servidor"
+            android:text="@string/error_failure"
             android:id="@+id/failed_conection_text"
 
             android:textSize="20sp"/>
@@ -67,12 +66,12 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textColor="@color/gray_active_icon"
-            android:text="Por Favor, intenta de nuevo"/>
+            android:text="@string/error_message"/>
 
         <Button
             android:layout_gravity="center_horizontal"
             android:id="@+id/button_reload_failed_server"
-            android:text="Recargar"
+            android:text="@string/reload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

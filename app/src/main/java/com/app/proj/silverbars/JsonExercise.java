@@ -12,6 +12,7 @@ public class JsonExercise {
     public String[] muscle;
     public String exercise_audio;
     public String exercise_image;
+    public int rep;
 
 //    @Override
 //    public String toString(){
@@ -62,6 +63,15 @@ public class JsonExercise {
     public String getExercise_audio() {
         return exercise_audio;
     }
+
+    public int getRep(){
+        return rep;
+    }
+
+    public void setRep(int rep){
+        this.rep = rep;
+    }
+
 
     public void setExercise_audio(String exercise_audio) {
         this.exercise_audio = exercise_audio;

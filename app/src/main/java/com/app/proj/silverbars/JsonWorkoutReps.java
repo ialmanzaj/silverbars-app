@@ -3,7 +3,7 @@ package com.app.proj.silverbars;
 /**
  * Created by andre_000 on 6/13/2016.
  */
-public class JsonReps {
+public class JsonWorkoutReps {
 
     public int id;
     public String workout_id;
@@ -45,10 +45,10 @@ public class JsonReps {
         this.repetition = repetition;
     }
 
-    public JsonReps() {
+    public JsonWorkoutReps() {
     }
 
-    public JsonReps(int id, String workout_id, String exercise, int repetition) {
+    public JsonWorkoutReps(int id, String workout_id, String exercise, int repetition) {
         this.id = id;
         this.workout_id = workout_id;
         this.exercise = exercise;

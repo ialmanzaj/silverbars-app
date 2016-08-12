@@ -102,13 +102,24 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
 
 
 
-    public ArrayList<String> getSelectedExercisesArrayList(){
+    public ArrayList<String> getSelectedExercisesName(){
         ArrayList<String> exercises = new ArrayList<>();
         for (int a = 0;a<mSelectedExercises.size();a++){
             exercises.add(mSelectedExercises.get(a).getExercise_name());
         }
         return exercises;
     }
+
+    public int[] getExerciseReps() {
+        int[] exercises_reps = new int[mSelectedExercises.size()];
+        for (int a = 0; a < mSelectedExercises.size(); a++) {
+            exercises_reps[a] = mSelectedExercises.get(a).getRep();
+        }
+
+        return exercises_reps;
+    }
+
+
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
@@ -190,6 +201,8 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
 
 
         viewHolder.nombre.setText(mSelectedExercises.get(a).getExercise_name());
+        mSelectedExercises.get(a).setRep(1);
+
 
         // Start a drag whenever the handle view it touched
         viewHolder.img_handle.setOnTouchListener(new View.OnTouchListener() {
@@ -205,16 +218,19 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
 
         viewHolder.workout_layout.setOnClickListener(new View.OnClickListener() {
 
-            private TextView DialogName, Reps;
+            private TextView DialogName, reps_dialog;
             private Button plusRep, minusRep;
             private int value = 0;
             private int ActualRepValue = 0;
+            
 
             @Override
             public void onClick(View view) {
 
                 //Log.v(TAG,"value of a: "+a);
                 //Log.v(TAG,"item: "+mSelectedExercises.get(a).getExercise_name());
+
+
 
                 View v = new MaterialDialog.Builder(view.getContext())
                         .title(R.string.rep_edit)
@@ -224,9 +240,8 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 dialog.dismiss();
                                 //On Dialog "Done" ClickListener
-                                viewHolder.repetitions.setText(String.valueOf(NewRepValue()));
-//                                WorkoutActivity workout = new WorkoutActivity();
-//                                workout.Exercises_reps[a] = NewRepValue();
+                                viewHolder.repetitions.setText(String.valueOf(NewRepValue(reps_dialog)));
+                                mSelectedExercises.get(a).setRep(NewRepValue(reps_dialog));
                             }
                         })
                         .show()
@@ -242,19 +257,19 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
                         Log.v(TAG,"position in list: "+indice);
                     }
 */
-
-
-
-
-                    Reps = (TextView) v.findViewById(R.id.Sets);
                     ActualRepValue = Integer.valueOf(viewHolder.repetitions.getText().toString());
-                    Reps.setText(String.valueOf(ActualRepValue));
+                    reps_dialog = (TextView) v.findViewById(R.id.Reps);
+                    mSelectedExercises.get(a).setRep(ActualRepValue);
+                    reps_dialog.setText(String.valueOf(ActualRepValue));
+
+
+
                     plusRep = (Button) v.findViewById(R.id.plusRep);
                     plusRep.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            //Increasing Reps Button
-                            plusTempo(Reps, plusRep, minusRep);
+                            //Increasing reps_dialog Button
+                            plusTempo(reps_dialog, plusRep, minusRep);
                         }
                     });
 
@@ -262,8 +277,8 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
                     minusRep.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            //Decreasing Reps Button
-                            minusTempo(Reps, minusRep, plusRep);
+                            //Decreasing reps_dialog Button
+                            minusTempo(reps_dialog, minusRep, plusRep);
                         }
                     });
 
@@ -281,15 +296,15 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
 
             }
 
-            public int NewRepValue() {
-                return Integer.valueOf(Reps.getText().toString());
+            public int NewRepValue(TextView textView) {
+                return Integer.valueOf(textView.getText().toString());
             }
 
             public void plusTempo(TextView view, Button button, Button button2) {
                 value = Integer.parseInt(view.getText().toString());
                 view.setText(String.valueOf(value + 1));
                 value++;
-                if (view == Reps) {
+                if (view == reps_dialog) {
                     if (value == 20) {
                         button.setEnabled(false);
                         button.setClickable(false);
@@ -316,7 +331,7 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
                 value = Integer.parseInt(view.getText().toString());
                 view.setText(String.valueOf(value - 1));
                 value--;
-                if (view == Reps) {
+                if (view == reps_dialog) {
                     if ((value) == 1) {
                         button.setEnabled(false);
                         button.setClickable(false);

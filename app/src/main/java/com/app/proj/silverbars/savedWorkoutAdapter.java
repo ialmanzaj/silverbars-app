@@ -43,12 +43,11 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
     private static final int TYPE_WORKOUT = 0;
     private static final int TYPE_VIEW_MORE = 1;
     private static final String TAG = "savedWorkoutAdapter";
-    //    private static final String[] WORKOUTS = {"Chest", "Upper Body", "Core", "Back Destruction", "Chest"};
-//    private static final int[] IMG = {R.mipmap.imagen1, R.mipmap.imagen2, R.mipmap.imagen3, R.mipmap.imagen4, R.mipmap.imagen5};
-    private WorkoutsFragment outerClass = new WorkoutsFragment();
-
     private List<JsonWorkout> workouts;
     private final Activity context;
+    private Boolean user_workout  = false;
+
+
 
     public static class VH extends RecyclerView.ViewHolder {
 
@@ -57,6 +56,8 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
         TextView text;
         Button btn;
         LikeButton like;
+
+
 
         public VH(View v) {
             super(v);
@@ -74,9 +75,10 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
     }
 
 
-    public savedWorkoutAdapter(Activity context, List<JsonWorkout> workouts) {
+    public savedWorkoutAdapter(Activity context, List<JsonWorkout> workouts,Boolean user_workout) {
         this.context = context;
         this.workouts = workouts;
+        this.user_workout = user_workout;
     }
 
     @Override
@@ -103,17 +105,18 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
             case TYPE_WORKOUT:
                 Log.v(TAG,"Workouts Size"+position);
 
-                String[] parts = workouts.get(position).getWorkout_image().split("workouts");
+                String[] imgdir = workouts.get(position).getWorkout_image().split("workouts");
                 Bitmap bmp;
                 String imgName = null;
 
-                if (parts.length < 2){
+                if (imgdir.length < 2){
 
                     Log.v(TAG,"Image"+ workouts.get(position).getWorkout_image());
                     bmp = loadImageFromCache(workouts.get(position).getWorkout_image());
                     vh.img.setImageBitmap(bmp);
+
                 }else{
-                    String Parsedurl = "workouts"+parts[1];
+                    String Parsedurl = "workouts"+imgdir[1];
                     Log.v(TAG,"Image"+Parsedurl);
 //                DownloadImage(Parsedurl,vh);
                     String[] imagesName = Parsedurl.split("/");
@@ -142,6 +145,7 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
                         i.putExtra("level", workouts.get(position).getLevel());
                         i.putExtra("muscle", workouts.get(position).getMain_muscle());
                         i.putExtra("exercises", workouts.get(position).getExercises());
+                        i.putExtra("user_workout",user_workout);
                         context.startActivity(i);
                     }
                 });

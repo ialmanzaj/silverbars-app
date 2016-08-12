@@ -30,43 +30,36 @@ public class FinalExercisesAdapter extends RecyclerView.Adapter<FinalExercisesAd
 
     private static final String TAG = "FinalExercisesAdapter";
     private List<JsonExercise> mExercises = new ArrayList<>();
+    private int[] exercise_reps;
     private InputStream bmpInput;
 
-    private Button plusPositive;
-    private Button minusPositive;
-    private Button plusIsometric;
-    private Button minusIsometric;
-    private Button plusNegative;
-    private Button minusNegative;
+    private Button plusPositive,plusNegative,minusPositive,plusIsometric,minusIsometric,minusNegative;
     private TextView Positive, Negative, Isometric;
+
+
 
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView imagen;
+        public ImageView imagen,img_handle;
         public TextView nombre;
         public TextView next;
         public TextView repetitions;
-        public TextView positive;
-        public TextView negative;
-        public TextView isometric;
 
         public ExerciseViewHolder(View v) {
             super(v);
-            imagen = (ImageView) v.findViewById(R.id.imagen);
-            nombre = (TextView) v.findViewById(R.id.nombre);
-            repetitions = (TextView) v.findViewById(R.id.repetitions);
-
-            positive = (TextView) v.findViewById(R.id.positive);
-            isometric = (TextView) v.findViewById(R.id.isometric);
-            negative = (TextView) v.findViewById(R.id.negative);
-
+            imagen = (ImageView) itemView.findViewById(R.id.imagen);
+            nombre = (TextView) itemView.findViewById(R.id.nombre);
+            repetitions = (TextView) itemView.findViewById(R.id.repetitions);
+            img_handle = (ImageView) itemView.findViewById(R.id.handle);
+            img_handle.setVisibility(View.GONE);
         }
 
     }
 
-    public FinalExercisesAdapter(Context context,List<JsonExercise> mExercises) {
+    public FinalExercisesAdapter(Context context,List<JsonExercise> mExercises,int[] exercise_reps) {
         Context mContext = context;
         this.mExercises = mExercises;
+        this.exercise_reps = exercise_reps;
 
     }
 
@@ -79,7 +72,7 @@ public class FinalExercisesAdapter extends RecyclerView.Adapter<FinalExercisesAd
     @Override
     public ExerciseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_exercise_cards, parent, false);
+                .inflate(R.layout.exercises, parent, false);
         return new ExerciseViewHolder(v);
 
     }
@@ -87,7 +80,7 @@ public class FinalExercisesAdapter extends RecyclerView.Adapter<FinalExercisesAd
     @Override
     public void onBindViewHolder(ExerciseViewHolder viewHolder, int position) {
 
-        Bitmap bmp = null;
+        Bitmap bmp;
 
         final int a = viewHolder.getAdapterPosition();
 
@@ -107,6 +100,7 @@ public class FinalExercisesAdapter extends RecyclerView.Adapter<FinalExercisesAd
             String[] imagesName = Parsedurl.split("/");
             String imgName = imagesName[2];
             bmp = loadImageFromCache(imgName);
+
             if (bmp != null){
                 viewHolder.imagen.setImageBitmap(bmp);
             }
@@ -115,9 +109,10 @@ public class FinalExercisesAdapter extends RecyclerView.Adapter<FinalExercisesAd
             }
         }
 
-        viewHolder.nombre.setText(mExercises.get(a).getExercise_name());
 
-        //viewHolder.repetitions.setText(String.valueOf(mExercises.get(a)));
+        //asignar nombre y repeticiones a cada elemento del recycler.
+        viewHolder.nombre.setText(mExercises.get(a).getExercise_name());
+        viewHolder.repetitions.setText(String.valueOf(exercise_reps[a]));
     }
 
 

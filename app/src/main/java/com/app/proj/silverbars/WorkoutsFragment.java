@@ -5,13 +5,12 @@ package com.app.proj.silverbars;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
-import android.widget.TabWidget;
 
 import org.lucasr.twowayview.widget.TwoWayView;
 
@@ -21,11 +20,9 @@ import java.util.List;
 
 public class WorkoutsFragment extends Fragment {
 
+    private static final String TAG = "WorkoutsFragment";
     View rootView, mainView;
-    SearchView mSearchView;
-    TabWidget tabs;
     TabHost tabHost;
-
 
 
     @Override
@@ -40,34 +37,59 @@ public class WorkoutsFragment extends Fragment {
         TabHost.TabSpec savedworkout = tabHost.newTabSpec(getResources().getString(R.string.tab_saved));
 
         myworkouts.setIndicator(getResources().getString(R.string.tab_my_workouts));
-        myworkouts.setContent(R.id.tab1);
+        myworkouts.setContent(R.id.my_workouts_layout);
 
         savedworkout.setIndicator(getResources().getString(R.string.tab_saved));
-        savedworkout.setContent(R.id.tab2);
+        savedworkout.setContent(R.id.saved_workouts_layout);
 
         tabHost.addTab(savedworkout);
         tabHost.addTab(myworkouts);
 
-        TwoWayView recyclerView = (TwoWayView) rootView.findViewById(R.id.list);
-        LinearLayout EmpyState = (LinearLayout) rootView.findViewById(R.id.empty_state);
+
+
+        TwoWayView local_workouts = (TwoWayView) rootView.findViewById(R.id.recycler_saved_workouts);
+        TwoWayView my_workouts = (TwoWayView) rootView.findViewById(R.id.recycler_my_workouts);
+
+        LinearLayout EmpyStateSavedWorkout = (LinearLayout) rootView.findViewById(R.id.empty_state_saved_workouts);
+        LinearLayout EmpyStateMyWorkouts = (LinearLayout) rootView.findViewById(R.id.empty_state_my_workouts);
 
         MySQLiteHelper database = new MySQLiteHelper(getContext());
 
         if (database.getWorkouts(1) != null){
+
+            local_workouts.setVisibility(View.VISIBLE);
             List<JsonWorkout> workouts = new ArrayList<>();
             JsonWorkout[] ParsedWorkouts = database.getWorkouts(1);
             Collections.addAll(workouts, ParsedWorkouts);
 
-
-            recyclerView.removeAllViews();
-            recyclerView.removeAllViewsInLayout();
-            recyclerView.setAdapter(null);
-            recyclerView.setAdapter(new savedWorkoutAdapter(getActivity(),workouts));
+            local_workouts.removeAllViews();
+            local_workouts.removeAllViewsInLayout();
+            local_workouts.setAdapter(null);
+            local_workouts.setAdapter(new savedWorkoutAdapter(getActivity(),workouts,false));
 
         }else {
-            EmpyState.setVisibility(View.VISIBLE);
+            EmpyStateSavedWorkout.setVisibility(View.VISIBLE);
         }
-        //Log.v("Saved Workouts",String.valueOf(database.getWorkouts(1).length));
+
+
+       if (database.getUserWorkouts(1) != null){
+
+            my_workouts.setVisibility(View.VISIBLE);
+            List<JsonWorkout> my_workouts_list= new ArrayList<>();
+            JsonWorkout[] MyWorkouts = database.getUserWorkouts(1);
+            Collections.addAll(my_workouts_list, MyWorkouts);
+
+           Log.v(TAG,"my workout size: "+my_workouts_list);
+
+            my_workouts.removeAllViews();
+            my_workouts.removeAllViewsInLayout();
+            my_workouts.setAdapter(null);
+            my_workouts.setAdapter(new savedWorkoutAdapter(getActivity(),my_workouts_list,true));
+
+        }else {
+            EmpyStateMyWorkouts.setVisibility(View.VISIBLE);
+        }
+
 
         return rootView;
     }

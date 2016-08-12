@@ -137,9 +137,11 @@
     </string-array>
 
     <string name="rest_text_exercise">Rest between Exercise</string>
-    <string name="error_title">No internet connexion</string>
-    <string name="error_message">Please, Connect to Internet and try again</string>
-
+    <string name="error_title_internet">No Internet connexion</string>
+    <string name="error_message_internet">Please, Connect to Internet and try again</string>
+    <string name="error_failure">The connection failed</string>
+    <string name="error_message">Please, Connect and try again</string>
+    <string name="reload">Reload</string>
 
     <string name="title_dialog">Do you want to finish the workout?</string>
     <string name="content_dialog">You \'ll lose the workout progress</string>
@@ -154,6 +156,8 @@
     <string name="skill_progress">My Skill Progression</string>
     <string name="workout_shared">Workout Shared</string>
     <string name="history_workouts_done">My workouts done</string>
+
+
 
 
 

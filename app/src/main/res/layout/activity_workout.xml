@@ -35,6 +35,7 @@
         </android.support.design.widget.AppBarLayout>
 
     <TabHost
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/tabHost2"
@@ -71,6 +72,7 @@
                         android:layout_height="match_parent">
 
                         <RelativeLayout
+                                android:id="@+id/togle_no_internet"
                                 android:minHeight="55dp"
                                 android:background="@color/colorSecondary"
                                 android:paddingStart="15dp"
@@ -420,6 +422,44 @@
             </FrameLayout>
         </LinearLayout>
     </TabHost>
+
+    <LinearLayout
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        android:id="@+id/error_layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:textSize="22sp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/black"
+            android:text="Something went wrong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:textSize="18sp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/dark_gray"
+            android:text="Please, try again"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_marginTop="10dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/colorSecondary"
+            android:text="Recargar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
 
 </LinearLayout>
 
