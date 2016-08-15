@@ -16,7 +16,7 @@ public class MusicSourceAdapter extends ArrayAdapter<String> {
 //    private static final String[] SOURCES = {"Musica Local", "Musica de SoundCloud", "Musica de Spotify"};
 //    private static final int[] IMG = {R.drawable.local48, R.drawable.soundcloud48, R.drawable.spotify48};
 private static final String[] SOURCES = {"Musica Local"};
-    private static final int[] IMG = {R.drawable.local48};
+    private static final int[] IMG = {};
 
     private final AppCompatActivity context;
 

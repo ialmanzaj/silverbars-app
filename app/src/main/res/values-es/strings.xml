@@ -138,7 +138,7 @@
     <string name="rest_text_set">Descanso entre Serie</string>
 
     <string name="rest_text_exercise">Descanso entre Ejercicio</string>
-    <string name="error_title">Estás sin conexión a internet</string>
+    <string name="error_title_internet">Estás sin conexión a internet</string>
     <string name="error_message_internet">Por Favor, Conectate a Internet y prueba de nuevo</string>
     <string name="error_failure">La conexion fallo</string>
     <string name="error_message">Por Favor, intenta de nuevo</string>
@@ -160,7 +160,10 @@
     <string name="workout_shared">Rutinas Compartidas</string>
     <string name="history_workouts_done">Mis rutinas completadas</string>
 
-
     <string name="exercises_no_selected">No has seleccionado ningún ejercicio</string>
+
+    <string name="muscles_involved">Músculos involucrados</string>
+
+    <string name="something_wrong">Algo salió mal</string>
 
 </resources>

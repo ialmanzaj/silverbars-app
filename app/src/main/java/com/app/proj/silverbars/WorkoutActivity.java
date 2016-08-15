@@ -2,6 +2,7 @@ package com.app.proj.silverbars;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
@@ -35,6 +37,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -55,15 +58,14 @@ import com.spotify.sdk.android.authentication.AuthenticationResponse;*/
 
 public class WorkoutActivity extends AppCompatActivity {
 
-    private Button plusSets,minusSets,plusRest,minusRest,plusRestSets,minusRestSets;
+    private Button plusSets,minusSets,plusRest,minusRest,plusRestSets,minusRestSets,Button_error_reload;
 
     TabHost Tab_layout;
 
     private TextView Positive, Negative, Isometric, Reps, Workout_name, Sets, RestbySet, RestbyExercise,RestSets_dialog,Sets_dialog;
     private String[] position;
-    private List<String> spinnerArray = new ArrayList<String>();
     private int value = 0;
-    private RecyclerView recycler;
+    private RecyclerView ExercisesRecycler;
     private RecyclerView.Adapter adapter;
     private int ExerciseReps = 1;
     private ArrayList<File> mySongs;
@@ -76,7 +78,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private Boolean respuesta_recibida = false;
 
     Button startButton;
-    private LinearLayout primary_linear,secondary_linear;
+    private LinearLayout primary_ColumnMuscle,secundary_ColumnMuscle,Progress;
 
 
     private boolean isTouched = false;
@@ -128,10 +130,12 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutLevel = intent.getStringExtra("level");
         mainMuscle = intent.getStringExtra("muscle");
         exercises = intent.getStringArrayExtra("exercises");
+
         Boolean user_workout = intent.getBooleanExtra("user_workout", false);
 
-
         ParsedExercises = new JsonExercise[exercises.length];
+        
+        
         setContentView(R.layout.activity_workout);
 
         startButton = (Button) findViewById(R.id.start_button);
@@ -139,17 +143,34 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
         // MUSCLES TEXT VIEW
-        primary_linear = (LinearLayout) findViewById(R.id.primary_muscles);
-        secondary_linear = (LinearLayout) findViewById(R.id.sec_muscles);
+        primary_ColumnMuscle = (LinearLayout) findViewById(R.id.column1);
+        secundary_ColumnMuscle = (LinearLayout) findViewById(R.id.column2);
 
+        Progress = (LinearLayout) findViewById(R.id.progress_bar_);
+
+        //error layout
         error_layout = (LinearLayout) findViewById(R.id.error_layout);
+        Button_error_reload = (Button) findViewById(R.id.error_reload_workout);
+
+        Button_error_reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                error_layout.setVisibility(View.GONE);
+                Progress.setVisibility(View.VISIBLE);
+                getExercisesFromJson();
+
+            }
+        });
 
 
         SwitchCompat enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
         SwitchCompat vibration_per_rep = (SwitchCompat) findViewById(R.id.vibration_per_rep);
         SwitchCompat vibration_per_set = (SwitchCompat) findViewById(R.id.vibration_per_set);
-
-        recycler = (RecyclerView) findViewById(R.id.reciclador);
+        
+        
+        
+        ExercisesRecycler = (RecyclerView) findViewById(R.id.reciclador);
 
         final RelativeLayout selectMusic = (RelativeLayout) findViewById(R.id.SelectMusic);
 
@@ -210,14 +231,14 @@ public class WorkoutActivity extends AppCompatActivity {
         Tab_layout.addTab(muscles);
 
 
-        if (recycler != null){
-            recycler.setNestedScrollingEnabled(false);
-            recycler.setHasFixedSize(false);
+        if (ExercisesRecycler != null){
+            ExercisesRecycler.setNestedScrollingEnabled(false);
+            ExercisesRecycler.setHasFixedSize(false);
         }
 
 
         RecyclerView.LayoutManager lManager = new LinearLayoutManager(this);
-        recycler.setLayoutManager(lManager);
+        ExercisesRecycler.setLayoutManager(lManager);
 
 
 
@@ -259,8 +280,7 @@ public class WorkoutActivity extends AppCompatActivity {
         if (database.checkWorkouts(workoutId) && Objects.equals(database.checkWorkoutLocal(workoutId), "true")){
             loadLocal = true;
             enableLocal.setChecked(true);
-
-
+            
             ParsedReps = database.getWorkout(workoutId);
             ParsedExercises = new JsonExercise[ParsedReps.length];
             Exercises_reps = new int[ParsedReps.length];
@@ -273,10 +293,6 @@ public class WorkoutActivity extends AppCompatActivity {
             
             for (int i = 0; i < ParsedReps.length; i++){
                 ParsedExercises[i] = database.getExercise(Integer.valueOf(ParsedReps[i].getExercise()));
-
-                //agregar json a array exercisesToRecycler
-                exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[i].getExercise_image()));
-
                 Exercises_reps[i] = ParsedReps[i].getRepetition();
 
                 // inicializar cada parte del tempo
@@ -284,34 +300,25 @@ public class WorkoutActivity extends AppCompatActivity {
                 WorkoutActivity.Negative_Exercises[i] = 1;
                 WorkoutActivity.Isometric_Exercises[i] = 1;
 
-
                 //RECORRER CADA EJECICIOS BUSCANDO MUSCULOS
-                for (int b = 0; b < ParsedExercises[i].muscle.length; b++){
-                    String name;
-                    name = ParsedExercises[i].muscle[b];
-                    MusclesArray.add(name);
-                }
+                Collections.addAll(MusclesArray, ParsedExercises[i].muscle);
 
-
+                //agregar json a array exercisesToRecycler
+                exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[i].getExercise_image()));
             }
-
+            
+            //start button encendido ya que sin la data null exeption in Activity WORKINGOUT
             startButton.setEnabled(true);
             adapter = new ExerciseAdapter(exercisesToRecycler,WorkoutActivity.this);
-            recycler.setAdapter(adapter);
+            ExercisesRecycler.setAdapter(adapter);
             setMusclesToView(MusclesArray);
 
         }else if (user_workout && database.checkUserWorkouts(workoutId) ){
 
             togle_no_internet.setVisibility(View.GONE);
 
-            Log.v(TAG,"workoutId: "+workoutId);
-            Log.v(TAG, Arrays.toString(database.getUserWorkout(workoutId)));
-
-
              ParsedReps = database.getUserWorkout(workoutId);
-            Log.v(TAG, Arrays.toString(ParsedReps));
-
-
+            
             ParsedExercises = new JsonExercise[ParsedReps.length];
             Exercises_reps = new int[ParsedReps.length];
 
@@ -323,33 +330,27 @@ public class WorkoutActivity extends AppCompatActivity {
             for (int i = 0; i < ParsedReps.length; i++){
 
                 ParsedExercises[i] = database.getExercise(Integer.valueOf(ParsedReps[i].getExercise()));
-
-                //agregar json a array exercisesToRecycler
-                exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[i].getExercise_image()));
-
                 Exercises_reps[i] = ParsedReps[i].getRepetition();
-
+                
                 // inicializar cada parte del tempo
                 WorkoutActivity.Positive_Exercises[i] = 1;
                 WorkoutActivity.Negative_Exercises[i] = 1;
                 WorkoutActivity.Isometric_Exercises[i] = 1;
-
-
+                
                 //RECORRER CADA EJECICIOS BUSCANDO MUSCULOS
-                for (int b = 0; b < ParsedExercises[i].muscle.length; b++){
-                    String name;
-                    name = ParsedExercises[i].muscle[b];
-                    MusclesArray.add(name);
-                }
+                Collections.addAll(MusclesArray, ParsedExercises[i].muscle);
+
+                //agregar json a array exercisesToRecycler
+                exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[i].getExercise_image()));
 
             }
+
             startButton.setEnabled(true);
             adapter = new ExerciseAdapter(exercisesToRecycler,WorkoutActivity.this);
-            recycler.setAdapter(adapter);
+            ExercisesRecycler.setAdapter(adapter);
             setMusclesToView(MusclesArray);
-
-
         } else {
+            
 
             getExercisesFromJson();
             loadLocal = false;
@@ -538,16 +539,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
         //START WORKOUT BUTTON
 
-
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.v(TAG,"START BUTTON: ACTIVADO");
-                LaunchWorkingOutActivity();
-            }
-        });
-
-
         // vibracion por repeticion y por set colocado cada switch
         vibration_per_rep.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -565,6 +556,16 @@ public class WorkoutActivity extends AppCompatActivity {
                 Log.v(TAG,"VibrationIsActivePerSet: "+VibrationIsActivePerSet);
             }
         });
+
+
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.v(TAG,"START BUTTON: ACTIVADO");
+                LaunchWorkingOutActivity();
+            }
+        });
+
 
 
     }// on create close
@@ -620,6 +621,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
     private void LaunchWorkingOutActivity() {
+
         int sets,restbyexercise,restbyset;
 
         sets = Integer.parseInt(Sets.getText().toString());
@@ -769,27 +771,39 @@ public class WorkoutActivity extends AppCompatActivity {
     private void setMusclesToView(List<String> musculos){
 
         if (musculos.size() > 0){
+            List<String> musculos_oficial = new ArrayList<>();
+            for (int a = 0; a<musculos.size();a++){
+                if (!musculos_oficial.contains(musculos.get(a))) {
+                    musculos_oficial.add(musculos.get(a));
+                }
+            }
 
-            // asignar musculos a text view si es primario o secundario
-            for (String s : musculos)
-            {
-                final TextView MuscleView = new TextView(WorkoutActivity.this);
+            for (int a = 0;a<musculos_oficial.size();a++) {
+                final TextView MuscleTextView = new TextView(WorkoutActivity.this);
+
+                partes += "#"+ musculos_oficial.get(a) + ",";
+                MuscleTextView.setText(musculos_oficial.get(a));
+
+                MuscleTextView.setGravity(Gravity.CENTER);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    MuscleView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));
+                    MuscleTextView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));
                 }else {
-                    MuscleView.setTextColor(getResources().getColor(R.color.gray_active_icon));
+                    MuscleTextView.setTextColor(getResources().getColor(R.color.gray_active_icon));
                 }
 
-                partes += "#"+ s + ",";
-                //MuscleView.setGravity(Gravity.CENTER);
-                //MuscleView.setText(s);
+                if (a%2 == 0){
+                    secundary_ColumnMuscle.addView(MuscleTextView);
+                }else {
+                    primary_ColumnMuscle.addView(MuscleTextView);
 
-                //Log.v(TAG, (String) MuscleView.getText());
-                //primary_linear.addView(MuscleView);
+                }
+
 
             }
         }
+
+
         webview.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -798,14 +812,23 @@ public class WorkoutActivity extends AppCompatActivity {
             }
 
         });
+
         webview.getSettings().setJavaScriptEnabled(true);
-        String fileurl = "file://"+Environment.getExternalStorageDirectory()+"/html/"+"index.html";
+
+
+        SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
+        String default_url = getResources().getString(R.string.muscle_path);
+        String muscle_url = sharedPref.getString(getString(R.string.muscle_path),default_url);
+
+        String fileurl = "file://"+muscle_url;
         webview.loadUrl(fileurl);
+
+
     }
 
-    private static String removeLastChar(String str) {
-        return str.substring(0,str.length()-1);
-    }
+
+
+    private static String removeLastChar(String str) {return str.substring(0,str.length()-1);}
 
     private void injectJS() {
 
@@ -814,7 +837,8 @@ public class WorkoutActivity extends AppCompatActivity {
             if (!Objects.equals(partes, "")){
 
                 partes = removeLastChar(partes);
-                //Log.v(TAG,partes);
+                
+                
                 webview.loadUrl("javascript: ("+ "window.onload = function () {"+
                         "partes = Snap.selectAll('"+partes+"');"+
                         "partes.forEach( function(elem,i) {"+
@@ -824,15 +848,17 @@ public class WorkoutActivity extends AppCompatActivity {
             }
 
         } catch (Exception e) {
+
             Log.e(TAG,"JAVASCRIPT Exception",e);
+            Tab_layout.setVisibility(View.GONE);
+            error_layout.setVisibility(View.VISIBLE);
         }
 
     }
 
 
-    private void getRepsfromJson(){
-
-
+    private void getExerciseRepsFromJson(){
+        
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
             @Override
@@ -858,20 +884,17 @@ public class WorkoutActivity extends AppCompatActivity {
                 .client(client)
                 .build();
 
-        final SilverbarsService service = retrofit.create(SilverbarsService.class);
+         SilverbarsService service = retrofit.create(SilverbarsService.class);
 
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-
-                Call<JsonWorkoutReps[]> call = service.getReps();
-                call.enqueue(new Callback<JsonWorkoutReps[]>() {
+        Call<JsonWorkoutReps[]> call = service.getReps();
+        call.enqueue(new Callback<JsonWorkoutReps[]>() {
                     @Override
                     public void onResponse(Call<JsonWorkoutReps[]> call, Response<JsonWorkoutReps[]> response) {
 
-
-
                         if (response.isSuccessful()) {
+
+                            error_layout.setVisibility(View.GONE);
+                            Tab_layout.setVisibility(View.VISIBLE);
 
                             JsonWorkoutReps[] Reps = response.body();
                             ParsedReps = new JsonWorkoutReps[exercisesToRecycler.size()];
@@ -900,6 +923,7 @@ public class WorkoutActivity extends AppCompatActivity {
                                     String[] splitName = Parsedurl.split("/");
                                     String mp3Name = splitName[2];
                                     File Dir = new File(Environment.getExternalStorageDirectory() + "/SilverbarsMp3");
+                                    
                                     if (Dir.isDirectory()) {
                                         File file = new File(Environment.getExternalStorageDirectory() + "/SilverbarsMp3/" + mp3Name);
                                         if (!file.exists()) {
@@ -915,9 +939,11 @@ public class WorkoutActivity extends AppCompatActivity {
                                     }
 
                                 }catch (NullPointerException e){
+                                    Log.e(TAG,"NullPointerException",e);
+                                    
                                     Tab_layout.setVisibility(View.GONE);
                                     error_layout.setVisibility(View.VISIBLE);
-                                    Log.e(TAG,"NullPointerException",e);
+                                    
                                 }
 
 
@@ -932,7 +958,7 @@ public class WorkoutActivity extends AppCompatActivity {
                             }
 
                             adapter = new ExerciseAdapter(exercisesToRecycler,WorkoutActivity.this);
-                            recycler.setAdapter(adapter);
+                            ExercisesRecycler.setAdapter(adapter);
                             setMusclesToView(MusclesArray);
                             startButton.setEnabled(true);
 
@@ -943,22 +969,24 @@ public class WorkoutActivity extends AppCompatActivity {
                             int statusCode = response.code();
 
                             ResponseBody errorBody = response.errorBody();
-                            Log.e(TAG, "getRepsfromJson: "+errorBody);
+                            Log.e(TAG, "getExerciseRepsFromJson: "+errorBody);
                             Log.e(TAG, "statusCode: "+statusCode);
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<JsonWorkoutReps[]> call, Throwable t) {
+                    protected void finalize() throws Throwable {
+                        super.finalize();
+                    }
 
+                    @Override
+                    public void onFailure(Call<JsonWorkoutReps[]> call, Throwable t) {
+                        Tab_layout.setVisibility(View.GONE);
                         error_layout.setVisibility(View.VISIBLE);
                         Log.e(TAG,"getExercisesfromJson, onfailure",t);
                     }
                 });
 
-                return null;
-            }
-        }.execute();
 
 
     }
@@ -970,7 +998,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         new AsyncTask<Void, Long, Void>() {
             @Override
-            protected Void doInBackground(Void... voworkouts_ids) {
+            protected Void doInBackground(Void... workouts_ids) {
                 Call<ResponseBody> call = downloadService.downloadFile(url);
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -983,7 +1011,9 @@ public class WorkoutActivity extends AppCompatActivity {
                         else {Log.e(TAG, "Download server contact failed");}
                     }
                     @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {Log.v(TAG, t.toString(),t);}
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.e(TAG, "DownloadMp3: onFailure",t);
+                    }
                 });
                 return null;
             };
@@ -991,6 +1021,7 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private boolean writeResponseBodyToDisk(ResponseBody body, String audioName) {
+
         try {
             File futureStudioIconFile = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+audioName);
             InputStream inputStream = null;
@@ -1050,7 +1081,6 @@ public class WorkoutActivity extends AppCompatActivity {
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
         for (int i = 0; i < ParsedExercises.length; i++){
             if (!database.checkExercise(ParsedExercises[i].getId()) ){
-
                 String imgDir = Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageName(i);
                 String mp3Dir = Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+audioName(i);
                 database.insertExercises(
@@ -1131,7 +1161,7 @@ public class WorkoutActivity extends AppCompatActivity {
         String str = "";
         for (int i = 0;i<array.length; i++) {
             str = str+array[i];
-            // Do not append comma at the end of last element
+
             if(i<array.length-1){
                 str = str+strSeparator;
             }
@@ -1141,6 +1171,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
     public void getExercisesFromJson(){
+
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -1181,25 +1212,25 @@ public class WorkoutActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         ParsedExercises[a] = response.body();
 
+                        Progress.setVisibility(View.GONE);
+                        Tab_layout.setVisibility(View.VISIBLE);
+
                         exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[a].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[a].getExercise_image()));
 
+                        //RECORRER CADA EJECICIOS BUSCANDO MUSCULOS
+                        Collections.addAll(MusclesArray, ParsedExercises[a].muscle);
 
-                        //Asignar cuales son los musculos de cada ejercicio
-                        for (int b = 0; b < ParsedExercises[a].muscle.length; b++){
-                            String name;
-                            name = ParsedExercises[a].muscle[b];
-                            MusclesArray.add(name);
-                        }
-//
-
+                        
                         if ( exercisesToRecycler.size() == exercises.length){
-                            getRepsfromJson();
+                            getExerciseRepsFromJson();
                         }
-//
+                        
+                        
+
                     } else {
+                        
                         error_layout.setVisibility(View.VISIBLE);
                         Tab_layout.setVisibility(View.GONE);
-
                         int statusCode = response.code();
                         error_layout.setVisibility(View.VISIBLE);
                         ResponseBody errorBody = response.errorBody();
@@ -1209,12 +1240,23 @@ public class WorkoutActivity extends AppCompatActivity {
                 }
 
                 @Override
+                protected void finalize() throws Throwable {
+                    super.finalize();
+
+                }
+
+                @Override
                 public void onFailure(Call<JsonExercise> call, Throwable t) {
+                    Log.e(TAG,"getExercisesFromJson, onFailure",t);
+                    
+                    
                     Tab_layout.setVisibility(View.GONE);
                     error_layout.setVisibility(View.VISIBLE);
-                    Log.e(TAG,"getExercisesFromJson, onFailure",t);
+                   
                 }
             });
+
+
         }
     }
 

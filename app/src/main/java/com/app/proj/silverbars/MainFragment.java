@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import org.lucasr.twowayview.widget.TwoWayView;
 
@@ -42,6 +43,11 @@ public class MainFragment extends Fragment {
     private boolean opened;
     LinearLayout noInternetConnectionLayout,failedServerLayout;
 
+
+
+    ProgressBar progressBar;
+    private int mProgressStatus = 0;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_fmain, container, false);
@@ -63,6 +69,8 @@ public class MainFragment extends Fragment {
         this.muscleData = muscleData;
     }
 
+
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -75,7 +83,10 @@ public class MainFragment extends Fragment {
         opened = getArguments().getBoolean("Opened");
 
 
+
+        progressBar = (ProgressBar) getView().findViewById(R.id.progress_bar);
         recyclerView = (TwoWayView) getView().findViewById(R.id.list);
+
 
         noInternetConnectionLayout = (LinearLayout) getView().findViewById(R.id.noInternetConnection_layout);
         failedServerLayout = (LinearLayout) getView().findViewById(R.id.failed_conection_layout);
@@ -90,7 +101,7 @@ public class MainFragment extends Fragment {
 
                 if (CheckInternet(getActivity().getApplicationContext())){
                     swipeContainer.setVisibility(View.VISIBLE);
-                    Task(muscleData);
+                    getWorkoutsData(muscleData);
                     noInternetConnectionLayout.setVisibility(View.GONE);
                 }else {
                     noInternetConnectionLayout.setVisibility(View.VISIBLE);
@@ -107,7 +118,7 @@ public class MainFragment extends Fragment {
 
                 if (CheckInternet(getActivity().getApplicationContext())){
                     swipeContainer.setVisibility(View.VISIBLE);
-                    Task(muscleData);
+                    getWorkoutsData(muscleData);
                     failedServerLayout.setVisibility(View.GONE);
                 }else {
                     failedServerLayout.setVisibility(View.VISIBLE);
@@ -120,7 +131,7 @@ public class MainFragment extends Fragment {
 
             opened = true;
             if (CheckInternet(getActivity().getApplicationContext())){
-                Task(muscleData);
+                getWorkoutsData(muscleData);
                 swipeContainer.setVisibility(View.VISIBLE);
                 noInternetConnectionLayout.setVisibility(View.GONE);
             }
@@ -132,7 +143,7 @@ public class MainFragment extends Fragment {
         }
         else{
             if (CheckInternet(getActivity().getApplicationContext())){
-                Task(muscleData);
+                getWorkoutsData(muscleData);
                 swipeContainer.setVisibility(View.VISIBLE);
                 noInternetConnectionLayout.setVisibility(View.GONE);
             }
@@ -148,11 +159,8 @@ public class MainFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
                 if (CheckInternet(getActivity().getApplicationContext())){
-                    Task(muscleData);
+                    getWorkoutsData(muscleData);
                 }
                 else{
                     swipeContainer.setRefreshing(false);
@@ -168,7 +176,8 @@ public class MainFragment extends Fragment {
 
     }
 
-    public void Task(final String muscle){
+    public void getWorkoutsData(final String muscle){
+        progressBar.setVisibility(View.VISIBLE);
 
         muscleData = muscle;
 
@@ -200,67 +209,79 @@ public class MainFragment extends Fragment {
                 .client(client)
                 .build();
         SilverbarsService service = retrofit.create(SilverbarsService.class);
+
+
+
         Call<JsonWorkout[]> call = service.getWorkouts();
         call.enqueue(new Callback<JsonWorkout[]>() {
 
 
-            @Override
-            public void onResponse(Call<JsonWorkout[]> call, Response<JsonWorkout[]> response) {
-                if (response.isSuccessful()) {
-//                    Workouts = null;
-                    recyclerView.removeAllViews();
-                    recyclerView.removeAllViewsInLayout();
-                    recyclerView.setAdapter(null);
-                    if (Objects.equals(muscle,"ALL")){
-                        Workouts = response.body();
-                    }
-                    else{
-                        JsonWorkout[] auxWorkout = response.body();
-                        JsonWorkout[] workoutFlag = null;
-                        int x = 0;
-                        for (JsonWorkout anAuxWorkout : auxWorkout) {
-                            String muscleData = anAuxWorkout.getMain_muscle();
-                            if (Objects.equals(muscle, muscleData)) {
-                                x++;
+                    @Override
+                    public void onResponse(Call<JsonWorkout[]> call, Response<JsonWorkout[]> response) {
+                        if (response.isSuccessful()) {
+
+                            recyclerView.removeAllViews();
+                            recyclerView.removeAllViewsInLayout();
+                            recyclerView.setAdapter(null);
+
+                            if (Objects.equals(muscle,"ALL")){
+                                Workouts = response.body();
                             }
-                        }
-                        Workouts = new JsonWorkout[x];
-                        int y = 0;
-                        for (JsonWorkout anAuxWorkout : auxWorkout) {
-                            String muscleData = anAuxWorkout.getMain_muscle();
-                            if (Objects.equals(muscle, muscleData)) {
-                                Workouts[y] = anAuxWorkout;
-                                //Log.v("Workout", Workouts[y].getWorkout_name());
-                                y++;
+                            else{
+
+                                JsonWorkout[] auxWorkout = response.body();
+                                JsonWorkout[] workoutFlag = null;
+                                int x = 0;
+                                for (JsonWorkout anAuxWorkout : auxWorkout) {
+                                    String muscleData = anAuxWorkout.getMain_muscle();
+                                    if (Objects.equals(muscle, muscleData)) {
+                                        x++;
+                                    }
+                                }
+                                Workouts = new JsonWorkout[x];
+                                int y = 0;
+                                for (JsonWorkout anAuxWorkout : auxWorkout) {
+                                    String muscleData = anAuxWorkout.getMain_muscle();
+                                    if (Objects.equals(muscle, muscleData)) {
+                                        Workouts[y] = anAuxWorkout;
+                                        //Log.v("Workout", Workouts[y].getWorkout_name());
+                                        y++;
+                                    }
+                                }
                             }
+                            progressBar.setVisibility(View.GONE);
+                            recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
+                            swipeContainer.setRefreshing(false);
+
+                        } else {
+                            int statusCode = response.code();
+                            // handle request errors yourself
+                            ResponseBody errorBody = response.errorBody();
+                            Log.e(TAG,errorBody.toString());
+
                         }
                     }
-                    recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
-                    swipeContainer.setRefreshing(false);
-                } else {
-                    int statusCode = response.code();
-                    // handle request errors yourself
-                    ResponseBody errorBody = response.errorBody();
-                    Log.e(TAG,errorBody.toString());
+                    @Override
+                    protected void finalize() throws Throwable {
+                        super.finalize();
+                        Log.v(TAG,"ha finalizado TASK() ");
 
-                }
-            }
-            @Override
-            protected void finalize() throws Throwable {
-                super.finalize();
-                //Log.v(TAG,"ha finalizado TASK() ");
+                    }
 
-            }
+                    @Override
+                    public void onFailure(Call<JsonWorkout[]> call, Throwable t) {
+                        Log.e(TAG,"getWorkoutsData, onFailure",t);
+                        swipeContainer.setVisibility(View.GONE);
+                        failedServerLayout.setVisibility(View.VISIBLE);
 
-            @Override
-            public void onFailure(Call<JsonWorkout[]> call, Throwable t) {
-                Log.e(TAG,"Task, onFailure",t);
-                swipeContainer.setVisibility(View.GONE);
-                failedServerLayout.setVisibility(View.VISIBLE);
+                    }
+                });
 
-            }
-        });
+
     }
+
+
+
 
     public boolean CheckInternet(Context context){
         ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);

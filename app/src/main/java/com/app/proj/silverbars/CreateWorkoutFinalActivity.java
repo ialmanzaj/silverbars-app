@@ -14,8 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,7 +38,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     ImageView imgProfile;
-    EditText workoutName;
+    AutoCompleteTextView workoutName;
     Button Save;
     private RecyclerView recycler;
     TextView Sets, RestbySet, RestbyExercise,RestSets_dialog,Sets_dialog;
@@ -99,7 +99,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
         }
 
 
-        workoutName = (EditText) findViewById(R.id.workoutName);
+        workoutName = (AutoCompleteTextView) findViewById(R.id.workoutName);
 
         Save = (Button) findViewById(R.id.Save);
         Save.setOnClickListener(new View.OnClickListener() {

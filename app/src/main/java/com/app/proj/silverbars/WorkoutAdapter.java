@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.os.Environment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,17 +20,14 @@ import android.widget.TextView;
 
 import com.like.LikeButton;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import static com.app.proj.silverbars.Utilities.loadWorkoutImageFromCache;
+import static com.app.proj.silverbars.Utilities.writeWorkoutImageinDisk;
 
 
 public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
@@ -87,10 +82,14 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
     }
 
     @Override
-    public void onBindViewHolder(VH vh, final int position) {
+    public void onBindViewHolder(VH vh, final int i) {
+
+        final int position = vh.getAdapterPosition();
+
         int height = containerDimensions(context);
         vh.layout.getLayoutParams().height = height / 3;
         switch (vh.getItemViewType()) {
+
             case TYPE_WORKOUT:
                 //Log.v(TAG,"Workouts Size"+position);
                 String[] parts = workouts[position].getWorkout_image().split("workouts");
@@ -102,7 +101,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                 //Log.v(TAG,"Image Name "+imgName);
 
                 // asignar imagen a view
-                Bitmap bmp = loadImageFromCache(imgName);
+                Bitmap bmp = loadWorkoutImageFromCache(context,imgName);
                 if (bmp != null){
                     //Bitmap resized = Bitmap.createScaledBitmap(bmp, 300, 300, true);
                     vh.img.setImageBitmap(bmp);
@@ -155,8 +154,8 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
 //                    vh.img.setImageBitmap(bmp);
                     Bitmap bitmap = null;
                     if (response.isSuccessful()) {
-                        boolean writtenToDisk = writeResponseBodyToDisk(response.body(),imgName);
-                        if(writtenToDisk){bitmap = loadImageFromCache(imgName);}
+                        boolean writtenToDisk = writeWorkoutImageinDisk(context,response.body(),imgName);
+                        if(writtenToDisk){bitmap = loadWorkoutImageFromCache(context,imgName);}
                         vh.img.setImageBitmap(bitmap);
                     }
                     else {
@@ -182,53 +181,5 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         int height = size.y;
         return height;
     }
-    private Bitmap loadImageFromCache(String imageURI) {
-        Bitmap bitmap = null;
-        File file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageURI);
-        if (file.exists()){
-            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-        }
-        return bitmap;
-    }
-    private boolean writeResponseBodyToDisk(ResponseBody body, String imgName) {
-        try {
-            File Folder = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/");
-            File futureStudioIconFile = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imgName);
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
-            boolean success = true;
-            if (!Folder.isDirectory()) {
-                Log.v(TAG,"Creating Dir");
-                success = Folder.mkdir();
-            }
-            if (success) {
-                try {
-                    byte[] fileReader = new byte[4096];
-                    long fileSize = body.contentLength();
-                    long fileSizeDownloaded = 0;
-                    inputStream = body.byteStream();
-                    outputStream = new FileOutputStream(futureStudioIconFile);
-                    while (true) {
-                        int read = inputStream.read(fileReader);
-                        if (read == -1) {break;}
-                        outputStream.write(fileReader, 0, read);
-                        fileSizeDownloaded += read;
-                        Log.v("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
-                    }
-                    outputStream.flush();
-                    return true;
 
-                } catch (IOException e) {
-                    return false;
-                } finally {
-                    if (inputStream != null) {inputStream.close();}
-                    if (outputStream != null) {outputStream.close();}
-                }
-            } else {
-                Log.e(TAG,"Error while creating dir");
-            }
-
-        } catch (IOException e) {return false;}
-        return false;
-    }
 }

@@ -80,27 +80,29 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingLeft="5dp">
+                    android:paddingStart="5dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Workout name"
-                        android:id="@+id/textView"
-                        android:layout_gravity="left|center_horizontal"
-                        android:textColor="@color/colorPrimaryText" />
 
-                    <EditText
+                    <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPersonName"
-                        android:hint="Workout name"
-                        android:ems="10"
-                        android:maxLength="20"
-                        android:id="@+id/workoutName"
-                        android:layout_gravity="center_horizontal"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:layout_height="wrap_content">
+
+                        <AutoCompleteTextView
+                            android:imeOptions="actionDone"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:ems="10"
+                            android:maxLength="20"
+                            android:id="@+id/workoutName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/workout_name"
+                            android:textColorHint="@color/black"
+                            android:inputType="textPersonName"
+                            android:maxLines="1"
+                            android:singleLine="true" />
+
+                    </android.support.design.widget.TextInputLayout>
+
                 </LinearLayout>
             </LinearLayout>
 

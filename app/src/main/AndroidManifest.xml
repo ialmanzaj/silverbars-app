@@ -25,21 +25,46 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:theme">
+
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name="com.app.proj.silverbars.MainScreenActivity">
+        <activity
+            android:screenOrientation="portrait"
+            android:name="com.app.proj.silverbars.SplashScreen"
+            android:theme="@style/SplashTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="portrait"
+            android:name="com.app.proj.silverbars.LoginActivity" android:label="@string/app_name" />
+
+        <activity
+            android:screenOrientation="portrait"
+            android:name="com.app.proj.silverbars.MainScreenActivity">
+        </activity>
+
+        <activity
+            android:screenOrientation="portrait"
             android:name="com.app.proj.silverbars.WorkoutActivity">
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name="com.app.proj.silverbars.MusicActivity"
             android:parentActivityName="com.app.proj.silverbars.WorkoutActivity">
             <meta-data
@@ -47,20 +72,33 @@
                 android:value="com.app.proj.silverbars.WorkoutActivity" />
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name="com.app.proj.silverbars.WorkingOutActivity"
             android:launchMode="singleTask" />
         <!-- <activity android:name=".Myworkouts" /> -->
         <activity android:name="com.app.proj.silverbars.PlaylistPickerActivity" />
         <activity
+            android:screenOrientation="portrait"
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
         <activity
-            android:name="com.app.proj.silverbars.LoginActivity"
-            android:label="@string/app_name" />
+            android:screenOrientation="portrait"
+            android:name=".CreateWorkoutActivity" />
         <activity
-            android:name="com.app.proj.silverbars.SplashScreen"
-            android:theme="@style/SplashTheme" />
+            android:screenOrientation="portrait"
+            android:name="com.app.proj.silverbars.CreateWorkoutFinalActivity"
+            android:windowSoftInputMode="stateHidden"
+            android:parentActivityName=".CreateWorkoutActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".CreateWorkoutActivity" />
+        </activity>
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".ExerciseListActivity" />
+        <activity android:name="com.app.proj.silverbars.ProgressionActivity"></activity>
+
         <activity android:name="com.app.proj.silverbars.SearchActivity">
 
             <!--
@@ -86,23 +124,14 @@
         <activity android:name="com.app.proj.silverbars.SpotifyMusic" />
         <activity android:name="com.app.proj.silverbars.SelectionMusicActivity" />
         <activity android:name="com.app.proj.silverbars.SongsActivity" />
-        <activity
-            android:name=".CreateWorkoutActivity"
-            />
-        <activity android:name=".ExerciseListActivity" />
+
+
         <activity android:name="com.app.proj.silverbars.orderExercises" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Theme.AppCompat" />
-        <activity android:name="com.app.proj.silverbars.ProgressionActivity"></activity>
-        <activity
-            android:name="com.app.proj.silverbars.CreateWorkoutFinalActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".CreateWorkoutActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CreateWorkoutActivity" />
-        </activity>
+
+
     </application>
 
 </manifest>

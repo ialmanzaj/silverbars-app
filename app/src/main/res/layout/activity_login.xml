@@ -4,19 +4,16 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.app.proj.silverbars.LoginActivity">
 
     <!-- Login progress -->
     <com.facebook.login.widget.LoginButton
+        android:padding="15dp"
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:gravity="center_vertical|center|center_horizontal"/>
+        android:gravity="center_vertical|center_horizontal"/>
 
     <ProgressBar
         android:id="@+id/login_progress"
@@ -27,6 +24,7 @@
         android:visibility="gone" />
 
     <ScrollView
+        android:visibility="gone"
         android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -69,7 +67,6 @@
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
-
             <Button
                 android:id="@+id/email_sign_in_button"
                 style="?android:textAppearanceSmall"
@@ -78,7 +75,6 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
-
         </LinearLayout>
     </ScrollView>
 

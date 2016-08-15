@@ -162,7 +162,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertUser(String name, String email, int active){
+    public void addUser(String name, String email, int active){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(KEY_NAME,name);
@@ -182,7 +182,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         return i;
     }
 
-    public String[] getUser(String email){
+    public String[] getUserByEmail(String email){
         String[] results = new String[4] ;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor row = db.rawQuery("SELECT * FROM users WHERE "+KEY_EMAIL+" = "+email,null);
@@ -200,6 +200,28 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             e.printStackTrace();
         }
         return results;
+    }
+
+    public boolean checkUser(String id){
+        boolean check;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_USERS+" WHERE "+KEY_EMAIL+" = "+id,null);
+
+        if (row.moveToFirst()){
+            check = true;
+            Log.v(TAG,"checkUser, yes we that user in database");
+        }
+        else{
+            Log.e(TAG,"checkUser, Database error:  user not found in database");
+            check = false;
+        }
+        db.close();
+        try {
+            BD_backup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return check;
     }
 
     public String[] getActiveUser(){

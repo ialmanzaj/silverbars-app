@@ -1,7 +1,9 @@
 package com.app.proj.silverbars;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -42,6 +44,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static com.app.proj.silverbars.Utilities.isExternalStorageWritable;
+
 //import com.afollestad.materialdialogs.MaterialDialog;
 
 public class MainScreenActivity extends AppCompatActivity {
@@ -70,10 +74,14 @@ public class MainScreenActivity extends AppCompatActivity {
     private FloatingActionButton fab_create_new_workout;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(TAG,"Main screenActivity creada");
         FacebookSdk.sdkInitialize(getApplicationContext());
+
+
         setContentView(R.layout.activity_main_screen);
 
         tagTitles = this.getResources().getStringArray(R.array.navigation_array);
@@ -85,20 +93,43 @@ public class MainScreenActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         
         //guardar html de svg en el celular
-        File Dir = new File(Environment.getExternalStorageDirectory()+"/html/");
-        if (Dir.isDirectory()){
-            File file = new File(Environment.getExternalStorageDirectory()+"/html/"+"index.html");
-            if (!file.exists()){
-                MuscleTemplateDownload();
+
+
+        if (isExternalStorageWritable()){
+
+            File Dir = new File(Environment.getExternalStorageDirectory()+"/html/");
+            if (Dir.isDirectory()){
+                File file = new File(Environment.getExternalStorageDirectory()+"/html/"+"index.html");
+                setMusclePath(file);
+                if (!file.exists()){
+                    MuscleTemplateDownload();
+                }
+            }else {
+                boolean success = Dir.mkdir();
+                if (success)
+                    MuscleTemplateDownload();
+
+                else
+                    Log.e(TAG,"Error creating dir");
             }
         }else {
-            boolean success = Dir.mkdir();
-            if (success)
-                MuscleTemplateDownload();
 
-            else
-                Log.e(TAG,"Error creating dir");
+            File Dir = new File(this.getFilesDir()+"/html/");
+            if (Dir.isDirectory()){
+                File file = new File(this.getFilesDir()+"/html/"+"index.html");
+                setMusclePath(file);
+                if (!file.exists()){
+                    MuscleTemplateDownload();
+                }
+            }else {
+                boolean success = Dir.mkdir();
+                if (success)
+                    MuscleTemplateDownload();
+                else
+                    Log.e(TAG,"Error creating dir");
+            }
         }
+
 
         fab_create_new_workout = (FloatingActionButton) findViewById(R.id.fab);
         
@@ -117,8 +148,8 @@ public class MainScreenActivity extends AppCompatActivity {
         Button_filter = (LinearLayout) toolbar.findViewById(R.id.Sort);
 
         final ArrayList<DrawerItem> items_drawer = new ArrayList<DrawerItem>();
-        items_drawer.add(new DrawerItem(tagTitles[0],R.drawable.ic_home_white_24dp));
-        items_drawer.add(new DrawerItem(tagTitles[1],R.drawable.ic_my_workouts));
+        items_drawer.add(new DrawerItem(tagTitles[0],R.drawable.ic_home_black_24dp));
+        items_drawer.add(new DrawerItem(tagTitles[1],R.drawable.ic_apps_black_24dp));
        /* items.add(new DrawerItem(tagTitles[2],R.drawable.ic_person_outline_white_24dp));*/
 
         drawerList.setAdapter(new DrawerListAdapter(this, items_drawer));
@@ -159,15 +190,14 @@ public class MainScreenActivity extends AppCompatActivity {
                                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 
                                 if (which != -1) {
-
                                     Log.v(TAG, String.valueOf(which));
                                     String[] Items = getResources().getStringArray(R.array.filter_items);
 
                                     Log.v(TAG, Items[which]);
                                     Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
                                     if (currentFragment instanceof MainFragment) {
-                                        ((MainFragment) currentFragment).Task(Items[which]);
-                                        //place your filtering logic here using currentFragment
+                                        ((MainFragment) currentFragment).getWorkoutsData(Items[which]);
+
 
                                     }
                                 }
@@ -293,10 +323,7 @@ public class MainScreenActivity extends AppCompatActivity {
     }
 
     public void MuscleTemplateDownload(){
-
         //Log.v(TAG, "METODO MUSCLE TEMPLATE LLAMADO");
-
-
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/")
                 .build();
 
@@ -311,13 +338,9 @@ public class MainScreenActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (response.isSuccessful()) {
-
-                            Boolean write = writeResponseBodyToDisk(response.body(),"index.html");
-
-
+                            Boolean write = writeHmlToDisk(response.body(),"index.html");
                         }
                         else {Log.e(TAG, "Download server contact failed");}
-
                     }
 
                     @Override
@@ -335,14 +358,16 @@ public class MainScreenActivity extends AppCompatActivity {
 
 
 
-    public boolean writeResponseBodyToDisk(ResponseBody body, String name) {
+    public boolean writeHmlToDisk(ResponseBody body, String name) {
+        Log.v(TAG,"writeMuscleHmlToDisk");
         try {
+            File file;
+            if (isExternalStorageWritable()){
 
-            File file = new File(Environment.getExternalStorageDirectory()+"/html/"+name);
-
-
-            Log.v(TAG, file.getPath());
-
+                file = new File(Environment.getExternalStorageDirectory()+"/html/"+name);
+            }else {
+                file = new File(this.getFilesDir()+"/html/"+name);
+            }
 
             InputStream input = null;
             OutputStream output = null;
@@ -366,8 +391,6 @@ public class MainScreenActivity extends AppCompatActivity {
                     fileSizeDownloaded += read;
                     //Log.d("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
                 }
-
-
                 output.flush();
                 return true;
 
@@ -381,6 +404,14 @@ public class MainScreenActivity extends AppCompatActivity {
         } catch (IOException e) { return false;}
     }
 
+    private void setMusclePath(File file){
+        Log.v(TAG,"setMusclePath: "+file.getPath());
+        SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.muscle_path), file.getPath());
+        editor.commit();
+
+    }
 
 
 

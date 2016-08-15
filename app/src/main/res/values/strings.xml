@@ -27,8 +27,11 @@
         completions."
     </string>
 
+    <string name="facebook_app_id" translatable="false">183093092104411</string>
+    <string name="fb_login_protocol_scheme" translatable="false">183093092104411</string>
 
-    <string name="facebook_app_id" translatable="false">438629419640939</string>
+
+
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
     <string name="action_websearch">Web search</string>
@@ -137,7 +140,7 @@
     </string-array>
 
     <string name="rest_text_exercise">Rest between Exercise</string>
-    <string name="error_title_internet">No Internet connexion</string>
+     <string name="error_title_internet">No Internet connexion</string>
     <string name="error_message_internet">Please, Connect to Internet and try again</string>
     <string name="error_failure">The connection failed</string>
     <string name="error_message">Please, Connect and try again</string>
@@ -157,11 +160,12 @@
     <string name="workout_shared">Workout Shared</string>
     <string name="history_workouts_done">My workouts done</string>
 
-
-
-
-
+    <string name="muscles_involved">Muscles Involved</string>
     <string name="exercises_no_selected">You haven\'t selected any exercise</string>
 
+    <string name="something_wrong">Something went wrong</string>
+
+
+    <string name="muscle_path" translatable="false">/</string>
 
 </resources>

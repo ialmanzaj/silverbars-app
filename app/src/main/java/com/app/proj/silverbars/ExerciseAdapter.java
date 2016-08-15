@@ -26,8 +26,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static com.app.proj.silverbars.AdaptersUtilities.loadImageFromCache;
-import static com.app.proj.silverbars.AdaptersUtilities.writeResponseBodyToDisk;
+import static com.app.proj.silverbars.Utilities.loadImageFromCache;
+import static com.app.proj.silverbars.Utilities.writeResponseBodyToDisk;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
 
@@ -42,6 +42,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     private Button plusNegative;
     private Button minusNegative;
     private TextView Positive, Negative, Isometric;
+    Context mContext;
 
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
@@ -68,7 +69,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     }
 
     public ExerciseAdapter(List<WorkoutInfo> items, Context context) {
-        Context mContext = context;
+        mContext = context;
         this.items = items;
 
     }
@@ -99,14 +100,14 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
         if (imageDir.length < 2){
 
-            bmp = loadImageFromCache(WorkoutActivity.ParsedExercises[a].getExercise_image());
+            bmp = loadImageFromCache(mContext,WorkoutActivity.ParsedExercises[a].getExercise_image());
             viewHolder.imagen.setImageBitmap(bmp);
 
         }else{
             String Parsedurl = "exercises"+imageDir[1];
             String[] imagesName = Parsedurl.split("/");
             String imgName = imagesName[2];
-            bmp = loadImageFromCache(imgName);
+            bmp = loadImageFromCache(mContext,imgName);
             if (bmp != null){
                 viewHolder.imagen.setImageBitmap(bmp);
             }
@@ -298,8 +299,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         Bitmap bitmap = null;
                         if (response.isSuccessful()) {
-                            boolean writtenToDisk = writeResponseBodyToDisk(response.body(),imgName);
-                            if(writtenToDisk){bitmap = loadImageFromCache(imgName);}
+                            boolean writtenToDisk = writeResponseBodyToDisk(mContext,response.body(),imgName);
+                            if(writtenToDisk){bitmap = loadImageFromCache(mContext,imgName);}
                             vh.imagen.setImageBitmap(bitmap);
                         }
                         else {

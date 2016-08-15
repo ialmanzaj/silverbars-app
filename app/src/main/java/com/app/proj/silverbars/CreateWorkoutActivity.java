@@ -3,6 +3,7 @@ package com.app.proj.silverbars;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+
 
 public class CreateWorkoutActivity extends AppCompatActivity implements OnStartDragListener {
 
@@ -180,22 +183,26 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             }
 
         });
+
         webView.getSettings().setJavaScriptEnabled(true);
-        String fileurl = "file://"+Environment.getExternalStorageDirectory()+"/html/"+"index.html";
+
+        SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
+        String default_url = getResources().getString(R.string.muscle_path);
+        String muscle_url = sharedPref.getString(getString(R.string.muscle_path),default_url);
+
+        Log.v(TAG,"muscle_url: "+muscle_url);
+        String fileurl = "file://"+muscle_url;
         webView.loadUrl(fileurl);
 
-
         if (adapter != null){
-
             if (adapter.getItemCount() > 0) {
                 Log.v(TAG,"hay algo: "+adapter.getSelectedExercisesName());
             }
-
         }
 
-        getExercisesFromJson();
 
 
+        getExercises();
     }//  close create workout
 
 
@@ -280,8 +287,16 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             }
 
         });
+
         webView.getSettings().setJavaScriptEnabled(true);
-        String fileurl = "file://"+Environment.getExternalStorageDirectory()+"/html/"+"index.html";
+
+
+        SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
+        String default_url = getResources().getString(R.string.muscle_path);
+        String muscle_url = sharedPref.getString(getString(R.string.muscle_path),default_url);
+
+
+        String fileurl = "file://"+muscle_url;
         webView.loadUrl(fileurl);
 
     }
@@ -312,7 +327,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     }
 
 
-    private void getExercisesFromJson(){
+    private void getExercises(){
 
         MySQLiteHelper database = new MySQLiteHelper(CreateWorkoutActivity.this);
 

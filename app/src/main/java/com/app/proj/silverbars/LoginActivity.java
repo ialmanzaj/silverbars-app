@@ -43,6 +43,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.ProfileTracker;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -76,6 +77,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
     };
+    private static final String TAG = "LoginActivity";
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -98,8 +100,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
+        Log.v(TAG,"LoginActivity creada");
+
         FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
         setContentView(R.layout.activity_login);
+
+
 
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
@@ -110,11 +117,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 md.update(signature.toByteArray());
                 Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
-        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
 
         }
-
-
 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -129,32 +136,45 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d("debug", "onSuccess");
-                GraphRequest request = new GraphRequest().newMeRequest(loginResult.getAccessToken(),
+                Log.v(TAG, "loginButton: onSuccess");
+
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
-                                String email = null;
-                                String name = null;
-                                try {
+                                Log.v(TAG, "onCompleted");
+
+                                String email;
+                                String name;
+
+                               try {
                                     email = object.getString("email");
                                     name = object.getString("name");
+/*
                                     mEmailView.setText(email);
-//                                    checkUser = database.checkUser(email);
-//                                    if (checkUser){
-//                                        final String[] result = database.getUserByEmail(email);
-//                                        final int id = Integer.parseInt(result[0]);
-//                                        database.updateUserState(id);
-//                                    }else{
-//                                        database.addUser(name,email,1);
-//                                    }
-                                    startActivity(new Intent(getApplicationContext(), MainScreenActivity.class));
-                                    finish();
+                                    checkUser = database.checkUser(email);
+                                    if (checkUser){
+                                        final String[] user = database.getUserByEmail(email);
+                                        final String id = user[0];
+                                        database.updateUser(id,1);
+                                   }else{
+                                        database.addUser(name,email,1);
+                                    }*/
+
+
+
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
+
+
                         });
+
+
+                startActivity(new Intent(getApplicationContext(), MainScreenActivity.class));
+                finish();
+
 
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "id,name,email");
@@ -165,22 +185,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             @Override
             public void onCancel() {
-                // App code
-                Toast.makeText(getApplicationContext(),
 
-                        "Canceled",
-
-                        Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onError(FacebookException exception) {
-                // App code
-                Toast.makeText(getApplicationContext(),
 
-                        "Error:"+exception,
-
-                        Toast.LENGTH_LONG).show();
             }
 
 
@@ -223,9 +233,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
-        if (callbackManager.onActivityResult(requestCode, resultCode, data)) {
-            return;
-        }
     }
 
 
@@ -488,6 +495,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return cm.getActiveNetworkInfo() != null;
     }
 
+
+
     public void checkConn() {
 
         boolean connection = isNetworkConnected();
@@ -507,6 +516,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Log.v(TAG,"Login activity destruida");
+    }
 }
 

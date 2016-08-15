@@ -17,7 +17,7 @@ import android.widget.TextView;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.app.proj.silverbars.AdaptersUtilities.loadImageFromCache;
+import static com.app.proj.silverbars.Utilities.loadImageFromCache;
 
 /**
  * Created by andre_000 on 4/12/2016.
@@ -65,7 +65,9 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
     @Override
     public void onBindViewHolder(WorkoutsViewHolder viewHolder, int i) {
 
-        Bitmap bmp = null;
+        Bitmap bmp;
+
+
         //Setting values to each recylerView Element
         String[] imageDir = WorkoutActivity.ParsedExercises[i].getExercise_image().split("exercises");
 
@@ -73,7 +75,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
         if (imageDir.length < 2){
             //Log.v(TAG, "ha entrado en IF imageDir.length < 2");
-            bmp = loadImageFromCache(WorkoutActivity.ParsedExercises[i].getExercise_image());
+            bmp = loadImageFromCache(context,WorkoutActivity.ParsedExercises[i].getExercise_image());
             viewHolder.imagen.setImageBitmap(bmp);
             viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
             viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
@@ -84,7 +86,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
             String Parsedurl = "exercises"+imageDir[1];
             String[] imagesName = Parsedurl.split("/");
             String imgName = imagesName[2];
-            bmp = loadImageFromCache(imgName);
+            bmp = loadImageFromCache(context,imgName);
 
             if (bmp != null){
                 //Log.v(TAG, "ha entrado en if bmp != null");

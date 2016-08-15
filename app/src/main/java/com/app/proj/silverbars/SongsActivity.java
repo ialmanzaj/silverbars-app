@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SongsActivity extends AppCompatActivity {
+    private static final String TAG = "SongsActivity";
     private ListView ListMusic;
     private static String strSeparator = "__,__";
     private String[] items;
@@ -31,63 +32,67 @@ public class SongsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_songs);
+
+        Log.v(TAG,"SongsActivity: empezo");
+
         ListMusic = (ListView)findViewById(R.id.lvPlaylist);
+
         mySongs = findSongs(Environment.getExternalStorageDirectory());
+
         if (mySongs.size() > 0) {
+
             items = new String[mySongs.size()];
             for (int i = 0; i < mySongs.size(); i++) {
                 items[i] = SongName(mySongs.get(i));
             }
-            ArrayAdapter<String> adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
-            ListMusic.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-            ListMusic.setAdapter(adp);
 
-            done = (Button)findViewById(R.id.done);
-            done.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    final int choice = ListMusic.getCount();
-                    selected = new long[choice];
-                    final SparseBooleanArray spa = ListMusic.getCheckedItemPositions();
-                    if (spa.size() != 0) {
-                        playlist = new String[ListMusic.getCheckedItemCount()];
-                        int x = 0;
-                        for (int i = 0; i < choice; i++) {
-                            selected[i] = -1;
-                        }
-                        for (int i = 0; i < choice; i++) {
-                            if (spa.get(i)) {
-                                selected[i] = ListMusic.getItemIdAtPosition(i);
+
+                ArrayAdapter<String> adp = new ArrayAdapter<>(this, R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
+                ListMusic.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                ListMusic.setAdapter(adp);
+
+                done = (Button)findViewById(R.id.done);
+                done.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final int choice = ListMusic.getCount();
+                        selected = new long[choice];
+                        final SparseBooleanArray spa = ListMusic.getCheckedItemPositions();
+                        if (spa.size() != 0) {
+                            playlist = new String[ListMusic.getCheckedItemCount()];
+                            int x = 0;
+                            for (int i = 0; i < choice; i++) {
+                                selected[i] = -1;
                             }
-                        }
-                        for(int j = 0; j < mySongs.size(); j++){
-                            if (j == selected[j]){
-                                playlist[x] = SongName(mySongs.get(j));
-                                x++;
+                            for (int i = 0; i < choice; i++) {
+                                if (spa.get(i)) {
+                                    selected[i] = ListMusic.getItemIdAtPosition(i);
+                                }
                             }
+                            for(int j = 0; j < mySongs.size(); j++){
+                                if (j == selected[j]){
+                                    playlist[x] = SongName(mySongs.get(j));
+                                    x++;
+                                }
+                            }
+                            Log.v("Songs", Arrays.toString(playlist));
+                            Intent returnIntent = new Intent();
+                            returnIntent.putExtra("positions",playlist);
+                            returnIntent.putExtra("songs",mySongs);
+                            setResult(RESULT_OK, returnIntent);
+                            finish();
                         }
-                        Log.v("Songs", Arrays.toString(playlist));
-                        Intent returnIntent = new Intent();
-                        returnIntent.putExtra("positions",playlist);
-                        returnIntent.putExtra("songs",mySongs);
-                        setResult(RESULT_OK, returnIntent);
-                        finish();
+                        else
+                            mySongs = null;
                     }
-                    else
-                        mySongs = null;
-                }
-            });
+                });
+
+
+
         }
         else {
-            done = (Button)findViewById(R.id.done);
-            done.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent returnIntent = new Intent();
-                    setResult(RESULT_OK, returnIntent);
-                    finish();
-                }
-            });
+            finish();
+            toast("No hay canciones");
         }
     }
 
@@ -96,6 +101,7 @@ public class SongsActivity extends AppCompatActivity {
     }
 
     public ArrayList<File> findSongs(File root){
+
         ArrayList<File> al = new ArrayList<File>();
         if (root.listFiles() != null){
             File[] files = root.listFiles();

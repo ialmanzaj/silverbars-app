@@ -1,52 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/CustomView"
     android:orientation="vertical"
+    android:layout_gravity="center"
+    android:paddingTop="5dp"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-        <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/CustomView"
-            android:layout_gravity="center"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
-            card_view:cardBackgroundColor="#fff"
-            card_view:contentPaddingTop="5dp">
-
-                <RelativeLayout
+            android:id="@+id/Layout">
+                <ImageView
+                    android:id="@+id/imagen"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/Layout">
+                    android:layout_height="wrap_content"
+                    android:maxHeight="250dp"
+                    android:contentDescription="@string/workout_name"
+                    android:layout_above="@+id/nombre" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/workout_name"
+                    android:textAlignment="center"
 
-
-                        <ImageView
-                            android:id="@+id/imagen"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:maxHeight="250dp"
-                            android:contentDescription="@string/workout_name"
-                            android:layout_above="@+id/nombre"
-                            />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="@string/workout_name"
-                            android:textAlignment="center"
-
-                            android:id="@+id/nombre"
-                            android:textColor="#000"
-                            android:gravity="bottom"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_alignParentBottom="true"
-                            android:layout_centerHorizontal="true" />
-                </RelativeLayout>
-
-                
-        </android.support.v7.widget.CardView>
-
-
+                    android:id="@+id/nombre"
+                    android:textColor="#000"
+                    android:gravity="bottom"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true" />
+        </RelativeLayout>
 </LinearLayout>
