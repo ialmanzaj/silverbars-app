@@ -26,3 +26,5 @@
 -dontwarn rx.**
 -dontwarn com.squareup.okhttp.*
 -dontwarn android.support.v4.**
+
+-dontwarn fi.foyt.foursquare.**

@@ -139,7 +139,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         return position < getItemCount() ? TYPE_WORKOUT : TYPE_VIEW_MORE;
     }
 
-    public void DownloadImage(String url, final VH vh, final String imgName){
+    private void DownloadImage(String url, final VH vh, final String imgName){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();

@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/lib/com.mikhaellopez.circularimageview.CircularImageView"
     tools:context=".ProfileFragment"
     android:background="#fff">
 
@@ -15,17 +14,13 @@
 
      android:id="@+id/LinearLayout">
 
-  <com.mikhaellopez.circularimageview.CircularImageView
+  <ImageView
       android:layout_width="100dp"
       android:layout_height="100dp"
       android:background="@color/light_gray"
-      app:civ_border_color="#EEEEEE"
-      app:civ_border_width="4dp"
-      app:civ_shadow="true"
-      app:civ_shadow_radius="50"
-      app:civ_shadow_color="#8BC34A"
-      android:id="@+id/view2"
-      android:layout_gravity="center" />
+      android:id="@+id/profile_image"
+      android:layout_gravity="center"
+      android:contentDescription="profile_image" />
 
   <TextView
       android:layout_marginBottom="5dp"
