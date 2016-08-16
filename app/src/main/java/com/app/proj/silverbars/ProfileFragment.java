@@ -11,6 +11,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import static com.facebook.Profile.getCurrentProfile;
 
 public class ProfileFragment extends Fragment {
 
@@ -19,11 +22,18 @@ public class ProfileFragment extends Fragment {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
     private RelativeLayout myTeam, Progression, skillsProgression, sharedWorkouts, history;
+    private TextView profile_name;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        profile_name = (TextView) rootView.findViewById(R.id.Profile_name);
+
+        String name = getCurrentProfile().getFirstName()+" "+getCurrentProfile().getLastName();
+        profile_name.setText(name);
+
         float scale = getResources().getDisplayMetrics().density;
         final int dpAsPixels = (int) (7*scale + 0.5f);
         myTeam = (RelativeLayout) rootView.findViewById(R.id.myTeam);
@@ -46,10 +56,10 @@ public class ProfileFragment extends Fragment {
                 return false;
             }
         });
+
+
         Progression = (RelativeLayout) rootView.findViewById(R.id.Progression);
-
         Progression.setClickable(true);
-
         Progression.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

@@ -804,14 +804,24 @@ public class WorkoutActivity extends AppCompatActivity {
         }
 
 
-        webview.setWebViewClient(new WebViewClient(){
+        runOnUiThread(new Runnable() {
             @Override
-            public void onPageFinished(WebView view, String url) {
-                injectJS();
-                super.onPageFinished(view, url);
-            }
+            public void run() {
 
+                webview.setWebViewClient(new WebViewClient(){
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
+                        injectJS();
+                        super.onPageFinished(view, url);
+                    }
+
+                });
+
+            }
         });
+
+
+
 
         webview.getSettings().setJavaScriptEnabled(true);
 

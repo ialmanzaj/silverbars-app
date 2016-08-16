@@ -33,7 +33,7 @@
       android:layout_height="wrap_content"
       android:textAppearance="?android:attr/textAppearanceLarge"
       android:text="Nombre"
-      android:id="@+id/textView23"
+      android:id="@+id/Profile_name"
       android:layout_gravity="center"
       android:textColor="@color/colorPrimaryText" />
 

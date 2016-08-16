@@ -25,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.FacebookSdk;
@@ -150,7 +149,7 @@ public class MainScreenActivity extends AppCompatActivity {
         final ArrayList<DrawerItem> items_drawer = new ArrayList<DrawerItem>();
         items_drawer.add(new DrawerItem(tagTitles[0],R.drawable.ic_home_black_24dp));
         items_drawer.add(new DrawerItem(tagTitles[1],R.drawable.ic_apps_black_24dp));
-       /* items.add(new DrawerItem(tagTitles[2],R.drawable.ic_person_outline_white_24dp));*/
+        items_drawer.add(new DrawerItem(tagTitles[2],R.drawable.ic_person_outline_black_24dp));
 
         drawerList.setAdapter(new DrawerListAdapter(this, items_drawer));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -271,7 +270,7 @@ public class MainScreenActivity extends AppCompatActivity {
                 fab_create_new_workout.setVisibility(View.GONE);
                 break;
             case 2:
-                /*if (currentFragment instanceof MainFragment) {
+                if (currentFragment instanceof MainFragment) {
                     muscle = ((MainFragment) currentFragment).getMuscleData();
                     //place your filtering logic here using currentFragment
                 }
@@ -281,7 +280,7 @@ public class MainScreenActivity extends AppCompatActivity {
                         .addToBackStack(null)
                         .commit();
                 Button_filter.setVisibility(View.GONE);
-                fab_create_new_workout.setVisibility(View.GONE);*/
+                fab_create_new_workout.setVisibility(View.GONE);
                 break;
         }
 
@@ -303,10 +302,6 @@ public class MainScreenActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void toast(String text){
-        Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
-    }
-
 
     @Override
     public void onBackPressed(){
@@ -321,6 +316,8 @@ public class MainScreenActivity extends AppCompatActivity {
             //place your filtering logic here using currentFragment
         }
     }
+
+
 
     public void MuscleTemplateDownload(){
         //Log.v(TAG, "METODO MUSCLE TEMPLATE LLAMADO");
@@ -405,6 +402,7 @@ public class MainScreenActivity extends AppCompatActivity {
     }
 
     private void setMusclePath(File file){
+
         Log.v(TAG,"setMusclePath: "+file.getPath());
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();

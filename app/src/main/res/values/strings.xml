@@ -37,7 +37,7 @@
     <string name="action_websearch">Web search</string>
 
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
-
+    <string name="sign_in" translatable="false">False</string>
 
     <!-- Strings related to activity_exercise_cards -->
     <string name="exercise_name">Exercise Name</string>
