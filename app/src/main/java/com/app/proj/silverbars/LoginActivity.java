@@ -80,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.v(TAG,"LoginActivity creada");
 
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
@@ -98,8 +99,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         } catch (PackageManager.NameNotFoundException e) {} catch (NoSuchAlgorithmException e) {}
 
-        loginButton.setReadPermissions("public_profile", "email", "user_friends");
 
+
+        loginButton.setReadPermissions("public_profile", "email", "user_friends");
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -111,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 Log.v(TAG, "onCompleted");
+
 
 
                             }
@@ -130,7 +133,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-                Log.d(TAG, "facebook:onCancel");
+                Log.e(TAG, "facebook:onCancel");
 
             }
             @Override
@@ -140,8 +143,6 @@ public class LoginActivity extends AppCompatActivity {
             }
 
         });
-
-
 
     }
 
@@ -163,8 +164,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
-
-
 
     /**
      * Shows the progress UI and hides the login form.
@@ -246,7 +245,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         Log.v(TAG,"Login activity onDestroy");
     }
 }

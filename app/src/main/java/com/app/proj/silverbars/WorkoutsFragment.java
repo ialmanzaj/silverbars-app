@@ -3,12 +3,14 @@ package com.app.proj.silverbars;
 //import android.support.design.widget.TabLayout;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 
@@ -52,6 +54,24 @@ public class WorkoutsFragment extends Fragment {
 
         LinearLayout EmpyStateSavedWorkout = (LinearLayout) rootView.findViewById(R.id.empty_state_saved_workouts);
         LinearLayout EmpyStateMyWorkouts = (LinearLayout) rootView.findViewById(R.id.empty_state_my_workouts);
+
+
+        Button explore = (Button) rootView.findViewById(R.id.explore);
+        Button create = (Button) rootView.findViewById(R.id.create_workout);
+
+
+        explore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(),CreateWorkoutActivity.class));
+            }
+        });
 
         MySQLiteHelper database = new MySQLiteHelper(getContext());
 

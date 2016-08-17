@@ -42,13 +42,16 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        profile_name = (TextView) rootView.findViewById(R.id.Profile_name);
 
+
+
+        //profiles settings
+        profile_name = (TextView) rootView.findViewById(R.id.Profile_name);
         String name = getCurrentProfile().getFirstName()+" "+getCurrentProfile().getLastName();
         profile_name.setText(name);
-
         profile_image = (ImageView) rootView.findViewById(R.id.profile_image);
         Bitmap bmp = loadProfileImageFromCache(getActivity(),getCurrentProfile().getId());
         if (bmp != null){
@@ -58,6 +61,8 @@ public class ProfileFragment extends Fragment {
         }
 
 
+
+        // buttons of options
         float scale = getResources().getDisplayMetrics().density;
         final int dpAsPixels = (int) (7*scale + 0.5f);
         myTeam = (RelativeLayout) rootView.findViewById(R.id.myTeam);

@@ -243,11 +243,10 @@ public class MainScreenActivity extends AppCompatActivity {
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
         switch (position){
-            case 0:
+            case 0:// ALL WORKOUTS TAB
                 if (currentFragment instanceof MainFragment) {
                     break;//place your filtering logic here using currentFragment
                 }else{
-//                    toast("Yes");
                     MainFragment main = new MainFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("Muscle",muscle);
@@ -265,10 +264,9 @@ public class MainScreenActivity extends AppCompatActivity {
                 }
 
                 break;
-            case 1:
+            case 1:// MY WORKOUTS TAB
                 if (currentFragment instanceof MainFragment) {
                     muscle = ((MainFragment) currentFragment).getMuscleData();
-                    //place your filtering logic here using currentFragment
                 }
                 fragmentManager
                         .beginTransaction()
@@ -279,7 +277,7 @@ public class MainScreenActivity extends AppCompatActivity {
                 fab_create_new_workout.setVisibility(View.GONE);
                 settings.setVisibility(View.GONE);
                 break;
-            case 2:
+            case 2:// PROFILE TAB
                 if (currentFragment instanceof MainFragment) {
                     muscle = ((MainFragment) currentFragment).getMuscleData();
                 }
