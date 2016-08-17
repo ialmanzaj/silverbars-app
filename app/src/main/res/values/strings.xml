@@ -31,7 +31,6 @@
     <string name="fb_login_protocol_scheme" translatable="false">183093092104411</string>
 
 
-
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
     <string name="action_websearch">Web search</string>
@@ -140,7 +139,7 @@
     </string-array>
 
     <string name="rest_text_exercise">Rest between Exercise</string>
-     <string name="error_title_internet">No Internet connexion</string>
+    <string name="error_title_internet">No Internet connexion</string>
     <string name="error_message_internet">Please, Connect to Internet and try again</string>
     <string name="error_failure">The connection failed</string>
     <string name="error_message">Please, Connect and try again</string>
@@ -164,8 +163,9 @@
     <string name="exercises_no_selected">You haven\'t selected any exercise</string>
 
     <string name="something_wrong">Something went wrong</string>
-
-
     <string name="muscle_path" translatable="false">/</string>
+
+    <string name="session_content">The session will end with your account and all data you have saved will be deleted</string>
+    <string name="session_title">Do you want  to log out?</string>
 
 </resources>

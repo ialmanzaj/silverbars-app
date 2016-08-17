@@ -294,8 +294,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         String default_url = getResources().getString(R.string.muscle_path);
         String muscle_url = sharedPref.getString(getString(R.string.muscle_path),default_url);
-
-
         String fileurl = "file://"+muscle_url;
         webView.loadUrl(fileurl);
 

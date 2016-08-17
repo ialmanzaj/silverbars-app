@@ -1,6 +1,7 @@
 package com.app.proj.silverbars;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,7 +21,6 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -56,7 +56,7 @@ public class MainScreenActivity extends AppCompatActivity {
     private String email,name;
     private int id;
     private TextView emailView, nameView, Username, title;
-    private ImageButton settings;
+
     private MySQLiteHelper database;
     private DrawerLayout drawerLayout;
     private ListView drawerList;
@@ -71,17 +71,21 @@ public class MainScreenActivity extends AppCompatActivity {
     public Spinner spinner;
     private boolean Opened = false;
     private FloatingActionButton fab_create_new_workout;
+    LinearLayout settings;
 
-
-
+    public static Activity MainScreenActivity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG,"Main screenActivity creada");
         FacebookSdk.sdkInitialize(getApplicationContext());
 
+        MainScreenActivity = this;
+
 
         setContentView(R.layout.activity_main_screen);
+
+        settings = (LinearLayout) findViewById(R.id.settings);
 
         tagTitles = this.getResources().getStringArray(R.array.navigation_array);
 
@@ -93,9 +97,7 @@ public class MainScreenActivity extends AppCompatActivity {
         
         //guardar html de svg en el celular
 
-
         if (isExternalStorageWritable()){
-
             File Dir = new File(Environment.getExternalStorageDirectory()+"/html/");
             if (Dir.isDirectory()){
                 File file = new File(Environment.getExternalStorageDirectory()+"/html/"+"index.html");
@@ -154,7 +156,13 @@ public class MainScreenActivity extends AppCompatActivity {
         drawerList.setAdapter(new DrawerListAdapter(this, items_drawer));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainScreenActivity.this,SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
         toolbar.setTitle(tagTitles[0]);
@@ -252,6 +260,7 @@ public class MainScreenActivity extends AppCompatActivity {
                             .commit();
                     Button_filter.setVisibility(View.VISIBLE);
                     fab_create_new_workout.setVisibility(View.VISIBLE);
+                    settings.setVisibility(View.GONE);
                     Opened = main.isOpened();
                 }
 
@@ -268,11 +277,11 @@ public class MainScreenActivity extends AppCompatActivity {
                         .commit();
                 Button_filter.setVisibility(View.GONE);
                 fab_create_new_workout.setVisibility(View.GONE);
+                settings.setVisibility(View.GONE);
                 break;
             case 2:
                 if (currentFragment instanceof MainFragment) {
                     muscle = ((MainFragment) currentFragment).getMuscleData();
-                    //place your filtering logic here using currentFragment
                 }
                 fragmentManager
                         .beginTransaction()
@@ -281,9 +290,9 @@ public class MainScreenActivity extends AppCompatActivity {
                         .commit();
                 Button_filter.setVisibility(View.GONE);
                 fab_create_new_workout.setVisibility(View.GONE);
+                settings.setVisibility(View.VISIBLE);
                 break;
         }
-
         // Se actualiza el item seleccionado y el título, después de cerrar el drawer
         drawerList.setItemChecked(position, true);
         toolbar.setTitle(tagTitles[position]);

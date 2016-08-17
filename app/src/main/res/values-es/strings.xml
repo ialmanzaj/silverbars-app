@@ -161,9 +161,10 @@
     <string name="history_workouts_done">Mis rutinas completadas</string>
 
     <string name="exercises_no_selected">No has seleccionado ningún ejercicio</string>
-
     <string name="muscles_involved">Músculos involucrados</string>
-
     <string name="something_wrong">Algo salió mal</string>
+
+    <string name="session_content">Se cerrará la sesión con tu cuenta y todos los datos que tenga guardados se borrarán</string>
+    <string name="session_title">Desea cerrar sesión?</string>
 
 </resources>

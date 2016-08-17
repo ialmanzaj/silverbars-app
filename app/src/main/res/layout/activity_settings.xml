@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.app.proj.silverbars.SettingsActivity">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="50dp"
+        app:elevation="2dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:background="@color/colorPrimary">
+
+    </android.support.v7.widget.Toolbar>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
+        android:background="@drawable/custom_border"
+        android:id="@+id/close_session">
+
+        <TextView
+            android:layout_marginStart="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Cerrar sesion"
+            android:id="@+id/textView33"
+            android:textColor="@color/colorPrimaryText"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:layout_centerVertical="true" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView3"
+            android:src="@drawable/ic_keyboard_arrow_right_black_36dp"
+            android:layout_gravity="right"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+</LinearLayout>

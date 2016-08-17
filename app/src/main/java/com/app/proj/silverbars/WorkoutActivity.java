@@ -822,7 +822,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-
         webview.getSettings().setJavaScriptEnabled(true);
 
 

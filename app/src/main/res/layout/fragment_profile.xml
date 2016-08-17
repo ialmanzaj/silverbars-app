@@ -1,20 +1,13 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".ProfileFragment"
     android:background="#fff">
 
- <LinearLayout
-     android:orientation="vertical"
-     android:layout_width="match_parent"
-     android:layout_height="match_parent"
-     android:layout_centerHorizontal="true"
-     android:paddingTop="8dp"
-
-     android:id="@+id/LinearLayout">
-
   <ImageView
+      android:layout_marginTop="10dp"
       android:layout_width="100dp"
       android:layout_height="100dp"
       android:background="@color/light_gray"
@@ -27,7 +20,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:textAppearance="?android:attr/textAppearanceLarge"
-      android:text="Nombre"
+      android:text="id nombre"
       android:id="@+id/Profile_name"
       android:layout_gravity="center"
       android:textColor="@color/colorPrimaryText" />
@@ -209,6 +202,6 @@
        android:layout_alignParentTop="true"
        android:layout_alignParentEnd="true"/>
   </RelativeLayout>
- </LinearLayout>
 
-</RelativeLayout>
+
+</LinearLayout>

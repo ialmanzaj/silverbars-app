@@ -106,8 +106,6 @@ public class LoginActivity extends AppCompatActivity {
                 Log.v(TAG, "loginButton: onSuccess");
 
 
-
-
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
                         new GraphRequest.GraphJSONObjectCallback() {
                             @Override
