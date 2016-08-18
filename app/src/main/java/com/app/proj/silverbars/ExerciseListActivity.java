@@ -97,14 +97,11 @@ public class ExerciseListActivity extends AppCompatActivity {
     }
 
     public void Exercises() {
+            MySQLiteHelper database = new MySQLiteHelper(ExerciseListActivity.this);
 
-
-        MySQLiteHelper database = new MySQLiteHelper(ExerciseListActivity.this);
-
-        for (int i = 0; i < database.getAllExercises().length; i++){
+            for (int i = 0; i < database.getAllExercises().length; i++){
                 Log.v(TAG,"exercises:"+database.getExercise(database.getExercisesIds()[i]).getExercise_name() );
                 OriginalExerciseListAll.add( database.getExercise(database.getExercisesIds()[i]) );
-
             }
 
             Log.v(TAG,"OriginalExerciseListAll size: "+OriginalExerciseListAll.size());
@@ -129,8 +126,6 @@ public class ExerciseListActivity extends AppCompatActivity {
                         }
                     }
                 }
-
-
             }catch (NullPointerException e){
                 Log.e(TAG, "no se ha seleccionado ningun ejercicio todavia");
             }
@@ -138,15 +133,13 @@ public class ExerciseListActivity extends AppCompatActivity {
 
             if (ExercisesNoSelected.isEmpty()){
                 adapter = new AllExercisesAdapter(ExerciseListActivity.this,OriginalExerciseListAll);
-                Log.v(TAG,"OriginalExerciseListAll: active");
+                //Log.v(TAG,"OriginalExerciseListAll: active");
             }else {
                 adapter = new AllExercisesAdapter(ExerciseListActivity.this,ExercisesNoSelected);
-                Log.v(TAG,"ExercisesNoSelected: active");
+                //Log.v(TAG,"ExercisesNoSelected: active");
             }
 
             recycler.setAdapter(adapter);
-
-
 
     }
 }

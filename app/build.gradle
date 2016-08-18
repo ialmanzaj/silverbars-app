@@ -51,9 +51,25 @@ configurations.all {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.1.1'
-    compile 'com.android.support:support-v4:24.1.1'
-    compile 'com.android.support:design:24.1.1'
+    //    compile 'com.google.code.gson:gson:2.6.2'
+    //    compile 'com.parse.bolts:bolts-tasks:1.4.0'
+
+    //    compile 'com.parse.bolts:bolts-applinks:1.4.0'
+    // This library handles authentication and authorization
+
+    //    compile 'com.spotify.sdk:spotify-auth:1.0.0-beta12@aar'
+
+    //    // This library handles music playback
+
+    //    compile 'com.spotify.sdk:spotify-player:1.0.0-beta12@aar'
+    // RxJava itself
+
+// And ProGuard rules for RxJava!
+
+
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:support-v4:24.2.0'
+    compile 'com.android.support:design:24.2.0'
     compile 'com.github.armcha:LuseenBottomNavigation:1.4.0'
     compile 'com.github.arimorty:floatingsearchview:1.1.2'
     compile 'com.facebook.android:facebook-android-sdk:4.12.0'
@@ -69,38 +85,20 @@ dependencies {
     compile 'org.lucasr.twowayview:layouts:1.0.0-SNAPSHOT@aar'
     compile 'com.github.jd-alexander:LikeButton:0.2.0'
     compile 'com.pnikosis:materialish-progress:1.7'
-    //    compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.anjlab.android.iab.v3:library:1.0.32'
-    compile 'io.reactivex:rxjava:1.0.17'
+    compile 'io.reactivex:rxjava:1.1.8'
     compile 'io.reactivex:rxandroid:0.23.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.okhttp3:okhttp:3.3.1'
     compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
     compile 'com.google.guava:guava:18.0'
-    //    compile 'com.parse.bolts:bolts-tasks:1.4.0'
-
-    //    compile 'com.parse.bolts:bolts-applinks:1.4.0'
     compile 'com.github.inaka:tinytask:v1'
-    // This library handles authentication and authorization
-
-    //    compile 'com.spotify.sdk:spotify-auth:1.0.0-beta12@aar'
-
-    //    // This library handles music playback
-
-    //    compile 'com.spotify.sdk:spotify-player:1.0.0-beta12@aar'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.jfeinstein10:SlidingMenu:4254feca3e'
     compile 'com.heinrichreimersoftware:material-drawer:2.3.2'
     compile 'com.yqritc:recyclerview-flexibledivider:1.2.6'
     compile 'com.theartofdev.edmodo:android-image-cropper:2.2.5'
     compile 'com.github.ashishbhandari:AndroidTabbedDialog:v1.1'
-    // RxJava itself
-    compile 'io.reactivex:rxjava:1.1.8'
-
-// And ProGuard rules for RxJava!
     compile 'com.artemzin.rxjava:proguard-rules:1.1.8.0'
-
-
-
 }

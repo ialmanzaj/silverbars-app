@@ -46,8 +46,6 @@ public class ProfileFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
 
-
-
         //profiles settings
         profile_name = (TextView) rootView.findViewById(R.id.Profile_name);
         String name = getCurrentProfile().getFirstName()+" "+getCurrentProfile().getLastName();
@@ -59,7 +57,6 @@ public class ProfileFragment extends Fragment {
         }else {
             DownloadProfileImage(getActivity(),getCurrentProfile().getId(),getCurrentProfile().getId());
         }
-
 
 
         // buttons of options

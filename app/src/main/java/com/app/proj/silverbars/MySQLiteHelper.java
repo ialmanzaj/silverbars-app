@@ -388,15 +388,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
              while(row.moveToNext()){
                  i++;
-                 if (convertStringToArray(row.getString(3)) == null){
-                     String[] type = new String[1];
-                     type[0] = row.getString(3);
-                     exercises[i].setType_exercise(type);
-                     exercises[i] = new JsonExercise(row.getInt(0),row.getString(1),row.getString(2),type,convertStringToArray(row.getString(4)),row.getString(5),row.getString(6));
-                 }else{
-                     exercises[i] = new JsonExercise(row.getInt(0),row.getString(1),row.getString(2),convertStringToArray(row.getString(3)),convertStringToArray(row.getString(4)),row.getString(5),row.getString(6));
-                 }
-
+                 exercises[i] = new JsonExercise(row.getInt(0),row.getString(1),row.getString(2),convertStringToArray(row.getString(3)),convertStringToArray(row.getString(4)),row.getString(5),row.getString(6));
             }
         } else {
             Log.e(TAG,"getAllExercises, Database Error: No exercises found");

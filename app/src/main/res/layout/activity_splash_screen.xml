@@ -5,13 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical"
-    android:background="@color/colorSecondary"
+    android:background="@color/white"
     tools:context="com.app.proj.silverbars.SplashScreen">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_launcher_app"/>
-
 
 </LinearLayout>

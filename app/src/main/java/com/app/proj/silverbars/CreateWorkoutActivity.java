@@ -493,10 +493,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         }
         return str;
     }
-    private void saveAllExercises(){
-        
-        
-    }
+    private void saveAllExercises(){}
 
     public String imageName(int position){
         String[] imageDir = parsedExercises[position].getExercise_image().split("exercises");

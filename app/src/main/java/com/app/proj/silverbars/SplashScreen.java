@@ -18,23 +18,21 @@ public class SplashScreen extends AppCompatActivity {
     private static final String TAG = "SplashScreen";
     AccessTokenTracker accessTokenTracker;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(TAG,"SplashScreen creada");
-
         setContentView(R.layout.activity_splash_screen);
+
         FacebookSdk.sdkInitialize(getApplicationContext());
+
 
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         Boolean signIn = sharedPref.getBoolean(getString(R.string.sign_in), false);
 
+
         if (signIn){
 
             startMainActivity();
-
             accessTokenTracker = new AccessTokenTracker() {
                 @Override
                 protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
@@ -42,7 +40,7 @@ public class SplashScreen extends AppCompatActivity {
                 }
             };
 
-        }else{
+        }else {
 
             startLogin();
 
@@ -66,7 +64,6 @@ public class SplashScreen extends AppCompatActivity {
         Intent i = new Intent(SplashScreen.this, LoginActivity.class);
         startActivity(i);
         finish();
-
     }
 
     private void startMainActivity(){
@@ -83,7 +80,6 @@ public class SplashScreen extends AppCompatActivity {
         super.onStart();
         Log.v(TAG," onStart()");
 
-
     }
 
 
@@ -91,11 +87,6 @@ public class SplashScreen extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.v(TAG,"onResume()");
-
-
-
-
-
 
     }
 
@@ -106,10 +97,6 @@ public class SplashScreen extends AppCompatActivity {
         Log.v(TAG,"onPause()");
 
 
-
-
-
-
     }
 
 
@@ -117,8 +104,6 @@ public class SplashScreen extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.v(TAG,"splash screen destruida");
-
-
 
 
     }

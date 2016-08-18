@@ -26,10 +26,9 @@ public class WorkoutsFragment extends Fragment {
     View rootView, mainView;
     TabHost tabHost;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         rootView = inflater.inflate(R.layout.activity_my_workouts, container, false);
 
         tabHost = (TabHost) rootView.findViewById(R.id.tabHost);
@@ -76,15 +75,12 @@ public class WorkoutsFragment extends Fragment {
         MySQLiteHelper database = new MySQLiteHelper(getContext());
 
         if (database.getWorkouts(1) != null){
-
             local_workouts.setVisibility(View.VISIBLE);
             List<JsonWorkout> workouts = new ArrayList<>();
             JsonWorkout[] ParsedWorkouts = database.getWorkouts(1);
             Collections.addAll(workouts, ParsedWorkouts);
 
-            local_workouts.removeAllViews();
-            local_workouts.removeAllViewsInLayout();
-            local_workouts.setAdapter(null);
+
             local_workouts.setAdapter(new savedWorkoutAdapter(getActivity(),workouts,false));
 
         }else {
@@ -93,25 +89,27 @@ public class WorkoutsFragment extends Fragment {
 
 
        if (database.getUserWorkouts(1) != null){
-
             my_workouts.setVisibility(View.VISIBLE);
             List<JsonWorkout> my_workouts_list= new ArrayList<>();
+
             JsonWorkout[] MyWorkouts = database.getUserWorkouts(1);
             Collections.addAll(my_workouts_list, MyWorkouts);
+            Log.v(TAG,"my workout size: "+my_workouts_list);
 
-           Log.v(TAG,"my workout size: "+my_workouts_list);
 
-            my_workouts.removeAllViews();
-            my_workouts.removeAllViewsInLayout();
-            my_workouts.setAdapter(null);
             my_workouts.setAdapter(new savedWorkoutAdapter(getActivity(),my_workouts_list,true));
 
         }else {
             EmpyStateMyWorkouts.setVisibility(View.VISIBLE);
         }
 
-
         return rootView;
     }
+
+
+
+
+
+
 
 }
