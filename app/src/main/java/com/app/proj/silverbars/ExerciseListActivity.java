@@ -159,10 +159,9 @@ public class ExerciseListActivity extends AppCompatActivity {
                         for (int c = 0;c < SelectedItemsIds.size();c++){
                             for (int a = 0; a < OriginalExerciseListAll.size(); a++){
 
+                                //ejercicio seleccionado lo elimina en la siguiente seleccion
                                 if (Objects.equals(OriginalExerciseListAll.get(a).getExercise_name(), SelectedItemsIds.get(c))){
                                     ExercisesNoSelected.remove(a);
-
-
                                 }
                             }
                         }

@@ -50,7 +50,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     private  List<String> MusclesArray = new ArrayList<>();
     private static String strSeparator = "__,__";
-
     private int Items_size = 0;
     JsonExercise[] parsedExercises;
     public static Activity create;
@@ -83,10 +82,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
         }
 
-
-
         empty_content = (LinearLayout) findViewById(R.id.content_empty);
-
 
         /// boton de siguiente
         Button nextButton = (Button) findViewById(R.id.Next);
