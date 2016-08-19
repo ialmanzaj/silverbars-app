@@ -31,6 +31,7 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.MessageDigest;
@@ -114,6 +115,14 @@ public class LoginActivity extends AppCompatActivity {
                             public void onCompleted(JSONObject object, GraphResponse response) {
                                 Log.v(TAG, "onCompleted");
 
+                                try {
+
+                                    Log.v(TAG,object.getString("id"));
+
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
 
 
                             }

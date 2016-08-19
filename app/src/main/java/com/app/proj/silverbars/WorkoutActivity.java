@@ -350,7 +350,7 @@ public class WorkoutActivity extends AppCompatActivity {
             ExercisesRecycler.setAdapter(adapter);
             setMusclesToView(MusclesArray);
         } else {
-            
+
 
             getExercisesFromJson();
             loadLocal = false;

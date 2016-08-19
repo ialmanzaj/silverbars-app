@@ -25,7 +25,6 @@ public class SplashScreen extends AppCompatActivity {
 
         FacebookSdk.sdkInitialize(getApplicationContext());
 
-
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         Boolean signIn = sharedPref.getBoolean(getString(R.string.sign_in), false);
 
@@ -41,11 +40,8 @@ public class SplashScreen extends AppCompatActivity {
             };
 
         }else {
-
             startLogin();
-
         }
-
 
 
 
