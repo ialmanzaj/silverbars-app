@@ -180,7 +180,10 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
         });
 
-        webView.getSettings().setJavaScriptEnabled(true);
+
+        //webView.getSettings().setUseWideViewPort(true);
+
+
 
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         String default_url = getResources().getString(R.string.muscle_path);
@@ -200,7 +203,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
 
     }//  close create workout
-
 
 
 

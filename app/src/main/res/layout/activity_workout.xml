@@ -292,17 +292,12 @@
                         android:id="@+id/reciclador"
                         android:layout_gravity="center_horizontal" />
                 </LinearLayout>
-
-                <LinearLayout
+                <ScrollView
                     android:orientation="vertical"
                     android:gravity="center_horizontal"
                     android:id="@+id/muscles"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
                         <LinearLayout
                             android:orientation="vertical"
                             android:layout_width="match_parent"
@@ -310,7 +305,7 @@
                             <WebView
                                 android:id="@+id/webview"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent">
+                                android:layout_height="wrap_content">
                             </WebView>
                             <LinearLayout
                                 android:orientation="vertical"
@@ -324,42 +319,35 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
 
-                                        <LinearLayout
-                                            android:layout_marginTop="10dp"
-                                            android:layout_marginBottom="10dp"
-                                            android:orientation="horizontal"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:baselineAligned="false">
+                                <LinearLayout
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:orientation="horizontal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:baselineAligned="false">
 
-                                        <LinearLayout
-                                            android:id="@+id/column1"
-                                            android:orientation="vertical"
-                                            android:gravity="center_horizontal"
-                                            android:layout_weight="1"
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content">
-                                        </LinearLayout>
-                                        <LinearLayout
-                                            android:id="@+id/column2"
-                                            android:orientation="vertical"
-                                            android:gravity="center_horizontal"
-                                            android:layout_weight="1"
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content">
-                                        </LinearLayout>
+                                    <LinearLayout
+                                        android:id="@+id/column1"
+                                        android:orientation="vertical"
+                                        android:gravity="center_horizontal"
+                                        android:layout_weight="1"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content">
                                     </LinearLayout>
+                                    <LinearLayout
+                                        android:id="@+id/column2"
+                                        android:orientation="vertical"
+                                        android:gravity="center_horizontal"
+                                        android:layout_weight="1"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content">
+                                    </LinearLayout>
+                                </LinearLayout>
 
                             </LinearLayout>
                         </LinearLayout>
-
-
-                    </ScrollView>
-
-
-                </LinearLayout>
-
-
+                </ScrollView>
             </FrameLayout>
         </LinearLayout>
     </TabHost>
@@ -401,6 +389,7 @@
 
     </LinearLayout>
 
+
     <LinearLayout
         android:background="@color/white"
         android:gravity="center_horizontal|center_vertical"
@@ -413,7 +402,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
-
 
 </LinearLayout>
 

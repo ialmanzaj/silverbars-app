@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
+import static com.app.proj.silverbars.Utilities.isExternalStorageWritable;
+
 /**
  * Created by andre_000 on 5/18/2016.
  */
@@ -71,8 +73,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String KEY_EXERCISE_AUDIO = "exercise_audio";
     public static final String KEY_EXERCISE_IMAGE = "exercise_image";
 
+
+    private final Context myContext;
+
     public MySQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        myContext = context;
     }
 
     private static final String CREATE_TABLE_USERS = "CREATE TABLE IF NOT EXISTS "+
@@ -786,22 +792,29 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 //    }
 
 
-    public static void BD_backup() throws IOException {
+
+
+    public void BD_backup() throws IOException {
 //        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
 
         String URL = "/data/data/com.app.proj.silverbars/databases/";
 
         final String inFileName = URL+DATABASE_NAME;
         File dbFile = new File(inFileName);
-        FileInputStream fis = null;
+        FileInputStream fis;
 
         fis = new FileInputStream(dbFile);
 
-        String directorio = Environment.getExternalStorageDirectory()+"/Database";
-        File d = new File(directorio);
-        if (!d.exists()) {
-            d.mkdir();
+        String directorio;
+        if (isExternalStorageWritable()){
+            directorio = Environment.getExternalStorageDirectory()+"/Database";
+        }else {
+             directorio = myContext.getFilesDir()+"/Database";
         }
+
+        File d = new File(directorio);
+        if (!d.exists()) {d.mkdir();}
+
         String outFileName = directorio + "/"+DATABASE_NAME;
 
         OutputStream output = new FileOutputStream(outFileName);

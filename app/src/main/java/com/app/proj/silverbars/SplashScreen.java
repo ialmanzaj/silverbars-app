@@ -43,8 +43,6 @@ public class SplashScreen extends AppCompatActivity {
             startLogin();
         }
 
-
-
     }
 
 

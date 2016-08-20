@@ -95,8 +95,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Negative =  b.getIntArray("Array_Negative_Exercises");
         Exercises = WorkoutActivity.ParsedExercises;
         exercises_size = Exercises.length;
-
-
+        // tempo config
         tempo = Positive[y] + Isometric[y] + Negative[y];
 
         //Log.v("Songs", Arrays.toString(position));
@@ -105,7 +104,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         // contadores de descanso y repeticiones actuales
         actualReps = Exercises_reps[0];
         actualRest = RestByExercise;
-
 
         artist_name = (TextView) findViewById(R.id.artist_name);
         CurrentSet = (TextView) findViewById(R.id.CurrentSet);
@@ -116,6 +114,34 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         ModalLayout = (FrameLayout) findViewById(R.id.ModalLayout);
         headerText = (TextView) findViewById(R.id.headerText);
         RestCounter_text = (TextView) findViewById(R.id.RestCounter_text);
+
+        final TextView totalExercise = (TextView) findViewById(R.id.TotalExercise);
+
+        // next and preview button for exercise
+        ImageButton prvExercise = (ImageButton) findViewById(R.id.prvExercise);
+        ImageButton nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
+
+        prvLayout = (FrameLayout) findViewById(R.id.prvLayout);
+        nxtLayout = (FrameLayout) findViewById(R.id.nxtLayout);
+        nxtLayout.setVisibility(View.VISIBLE);
+
+        // pause and finish workout controls
+        PauseButton = (Button) findViewById(R.id.PauseButton);
+        Button endbutton = (Button) findViewById(R.id.Endbutton);
+
+        RelativeLayout playerLayout = (RelativeLayout) findViewById(R.id.PlayerLayout);
+
+        //repetiton text
+        Rep_timer_text = (TextView) findViewById(R.id.Rep_timer_text);
+
+        song_name = (TextView) findViewById(R.id.song_name);
+        song_name.setSelected(true);
+
+
+        // Inicializar Workouts
+        List<WorkoutInfo> items = new ArrayList<>();
+
+
         RestCounter_text.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -124,10 +150,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-
-
+                //cuando el descanso se acaba
                 if (actualRest == 0){
-
                     Log.v(TAG,"Descanso: Terminado");
                     restTimer.cancel();
                     rest = false;
@@ -145,24 +169,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
-        final TextView totalExercise = (TextView) findViewById(R.id.TotalExercise);
-
-        // next and preview button for exercise
-        ImageButton prvExercise = (ImageButton) findViewById(R.id.prvExercise);
-        ImageButton nxtExercise = (ImageButton) findViewById(R.id.nxtExercise);
-        prvLayout = (FrameLayout) findViewById(R.id.prvLayout);
-        nxtLayout = (FrameLayout) findViewById(R.id.nxtLayout);
-        nxtLayout.setVisibility(View.VISIBLE);
-
-        RelativeLayout playerLayout = (RelativeLayout) findViewById(R.id.PlayerLayout);
-
-        // pause and finish workout controls
-        PauseButton = (Button) findViewById(R.id.PauseButton);
-        Button endbutton = (Button) findViewById(R.id.Endbutton);
 
 
-        //repetiton text
-        Rep_timer_text = (TextView) findViewById(R.id.Rep_timer_text);
         Rep_timer_text.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -322,13 +330,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        song_name = (TextView) findViewById(R.id.song_name);
-        song_name.setSelected(true);
 
 
-
-        // Inicializar Workouts
-        List<WorkoutInfo> items = new ArrayList<>();
 
         for (JsonExercise Exercise : Exercises) {
             items.add(new WorkoutInfo(Exercise.getExercise_name(), null,Exercise.getExercise_image()));
@@ -348,7 +351,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         RecyclerView.Adapter adapter = new WorkoutsAdapter(items, getApplicationContext());
         recycler.setAdapter(adapter);
 
-        if (adapter.getItemCount() == 1){
+        if (adapter.getItemCount() <= 1){
             prvLayout.setVisibility(View.GONE);
             nxtLayout.setVisibility(View.GONE);
         }
@@ -366,56 +369,113 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         prvExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //String state = PauseButton.getText().toString();
-                recycler.smoothScrollToPosition(y-1);
-                y--;
-                CurrentExercise.setText(String.valueOf(y+1));
-                main_timer.cancel();
-                Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
-                asignTotalTime(y);
-                startMainCountDown(totalTime,1,totalTime);
-                if (y == 0){
-                    prvLayout.setVisibility(View.GONE);
-                }
-                else{
-                    if(y < elements-1 && exercises_size > 1){
-                        nxtLayout.setVisibility(View.VISIBLE);
+
+
+                new MaterialDialog.Builder(WorkingOutActivity.this)
+                        .title("Desea regresar al ejercicio anterior?")
+                        .content("Esta seguro que quiere regresar al ejercicio anterior?")
+                        .titleColor(getResources().getColor(R.color.colorPrimaryText))
+                        .contentColor(getResources().getColor(R.color.colorPrimaryText))
+                        .positiveColor(getResources().getColor(R.color.colorPrimaryText))
+                        .negativeColor(getResources().getColor(R.color.colorPrimaryText))
+                        .backgroundColor(Color.WHITE)
+                        .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                            //String state = PauseButton.getText().toString();
+                            recycler.smoothScrollToPosition(y-1);
+                            y--;
+                            CurrentExercise.setText(String.valueOf(y+1));
+                            main_timer.cancel();
+                            Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
+                            asignTotalTime(y);
+                            startMainCountDown(totalTime,1,totalTime);
+                            if (y == 0){
+                                prvLayout.setVisibility(View.GONE);
+                            }
+                            else{
+                                if(y < elements-1 && exercises_size > 1){
+                                    nxtLayout.setVisibility(View.VISIBLE);
+                                }
+                            }
+                            if (pause){
+                                PauseCountDown();
+                                if (SelectedSongs) {
+                                    mp.pause();
+                                }
+                            }
+
+
                     }
-                }
-                if (pause){
-                    PauseCountDown();
-                    if (SelectedSongs) {
-                        mp.pause();
+                })
+                        .negativeText(getResources().getString(R.string.negative_dialog)).onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
                     }
-                }
+                })
+                        .show();
+
+
+
             }
         });
 
+
+        //darle al siguiente ejercicio
         nxtExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // String state = PauseButton.getText().toString();
-                recycler.smoothScrollToPosition(y+1);
-                y++;
-                CurrentExercise.setText(String.valueOf(y+1));
-                main_timer.cancel();
-                Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
-                asignTotalTime(y);
-                startMainCountDown(totalTime,1,totalTime);
-                if (y == elements-1){
-                    nxtLayout.setVisibility(View.GONE);
-                }
-                else{
-                    if (y > 0 && exercises_size > 1){
-                        prvLayout.setVisibility(View.VISIBLE);
+
+
+
+                new MaterialDialog.Builder(WorkingOutActivity.this)
+                        .title("Desea pasar al siguiente ejercicio?")
+                        .content("Esta seguro que quiere pasar al siguiente ejercicio?")
+                        .titleColor(getResources().getColor(R.color.colorPrimaryText))
+                        .contentColor(getResources().getColor(R.color.colorPrimaryText))
+                        .positiveColor(getResources().getColor(R.color.colorPrimaryText))
+                        .negativeColor(getResources().getColor(R.color.colorPrimaryText))
+                        .backgroundColor(Color.WHITE)
+                        .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            dialog.dismiss();
+                            // String state = PauseButton.getText().toString();
+                            recycler.smoothScrollToPosition(y+1);
+                            y++;
+                            CurrentExercise.setText(String.valueOf(y+1));
+                            main_timer.cancel();
+                            Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
+                            asignTotalTime(y);
+                            startMainCountDown(totalTime,1,totalTime);
+                            if (y == elements-1){
+                                nxtLayout.setVisibility(View.GONE);
+                            }
+                            else{
+                                if (y > 0 && exercises_size > 1){
+                                    prvLayout.setVisibility(View.VISIBLE);
+                                }
+                            }
+                            if (pause){
+                                PauseCountDown();
+                                if (SelectedSongs) {
+                                    mp.pause();
+                                }
+                            }
+
+
                     }
-                }
-                if (pause){
-                    PauseCountDown();
-                    if (SelectedSongs) {
-                        mp.pause();
+                })
+                        .negativeText(getResources().getString(R.string.negative_dialog)).onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
                     }
-                }
+                })
+                        .show();
+
             }
         });
 
@@ -436,6 +496,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         playlist.add(mySongs.get(j));
                     }
             }
+
             u = Uri.parse(playlist.get(x).toString());
             String SongName = SongName(playlist.get(x)).replace(".mp3","");
             song_name.setText(SongName);
@@ -831,16 +892,19 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
 
+    private void PauseMusic(){if (SelectedSongs) {mp.pause();}}
+
+    private void CancelMusic(){if (SelectedSongs) {mp.release();}}
+
+    private void ResumeMusic(){if (SelectedSongs) {mp.start();}}
+
 
     private void DialogFinalize(){
 
         PauseCountDown();
-        Log.v(TAG,"PAUSA activada: "+ pause);
+        PauseMusic();
 
 
-        if (SelectedSongs) {
-            mp.pause();
-        }
         new MaterialDialog.Builder(this)
                 .title(getResources().getString(R.string.title_dialog))
                 .titleColor(getResources().getColor(R.color.colorPrimaryText))
@@ -853,22 +917,22 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
-                Log.v(TAG,"dialog finish workout: SI");
-                dialog.dismiss();
-                ScreenOff();
+                    Log.v(TAG,"dialog finish workout: SI");
+                    dialog.dismiss();
+                    ScreenOff();
 
-                startTimer.cancel();
-                if (main_timer != null){
-                    main_timer.cancel();
-                }
+                    startTimer.cancel();
+                    if (main_timer != null){
+                        main_timer.cancel();
+                    }
 
-                if (media!=null){
-                    media.release();
-                }
-                if (SelectedSongs) {
-                    mp.release();
-                }
-                finish();
+                    CancelMusic();
+
+                    if (media!=null){
+                        media.release();
+                    }
+
+                    finish();
 
             }
         })
@@ -876,53 +940,45 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 Log.v(TAG,"dialog finish workout: NO");
-                dialog.dismiss();
+                    dialog.dismiss();
 
+                    ResumeCountDown();
+                    ResumeMusic();
 
-                ResumeCountDown();
-                if (SelectedSongs) {
-                    mp.start();
-                }
             }
         })
                 .show();
     }
 
 
-
     @Override
     protected void onStart() {
         super.onStart();
-
         Log.v(TAG,"onStart");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.v(TAG,"onResume");
 
         if (pause){
             ResumeCountDown();
         }
-        
-        Log.v(TAG,"onResume");
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        PauseCountDown();
         Log.v(TAG,"onPause");
+        PauseCountDown();
+
     }
 
-    private void ScreenOn(){
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    }
+    private void ScreenOn(){getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);}
 
-    private void ScreenOff(){
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    }
+    private void ScreenOff(){getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);}
 
 
 }

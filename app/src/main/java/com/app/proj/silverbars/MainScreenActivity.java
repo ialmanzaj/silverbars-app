@@ -82,11 +82,9 @@ public class MainScreenActivity extends AppCompatActivity {
 
         MainScreenActivity = this;
 
-
         setContentView(R.layout.activity_main_screen);
 
         settings = (LinearLayout) findViewById(R.id.settings);
-
         tagTitles = this.getResources().getStringArray(R.array.navigation_array);
 
         Log.v(TAG,tagTitles[0]);
@@ -367,7 +365,6 @@ public class MainScreenActivity extends AppCompatActivity {
         try {
             File file;
             if (isExternalStorageWritable()){
-
                 file = new File(Environment.getExternalStorageDirectory()+"/html/"+name);
             }else {
                 file = new File(this.getFilesDir()+"/html/"+name);

@@ -167,4 +167,8 @@
     <string name="session_content">Se cerrará la sesión con tu cuenta y todos los datos que tenga guardados se borrarán</string>
     <string name="session_title">Desea cerrar sesión?</string>
 
+    <string name="next">Siguiente</string>
+    <string name="empty_create">La Rutinas esta vacia :(</string>
+    <string name="add_exercises">Agregar ejercicios</string>
+    <string name="add_more">Agregar más ejercicios</string>
 </resources>

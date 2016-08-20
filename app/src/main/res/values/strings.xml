@@ -168,4 +168,8 @@
     <string name="session_content">The session will end with your account and all data you have saved will be deleted</string>
     <string name="session_title">Do you want  to log out?</string>
 
+    <string name="next">Next</string>
+    <string name="empty_create">The Workout is empty :(</string>
+    <string name="add_exercises">Add exercises</string>
+    <string name="add_more">Add more exercises</string>
 </resources>

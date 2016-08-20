@@ -154,10 +154,13 @@ public class Utilities {
                 Folder = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/");
                 futureStudioIconFile = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imgName);
             }else{
+
                 Folder = new File(context.getFilesDir()+"/SilverbarsImg/");
                 futureStudioIconFile = new File(context.getFilesDir()+"/SilverbarsImg/"+imgName);
 
             }
+
+
 
             InputStream inputStream = null;
             OutputStream outputStream = null;
@@ -192,6 +195,7 @@ public class Utilities {
                 }
             } else {
                 Log.e(TAG,"Error while creating dir");
+
             }
 
         } catch (IOException e) {return false;}

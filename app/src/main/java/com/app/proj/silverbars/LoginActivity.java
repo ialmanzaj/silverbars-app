@@ -10,6 +10,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -25,8 +26,6 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -34,10 +33,17 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 
 /**
  * A login screen that offers login via email/password.
@@ -68,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
     private View mProgressView;
     private View mLoginFormView;
     private LoginButton loginButton;
-    CallbackManager callbackManager = CallbackManager.Factory.create();
+    CallbackManager callbackManager;
     ProfileTracker profileTracker;
     String basicMail, basicPass, email, name;
     ImageButton RefreshButton;
@@ -81,12 +87,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.v(TAG,"LoginActivity creada");
 
-
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
         mProgressView = findViewById(R.id.login_progress);
         loginButton = (LoginButton) findViewById(R.id.login_button);
+
+        callbackManager = CallbackManager.Factory.create();
+
 
         try {
 
@@ -101,43 +109,20 @@ public class LoginActivity extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {} catch (NoSuchAlgorithmException e) {}
 
 
-
         loginButton.setReadPermissions("public_profile", "email", "user_friends");
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.v(TAG, "loginButton: onSuccess");
 
+                //Log.v(TAG,"access token"+loginResult.getAccessToken().getToken());
 
-                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(),
-                        new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject object, GraphResponse response) {
-                                Log.v(TAG, "onCompleted");
-
-                                try {
-
-                                    Log.v(TAG,object.getString("id"));
-
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-
-                            }
-
-
-                        });
+                POST(loginResult.getAccessToken().getToken());
 
                 saveLogIn();
                 startActivity(new Intent(getApplicationContext(), MainScreenActivity.class));
                 finish();
 
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,email");
-                request.setParameters(parameters);
-                request.executeAsync();
             }
 
             @Override
@@ -159,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(getString(R.string.sign_in),true);
-        editor.commit();
+        editor.apply();
         Log.v(TAG,getString(R.string.sign_in));
 
     }
@@ -249,7 +234,78 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.v(TAG,"onResume");
+
+
     }
+
+    private void POST(final String accessToken){
+        final Boolean respuesta = false;
+        Log.v(TAG,"envio POST");
+        new AsyncTask<Void,Void,Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                try {
+                    Log.v(TAG,"ha enviado el post");
+
+                    URL url = new URL("http://api.silverbarsapp.com/rest-auth/facebook/"); //Enter URL here
+                    HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setRequestMethod("POST"); // here you are telling that it is a POST request, which can be changed into "PUT", "GET", "DELETE" etc.
+                    httpURLConnection.setRequestProperty("Content-Type", "application/json"); // here you are setting the `Content-Type` for the data you are sending which is `application/json`
+                    httpURLConnection.connect();
+
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("access_token",accessToken);
+                    jsonObject.put("code", "183093092104411");
+
+                    DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
+                    wr.writeBytes(jsonObject.toString());
+                    wr.flush();
+                    wr.close();
+
+                    int responseCode = httpURLConnection.getResponseCode();
+
+                    Log.v(TAG,"Sending 'POST' request to URL : " + url);
+                    Log.v(TAG,"Response Code : " + responseCode);
+
+                    if (responseCode == 200){
+
+                        Log.v(TAG,"respuesta correcta ");
+
+                    }else{
+                        Log.e(TAG,"respuesta incorrecta ");
+                    }
+
+                    BufferedReader br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                    String line = "";
+                    StringBuilder responseOutput = new StringBuilder();
+                    System.out.println("output===============" + br);
+                    while((line = br.readLine()) != null ) {
+                        responseOutput.append(line);
+                    }
+                    br.close();
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+
+        }.execute();
+
+
+    }
+
+
+
 
     @Override
     protected void onDestroy() {
