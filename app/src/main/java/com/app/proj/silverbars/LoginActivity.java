@@ -109,19 +109,16 @@ public class LoginActivity extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {} catch (NoSuchAlgorithmException e) {}
 
 
+
         loginButton.setReadPermissions("public_profile", "email", "user_friends");
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.v(TAG, "loginButton: onSuccess");
 
-                //Log.v(TAG,"access token"+loginResult.getAccessToken().getToken());
 
                 POST(loginResult.getAccessToken().getToken());
 
-                saveLogIn();
-                startActivity(new Intent(getApplicationContext(), MainScreenActivity.class));
-                finish();
 
             }
 
@@ -129,14 +126,20 @@ public class LoginActivity extends AppCompatActivity {
             public void onCancel() {
                 Log.e(TAG, "facebook:onCancel");
 
+
             }
             @Override
             public void onError(FacebookException exception) {
                 Log.e(TAG, "facebook:onError", exception);
 
+
+
+
             }
 
         });
+
+
 
     }
 
@@ -202,19 +205,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    public void checkConn() {
-
-        boolean connection = isNetworkConnected();
-
-        if (!connection){
-//            loginButton.setEnabled(false);
-//            loginButton.setClickable(false);
-            toast("Verifique su conexion a internet");
-        }else{
-//            loginButton.setEnabled(true);
-//            loginButton.setClickable(true);
-        }
-    }
 
     public void toast(String text){
         Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
@@ -248,7 +238,6 @@ public class LoginActivity extends AppCompatActivity {
             protected Void doInBackground(Void... params) {
 
                 try {
-                    Log.v(TAG,"ha enviado el post");
 
                     URL url = new URL("http://api.silverbarsapp.com/rest-auth/facebook/"); //Enter URL here
                     HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
@@ -273,9 +262,15 @@ public class LoginActivity extends AppCompatActivity {
 
                     if (responseCode == 200){
 
+                        saveLogIn();
+                        startActivity(new Intent(getApplicationContext(), MainScreenActivity.class));
+                        finish();
+
                         Log.v(TAG,"respuesta correcta ");
 
                     }else{
+
+                        Toast.makeText(getApplicationContext(),"Error de conexion, porfavor pruebe de nuevo",Toast.LENGTH_SHORT).show();
                         Log.e(TAG,"respuesta incorrecta ");
                     }
 

@@ -6,14 +6,12 @@ import android.graphics.Point;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -64,24 +62,8 @@ public class SelectionMusicActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                try {
-                    ArrayList<File> mySongs = findSongs(Environment.getExternalStorageDirectory());
 
-                    if (mySongs.size() > 0) {
-
-                        String[] items = new String[mySongs.size()];
-                        for (int i = 0; i < mySongs.size(); i++) {
-                            items[i] = SongName(mySongs.get(i));
-                        }
-
-                        ArrayAdapter<String> adp = new ArrayAdapter<String>(SelectionMusicActivity.this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
-                        startActivityForResult(new Intent(getApplicationContext(), SongsActivity.class), 1);
-                    }
-
-                }catch (NullPointerException e){
-                    toast("no hay canciones");
-                }
-
+                startActivityForResult(new Intent(getApplicationContext(), SongsActivity.class), 1);
 
             }
         });

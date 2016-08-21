@@ -47,7 +47,7 @@ public class SongsActivity extends AppCompatActivity {
             }
 
 
-                ArrayAdapter<String> adp = new ArrayAdapter<>(this, R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
+                ArrayAdapter<String> adp = new ArrayAdapter<>(this, R.layout.simple_list_item_multiple_choice, R.id.text1, items);
                 ListMusic.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
                 ListMusic.setAdapter(adp);
 
