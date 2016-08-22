@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context="com.app.proj.silverbars.ResultsActivity"
     android:orientation="vertical">
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
@@ -24,14 +23,11 @@
             android:layout_height="wrap_content">
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-
     <WebView
         android:background="@color/white"
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </WebView>
-
-
 
 </LinearLayout>

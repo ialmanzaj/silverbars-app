@@ -211,6 +211,7 @@ public class MainScreenActivity extends AppCompatActivity {
                         })
                         .positiveText(R.string.choose)
                         .positiveColor(getResources().getColor(R.color.white))
+                        .positiveColor(getResources().getColor(R.color.white,null))
                         .show();
             }
         });

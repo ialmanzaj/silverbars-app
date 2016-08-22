@@ -80,9 +80,9 @@ public class WorkoutActivity extends AppCompatActivity {
     private int ExerciseReps = 1;
     private ArrayList<File> mySongs;
     static public int[] Exercises_reps;
-    static public int [] Positive_Exercises;
-    static public int [] Isometric_Exercises;
-    static public int [] Negative_Exercises;
+    static public int[] Positive_Exercises;
+    static public int[] Isometric_Exercises;
+    static public int[] Negative_Exercises;
 
     RelativeLayout togle_no_internet;
     private Boolean respuesta_recibida = false;
@@ -842,11 +842,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     }
 
-
-
-
     private void injectJS() {
-
         try {
             if (!Objects.equals(partes, "")){
 
@@ -857,18 +853,13 @@ public class WorkoutActivity extends AppCompatActivity {
                         "partes.forEach( function(elem,i) {"+
                         "elem.attr({fill: '#602C8D',stroke: '#602C8D',});"+
                         "});"+ "}"+  ")()");
-
             }
-
         } catch (Exception e) {
-
             Log.e(TAG,"JAVASCRIPT Exception",e);
             Tab_layout.setVisibility(View.GONE);
             error_layout.setVisibility(View.VISIBLE);
         }
-
     }
-
 
 
     private void getExerciseRepsFromAPI(){
@@ -977,16 +968,13 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
                         } else {
-
                             error_layout.setVisibility(View.VISIBLE);
                             int statusCode = response.code();
-
                             ResponseBody errorBody = response.errorBody();
                             Log.e(TAG, "getExerciseRepsFromAPI: "+errorBody);
                             Log.e(TAG, "statusCode: "+statusCode);
                         }
                     }
-
                     @Override
                     protected void finalize() throws Throwable {
                         super.finalize();
@@ -994,9 +982,10 @@ public class WorkoutActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<JsonWorkoutReps[]> call, Throwable t) {
+                        Log.e(TAG,"getExercisesfromJson, onfailure",t);
                         Tab_layout.setVisibility(View.GONE);
                         error_layout.setVisibility(View.VISIBLE);
-                        Log.e(TAG,"getExercisesfromJson, onfailure",t);
+
                     }
                 });
 
@@ -1039,7 +1028,6 @@ public class WorkoutActivity extends AppCompatActivity {
         try {
 
             File futureStudioIconFile = new File(this.getCacheDir()+"/SilverbarsMp3/"+getAudioName);
-            
 
             InputStream inputStream = null;
             OutputStream outputStream = null;
@@ -1235,6 +1223,7 @@ public class WorkoutActivity extends AppCompatActivity {
                         error_layout.setVisibility(View.VISIBLE);
                         Tab_layout.setVisibility(View.GONE);
                         int statusCode = response.code();
+
                         error_layout.setVisibility(View.VISIBLE);
                         ResponseBody errorBody = response.errorBody();
                         Log.e(TAG, "getExercisesFromAPI: "+errorBody);
@@ -1251,8 +1240,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<JsonExercise> call, Throwable t) {
                     Log.e(TAG,"getExercisesFromAPI, onFailure",t);
-                    
-                    
+
                     Tab_layout.setVisibility(View.GONE);
                     error_layout.setVisibility(View.VISIBLE);
                    

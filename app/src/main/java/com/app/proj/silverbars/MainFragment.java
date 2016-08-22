@@ -2,7 +2,6 @@ package com.app.proj.silverbars;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -42,15 +41,16 @@ public class MainFragment extends Fragment {
     public String muscleData = "ALL";
     private boolean opened;
     LinearLayout noInternetConnectionLayout,failedServerLayout;
-
-
-
     ProgressBar progressBar;
-    private int mProgressStatus = 0;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_fmain, container, false);
+
+
+
     }
 
     public boolean isOpened() {
@@ -75,9 +75,6 @@ public class MainFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Intent intent = this.getActivity().getIntent();
-        String email = intent.getStringExtra("Email");
-        String name = intent.getStringExtra("Name");
 
         muscleData = getArguments().getString("Muscle");
         opened = getArguments().getBoolean("Opened");
@@ -91,7 +88,6 @@ public class MainFragment extends Fragment {
         noInternetConnectionLayout = (LinearLayout) getView().findViewById(R.id.noInternetConnection_layout);
         failedServerLayout = (LinearLayout) getView().findViewById(R.id.failed_conection_layout);
         swipeContainer = (SwipeRefreshLayout) getView().findViewById(R.id.swipeContainer);
-
 
 
         Button button_reload_no_internet = (Button) getView().findViewById(R.id.button_reload_no_internet);
@@ -154,7 +150,6 @@ public class MainFragment extends Fragment {
             }
         }
 
-
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -176,6 +171,8 @@ public class MainFragment extends Fragment {
 
     }
 
+
+
     public void getWorkoutsData(final String muscle){
         progressBar.setVisibility(View.VISIBLE);
 
@@ -188,7 +185,7 @@ public class MainFragment extends Fragment {
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request original = chain.request();
 
-                // Customize the request
+
                 Request request = original.newBuilder()
                         .header("Accept", "application/json")
                         .header("Authorization", "auth-token")
@@ -197,7 +194,6 @@ public class MainFragment extends Fragment {
 
                 okhttp3.Response response = chain.proceed(request);
                 Log.v(TAG,response.toString());
-                // Customize or return the response
                 return response;
             }
         });
@@ -255,9 +251,12 @@ public class MainFragment extends Fragment {
 
                         } else {
                             int statusCode = response.code();
-                            // handle request errors yourself
+
                             ResponseBody errorBody = response.errorBody();
                             Log.e(TAG,errorBody.toString());
+                            progressBar.setVisibility(View.GONE);
+                            swipeContainer.setVisibility(View.GONE);
+                            failedServerLayout.setVisibility(View.VISIBLE);
 
                         }
                     }
@@ -271,6 +270,8 @@ public class MainFragment extends Fragment {
                     @Override
                     public void onFailure(Call<JsonWorkout[]> call, Throwable t) {
                         Log.e(TAG,"getWorkoutsData, onFailure",t);
+
+                        progressBar.setVisibility(View.GONE);
                         swipeContainer.setVisibility(View.GONE);
                         failedServerLayout.setVisibility(View.VISIBLE);
 
@@ -280,10 +281,7 @@ public class MainFragment extends Fragment {
 
     }
 
-
-
-
-    public boolean CheckInternet(Context context){
+    private boolean CheckInternet(Context context){
         ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo i = cm.getActiveNetworkInfo();
         if (i == null)
