@@ -39,20 +39,28 @@ public class SongsActivity extends AppCompatActivity {
 
         mySongs = findSongs(Environment.getExternalStorageDirectory());
 
+        ArrayList<File> canciones;
+
         if (mySongs.size() > 0) {
 
-            items = new String[mySongs.size()];
-            for (int i = 0; i < mySongs.size(); i++) {
-                items[i] = SongName(mySongs.get(i));
+            Log.v(TAG,"mySongs: "+ mySongs);
+            canciones = DeleteNoteVoice(mySongs);
+
+            items = new String[canciones.size()];
+
+            for (int i = 0; i < canciones.size(); i++) {
+                items[i] = SongName(canciones.get(i));
             }
+            Log.v(TAG,"items: "+ Arrays.toString(items));
 
 
-                ArrayAdapter<String> adp = new ArrayAdapter<>(this, R.layout.simple_list_item_multiple_choice, R.id.text1, items);
-                ListMusic.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-                ListMusic.setAdapter(adp);
 
-                done = (Button)findViewById(R.id.done);
-                done.setOnClickListener(new View.OnClickListener() {
+            ArrayAdapter<String> adp = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
+            ListMusic.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            ListMusic.setAdapter(adp);
+
+            done = (Button)findViewById(R.id.done);
+            done.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         final int choice = ListMusic.getCount();
@@ -159,6 +167,26 @@ public class SongsActivity extends AppCompatActivity {
             Log.v("Exception",e.toString());
         }
         return duration;
+    }
+
+    private ArrayList<File> DeleteNoteVoice(ArrayList<File> songs){
+        ArrayList<String> canciones = new ArrayList<>();
+
+
+        for (int a = 0;a<songs.size();a++){
+
+            canciones.add(String.valueOf(songs.get(a)));
+
+            canciones.get(a).split("/storage/emulated/0/");
+
+            if (canciones.get(a).contains("/WhatsApp/Media/WhatsApp Audio/")){
+                Log.v(TAG,"nota de voz"+songs.get(a));
+                Log.v(TAG,"encontre nota de voz"+canciones.get(a));
+                songs.remove(a);
+            }
+
+        }
+        return songs;
     }
 
 }

@@ -62,8 +62,7 @@ public class SelectionMusicActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
-                startActivityForResult(new Intent(getApplicationContext(), SongsActivity.class), 1);
+                startActivityForResult(new Intent(SelectionMusicActivity.this, SongsActivity.class), 1);
 
             }
         });
@@ -71,7 +70,7 @@ public class SelectionMusicActivity extends AppCompatActivity {
         playlistButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(getApplicationContext(), PlaylistPickerActivity.class), 1);
+                startActivityForResult(new Intent(SelectionMusicActivity.this, PlaylistPickerActivity.class), 1);
 
             }
         });

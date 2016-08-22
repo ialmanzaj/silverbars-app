@@ -244,7 +244,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
 
     private void getUsersPlaylist(int userId){
         if (getPlaylist(userId)!=null){
-            ArrayAdapter<String> adp2 = new ArrayAdapter<String>(this, R.layout.simple_list_item_single_choice, R.id.text1, getPlaylist(1));
+            ArrayAdapter<String> adp2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, android.R.id.text1, getPlaylist(1));
             ListPlaylist.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             ListPlaylist.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
