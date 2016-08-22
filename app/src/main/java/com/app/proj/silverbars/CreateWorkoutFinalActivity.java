@@ -356,7 +356,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request original = chain.request();
-                // Customize the request
+
                 Request request = original.newBuilder()
                         .header("Accept", "application/json")
                         .header("Authorization", "auth-token")
@@ -364,7 +364,6 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
                         .build();
                 okhttp3.Response response = chain.proceed(request);
                 Log.v("Response",response.toString());
-                // Customize or return the response
                 return response;
             }
         });

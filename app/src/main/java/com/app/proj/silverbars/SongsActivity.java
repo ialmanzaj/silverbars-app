@@ -1,8 +1,6 @@
 package com.app.proj.silverbars;
 
 import android.content.Intent;
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +16,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.app.proj.silverbars.Utilities.SongDuration;
+import static com.app.proj.silverbars.Utilities.SongName;
+
+
 public class SongsActivity extends AppCompatActivity {
     private static final String TAG = "SongsActivity";
     private ListView ListMusic;
@@ -28,29 +30,31 @@ public class SongsActivity extends AppCompatActivity {
     private Button clean,done;
     private String[] playlist;
 
+    ArrayList<File> canciones_url;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_songs);
-
         Log.v(TAG,"SongsActivity: empezo");
 
         ListMusic = (ListView)findViewById(R.id.lvPlaylist);
 
         mySongs = findSongs(Environment.getExternalStorageDirectory());
 
-        ArrayList<File> canciones;
+        Log.v(TAG,"mySongs list: "+mySongs);
 
         if (mySongs.size() > 0) {
 
-            Log.v(TAG,"mySongs: "+ mySongs);
-            canciones = DeleteNoteVoice(mySongs);
+            canciones_url = DeleteNoteVoice(mySongs);
+            items = new String[canciones_url.size()];
 
-            items = new String[canciones.size()];
+            for (int i = 0; i < canciones_url.size(); i++) {
+                items[i] = SongName(this,canciones_url.get(i));
 
-            for (int i = 0; i < canciones.size(); i++) {
-                items[i] = SongName(canciones.get(i));
             }
+
+
             Log.v(TAG,"items: "+ Arrays.toString(items));
 
 
@@ -76,21 +80,24 @@ public class SongsActivity extends AppCompatActivity {
                                     selected[i] = ListMusic.getItemIdAtPosition(i);
                                 }
                             }
-                            for(int j = 0; j < mySongs.size(); j++){
+                            for(int j = 0; j < canciones_url.size(); j++){
                                 if (j == selected[j]){
-                                    playlist[x] = SongName(mySongs.get(j));
+                                    playlist[x] = SongName(SongsActivity.this,canciones_url.get(j));
                                     x++;
                                 }
                             }
-                            Log.v("Songs", Arrays.toString(playlist));
+
+                            Log.v("playlist", Arrays.toString(playlist));
+                            Log.v("songs", String.valueOf(canciones_url));
+
                             Intent returnIntent = new Intent();
                             returnIntent.putExtra("positions",playlist);
-                            returnIntent.putExtra("songs",mySongs);
+                            returnIntent.putExtra("songs",canciones_url);
                             setResult(RESULT_OK, returnIntent);
                             finish();
                         }
                         else
-                            mySongs = null;
+                            canciones_url = null;
                     }
                 });
 
@@ -109,7 +116,7 @@ public class SongsActivity extends AppCompatActivity {
 
     public ArrayList<File> findSongs(File root){
 
-        ArrayList<File> al = new ArrayList<File>();
+        ArrayList<File> al = new ArrayList<>();
         if (root.listFiles() != null){
             File[] files = root.listFiles();
             for(File singleFile : files){
@@ -118,7 +125,7 @@ public class SongsActivity extends AppCompatActivity {
                 }
                 else{
                     if (singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".wav")){
-                        if (SongDuration(singleFile)!=null && Long.valueOf(SongDuration(singleFile))>150000)
+                        if (SongDuration(this,singleFile)!=null && Long.valueOf(SongDuration(this,singleFile))>150000)
                             al.add(singleFile);
                     }
                 }
@@ -132,58 +139,25 @@ public class SongsActivity extends AppCompatActivity {
         finish();
     }
 
-    private String SongName(File file){
-        String title = null;
-        try{
-            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            Uri uri = Uri.fromFile(file);
-            mediaMetadataRetriever.setDataSource(this, uri);
-            title = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-        }catch(Exception e){
-            Log.v("Exception",e.toString());
-        }
-        return title;
-    }
-    private String SongArtist(File file){
-        String artist = null;
-        try{
-            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            Uri uri = Uri.fromFile(file);
-            mediaMetadataRetriever.setDataSource(this, uri);
-            artist = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-        }catch(Exception e){
-            Log.v("Exception",e.toString());
-        }
-        return artist;
-    }
-    private String SongDuration(File file){
-        String duration = null;
-        try{MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            Uri uri = Uri.fromFile(file);
-            mediaMetadataRetriever.setDataSource(this, uri);
-            duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        }catch (Exception e){
-            Log.v("Exception",e.toString());
-        }
-        return duration;
-    }
 
     private ArrayList<File> DeleteNoteVoice(ArrayList<File> songs){
         ArrayList<String> canciones = new ArrayList<>();
+        ArrayList<File>   songs_urls = new ArrayList<>();
+        for (int a = 0;a<songs.size();a++){canciones.add(songs.get(a).getPath());}
 
-        for (int a = 0;a<songs.size();a++){
+        for (int b = 0;b<canciones.size();b++){
+            canciones.get(b).split("/storage/emulated/0/");
 
-            canciones.add(String.valueOf(songs.get(a)));
-
-            canciones.get(a).split("/storage/emulated/0/");
-
-            if (canciones.get(a).contains("/WhatsApp/Media/WhatsApp Audio/")){
-                Log.v(TAG,"encontre nota de voz"+canciones.get(a));
-                songs.remove(a);
+            if (!canciones.get(b).contains("WhatsApp/Media/WhatsApp Audio/AUD-")){
+                Log.v(TAG,"otras canciones: "+songs.get(b));
+                try {
+                    songs_urls.add(songs.get(b));
+                }catch (NullPointerException e){}
             }
 
         }
-        return songs;
+
+        return songs_urls;
     }
 
 }

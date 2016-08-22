@@ -28,8 +28,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static com.app.proj.silverbars.Utilities.loadWorkoutImageFromCache;
-import static com.app.proj.silverbars.Utilities.writeWorkoutImageinDisk;
+import static com.app.proj.silverbars.Utilities.loadWorkoutImageFromInternalMemory;
+import static com.app.proj.silverbars.Utilities.saveWorkoutImgInDevice;
 
 /**
  * Created by andresrodriguez on 7/29/16.
@@ -89,48 +89,46 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
     }
 
     @Override
-    public void onBindViewHolder(VH vh,  int i) {
+    public void onBindViewHolder(VH viewholder,  int i) {
 
-        final int position = vh.getAdapterPosition();
+        final int position = viewholder.getAdapterPosition();
 
         int height = containerDimensions(context);
-        vh.layout.getLayoutParams().height = height / 3;
+        viewholder.layout.getLayoutParams().height = height / 3;
 
-
-        switch (vh.getItemViewType()) {
+        switch (viewholder.getItemViewType()) {
             case TYPE_WORKOUT:
-                Log.v(TAG,"Workouts Size"+position);
 
-                String[] imgdir = workouts.get(position).getWorkout_image().split("workouts");
-                Bitmap bmp;
-                String imgName = null;
+                String[] workoutImgDir = workouts.get(position).getWorkout_image().split("workouts");
+                Bitmap imgBitmap;
+                String workoutImgName = null;
 
-                if (imgdir.length < 2){
+                if (workoutImgDir.length < 2){
 
-                    Log.v(TAG,"Image"+ workouts.get(position).getWorkout_image());
-                    bmp = loadWorkoutImageFromCache(context,workouts.get(position).getWorkout_image());
-                    vh.img.setImageBitmap(bmp);
+                    Log.v(TAG,"Image: "+ workouts.get(position).getWorkout_image());
+                    imgBitmap = loadWorkoutImageFromInternalMemory(context,workouts.get(position).getWorkout_image());
+                    viewholder.img.setImageBitmap(imgBitmap);
 
                 }else{
-                    String Parsedurl = "workouts"+imgdir[1];
-                    Log.v(TAG,"Image"+Parsedurl);
-//                DownloadImage(Parsedurl,vh);
-                    String[] imagesName = Parsedurl.split("/");
-                    imgName = imagesName[2];
-                    Log.v(TAG,"Image Name"+imgName);
 
-                    bmp = loadWorkoutImageFromCache(context,imgName);
-                    if (bmp != null){
-                        vh.img.setImageBitmap(bmp);
-                    }
-                    else{
-                        DownloadImage(Parsedurl,vh,imgName);
+
+                    String Parsedurl = "workouts"+workoutImgDir[1];
+                    String[] imagesName = Parsedurl.split("/");
+                    workoutImgName = imagesName[2];
+                    Log.v(TAG,"Image Name: "+workoutImgName);
+
+                    imgBitmap = loadWorkoutImageFromInternalMemory(context,workoutImgName);
+
+                    if (imgBitmap != null){
+                        viewholder.img.setImageBitmap(imgBitmap);
+                    }else{
+                        DownloadImage(Parsedurl,viewholder,workoutImgName);
                     }
                 }
-//                vh.img.setImageBitmap(bmp);
-                final String imagen = imgName;
-                vh.text.setText(workouts.get(position).getWorkout_name());
-                vh.btn.setOnClickListener(new View.OnClickListener() {
+
+                final String imagen = workoutImgName;
+                viewholder.text.setText(workouts.get(position).getWorkout_name());
+                viewholder.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(context, WorkoutActivity.class);
@@ -159,7 +157,9 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
         return position < getItemCount() ? TYPE_WORKOUT : TYPE_VIEW_MORE;
     }
 
-    private void DownloadImage(String url, final VH vh, final String imgName){
+    private void DownloadImage(String url, final VH viewholder, final String workoutImgName){
+
+        Log.v(TAG,"DownloadImage");
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
@@ -170,25 +170,41 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
+
                     Bitmap bitmap = null;
+
                     if (response.isSuccessful()) {
-                        boolean writtenToDisk = writeWorkoutImageinDisk(context,response.body(),imgName);
-                        if(writtenToDisk){bitmap = loadWorkoutImageFromCache(context,imgName);}
-                        vh.img.setImageBitmap(bitmap);
-                    }
-                    else {
+
+                        boolean writtenToDisk = saveWorkoutImgInDevice(context,response.body(),workoutImgName);
+
+                        if(writtenToDisk){
+                            bitmap = loadWorkoutImageFromInternalMemory(context,workoutImgName);
+                        }
+
+
+                        viewholder.img.setImageBitmap(bitmap);
+
+
+                    } else {
                         Log.v(TAG, "Download server contact failed");
                     }
+
+
+
                 } else {
                     Log.v(TAG, "State: server contact failed");
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {}
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG,"onFAILURE",t);
+            }
         });
     }
 
+    
+    
     private static int containerDimensions(Context context) {
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);

@@ -3,6 +3,8 @@ package com.app.proj.silverbars;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 
@@ -71,12 +73,7 @@ public class Utilities {
 
         if (imageDir.length < 2){
 
-            File file;
-            if (isExternalStorageWritable()){
-                file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageURI);
-            }else {
-                file = new File(context.getFilesDir()+"/SilverbarsImg/"+imageURI);
-            }
+            File file = getFileReady(context,"/SilverbarsImg/"+imageURI);
 
             if (file.exists()){
                 bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
@@ -94,12 +91,7 @@ public class Utilities {
 
         try {
 
-            File futureStudioIconFile;
-            if (isExternalStorageWritable()){
-                futureStudioIconFile = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imgName);
-            }else {
-                futureStudioIconFile = new File(context.getFilesDir()+"/SilverbarsImg/"+imgName);
-            }
+            File futureStudioIconFile = getFileReady(context,"/SilverbarsImg/"+imgName);
 
             InputStream inputStream = null;
             OutputStream outputStream = null;
@@ -130,36 +122,27 @@ public class Utilities {
         } catch (IOException e) {return false;}
     }
 
-    public static Bitmap loadWorkoutImageFromCache(Context context,String imageURI) {
+    public static Bitmap loadWorkoutImageFromInternalMemory(Context context, String imageURI) {
+        Log.v(TAG,"loadWorkoutImageFromInternalMemory:");
+
+
         Bitmap bitmap = null;
-        File file;
-        if (isExternalStorageWritable()){
-            file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageURI);
-        }else {
-            file = new File(context.getFilesDir()+"/SilverbarsImg/"+imageURI);
-        }
+        File file = getFileReady(context,"/SilverbarsImg/"+imageURI);
+
         if (file.exists()){
             bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
         }
         return bitmap;
     }
 
-    public static boolean writeWorkoutImageinDisk(Context context,ResponseBody body, String imgName) {
+    public static boolean saveWorkoutImgInDevice(Context context, ResponseBody body, String imgName) {
+
+        Log.v(TAG,"saveWorkoutImgInDevice:");
 
         try {
 
-            File Folder;
-            File futureStudioIconFile;
-            if (isExternalStorageWritable()){
-                Folder = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/");
-                futureStudioIconFile = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imgName);
-            }else{
-
-                Folder = new File(context.getFilesDir()+"/SilverbarsImg/");
-                futureStudioIconFile = new File(context.getFilesDir()+"/SilverbarsImg/"+imgName);
-
-            }
-
+            File Folder = getFileReady(context,"/SilverbarsImg/");
+            File futureStudioIconFile = getFileReady(context,"/SilverbarsImg/"+imgName);
 
 
             InputStream inputStream = null;
@@ -198,7 +181,11 @@ public class Utilities {
 
             }
 
-        } catch (IOException e) {return false;}
+        } catch (IOException e) {
+
+            return false;
+
+        }
         return false;
     }
 
@@ -271,7 +258,6 @@ public class Utilities {
             }else {
                 file = new File(context.getFilesDir()+"/SilverbarsImg/"+imageURI);
             }
-
             if (file.exists()){
                 bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
             }
@@ -321,5 +307,52 @@ public class Utilities {
     }
 
     public static String removeLastChar(String str) {return str.substring(0,str.length()-1);}
+
+
+
+    public static String SongArtist(Context context,File file){
+        String artist = null;
+        try{
+            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+            Uri uri = Uri.fromFile(file);
+            mediaMetadataRetriever.setDataSource(context, uri);
+            artist = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+        }catch(Exception e){
+            Log.e(TAG,"Exception: ",e);
+        }
+        return artist;
+    }
+
+    public static String SongDuration(Context context,File file){
+        String duration = null;
+        try{MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+            Uri uri = Uri.fromFile(file);
+            mediaMetadataRetriever.setDataSource(context, uri);
+            duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        }catch (Exception e){
+            Log.e(TAG,"Exception: ",e);
+        }
+        return duration;
+    }
+
+
+    public static String SongName(Context context,File file){
+        String title = null;
+        try{
+            if (file.getPath().contains("/storage/emulated/0/Download/")){
+                title = file.getPath().split("/storage/emulated/0/Download/")[1];
+                Log.v(TAG,"title: "+title);
+
+            }else {
+                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+                Uri uri = Uri.fromFile(file);
+                mediaMetadataRetriever.setDataSource(context, uri);
+                title = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+            }
+        } catch(Exception e){
+            Log.e(TAG,"Exception: ",e);
+        }
+        return title;
+    }
 
 }

@@ -3,7 +3,6 @@ package com.app.proj.silverbars;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,12 +35,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import static com.app.proj.silverbars.Utilities.SongArtist;
+import static com.app.proj.silverbars.Utilities.SongName;
 
 public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG ="WorkingOut ACTIVITY";
     static MediaPlayer mp;
-    ArrayList<File> mySongs, playlist;
+    ArrayList<File> mySongs;
+    ArrayList<File> playlist;
     private ImageButton btPlay;
     private ImageButton btPause;
     private Uri u;
@@ -88,7 +90,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         VibrationPerRep = b.getBoolean("VibrationPerRep");
         VibrationPerSet =  b.getBoolean("VibrationPerSet");
         TotalSets = b.getInt("Sets");
+
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
+        Log.v(TAG,"mysongs"+mySongs);
+
+
         String[] position = b.getStringArray("pos");
         Positive = b.getIntArray("Array_Positive_Exercises");
         Isometric =  b.getIntArray("Array_Isometric_Exercises");
@@ -244,10 +250,12 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         mp.release();
                         x = (x-1)%playlist.size();
                         u = Uri.parse(playlist.get(x).toString());
-                        String SongName = SongName(playlist.get(x)).replace(".mp3","");
-                        song_name.setText(SongName);
-                        String SongArtist = SongArtist(playlist.get(x));
-                        artist_name.setText(SongArtist);
+                        
+                        String songName = SongName(WorkingOutActivity.this,playlist.get(x));
+                        song_name.setText(quitarMp3(songName));
+                        String artist = SongArtist(WorkingOutActivity.this,playlist.get(x));
+
+                        artist_name.setText(artist);
                         mp = MediaPlayer.create(getApplicationContext(),u);
                         mp.start();
                     }
@@ -273,10 +281,15 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         mp.release();
                         x = (x + 1) % playlist.size();
                         u = Uri.parse(playlist.get(x).toString());
-                        String SongName = SongName(playlist.get(x)).replace(".mp3","");
-                        song_name.setText(SongName);
-                        String SongArtist = SongArtist(playlist.get(x));
-                        artist_name.setText(SongArtist);
+
+                        String songName = SongName(WorkingOutActivity.this,playlist.get(x));
+
+                        song_name.setText(songName);
+
+                        String artist = SongArtist(WorkingOutActivity.this,playlist.get(x));
+                        
+                        artist_name.setText(artist);
+                        
                         mp = MediaPlayer.create(getApplicationContext(), u);
                         mp.start();
                     } else {
@@ -331,8 +344,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         });
 
 
-
-
         for (JsonExercise Exercise : Exercises) {
             items.add(new WorkoutInfo(Exercise.getExercise_name(), null,Exercise.getExercise_image()));
         }
@@ -370,6 +381,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onClick(View view) {
 
+                PauseCountDown();
 
                 new MaterialDialog.Builder(WorkingOutActivity.this)
                         .title("Desea regresar al ejercicio anterior?")
@@ -383,7 +395,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
-                            //String state = PauseButton.getText().toString();
                             recycler.smoothScrollToPosition(y-1);
                             y--;
                             CurrentExercise.setText(String.valueOf(y+1));
@@ -413,6 +424,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         dialog.dismiss();
+                        ResumeCountDown();
+
                     }
                 })
                         .show();
@@ -428,8 +441,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onClick(View view) {
 
-
-
+                PauseCountDown();
+                
                 new MaterialDialog.Builder(WorkingOutActivity.this)
                         .title("Desea pasar al siguiente ejercicio?")
                         .content("Esta seguro que quiere pasar al siguiente ejercicio?")
@@ -472,6 +485,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         dialog.dismiss();
+
+                        ResumeCountDown();
                     }
                 })
                         .show();
@@ -485,23 +500,24 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         btPlay.setOnClickListener(this);
         btPause.setOnClickListener(this);
 
-
-
         if (mySongs != null && mySongs.size() > 0){
             SelectedSongs = true;
             for(int j = 0; j < mySongs.size(); j++){
                 for(int z = 0; z < position.length; z++)
-                    if (Objects.equals(position[z], SongName(mySongs.get(j)))){
+                    if (Objects.equals(position[z], SongName(this,mySongs.get(j)))){
                         z++;
                         playlist.add(mySongs.get(j));
                     }
             }
 
+            
             u = Uri.parse(playlist.get(x).toString());
-            String SongName = SongName(playlist.get(x)).replace(".mp3","");
-            song_name.setText(SongName);
-            String SongArtist = SongArtist(playlist.get(x));
-            artist_name.setText(SongArtist);
+            
+            String songName = SongName(this,playlist.get(x));
+            song_name.setText(quitarMp3(songName));
+
+            String artist = SongArtist(WorkingOutActivity.this,playlist.get(x));
+            artist_name.setText(artist);
 
             Log.v(TAG, (String) song_name.getText());
 
@@ -512,7 +528,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
-                    MusicPlayList(playlist_size);
+                    playMusic(playlist_size);
                 }
             });
         }
@@ -553,28 +569,20 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         }.start();
     }
 
-    @Override
-    public void onBackPressed(){
-        Log.v(TAG,"BUTTON BACK PRESSED: CLICK");
-        DialogFinalize();
+    private String quitarMp3(String song){
+        return song.replace(".mp3","");
     }
 
-    private void MusicPlayList(final int playlist_size){
 
+
+    private void playMusic(final int playlist_size){
         if (playlist_size>1){
             x = (x+1)%playlist.size();
-
             u = Uri.parse(playlist.get(x).toString());
-
-            String SongName = SongName(playlist.get(x)).replace(".mp3","");
-
-            song_name.setText(SongName);
-
-            String SongArtist = SongArtist(playlist.get(x));
-
-            artist_name.setText(SongArtist);
-
-            Log.v(TAG, (String) song_name.getText());
+            String songName = SongName(this,playlist.get(x));
+            song_name.setText(quitarMp3(songName));
+            String artist = SongArtist(this,playlist.get(x));
+            artist_name.setText(artist);
 
             mp = MediaPlayer.create(getApplicationContext(),u);
             mp.start();
@@ -587,17 +595,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
-                MusicPlayList(playlist_size);
+                playMusic(playlist_size);
             }
         });
     }
 
     private void startMainCountDown(int seconds,int interval, int time_aux){
-
         if (!pause && start){
             Log.v(TAG,"Main CountDown: activado");
-
-
             int totalsecs= seconds * 1000;
             int sec_interval= interval * 1000 ;
             Time_aux = time_aux;
@@ -610,18 +615,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 public void onFinish() {}
             }.start();
         }
-
-
     }
 
 
     // CONTADOR DE REPETICIONES
     public void performTick(long millisUntilFinished) {
-
         Format_Time = Math.round(millisUntilFinished * 0.001f);
         Log.v(TAG,"Format_Time: "+Format_Time);
         //Log.v("Time",String.valueOf(Time_aux-tempo)+" / "+Format_Time);
-
 
         if (Time_aux-tempo == Format_Time){
             Time_aux = Time_aux - tempo;
@@ -633,8 +634,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     }
 
-
-
     private void ActivateVibrationPerRep(){
         if (VibrationPerRep) {
             Vibrator vb = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -644,11 +643,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 vb.cancel();
                 Log.v(TAG, "Vibration Por Rep: cancelado");
             }
-
-
         }
-
-
     }
 
     private void ActivateVibrationPerSet(){
@@ -815,43 +810,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
-    private String SongName(File file){
-        String title = null;
-        try{
-            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            Uri uri = Uri.fromFile(file);
-            mediaMetadataRetriever.setDataSource(this, uri);
-            title = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-        }catch(Exception e){
-            Log.e(TAG,"SongName, Exception",e);
-        }
-        return title;
-    }
 
-    private String SongArtist(File file){
-        String artist = null;
-        try{
-            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            Uri uri = Uri.fromFile(file);
-            mediaMetadataRetriever.setDataSource(this, uri);
-            artist = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-        }catch(Exception e){
-            Log.e(TAG,"SongArtist, Exception",e);
-        }
-        return artist;
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        ScreenOff();
-        if (start){
-            main_timer.cancel();
-        }
-        if (media!=null)
-            media.release();
-        super.onDestroy();
-    }
 
 
     private void showRestModal(int rest_time){
@@ -950,6 +909,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 .show();
     }
 
+    private void ScreenOn(){getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);}
+
+    private void ScreenOff(){getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);}
+
 
     @Override
     protected void onStart() {
@@ -965,20 +928,31 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         if (pause){
             ResumeCountDown();
         }
-
     }
-
     @Override
     protected void onPause() {
         super.onPause();
         Log.v(TAG,"onPause");
         PauseCountDown();
-
     }
 
-    private void ScreenOn(){getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);}
+    @Override
+    public void onBackPressed(){
+        Log.v(TAG,"BUTTON BACK PRESSED: CLICK");
+        DialogFinalize();
+    }
 
-    private void ScreenOff(){getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);}
+    @Override
+    protected void onDestroy() {
+        ScreenOff();
+        if (start){
+            main_timer.cancel();
+        }
+        if (media!=null)
+            media.release();
+        super.onDestroy();
+    }
+
 
 
 }

@@ -1,1 +1,7 @@
-<resources></resources>
+<resources>
+
+    <style name="LinearProgress" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/secondColor</item>
+        <item name="android:progressBackgroundTint">@color/light_gray</item>
+    </style>
+</resources>

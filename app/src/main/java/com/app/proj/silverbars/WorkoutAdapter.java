@@ -26,8 +26,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static com.app.proj.silverbars.Utilities.loadWorkoutImageFromCache;
-import static com.app.proj.silverbars.Utilities.writeWorkoutImageinDisk;
+import static com.app.proj.silverbars.Utilities.loadWorkoutImageFromInternalMemory;
+import static com.app.proj.silverbars.Utilities.saveWorkoutImgInDevice;
 
 
 public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
@@ -82,36 +82,33 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
     }
 
     @Override
-    public void onBindViewHolder(VH vh, final int i) {
+    public void onBindViewHolder(VH viewHolder, int i) {
 
-        final int position = vh.getAdapterPosition();
-
+        final int position = viewHolder.getAdapterPosition();
         int height = containerDimensions(context);
-        vh.layout.getLayoutParams().height = height / 3;
-        switch (vh.getItemViewType()) {
-
+        viewHolder.layout.getLayoutParams().height = height / 3;
+        
+        
+        switch (viewHolder.getItemViewType()) {
             case TYPE_WORKOUT:
-                //Log.v(TAG,"Workouts Size"+position);
+                
                 String[] parts = workouts[position].getWorkout_image().split("workouts");
                 String Parsedurl = "workouts"+parts[1];
 
-                //Log.v(TAG,"Image "+Parsedurl);
                 String[] imagesName = Parsedurl.split("/");
                 final String imgName = imagesName[2];
-                //Log.v(TAG,"Image Name "+imgName);
 
-                // asignar imagen a view
-                Bitmap bmp = loadWorkoutImageFromCache(context,imgName);
+
+                Bitmap bmp = loadWorkoutImageFromInternalMemory(context,imgName);
+
                 if (bmp != null){
-                    //Bitmap resized = Bitmap.createScaledBitmap(bmp, 300, 300, true);
-                    vh.img.setImageBitmap(bmp);
+                    viewHolder.img.setImageBitmap(bmp);
+                } else{
+                    DownloadImage(Parsedurl,viewHolder,imgName);
                 }
-                else{
-                    DownloadImage(Parsedurl,vh,imgName);
-                }
-//                vh.img.setImageBitmap(bmp);
-                vh.text.setText(workouts[position].getWorkout_name());
-                vh.btn.setOnClickListener(new View.OnClickListener() {
+
+                viewHolder.text.setText(workouts[position].getWorkout_name());
+                viewHolder.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(context, WorkoutActivity.class);
@@ -139,7 +136,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         return position < getItemCount() ? TYPE_WORKOUT : TYPE_VIEW_MORE;
     }
 
-    private void DownloadImage(String url, final VH vh, final String imgName){
+    private void DownloadImage(String url, final VH viewHolder, final String imgName){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
@@ -150,15 +147,20 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-//                    Bitmap bmp = BitmapFactory.decodeStream(response.body().byteStream());
-//                    vh.img.setImageBitmap(bmp);
+
                     Bitmap bitmap = null;
+
                     if (response.isSuccessful()) {
-                        boolean writtenToDisk = writeWorkoutImageinDisk(context,response.body(),imgName);
-                        if(writtenToDisk){bitmap = loadWorkoutImageFromCache(context,imgName);}
-                        vh.img.setImageBitmap(bitmap);
-                    }
-                    else {
+
+                        boolean writtenToDisk = saveWorkoutImgInDevice(context,response.body(),imgName);
+
+                        if(writtenToDisk){
+                            bitmap = loadWorkoutImageFromInternalMemory(context,imgName);
+                        }
+
+                        viewHolder.img.setImageBitmap(bitmap);
+
+                    } else {
                         Log.v(TAG, "Download server contact failed");
                     }
                 } else {

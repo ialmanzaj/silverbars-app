@@ -68,6 +68,8 @@ public class JsonExercise {
         return rep;
     }
 
+
+
     public void setRep(int rep){
         this.rep = rep;
     }

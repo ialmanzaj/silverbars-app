@@ -3,6 +3,9 @@ package com.app.proj.silverbars;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +24,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -90,7 +94,7 @@ public class WorkoutActivity extends AppCompatActivity {
     Button startButton;
     private LinearLayout primary_ColumnMuscle,secundary_ColumnMuscle,Progress;
 
-
+    LinearLayout contentInfo;
     private boolean isTouched = false;
     private boolean loadLocal = false;
 
@@ -127,6 +131,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private TextView Rest_by_exercise_dialog;
 
     private  List<String> MusclesArray = new ArrayList<>();
+    private  List<String> TypeExercises = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +158,9 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
         // MUSCLES TEXT VIEW
+
+        contentInfo = (LinearLayout)findViewById(R.id.content_info);
+
         primary_ColumnMuscle = (LinearLayout) findViewById(R.id.column1);
         secundary_ColumnMuscle = (LinearLayout) findViewById(R.id.column2);
 
@@ -310,6 +318,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
                 //RECORRER CADA EJECICIOS BUSCANDO MUSCULOS
                 Collections.addAll(MusclesArray, ParsedExercises[i].muscle);
+                Collections.addAll(TypeExercises,ParsedExercises[i].getType_exercise());
 
                 //agregar json a array exercisesToRecycler
                 exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[i].getExercise_image()));
@@ -320,6 +329,8 @@ public class WorkoutActivity extends AppCompatActivity {
             adapter = new ExerciseAdapter(exercisesToRecycler,WorkoutActivity.this);
             ExercisesRecycler.setAdapter(adapter);
             setMusclesToView(MusclesArray);
+            putTypesInWorkout(TypeExercises);
+
 
         }else if (user_workout && database.checkUserWorkouts(workoutId) ){
             togle_no_internet.setVisibility(View.GONE);// this only for workouts in API
@@ -347,6 +358,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 
                 //RECORRER CADA EJECICIOS BUSCANDO MUSCULOS
                 Collections.addAll(MusclesArray, ParsedExercises[i].muscle);
+                Collections.addAll(TypeExercises,ParsedExercises[i].getType_exercise());
 
                 //agregar json a array exercisesToRecycler
                 exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[i].getExercise_image()));
@@ -357,6 +369,8 @@ public class WorkoutActivity extends AppCompatActivity {
             adapter = new ExerciseAdapter(exercisesToRecycler,WorkoutActivity.this);
             ExercisesRecycler.setAdapter(adapter);
             setMusclesToView(MusclesArray);
+            putTypesInWorkout(TypeExercises);
+
         } else {
 
 
@@ -775,19 +789,28 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
+    private List<String> deleteCopiesofList(List<String> list){
+        List<String> real_list = new ArrayList<>();
+
+        for (int a = 0; a<list.size();a++) {
+            if (!real_list.contains(list.get(a))) {
+                real_list.add(list.get(a));
+            }
+        }
+        return real_list;
+    }
+
     
     private void setMusclesToView(List<String> musculos){
 
         if (musculos.size() > 0){
-            List<String> musculos_oficial = new ArrayList<>();
-            for (int a = 0; a<musculos.size();a++){
-                if (!musculos_oficial.contains(musculos.get(a))) {
-                    musculos_oficial.add(musculos.get(a));
-                }
-            }
+
+            List<String> musculos_oficial;
+            musculos_oficial = deleteCopiesofList(musculos);
 
             for (int a = 0;a<musculos_oficial.size();a++) {
-                final TextView MuscleTextView = new TextView(WorkoutActivity.this);
+
+                final TextView MuscleTextView = new TextView(this);
 
                 partes += "#"+ musculos_oficial.get(a) + ",";
                 MuscleTextView.setText(musculos_oficial.get(a));
@@ -811,7 +834,6 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         }
 
-
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -829,7 +851,6 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
 
-
         webview.getSettings().setJavaScriptEnabled(true);
 
         // ACCEDER A LA URL DEL HTML GUARDADO EN EL PHONE
@@ -845,9 +866,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private void injectJS() {
         try {
             if (!Objects.equals(partes, "")){
-
                 partes = removeLastChar(partes);
-                
                 webview.loadUrl("javascript: ("+ "window.onload = function () {"+
                         "partes = Snap.selectAll('"+partes+"');"+
                         "partes.forEach( function(elem,i) {"+
@@ -964,6 +983,7 @@ public class WorkoutActivity extends AppCompatActivity {
                             adapter = new ExerciseAdapter(exercisesToRecycler,WorkoutActivity.this);
                             ExercisesRecycler.setAdapter(adapter);
                             setMusclesToView(MusclesArray);
+                            putTypesInWorkout(TypeExercises);
                             startButton.setEnabled(true);
 
 
@@ -1027,7 +1047,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         try {
 
-            File futureStudioIconFile = new File(this.getCacheDir()+"/SilverbarsMp3/"+getAudioName);
+            File futureStudioIconFile = new File(this.getFilesDir()+"/SilverbarsMp3/"+getAudioName);
 
             InputStream inputStream = null;
             OutputStream outputStream = null;
@@ -1211,9 +1231,13 @@ public class WorkoutActivity extends AppCompatActivity {
 
                         exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[a].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[a].getExercise_image()));
 
+                        Collections.addAll(TypeExercises,ParsedExercises[a].getType_exercise());
+
+                        Log.v(TAG,"TypeExercises"+TypeExercises);
+
                         //RECORRER CADA EJECICIOS BUSCANDO MUSCULOS
                         Collections.addAll(MusclesArray, ParsedExercises[a].muscle);
-                        
+
                         if ( exercisesToRecycler.size() == exercises.length){
                             getExerciseRepsFromAPI();
                         }
@@ -1249,6 +1273,110 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
         }
+    }
+
+    private  int ISOMETRIC = 0,CARDIO = 0,PYLOMETRICS = 0,STRENGTH = 0;
+
+    private void getCountTimes(List<String> list){
+        for (int a = 0; a<list.size();a++) {
+            if (list.get(a).equals("ISOMETRIC")) {
+                ISOMETRIC = ISOMETRIC+1;
+            }if (list.get(a).equals("CARDIO")){
+                CARDIO=CARDIO+1;
+            }if(list.get(a).equals("PYLOMETRICS")){
+                PYLOMETRICS = PYLOMETRICS+1;
+            }if (list.get(a).equals("STRENGTH")){
+                STRENGTH = STRENGTH+1;
+            }
+        }
+    }
+
+
+
+    private void putTypesInWorkout(List<String> types){
+
+        List<String> typesExercise;
+
+        typesExercise = deleteCopiesofList(types);
+
+        getCountTimes(typesExercise);
+
+        Log.v(TAG,"ISOMETRIC: "+ISOMETRIC);
+        Log.v(TAG,"CARDIO: "+CARDIO);
+        Log.v(TAG,"PYLOMETRICS: "+PYLOMETRICS);
+        Log.v(TAG,"STRENGTH: "+STRENGTH);
+
+        int[] porcentaje = new int[typesExercise.size()];
+
+
+
+        for (int a = 0;a<typesExercise.size();a++){
+
+            TextView textView = new TextView(this);
+            LinearLayout linear = new LinearLayout(this);
+            linear.setOrientation(LinearLayout.HORIZONTAL);
+            ProgressBar progress = new ProgressBar(this,null ,android.R.attr.progressBarStyleHorizontal);
+
+            if (ISOMETRIC > 0){
+                porcentaje[a] = (int) (((double) ISOMETRIC / typesExercise.size())*100);
+            }if (CARDIO > 0){
+                porcentaje[a] = (int) (((double) CARDIO / typesExercise.size())*100);
+            }if (STRENGTH > 0){
+                porcentaje[a] = (int) (((double) STRENGTH / typesExercise.size()) *100);
+            }if (PYLOMETRICS > 0){
+                porcentaje[a] = (int) (((double)PYLOMETRICS / typesExercise.size()) *100);
+            }
+
+            Log.v(TAG,"porcentaje: "+porcentaje[a]);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.MATCH_PARENT);
+
+            LinearLayout.LayoutParams params3 = new LinearLayout.LayoutParams(
+                    RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.MATCH_PARENT);
+
+            LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
+            params.weight = 2.0f;
+            params3.weight = 0.5f;
+
+            progress.setLayoutParams(params2);
+            progress.setLayoutParams(params);
+
+
+            progress.setProgress(porcentaje[a]);
+            progress.setMax(100);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                progress.setProgressTintList(ColorStateList.valueOf(Color.RED));
+                progress.setBackgroundTintList((ColorStateList.valueOf(Color.RED)));
+            }else {
+                progress.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+            }
+
+
+            textView.setText(typesExercise.get(a));
+            textView.setGravity(Gravity.START);
+            textView.setLayoutParams(params3);
+
+            textView.setTextColor(getResources().getColor(R.color.black));
+
+
+            linear.setPadding(15,15,15,15);
+            linear.addView(textView);
+            linear.addView(progress);
+
+            linear.setMinimumHeight(45);
+
+            contentInfo.addView(linear);
+
+        }
+
+
+
+
+
+
+
     }
 
 
