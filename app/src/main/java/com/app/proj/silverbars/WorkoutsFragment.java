@@ -24,7 +24,6 @@ public class WorkoutsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         rootView = inflater.inflate(R.layout.activity_my_workouts, container, false);
 
         ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
@@ -32,7 +31,6 @@ public class WorkoutsFragment extends Fragment {
 
         TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
 
         return rootView;
     }

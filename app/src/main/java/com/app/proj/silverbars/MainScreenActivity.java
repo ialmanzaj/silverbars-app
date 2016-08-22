@@ -210,6 +210,7 @@ public class MainScreenActivity extends AppCompatActivity {
                             }
                         })
                         .positiveText(R.string.choose)
+                        .positiveColor(getResources().getColor(R.color.white))
                         .show();
             }
         });
@@ -390,7 +391,7 @@ public class MainScreenActivity extends AppCompatActivity {
                     if (read == -1) {break;}
                     output.write(buffer, 0, read);
                     fileSizeDownloaded += read;
-                    //Log.d("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                    Log.d(TAG, "Download file: " + fileSizeDownloaded + " of " + fileSize);
                 }
                 output.flush();
                 return true;
@@ -406,12 +407,11 @@ public class MainScreenActivity extends AppCompatActivity {
     }
 
     private void setMusclePath(File file){
-
         Log.v(TAG,"setMusclePath: "+file.getPath());
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.muscle_path), file.getPath());
-        editor.commit();
+        editor.apply();
 
     }
 

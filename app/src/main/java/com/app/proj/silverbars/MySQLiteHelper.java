@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -15,7 +14,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import static com.app.proj.silverbars.Utilities.isExternalStorageWritable;
+import static com.app.proj.silverbars.Utilities.getUrlReady;
 
 /**
  * Created by andre_000 on 5/18/2016.
@@ -805,19 +804,16 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         fis = new FileInputStream(dbFile);
 
-        String directorio;
-        if (isExternalStorageWritable()){
-            directorio = Environment.getExternalStorageDirectory()+"/Database";
-        }else {
-             directorio = myContext.getFilesDir()+"/Database";
-        }
+        String directorio = getUrlReady(myContext,"/Database");
 
         File d = new File(directorio);
-        if (!d.exists()) {d.mkdir();}
+        if (!d.exists()) {
+            d.mkdir();
+        }
 
         String outFileName = directorio + "/"+DATABASE_NAME;
-
         OutputStream output = new FileOutputStream(outFileName);
+
 
         byte[] buffer = new byte[1024];
         int length;
@@ -831,17 +827,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     }
 
-    public static String convertArrayToString(String[] array){
-        String str = "";
-        for (int i = 0;i<array.length; i++) {
-            str = str+array[i];
-            // Do not append comma at the end of last element
-            if(i<array.length-1){
-                str = str+strSeparator;
-            }
-        }
-        return str;
-    }
 
     public static String[] convertStringToArray(String str){
         return str.split(strSeparator);

@@ -50,6 +50,10 @@ public class SettingsActivity extends AppCompatActivity {
                 View v = new MaterialDialog.Builder(view.getContext())
                         .title(getResources().getString(R.string.session_title))
                         .content(getResources().getString(R.string.session_content))
+
+                        .contentColor(getResources().getColor(R.color.white))
+                        .positiveColor(getResources().getColor(R.color.white))
+                        .negativeColor(getResources().getColor(R.color.white))
                         .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {

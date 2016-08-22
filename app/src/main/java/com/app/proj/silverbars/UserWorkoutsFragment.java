@@ -20,15 +20,12 @@ import java.util.List;
 public class UserWorkoutsFragment extends Fragment {
 
     private static final String TAG = "UserWorkoutsFragment";
-    private View roootview;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-        roootview =  inflater.inflate(R.layout.fragment_user_workouts, container, false);
-
+        View roootview = inflater.inflate(R.layout.fragment_user_workouts, container, false);
         TwoWayView my_workouts = (TwoWayView) roootview.findViewById(R.id.recycler_my_workouts);
 
         LinearLayout EmpyStateMyWorkouts = (LinearLayout) roootview.findViewById(R.id.empty_state_my_workouts);
@@ -41,7 +38,6 @@ public class UserWorkoutsFragment extends Fragment {
                 startActivity(new Intent(getActivity(),CreateWorkoutActivity.class));
             }
         });
-
 
         MySQLiteHelper database = new MySQLiteHelper(getContext());
 
@@ -59,7 +55,6 @@ public class UserWorkoutsFragment extends Fragment {
         }else {
             EmpyStateMyWorkouts.setVisibility(View.VISIBLE);
         }
-
 
         return roootview;
     }
