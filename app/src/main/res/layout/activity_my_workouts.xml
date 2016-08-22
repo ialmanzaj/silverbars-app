@@ -1,132 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".WorkoutsFragment">
 
-    <TabHost
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabMode="fixed"
+            app:tabGravity="fill"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/tabHost"
-        android:layout_gravity="center_horizontal">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"></TabWidget>
-
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:id="@+id/my_workouts_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:gravity="center_vertical"
-                        android:background="@color/white"
-                        android:visibility="gone"
-                        android:id="@+id/empty_state_my_workouts"
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:textColor="@color/black"
-                            android:textSize="22sp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/blank_text_my_workouts"
-                            android:layout_gravity="center"
-                            android:gravity="center" />
-
-                        <Button
-                            android:layout_marginTop="10dp"
-                            android:paddingStart="15dp"
-                            android:paddingEnd="15dp"
-                            android:background="@color/colorSecondary"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_create_workout"
-                            android:id="@+id/create_workout"
-                            android:layout_gravity="center"
-                            android:gravity="center" />
-                    </LinearLayout>
-                    <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/recycler_my_workouts"
-                        android:visibility="invisible"
-                        android:paddingTop="5dp"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:twowayview_layoutManager="GridLayoutManager"
-                        app:twowayview_numColumns="2"
-                        android:orientation="vertical" />
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/saved_workouts_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center">
-                    <LinearLayout
-                                android:orientation="vertical"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center_vertical"
-                                android:id="@+id/empty_state_saved_workouts"
-                                android:visibility="gone"
-                                android:background="@color/white">
-
-                                <TextView
-                                    android:textColor="@color/black"
-                                    android:textSize="22sp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/blank_text_my_workouts_saved"
-                                    android:layout_gravity="center"
-                                    android:gravity="center" />
-
-                                <Button
-                                    android:layout_marginTop="10dp"
-                                    android:paddingStart="15dp"
-                                    android:paddingEnd="15dp"
-                                    android:background="@color/colorSecondary"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/explore_button"
-                                    android:id="@+id/explore"
-                                    android:layout_gravity="center"
-                                    android:gravity="center" />
-                            </LinearLayout>
-                    <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/recycler_saved_workouts"
-                        android:paddingTop="5dp"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-                        android:visibility="invisible"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:twowayview_layoutManager="GridLayoutManager"
-                        app:twowayview_numColumns="2"
-                        android:orientation="vertical" />
-                </LinearLayout>
-
-
-            </FrameLayout>
-        </LinearLayout>
-    </TabHost>
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

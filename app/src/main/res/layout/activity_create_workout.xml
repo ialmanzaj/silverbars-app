@@ -98,9 +98,10 @@
                             android:visibility="gone"
                             android:background="@color/secondColor"
                             android:id="@+id/reAdd"
-                            android:text=""
+                            android:text="@string/add_more"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"/>
 
                     </LinearLayout>
                     <android.support.v7.widget.RecyclerView
@@ -125,7 +126,7 @@
                             android:background="@color/white"
                             android:id="@+id/WebView_create"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="match_parent">
                         </WebView>
                         <LinearLayout
                             android:orientation="horizontal"

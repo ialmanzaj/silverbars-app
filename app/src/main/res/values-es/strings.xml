@@ -171,4 +171,10 @@
     <string name="empty_create">La Rutinas esta vacia :(</string>
     <string name="add_exercises">Agregar ejercicios</string>
     <string name="add_more">Agregar más ejercicios</string>
+
+    <string name="songs">Canciones</string>
+    <string name="playlist">Lista de reproducción</string>
+    <string name="spotify">Spotify</string>
+    <string name="soundcloud">SoundCloud</string>
+
 </resources>

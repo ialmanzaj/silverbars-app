@@ -172,4 +172,10 @@
     <string name="empty_create">The Workout is empty :(</string>
     <string name="add_exercises">Add exercises</string>
     <string name="add_more">Add more exercises</string>
+
+    <string name="songs">Songs</string>
+    <string name="spotify">Spotify</string>
+    <string name="playlist">Playlists</string>
+    <string name="soundcloud">SoundCloud</string>
+
 </resources>

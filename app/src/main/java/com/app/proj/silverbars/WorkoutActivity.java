@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -52,13 +51,24 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import static com.app.proj.silverbars.Utilities.convertArrayToString;
+import static com.app.proj.silverbars.Utilities.getFileReady;
+import static com.app.proj.silverbars.Utilities.getUrlReady;
+import static com.app.proj.silverbars.Utilities.removeLastChar;
+
+
 /*import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;*/
 
 public class WorkoutActivity extends AppCompatActivity {
 
-    private Button plusSets,minusSets,plusRest,minusRest,plusRestSets,minusRestSets,Button_error_reload;
+    private Button plusSets;
+    private Button minusSets;
+    private Button plusRest;
+    private Button minusRest;
+    private Button plusRestSets;
+    private Button minusRestSets;
 
     TabHost Tab_layout;
 
@@ -84,7 +94,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private boolean isTouched = false;
     private boolean loadLocal = false;
 
-    private static String strSeparator = "__,__";
+   
 
 //    Workout Data
     private int workoutId = 0, workoutSets = 0;
@@ -150,15 +160,15 @@ public class WorkoutActivity extends AppCompatActivity {
 
         //error layout
         error_layout = (LinearLayout) findViewById(R.id.error_layout);
-        Button_error_reload = (Button) findViewById(R.id.error_reload_workout);
+        Button button_error_reload = (Button) findViewById(R.id.error_reload_workout);
 
-        Button_error_reload.setOnClickListener(new View.OnClickListener() {
+        button_error_reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 error_layout.setVisibility(View.GONE);
                 Progress.setVisibility(View.VISIBLE);
-                getExercisesFromJson();
+                getExercisesFromAPI();
 
             }
         });
@@ -167,7 +177,6 @@ public class WorkoutActivity extends AppCompatActivity {
         SwitchCompat enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
         SwitchCompat vibration_per_rep = (SwitchCompat) findViewById(R.id.vibration_per_rep);
         SwitchCompat vibration_per_set = (SwitchCompat) findViewById(R.id.vibration_per_set);
-        
         
         
         ExercisesRecycler = (RecyclerView) findViewById(R.id.reciclador);
@@ -196,7 +205,6 @@ public class WorkoutActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         if (myToolbar != null) {
-
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(workoutName);
             myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -314,9 +322,9 @@ public class WorkoutActivity extends AppCompatActivity {
             setMusclesToView(MusclesArray);
 
         }else if (user_workout && database.checkUserWorkouts(workoutId) ){
+            togle_no_internet.setVisibility(View.GONE);// this only for workouts in API
 
-            togle_no_internet.setVisibility(View.GONE);
-
+            
              ParsedReps = database.getUserWorkout(workoutId);
             
             ParsedExercises = new JsonExercise[ParsedReps.length];
@@ -352,7 +360,7 @@ public class WorkoutActivity extends AppCompatActivity {
         } else {
 
 
-            getExercisesFromJson();
+            getExercisesFromAPI();
             loadLocal = false;
             enableLocal.setChecked(false);
         }
@@ -824,7 +832,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         webview.getSettings().setJavaScriptEnabled(true);
 
-
+        // ACCEDER A LA URL DEL HTML GUARDADO EN EL PHONE
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         String default_url = getResources().getString(R.string.muscle_path);
         String muscle_url = sharedPref.getString(getString(R.string.muscle_path),default_url);
@@ -836,16 +844,13 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-    private static String removeLastChar(String str) {return str.substring(0,str.length()-1);}
 
     private void injectJS() {
 
         try {
-
             if (!Objects.equals(partes, "")){
 
                 partes = removeLastChar(partes);
-                
                 
                 webview.loadUrl("javascript: ("+ "window.onload = function () {"+
                         "partes = Snap.selectAll('"+partes+"');"+
@@ -865,14 +870,15 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
 
-    private void getExerciseRepsFromJson(){
-        
+
+    private void getExerciseRepsFromAPI(){
+
+
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request original = chain.request();
-
 
                 Request request = original.newBuilder()
                         .header("Accept", "application/json")
@@ -930,10 +936,11 @@ public class WorkoutActivity extends AppCompatActivity {
                                     String Parsedurl = "exercises" + audioDir[1];
                                     String[] splitName = Parsedurl.split("/");
                                     String mp3Name = splitName[2];
-                                    File Dir = new File(Environment.getExternalStorageDirectory() + "/SilverbarsMp3");
-                                    
+
+                                    File Dir = getFileReady(WorkoutActivity.this,"/SilverbarsMp3");
+                                   
                                     if (Dir.isDirectory()) {
-                                        File file = new File(Environment.getExternalStorageDirectory() + "/SilverbarsMp3/" + mp3Name);
+                                        File file = getFileReady(WorkoutActivity.this,"/SilverbarsMp3/" + mp3Name);
                                         if (!file.exists()) {
                                             DownloadMp3(Parsedurl, mp3Name);
                                         }
@@ -953,9 +960,7 @@ public class WorkoutActivity extends AppCompatActivity {
                                     error_layout.setVisibility(View.VISIBLE);
                                     
                                 }
-
-
-
+                                
                                 Exercises_reps[i] = ParsedReps[i].getRepetition();
 
                                 // inicializar cada parte del tempo
@@ -977,7 +982,7 @@ public class WorkoutActivity extends AppCompatActivity {
                             int statusCode = response.code();
 
                             ResponseBody errorBody = response.errorBody();
-                            Log.e(TAG, "getExerciseRepsFromJson: "+errorBody);
+                            Log.e(TAG, "getExerciseRepsFromAPI: "+errorBody);
                             Log.e(TAG, "statusCode: "+statusCode);
                         }
                     }
@@ -999,7 +1004,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
     }
 
-    private void DownloadMp3(final String url, final String audioName) {
+    private void DownloadMp3(final String url, final String getAudioName) {
+        
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
         final SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
@@ -1012,7 +1018,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (response.isSuccessful()) {
-                            boolean writtenToDisk = writeResponseBodyToDisk(response.body(),audioName);
+                            boolean writtenToDisk = saveAudioInCache(response.body(),getAudioName);
 
                             Log.v(TAG, String.valueOf(writtenToDisk));
                         }
@@ -1028,12 +1034,16 @@ public class WorkoutActivity extends AppCompatActivity {
         }.execute();
     }
 
-    private boolean writeResponseBodyToDisk(ResponseBody body, String audioName) {
+    private boolean saveAudioInCache(ResponseBody body, String getAudioName) {
 
         try {
-            File futureStudioIconFile = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+audioName);
+
+            File futureStudioIconFile = new File(this.getCacheDir()+"/SilverbarsMp3/"+getAudioName);
+            
+
             InputStream inputStream = null;
             OutputStream outputStream = null;
+
             try {
                 byte[] fileReader = new byte[4096];
                 long fileSize = body.contentLength();
@@ -1084,13 +1094,15 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
     //guardar ejercicios en la base de datos
-    public void saveExercisesinDatabase(){
+    private void saveExercisesinDatabase(){
 
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
         for (int i = 0; i < ParsedExercises.length; i++){
             if (!database.checkExercise(ParsedExercises[i].getId()) ){
-                String imgDir = Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageName(i);
-                String mp3Dir = Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+audioName(i);
+                String imgDir,mp3Dir;
+                imgDir = getUrlReady(this,"/SilverbarsImg/"+getImageName(i));
+                mp3Dir = getUrlReady(this,"/SilverbarsMp3/"+getAudioName(i));
+                  
                 database.insertExercises(
                         ParsedExercises[i].getId(),
                         ParsedExercises[i].getExercise_name(),
@@ -1111,8 +1123,9 @@ public class WorkoutActivity extends AppCompatActivity {
 
         String[] exercises_ids = new String[ParsedExercises.length];
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
-        String imgDir = Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+workoutImage;
 
+        String imgDir = getUrlReady(this,"/SilverbarsImg/"+workoutImage);
+        
         Log.v(TAG,"imgdir: "+workoutImage);
 
         for (int i = 0; i < exercises_ids.length; i++){
@@ -1146,39 +1159,25 @@ public class WorkoutActivity extends AppCompatActivity {
                 );
             }
         }
-
     }
 
-    public String imageName(int position){
+    private String getImageName(int position){
         String[] imageDir = ParsedExercises[position].getExercise_image().split("exercises");
         String Parsedurl = "exercises" + imageDir[1];
         String[] imagesName = Parsedurl.split("/");
-        String imgName = imagesName[2];
-        return imgName;
+        return imagesName[2];
     }
 
-    public String audioName(int position){
+    private String getAudioName(int position){
         String[] audioDir = ParsedExercises[position].getExercise_audio().split("exercises");;
         String Parsedurl = "exercises"+audioDir[1];
         String[] splitName = Parsedurl.split("/");
-        String mp3Name = splitName[2];
-        return mp3Name;
-    }
-
-    public static String convertArrayToString(String[] array){
-        String str = "";
-        for (int i = 0;i<array.length; i++) {
-            str = str+array[i];
-
-            if(i<array.length-1){
-                str = str+strSeparator;
-            }
-        }
-        return str;
+        return splitName[2];
     }
 
 
-    public void getExercisesFromJson(){
+
+    private void getExercisesFromAPI(){
 
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -1194,7 +1193,6 @@ public class WorkoutActivity extends AppCompatActivity {
                         .build();
                 okhttp3.Response response = chain.proceed(request);
                 Log.v(TAG,response.toString());
-                // Customize or return the response
                 return response;
             }
         });
@@ -1227,13 +1225,10 @@ public class WorkoutActivity extends AppCompatActivity {
 
                         //RECORRER CADA EJECICIOS BUSCANDO MUSCULOS
                         Collections.addAll(MusclesArray, ParsedExercises[a].muscle);
-
                         
                         if ( exercisesToRecycler.size() == exercises.length){
-                            getExerciseRepsFromJson();
+                            getExerciseRepsFromAPI();
                         }
-                        
-                        
 
                     } else {
                         
@@ -1242,7 +1237,7 @@ public class WorkoutActivity extends AppCompatActivity {
                         int statusCode = response.code();
                         error_layout.setVisibility(View.VISIBLE);
                         ResponseBody errorBody = response.errorBody();
-                        Log.e(TAG, "getExercisesFromJson: "+errorBody);
+                        Log.e(TAG, "getExercisesFromAPI: "+errorBody);
                         Log.e(TAG, "statusCode: "+statusCode);
                     }
                 }
@@ -1255,7 +1250,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<JsonExercise> call, Throwable t) {
-                    Log.e(TAG,"getExercisesFromJson, onFailure",t);
+                    Log.e(TAG,"getExercisesFromAPI, onFailure",t);
                     
                     
                     Tab_layout.setVisibility(View.GONE);

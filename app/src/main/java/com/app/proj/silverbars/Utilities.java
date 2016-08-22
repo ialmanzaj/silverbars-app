@@ -284,4 +284,42 @@ public class Utilities {
         return bitmap;
     }
 
+    public static String strSeparator = "__,__";
+    public static String convertArrayToString(String[] array){
+        String str = "";
+        for (int i = 0;i<array.length; i++) {
+            str = str+array[i];
+
+            if(i<array.length-1){
+                str = str+strSeparator;
+            }
+        }
+        return str;
+    }
+
+
+    public static String getUrlReady(Context context,String url){
+
+        String dir;
+        if (isExternalStorageWritable()){
+            dir = Environment.getExternalStorageDirectory()+url;
+        }else {
+            dir = context.getFilesDir()+url;
+        }
+        return dir;
+    }
+
+    public static File getFileReady(Context context,String url){
+
+        File Dir;
+        if(isExternalStorageWritable()){
+            Dir = new File(Environment.getExternalStorageDirectory() + url);
+        }else {
+            Dir = new File(context.getFilesDir()+url);
+        }
+        return Dir;
+    }
+
+    public static String removeLastChar(String str) {return str.substring(0,str.length()-1);}
+
 }
