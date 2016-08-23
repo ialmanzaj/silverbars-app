@@ -8,7 +8,6 @@ repositories {
 }
 
 android {
-
     lintOptions {
         abortOnError false
     }
@@ -20,9 +19,17 @@ android {
         applicationId "com.app.proj.silverbars"
         minSdkVersion 19
         targetSdkVersion 24
-        versionCode 23
-        versionName "1.2.2.1"
+        versionCode 25
+        versionName "1.2.2.3"
+        multiDexEnabled true
     }
+
+    dexOptions
+            {
+                incremental false
+                javaMaxHeapSize "2048M"
+                preDexLibraries = false
+            }//end dexOptions
 
     buildTypes {
         release {
@@ -102,4 +109,5 @@ dependencies {
     compile 'com.github.ashishbhandari:AndroidTabbedDialog:v1.1'
     compile 'com.artemzin.rxjava:proguard-rules:1.1.8.0'
     compile 'com.facebook.fresco:fresco:0.13.0'
+    compile 'com.android.support:multidex:+'
 }
