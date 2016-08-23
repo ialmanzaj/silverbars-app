@@ -14,10 +14,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.Arrays;
 import java.util.List;
 
-import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
+import static com.app.proj.silverbars.Utilities.getBitmapFromURL;
 
 /**
  * Created by andre_000 on 4/12/2016.
@@ -25,11 +24,10 @@ import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
 public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.WorkoutsViewHolder> {
 
     private static final String TAG = "Workout Adapter";
-    private List<WorkoutInfo> items;
+    private List<WorkoutInfo> workouts;
     private Context context;
 
     public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {
-
         // Campos respectivos de un item
         public ImageView imagen;
         public TextView nombre;
@@ -45,41 +43,49 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         }
     }
 
-    public WorkoutsAdapter(List<WorkoutInfo> items, Context context) {
-        this.items = items;
+    public WorkoutsAdapter(List<WorkoutInfo> workouts, Context context) {
+        this.workouts = workouts;
         this.context = context;
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return workouts.size();
     }
 
     @Override
-    public WorkoutsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public WorkoutsViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.workouts_card, viewGroup, false);
         return new WorkoutsViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(WorkoutsViewHolder viewHolder, int i) {
-
+    public void onBindViewHolder(WorkoutsViewHolder viewHolder, int a) {
+        int position = viewHolder.getAdapterPosition();
         Bitmap bmp;
+        //String[] imageDir = WorkoutActivity.ParsedExercises[position].getExercise_image().split("exercises");
 
-
-        //Setting values to each recylerView Element
-        String[] imageDir = WorkoutActivity.ParsedExercises[i].getExercise_image().split("exercises");
-
-        Log.v(TAG, Arrays.toString(imageDir));
-
-        if (imageDir.length < 2){
-            //Log.v(TAG, "ha entrado en IF imageDir.length < 2");
-            bmp = loadExerciseImageFromDevice(context,WorkoutActivity.ParsedExercises[i].getExercise_image());
+        bmp = getBitmapFromURL(WorkoutActivity.ParsedExercises[position].getExercise_image());
+        
+        //Log.v(TAG, Arrays.toString(imageDir));
+        
+        if (bmp != null){
             viewHolder.imagen.setImageBitmap(bmp);
             viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
             viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
-            viewHolder.nombre.setText(items.get(i).getNombre());
+        }else {
+            Log.e(TAG,"problema con la conexion");
+        }
+            viewHolder.nombre.setText(workouts.get(position).getNombre());
+
+       /* if (imageDir.length < 2){
+            //Log.v(TAG, "ha entrado en IF imageDir.length < 2");
+            bmp = loadExerciseImageFromDevice(context,WorkoutActivity.ParsedExercises[position].getExercise_image());
+            viewHolder.imagen.setImageBitmap(bmp);
+            viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
+            viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
+            viewHolder.nombre.setText(workouts.get(position).getNombre());
 
         }else{
 
@@ -93,11 +99,11 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
                 viewHolder.imagen.setImageBitmap(bmp);
                 viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
                 viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
-                viewHolder.nombre.setText(items.get(i).getNombre());
+                viewHolder.nombre.setText(workouts.get(position).getNombre());
             }
-        }
+        }*/
 
-//        viewHolder.next.setText("Visitas:"+String.valueOf(items.get(i).getVisitas()));
+//        viewHolder.next.setText("Visitas:"+String.valueOf(workouts.get(position).getVisitas()));
     }
 
     private static int containerDimensions(Context context) {

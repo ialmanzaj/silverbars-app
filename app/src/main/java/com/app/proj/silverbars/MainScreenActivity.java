@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.FacebookSdk;
+import com.facebook.drawee.backends.pipeline.Fresco;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -80,6 +81,8 @@ public class MainScreenActivity extends AppCompatActivity {
         Log.v(TAG,"Main screenActivity creada");
         FacebookSdk.sdkInitialize(getApplicationContext());
 
+        Fresco.initialize(this);
+
         MainScreenActivity = this;
 
         setContentView(R.layout.activity_main_screen);
@@ -93,13 +96,14 @@ public class MainScreenActivity extends AppCompatActivity {
         drawerList = (ListView) findViewById(R.id.left_drawer);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         
-        //guardar html de svg en el celular
+
 
         if (isExternalStorageWritable()){
             File Dir = new File(Environment.getExternalStorageDirectory()+"/html/");
             if (Dir.isDirectory()){
                 File file = new File(Environment.getExternalStorageDirectory()+"/html/"+"index.html");
                 setMusclePath(file);
+
                 if (!file.exists()){
                     MuscleTemplateDownload();
                 }

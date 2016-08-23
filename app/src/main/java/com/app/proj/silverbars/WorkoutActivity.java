@@ -56,6 +56,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.app.proj.silverbars.Utilities.convertArrayToString;
+import static com.app.proj.silverbars.Utilities.deleteCopiesofList;
 import static com.app.proj.silverbars.Utilities.getFileReady;
 import static com.app.proj.silverbars.Utilities.getUrlReady;
 import static com.app.proj.silverbars.Utilities.removeLastChar;
@@ -73,9 +74,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private Button minusRest;
     private Button plusRestSets;
     private Button minusRestSets;
-
     TabHost Tab_layout;
-
     private TextView Positive, Negative, Isometric, Reps, Workout_name, Sets, RestbySet, RestbyExercise,RestSets_dialog,Sets_dialog;
     private String[] position;
     private int value = 0;
@@ -87,18 +86,13 @@ public class WorkoutActivity extends AppCompatActivity {
     static public int[] Positive_Exercises;
     static public int[] Isometric_Exercises;
     static public int[] Negative_Exercises;
-
     RelativeLayout togle_no_internet;
     private Boolean respuesta_recibida = false;
-
     Button startButton;
     private LinearLayout primary_ColumnMuscle,secundary_ColumnMuscle,Progress;
-
     LinearLayout contentInfo;
     private boolean isTouched = false;
     private boolean loadLocal = false;
-
-   
 
 //    Workout Data
     private int workoutId = 0, workoutSets = 0;
@@ -790,16 +784,7 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
-    private List<String> deleteCopiesofList(List<String> list){
-        List<String> real_list = new ArrayList<>();
 
-        for (int a = 0; a<list.size();a++) {
-            if (!real_list.contains(list.get(a))) {
-                real_list.add(list.get(a));
-            }
-        }
-        return real_list;
-    }
 
     
     private void setMusclesToView(List<String> musculos){
@@ -1028,7 +1013,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (response.isSuccessful()) {
-                            boolean writtenToDisk = saveAudioInCache(response.body(),getAudioName);
+                            boolean writtenToDisk = saveAudioInDevice(response.body(),getAudioName);
 
                             Log.v(TAG, String.valueOf(writtenToDisk));
                         }
@@ -1044,7 +1029,7 @@ public class WorkoutActivity extends AppCompatActivity {
         }.execute();
     }
 
-    private boolean saveAudioInCache(ResponseBody body, String getAudioName) {
+    private boolean saveAudioInDevice(ResponseBody body, String getAudioName) {
 
         try {
 
@@ -1054,11 +1039,14 @@ public class WorkoutActivity extends AppCompatActivity {
             OutputStream outputStream = null;
 
             try {
-                byte[] fileReader = new byte[4096];
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
                 inputStream = body.byteStream();
                 outputStream = new FileOutputStream(futureStudioIconFile);
+                int size = inputStream.available();
+                
+                byte[] fileReader = new byte[size];
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+
                 while (true) {
                     int read = inputStream.read(fileReader);
                     if (read == -1) {break;}
@@ -1320,9 +1308,9 @@ public class WorkoutActivity extends AppCompatActivity {
             }if (CARDIO > 0){
                 porcentaje[a] = (int) (((double) CARDIO / typesExercise.size())*100);
             }if (STRENGTH > 0){
-                porcentaje[a] = (int) (((double) STRENGTH / typesExercise.size()) *100);
+                porcentaje[a] = (int) (((double) STRENGTH / typesExercise.size())*100);
             }if (PYLOMETRICS > 0){
-                porcentaje[a] = (int) (((double)PYLOMETRICS / typesExercise.size()) *100);
+                porcentaje[a] = (int) (((double) PYLOMETRICS / typesExercise.size())*100);
             }
 
             Log.v(TAG,"porcentaje: "+porcentaje[a]);
@@ -1335,7 +1323,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
             LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
             params.weight = 2.0f;
-            params3.weight = 0.5f;
+            params3.weight = 1.0f;
 
             progress.setLayoutParams(params2);
             progress.setLayoutParams(params);
@@ -1351,13 +1339,11 @@ public class WorkoutActivity extends AppCompatActivity {
                 progress.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
             }
 
-
             textView.setText(typesExercise.get(a));
             textView.setGravity(Gravity.START);
             textView.setLayoutParams(params3);
 
             textView.setTextColor(getResources().getColor(R.color.black));
-
 
             linear.setPadding(15,15,15,15);
             linear.addView(textView);

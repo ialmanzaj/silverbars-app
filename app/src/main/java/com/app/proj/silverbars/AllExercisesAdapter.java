@@ -31,9 +31,7 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
     private Context mContext;
     private List<JsonExercise> mExercises = new ArrayList<>();
 
-
     public static SparseBooleanArray selectedItems = new SparseBooleanArray();
-
 
     public static class AllExercisesViewHolder extends RecyclerView.ViewHolder {
 
@@ -51,7 +49,6 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
 
             unchecked = (ImageView) itemView.findViewById(R.id.unchecked);
             checked = (ImageView) itemView.findViewById(R.id.checked);
-
 
         }
     }
@@ -74,8 +71,6 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
     public AllExercisesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.all_exercises_list, viewGroup, false);
-
-
         return new AllExercisesViewHolder(v);
     }
 
@@ -91,13 +86,11 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
             @Override
             public void onClick(View v) {
 
-
                 if (selectedItems.get(a, false)) {
                     selectedItems.delete(a);
 
                     viewHolder.checked.setVisibility(View.GONE);
                     viewHolder.unchecked.setVisibility(View.VISIBLE);
-
                 }
                 else {
 
@@ -105,21 +98,15 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
                     viewHolder.unchecked.setVisibility(View.GONE);
                     viewHolder.checked.setVisibility(View.VISIBLE);
                 }
-
-
                 //for (int item = 0;item < selectedItems.size();item++) Log.v("lista selected", String.valueOf((item)));
-
             }
         });
 
+        Bitmap bmp;
 
-        //Setting values to each recylerView Element
-
-        Bitmap bmp = null;
         String[] imageDir = mExercises.get(a).getExercise_image().split("exercises");
 
-        if (imageDir.length < 2){
-
+       if (imageDir.length < 2){
             bmp = loadExerciseImageFromDevice(mContext,mExercises.get(a).getExercise_image());
             viewHolder.imagen.setImageBitmap(bmp);
 
@@ -137,8 +124,8 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
         }
 
         viewHolder.nombre.setText(mExercises.get(a).getExercise_name());
-
     }
+
 
     public void DownloadImage(final String url, final AllExercisesViewHolder vh, final String imgName) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
@@ -172,7 +159,6 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
             };
         }.execute();
     }
-
 
 
 }

@@ -20,8 +20,8 @@ android {
         applicationId "com.app.proj.silverbars"
         minSdkVersion 19
         targetSdkVersion 24
-        versionCode 22
-        versionName "1.2.2"
+        versionCode 23
+        versionName "1.2.2.1"
     }
 
     buildTypes {
@@ -101,4 +101,5 @@ dependencies {
     compile 'com.theartofdev.edmodo:android-image-cropper:2.2.5'
     compile 'com.github.ashishbhandari:AndroidTabbedDialog:v1.1'
     compile 'com.artemzin.rxjava:proguard-rules:1.1.8.0'
+    compile 'com.facebook.fresco:fresco:0.13.0'
 }

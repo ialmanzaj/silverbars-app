@@ -17,7 +17,6 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -26,13 +25,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static com.app.proj.silverbars.Utilities.getBitmapFromURL;
 import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
 import static com.app.proj.silverbars.Utilities.saveExerciseImageInDevice;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
 
     private static final String TAG = "EXERCISE ADAPTER";
-    private List<WorkoutInfo> items;
+    private List<WorkoutInfo> exercises;
     private InputStream bmpInput;
 
     private Button plusPositive;
@@ -66,14 +66,14 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         }
     }
 
-    public ExerciseAdapter(List<WorkoutInfo> items, Context context) {
+    public ExerciseAdapter(List<WorkoutInfo> exercises, Context context) {
         mContext = context;
-        this.items = items;
+        this.exercises = exercises;
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return exercises.size();
     }
 
     @Override
@@ -86,16 +86,24 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     @Override
     public void onBindViewHolder(final ExerciseViewHolder viewHolder, final int i) {
          final int a = viewHolder.getAdapterPosition();
-        // IMAGE FROM API SPLIT
-        String[] imageDir = WorkoutActivity.ParsedExercises[a].getExercise_image().split("exercises");
-
-        Log.v("Image Array", Arrays.toString(imageDir));
-
         Bitmap bmp;
-        if (imageDir.length < 2){
+        //Log.v("Image Array", Arrays.toString(imageDir));
+
+         bmp = getBitmapFromURL(WorkoutActivity.ParsedExercises[a].getExercise_image());
+        if (bmp!=null){
+
+            viewHolder.imagen.setImageBitmap(bmp);
+
+        }else {
+            // GET IMAGES FROM API
+            String[] imageDir = WorkoutActivity.ParsedExercises[a].getExercise_image().split("exercises");
+            if (imageDir.length < 2){
+
             bmp = loadExerciseImageFromDevice(mContext,WorkoutActivity.ParsedExercises[a].getExercise_image());
             viewHolder.imagen.setImageBitmap(bmp);
+
         }else{
+
             String Parsedurl = "exercises"+imageDir[1];
             String[] imagesName = Parsedurl.split("/");
             String imgName = imagesName[2];
@@ -108,9 +116,12 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             }
         }
 
+        }
+
+
+
         viewHolder.nombre.setText(WorkoutActivity.ParsedExercises[a].getExercise_name());
         viewHolder.repetitions.setText(String.valueOf(WorkoutActivity.Exercises_reps[a]));
-
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             private TextView DialogName, Reps;
@@ -148,7 +159,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                         })
                         .show()
                         .getCustomView();
-
 
                 if (v != null) {
 

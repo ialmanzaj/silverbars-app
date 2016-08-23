@@ -173,9 +173,11 @@
     <string name="add_exercises">Add exercises</string>
     <string name="add_more">Add more exercises</string>
 
-    <string name="songs">Songs</string>
+    <string name="songs">My Songs</string>
     <string name="spotify">Spotify</string>
-    <string name="playlist">Playlists</string>
+    <string name="playlist">My Playlists</string>
     <string name="soundcloud">SoundCloud</string>
+
+    <string name="coming_soon">Coming Soon</string>
 
 </resources>

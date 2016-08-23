@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.NetworkOnMainThreadException;
 import android.util.Log;
 
 import java.io.File;
@@ -13,6 +14,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import okhttp3.ResponseBody;
 
@@ -33,7 +43,6 @@ public class Utilities {
     }
 */
 
-
     /* Checks if external storage is available for read and write */
     public static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
@@ -42,63 +51,6 @@ public class Utilities {
         }
         return false;
     }
-
-    public static Bitmap loadImageFromCache(Context context, String imageURI) {
-        Bitmap bitmap = null;
-        String[] imageDir = imageURI.split("SilverbarsImg");
-
-        if (imageDir.length < 2){
-
-            File file = getCacheFileReady(context,"/SilverbarsImg/"+imageURI);
-
-            if (file.exists()){
-                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            }
-        }else{
-            File file = new File(imageURI);
-            if (file.exists()){
-                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            }
-        }
-        return bitmap;
-    }
-
-    public static boolean saveImageInCache(Context context, ResponseBody body, String imgName) {
-        try {
-
-            File futureStudioIconFile = getCacheFileReady(context,"/SilverbarsImg/"+imgName);
-            InputStream input = null;
-            OutputStream outputStream = null;
-
-            try {
-                input = body.byteStream();
-                outputStream = new FileOutputStream(futureStudioIconFile);
-                int size = input.available();
-
-                byte[] fileReader = new byte[size];
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
-
-                while (true) {
-                    int read = input.read(fileReader);
-                    if (read == -1) {break;}
-                    outputStream.write(fileReader, 0, read);
-                    fileSizeDownloaded += read;
-                    Log.v(TAG, "saveImageInCache: Download, file download: " + fileSizeDownloaded + " of " + fileSize);
-                }
-                outputStream.flush();
-                return true;
-
-            } catch (IOException e) {
-                return false;
-            } finally {
-                if (input != null) {input.close();}
-                if (outputStream != null) {outputStream.close();}
-            }
-        } catch (IOException e) {return false;}
-    }
-
-
 
     public static Bitmap loadExerciseImageFromDevice(Context context, String imageURI) {
         Bitmap bitmap = null;
@@ -322,5 +274,53 @@ public class Utilities {
         }
         return song;
     }
+
+    public static List<String> deleteCopiesofList(List<String> list){
+        List<String> real_list = new ArrayList<>();
+
+        for (int a = 0; a<list.size();a++) {
+            if (!real_list.contains(list.get(a))) {
+                real_list.add(list.get(a));
+            }
+        }
+        return real_list;
+    }
+
+    public static Bitmap getBitmapFromURL(String src) {
+        Bitmap myBitmap = null;
+        try {
+
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+
+            try {
+                Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
+                SecretKeySpec keySpec = new SecretKeySpec("01234567890abcde".getBytes(), "AES");
+                IvParameterSpec ivSpec = new IvParameterSpec("fedcba9876543210".getBytes());
+                cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
+
+                InputStream input = connection.getInputStream();
+                CipherInputStream cis = new CipherInputStream(input, cipher);
+
+
+                myBitmap = BitmapFactory.decodeStream(cis);
+
+            } catch (Exception e) {
+                e.fillInStackTrace();
+                Log.v("ERROR", "Errorchence : " + e);
+            }
+
+            return myBitmap;
+
+        } catch (NetworkOnMainThreadException e) {
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 }

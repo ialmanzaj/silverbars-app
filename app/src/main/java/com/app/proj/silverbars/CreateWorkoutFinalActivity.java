@@ -64,7 +64,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
     static String MAIN_MUSCLE,LEVEL;
     private static String strSeparator = "__,__";
 
-    String workoutImage;
+    String workoutImage = "/";
     String[] exercises_ids;
     List<JsonExercise> SelectedExercises = new ArrayList<>();
 
@@ -542,7 +542,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
         Log.v(TAG,"name: "+name);
         if (!Objects.equals(name, "")){
             String imgDir = workoutImage;
-            if (workoutImage != null){
+
                 MySQLiteHelper database = new MySQLiteHelper(CreateWorkoutFinalActivity.this);
                 database.addNewUserWorkouts(
                         name,
@@ -566,11 +566,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
                 }
                 finish();
                 CreateWorkoutActivity.create.finish();
-            } else {
 
-            Toast.makeText(CreateWorkoutFinalActivity.this, "Elija un la foto para su rutina",
-                    Toast.LENGTH_SHORT).show();
-            }
         }else {
 
             Toast.makeText(CreateWorkoutFinalActivity.this, "Elija un nombre para su rutina",

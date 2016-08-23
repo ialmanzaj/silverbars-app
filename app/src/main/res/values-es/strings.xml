@@ -172,9 +172,11 @@
     <string name="add_exercises">Agregar ejercicios</string>
     <string name="add_more">Agregar más ejercicios</string>
 
-    <string name="songs">Canciones</string>
-    <string name="playlist">Lista de reproducción</string>
+    <string name="songs">Mis Canciones</string>
+    <string name="playlist">Mis listas de reproducción</string>
     <string name="spotify">Spotify</string>
     <string name="soundcloud">SoundCloud</string>
+
+    <string name="coming_soon">Proximamente</string>
 
 </resources>

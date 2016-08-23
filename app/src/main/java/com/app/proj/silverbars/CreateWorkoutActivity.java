@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,12 +15,15 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -35,6 +42,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.app.proj.silverbars.Utilities.deleteCopiesofList;
 
 
 public class CreateWorkoutActivity extends AppCompatActivity implements OnStartDragListener {
@@ -49,12 +57,18 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     private ItemTouchHelper mItemTouchHelper;
 
     private  List<String> MusclesArray = new ArrayList<>();
+    private  List<String> TypeExercises = new ArrayList<>();
     private static String strSeparator = "__,__";
     private int Items_size = 0;
     JsonExercise[] parsedExercises;
+
+    private String partes = "";
     public static Activity create;
     
     private List<JsonExercise> ExercisesToAdapter = new ArrayList<>();
+
+    private LinearLayout primary_ColumnMuscle,secundary_ColumnMuscle,Progress;
+    LinearLayout contentInfo;
 
 
     @Override
@@ -63,6 +77,11 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         setContentView(R.layout.activity_create_workout);
 
         create = this;
+
+        contentInfo = (LinearLayout)findViewById(R.id.content_info);
+        primary_ColumnMuscle = (LinearLayout) findViewById(R.id.column1);
+        secundary_ColumnMuscle = (LinearLayout) findViewById(R.id.column2);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -172,34 +191,14 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         tabHost2.addTab(muscles);
 
         webView = (WebView) findViewById(R.id.WebView_create);
-        webView.setWebViewClient(new WebViewClient(){
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-            }
+        getBodyView();
 
-        });
-
-
-        //webView.getSettings().setUseWideViewPort(true);
-
-
-
-        SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
-        String default_url = getResources().getString(R.string.muscle_path);
-        String muscle_url = sharedPref.getString(getString(R.string.muscle_path),default_url);
-
-        Log.v(TAG,"muscle_url: "+muscle_url);
-        String fileurl = "file://"+muscle_url;
-        webView.loadUrl(fileurl);
 
         if (adapter != null){
             if (adapter.getItemCount() > 0) {
                 Log.v(TAG,"hay algo: "+adapter.getSelectedExercisesName());
             }
         }
-
-
 
 
     }//  close create workout
@@ -252,28 +251,30 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
 
     }
-    private String partes = "";
+
 
     private void setMusclesToView(List<String> musculos){
+        if (musculos.size() > 0){
+            List<String> musculos_oficial;
+            musculos_oficial = deleteCopiesofList(musculos);
+            for (int a = 0;a<musculos_oficial.size();a++) {
+                final TextView MuscleTextView = new TextView(this);
 
-        if ( musculos.size() > 0 ){
-            for (String s : musculos)
-            {
-                /*final TextView MuscleView = new TextView(WorkoutActivity.this);
+                partes += "#"+ musculos_oficial.get(a) + ",";
+                MuscleTextView.setText(musculos_oficial.get(a));
+                MuscleTextView.setGravity(Gravity.CENTER);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    MuscleView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));
+                    MuscleTextView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));
                 }else {
-                    MuscleView.setTextColor(getResources().getColor(R.color.gray_active_icon));
-                }*/
+                    MuscleTextView.setTextColor(getResources().getColor(R.color.gray_active_icon));
+                }
 
-                partes += "#"+ s + ",";
-                //MuscleView.setGravity(Gravity.CENTER);
-                //MuscleView.setText(s);
-
-                //Log.v(TAG, (String) MuscleView.getText());
-                //primary_linear.addView(MuscleView);
-
+                if (a%2 == 0){
+                    //secundary_ColumnMuscle.addView(MuscleTextView);
+                }else {
+                    //primary_ColumnMuscle.addView(MuscleTextView);
+                }
             }
         }
 
@@ -283,12 +284,18 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                 injectJS();
                 super.onPageFinished(view, url);
             }
-
         });
+
+        //webView.getSettings().setUseWideViewPort(true);
 
         webView.getSettings().setJavaScriptEnabled(true);
 
+        getBodyView();
+    }
 
+    private void getBodyView(){
+
+        // ACCEDER A LA URL DEL HTML GUARDADO EN EL PHONE
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         String default_url = getResources().getString(R.string.muscle_path);
         String muscle_url = sharedPref.getString(getString(R.string.muscle_path),default_url);
@@ -302,29 +309,19 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     private void injectJS() {
         try {
-
-            if (partes != null){
-
+            if (!Objects.equals(partes, "")){
                 partes = removeLastChar(partes);
                 webView.loadUrl("javascript: ("+ "window.onload = function () {"+
-
                         "partes = Snap.selectAll('"+partes+"');"+
                         "partes.forEach( function(elem,i) {"+
                         "elem.attr({fill: '#602C8D',stroke: '#602C8D',});"+
                         "});"+ "}"+  ")()");
             }
-
-
-            //Log.v("MAIN ACTIVITY","HA EJECUTADO EL JAVASCRIPT");
-
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG,"JAVASCRIPT Exception",e);
+
         }
     }
-
-
-
-
 
     private void putExercisesinRecycler(final ArrayList<String> new_items_to_list){
 
@@ -385,12 +382,14 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
                                 if (adapter == null){
                                     ExercisesToAdapter.add(AllExercisesList.get(a));
-
                                 }else {
                                     ExercisesToAdapter.add(AllExercisesList.get(a));
                                     Log.v(TAG,"ITEM INSERTED:"+( ExercisesToAdapter.size()));
                                     adapter.notifyItemInserted(ExercisesToAdapter.size());
                                 }
+
+                                //Collections.addAll(TypeExercises,ExercisesToAdapter.get(a).getType_exercise());
+                                //Log.v(TAG,"TypeExercises"+TypeExercises);
 
                                 for (int b = 0; b < ExercisesToAdapter.get(c).muscle.length; b++){
                                     String name;
@@ -407,6 +406,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                     recycler.setAdapter(adapter);
 
                     setMusclesToView(MusclesArray);
+                    //putTypesInWorkout(TypeExercises);
 
                     ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
                     mItemTouchHelper  = new ItemTouchHelper(callback);
@@ -430,21 +430,109 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
 
     }
+    private  int ISOMETRIC = 0,CARDIO = 0,PYLOMETRICS = 0,STRENGTH = 0;
+
+    private void getCountTimes(List<String> list){
+        for (int a = 0; a<list.size();a++) {
+            if (list.get(a).equals("ISOMETRIC")) {
+                ISOMETRIC = ISOMETRIC+1;
+            }if (list.get(a).equals("CARDIO")){
+                CARDIO=CARDIO+1;
+            }if(list.get(a).equals("PYLOMETRICS")){
+                PYLOMETRICS = PYLOMETRICS+1;
+            }if (list.get(a).equals("STRENGTH")){
+                STRENGTH = STRENGTH+1;
+            }
+        }
+    }
 
 
+
+    private void putTypesInWorkout(List<String> types){
+        List<String> typesExercise;
+        typesExercise = deleteCopiesofList(types);
+        getCountTimes(typesExercise);
+
+        Log.v(TAG,"ISOMETRIC: "+ISOMETRIC);
+        Log.v(TAG,"CARDIO: "+CARDIO);
+        Log.v(TAG,"PYLOMETRICS: "+PYLOMETRICS);
+        Log.v(TAG,"STRENGTH: "+STRENGTH);
+
+        int[] porcentaje = new int[typesExercise.size()];
+
+
+
+        for (int a = 0;a<typesExercise.size();a++) {
+
+            TextView textView = new TextView(this);
+            LinearLayout linear = new LinearLayout(this);
+            linear.setOrientation(LinearLayout.HORIZONTAL);
+            ProgressBar progress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+
+            if (ISOMETRIC > 0) {
+                porcentaje[a] = (int) (((double) ISOMETRIC / typesExercise.size()) * 100);
+            }
+            if (CARDIO > 0) {
+                porcentaje[a] = (int) (((double) CARDIO / typesExercise.size()) * 100);
+            }
+            if (STRENGTH > 0) {
+                porcentaje[a] = (int) (((double) STRENGTH / typesExercise.size()) * 100);
+            }
+            if (PYLOMETRICS > 0) {
+                porcentaje[a] = (int) (((double) PYLOMETRICS / typesExercise.size()) * 100);
+            }
+
+            Log.v(TAG, "porcentaje: " + porcentaje[a]);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.MATCH_PARENT);
+
+            LinearLayout.LayoutParams params3 = new LinearLayout.LayoutParams(
+                    RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.MATCH_PARENT);
+
+            LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
+            params.weight = 1.0f;
+            params3.weight = 1.0f;
+
+            progress.setLayoutParams(params2);
+            progress.setLayoutParams(params);
+
+            progress.setProgress(porcentaje[a]);
+            progress.setMax(100);
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                progress.setProgressTintList(ColorStateList.valueOf(Color.RED));
+                progress.setBackgroundTintList((ColorStateList.valueOf(Color.RED)));
+            } else {
+                progress.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+            }
+
+            textView.setText(typesExercise.get(a));
+            textView.setGravity(Gravity.START);
+            textView.setLayoutParams(params3);
+
+            textView.setTextColor(getResources().getColor(R.color.black));
+            linear.setPadding(15, 15, 15, 15);
+            linear.addView(textView);
+            linear.addView(progress);
+
+            linear.setMinimumHeight(45);
+
+            //contentInfo.addView(linear);
+
+        }
+    }
 
 
     @Override
     protected void onStart() {
         super.onStart();
-
-
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
 
     }
 
