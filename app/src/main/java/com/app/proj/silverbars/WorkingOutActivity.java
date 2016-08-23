@@ -37,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.app.proj.silverbars.Utilities.SongArtist;
 import static com.app.proj.silverbars.Utilities.SongName;
+import static com.app.proj.silverbars.Utilities.quitarMp3;
 
 public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -569,10 +570,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         }.start();
     }
 
-    private String quitarMp3(String song){
-        return song.replace(".mp3","");
-    }
-
 
 
     private void playMusic(final int playlist_size){
@@ -875,8 +872,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
                     Log.v(TAG,"dialog finish workout: SI");
+
                     dialog.dismiss();
                     ScreenOff();
 

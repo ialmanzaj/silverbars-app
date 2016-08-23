@@ -18,16 +18,15 @@ import java.util.Arrays;
 
 import static com.app.proj.silverbars.Utilities.SongDuration;
 import static com.app.proj.silverbars.Utilities.SongName;
+import static com.app.proj.silverbars.Utilities.quitarMp3;
 
 
 public class SongsActivity extends AppCompatActivity {
     private static final String TAG = "SongsActivity";
     private ListView ListMusic;
-    private static String strSeparator = "__,__";
-    private String[] items;
+
     private long[] selected;
-    private ArrayList<File> mySongs;
-    private Button clean,done;
+    private Button clean;
     private String[] playlist;
 
     ArrayList<File> canciones_url;
@@ -40,29 +39,26 @@ public class SongsActivity extends AppCompatActivity {
 
         ListMusic = (ListView)findViewById(R.id.lvPlaylist);
 
-        mySongs = findSongs(Environment.getExternalStorageDirectory());
+        ArrayList<File> mySongs = findSongs(Environment.getExternalStorageDirectory());
 
-        Log.v(TAG,"mySongs list: "+mySongs);
+        Log.v(TAG,"mySongs list: "+ mySongs);
 
         if (mySongs.size() > 0) {
-
             canciones_url = DeleteNoteVoice(mySongs);
-            items = new String[canciones_url.size()];
+            String[] items = new String[canciones_url.size()];
 
             for (int i = 0; i < canciones_url.size(); i++) {
-                items[i] = SongName(this,canciones_url.get(i));
-
+                items[i] = quitarMp3(SongName(this,canciones_url.get(i)));
             }
 
-
-            Log.v(TAG,"items: "+ Arrays.toString(items));
-
+            //Log.v(TAG,"items: "+ Arrays.toString(items));
 
             ArrayAdapter<String> adp = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
             ListMusic.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
             ListMusic.setAdapter(adp);
 
-            done = (Button)findViewById(R.id.done);
+
+            Button done = (Button) findViewById(R.id.done);
             done.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -101,8 +97,6 @@ public class SongsActivity extends AppCompatActivity {
                     }
                 });
 
-
-
         }
         else {
             finish();
@@ -139,8 +133,8 @@ public class SongsActivity extends AppCompatActivity {
         finish();
     }
 
-
     private ArrayList<File> DeleteNoteVoice(ArrayList<File> songs){
+
         ArrayList<String> canciones = new ArrayList<>();
         ArrayList<File>   songs_urls = new ArrayList<>();
         for (int a = 0;a<songs.size();a++){canciones.add(songs.get(a).getPath());}
@@ -156,7 +150,6 @@ public class SongsActivity extends AppCompatActivity {
             }
 
         }
-
         return songs_urls;
     }
 

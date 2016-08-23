@@ -31,9 +31,7 @@ import retrofit2.Retrofit;
 import static com.app.proj.silverbars.Utilities.loadWorkoutImageFromInternalMemory;
 import static com.app.proj.silverbars.Utilities.saveWorkoutImgInDevice;
 
-/**
- * Created by andresrodriguez on 7/29/16.
- */
+
 public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapter.VH> {
 
     private static final int TYPE_WORKOUT = 0;
@@ -110,7 +108,6 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
                     viewholder.img.setImageBitmap(imgBitmap);
 
                 }else{
-
 
                     String Parsedurl = "workouts"+workoutImgDir[1];
                     String[] imagesName = Parsedurl.split("/");
@@ -195,7 +192,6 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
                     Log.v(TAG, "State: server contact failed");
                 }
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.e(TAG,"onFAILURE",t);

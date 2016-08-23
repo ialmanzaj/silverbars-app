@@ -342,7 +342,6 @@ public class Utilities {
             if (file.getPath().contains("/storage/emulated/0/Download/")){
                 title = file.getPath().split("/storage/emulated/0/Download/")[1];
                 Log.v(TAG,"title: "+title);
-
             }else {
                 MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
                 Uri uri = Uri.fromFile(file);
@@ -353,6 +352,16 @@ public class Utilities {
             Log.e(TAG,"Exception: ",e);
         }
         return title;
+    }
+
+
+    public static String quitarMp3(String song){
+        if(song.contains(".mp3")){
+            song =  song.replace(".mp3","");
+        }if (song.contains("-")){
+            song = song.replace("-"," ");
+        }
+        return song;
     }
 
 }
