@@ -44,9 +44,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static com.app.proj.silverbars.Utilities.isExternalStorageWritable;
-
-//import com.afollestad.materialdialogs.MaterialDialog;
+import static com.app.proj.silverbars.Utilities.getFileReady;
 
 public class MainScreenActivity extends AppCompatActivity {
 
@@ -95,43 +93,6 @@ public class MainScreenActivity extends AppCompatActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView) findViewById(R.id.left_drawer);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        
-
-
-        if (isExternalStorageWritable()){
-            File Dir = new File(Environment.getExternalStorageDirectory()+"/html/");
-            if (Dir.isDirectory()){
-                File file = new File(Environment.getExternalStorageDirectory()+"/html/"+"index.html");
-                setMusclePath(file);
-
-                if (!file.exists()){
-                    MuscleTemplateDownload();
-                }
-            }else {
-                boolean success = Dir.mkdir();
-                if (success)
-                    MuscleTemplateDownload();
-
-                else
-                    Log.e(TAG,"Error creating dir");
-            }
-        }else {
-
-            File Dir = new File(this.getFilesDir()+"/html/");
-            if (Dir.isDirectory()){
-                File file = new File(this.getFilesDir()+"/html/"+"index.html");
-                setMusclePath(file);
-                if (!file.exists()){
-                    MuscleTemplateDownload();
-                }
-            }else {
-                boolean success = Dir.mkdir();
-                if (success)
-                    MuscleTemplateDownload();
-                else
-                    Log.e(TAG,"Error creating dir");
-            }
-        }
 
 
         fab_create_new_workout = (FloatingActionButton) findViewById(R.id.fab);
@@ -218,6 +179,23 @@ public class MainScreenActivity extends AppCompatActivity {
                         .show();
             }
         });
+
+
+        File Dir = getFileReady(this,"/html/");
+        if (Dir.isDirectory()){
+            File file = new File(Environment.getExternalStorageDirectory()+"/html/"+"index.html");
+            setMusclePath(file);
+            if (!file.exists()){
+                MuscleTemplateDownload();
+            }
+        }else {
+            boolean success = Dir.mkdir();
+            if (success)
+                MuscleTemplateDownload();
+            else
+                Log.e(TAG,"Error creating dir");
+        }
+
 
     }//oncreate
 
@@ -330,7 +308,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
 
     public void MuscleTemplateDownload(){
-        //Log.v(TAG, "METODO MUSCLE TEMPLATE LLAMADO");
+        Log.v(TAG,"downloading file");
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/")
                 .build();
 
@@ -345,7 +323,7 @@ public class MainScreenActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (response.isSuccessful()) {
-                            Boolean write = writeHmlToDisk(response.body(),"index.html");
+                            Boolean write = saveHtmInDevice(response.body(),"index.html");
                         }
                         else {Log.e(TAG, "Download server contact failed");}
                     }
@@ -360,20 +338,15 @@ public class MainScreenActivity extends AppCompatActivity {
         }.execute();
 
 
+
     }
 
+    
 
+    public boolean saveHtmInDevice(ResponseBody body, String name) {
 
-
-    public boolean writeHmlToDisk(ResponseBody body, String name) {
-        Log.v(TAG,"writeMuscleHmlToDisk");
         try {
-            File file;
-            if (isExternalStorageWritable()){
-                file = new File(Environment.getExternalStorageDirectory()+"/html/"+name);
-            }else {
-                file = new File(this.getFilesDir()+"/html/"+name);
-            }
+            File file = getFileReady(this,"/html/"+name);
 
             InputStream input = null;
             OutputStream output = null;
@@ -381,10 +354,7 @@ public class MainScreenActivity extends AppCompatActivity {
             try {
                 input = body.byteStream();
                 output = new FileOutputStream(file);
-
                 int size = input.available();
-                //Log.d("size ", String.valueOf(size));
-
                 byte[] buffer = new byte[size];
 
                 long fileSize = body.contentLength();
@@ -419,9 +389,17 @@ public class MainScreenActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.v(TAG,"onResume");
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-
+    }
 
 
 }

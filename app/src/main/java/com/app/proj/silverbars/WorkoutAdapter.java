@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,9 +16,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.like.LikeButton;
 
 import okhttp3.ResponseBody;
@@ -41,32 +42,31 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
     private JsonWorkout[] workouts = outerClass.Workouts;
 
     private final Activity context;
-
     public static class VH extends RecyclerView.ViewHolder {
 
         FrameLayout layout;
-        ImageView img;
+        //ImageView img;
         TextView text;
         Button btn;
         LikeButton like;
+        SimpleDraweeView img;
 
-        public VH(View v) {
-            super(v);
+        public VH(View itemview) {
+            super(itemview);
 
-            layout = (CardView) v.findViewById(R.id.layout);
-            img  = (ImageView) v.findViewById(R.id.img);
-            text = (TextView)  v.findViewById(R.id.text);
-            btn  = (Button)    v.findViewById(R.id.btn);
+            img = (SimpleDraweeView) itemview.findViewById(R.id.img);
+            layout = (CardView) itemview.findViewById(R.id.layout);
+            text = (TextView)  itemview.findViewById(R.id.text);
+            btn  = (Button)    itemview.findViewById(R.id.btn);
+
             //like = (LikeButton) v.findViewById(R.id.like);
             //like.setAnimationScaleFactor(2);
 //            like.setIconSizePx(64);
-
             //like.setExplodingDotColorsRes(R.color.colorPrimaryText,R.color.bookmark);
         }
     }
 
     public WorkoutAdapter(Activity context) {
-//        Log.v("Workouts:", String.valueOf(workouts));
         this.context = context;
     }
 
@@ -91,13 +91,20 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         
         switch (viewHolder.getItemViewType()) {
             case TYPE_WORKOUT:
-                
+
+                viewHolder.text.setText(workouts[position].getWorkout_name());
+
+                Uri uri = Uri.parse(workouts[position].getWorkout_image());
+                viewHolder.img.setImageURI(uri);
+
+
                 String[] parts = workouts[position].getWorkout_image().split("workouts");
                 String Parsedurl = "workouts"+parts[1];
-
                 String[] imagesName = Parsedurl.split("/");
                 final String imgName = imagesName[2];
 
+
+/*
 
                 Bitmap bmp = loadWorkoutImageFromDevice(context,imgName);
 
@@ -106,8 +113,9 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                 } else{
                     DownloadImage(Parsedurl,viewHolder,imgName);
                 }
+*/
 
-                viewHolder.text.setText(workouts[position].getWorkout_name());
+
                 viewHolder.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

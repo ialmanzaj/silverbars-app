@@ -20,13 +20,12 @@
             android:layout_height="0dp"
             android:layout_weight="3">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/img"
-                android:contentDescription="@string/workout_name" />
-
+                android:contentDescription="@string/workout_name"
+                android:layout_width="wrap_content"
+                android:scaleType="centerCrop"
+                android:layout_height="match_parent" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -39,7 +38,6 @@
                 android:layout_marginEnd="15dp"
                 android:id="@+id/text" />
         </RelativeLayout>
-
 
         <LinearLayout
             android:orientation="horizontal"

@@ -1,22 +1,20 @@
 package com.app.proj.silverbars;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.List;
+import com.facebook.drawee.view.SimpleDraweeView;
 
-import static com.app.proj.silverbars.Utilities.getBitmapFromURL;
-import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
+import java.util.List;
 
 /**
  * Created by andre_000 on 4/12/2016.
@@ -32,14 +30,17 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
     public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView imagen;
+        //public ImageView imagen;
         public TextView nombre;
         public TextView next;
         public RelativeLayout Layout;
 
+        SimpleDraweeView imagen;
+
         public WorkoutsViewHolder(View v) {
             super(v);
-            imagen = (ImageView) v.findViewById(R.id.imagen);
+            imagen = (SimpleDraweeView) v.findViewById(R.id.imagen);
+            //imagen = (ImageView) v.findViewById(R.id.imagen);
             nombre = (TextView) v.findViewById(R.id.nombre);
             Layout = (RelativeLayout) v.findViewById(R.id.Layout);
 //            next = (TextView) v.findViewById(R.id.next);
@@ -68,13 +69,18 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
         int position = viewHolder.getAdapterPosition();
 
-        Bitmap bmp;
+        viewHolder.nombre.setText(workouts.get(position).getNombre());
 
-        bmp = getBitmapFromURL(WorkoutActivity.ParsedExercises[position].getExercise_image());
-        
+        Uri uri = Uri.parse(WorkoutActivity.ParsedExercises[position].getExercise_image());
+
+        viewHolder.imagen.setImageURI(uri);
+        viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
+        viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
+
+
         //Log.v(TAG, Arrays.toString(imageDir));
         
-        if (bmp != null){
+       /* if (bmp != null){
             viewHolder.imagen.setImageBitmap(bmp);
             viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
             viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
@@ -106,8 +112,8 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
                 }
             }
 
-        }
-            viewHolder.nombre.setText(workouts.get(position).getNombre());
+        }*/
+
 
 //        viewHolder.next.setText("Visitas:"+String.valueOf(workouts.get(position).getVisitas()));
     }

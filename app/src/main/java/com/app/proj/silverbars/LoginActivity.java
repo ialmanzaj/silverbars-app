@@ -44,14 +44,8 @@ import java.security.NoSuchAlgorithmException;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
-/**
- * A login screen that offers login via email/password.
- */
 public class LoginActivity extends AppCompatActivity {
 
-    /**
-     * Id to identity READ_CONTACTS permission request.
-     */
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
@@ -62,12 +56,8 @@ public class LoginActivity extends AppCompatActivity {
             "foo@example.com:hello", "bar@example.com:world"
     };
     private static final String TAG = "LoginActivity";
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
 
 
-    // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
@@ -94,9 +84,7 @@ public class LoginActivity extends AppCompatActivity {
 
         callbackManager = CallbackManager.Factory.create();
 
-
         try {
-
             PackageInfo info = getPackageManager().getPackageInfo(
                     "com.app.proj.silverbars",
                     PackageManager.GET_SIGNATURES);
@@ -123,13 +111,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onCancel() {
                 Log.e(TAG, "facebook:onCancel");
 
-
             }
             @Override
             public void onError(FacebookException exception) {
                 Log.e(TAG, "facebook:onError", exception);
-
-                Toast.makeText(getApplicationContext(),"Error de conexion, porfavor pruebe de nuevo",Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -141,9 +126,7 @@ public class LoginActivity extends AppCompatActivity {
         editor.putBoolean(getString(R.string.sign_in),true);
         editor.apply();
         Log.v(TAG,getString(R.string.sign_in));
-
     }
-
     @Override
     protected void attachBaseContext(Context newBase){
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -266,13 +249,11 @@ public class LoginActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
                 return null;
             }
 
 
         }.execute();
-
     }
 
     @Override

@@ -286,7 +286,6 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
 
-
         //COMPROBAR SI EL WORKOUT ESTA ACTIVADO EN LA BASE DE DATOS - SAVED WORKOUTS
         if (database.checkWorkouts(workoutId) && Objects.equals(database.checkWorkoutLocal(workoutId), "true")){
 
@@ -326,7 +325,9 @@ public class WorkoutActivity extends AppCompatActivity {
             ExercisesRecycler.setAdapter(adapter);
             setMusclesToView(MusclesArray);
             putTypesInWorkout(TypeExercises);
-        }else if (user_workout && database.checkUserWorkouts(workoutId) ){ //USER WORKOUTS
+
+        }else if (user_workout && database.checkUserWorkouts(workoutId) ){
+            //USER WORKOUTS
             togle_no_internet.setVisibility(View.GONE);// this only for workouts in API
 
              ExerciseswithReps = database.getUserWorkout(workoutId);
@@ -368,10 +369,9 @@ public class WorkoutActivity extends AppCompatActivity {
             putTypesInWorkout(TypeExercises);
 
         } else {
-
-            getExercisesFromAPI();
             loadLocal = false;
             enableLocal.setChecked(false);
+            getExercisesFromAPI();
         }
 
 
@@ -582,6 +582,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 LaunchWorkingOutActivity();
             }
         });
+
 
 
 
@@ -1353,7 +1354,9 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-
-
+    }
 }

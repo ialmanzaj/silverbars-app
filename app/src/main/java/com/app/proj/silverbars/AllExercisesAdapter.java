@@ -2,6 +2,7 @@ package com.app.proj.silverbars;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,16 +39,20 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
     public static class AllExercisesViewHolder extends RecyclerView.ViewHolder {
 
         // Campos respectivos de un item
-        public ImageView imagen;
+        //public ImageView imagen;
         public TextView nombre;
         public TextView next;
         public ImageView unchecked, checked;
 
+        SimpleDraweeView imagen;
+
 
         public AllExercisesViewHolder(View itemView) {
             super(itemView);
-            imagen = (ImageView) itemView.findViewById(R.id.imagen);
+            //imagen = (ImageView) itemView.findViewById(R.id.imagen);
             nombre = (TextView) itemView.findViewById(R.id.nombre);
+
+            imagen = (SimpleDraweeView) itemView.findViewById(R.id.imagen);
 
             unchecked = (ImageView) itemView.findViewById(R.id.unchecked);
             checked = (ImageView) itemView.findViewById(R.id.checked);
@@ -102,7 +109,13 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
             }
         });
 
-        Bitmap bmp;
+        viewHolder.nombre.setText(mExercises.get(a).getExercise_name());
+
+        Uri uri = Uri.parse(mExercises.get(a).getExercise_image());
+        viewHolder.imagen.setImageURI(uri);
+
+
+       /* Bitmap bmp;
 
         String[] imageDir = mExercises.get(a).getExercise_image().split("exercises");
 
@@ -121,9 +134,9 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
             } else {
                 DownloadImage(Parsedurl, viewHolder, imgName);
             }
-        }
+        }*/
 
-        viewHolder.nombre.setText(mExercises.get(a).getExercise_name());
+
     }
 
 

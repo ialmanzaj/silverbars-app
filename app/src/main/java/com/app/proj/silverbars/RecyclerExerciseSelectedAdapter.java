@@ -3,6 +3,7 @@ package com.app.proj.silverbars;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MotionEventCompat;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,22 +44,28 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
     private final OnStartDragListener mDragStartListener;
     Context mContext;
 
+
+
     public static class selectedExercisesViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder {
 
         // Campos respectivos de un item
-        private ImageView imagen,img_handle;
+        private ImageView img_handle;
         private TextView nombre;
         private TextView next;
         private ImageView unchecked, checked;
         private TextView repetitions;
         private LinearLayout workout_layout;
 
+        SimpleDraweeView imagen;
+
 
         public selectedExercisesViewHolder(View itemView) {
             super(itemView);
-            imagen = (ImageView) itemView.findViewById(R.id.imagen);
+            //imagen = (ImageView) itemView.findViewById(R.id.imagen);
             nombre = (TextView) itemView.findViewById(R.id.nombre);
+
+            imagen = (SimpleDraweeView) itemView.findViewById(R.id.imagen);
 
             img_handle = (ImageView) itemView.findViewById(R.id.handle);
             unchecked = (ImageView) itemView.findViewById(R.id.unchecked);
@@ -176,16 +184,23 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
     public void onBindViewHolder(final selectedExercisesViewHolder viewHolder,int i) {
 
         final int a = viewHolder.getAdapterPosition();
+
+        viewHolder.nombre.setText(mSelectedExercises.get(a).getExercise_name());
+        mSelectedExercises.get(a).setRep(1);
+
+
         //Log.v(TAG,"Exercises selected: "+mSelectedExercises.get(a).getExercise_name());
 
+        Uri uri = Uri.parse(mSelectedExercises.get(a).getExercise_image());
+        viewHolder.imagen.setImageURI(uri);
+
+
+
         Bitmap bmp = null;
-        String[] imageDir = mSelectedExercises.get(a).getExercise_image().split("exercises");
-
-        if (imageDir.length < 2){
-
+        /*if (imageDir.length < 2){
+            String[] imageDir = mSelectedExercises.get(a).getExercise_image().split("exercises");
             bmp = loadExerciseImageFromDevice(mContext,mSelectedExercises.get(a).getExercise_image());
             viewHolder.imagen.setImageBitmap(bmp);
-
         }else {
             String Parsedurl = "exercises" + imageDir[1];
             String[] imagesName = Parsedurl.split("/");
@@ -197,11 +212,10 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
             } else {
                 DownloadImage(Parsedurl, viewHolder, imgName);
             }
-        }
+        }*/
 
 
-        viewHolder.nombre.setText(mSelectedExercises.get(a).getExercise_name());
-        mSelectedExercises.get(a).setRep(1);
+
 
 
         // Start a drag whenever the handle view it touched
