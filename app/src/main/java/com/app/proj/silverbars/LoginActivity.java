@@ -34,10 +34,8 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -145,6 +143,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.v(TAG,getString(R.string.sign_in));
 
     }
+
     @Override
     protected void attachBaseContext(Context newBase){
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -221,8 +220,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void POST(final String accessToken){
-        final Boolean respuesta = false;
-        Log.v(TAG,"envio POST");
+
         new AsyncTask<Void,Void,Void>() {
 
             @Override
@@ -256,29 +254,13 @@ public class LoginActivity extends AppCompatActivity {
                         saveLogIn();
                         startActivity(new Intent(getApplicationContext(), MainScreenActivity.class));
                         finish();
-                    }if(responseCode == 500){
+                    }else if(responseCode == 500){
+                        Log.e(TAG,"error iniciando sesion");
                         LoginManager.getInstance().logOut();
-
-                        Toast.makeText(getApplicationContext(),"Error de conexion con el servidor, por favor pruebe de nuevo",Toast.LENGTH_SHORT).show();
-                        Log.e(TAG,"respuesta incorrecta ");
-
-                    } else{
-
+                    }else{
+                        Log.e(TAG,"error desconocido");
                         LoginManager.getInstance().logOut();
-                        Toast.makeText(getApplicationContext(),"Error de conexion, porfavor pruebe de nuevo",Toast.LENGTH_SHORT).show();
-                        Log.e(TAG,"respuesta incorrecta ");
                     }
-
-                    BufferedReader br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-                    String line = "";
-                    StringBuilder responseOutput = new StringBuilder();
-                    System.out.println("output===============" + br);
-                    while((line = br.readLine()) != null ) {
-                        responseOutput.append(line);
-                    }
-                    br.close();
-
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
