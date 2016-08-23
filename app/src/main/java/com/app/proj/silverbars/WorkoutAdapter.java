@@ -3,12 +3,10 @@ package com.app.proj.silverbars;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,15 +18,6 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.like.LikeButton;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-
-import static com.app.proj.silverbars.Utilities.loadWorkoutImageFromDevice;
-import static com.app.proj.silverbars.Utilities.saveWorkoutImgInDevice;
 
 
 public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
@@ -144,44 +133,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         return position < getItemCount() ? TYPE_WORKOUT : TYPE_VIEW_MORE;
     }
 
-    private void DownloadImage(String url, final VH viewHolder, final String imgName){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
-                .build();
-        SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
-        Call<ResponseBody> call = downloadService.downloadFile(url);
 
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-
-                    Bitmap bitmap = null;
-
-                    if (response.isSuccessful()) {
-
-                        boolean writtenToDisk = saveWorkoutImgInDevice(context,response.body(),imgName);
-
-                        if(writtenToDisk){
-                            bitmap = loadWorkoutImageFromDevice(context,imgName);
-                        }
-
-                        viewHolder.img.setImageBitmap(bitmap);
-
-                    } else {
-                        Log.v(TAG, "Download server contact failed");
-                    }
-                } else {
-                    Log.v(TAG,"State server contact failed");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e(TAG,"onFAILURE",t);
-            }
-        });
-    }
 
     public static int containerDimensions(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);

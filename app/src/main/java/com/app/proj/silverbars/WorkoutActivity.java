@@ -60,6 +60,7 @@ import static com.app.proj.silverbars.Utilities.deleteCopiesofList;
 import static com.app.proj.silverbars.Utilities.getFileReady;
 import static com.app.proj.silverbars.Utilities.getUrlReady;
 import static com.app.proj.silverbars.Utilities.removeLastChar;
+import static com.app.proj.silverbars.Utilities.saveWorkoutImgInDevice;
 
 
 /*import com.spotify.sdk.android.authentication.AuthenticationClient;
@@ -1156,6 +1157,36 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
+    private void DownloadImage(String url, final String imgName){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
+                .build();
+        SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
+        Call<ResponseBody> call = downloadService.downloadFile(url);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    if (response.isSuccessful()) {
+
+                        boolean writtenToDisk = saveWorkoutImgInDevice(WorkoutActivity.this,response.body(),imgName);
+
+                    } else {
+                        Log.v(TAG, "Download server contact failed");
+                    }
+                } else {
+                    Log.v(TAG,"State server contact failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG,"onFAILURE",t);
+            }
+        });
+    }
+
     private String getImageName(int position){
         String[] imageDir = ParsedExercises[position].getExercise_image().split("exercises");
         String Parsedurl = "exercises" + imageDir[1];
@@ -1291,8 +1322,6 @@ public class WorkoutActivity extends AppCompatActivity {
         Log.v(TAG,"STRENGTH: "+STRENGTH);
 
         int[] porcentaje = new int[typesExercise.size()];
-
-
 
         for (int a = 0;a<typesExercise.size();a++){
 
