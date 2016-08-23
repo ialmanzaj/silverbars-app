@@ -856,7 +856,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 webview.loadUrl("javascript: ("+ "window.onload = function () {"+
                         "partes = Snap.selectAll('"+partes+"');"+
                         "partes.forEach( function(elem,i) {"+
-                        "elem.attr({fill: '#602C8D',stroke: '#602C8D',});"+
+                        "elem.attr({stroke:'#602C8D',fill:'#602C8D'});"+
                         "});"+ "}"+  ")()");
             }
         } catch (Exception e) {
@@ -866,9 +866,7 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
-
     private void getExerciseRepsFromAPI(){
-
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -1032,7 +1030,6 @@ public class WorkoutActivity extends AppCompatActivity {
     private boolean saveAudioInDevice(ResponseBody body, String getAudioName) {
 
         try {
-
             File futureStudioIconFile = new File(this.getFilesDir()+"/SilverbarsMp3/"+getAudioName);
 
             InputStream inputStream = null;

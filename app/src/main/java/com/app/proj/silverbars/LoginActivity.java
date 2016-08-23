@@ -27,6 +27,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.ProfileTracker;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -116,9 +117,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 Log.v(TAG, "loginButton: onSuccess");
 
-
                 POST(loginResult.getAccessToken().getToken());
-
 
             }
 
@@ -132,15 +131,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onError(FacebookException exception) {
                 Log.e(TAG, "facebook:onError", exception);
 
-
-
-
+                Toast.makeText(getApplicationContext(),"Error de conexion, porfavor pruebe de nuevo",Toast.LENGTH_SHORT).show();
             }
 
         });
-
-
-
     }
 
     private void saveLogIn(){
@@ -197,14 +191,11 @@ public class LoginActivity extends AppCompatActivity {
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
-
     public boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         return cm.getActiveNetworkInfo() != null;
     }
-
-
 
     public void toast(String text){
         Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
@@ -261,15 +252,19 @@ public class LoginActivity extends AppCompatActivity {
                     Log.v(TAG,"Response Code : " + responseCode);
 
                     if (responseCode == 200){
-
+                        Log.v(TAG,"respuesta correcta ");
                         saveLogIn();
                         startActivity(new Intent(getApplicationContext(), MainScreenActivity.class));
                         finish();
+                    }if(responseCode == 500){
+                        LoginManager.getInstance().logOut();
 
-                        Log.v(TAG,"respuesta correcta ");
+                        Toast.makeText(getApplicationContext(),"Error de conexion con el servidor, por favor pruebe de nuevo",Toast.LENGTH_SHORT).show();
+                        Log.e(TAG,"respuesta incorrecta ");
 
-                    }else{
+                    } else{
 
+                        LoginManager.getInstance().logOut();
                         Toast.makeText(getApplicationContext(),"Error de conexion, porfavor pruebe de nuevo",Toast.LENGTH_SHORT).show();
                         Log.e(TAG,"respuesta incorrecta ");
                     }
@@ -296,11 +291,7 @@ public class LoginActivity extends AppCompatActivity {
 
         }.execute();
 
-
     }
-
-
-
 
     @Override
     protected void onDestroy() {

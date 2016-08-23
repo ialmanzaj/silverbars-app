@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +16,14 @@ import android.widget.TextView;
 import java.util.List;
 
 import static com.app.proj.silverbars.Utilities.getBitmapFromURL;
+import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
 
 /**
  * Created by andre_000 on 4/12/2016.
  */
+
+
+// ADAPTER FOR WORKING OUT ACTIVITY
 public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.WorkoutsViewHolder> {
 
     private static final String TAG = "Workout Adapter";
@@ -28,7 +31,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
     private Context context;
 
     public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {
-        // Campos respectivos de un item
+
         public ImageView imagen;
         public TextView nombre;
         public TextView next;
@@ -62,9 +65,10 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
     @Override
     public void onBindViewHolder(WorkoutsViewHolder viewHolder, int a) {
+
         int position = viewHolder.getAdapterPosition();
+
         Bitmap bmp;
-        //String[] imageDir = WorkoutActivity.ParsedExercises[position].getExercise_image().split("exercises");
 
         bmp = getBitmapFromURL(WorkoutActivity.ParsedExercises[position].getExercise_image());
         
@@ -74,34 +78,36 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
             viewHolder.imagen.setImageBitmap(bmp);
             viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
             viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
+
         }else {
-            Log.e(TAG,"problema con la conexion");
-        }
-            viewHolder.nombre.setText(workouts.get(position).getNombre());
 
-       /* if (imageDir.length < 2){
-            //Log.v(TAG, "ha entrado en IF imageDir.length < 2");
-            bmp = loadExerciseImageFromDevice(context,WorkoutActivity.ParsedExercises[position].getExercise_image());
-            viewHolder.imagen.setImageBitmap(bmp);
-            viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
-            viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
-            viewHolder.nombre.setText(workouts.get(position).getNombre());
-
-        }else{
-
-            String Parsedurl = "exercises"+imageDir[1];
-            String[] imagesName = Parsedurl.split("/");
-            String imgName = imagesName[2];
-            bmp = loadExerciseImageFromDevice(context,imgName);
-
-            if (bmp != null){
-                //Log.v(TAG, "ha entrado en if bmp != null");
+            String[] imageDir = WorkoutActivity.ParsedExercises[position].getExercise_image().split("exercises");
+            if (imageDir.length < 2){
+                //Log.v(TAG, "ha entrado en IF imageDir.length < 2");
+                bmp = loadExerciseImageFromDevice(context,WorkoutActivity.ParsedExercises[position].getExercise_image());
                 viewHolder.imagen.setImageBitmap(bmp);
                 viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
                 viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
                 viewHolder.nombre.setText(workouts.get(position).getNombre());
+
+            }else{
+
+                String Parsedurl = "exercises"+imageDir[1];
+                String[] imagesName = Parsedurl.split("/");
+                String imgName = imagesName[2];
+                bmp = loadExerciseImageFromDevice(context,imgName);
+
+                if (bmp != null){
+                    //Log.v(TAG, "ha entrado en if bmp != null");
+                    viewHolder.imagen.setImageBitmap(bmp);
+                    viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
+                    viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
+                    viewHolder.nombre.setText(workouts.get(position).getNombre());
+                }
             }
-        }*/
+
+        }
+            viewHolder.nombre.setText(workouts.get(position).getNombre());
 
 //        viewHolder.next.setText("Visitas:"+String.valueOf(workouts.get(position).getVisitas()));
     }

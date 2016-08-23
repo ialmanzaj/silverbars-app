@@ -25,7 +25,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static com.app.proj.silverbars.Utilities.getBitmapFromURL;
 import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
 import static com.app.proj.silverbars.Utilities.saveExerciseImageInDevice;
 
@@ -86,15 +85,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     @Override
     public void onBindViewHolder(final ExerciseViewHolder viewHolder, final int i) {
          final int a = viewHolder.getAdapterPosition();
-        Bitmap bmp;
-        //Log.v("Image Array", Arrays.toString(imageDir));
 
-         bmp = getBitmapFromURL(WorkoutActivity.ParsedExercises[a].getExercise_image());
-        if (bmp!=null){
+            Bitmap bmp;
 
-            viewHolder.imagen.setImageBitmap(bmp);
-
-        }else {
             // GET IMAGES FROM API
             String[] imageDir = WorkoutActivity.ParsedExercises[a].getExercise_image().split("exercises");
             if (imageDir.length < 2){
@@ -114,7 +107,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             else{
                 DownloadImage(Parsedurl,viewHolder,imgName);
             }
-        }
+
 
         }
 
