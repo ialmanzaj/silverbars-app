@@ -43,6 +43,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.app.proj.silverbars.Utilities.getUrlReady;
+
 public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateWorkoutFinal";
@@ -64,6 +66,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
     String workoutImage;
     String[] exercises_ids;
+    List<JsonExercise> SelectedExercises = new ArrayList<>();
 
 
 
@@ -116,10 +119,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
         Save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                saveWorkout();
-
-
+                saveWorkoutInDB();
             }
         });
 
@@ -382,7 +382,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     JsonExercise[] exercises = response.body();
                     List<JsonExercise> AllExercisesList = new ArrayList<>();
-                    List<JsonExercise> SelectedExercises = new ArrayList<>();
+
 
                     Collections.addAll(AllExercisesList,exercises);
 
@@ -492,7 +492,6 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
                 } else {
                     int statusCode = response.code();
-
                     ResponseBody errorBody = response.errorBody();
                     Log.e(TAG,errorBody.toString());
                 }
@@ -506,9 +505,95 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
     }
 
+    private void saveWorkoutInDB(){
+        MySQLiteHelper database = new MySQLiteHelper(CreateWorkoutFinalActivity.this);
+
+        for (int i = 0; i < SelectedExercises.size(); i++){
+
+            if (!database.checkExercise(SelectedExercises.get(i).getId()) ){
+
+                String imgDir,mp3Dir;
+                imgDir = getUrlReady(this,"/SilverbarsImg/"+SelectedExercises.get(i).exercise_image);
+                mp3Dir = getUrlReady(this,"/SilverbarsMp3/"+SelectedExercises.get(i).exercise_audio);
+
+                database.insertExercises(
+                        SelectedExercises.get(i).getId(),
+                        SelectedExercises.get(i).getExercise_name(),
+                        SelectedExercises.get(i).getLevel(),
+                        convertArrayToString(SelectedExercises.get(i).getType_exercise()),
+                        convertArrayToString(SelectedExercises.get(i).getMuscle()),
+                        mp3Dir,
+                        imgDir
+                );
+            }
+        }
+        saveWorkoutinData();
+    }
+
+    private void saveWorkoutinData(){
+
+        String name = workoutName.getText().toString();
+        int workoutSets = actual_set;
+        String workoutLevel = LEVEL;
+        String mainMuscle = MAIN_MUSCLE;
 
 
-    public class WrappingLinearLayoutManager extends LinearLayoutManager {
+        int user_id = 1;
+        Log.v(TAG,"name: "+name);
+        if (!Objects.equals(name, "")){
+            String imgDir = workoutImage;
+            if (workoutImage != null){
+                MySQLiteHelper database = new MySQLiteHelper(CreateWorkoutFinalActivity.this);
+                database.addNewUserWorkouts(
+                        name,
+                        imgDir,
+                        workoutSets,
+                        workoutLevel,
+                        mainMuscle,
+                        convertArrayToString(exercises_ids),
+                        user_id
+                    );
+
+                int workout_id = database.getUserWorkoutSize();
+              
+                for (int i = 0; i < Exercises.size(); i++) {
+                    int exerciseid = Integer.parseInt(exercises_ids[i]);
+                    database.addNewUserWorkout(
+                            workout_id,
+                            exerciseid,
+                            reps[i]
+                    );
+                }
+                finish();
+                CreateWorkoutActivity.create.finish();
+            } else {
+
+            Toast.makeText(CreateWorkoutFinalActivity.this, "Elija un la foto para su rutina",
+                    Toast.LENGTH_SHORT).show();
+            }
+        }else {
+
+            Toast.makeText(CreateWorkoutFinalActivity.this, "Elija un nombre para su rutina",
+                    Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
+
+
+    private static String convertArrayToString(String[] array){
+        String str = "";
+        for (int i = 0;i<array.length; i++) {
+            str = str+array[i];
+            // Do not append comma at the end of last element
+            if(i<array.length-1){
+                str = str+strSeparator;
+            }
+        }
+        return str;
+    }
+
+    private class WrappingLinearLayoutManager extends LinearLayoutManager {
 
         public WrappingLinearLayoutManager(Context context) {
             super(context);
@@ -697,86 +782,6 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
     }
 
 
-
-    private void saveWorkout(){
-
-        String name = workoutName.getText().toString();
-        int workoutSets = actual_set;
-        String workoutLevel = LEVEL;
-        String mainMuscle = MAIN_MUSCLE;
-
-        int user_id = 1;
-
-        Log.v(TAG,"name: "+name);
-
-        if (!Objects.equals(name, "")){
-
-            String imgDir = workoutImage;
-
-            if (workoutImage != null){
-
-                MySQLiteHelper database = new MySQLiteHelper(CreateWorkoutFinalActivity.this);
-
-                database.addNewUserWorkouts(
-                        name,
-                        imgDir,
-                        workoutSets,
-                        workoutLevel,
-                        mainMuscle,
-                        convertArrayToString(exercises_ids),
-                        user_id
-                    );
-                int workout_id = database.getUserWorkoutSize();
-
-                Log.v(TAG, "workout_id: "+workout_id);
-
-                for (int i = 0; i < Exercises.size(); i++) {
-                    int exerciseid = Integer.parseInt(exercises_ids[i]);
-
-                    database.addNewUserWorkout(
-                            workout_id,
-                            exerciseid,
-                            reps[i]
-                    );
-                }
-
-
-                //Log.v(TAG, Arrays.toString(database.getUserWorkout(1)));
-                //Log.v(TAG, Arrays.toString(database.getUserWorkout(0)));
-
-                finish();
-                CreateWorkoutActivity.create.finish();
-
-
-
-
-            } else {
-
-            Toast.makeText(CreateWorkoutFinalActivity.this, "Elija un la foto para su rutina",
-                    Toast.LENGTH_SHORT).show();
-
-            }
-
-        }else {
-
-            Toast.makeText(CreateWorkoutFinalActivity.this, "Elija un nombre para su rutina",
-                    Toast.LENGTH_SHORT).show();
-
-        }
-
-    }
-
-    public static String convertArrayToString(String[] array){
-        String str = "";
-        for (int i = 0;i<array.length; i++) {
-            str = str+array[i];
-            // Do not append comma at the end of last element
-            if(i<array.length-1){
-                str = str+strSeparator;
-            }
-        }
-        return str;
-    }
 
 
 

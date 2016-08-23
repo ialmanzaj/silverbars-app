@@ -104,10 +104,12 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             viewHolder.imagen.setImageBitmap(bmp);
 
         }else{
+
             String Parsedurl = "exercises"+imageDir[1];
             String[] imagesName = Parsedurl.split("/");
             String imgName = imagesName[2];
             bmp = loadImageFromCache(mContext,imgName);
+
             if (bmp != null){
                 viewHolder.imagen.setImageBitmap(bmp);
             }

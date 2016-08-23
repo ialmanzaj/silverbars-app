@@ -792,7 +792,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
 
 
-
     public void BD_backup() throws IOException {
 //        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
 
@@ -809,6 +808,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         File d = new File(directorio);
         if (!d.exists()) {
             d.mkdir();
+            Log.v(TAG,"base de datos creada");
         }
 
         String outFileName = directorio + "/"+DATABASE_NAME;

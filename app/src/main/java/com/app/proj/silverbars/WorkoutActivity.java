@@ -108,7 +108,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private List<WorkoutInfo> exercisesToRecycler = new ArrayList<>();
     public static JsonExercise[] ParsedExercises;
-    public static JsonWorkoutReps[] ParsedReps;
+    public static JsonWorkoutReps[] ExerciseswithReps;
 
 
     private static final String TAG ="WORKOUT ACTIVITY";
@@ -292,24 +292,26 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
 
-        //COMPROBAR SI EL WORKOUT ESTA ACTIVADO EN LA BASE DE DATOS
+
+        //COMPROBAR SI EL WORKOUT ESTA ACTIVADO EN LA BASE DE DATOS - SAVED WORKOUTS
         if (database.checkWorkouts(workoutId) && Objects.equals(database.checkWorkoutLocal(workoutId), "true")){
+
             loadLocal = true;
             enableLocal.setChecked(true);
             
-            ParsedReps = database.getWorkout(workoutId);
-            ParsedExercises = new JsonExercise[ParsedReps.length];
-            Exercises_reps = new int[ParsedReps.length];
+            ExerciseswithReps = database.getWorkout(workoutId);
+            ParsedExercises = new JsonExercise[ExerciseswithReps.length];
+            Exercises_reps = new int[ExerciseswithReps.length];
             
             // inicializar tempo arrays por ejercicio
-            Positive_Exercises = new int[ParsedReps.length];
-            Isometric_Exercises = new int[ParsedReps.length];
-            Negative_Exercises = new int[ParsedReps.length];
+            Positive_Exercises = new int[ExerciseswithReps.length];
+            Isometric_Exercises = new int[ExerciseswithReps.length];
+            Negative_Exercises = new int[ExerciseswithReps.length];
 
             
-            for (int i = 0; i < ParsedReps.length; i++){
-                ParsedExercises[i] = database.getExercise(Integer.valueOf(ParsedReps[i].getExercise()));
-                Exercises_reps[i] = ParsedReps[i].getRepetition();
+            for (int i = 0; i < ExerciseswithReps.length; i++){
+                ParsedExercises[i] = database.getExercise(Integer.valueOf(ExerciseswithReps[i].getExercise()));
+                Exercises_reps[i] = ExerciseswithReps[i].getRepetition();
 
                 // inicializar cada parte del tempo
                 WorkoutActivity.Positive_Exercises[i] = 1;
@@ -330,26 +332,26 @@ public class WorkoutActivity extends AppCompatActivity {
             ExercisesRecycler.setAdapter(adapter);
             setMusclesToView(MusclesArray);
             putTypesInWorkout(TypeExercises);
-
-
-        }else if (user_workout && database.checkUserWorkouts(workoutId) ){
+        }else if (user_workout && database.checkUserWorkouts(workoutId) ){ //USER WORKOUTS
             togle_no_internet.setVisibility(View.GONE);// this only for workouts in API
 
+             ExerciseswithReps = database.getUserWorkout(workoutId);
             
-             ParsedReps = database.getUserWorkout(workoutId);
-            
-            ParsedExercises = new JsonExercise[ParsedReps.length];
-            Exercises_reps = new int[ParsedReps.length];
+            ParsedExercises = new JsonExercise[ExerciseswithReps.length];
+            Exercises_reps = new int[ExerciseswithReps.length];
 
             // inicializar tempo arrays por ejercicio
-            Positive_Exercises = new int[ParsedReps.length];
-            Isometric_Exercises = new int[ParsedReps.length];
-            Negative_Exercises = new int[ParsedReps.length];
+            Positive_Exercises = new int[ExerciseswithReps.length];
+            Isometric_Exercises = new int[ExerciseswithReps.length];
+            Negative_Exercises = new int[ExerciseswithReps.length];
 
-            for (int i = 0; i < ParsedReps.length; i++){
+            for (int i = 0; i < ExerciseswithReps.length; i++){
 
-                ParsedExercises[i] = database.getExercise(Integer.valueOf(ParsedReps[i].getExercise()));
-                Exercises_reps[i] = ParsedReps[i].getRepetition();
+                ParsedExercises[i] = database.getExercise(Integer.valueOf(ExerciseswithReps[i].getExercise()));
+                Log.v(TAG,"ParsedExercises[i]"+ParsedExercises[i].getExercise_name());
+
+
+                Exercises_reps[i] = ExerciseswithReps[i].getRepetition();
                 
                 // inicializar cada parte del tempo
                 WorkoutActivity.Positive_Exercises[i] = 1;
@@ -372,7 +374,6 @@ public class WorkoutActivity extends AppCompatActivity {
             putTypesInWorkout(TypeExercises);
 
         } else {
-
 
             getExercisesFromAPI();
             loadLocal = false;
@@ -921,13 +922,13 @@ public class WorkoutActivity extends AppCompatActivity {
                             Tab_layout.setVisibility(View.VISIBLE);
 
                             JsonWorkoutReps[] Reps = response.body();
-                            ParsedReps = new JsonWorkoutReps[exercisesToRecycler.size()];
+                            ExerciseswithReps = new JsonWorkoutReps[exercisesToRecycler.size()];
 
                             int y = 0;
                             for (JsonWorkoutReps Rep : Reps) {
                                 String workout = Rep.getWorkout_id();
                                 if (workout.indexOf("workouts/" + workoutId) > 0) {
-                                    ParsedReps[y] = Rep;
+                                    ExerciseswithReps[y] = Rep;
                                     y++;
                                 }
                             }
@@ -971,7 +972,7 @@ public class WorkoutActivity extends AppCompatActivity {
                                     
                                 }
                                 
-                                Exercises_reps[i] = ParsedReps[i].getRepetition();
+                                Exercises_reps[i] = ExerciseswithReps[i].getRepetition();
 
                                 // inicializar cada parte del tempo
                                 WorkoutActivity.Positive_Exercises[i] = 1;
