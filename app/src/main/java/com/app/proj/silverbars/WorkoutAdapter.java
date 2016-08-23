@@ -26,7 +26,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static com.app.proj.silverbars.Utilities.loadWorkoutImageFromInternalMemory;
+import static com.app.proj.silverbars.Utilities.loadWorkoutImageFromDevice;
 import static com.app.proj.silverbars.Utilities.saveWorkoutImgInDevice;
 
 
@@ -99,7 +99,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                 final String imgName = imagesName[2];
 
 
-                Bitmap bmp = loadWorkoutImageFromInternalMemory(context,imgName);
+                Bitmap bmp = loadWorkoutImageFromDevice(context,imgName);
 
                 if (bmp != null){
                     viewHolder.img.setImageBitmap(bmp);
@@ -155,7 +155,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                         boolean writtenToDisk = saveWorkoutImgInDevice(context,response.body(),imgName);
 
                         if(writtenToDisk){
-                            bitmap = loadWorkoutImageFromInternalMemory(context,imgName);
+                            bitmap = loadWorkoutImageFromDevice(context,imgName);
                         }
 
                         viewHolder.img.setImageBitmap(bitmap);

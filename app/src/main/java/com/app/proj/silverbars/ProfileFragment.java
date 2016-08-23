@@ -24,7 +24,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import static com.app.proj.silverbars.Utilities.loadProfileImageFromCache;
-import static com.app.proj.silverbars.Utilities.loadWorkoutImageFromInternalMemory;
+import static com.app.proj.silverbars.Utilities.loadWorkoutImageFromDevice;
 import static com.app.proj.silverbars.Utilities.saveWorkoutImgInDevice;
 import static com.facebook.Profile.getCurrentProfile;
 
@@ -197,7 +197,7 @@ public class ProfileFragment extends Fragment {
                     Bitmap bitmap = null;
                     if (response.isSuccessful()) {
                         boolean writtenToDisk = saveWorkoutImgInDevice(context,response.body(),imgName);
-                        if(writtenToDisk){bitmap = loadWorkoutImageFromInternalMemory(context,imgName);}
+                        if(writtenToDisk){bitmap = loadWorkoutImageFromDevice(context,imgName);}
                         profile_image.setImageBitmap(bitmap);
 
                     }

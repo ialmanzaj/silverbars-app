@@ -26,8 +26,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static com.app.proj.silverbars.Utilities.loadImageFromCache;
-import static com.app.proj.silverbars.Utilities.writeResponseBodyToDisk;
+import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
+import static com.app.proj.silverbars.Utilities.saveExerciseImageInDevice;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
 
@@ -63,15 +63,12 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             positive = (TextView) v.findViewById(R.id.positive);
             isometric = (TextView) v.findViewById(R.id.isometric);
             negative = (TextView) v.findViewById(R.id.negative);
-
         }
-
     }
 
     public ExerciseAdapter(List<WorkoutInfo> items, Context context) {
         mContext = context;
         this.items = items;
-
     }
 
     @Override
@@ -88,28 +85,21 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     @Override
     public void onBindViewHolder(final ExerciseViewHolder viewHolder, final int i) {
-        Bitmap bmp = null;
-
          final int a = viewHolder.getAdapterPosition();
-
-        //Setting values to each recylerView Element
+        // IMAGE FROM API SPLIT
         String[] imageDir = WorkoutActivity.ParsedExercises[a].getExercise_image().split("exercises");
-
 
         Log.v("Image Array", Arrays.toString(imageDir));
 
+        Bitmap bmp;
         if (imageDir.length < 2){
-
-            bmp = loadImageFromCache(mContext,WorkoutActivity.ParsedExercises[a].getExercise_image());
+            bmp = loadExerciseImageFromDevice(mContext,WorkoutActivity.ParsedExercises[a].getExercise_image());
             viewHolder.imagen.setImageBitmap(bmp);
-
         }else{
-
             String Parsedurl = "exercises"+imageDir[1];
             String[] imagesName = Parsedurl.split("/");
             String imgName = imagesName[2];
-            bmp = loadImageFromCache(mContext,imgName);
-
+            bmp = loadExerciseImageFromDevice(mContext,imgName);
             if (bmp != null){
                 viewHolder.imagen.setImageBitmap(bmp);
             }
@@ -117,7 +107,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                 DownloadImage(Parsedurl,viewHolder,imgName);
             }
         }
-
 
         viewHolder.nombre.setText(WorkoutActivity.ParsedExercises[a].getExercise_name());
         viewHolder.repetitions.setText(String.valueOf(WorkoutActivity.Exercises_reps[a]));
@@ -131,14 +120,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
             @Override
             public void onClick(View view) {
-/*
-                TabDialogFragment.createBuilder(view.getContext(), fragmentManager)
-                        .setTitle("hello")
-                        .setSubTitle("Cuenta regresiva")
-                        .setTabButtonText(new CharSequence[]{"Por Repeticion", "Simple"})
-                        .setPositiveButtonText("ok")
-                        .show();*/
-
 
                 View v = new MaterialDialog.Builder(view.getContext())
                         .title(R.string.rep_edit)
@@ -147,10 +128,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 dialog.dismiss();
-                               /* //On Dialog "Done" ClickListener
-                                viewHolder.repetitions.setText(String.valueOf(NewRepValue()));
-                                WorkoutActivity workout = new WorkoutActivity();
-                                WorkoutActivity.Exercises_reps[a] = NewRepValue();*/
+
                                 viewHolder.positive.setText(Positive.getText());
                                 viewHolder.isometric.setText(Isometric.getText());
                                 viewHolder.negative.setText(Negative.getText());
@@ -172,7 +150,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                         .getCustomView();
 
 
-                //Dialog elements
                 if (v != null) {
 
                         Positive = (TextView) v.findViewById(R.id.Positive);
@@ -232,8 +209,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
                 }
 
-
-                //Check if actual rep value is 1 or 20 on Dialog open
                 if (ActualRepValue == 1){
                     minusRep.setEnabled(false);
                     minusRep.setClickable(false);
@@ -285,7 +260,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         });
     }
 
-    private void DownloadImage(final String url, final ExerciseViewHolder vh, final String imgName) {
+    private void DownloadImage(final String url, final ExerciseViewHolder viewHolder, final String imgName) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
 
@@ -299,12 +274,18 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
                         Bitmap bitmap = null;
                         if (response.isSuccessful()) {
-                            boolean writtenToDisk = writeResponseBodyToDisk(mContext,response.body(),imgName);
-                            if(writtenToDisk){bitmap = loadImageFromCache(mContext,imgName);}
-                            vh.imagen.setImageBitmap(bitmap);
+
+                            boolean writtenToDisk = saveExerciseImageInDevice(mContext,response.body(),imgName);
+                            if(writtenToDisk){
+                                bitmap = loadExerciseImageFromDevice(mContext,imgName);
+                            }
+                            viewHolder.imagen.setImageBitmap(bitmap);
                         }
+
+
                         else {
                             Log.e(TAG, "DownloadImage, Download failed :(");
                         }

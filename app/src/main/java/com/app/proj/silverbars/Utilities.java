@@ -43,37 +43,13 @@ public class Utilities {
         return false;
     }
 
-    public static boolean CheckExternalStorage(){
-
-        boolean mExternalStorageAvailable = false;
-        boolean mExternalStorageWriteable = false;
-        String state = Environment.getExternalStorageState();
-
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            // We can read and write the media
-            mExternalStorageAvailable = mExternalStorageWriteable = true;
-        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            // We can only read the media
-            mExternalStorageAvailable = true;
-            mExternalStorageWriteable = false;
-        } else {
-            // Something else is wrong. It may be one of many other states, but all we need
-            //  to know is we can neither read nor write
-            mExternalStorageAvailable = mExternalStorageWriteable = false;
-        }
-
-        return mExternalStorageAvailable && mExternalStorageWriteable;
-    }
-
-
     public static Bitmap loadImageFromCache(Context context, String imageURI) {
-
         Bitmap bitmap = null;
         String[] imageDir = imageURI.split("SilverbarsImg");
 
         if (imageDir.length < 2){
 
-            File file = getFileReady(context,"/SilverbarsImg/"+imageURI);
+            File file = getCacheFileReady(context,"/SilverbarsImg/"+imageURI);
 
             if (file.exists()){
                 bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
@@ -87,28 +63,28 @@ public class Utilities {
         return bitmap;
     }
 
-    public static boolean writeResponseBodyToDisk(Context context,ResponseBody body, String imgName) {
-
+    public static boolean saveImageInCache(Context context, ResponseBody body, String imgName) {
         try {
 
-            File futureStudioIconFile = getFileReady(context,"/SilverbarsImg/"+imgName);
-
-            InputStream inputStream = null;
+            File futureStudioIconFile = getCacheFileReady(context,"/SilverbarsImg/"+imgName);
+            InputStream input = null;
             OutputStream outputStream = null;
 
             try {
+                input = body.byteStream();
+                outputStream = new FileOutputStream(futureStudioIconFile);
+                int size = input.available();
 
-                byte[] fileReader = new byte[4096];
+                byte[] fileReader = new byte[size];
                 long fileSize = body.contentLength();
                 long fileSizeDownloaded = 0;
-                inputStream = body.byteStream();
-                outputStream = new FileOutputStream(futureStudioIconFile);
+
                 while (true) {
-                    int read = inputStream.read(fileReader);
+                    int read = input.read(fileReader);
                     if (read == -1) {break;}
                     outputStream.write(fileReader, 0, read);
                     fileSizeDownloaded += read;
-                    Log.v(TAG, "writeResponseBodyToDisk: Download, file download: " + fileSizeDownloaded + " of " + fileSize);
+                    Log.v(TAG, "saveImageInCache: Download, file download: " + fileSizeDownloaded + " of " + fileSize);
                 }
                 outputStream.flush();
                 return true;
@@ -116,19 +92,68 @@ public class Utilities {
             } catch (IOException e) {
                 return false;
             } finally {
-                if (inputStream != null) {inputStream.close();}
+                if (input != null) {input.close();}
                 if (outputStream != null) {outputStream.close();}
             }
         } catch (IOException e) {return false;}
     }
 
-    public static Bitmap loadWorkoutImageFromInternalMemory(Context context, String imageURI) {
-        Log.v(TAG,"loadWorkoutImageFromInternalMemory:");
 
 
+    public static Bitmap loadExerciseImageFromDevice(Context context, String imageURI) {
+        Bitmap bitmap = null;
+        String[] imageDir = imageURI.split("SilverbarsImg");
+        if (imageDir.length < 2){
+            File file = getFileReady(context,"/SilverbarsImg/"+imageURI);
+            if (file.exists()){
+                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            }
+        }else{
+            File file = new File(imageURI);
+            if (file.exists()){
+                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            }
+        }
+        return bitmap;
+    }
+
+    public static boolean saveExerciseImageInDevice(Context context, ResponseBody body, String imgName) {
+        try {
+            File futureStudioIconFile = getFileReady(context,"/SilverbarsImg/"+imgName);
+            InputStream input = null;
+            OutputStream outputStream = null;
+
+            try {
+                input = body.byteStream();
+                outputStream = new FileOutputStream(futureStudioIconFile);
+                int size = input.available();
+                
+                byte[] fileReader = new byte[size];
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+
+                while (true) {
+                    int read = input.read(fileReader);
+                    if (read == -1) {break;}
+                    outputStream.write(fileReader, 0, read);
+                    fileSizeDownloaded += read;
+                    Log.v(TAG, "saveExerciseImageInDevice: Download, file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+                outputStream.flush();
+                return true;
+
+            } catch (IOException e) {
+                return false;
+            } finally {
+                if (input != null) {input.close();}
+                if (outputStream != null) {outputStream.close();}
+            }
+        } catch (IOException e) {return false;}
+    }
+
+    public static Bitmap loadWorkoutImageFromDevice(Context context, String imageURI) {
         Bitmap bitmap = null;
         File file = getFileReady(context,"/SilverbarsImg/"+imageURI);
-
         if (file.exists()){
             bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
         }
@@ -137,31 +162,29 @@ public class Utilities {
 
     public static boolean saveWorkoutImgInDevice(Context context, ResponseBody body, String imgName) {
 
-        Log.v(TAG,"saveWorkoutImgInDevice:");
-
         try {
-
             File Folder = getFileReady(context,"/SilverbarsImg/");
             File futureStudioIconFile = getFileReady(context,"/SilverbarsImg/"+imgName);
 
-
-            InputStream inputStream = null;
+            InputStream input = null;
             OutputStream outputStream = null;
-            boolean success = true;
 
+            boolean success = true;
             if (!Folder.isDirectory()) {
                 Log.v(TAG,"Creating Dir");
                 success = Folder.mkdir();
             }
             if (success) {
                 try {
-                    byte[] fileReader = new byte[4096];
+                    input = body.byteStream();
+                    outputStream = new FileOutputStream(futureStudioIconFile);
+                    int size = input.available();
+
+                    byte[] fileReader = new byte[size];
                     long fileSize = body.contentLength();
                     long fileSizeDownloaded = 0;
-                    inputStream = body.byteStream();
-                    outputStream = new FileOutputStream(futureStudioIconFile);
                     while (true) {
-                        int read = inputStream.read(fileReader);
+                        int read = input.read(fileReader);
                         if (read == -1) {break;}
                         outputStream.write(fileReader, 0, read);
                         fileSizeDownloaded += read;
@@ -173,80 +196,19 @@ public class Utilities {
                 } catch (IOException e) {
                     return false;
                 } finally {
-                    if (inputStream != null) {inputStream.close();}
+                    if (input != null) {input.close();}
                     if (outputStream != null) {outputStream.close();}
                 }
             } else {
                 Log.e(TAG,"Error while creating dir");
-
             }
-
         } catch (IOException e) {
-
             return false;
-
         }
         return false;
     }
 
-
-    public static boolean writeProfileImageinDisk(Context context,ResponseBody body, String imgName) {
-
-        try {
-
-            File Folder;
-            File futureStudioIconFile;
-            if (isExternalStorageWritable()){
-                Folder = new File(Environment.getExternalStorageDirectory()+"/SilverbarsProfileImage/");
-                futureStudioIconFile = new File(Environment.getExternalStorageDirectory()+"/SilverbarsProfileImage/"+imgName);
-            }else{
-                Folder = new File(context.getFilesDir()+"/SilverbarsProfileImage/");
-                futureStudioIconFile = new File(context.getFilesDir()+"/SilverbarsProfileImage/"+imgName);
-
-            }
-
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
-
-            boolean success = true;
-            if (!Folder.isDirectory()) {
-                Log.v(TAG,"Creating Dir");
-                success = Folder.mkdir();
-            }
-
-            if (success) {
-                try {
-                    byte[] fileReader = new byte[4096];
-                    long fileSize = body.contentLength();
-                    long fileSizeDownloaded = 0;
-                    inputStream = body.byteStream();
-                    outputStream = new FileOutputStream(futureStudioIconFile);
-                    while (true) {
-                        int read = inputStream.read(fileReader);
-                        if (read == -1) {break;}
-                        outputStream.write(fileReader, 0, read);
-                        fileSizeDownloaded += read;
-                        Log.v("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
-                    }
-                    outputStream.flush();
-                    return true;
-
-                } catch (IOException e) {
-                    return false;
-                } finally {
-                    if (inputStream != null) {inputStream.close();}
-                    if (outputStream != null) {outputStream.close();}
-                }
-            } else {
-                Log.e(TAG,"Error while creating dir");
-            }
-
-        } catch (IOException e) {return false;}
-        return false;
-    }
-
     public static Bitmap loadProfileImageFromCache(Context context, String imageURI) {
-
         Bitmap bitmap = null;
         String[] imageDir = imageURI.split("SilverbarsImg");
 
@@ -285,29 +247,26 @@ public class Utilities {
 
 
     public static String getUrlReady(Context context,String url){
-
-        String dir;
-        if (isExternalStorageWritable()){
-            dir = Environment.getExternalStorageDirectory()+url;
-        }else {
-            dir = context.getFilesDir()+url;
-        }
+        String dir = context.getFilesDir()+url;
         return dir;
     }
 
     public static File getFileReady(Context context,String url){
+        File Dir = new File(context.getFilesDir()+url);
+        return Dir;
+    }
 
-        File Dir;
-        if(isExternalStorageWritable()){
-            Dir = new File(Environment.getExternalStorageDirectory() + url);
-        }else {
-            Dir = new File(context.getFilesDir()+url);
-        }
+    public static String getCacheUrlReady(Context context,String url){
+        String dir = context.getExternalCacheDir()+url;
+        return dir;
+    }
+
+    public static File getCacheFileReady(Context context,String url){
+        File Dir = new File(context.getCacheDir()+url);
         return Dir;
     }
 
     public static String removeLastChar(String str) {return str.substring(0,str.length()-1);}
-
 
 
     public static String SongArtist(Context context,File file){

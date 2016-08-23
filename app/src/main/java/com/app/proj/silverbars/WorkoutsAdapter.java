@@ -17,7 +17,7 @@ import android.widget.TextView;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.app.proj.silverbars.Utilities.loadImageFromCache;
+import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
 
 /**
  * Created by andre_000 on 4/12/2016.
@@ -75,7 +75,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
         if (imageDir.length < 2){
             //Log.v(TAG, "ha entrado en IF imageDir.length < 2");
-            bmp = loadImageFromCache(context,WorkoutActivity.ParsedExercises[i].getExercise_image());
+            bmp = loadExerciseImageFromDevice(context,WorkoutActivity.ParsedExercises[i].getExercise_image());
             viewHolder.imagen.setImageBitmap(bmp);
             viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
             viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
@@ -86,7 +86,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
             String Parsedurl = "exercises"+imageDir[1];
             String[] imagesName = Parsedurl.split("/");
             String imgName = imagesName[2];
-            bmp = loadImageFromCache(context,imgName);
+            bmp = loadExerciseImageFromDevice(context,imgName);
 
             if (bmp != null){
                 //Log.v(TAG, "ha entrado en if bmp != null");

@@ -30,8 +30,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static com.app.proj.silverbars.Utilities.loadImageFromCache;
-import static com.app.proj.silverbars.Utilities.writeResponseBodyToDisk;
+import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
+import static com.app.proj.silverbars.Utilities.saveExerciseImageInDevice;
 
 
 public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<RecyclerExerciseSelectedAdapter.selectedExercisesViewHolder>  implements ItemTouchHelperAdapter {
@@ -183,14 +183,14 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
 
         if (imageDir.length < 2){
 
-            bmp = loadImageFromCache(mContext,mSelectedExercises.get(a).getExercise_image());
+            bmp = loadExerciseImageFromDevice(mContext,mSelectedExercises.get(a).getExercise_image());
             viewHolder.imagen.setImageBitmap(bmp);
 
         }else {
             String Parsedurl = "exercises" + imageDir[1];
             String[] imagesName = Parsedurl.split("/");
             String imgName = imagesName[2];
-            bmp = loadImageFromCache(mContext,imgName);
+            bmp = loadExerciseImageFromDevice(mContext,imgName);
 
             if (bmp != null) {
                 viewHolder.imagen.setImageBitmap(bmp);
@@ -372,8 +372,8 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         Bitmap bitmap = null;
                         if (response.isSuccessful()) {
-                            boolean writtenToDisk = writeResponseBodyToDisk(mContext,response.body(),imgName);
-                            if(writtenToDisk){bitmap = loadImageFromCache(mContext,imgName);}
+                            boolean writtenToDisk = saveExerciseImageInDevice(mContext,response.body(),imgName);
+                            if(writtenToDisk){bitmap = loadExerciseImageFromDevice(mContext,imgName);}
                             vh.imagen.setImageBitmap(bitmap);
                         }
                         else {

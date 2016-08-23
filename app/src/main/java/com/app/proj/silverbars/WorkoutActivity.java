@@ -1295,11 +1295,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
     private void putTypesInWorkout(List<String> types){
-
         List<String> typesExercise;
-
         typesExercise = deleteCopiesofList(types);
-
         getCountTimes(typesExercise);
 
         Log.v(TAG,"ISOMETRIC: "+ISOMETRIC);
@@ -1371,13 +1368,6 @@ public class WorkoutActivity extends AppCompatActivity {
             contentInfo.addView(linear);
 
         }
-
-
-
-
-
-
-
     }
 
 
