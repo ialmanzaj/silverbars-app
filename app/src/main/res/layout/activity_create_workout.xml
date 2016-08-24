@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +12,6 @@
         android:layout_height="wrap_content"
         android:minHeight="50dp"
         app:elevation="2dp">
-
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -31,147 +31,19 @@
                 android:layout_height="40dp"
                 android:layout_gravity="end"
                 android:layout_marginEnd="5dp"/>
-
         </android.support.v7.widget.Toolbar>
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/custom_tab_layout_height"
+            app:tabMode="fixed"
+            app:tabGravity="fill"/>
     </android.support.design.widget.AppBarLayout>
 
-    <TabHost
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/tabHost3">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TabWidget
-                android:tabStripLeft="@color/secondColor"
-                android:background="@color/colorPrimary"
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            </TabWidget>
-
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <LinearLayout
-                    android:background="@color/white"
-                    android:id="@+id/rutina_"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/content_empty"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <TextView
-                            android:textColor="@color/black"
-                            android:textSize="26sp"
-                            android:layout_gravity="center_horizontal|center_vertical"
-                            android:text="@string/empty_create"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                        <Button
-                            android:layout_marginTop="5dp"
-                            android:paddingStart="25dp"
-                            android:paddingEnd="25dp"
-                            android:background="@color/secondColor"
-                            android:id="@+id/add_exercises"
-                            android:layout_gravity="center_horizontal"
-                            android:text="@string/add_exercises"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:padding="10dp"
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <Button
-                            android:visibility="gone"
-                            android:background="@color/secondColor"
-                            android:id="@+id/reAdd"
-                            android:text="@string/add_more"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/white"/>
-
-                    </LinearLayout>
-                    <android.support.v7.widget.RecyclerView
-                            android:visibility="gone"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/recycler_exercises_selected"
-                            android:layout_gravity="center" />
-
-                </LinearLayout>
-                <ScrollView
-                    android:background="@color/white"
-                    android:id="@+id/muscles_"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <WebView
-                            android:background="@color/white"
-                            android:id="@+id/WebView_create"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-                        </WebView>
-                    <LinearLayout
-                        android:id="@+id/content_info"
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <TextView
-                            android:textSize="18sp"
-                            android:textColor="@color/black"
-                            android:text="@string/muscles_involved"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                        <LinearLayout
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:baselineAligned="false">
-                            <LinearLayout
-                                android:id="@+id/column1"
-                                android:orientation="vertical"
-                                android:gravity="center_horizontal"
-                                android:layout_weight="1"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content">
-                            </LinearLayout>
-                            <LinearLayout
-                                android:id="@+id/column2"
-                                android:orientation="vertical"
-                                android:gravity="center_horizontal"
-                                android:layout_weight="1"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content">
-                            </LinearLayout>
-                        </LinearLayout>
-                    </LinearLayout>
-                    </LinearLayout>
-                </ScrollView>
-
-            </FrameLayout>
-
-        </LinearLayout>
-
-    </TabHost>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
 
 </LinearLayout>
