@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,23 +35,19 @@ public class ExerciseListActivity extends AppCompatActivity {
     Toolbar toolbar;
     RecyclerView recycler;
     Button add_button;
-    public static JsonExercise[] Exercises;
     private RecyclerView.Adapter adapter;
 
     private ArrayList<String> sExercises_Id = new ArrayList<>();
-    
     List<JsonExercise> OriginalExerciseListAll = new ArrayList<>();
-
     List<JsonExercise> ExercisesNoSelected = new ArrayList<>();
-
-
     ArrayList<String> SelectedItemsIds = new ArrayList<>();
 
+    private LinearLayout error_layout;
+    private LinearLayout Progress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise_list);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -66,26 +63,35 @@ public class ExerciseListActivity extends AppCompatActivity {
         }
 
 
+        Progress = (LinearLayout) findViewById(R.id.progress_bar_);
+        error_layout = (LinearLayout) findViewById(R.id.error_layout);
+        Button button_error_reload = (Button) findViewById(R.id.error_reload_workout);
+
+        button_error_reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                error_layout.setVisibility(View.GONE);
+                Progress.setVisibility(View.VISIBLE);
+                getExercisesFromAPI();
+
+            }
+        });
+
+
         recycler = (RecyclerView) findViewById(R.id.recycler);
         RecyclerView.LayoutManager lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
-
-
 
         add_button = (Button) findViewById(R.id.done_button);
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
                 for (int i = 0; i < OriginalExerciseListAll.size(); i++){
                     if (AllExercisesAdapter.selectedItems.get(i)){
                         sExercises_Id.add(OriginalExerciseListAll.get(i).getExercise_name());
-
                     }
                 }
-
-
 
                 // enviar items a la actividad anterior
                 Intent return_Intent = new Intent();
@@ -96,26 +102,20 @@ public class ExerciseListActivity extends AppCompatActivity {
 
                 //deselecionar todos los elementos elegidos
                 AllExercisesAdapter.selectedItems.clear();
-
-
-
             }
         });
 
-        Exercises();
-
+        getExercisesFromAPI();
 
     }
 
-    public void Exercises() {
-
+    private void getExercisesFromAPI() {
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request original = chain.request();
-                // Customize the request
                 Request request = original.newBuilder()
                         .header("Accept", "application/json")
                         .header("Authorization", "auth-token")
@@ -123,7 +123,6 @@ public class ExerciseListActivity extends AppCompatActivity {
                         .build();
                 okhttp3.Response response = chain.proceed(request);
                 Log.v("Response",response.toString());
-                // Customize or return the response
                 return response;
             }
         });
@@ -141,6 +140,9 @@ public class ExerciseListActivity extends AppCompatActivity {
             public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
 
                 if (response.isSuccessful()) {
+
+                    onErrorOff();
+
                     JsonExercise[] parsedExercises = response.body();
                     Collections.addAll(OriginalExerciseListAll,parsedExercises);
 
@@ -183,19 +185,37 @@ public class ExerciseListActivity extends AppCompatActivity {
                     recycler.setAdapter(adapter);
                 } else {
                     int statusCode = response.code();
-
                     ResponseBody errorBody = response.errorBody();
                     Log.e(TAG,errorBody.toString());
+                    Log.e(TAG,"statusCode"+statusCode);
+                    onErrorOn();
+
                 }
             }
 
             @Override
             public void onFailure(Call<JsonExercise[]> call, Throwable t) {
                 Log.e(TAG,"onFailure: ",t);
+                onErrorOn();
             }
         });
-
     }
+
+
+
+    private void onErrorOn(){
+        error_layout.setVisibility(View.VISIBLE);
+        recycler.setVisibility(View.GONE);
+        add_button.setVisibility(View.GONE);
+    }
+    private void onErrorOff(){
+        Progress.setVisibility(View.GONE);
+        error_layout.setVisibility(View.GONE);
+        recycler.setVisibility(View.VISIBLE);
+        add_button.setVisibility(View.VISIBLE);
+    }
+
+
 
 
 }

@@ -83,10 +83,12 @@ public class WorkoutActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private int ExerciseReps = 1;
     private ArrayList<File> mySongs;
+
     static public int[] Exercises_reps;
     static public int[] Positive_Exercises;
     static public int[] Isometric_Exercises;
     static public int[] Negative_Exercises;
+
     RelativeLayout togle_no_internet;
     private Boolean respuesta_recibida = false;
     Button startButton;
@@ -155,12 +157,11 @@ public class WorkoutActivity extends AppCompatActivity {
         // MUSCLES TEXT VIEW
 
         contentInfo = (LinearLayout)findViewById(R.id.content_info);
-
         primary_ColumnMuscle = (LinearLayout) findViewById(R.id.column1);
         secundary_ColumnMuscle = (LinearLayout) findViewById(R.id.column2);
 
-        Progress = (LinearLayout) findViewById(R.id.progress_bar_);
 
+        Progress = (LinearLayout) findViewById(R.id.progress_bar_);
         //error layout
         error_layout = (LinearLayout) findViewById(R.id.error_layout);
         Button button_error_reload = (Button) findViewById(R.id.error_reload_workout);
@@ -790,9 +791,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     
     private void setMusclesToView(List<String> musculos){
-
         if (musculos.size() > 0){
-
             List<String> musculos_oficial;
             musculos_oficial = deleteCopiesofList(musculos);
 
@@ -837,18 +836,19 @@ public class WorkoutActivity extends AppCompatActivity {
 
             }
         });
-
-
         webview.getSettings().setJavaScriptEnabled(true);
 
         // ACCEDER A LA URL DEL HTML GUARDADO EN EL PHONE
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         String default_url = getResources().getString(R.string.muscle_path);
         String muscle_url = sharedPref.getString(getString(R.string.muscle_path),default_url);
-        String fileurl = "file://"+muscle_url;
-        webview.loadUrl(fileurl);
 
-
+        if (muscle_url.equals("/")){
+            webview.loadUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/html/index.html");
+        }else {
+            String fileurl = "file://"+muscle_url;
+            webview.loadUrl(fileurl);
+        }
     }
 
     private void injectJS() {
@@ -863,8 +863,7 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             Log.e(TAG,"JAVASCRIPT Exception",e);
-            Tab_layout.setVisibility(View.GONE);
-            error_layout.setVisibility(View.VISIBLE);
+           onErrorOn();
         }
     }
 
@@ -900,11 +899,9 @@ public class WorkoutActivity extends AppCompatActivity {
         call.enqueue(new Callback<JsonWorkoutReps[]>() {
                     @Override
                     public void onResponse(Call<JsonWorkoutReps[]> call, Response<JsonWorkoutReps[]> response) {
-
                         if (response.isSuccessful()) {
 
-                            error_layout.setVisibility(View.GONE);
-                            Tab_layout.setVisibility(View.VISIBLE);
+                           onErrorOff();
 
                             JsonWorkoutReps[] Reps = response.body();
                             ExerciseswithReps = new JsonWorkoutReps[exercisesToRecycler.size()];
@@ -946,7 +943,6 @@ public class WorkoutActivity extends AppCompatActivity {
                                             DownloadMp3(Parsedurl, mp3Name);
                                         else
                                             Log.e(TAG, "Error creating dir");
-
                                     }
 
                                 }catch (NullPointerException e){
@@ -974,7 +970,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
                         } else {
-                            error_layout.setVisibility(View.VISIBLE);
+                            onErrorOn();
                             int statusCode = response.code();
                             ResponseBody errorBody = response.errorBody();
                             Log.e(TAG, "getExerciseRepsFromAPI: "+errorBody);
@@ -989,14 +985,19 @@ public class WorkoutActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<JsonWorkoutReps[]> call, Throwable t) {
                         Log.e(TAG,"getExercisesfromJson, onfailure",t);
-                        Tab_layout.setVisibility(View.GONE);
-                        error_layout.setVisibility(View.VISIBLE);
-
+                        onErrorOn();
                     }
                 });
+    }
 
+    private void onErrorOn(){
+        Tab_layout.setVisibility(View.GONE);
+        error_layout.setVisibility(View.VISIBLE);
+    }
 
-
+    private void onErrorOff(){
+        error_layout.setVisibility(View.GONE);
+        Tab_layout.setVisibility(View.VISIBLE);
     }
 
     private void DownloadMp3(final String url, final String getAudioName) {
@@ -1187,6 +1188,7 @@ public class WorkoutActivity extends AppCompatActivity {
         });
     }
 
+
     private String getImageName(int position){
         String[] imageDir = ParsedExercises[position].getExercise_image().split("exercises");
         String Parsedurl = "exercises" + imageDir[1];
@@ -1204,7 +1206,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
     private void getExercisesFromAPI(){
-
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -1261,12 +1262,10 @@ public class WorkoutActivity extends AppCompatActivity {
                         }
 
                     } else {
-                        
-                        error_layout.setVisibility(View.VISIBLE);
-                        Tab_layout.setVisibility(View.GONE);
-                        int statusCode = response.code();
 
-                        error_layout.setVisibility(View.VISIBLE);
+                        onErrorOn();
+
+                        int statusCode = response.code();
                         ResponseBody errorBody = response.errorBody();
                         Log.e(TAG, "getExercisesFromAPI: "+errorBody);
                         Log.e(TAG, "statusCode: "+statusCode);
@@ -1282,9 +1281,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<JsonExercise> call, Throwable t) {
                     Log.e(TAG,"getExercisesFromAPI, onFailure",t);
-
-                    Tab_layout.setVisibility(View.GONE);
-                    error_layout.setVisibility(View.VISIBLE);
+                    onErrorOn();
                    
                 }
             });

@@ -67,28 +67,20 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     
     private List<JsonExercise> ExercisesToAdapter = new ArrayList<>();
 
-    private LinearLayout primary_ColumnMuscle,secundary_ColumnMuscle,Progress;
+    private LinearLayout primary_ColumnMuscle,secundary_ColumnMuscle,Progress,progressLayout,error_layout;
     LinearLayout contentInfo;
 
+    ArrayList<String> Items_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_workout);
 
-        create = this;
-
-        contentInfo = (LinearLayout)findViewById(R.id.content_info);
-        primary_ColumnMuscle = (LinearLayout) findViewById(R.id.column1);
-        secundary_ColumnMuscle = (LinearLayout) findViewById(R.id.column2);
-
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         if (toolbar != null) {
-
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Create Workout");
             toolbar.setNavigationIcon(R.drawable.ic_clear_white_24dp);
@@ -98,43 +90,53 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                     finish();
                 }
             });
-
         }
 
+        create = this;
+        contentInfo = (LinearLayout)findViewById(R.id.content_info);
+        primary_ColumnMuscle = (LinearLayout) findViewById(R.id.column1);
+        secundary_ColumnMuscle = (LinearLayout) findViewById(R.id.column2);
+
         empty_content = (LinearLayout) findViewById(R.id.content_empty);
+
+
+        progressLayout = (LinearLayout) findViewById(R.id.progress_bar_);
+        error_layout = (LinearLayout) findViewById(R.id.error_layout);
+        Button button_error_reload = (Button) findViewById(R.id.error_reload_workout);
+
+        button_error_reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                error_layout.setVisibility(View.GONE);
+                Progress.setVisibility(View.VISIBLE);
+
+                if (Items_id.size() > 0){
+                    putExercisesinRecycler(Items_id);
+                }
+            }
+        });
+
+
 
         /// boton de siguiente
         Button nextButton = (Button) findViewById(R.id.Next);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 if ( adapter != null ){
-
                     if (adapter.getItemCount() > 0){
                         Intent intent = new Intent(CreateWorkoutActivity.this, CreateWorkoutFinalActivity.class);
                         intent.putExtra("exercises", adapter.getSelectedExercisesName());
                         intent.putExtra("reps",adapter.getExerciseReps());
-
                         startActivityForResult(intent,3);
-
                     }else {
                         Toast.makeText(CreateWorkoutActivity.this, getResources().getString(R.string.exercises_no_selected),
                                 Toast.LENGTH_SHORT).show();
                     }
-
                 }else {
                     Toast.makeText(CreateWorkoutActivity.this, getResources().getString(R.string.exercises_no_selected),
                             Toast.LENGTH_SHORT).show();
-
                 }
-
-
-
-//                String name = workoutName.getText().toString();
-//                MySQLiteHelper sqLiteHelper = new MySQLiteHelper(getApplicationContext());
-//                sqLiteHelper.insertWorkouts(name,);
             }
         });
 
@@ -156,12 +158,10 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         re_addExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(CreateWorkoutActivity.this,ExerciseListActivity.class);
                 intent.putExtra("items_selected",adapter.getSelectedExercisesName() );
                 Log.v(TAG,"items_selected"+adapter.getSelectedExercisesName() );
                 startActivityForResult(intent,2);
-                
             }
         });
 
@@ -170,7 +170,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         recycler = (RecyclerView) findViewById(R.id.recycler_exercises_selected);
         RecyclerView.LayoutManager lManager = new LinearLayoutManager(this);
         recycler.setLayoutManager(lManager);
-
 
 
         //Defining Tabs
@@ -213,33 +212,28 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             if (resultCode == RESULT_OK && data != null){
 
                     if (data.hasExtra("Items")) {
-                        ArrayList<String> items_ids_from_activity = data.getStringArrayListExtra("Items");
-                        Log.v(TAG, "NAMES ID: " + items_ids_from_activity);
+                        Items_id = data.getStringArrayListExtra("Items");
 
+                        if (Items_id.size() > 0){
+                            putExercisesinRecycler(Items_id);
 
-                        if (items_ids_from_activity.size() > 0){
-                            putExercisesinRecycler(items_ids_from_activity);
-                            Log.v(TAG, "primeros items añadidos: " + items_ids_from_activity);
                         }
-
                     }
             }
-        }if (requestCode == 2 ) {
+
+        }else if (requestCode == 2 ) {
             Log.v(TAG, "requestCode: 2");
 
             if (resultCode == RESULT_OK && data != null){
 
                 if (data.hasExtra("Items")) {
 
-                    ArrayList<String> new_Items_id = data.getStringArrayListExtra("Items");
-                    Log.v(TAG, "NAMES ID: " + new_Items_id);
-
-                    putExercisesinRecycler(new_Items_id);
+                    Items_id = data.getStringArrayListExtra("Items");
+                    putExercisesinRecycler(Items_id);
                 }
-
             }
 
-        } if (requestCode == 3 ){
+        } else if (requestCode == 3){
             if (resultCode == RESULT_OK && data != null){
 
                 ArrayList<String> exercises_id = data.getStringArrayListExtra("exercises");
@@ -247,7 +241,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                 //getExercisesFromJson(exercises_id);
             }
         }
-
 
 
     }
@@ -294,15 +287,19 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     }
 
     private void getBodyView(){
-
         // ACCEDER A LA URL DEL HTML GUARDADO EN EL PHONE
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         String default_url = getResources().getString(R.string.muscle_path);
         String muscle_url = sharedPref.getString(getString(R.string.muscle_path),default_url);
-        String fileurl = "file://"+muscle_url;
-        webView.loadUrl(fileurl);
-
+        if (muscle_url.equals("/")){
+            webView.loadUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/html/index.html");
+        }else {
+            String fileurl = "file://"+muscle_url;
+            webView.loadUrl(fileurl);
+        }
     }
+
+
     private static String removeLastChar(String str) {
         return str.substring(0,str.length()-1);
     }
@@ -419,6 +416,8 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
                     ResponseBody errorBody = response.errorBody();
                     Log.e(TAG,errorBody.toString());
+                    Log.e(TAG,"statusCode"+statusCode);
+
                 }
             }
 
@@ -430,6 +429,8 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
 
     }
+
+
     private  int ISOMETRIC = 0,CARDIO = 0,PYLOMETRICS = 0,STRENGTH = 0;
 
     private void getCountTimes(List<String> list){
