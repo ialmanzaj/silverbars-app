@@ -60,7 +60,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:id="@+id/prvExercise"
-                                android:src="@mipmap/ic_keyboard_arrow_left_black_36dp"
+                                android:src="@drawable/ic_skip_previous_black_24dp"
                                 android:background="#fff"
                                 android:layout_gravity="center" />
 

@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:minHeight="50dp"
         app:elevation="2dp">
-
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -31,7 +30,6 @@
                 android:layout_height="40dp"
                 android:layout_gravity="end"
                 android:layout_marginEnd="5dp"/>
-
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
@@ -58,6 +56,67 @@
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+                <ScrollView
+                    android:background="@color/white"
+                    android:id="@+id/muscles_"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <WebView
+                            android:layout_weight="1"
+                            android:background="@color/white"
+                            android:id="@+id/WebView_create"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                        </WebView>
+
+                        <LinearLayout
+                            android:id="@+id/content_info"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:textSize="18sp"
+                                android:textColor="@color/black"
+                                android:text="@string/muscles_involved"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                            <LinearLayout
+                                android:layout_marginTop="10dp"
+                                android:layout_marginBottom="10dp"
+                                android:orientation="horizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:baselineAligned="false">
+                                <LinearLayout
+                                    android:id="@+id/column1"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal"
+                                    android:layout_weight="1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content">
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:id="@+id/column2"
+                                    android:orientation="vertical"
+                                    android:gravity="center_horizontal"
+                                    android:layout_weight="1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content">
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </ScrollView>
+
                 <LinearLayout
                     android:background="@color/white"
                     android:id="@+id/rutina_"
@@ -112,61 +171,6 @@
                         android:layout_gravity="center" />
 
                 </LinearLayout>
-                <ScrollView
-                    android:background="@color/white"
-                    android:id="@+id/muscles_"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <WebView
-                            android:background="@color/white"
-                            android:id="@+id/WebView_create"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-                        </WebView>
-                        <LinearLayout
-                            android:id="@+id/content_info"
-                            android:orientation="vertical"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                            <TextView
-                                android:textSize="18sp"
-                                android:textColor="@color/black"
-                                android:text="@string/muscles_involved"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-                            <LinearLayout
-                                android:layout_marginTop="10dp"
-                                android:layout_marginBottom="10dp"
-                                android:orientation="horizontal"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:baselineAligned="false">
-                                <LinearLayout
-                                    android:id="@+id/column1"
-                                    android:orientation="vertical"
-                                    android:gravity="center_horizontal"
-                                    android:layout_weight="1"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content">
-                                </LinearLayout>
-                                <LinearLayout
-                                    android:id="@+id/column2"
-                                    android:orientation="vertical"
-                                    android:gravity="center_horizontal"
-                                    android:layout_weight="1"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content">
-                                </LinearLayout>
-                            </LinearLayout>
-                        </LinearLayout>
-                    </LinearLayout>
-                </ScrollView>
 
             </FrameLayout>
 

@@ -99,7 +99,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 //    Workout Data
     private int workoutId = 0, workoutSets = 0;
-    private String workoutName, workoutLevel, mainMuscle, workoutImage;
+    private String workoutName, workoutLevel, mainMuscle, workoutImgUrl;
     private String[] exercises;
 
 
@@ -137,7 +137,7 @@ public class WorkoutActivity extends AppCompatActivity {
         Intent intent = getIntent();
         workoutId = intent.getIntExtra("id",0);
         workoutName = intent.getStringExtra("name");
-        workoutImage = intent.getStringExtra("image");
+        workoutImgUrl = intent.getStringExtra("image");
         workoutSets = intent.getIntExtra("sets", 1);
         workoutLevel = intent.getStringExtra("level");
         mainMuscle = intent.getStringExtra("muscle");
@@ -1096,9 +1096,14 @@ public class WorkoutActivity extends AppCompatActivity {
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
         for (int i = 0; i < ParsedExercises.length; i++){
             if (!database.checkExercise(ParsedExercises[i].getId()) ){
-                String imgDir,mp3Dir;
-                imgDir = getUrlReady(this,"/SilverbarsImg/"+getImageName(i));
-                mp3Dir = getUrlReady(this,"/SilverbarsMp3/"+getAudioName(i));
+                File imgDir,mp3Dir;
+                imgDir = getFileReady(this,"/SilverbarsImg/"+getImageName(i));
+                mp3Dir = getFileReady(this,"/SilverbarsMp3/"+getAudioName(i));
+
+                if (!imgDir.exists()){
+                    Log.v(TAG,"img url "+ParsedExercises[i].getExercise_image());
+                    DownloadImage(ParsedExercises[i].getExercise_image(),getImageName(i));
+                }
                   
                 database.insertExercises(
                         ParsedExercises[i].getId(),
@@ -1106,8 +1111,8 @@ public class WorkoutActivity extends AppCompatActivity {
                         ParsedExercises[i].getLevel(),
                         convertArrayToString(ParsedExercises[i].getType_exercise()),
                         convertArrayToString(ParsedExercises[i].getMuscle()),
-                        mp3Dir,
-                        imgDir
+                        mp3Dir.getPath(),
+                        imgDir.getPath()
                 );
             }else{
                 database.updateLocal(workoutId,"true");
@@ -1121,9 +1126,12 @@ public class WorkoutActivity extends AppCompatActivity {
         String[] exercises_ids = new String[ParsedExercises.length];
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
 
-        String imgDir = getUrlReady(this,"/SilverbarsImg/"+workoutImage);
-        
-        Log.v(TAG,"imgdir: "+workoutImage);
+        File imgDir = getFileReady(this,"/SilverbarsImg/"+getWorkoutImage(workoutImgUrl));
+
+        if (!imgDir.exists()){
+            Log.v(TAG,"img url "+workoutImgUrl);
+            DownloadImage(workoutImgUrl,getWorkoutImage(workoutImgUrl));
+        }
 
         for (int i = 0; i < exercises_ids.length; i++){
             exercises_ids[i] = String.valueOf(ParsedExercises[i].getId());
@@ -1133,7 +1141,7 @@ public class WorkoutActivity extends AppCompatActivity {
             database.insertWorkouts(
                     workoutId,
                     workoutName,
-                    imgDir,
+                    imgDir.getPath(),
                     workoutSets,
                     workoutLevel,
                     mainMuscle,
@@ -1143,6 +1151,15 @@ public class WorkoutActivity extends AppCompatActivity {
             );
         }
         saveWorkout();
+    }
+    
+    private String getWorkoutImage(String workoutUrl){
+        String[] workoutImgDir = workoutUrl.split("workouts");
+        String Parsedurl = "workouts"+workoutImgDir[1];
+        String[] imagesName = Parsedurl.split("/");
+        String workoutImgName = imagesName[2];
+        Log.v(TAG,"Image Name: "+workoutImgName);
+        return workoutImgName;
     }
 
     private void saveWorkout(){
@@ -1158,7 +1175,9 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
+
     private void DownloadImage(String url, final String imgName){
+        Log.v(TAG,"DownloadImage ");
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
@@ -1171,7 +1190,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     if (response.isSuccessful()) {
 
-                        boolean writtenToDisk = saveWorkoutImgInDevice(WorkoutActivity.this,response.body(),imgName);
+                        saveWorkoutImgInDevice(WorkoutActivity.this,response.body(),imgName);
 
                     } else {
                         Log.v(TAG, "Download server contact failed");

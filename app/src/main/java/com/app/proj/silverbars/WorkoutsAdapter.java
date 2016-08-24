@@ -77,48 +77,10 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
         viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
 
-
-        //Log.v(TAG, Arrays.toString(imageDir));
-        
-       /* if (bmp != null){
-            viewHolder.imagen.setImageBitmap(bmp);
-            viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
-            viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
-
-        }else {
-
-            String[] imageDir = WorkoutActivity.ParsedExercises[position].getExercise_image().split("exercises");
-            if (imageDir.length < 2){
-                //Log.v(TAG, "ha entrado en IF imageDir.length < 2");
-                bmp = loadExerciseImageFromDevice(context,WorkoutActivity.ParsedExercises[position].getExercise_image());
-                viewHolder.imagen.setImageBitmap(bmp);
-                viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
-                viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
-                viewHolder.nombre.setText(workouts.get(position).getNombre());
-
-            }else{
-
-                String Parsedurl = "exercises"+imageDir[1];
-                String[] imagesName = Parsedurl.split("/");
-                String imgName = imagesName[2];
-                bmp = loadExerciseImageFromDevice(context,imgName);
-
-                if (bmp != null){
-                    //Log.v(TAG, "ha entrado en if bmp != null");
-                    viewHolder.imagen.setImageBitmap(bmp);
-                    viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
-                    viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
-                    viewHolder.nombre.setText(workouts.get(position).getNombre());
-                }
-            }
-
-        }*/
-
-
-//        viewHolder.next.setText("Visitas:"+String.valueOf(workouts.get(position).getVisitas()));
     }
 
-    private static int containerDimensions(Context context) {
+
+    private int containerDimensions(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();

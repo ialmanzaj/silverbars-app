@@ -76,34 +76,13 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         final int position = viewHolder.getAdapterPosition();
         int height = containerDimensions(context);
         viewHolder.layout.getLayoutParams().height = height / 3;
-        
-        
+
         switch (viewHolder.getItemViewType()) {
             case TYPE_WORKOUT:
 
                 viewHolder.text.setText(workouts[position].getWorkout_name());
-
                 Uri uri = Uri.parse(workouts[position].getWorkout_image());
                 viewHolder.img.setImageURI(uri);
-
-
-                String[] parts = workouts[position].getWorkout_image().split("workouts");
-                String Parsedurl = "workouts"+parts[1];
-                String[] imagesName = Parsedurl.split("/");
-                final String imgName = imagesName[2];
-
-
-/*
-
-                Bitmap bmp = loadWorkoutImageFromDevice(context,imgName);
-
-                if (bmp != null){
-                    viewHolder.img.setImageBitmap(bmp);
-                } else{
-                    DownloadImage(Parsedurl,viewHolder,imgName);
-                }
-*/
-
 
                 viewHolder.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -111,7 +90,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                         Intent i = new Intent(context, WorkoutActivity.class);
                         i.putExtra("id",workouts[position].getId());
                         i.putExtra("name",workouts[position].getWorkout_name());
-                        i.putExtra("image",imgName);
+                        i.putExtra("image",workouts[position].getWorkout_image());
                         i.putExtra("sets",workouts[position].getSets());
                         i.putExtra("level",workouts[position].getLevel());
                         i.putExtra("muscle",workouts[position].getMain_muscle());

@@ -1,6 +1,7 @@
 package com.app.proj.silverbars;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -17,6 +19,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.InputStream;
 import java.util.List;
+
+import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
 
@@ -43,7 +47,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         public TextView negative;
         public TextView isometric;
 
-        SimpleDraweeView imagen;
+        SimpleDraweeView imagen_cache;
+        ImageView imageView_local;
+
 
         public ExerciseViewHolder(View v) {
             super(v);
@@ -51,7 +57,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             nombre = (TextView) v.findViewById(R.id.nombre);
             repetitions = (TextView) v.findViewById(R.id.repetitions);
 
-            imagen = (SimpleDraweeView) v.findViewById(R.id.imagen);
+            imagen_cache = (SimpleDraweeView) v.findViewById(R.id.imagen);
+            imageView_local = (ImageView) v.findViewById(R.id.imagen_local);
 
             positive = (TextView) v.findViewById(R.id.positive);
             isometric = (TextView) v.findViewById(R.id.isometric);
@@ -83,32 +90,20 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         viewHolder.nombre.setText(WorkoutActivity.ParsedExercises[a].getExercise_name());
         viewHolder.repetitions.setText(String.valueOf(WorkoutActivity.Exercises_reps[a]));
 
+        String[] imageDir = WorkoutActivity.ParsedExercises[a].getExercise_image().split("exercises");
 
-        Uri uri = Uri.parse(WorkoutActivity.ParsedExercises[a].getExercise_image());
-        viewHolder.imagen.setImageURI(uri);
-
-            //Bitmap bmp;
-           /* // GET IMAGES FROM API
-            String[] imageDir = WorkoutActivity.ParsedExercises[a].getExercise_image().split("exercises");
-            if (imageDir.length < 2){
-
+        if (imageDir.length < 2){
+            Log.v(TAG,"img from local");
+            Bitmap bmp;
+            viewHolder.imageView_local.setVisibility(View.VISIBLE);
             bmp = loadExerciseImageFromDevice(mContext,WorkoutActivity.ParsedExercises[a].getExercise_image());
-            viewHolder.imagen.setImageBitmap(bmp);
-
-            }else{
-
-                String Parsedurl = "exercises"+imageDir[1];
-                String[] imagesName = Parsedurl.split("/");
-                String imgName = imagesName[2];
-                bmp = loadExerciseImageFromDevice(mContext,imgName);
-                if (bmp != null){
-                    viewHolder.imagen.setImageBitmap(bmp);
-                }
-                else{
-                    DownloadImage(Parsedurl,viewHolder,imgName);
-                }
-            }
-*/
+            viewHolder.imageView_local.setImageBitmap(bmp);
+        }else {
+            Log.v(TAG,"img from json");
+            viewHolder.imagen_cache.setVisibility(View.VISIBLE);
+            Uri uri = Uri.parse(WorkoutActivity.ParsedExercises[a].getExercise_image());
+            viewHolder.imagen_cache.setImageURI(uri);
+        }
 
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {

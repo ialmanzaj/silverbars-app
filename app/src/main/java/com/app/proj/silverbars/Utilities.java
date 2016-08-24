@@ -212,15 +212,6 @@ public class Utilities {
         return Dir;
     }
 
-    public static String getCacheUrlReady(Context context,String url){
-        String dir = context.getExternalCacheDir()+url;
-        return dir;
-    }
-
-    public static File getCacheFileReady(Context context,String url){
-        File Dir = new File(context.getCacheDir()+url);
-        return Dir;
-    }
 
     public static String removeLastChar(String str) {return str.substring(0,str.length()-1);}
 
@@ -290,41 +281,7 @@ public class Utilities {
         return real_list;
     }
 
-    public static Bitmap getBitmapFromURL(String src) {
-        Bitmap myBitmap = null;
-        try {
 
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-
-            try {
-                Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
-                SecretKeySpec keySpec = new SecretKeySpec("01234567890abcde".getBytes(), "AES");
-                IvParameterSpec ivSpec = new IvParameterSpec("fedcba9876543210".getBytes());
-                cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
-
-                InputStream input = connection.getInputStream();
-                CipherInputStream cis = new CipherInputStream(input, cipher);
-
-
-                myBitmap = BitmapFactory.decodeStream(cis);
-
-            } catch (Exception e) {
-                e.fillInStackTrace();
-                Log.v("ERROR", "Errorchence : " + e);
-            }
-
-            return myBitmap;
-
-        } catch (NetworkOnMainThreadException e) {
-            return null;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     public static class WrappingLinearLayoutManager extends LinearLayoutManager {
 

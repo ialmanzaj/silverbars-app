@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,8 +16,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -190,8 +194,9 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         tabHost2.addTab(muscles);
 
         webView = (WebView) findViewById(R.id.WebView_create);
-        getBodyView();
 
+
+        getBodyView();
 
         if (adapter != null){
             if (adapter.getItemCount() > 0) {
@@ -199,6 +204,19 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             }
         }
 
+        ViewTreeObserver viewTreeObserver  = webView.getViewTreeObserver();
+
+        viewTreeObserver.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                int height = webView.getMeasuredHeight();
+                if( height != 0 ){
+                    Toast.makeText(CreateWorkoutActivity.this, "height:"+height,Toast.LENGTH_SHORT).show();
+                    webView.getViewTreeObserver().removeOnPreDrawListener(this);
+                }
+                return false;
+            }
+        });
 
     }//  close create workout
 
@@ -284,6 +302,15 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         webView.getSettings().setJavaScriptEnabled(true);
 
         getBodyView();
+    }
+
+    private  int containerDimensions(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        return width;
     }
 
     private void getBodyView(){

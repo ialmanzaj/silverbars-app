@@ -52,7 +52,7 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
             super(v);
 
             layout = (CardView) v.findViewById(R.id.layout);
-            img  = (ImageView) v.findViewById(R.id.img);
+            img  = (ImageView) v.findViewById(R.id.img_local);
             text = (TextView)  v.findViewById(R.id.text);
             btn  = (Button)    v.findViewById(R.id.btn);
             //like = (LikeButton) v.findViewById(R.id.like);
@@ -92,33 +92,18 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
         switch (viewholder.getItemViewType()) {
             case TYPE_WORKOUT:
 
+                Log.v(TAG,"Image: "+ workouts.get(position).getWorkout_image());
+                viewholder.img.setVisibility(View.VISIBLE);
+
                 String[] workoutImgDir = workouts.get(position).getWorkout_image().split(context.getFilesDir().getPath());
                 Bitmap imgBitmap;
-                String workoutImgName = null;
+                String workoutImgName = getWorkoutImageName(workoutImgDir);
+                Log.v(TAG,"Image Name: "+workoutImgName);
 
-                if (workoutImgDir.length < 2){
+                imgBitmap = loadWorkoutImageFromDevice(context,workoutImgName);
+                viewholder.img.setImageBitmap(imgBitmap);
 
-                    Log.v(TAG,"Image: "+ workouts.get(position).getWorkout_image());
-                    imgBitmap = loadWorkoutImageFromDevice(context,workouts.get(position).getWorkout_image());
-                    viewholder.img.setImageBitmap(imgBitmap);
 
-                }else{
-
-                    String Parsedurl = "workouts"+workoutImgDir[1];
-                    String[] imagesName = Parsedurl.split("/");
-                    workoutImgName = imagesName[2];
-                    Log.v(TAG,"Image Name: "+workoutImgName);
-
-                    imgBitmap = loadWorkoutImageFromDevice(context,workoutImgName);
-
-                    if (imgBitmap != null){
-                        viewholder.img.setImageBitmap(imgBitmap);
-                    }else{
-                        DownloadImage(Parsedurl,viewholder,workoutImgName);
-                    }
-                }
-
-                final String imagen = workoutImgName;
                 viewholder.text.setText(workouts.get(position).getWorkout_name());
                 viewholder.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -126,7 +111,7 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
                         Intent i = new Intent(context, WorkoutActivity.class);
                         i.putExtra("id", workouts.get(position).getId());
                         i.putExtra("name", workouts.get(position).getWorkout_name());
-                        i.putExtra("image",imagen);
+                        i.putExtra("image",workouts.get(position).getWorkout_image());
                         i.putExtra("sets", workouts.get(position).getSets());
                         i.putExtra("level", workouts.get(position).getLevel());
                         i.putExtra("muscle", workouts.get(position).getMain_muscle());
@@ -142,6 +127,12 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
     @Override
     public int getItemCount() {
         return workouts.size();
+    }
+
+    private String getWorkoutImageName(String[] workoutImgDir){
+        String Parsedurl = "workouts"+workoutImgDir[1];
+        String[] imagesName = Parsedurl.split("/");
+        return imagesName[2];
     }
 
     @Override

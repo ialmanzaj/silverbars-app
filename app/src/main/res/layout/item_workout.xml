@@ -23,6 +23,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"/>
+            <ImageView
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/workout_name"
+                android:visibility="gone"
+                android:id="@+id/img_local"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
