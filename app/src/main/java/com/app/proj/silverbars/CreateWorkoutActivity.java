@@ -204,19 +204,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             }
         }
 
-        ViewTreeObserver viewTreeObserver  = webView.getViewTreeObserver();
 
-        viewTreeObserver.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                int height = webView.getMeasuredHeight();
-                if( height != 0 ){
-                    Toast.makeText(CreateWorkoutActivity.this, "height:"+height,Toast.LENGTH_SHORT).show();
-                    webView.getViewTreeObserver().removeOnPreDrawListener(this);
-                }
-                return false;
-            }
-        });
 
     }//  close create workout
 
