@@ -65,7 +65,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private FrameLayout nxtLayout;
     private FrameLayout ModalLayout;
     private Button PauseButton;
-    private boolean SelectedSongs = false, finish = false, start = false;
+    private boolean SelectedSongs = false, finish = false, start = false,main = false;
     private RecyclerView recycler;
     private int TotalSets = 0, ActualSets = 0, Time_aux = 0,actualRest = 0;
     AlertDialog alertDialog;
@@ -730,20 +730,20 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Log.v(TAG,"ResumeCountDown: activado");
         Log.v(TAG,"rest flag: "+rest);
 
-
         if (rest){
 
             Log.v(TAG,"ActualTimeRest: "+ActualTimeRest);
             startRestTimer(ActualTimeRest);
-
 
         }else {
 
             //Log.v(TAG,"Resume main: ACTIVADO");
             //Log.v(TAG,"time: "+ActualTimeMain);
             //Log.v(TAG,"Time_aux: "+Time_aux);
+            if (start){
+                startMainCountDown(ActualTimeMain,1,Time_aux);
+            }
 
-            startMainCountDown(ActualTimeMain,1,Time_aux);
         }
 
 
