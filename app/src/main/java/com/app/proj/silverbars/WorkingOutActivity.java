@@ -65,9 +65,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private FrameLayout nxtLayout;
     private FrameLayout ModalLayout;
     private Button PauseButton;
-    private boolean SelectedSongs = false, finish = false, start = false,main = false;
+    private boolean SelectedSongs = false, finish = false, START_TIMER = false,main = false,MAIN_TIMER = false;
     private RecyclerView recycler;
-    private int TotalSets = 0, ActualSets = 0, Time_aux = 0,actualRest = 0;
+    private int TotalSets = 0, ActualSets = 0, Time_aux = 0,actualRest = 0,actual_start_time = 0;
     AlertDialog alertDialog;
     private MediaPlayer media;
     private JsonExercise[] Exercises;
@@ -182,12 +182,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         y++;
 
                         if (exercises_size > 1){
-
                             prvLayout.setVisibility(View.VISIBLE);
                             if((y+1)==elements){
                                 nxtLayout.setVisibility(View.GONE);
                             }
-
                         }
 
                         recycler.smoothScrollToPosition(y);
@@ -241,6 +239,21 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+                if (actual_start_time == 0){
+                    Log.v(TAG,"START TIMER: INICIADO");
+                    ScreenOn();
+                    asignTotalTime(y);
+
+                    MAIN_TIMER = true;
+                    startMainCountDown(totalTime,1,totalTime);
+
+                    if (SelectedSongs && MAIN_TIMER){
+                        mp.start();
+                    }
+
+                    ModalLayout.setVisibility(View.GONE);
+                }
                 //cuando el descanso se acaba
                 if (actualRest == 0){
                     Log.v(TAG,"Descanso: Terminado");
@@ -570,31 +583,30 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             Log.v(TAG, (String) song_name.getText());
         }
 
-        // TIMER INICIAL - 5,4,3,2,1
-        startTimer = new CountDownTimer(4000, 1000) {
+
+        actual_start_time = 5;
+        startInicialTimer(actual_start_time);
+    }
+
+
+    private void startInicialTimer(int seconds){
+
+        long  sec = seconds * 1000;
+
+        startTimer = new CountDownTimer(sec, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                RestCounter_text.setText(String.format(FORMAT,
-                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(
-                                TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished))));
+
+                Format_Time_Rest =  Math.round(millisUntilFinished * 0.001f);
+
+                actual_start_time--;
+                RestCounter_text.setText(String.valueOf(actual_start_time));
             }
 
             public void onFinish() {
-                Log.v(TAG,"START TIMER: INICIADO");
-                ScreenOn();
-                start = true;
-                asignTotalTime(y);
-
-                startMainCountDown(totalTime,1,totalTime);
-
-                if (SelectedSongs && start){
-                    mp.start();
-                }
-
-                ModalLayout.setVisibility(View.GONE);
             }
-
         }.start();
+        START_TIMER = true;
     }
 
 
@@ -625,7 +637,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void startMainCountDown(int seconds,int interval, int time_aux){
-        if (!pause && start){
+        if (!pause && MAIN_TIMER){
             Log.v(TAG,"Main CountDown: activado");
             int totalsecs= seconds * 1000;
             int sec_interval= interval * 1000 ;
@@ -705,21 +717,21 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Log.v(TAG,"PauseCountDown: activado");
         Log.v(TAG,"rest flag: "+rest);
 
-        if (start){
+        if (MAIN_TIMER && main_timer!=null){
 
             if (!rest){
-
-                //Log.v(TAG,"Pausar main: activado");
-                //Log.v(TAG,"Format_Time: "+Format_Time);
                 ActualTimeMain = Format_Time;
                 main_timer.cancel();
 
             }else {
+
                 Log.v(TAG,"Pausar rest: activado");
                 ActualTimeRest = Format_Time_Rest;
-
                 restTimer.cancel();
             }
+        }else if (START_TIMER) {
+
+            startTimer.cancel();
 
         }
 
@@ -731,17 +743,15 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Log.v(TAG,"rest flag: "+rest);
 
         if (rest){
-
             Log.v(TAG,"ActualTimeRest: "+ActualTimeRest);
             startRestTimer(ActualTimeRest);
-
         }else {
 
-            //Log.v(TAG,"Resume main: ACTIVADO");
-            //Log.v(TAG,"time: "+ActualTimeMain);
-            //Log.v(TAG,"Time_aux: "+Time_aux);
-            if (start){
+            if (MAIN_TIMER){
                 startMainCountDown(ActualTimeMain,1,Time_aux);
+            }
+            if (START_TIMER){
+                startInicialTimer(actual_start_time+5);
             }
 
         }
@@ -784,19 +794,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
                 media = MediaPlayer.create(this,Uri.parse(getFilesDir()+"/SilverbarsMp3/"+mp3Name));
 
-
             }else {
 
                 String[] mp3dir = file.split("/SilverbarsMp3/");
                 media = MediaPlayer.create(this, Uri.parse(getFilesDir()+"/SilverbarsMp3/"+mp3dir[1]));
-
             }
-
-
-
-
-
-
 
         } catch (Exception e) {
             Log.e(TAG,"Exception",e);
@@ -958,11 +960,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onDestroy() {
         ScreenOff();
-        if (start){
+        if (MAIN_TIMER && main_timer != null){
             main_timer.cancel();
         }
-        if (media!=null)
+
+        if (media!=null){
             media.release();
+        }
+
         super.onDestroy();
     }
 
