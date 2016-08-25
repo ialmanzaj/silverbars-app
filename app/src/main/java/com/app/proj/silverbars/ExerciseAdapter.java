@@ -108,7 +108,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             Log.v(TAG,"image: "+WorkoutActivity.ParsedExercises[a].getExercise_image());
             bmp = loadExerciseImageFromDevice(mContext,WorkoutActivity.ParsedExercises[a].getExercise_image());
             viewHolder.imageView_local.setImageBitmap(bmp);
-
         }
 
 

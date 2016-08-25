@@ -45,6 +45,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import static com.app.proj.silverbars.Utilities.getFileReady;
+import static com.app.proj.silverbars.Utilities.saveHtmInDevice;
 
 public class MainScreenActivity extends AppCompatActivity {
 
@@ -183,11 +184,13 @@ public class MainScreenActivity extends AppCompatActivity {
 
         File Dir = getFileReady(this,"/html/");
         if (Dir.isDirectory()){
-            File file = new File(Environment.getExternalStorageDirectory()+"/html/"+"index.html");
-            setMusclePath(file);
+            Log.v(TAG,"EXISTE DIR"+Dir.getPath());
+            File file = getFileReady(this,"/html/"+"index.html");
             if (!file.exists()){
                 MuscleTemplateDownload();
-            }
+                setMusclePath(file);
+            }else
+                setMusclePath(file);
         }else {
             boolean success = Dir.mkdir();
             if (success)
@@ -195,7 +198,6 @@ public class MainScreenActivity extends AppCompatActivity {
             else
                 Log.e(TAG,"Error creating dir");
         }
-
 
     }//oncreate
 
@@ -306,9 +308,8 @@ public class MainScreenActivity extends AppCompatActivity {
     }
 
 
-
-    public void MuscleTemplateDownload(){
-        Log.v(TAG,"downloading file");
+    private void MuscleTemplateDownload(){
+        Log.v(TAG,"MuscleTemplateDownload");
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/")
                 .build();
 
@@ -323,7 +324,7 @@ public class MainScreenActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (response.isSuccessful()) {
-                            Boolean write = saveHtmInDevice(response.body(),"index.html");
+                            Boolean write = saveHtmInDevice(MainScreenActivity.this,response.body(),"index.html");
                         }
                         else {Log.e(TAG, "Download server contact failed");}
                     }
@@ -343,42 +344,6 @@ public class MainScreenActivity extends AppCompatActivity {
 
     
 
-    public boolean saveHtmInDevice(ResponseBody body, String name) {
-
-        try {
-            File file = getFileReady(this,"/html/"+name);
-
-            InputStream input = null;
-            OutputStream output = null;
-
-            try {
-                input = body.byteStream();
-                output = new FileOutputStream(file);
-                int size = input.available();
-                byte[] buffer = new byte[size];
-
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
-
-                while (true) {
-                    int read = input.read(buffer);
-                    if (read == -1) {break;}
-                    output.write(buffer, 0, read);
-                    fileSizeDownloaded += read;
-                    Log.d(TAG, "Download file: " + fileSizeDownloaded + " of " + fileSize);
-                }
-                output.flush();
-                return true;
-
-            } catch (IOException e) {
-                Log.e(TAG,"IOEXEPTION",e);
-                return false;
-            } finally {
-                if (input != null) {input.close();}
-                if (output != null) {output.close();}
-            }
-        } catch (IOException e) { return false;}
-    }
 
     private void setMusclePath(File file){
         Log.v(TAG,"setMusclePath: "+file.getPath());
@@ -386,7 +351,6 @@ public class MainScreenActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(getString(R.string.muscle_path), file.getPath());
         editor.apply();
-
     }
 
     @Override

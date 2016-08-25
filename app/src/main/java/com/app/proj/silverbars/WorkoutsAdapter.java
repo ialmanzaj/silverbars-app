@@ -1,6 +1,7 @@
 package com.app.proj.silverbars;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -9,12 +10,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
+
+import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
 
 /**
  * Created by andre_000 on 4/12/2016.
@@ -35,11 +39,13 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         public TextView next;
         public RelativeLayout Layout;
 
-        SimpleDraweeView imagen;
+        SimpleDraweeView imagen_cache;
+        ImageView imageView_local;
 
         public WorkoutsViewHolder(View v) {
             super(v);
-            imagen = (SimpleDraweeView) v.findViewById(R.id.imagen);
+            imagen_cache = (SimpleDraweeView) v.findViewById(R.id.imagen_cache);
+            imageView_local = (ImageView) v.findViewById(R.id.imagen_local);
             //imagen = (ImageView) v.findViewById(R.id.imagen);
             nombre = (TextView) v.findViewById(R.id.nombre);
             Layout = (RelativeLayout) v.findViewById(R.id.Layout);
@@ -71,11 +77,21 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
         viewHolder.nombre.setText(workouts.get(position).getNombre());
 
-        Uri uri = Uri.parse(WorkoutActivity.ParsedExercises[position].getExercise_image());
+        String[] imageDir = WorkoutActivity.ParsedExercises[a].getExercise_image().split("exercises");
 
-        viewHolder.imagen.setImageURI(uri);
-        viewHolder.imagen.getLayoutParams().width = containerDimensions(context);
-        viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
+        if (imageDir.length == 2){
+            Uri uri = Uri.parse(WorkoutActivity.ParsedExercises[position].getExercise_image());
+            viewHolder.imagen_cache.setImageURI(uri);
+            viewHolder.imagen_cache.getLayoutParams().width = containerDimensions(context);
+            viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
+        }else {
+            viewHolder.imageView_local.setVisibility(View.VISIBLE);
+            Bitmap bitmap = loadExerciseImageFromDevice(context,WorkoutActivity.ParsedExercises[a].getExercise_image());
+            viewHolder.imageView_local.setImageBitmap(bitmap);
+            viewHolder.imageView_local.getLayoutParams().width = containerDimensions(context);
+            viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
+        }
+
 
     }
 

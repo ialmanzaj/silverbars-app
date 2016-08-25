@@ -15,7 +15,14 @@
                 <com.facebook.drawee.view.SimpleDraweeView
                     android:layout_above="@+id/nombre"
                     android:contentDescription="@string/workout_name"
-                    android:id="@+id/imagen"
+                    android:id="@+id/imagen_cache"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/imagen_local"
+                    android:layout_above="@+id/nombre"
+                    android:contentDescription="@string/workout_name"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 

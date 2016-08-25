@@ -413,4 +413,41 @@ public class Utilities {
         } catch (IOException e) {return false;}
     }
 
+    public static boolean saveHtmInDevice(Context context,ResponseBody body, String name) {
+
+        try {
+            File file = getFileReady(context,"/html/"+name);
+
+            InputStream input = null;
+            OutputStream output = null;
+
+            try {
+                input = body.byteStream();
+                output = new FileOutputStream(file);
+                int size = input.available();
+                byte[] buffer = new byte[size];
+
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+
+                while (true) {
+                    int read = input.read(buffer);
+                    if (read == -1) {break;}
+                    output.write(buffer, 0, read);
+                    fileSizeDownloaded += read;
+                    Log.d(TAG, "Download file: " + fileSizeDownloaded + " of " + fileSize);
+                }
+                output.flush();
+                return true;
+
+            } catch (IOException e) {
+                Log.e(TAG,"IOEXEPTION",e);
+                return false;
+            } finally {
+                if (input != null) {input.close();}
+                if (output != null) {output.close();}
+            }
+        } catch (IOException e) { return false;}
+    }
+
 }
