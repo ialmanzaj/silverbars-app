@@ -176,7 +176,11 @@
     <string name="playlist">Mis listas de reproducción</string>
     <string name="spotify">Spotify</string>
     <string name="soundcloud">SoundCloud</string>
-
     <string name="coming_soon">Proximamente</string>
+
+    <string name="STRENGTH">FUERZA</string>
+    <string name="CARDIO">CARDIO</string>
+    <string name="ISOMETRIC">ISOMETRIC</string>
+    <string name="PYLOMETRICS">PLIOMETRÍA</string>
 
 </resources>

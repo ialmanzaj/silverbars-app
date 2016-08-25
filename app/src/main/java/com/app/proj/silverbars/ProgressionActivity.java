@@ -1,5 +1,7 @@
 package com.app.proj.silverbars;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -35,7 +37,7 @@ public class ProgressionActivity extends AppCompatActivity {
         }
 
 
-       webview = (WebView) findViewById(R.id.WebView_progression);
+        webview = (WebView) findViewById(R.id.WebView_progression);
         webview.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -43,14 +45,27 @@ public class ProgressionActivity extends AppCompatActivity {
                 super.onPageFinished(view, url);
             }
         });
+
         webview.getSettings().setJavaScriptEnabled(true);
 
-        String fileUrl = "file://" + Environment.getExternalStorageDirectory() + "/html/" + "index.html";
-        Log.v(TAG, fileUrl);
-        webview.loadUrl(fileUrl);
-
+        getBodyView();
 
     }
+
+    private void getBodyView(){
+        // ACCEDER A LA URL DEL HTML GUARDADO EN EL PHONE
+        SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias", Context.MODE_PRIVATE);
+        String default_url = getResources().getString(R.string.muscle_path);
+        String muscle_url = sharedPref.getString(getString(R.string.muscle_path),default_url);
+        if (muscle_url.equals("/")){
+            webview.loadUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/html/index.html");
+        }else {
+            String fileurl = "file://"+muscle_url;
+            webview.loadUrl(fileurl);
+        }
+    }
+
+
     private void injectJS() {
         try {
 
@@ -69,8 +84,6 @@ public class ProgressionActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-
 
 
 }

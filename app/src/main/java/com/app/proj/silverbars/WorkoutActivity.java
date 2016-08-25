@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -16,9 +17,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -38,6 +41,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -317,6 +321,9 @@ public class WorkoutActivity extends AppCompatActivity {
                 Collections.addAll(MusclesArray, ParsedExercises[i].muscle);
                 Collections.addAll(TypeExercises,ParsedExercises[i].getType_exercise());
 
+                Log.v(TAG,"MusclesArray: "+MusclesArray);
+                Log.v(TAG,"TypeExercises: "+TypeExercises);
+
                 //agregar json a array exercisesToRecycler
                 exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[i].getExercise_image()));
             }
@@ -358,6 +365,10 @@ public class WorkoutActivity extends AppCompatActivity {
                 //RECORRER CADA EJECICIOS BUSCANDO MUSCULOS
                 Collections.addAll(MusclesArray, ParsedExercises[i].muscle);
                 Collections.addAll(TypeExercises,ParsedExercises[i].getType_exercise());
+
+                Log.v(TAG,"MusclesArray: "+MusclesArray);
+                Log.v(TAG,"TypeExercises: "+TypeExercises);
+
 
                 //agregar json a array exercisesToRecycler
                 exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[i].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[i].getExercise_image()));
@@ -1298,75 +1309,114 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
     private void putTypesInWorkout(List<String> types){
-        List<String> typesExercise;
-        typesExercise = deleteCopiesofList(types);
-        getCountTimes(typesExercise);
+
+        getCountTimes(types);
+
+        List<String> typesExercise_to_Layout;
+        typesExercise_to_Layout = deleteCopiesofList(types);
+
+        Log.v(TAG,"typesExercise_to_Layout: "+typesExercise_to_Layout);
+        Log.v(TAG,"typesExercise_to_Layout size: "+typesExercise_to_Layout.size());
+
 
         Log.v(TAG,"ISOMETRIC: "+ISOMETRIC);
         Log.v(TAG,"CARDIO: "+CARDIO);
         Log.v(TAG,"PYLOMETRICS: "+PYLOMETRICS);
         Log.v(TAG,"STRENGTH: "+STRENGTH);
 
-        int[] porcentaje = new int[typesExercise.size()];
 
-        for (int a = 0;a<typesExercise.size();a++){
+        int ISOMETRIC_ = 0,CARDIO_ = 0,STRENGTH_ = 0,PYLOMETRICS_ = 0;
 
-            TextView textView = new TextView(this);
-            LinearLayout linear = new LinearLayout(this);
-            linear.setOrientation(LinearLayout.HORIZONTAL);
-            ProgressBar progress = new ProgressBar(this,null ,android.R.attr.progressBarStyleHorizontal);
+        if (ISOMETRIC > 0){
+            Log.v(TAG,"porcentaje ISOMETRIC: "+ISOMETRIC+"/"+types.size());
+            ISOMETRIC_ = (ISOMETRIC *100 / types.size());
+            //Log.v(TAG,"porcentaje: "+ISOMETRIC_);
 
-            if (ISOMETRIC > 0){
-                porcentaje[a] = (int) (((double) ISOMETRIC / typesExercise.size())*100);
-            }if (CARDIO > 0){
-                porcentaje[a] = (int) (((double) CARDIO / typesExercise.size())*100);
-            }if (STRENGTH > 0){
-                porcentaje[a] = (int) (((double) STRENGTH / typesExercise.size())*100);
-            }if (PYLOMETRICS > 0){
-                porcentaje[a] = (int) (((double) PYLOMETRICS / typesExercise.size())*100);
-            }
+            RelativeLayout relativeLayout = CreateNewView(getResources().getString(R.string.ISOMETRIC),ISOMETRIC_);
+            contentInfo.addView(relativeLayout);
 
-            Log.v(TAG,"porcentaje: "+porcentaje[a]);
+        }if (CARDIO > 0){
+            Log.v(TAG,"porcentaje CARDIO: "+CARDIO+"/"+types.size());
+            CARDIO_ = ( CARDIO*100 / types.size());
+            Log.v(TAG,"porcentaje: "+CARDIO_);
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.MATCH_PARENT);
+            RelativeLayout relativeLayout = CreateNewView(getResources().getString(R.string.CARDIO),CARDIO_);
+            contentInfo.addView(relativeLayout);
 
-            LinearLayout.LayoutParams params3 = new LinearLayout.LayoutParams(
-                    RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.MATCH_PARENT);
+        }if (STRENGTH > 0){
 
-            LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
-            params.weight = 2.0f;
-            params3.weight = 1.0f;
-
-            progress.setLayoutParams(params2);
-            progress.setLayoutParams(params);
+            Log.v(TAG,"porcentaje STRENGTH: "+STRENGTH+"/"+types.size());
+            STRENGTH_ = ((STRENGTH*100/ types.size()));
+            Log.v(TAG,"porcentaje: "+STRENGTH_);
 
 
-            progress.setProgress(porcentaje[a]);
-            progress.setMax(100);
+            RelativeLayout relativeLayout = CreateNewView(getResources().getString(R.string.STRENGTH),STRENGTH_);
+            contentInfo.addView(relativeLayout);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                progress.setProgressTintList(ColorStateList.valueOf(Color.RED));
-                progress.setBackgroundTintList((ColorStateList.valueOf(Color.RED)));
-            }else {
-                progress.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-            }
+        }if (PYLOMETRICS > 0) {
 
-            textView.setText(typesExercise.get(a));
-            textView.setGravity(Gravity.START);
-            textView.setLayoutParams(params3);
 
-            textView.setTextColor(getResources().getColor(R.color.black));
+            Log.v(TAG, "porcentaje PYLOMETRICS: " + PYLOMETRICS + "/" + types.size());
+            PYLOMETRICS_ = ((PYLOMETRICS * 100 / types.size()));
+            Log.v(TAG, "porcentaje: " + PYLOMETRICS_);
 
-            linear.setPadding(15,15,15,15);
-            linear.addView(textView);
-            linear.addView(progress);
-
-            linear.setMinimumHeight(45);
-
-            contentInfo.addView(linear);
-
+            RelativeLayout relativeLayout = CreateNewView(getResources().getString(R.string.PYLOMETRICS),PYLOMETRICS_);
+            contentInfo.addView(relativeLayout);
         }
+
+
+    }
+
+    private RelativeLayout CreateNewView(String type,int progress){
+
+        TextView textView = new TextView(this);
+
+        // TEXT OF TYPE OF EXERCISES
+        RelativeLayout.LayoutParams layoutParams_of_textView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        textView.setGravity(Gravity.START);
+        textView.setLayoutParams(layoutParams_of_textView);
+        textView.setTextColor(getResources().getColor(R.color.black));
+        textView.setText(type);
+
+        // Progress
+        ProgressBar progressBar = new ProgressBar(this,null ,android.R.attr.progressBarStyleHorizontal);
+        RelativeLayout.LayoutParams layoutParams_Progress = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams_Progress.addRule(RelativeLayout.ALIGN_PARENT_END);
+        progressBar.setLayoutParams(layoutParams_Progress);
+        progressBar.getLayoutParams().width = containerDimensions(this) / 2;
+        progressBar.setMax(100);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            progressBar.setProgressTintList(ColorStateList.valueOf(Color.RED));
+            progressBar.setBackgroundTintList((ColorStateList.valueOf(Color.RED)));
+        }else {
+            progressBar.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+        }
+
+
+        progressBar.setProgress(progress);
+
+        RelativeLayout relativeLayout = new RelativeLayout(this);
+        RelativeLayout.LayoutParams match_parent = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        relativeLayout.setLayoutParams(match_parent);
+        relativeLayout.setPadding(15,15,15,15);
+        relativeLayout.setMinimumHeight(45);
+
+        relativeLayout.addView(textView);
+        relativeLayout.addView(progressBar);
+
+        return relativeLayout;
+    }
+
+
+    private int containerDimensions(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        return width;
     }
 
     @Override
