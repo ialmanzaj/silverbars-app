@@ -25,7 +25,6 @@ public class ProgressionActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         if (toolbar != null){
-
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(getResources().getString(R.string.progression_));
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -65,25 +64,19 @@ public class ProgressionActivity extends AppCompatActivity {
         }
     }
 
-
     private void injectJS() {
         try {
-
             String partes = "";
-
             webview.loadUrl("javascript: ("+ "window.onload = function () {"+
 
                     "partes = Snap.selectAll('"+partes+"');"+
                     "partes.forEach( function(elem,i) {"+
                     "elem.attr({fill: '#602C8D',stroke: '#602C8D',});"+
                     "});"+ "}"+  ")()");
-
             //Log.v("MAIN ACTIVITY","HA EJECUTADO EL JAVASCRIPT");
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
 }

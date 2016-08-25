@@ -78,6 +78,12 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private int exercises_size = 0;
     private int RestByExercise = 0,RestBySet = 0;
     private int [] Positive,Negative,Isometric;
+    
+    TextView positive,negative,isometric;
+
+
+    // Inicializar Workouts
+    List<WorkoutInfo> exercisesforRecycler = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +126,18 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         CurrentSet = (TextView) findViewById(R.id.CurrentSet);
         TextView totalSet = (TextView) findViewById(R.id.TotalSet);
         CurrentExercise = (TextView) findViewById(R.id.CurrentExercise);
+        
+        
+        //tempo text
+        positive = (TextView) findViewById(R.id.positive);
+        isometric = (TextView) findViewById(R.id.isometric);
+        negative = (TextView) findViewById(R.id.negative);
 
+        positive.setText(String.valueOf(Positive[0]));
+        isometric.setText(String.valueOf(Isometric[0]));
+        negative.setText(String.valueOf(Negative[0]));
+        
+        
         // Rest modal
         ModalLayout = (FrameLayout) findViewById(R.id.ModalLayout);
         headerText = (TextView) findViewById(R.id.headerText);
@@ -142,44 +159,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         RelativeLayout playerLayout = (RelativeLayout) findViewById(R.id.PlayerLayout);
 
-        //repetiton text
-        Rep_timer_text = (TextView) findViewById(R.id.Rep_timer_text);
-
         song_name = (TextView) findViewById(R.id.song_name);
         song_name.setSelected(true);
 
+        //repetiton text
+        Rep_timer_text = (TextView) findViewById(R.id.Rep_timer_text);
 
-        // Inicializar Workouts
-        List<WorkoutInfo> items = new ArrayList<>();
-
-
-        RestCounter_text.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                //cuando el descanso se acaba
-                if (actualRest == 0){
-                    Log.v(TAG,"Descanso: Terminado");
-                    restTimer.cancel();
-                    rest = false;
-                    playExerciseAudio(Exercises[y].getExercise_audio());
-                    asignTotalTime(y);
-                    startMainCountDown(totalTime,1,totalTime);
-                    Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
-
-                    ModalLayout.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+        //inicializar rep text
+        Rep_timer_text.setText(String.valueOf(Exercises_reps[0]));
 
 
         Rep_timer_text.addTextChangedListener(new TextWatcher() {
@@ -243,6 +230,41 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
             @Override
             public void afterTextChanged(Editable editable) {}
+        });
+
+
+        RestCounter_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                //cuando el descanso se acaba
+                if (actualRest == 0){
+                    Log.v(TAG,"Descanso: Terminado");
+                    restTimer.cancel();
+                    rest = false;
+                    playExerciseAudio(Exercises[y].getExercise_audio());
+                    asignTotalTime(y);
+                    startMainCountDown(totalTime,1,totalTime);
+                    Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
+
+
+                    positive.setText(String.valueOf(Positive[y]));
+                    isometric.setText(String.valueOf(Isometric[y]));
+                    negative.setText(String.valueOf(Negative[y]));
+
+
+                    ModalLayout.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
         });
 
         //change to next music with swipe
@@ -317,10 +339,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             public void onClick(View view) {
                 Log.v(TAG,"BUTTON PAUSE: CLICK");
                 if (!pause){
-
                     PauseCountDown();
                     PauseButton.setText(getResources().getString(R.string.resume_workout_text));
-
 
                     if (SelectedSongs){
                         mp.pause();
@@ -352,8 +372,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
         for (JsonExercise Exercise : Exercises) {
-            items.add(new WorkoutInfo(Exercise.getExercise_name(), null,Exercise.getExercise_image()));
+            exercisesforRecycler.add(new WorkoutInfo(Exercise.getExercise_name(), null,Exercise.getExercise_image()));
         }
+
 
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
@@ -366,7 +387,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
         // Crear un nuevo adaptador
-        RecyclerView.Adapter adapter = new WorkoutsAdapter(items, getApplicationContext());
+        RecyclerView.Adapter adapter = new WorkoutsAdapter(exercisesforRecycler, getApplicationContext());
         recycler.setAdapter(adapter);
 
         if (adapter.getItemCount() <= 1){
@@ -379,7 +400,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         totalExercise.setText(String.valueOf(elements));
         totalSet.setText(String.valueOf(TotalSets));
 
-        Rep_timer_text.setText(String.valueOf(Exercises_reps[0]));
+
 
         totalSet.setText(String.valueOf(TotalSets));
         CurrentSet.setText("0");
