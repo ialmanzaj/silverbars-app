@@ -74,11 +74,12 @@ public class Utilities {
     }
 
     public static boolean saveExerciseImageInDevice(Context context, ResponseBody body, String imgName) {
+
+        Log.v(TAG,"saveExerciseImageInDevice: "+imgName);
         try {
             File futureStudioIconFile = getFileReady(context,"/SilverbarsImg/"+imgName);
             InputStream input = null;
             OutputStream outputStream = null;
-
             try {
                 input = body.byteStream();
                 outputStream = new FileOutputStream(futureStudioIconFile);
@@ -93,7 +94,7 @@ public class Utilities {
                     if (read == -1) {break;}
                     outputStream.write(fileReader, 0, read);
                     fileSizeDownloaded += read;
-                    Log.v(TAG, "saveExerciseImageInDevice: Download, file download: " + fileSizeDownloaded + " of " + fileSize);
+                    Log.v(TAG, "Download, file download from saveExerciseImageInDevice: " + fileSizeDownloaded + " of " + fileSize);
                 }
                 outputStream.flush();
                 return true;
@@ -116,11 +117,62 @@ public class Utilities {
         return bitmap;
     }
 
-    public static boolean saveWorkoutImgInDevice(Context context, ResponseBody body, String imgName) {
+    public static boolean saveAudioInDevice(Context context,ResponseBody body, String getAudioName) {
+
+        try {
+
+            File Folder = getFileReady(context,"/SilverbarsMp3/");
+            File mp3file = new File(context.getFilesDir()+"/SilverbarsMp3/"+getAudioName);
+
+            InputStream input = null;
+            OutputStream outputStream = null;
+
+            boolean success = true;
+            if (!Folder.isDirectory()) {
+                Log.v(TAG,"Creating Dir");
+                success = Folder.mkdir();
+            }if (success) {
+                try {
+                    input = body.byteStream();
+                    outputStream = new FileOutputStream(mp3file);
+                    int size = input.available();
+
+                    byte[] fileReader = new byte[size];
+                    long fileSize = body.contentLength();
+                    long fileSizeDownloaded = 0;
+                    while (true) {
+                        int read = input.read(fileReader);
+                        if (read == -1) {break;}
+                        outputStream.write(fileReader, 0, read);
+                        fileSizeDownloaded += read;
+                        Log.v("Download", "file download from saveAudioInDevice: " + fileSizeDownloaded + " of " + fileSize);
+                    }
+                    outputStream.flush();
+                    return true;
+
+                } catch (IOException e) {
+                    return false;
+                } finally {
+                    if (input != null) {input.close();}
+                    if (outputStream != null) {outputStream.close();}
+                }
+            } else {
+                Log.e(TAG,"Error while creating dir: saveWorkoutImgInDevice");
+            }
+
+
+        } catch (IOException e) {return false;}
+
+        return false;
+    }
+
+    public static boolean saveWorkoutImgInDevice(Context context, ResponseBody body, String workoutimg) {
+
+        Log.v(TAG,"saveWorkoutImgInDevice: "+workoutimg);
 
         try {
             File Folder = getFileReady(context,"/SilverbarsImg/");
-            File futureStudioIconFile = getFileReady(context,"/SilverbarsImg/"+imgName);
+            File futureStudioIconFile = getFileReady(context,"/SilverbarsImg/"+workoutimg);
 
             InputStream input = null;
             OutputStream outputStream = null;
@@ -144,7 +196,7 @@ public class Utilities {
                         if (read == -1) {break;}
                         outputStream.write(fileReader, 0, read);
                         fileSizeDownloaded += read;
-                        Log.v("Download", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                        Log.v("Download", "file download from saveWorkoutImgInDevice: " + fileSizeDownloaded + " of " + fileSize);
                     }
                     outputStream.flush();
                     return true;
@@ -156,7 +208,7 @@ public class Utilities {
                     if (outputStream != null) {outputStream.close();}
                 }
             } else {
-                Log.e(TAG,"Error while creating dir");
+                Log.e(TAG,"Error while creating dir: saveWorkoutImgInDevice");
             }
         } catch (IOException e) {
             return false;
@@ -169,13 +221,7 @@ public class Utilities {
         String[] imageDir = imageURI.split("SilverbarsImg");
 
         if (imageDir.length < 2){
-
-            File file;
-            if (isExternalStorageWritable()){
-                file = new File(Environment.getExternalStorageDirectory()+"/SilverbarsImg/"+imageURI);
-            }else {
-                file = new File(context.getFilesDir()+"/SilverbarsImg/"+imageURI);
-            }
+            File file = getFileReady(context,"/SilverbarsImg/"+imageURI);
             if (file.exists()){
                 bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
             }
@@ -187,6 +233,8 @@ public class Utilities {
         }
         return bitmap;
     }
+
+
 
     public static String strSeparator = "__,__";
     public static String convertArrayToString(String[] array){
@@ -377,41 +425,7 @@ public class Utilities {
         }
     }
 
-    public static boolean saveAudioInDevice(Context context,ResponseBody body, String getAudioName) {
 
-        try {
-            File futureStudioIconFile = new File(context.getFilesDir()+"/SilverbarsMp3/"+getAudioName);
-
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
-
-            try {
-                inputStream = body.byteStream();
-                outputStream = new FileOutputStream(futureStudioIconFile);
-                int size = inputStream.available();
-
-                byte[] fileReader = new byte[size];
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
-
-                while (true) {
-                    int read = inputStream.read(fileReader);
-                    if (read == -1) {break;}
-                    outputStream.write(fileReader, 0, read);
-                    fileSizeDownloaded += read;
-                    Log.v(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
-                }
-                outputStream.flush();
-                return true;
-
-            } catch (IOException e) {
-                return false;
-            } finally {
-                if (inputStream != null) {inputStream.close();}
-                if (outputStream != null) {outputStream.close();}
-            }
-        } catch (IOException e) {return false;}
-    }
 
     public static boolean saveHtmInDevice(Context context,ResponseBody body, String name) {
 
@@ -435,7 +449,7 @@ public class Utilities {
                     if (read == -1) {break;}
                     output.write(buffer, 0, read);
                     fileSizeDownloaded += read;
-                    Log.d(TAG, "Download file: " + fileSizeDownloaded + " of " + fileSize);
+                    Log.d(TAG, "Download file from saveHtmInDevice: " + fileSizeDownloaded + " of " + fileSize);
                 }
                 output.flush();
                 return true;

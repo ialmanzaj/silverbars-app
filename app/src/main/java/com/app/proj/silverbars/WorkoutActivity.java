@@ -546,7 +546,7 @@ public class WorkoutActivity extends AppCompatActivity {
                         }
                         Intent i = new Intent(getBaseContext(), SelectionMusicActivity.class);
                         startActivityForResult(i,1);
-                        //startActivity(new Intent(WorkoutActivity.this,SelectionMusicActivity.class));
+
                         break;
                     default:
                         break;

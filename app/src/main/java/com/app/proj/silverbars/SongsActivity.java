@@ -44,22 +44,26 @@ public class SongsActivity extends AppCompatActivity {
         Log.v(TAG,"mySongs list: "+ mySongs);
 
         if (mySongs.size() > 0) {
+
             canciones_url = DeleteNoteVoice(mySongs);
-            String[] items = new String[canciones_url.size()];
 
-            for (int i = 0; i < canciones_url.size(); i++) {
-                items[i] = quitarMp3(SongName(this,canciones_url.get(i)));
-            }
+            if (canciones_url.size() > 0){
 
-            //Log.v(TAG,"items: "+ Arrays.toString(items));
+                String[] items = new String[canciones_url.size()];
 
-            ArrayAdapter<String> adp = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
-            ListMusic.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-            ListMusic.setAdapter(adp);
+                for (int i = 0; i < canciones_url.size(); i++) {
+                    items[i] = quitarMp3(SongName(this,canciones_url.get(i)));
+                }
+
+                //Log.v(TAG,"items: "+ Arrays.toString(items));
+
+                ArrayAdapter<String> adp = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
+                ListMusic.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+                ListMusic.setAdapter(adp);
 
 
-            Button done = (Button) findViewById(R.id.done);
-            done.setOnClickListener(new View.OnClickListener() {
+                Button done = (Button) findViewById(R.id.done);
+                done.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         final int choice = ListMusic.getCount();
@@ -96,6 +100,9 @@ public class SongsActivity extends AppCompatActivity {
                             canciones_url = null;
                     }
                 });
+
+            }
+
 
         }
         else {

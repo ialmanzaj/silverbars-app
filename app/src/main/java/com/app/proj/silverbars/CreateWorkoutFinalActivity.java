@@ -522,6 +522,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
                     DownloadImage(SelectedExercises.get(i).exercise_image,getImageName(i));
                 }
                 if (!mp3Dir.exists()){
+                    Log.v(TAG,"mp3 url "+SelectedExercises.get(i).exercise_audio);
                     DownloadMp3(SelectedExercises.get(i).exercise_audio,getAudioName(i));
                 }
                 database.insertExercises(
@@ -582,11 +583,12 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
         String[] imageDir = SelectedExercises.get(position).getExercise_image().split("exercises");
         String Parsedurl = "exercises" + imageDir[1];
         String[] imagesName = Parsedurl.split("/");
+        Log.v(TAG,"getImageName: "+imagesName[2]);
         return imagesName[2];
     }
 
     private void DownloadImage(String url, final String imgName){
-        Log.v(TAG,"DownloadImage ");
+        Log.v(TAG,"DownloadImage "+imgName);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
@@ -599,7 +601,12 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     if (response.isSuccessful()) {
 
-                        saveWorkoutImgInDevice(CreateWorkoutFinalActivity.this,response.body(),imgName);
+                        Boolean guardado = saveWorkoutImgInDevice(CreateWorkoutFinalActivity.this,response.body(),imgName);
+
+                        if (guardado){
+                            Log.v(TAG,"download complete "+imgName);
+                        }
+
 
                     } else {
                         Log.v(TAG, "Download server contact failed");
@@ -616,8 +623,8 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
         });
     }
 
-    private void DownloadMp3(final String url, final String getAudioName) {
-
+    private void DownloadMp3(final String url, final String audioName) {
+        Log.v(TAG,"DownloadMp3 "+audioName);
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
         final SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
@@ -630,9 +637,12 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (response.isSuccessful()) {
-                            boolean writtenToDisk = saveAudioInDevice(CreateWorkoutFinalActivity.this,response.body(),getAudioName);
+                            Boolean guardado = saveAudioInDevice(CreateWorkoutFinalActivity.this,response.body(),audioName);
 
-                            Log.v(TAG, String.valueOf(writtenToDisk));
+                            if (guardado){
+                                Log.v(TAG,"download complete "+audioName);
+                            }
+
                         }
                         else {Log.e(TAG, "Download server contact failed");}
                     }
@@ -645,10 +655,13 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
             };
         }.execute();
     }
+
+
     private String getAudioName(int position){
         String[] audioDir = SelectedExercises.get(position).getExercise_audio().split("exercises");;
         String Parsedurl = "exercises"+audioDir[1];
         String[] splitName = Parsedurl.split("/");
+        Log.v(TAG,"getAudioName: "+splitName[2]);
         return splitName[2];
     }
 

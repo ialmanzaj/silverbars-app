@@ -37,6 +37,8 @@ import java.util.concurrent.TimeUnit;
 
 import static com.app.proj.silverbars.Utilities.SongArtist;
 import static com.app.proj.silverbars.Utilities.SongName;
+import static com.app.proj.silverbars.Utilities.getFileReady;
+import static com.app.proj.silverbars.Utilities.getUrlReady;
 import static com.app.proj.silverbars.Utilities.quitarMp3;
 
 public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener {
@@ -100,7 +102,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Positive = b.getIntArray("Array_Positive_Exercises");
         Isometric =  b.getIntArray("Array_Isometric_Exercises");
         Negative =  b.getIntArray("Array_Negative_Exercises");
+
         Exercises = WorkoutActivity.ParsedExercises;
+
         exercises_size = Exercises.length;
         // tempo config
         tempo = Positive[y] + Isometric[y] + Negative[y];
@@ -230,6 +234,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             main_timer.cancel();
                             ScreenOff();
                             Log.v(TAG,"results activity here");
+                            startActivity(new Intent(WorkingOutActivity.this,ResultsActivity.class));
                         }
                     }
                 }
@@ -732,7 +737,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
     private void playExerciseAudio(String file){
-
+        Log.v(TAG,"playExerciseAudio: "+file);
         media = new MediaPlayer();
         int maxVolume = 100;
         final float volumeFull = (float)(Math.log(maxVolume)/Math.log(maxVolume));;
@@ -743,58 +748,24 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             media = new MediaPlayer();
         }
         try {
-            String[] audioDir = file.split("exercises");
 
-            if (audioDir.length < 2){
-                audioDir = file.split("SilverbarsMp3");
-                String Parsedurl = "exercises"+audioDir[1];
-                Log.v(TAG,"Parsedurl: "+Parsedurl);
-                String[] splitName = Parsedurl.split("/");
-                Log.v(TAG,"splitName: "+ Arrays.toString(splitName));
-                String mp3Name = splitName[1];
-                Log.v(TAG,"mp3Name: "+ mp3Name);
-
-
-                File Dir = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+mp3Name);
-                Uri uri = Uri.parse(Dir.toString());
-                media = MediaPlayer.create(getApplicationContext(),uri);
-
-
-            }else {
-
-                String Parsedurl = "exercises"+audioDir[1];
-                Log.v(TAG,"Parsedurl: "+Parsedurl);
-                String[] splitName = Parsedurl.split("/");
-                Log.v(TAG,"splitName: "+ Arrays.toString(splitName));
-                String mp3Name = splitName[2];
-                Log.v(TAG,"mp3Name: "+ mp3Name);
-
-
-                File Dir = new File(Environment.getExternalStorageDirectory()+"/SilverbarsMp3/"+mp3Name);
-                Uri uri = Uri.parse(Dir.toString());
-                media = MediaPlayer.create(getApplicationContext(),uri);
-
-            }
+            String[] mp3dir = file.split("/SilverbarsMp3/");
+            media = MediaPlayer.create(this, Uri.parse(getFilesDir()+"/SilverbarsMp3/"+mp3dir[1]));
 
 
         } catch (Exception e) {
             Log.e(TAG,"Exception",e);
         }
 
-
         media.setOnPreparedListener(new MediaPlayer.OnPreparedListener(){
-
             public void onPrepared(MediaPlayer arg0) {
                 Log.e("ready!","ready!");
-
                 if (mp!=null){
                     if (mp.isPlaying())
                         mp.setVolume(0.04f,0.04f);
                 }
                 media.start();
-
             }} );
-
 
         media.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
