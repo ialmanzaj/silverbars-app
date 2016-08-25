@@ -18,6 +18,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
@@ -92,17 +93,22 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
         String[] imageDir = WorkoutActivity.ParsedExercises[a].getExercise_image().split("exercises");
 
-        if (imageDir.length < 2){
-            Log.v(TAG,"img from local");
-            Bitmap bmp;
-            viewHolder.imageView_local.setVisibility(View.VISIBLE);
-            bmp = loadExerciseImageFromDevice(mContext,WorkoutActivity.ParsedExercises[a].getExercise_image());
-            viewHolder.imageView_local.setImageBitmap(bmp);
-        }else {
+        Log.v(TAG,"imageDir "+ Arrays.toString(imageDir));
+        Log.v(TAG,"imageDir lenght: "+ imageDir.length);
+
+        if (imageDir.length == 2){
             Log.v(TAG,"img from json");
             viewHolder.imagen_cache.setVisibility(View.VISIBLE);
             Uri uri = Uri.parse(WorkoutActivity.ParsedExercises[a].getExercise_image());
             viewHolder.imagen_cache.setImageURI(uri);
+        }else {
+            Log.v(TAG,"img from local");
+            Bitmap bmp;
+            viewHolder.imageView_local.setVisibility(View.VISIBLE);
+            Log.v(TAG,"image: "+WorkoutActivity.ParsedExercises[a].getExercise_image());
+            bmp = loadExerciseImageFromDevice(mContext,WorkoutActivity.ParsedExercises[a].getExercise_image());
+            viewHolder.imageView_local.setImageBitmap(bmp);
+
         }
 
 

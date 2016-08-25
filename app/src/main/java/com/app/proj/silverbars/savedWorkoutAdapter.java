@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.like.LikeButton;
 
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -95,13 +96,18 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
                 Log.v(TAG,"Image: "+ workouts.get(position).getWorkout_image());
                 viewholder.img.setVisibility(View.VISIBLE);
 
-                String[] workoutImgDir = workouts.get(position).getWorkout_image().split(context.getFilesDir().getPath());
-                Bitmap imgBitmap;
-                String workoutImgName = getWorkoutImageName(workoutImgDir);
-                Log.v(TAG,"Image Name: "+workoutImgName);
+                String[] workoutImgDir = workouts.get(position).getWorkout_image().split(context.getFilesDir().getPath()+"/SilverbarsImg/");
+                Log.v(TAG,"workoutImgDir"+ Arrays.toString(workoutImgDir));
+                Log.v(TAG,"workoutImgDir lenghth"+ workoutImgDir.length);
 
-                imgBitmap = loadWorkoutImageFromDevice(context,workoutImgName);
-                viewholder.img.setImageBitmap(imgBitmap);
+
+                if (workoutImgDir.length == 2){
+                    String workoutImgName = workoutImgDir[1];
+                    Log.v(TAG,"Image Name: "+workoutImgName);
+                    Bitmap imgBitmap;
+                    imgBitmap = loadWorkoutImageFromDevice(context,workoutImgName);
+                    viewholder.img.setImageBitmap(imgBitmap);
+                }
 
 
                 viewholder.text.setText(workouts.get(position).getWorkout_name());
@@ -129,11 +135,6 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
         return workouts.size();
     }
 
-    private String getWorkoutImageName(String[] workoutImgDir){
-        String Parsedurl = "workouts"+workoutImgDir[1];
-        String[] imagesName = Parsedurl.split("/");
-        return imagesName[2];
-    }
 
     @Override
     public int getItemViewType(int position) {

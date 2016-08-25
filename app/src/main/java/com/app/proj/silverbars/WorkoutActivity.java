@@ -61,7 +61,7 @@ import static com.app.proj.silverbars.Utilities.getFileReady;
 import static com.app.proj.silverbars.Utilities.getUrlReady;
 import static com.app.proj.silverbars.Utilities.removeLastChar;
 import static com.app.proj.silverbars.Utilities.saveWorkoutImgInDevice;
-
+import static com.app.proj.silverbars.Utilities.saveAudioInDevice;
 
 /*import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -1014,7 +1014,7 @@ public class WorkoutActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (response.isSuccessful()) {
-                            boolean writtenToDisk = saveAudioInDevice(response.body(),getAudioName);
+                            boolean writtenToDisk = saveAudioInDevice(WorkoutActivity.this,response.body(),getAudioName);
 
                             Log.v(TAG, String.valueOf(writtenToDisk));
                         }
@@ -1030,41 +1030,7 @@ public class WorkoutActivity extends AppCompatActivity {
         }.execute();
     }
 
-    private boolean saveAudioInDevice(ResponseBody body, String getAudioName) {
 
-        try {
-            File futureStudioIconFile = new File(this.getFilesDir()+"/SilverbarsMp3/"+getAudioName);
-
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
-
-            try {
-                inputStream = body.byteStream();
-                outputStream = new FileOutputStream(futureStudioIconFile);
-                int size = inputStream.available();
-                
-                byte[] fileReader = new byte[size];
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
-
-                while (true) {
-                    int read = inputStream.read(fileReader);
-                    if (read == -1) {break;}
-                    outputStream.write(fileReader, 0, read);
-                    fileSizeDownloaded += read;
-                    Log.v(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
-                }
-                outputStream.flush();
-                return true;
-
-            } catch (IOException e) {
-                return false;
-            } finally {
-                if (inputStream != null) {inputStream.close();}
-                if (outputStream != null) {outputStream.close();}
-            }
-        } catch (IOException e) {return false;}
-    }
 
    /* public void SpotifyLogin(){
         final AuthenticationRequest request = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
@@ -1104,7 +1070,6 @@ public class WorkoutActivity extends AppCompatActivity {
                     Log.v(TAG,"img url "+ParsedExercises[i].getExercise_image());
                     DownloadImage(ParsedExercises[i].getExercise_image(),getImageName(i));
                 }
-                  
                 database.insertExercises(
                         ParsedExercises[i].getId(),
                         ParsedExercises[i].getExercise_name(),

@@ -46,47 +46,49 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <LinearLayout
+                android:minHeight="110dp"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/linearLayout3">
 
-
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:layout_weight="1"
+                    android:id="@+id/chageImg"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
 
                     <ImageView
-                        android:layout_width="110dp"
-                        android:layout_height="110dp"
-                        android:id="@+id/imgProfile"
-                        />
-
-                    <ImageButton
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/chageImg"
+                        android:src="@drawable/ic_camera_alt_black_24dp"
+                        android:id="@+id/imgProfile"
+                        android:contentDescription="" />
+                    <ImageView
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:src="@android:drawable/ic_menu_edit"
-                        android:layout_gravity="right|bottom"
-                        android:background="#00ffffff" />
-
-                </FrameLayout>
+                        android:background="#00ffffff"
+                        android:contentDescription="" />
+                </RelativeLayout>
 
                 <LinearLayout
-
+                    android:layout_weight="2"
                     android:orientation="vertical"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:paddingStart="5dp">
-
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
-
                         <AutoCompleteTextView
                             android:imeOptions="actionDone"
                             android:textColor="@color/colorPrimaryDark"

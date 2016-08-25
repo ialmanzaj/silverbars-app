@@ -377,5 +377,40 @@ public class Utilities {
         }
     }
 
+    public static boolean saveAudioInDevice(Context context,ResponseBody body, String getAudioName) {
+
+        try {
+            File futureStudioIconFile = new File(context.getFilesDir()+"/SilverbarsMp3/"+getAudioName);
+
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+
+            try {
+                inputStream = body.byteStream();
+                outputStream = new FileOutputStream(futureStudioIconFile);
+                int size = inputStream.available();
+
+                byte[] fileReader = new byte[size];
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+
+                while (true) {
+                    int read = inputStream.read(fileReader);
+                    if (read == -1) {break;}
+                    outputStream.write(fileReader, 0, read);
+                    fileSizeDownloaded += read;
+                    Log.v(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+                outputStream.flush();
+                return true;
+
+            } catch (IOException e) {
+                return false;
+            } finally {
+                if (inputStream != null) {inputStream.close();}
+                if (outputStream != null) {outputStream.close();}
+            }
+        } catch (IOException e) {return false;}
+    }
 
 }
