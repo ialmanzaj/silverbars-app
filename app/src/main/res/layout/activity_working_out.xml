@@ -6,7 +6,6 @@
     android:orientation="vertical"
     tools:context=".WorkingOutActivity"
     android:background="#fff">
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -438,7 +437,6 @@
         </LinearLayout>
 
         <FrameLayout
-            android:visibility="gone"
             android:gravity="center_vertical"
             android:layout_marginBottom="110dp"
             android:layout_width="match_parent"
@@ -466,7 +464,6 @@
                 android:textSize="180sp"
                 android:layout_marginTop="15dp"/>
         </FrameLayout>
-
 
     </FrameLayout>
 
