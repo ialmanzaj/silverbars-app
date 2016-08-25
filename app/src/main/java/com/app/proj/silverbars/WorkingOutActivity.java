@@ -590,8 +590,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
     private void startInicialTimer(int seconds){
-
-        long  sec = seconds * 1000;
+        long  sec = (seconds+5) * 1000;
 
         startTimer = new CountDownTimer(sec, 1000) {
             @Override
@@ -603,8 +602,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 RestCounter_text.setText(String.valueOf(actual_start_time));
             }
 
-            public void onFinish() {
-            }
+            public void onFinish() {}
         }.start();
         START_TIMER = true;
     }
@@ -751,7 +749,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 startMainCountDown(ActualTimeMain,1,Time_aux);
             }
             if (START_TIMER){
-                startInicialTimer(actual_start_time+5);
+                startInicialTimer(actual_start_time);
             }
 
         }
