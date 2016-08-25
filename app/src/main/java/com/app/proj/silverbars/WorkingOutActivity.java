@@ -235,6 +235,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             ScreenOff();
                             Log.v(TAG,"results activity here");
                             startActivity(new Intent(WorkingOutActivity.this,ResultsActivity.class));
+                            finish();
                         }
                     }
                 }
@@ -749,8 +750,31 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         }
         try {
 
-            String[] mp3dir = file.split("/SilverbarsMp3/");
-            media = MediaPlayer.create(this, Uri.parse(getFilesDir()+"/SilverbarsMp3/"+mp3dir[1]));
+            String[] audioDir = Exercises[y].getExercise_audio().split("exercises");
+
+            if (audioDir.length == 2){
+
+                String Parsedurl = "exercises"+audioDir[1];
+                Log.v(TAG,"Parsedurl: "+Parsedurl);
+                String[] splitName = Parsedurl.split("/");
+                Log.v(TAG,"splitName: "+ Arrays.toString(splitName));
+                String mp3Name = splitName[2];
+                Log.v(TAG,"mp3Name: "+ mp3Name);
+
+                media = MediaPlayer.create(this,Uri.parse(getFilesDir()+"/SilverbarsMp3/"+mp3Name));
+
+
+            }else {
+
+                String[] mp3dir = file.split("/SilverbarsMp3/");
+                media = MediaPlayer.create(this, Uri.parse(getFilesDir()+"/SilverbarsMp3/"+mp3dir[1]));
+
+            }
+
+
+
+
+
 
 
         } catch (Exception e) {

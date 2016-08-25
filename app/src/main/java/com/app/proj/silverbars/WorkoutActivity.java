@@ -868,6 +868,7 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private void getExerciseRepsFromAPI(){
+        Log.v(TAG,"getExerciseRepsFromAPI");
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -933,15 +934,17 @@ public class WorkoutActivity extends AppCompatActivity {
                                     File Dir = getFileReady(WorkoutActivity.this,"/SilverbarsMp3");
                                    
                                     if (Dir.isDirectory()) {
-                                        File file = getFileReady(WorkoutActivity.this,"/SilverbarsMp3/" + mp3Name);
+                                        File file = getFileReady(WorkoutActivity.this,"/SilverbarsMp3/"+mp3Name);
                                         if (!file.exists()) {
+                                            int position = i;
                                             DownloadMp3(Parsedurl, mp3Name);
                                         }
                                     } else {
                                         boolean success = Dir.mkdir();
-                                        if (success)
+                                        if (success) {
+                                            int position = i;
                                             DownloadMp3(Parsedurl, mp3Name);
-                                        else
+                                        }else
                                             Log.e(TAG, "Error creating dir");
                                     }
 
@@ -1001,6 +1004,7 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private void DownloadMp3(final String url, final String getAudioName) {
+        Log.v(TAG,"DownloadMp3: "+getAudioName);
         
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
@@ -1015,10 +1019,10 @@ public class WorkoutActivity extends AppCompatActivity {
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (response.isSuccessful()) {
                             boolean writtenToDisk = saveAudioInDevice(WorkoutActivity.this,response.body(),getAudioName);
-
                             Log.v(TAG, String.valueOf(writtenToDisk));
+
                         }
-                        else {Log.e(TAG, "Download server contact failed");}
+                        else {Log.e(TAG, "DownloadMp3, Download server failed:");}
                     }
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
@@ -1029,6 +1033,7 @@ public class WorkoutActivity extends AppCompatActivity {
             };
         }.execute();
     }
+
 
 
 
