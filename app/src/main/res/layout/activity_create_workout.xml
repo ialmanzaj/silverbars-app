@@ -58,6 +58,7 @@
                 android:layout_height="match_parent">
 
                 <ScrollView
+
                     android:background="@color/white"
                     android:id="@+id/muscles_"
                     android:layout_width="match_parent"

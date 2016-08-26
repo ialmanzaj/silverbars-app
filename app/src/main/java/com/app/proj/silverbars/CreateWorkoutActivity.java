@@ -26,6 +26,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,6 +103,12 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         secundary_ColumnMuscle = (LinearLayout) findViewById(R.id.column2);
 
         empty_content = (LinearLayout) findViewById(R.id.content_empty);
+
+        ScrollView scrollView = (ScrollView) findViewById(R.id.muscles_);
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            scrollView.setFillViewport(true);
+        }
 
 
         progressLayout = (LinearLayout) findViewById(R.id.progress_bar_);

@@ -67,8 +67,9 @@ dependencies {
     //    compile 'com.spotify.sdk:spotify-auth:1.0.0-beta12@aar'
 
     //    // This library handles music playback
+    compile 'com.spotify.sdk:spotify-auth-beta21-noconnect-2.18c@aar'
+    compile 'com.spotify.sdk:spotify-player-beta21-noconnect-2.18c@aar'
 
-    //    compile 'com.spotify.sdk:spotify-player:1.0.0-beta12@aar'
     // RxJava itself
 
 // And ProGuard rules for RxJava!
@@ -109,5 +110,7 @@ dependencies {
     compile 'com.github.ashishbhandari:AndroidTabbedDialog:v1.1'
     compile 'com.artemzin.rxjava:proguard-rules:1.1.8.0'
     compile 'com.facebook.fresco:fresco:0.13.0'
-    compile 'com.android.support:multidex:+'
+    compile 'com.android.support:multidex:1.0.1'
+
 }
+

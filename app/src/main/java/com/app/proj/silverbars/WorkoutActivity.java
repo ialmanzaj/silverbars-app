@@ -1,12 +1,16 @@
 package com.app.proj.silverbars;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,12 +33,25 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.spotify.sdk.android.authentication.AuthenticationClient;
+import com.spotify.sdk.android.authentication.AuthenticationRequest;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;
+import com.spotify.sdk.android.player.Config;
+import com.spotify.sdk.android.player.ConnectionStateCallback;
+import com.spotify.sdk.android.player.Connectivity;
+import com.spotify.sdk.android.player.Error;
+import com.spotify.sdk.android.player.PlaybackState;
+import com.spotify.sdk.android.player.Player;
+import com.spotify.sdk.android.player.PlayerEvent;
+import com.spotify.sdk.android.player.Spotify;
+import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,6 +64,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -116,14 +134,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private LinearLayout error_layout;
 
-
-    @SuppressWarnings("SpellCheckingInspection")
-    private static final String CLIENT_ID = "8a91678afa49446c9aff1beaabe9c807";
-    @SuppressWarnings("SpellCheckingInspection")
-    private static final String REDIRECT_URI = "testschema://callback";
-
-    private static final int REQUEST_CODE = 1337;
-
     private static boolean VibrationIsActivePerRep=true;
     private static boolean VibrationIsActivePerSet=true;
 
@@ -159,7 +169,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
         // MUSCLES TEXT VIEW
-
         contentInfo = (LinearLayout)findViewById(R.id.content_info);
         primary_ColumnMuscle = (LinearLayout) findViewById(R.id.column1);
         secundary_ColumnMuscle = (LinearLayout) findViewById(R.id.column2);
@@ -256,6 +265,11 @@ public class WorkoutActivity extends AppCompatActivity {
         RecyclerView.LayoutManager lManager = new LinearLayoutManager(this);
         ExercisesRecycler.setLayoutManager(lManager);
 
+        ScrollView scrollView = (ScrollView) findViewById(R.id.muscles);
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            scrollView.setFillViewport(true);
+        }
 
 
         // CREAR BASE DE DATOS
@@ -596,12 +610,7 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
 
-
-
-
     }// on create close
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -623,27 +632,9 @@ public class WorkoutActivity extends AppCompatActivity {
             toast("No result");
 
         }
-        /*else if (requestCode == REQUEST_CODE) {
-            AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
-            switch (response.getType()) {
-                // Response was successful and contains auth token
-                case TOKEN:
-                    logMessage("Got token: " + response.getAccessToken());
-                    CredentialsHandler.setToken(this, response.getAccessToken(), response.getExpiresIn(), TimeUnit.SECONDS);
-                    startMainActivity(response.getAccessToken());
-                    break;
 
-                // Auth flow returned an error
-                case ERROR:
-                    logError("Auth error: " + response.getError());
-                    break;
-
-                // Most likely auth flow was cancelled
-                default:
-                    logError("Auth result: " + response.getType());
-            }
-        }*/
     }
+
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -652,13 +643,11 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
     private void LaunchWorkingOutActivity() {
-
         int sets,restbyexercise,restbyset;
 
         sets = Integer.parseInt(Sets.getText().toString());
         restbyexercise = Integer.parseInt(removeLastChar(RestbyExercise.getText().toString()));
         restbyset = Integer.parseInt(removeLastChar(RestbySet.getText().toString()));
-
 
         Intent intent = new Intent(this, WorkingOutActivity.class);
         intent.putExtra("ExercisesReps",Exercises_reps);
@@ -673,7 +662,6 @@ public class WorkoutActivity extends AppCompatActivity {
         intent.putExtra("Array_Isometric_Exercises",Isometric_Exercises);
         intent.putExtra("Array_Negative_Exercises",Negative_Exercises);
         startActivity(intent);
-
     }
 
 
@@ -1047,26 +1035,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-
-   /* public void SpotifyLogin(){
-        final AuthenticationRequest request = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
-                .setScopes(new String[]{"playlist-read","user-library-read"})
-                .build();
-
-        AuthenticationClient.openLoginActivity(WorkoutActivity.this, REQUEST_CODE, request);
-    }
-*/
- /*   private void startMainActivity(String token) {
-//        Intent intent = new Intent(this, SpotifyMusic.class);
-//        startActivityForResult(intent,1);
-        Intent intent = SpotifyMusic.createIntent(this);
-        intent.putExtra(SpotifyMusic.EXTRA_TOKEN, token);
-        startActivity(intent);
-        finish();
-    }*/
-
-
-
     private void logMessage(String msg) {
         Log.v(TAG, msg);
     }
@@ -1170,9 +1138,7 @@ public class WorkoutActivity extends AppCompatActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     if (response.isSuccessful()) {
-
                         saveWorkoutImgInDevice(WorkoutActivity.this,response.body(),imgName);
-
                     } else {
                         Log.v(TAG, "Download server contact failed");
                     }
@@ -1419,9 +1385,18 @@ public class WorkoutActivity extends AppCompatActivity {
         return width;
     }
 
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
+
     }
+
 }
