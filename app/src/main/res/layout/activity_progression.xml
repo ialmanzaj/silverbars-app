@@ -12,17 +12,16 @@
         android:layout_height="wrap_content"
         android:minHeight="50dp"
         app:elevation="2dp">
-
     <android.support.v7.widget.Toolbar
         android:background="@color/colorPrimary"
         android:id="@+id/toolbar_"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </android.support.v7.widget.Toolbar>
-
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
+        android:id="@+id/muscles"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -45,7 +44,5 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
-
 
 </LinearLayout>

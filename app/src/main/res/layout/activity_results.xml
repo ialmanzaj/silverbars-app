@@ -23,11 +23,24 @@
             android:layout_height="wrap_content">
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-    <WebView
-        android:background="@color/white"
-        android:id="@+id/webview"
+
+    <ScrollView
+        android:id="@+id/muscles"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </WebView>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <WebView
+                android:background="@color/white"
+                android:id="@+id/webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </WebView>
+
+        </LinearLayout>
+    </ScrollView>
+
 
 </LinearLayout>

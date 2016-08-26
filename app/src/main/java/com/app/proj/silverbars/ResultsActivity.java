@@ -2,6 +2,7 @@ package com.app.proj.silverbars;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ScrollView;
 
 import java.util.Objects;
 
@@ -27,6 +29,14 @@ public class ResultsActivity extends AppCompatActivity {
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+
+
+        ScrollView scrollView = (ScrollView) findViewById(R.id.muscles);
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            scrollView.setFillViewport(true);
+        }
+
 
         if (myToolbar != null) {
             getSupportActionBar().setTitle("Results");

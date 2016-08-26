@@ -2,6 +2,7 @@ package com.app.proj.silverbars;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ScrollView;
 
 public class ProgressionActivity extends AppCompatActivity {
     private static final String TAG = "PROGRESSION ACTIVITY";
@@ -23,6 +25,14 @@ public class ProgressionActivity extends AppCompatActivity {
         Toolbar toolbar;
         toolbar = (Toolbar) findViewById(R.id.toolbar_);
         setSupportActionBar(toolbar);
+
+
+        ScrollView scrollView = (ScrollView) findViewById(R.id.muscles);
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            scrollView.setFillViewport(true);
+        }
+
 
         if (toolbar != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
