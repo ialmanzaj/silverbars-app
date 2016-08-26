@@ -76,20 +76,19 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         int position = viewHolder.getAdapterPosition();
 
         viewHolder.nombre.setText(workouts.get(position).getNombre());
+        viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
+
 
         String[] imageDir = WorkoutActivity.ParsedExercises[a].getExercise_image().split("exercises");
 
         if (imageDir.length == 2){
             Uri uri = Uri.parse(WorkoutActivity.ParsedExercises[position].getExercise_image());
             viewHolder.imagen_cache.setImageURI(uri);
-            viewHolder.imagen_cache.getLayoutParams().width = containerDimensions(context);
-            viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
+
         }else {
             viewHolder.imageView_local.setVisibility(View.VISIBLE);
             Bitmap bitmap = loadExerciseImageFromDevice(context,WorkoutActivity.ParsedExercises[a].getExercise_image());
             viewHolder.imageView_local.setImageBitmap(bitmap);
-            viewHolder.imageView_local.getLayoutParams().width = containerDimensions(context);
-            viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
         }
 
 

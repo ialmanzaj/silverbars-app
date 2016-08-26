@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/CustomView"
     android:orientation="vertical"
     android:layout_gravity="center"
@@ -11,8 +12,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/Layout">
-
                 <com.facebook.drawee.view.SimpleDraweeView
+                    fresco:actualImageScaleType="centerInside"
                     android:layout_above="@+id/nombre"
                     android:contentDescription="@string/workout_name"
                     android:id="@+id/imagen_cache"
@@ -26,7 +27,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -39,5 +39,6 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true" />
+
         </RelativeLayout>
 </LinearLayout>

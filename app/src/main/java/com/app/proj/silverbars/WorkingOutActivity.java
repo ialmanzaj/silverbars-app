@@ -435,7 +435,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
+                            ResumeCountDown();
                             recycler.smoothScrollToPosition(y-1);
                             y--;
                             CurrentExercise.setText(String.valueOf(y+1));
@@ -496,6 +496,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                             dialog.dismiss();
+                            ResumeCountDown();
                             // String state = PauseButton.getText().toString();
                             recycler.smoothScrollToPosition(y+1);
                             y++;
