@@ -254,11 +254,13 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
                     ModalLayout.setVisibility(View.GONE);
                 }
+
                 //cuando el descanso se acaba
                 if (actualRest == 0){
                     Log.v(TAG,"Descanso: Terminado");
                     restTimer.cancel();
                     rest = false;
+
                     playExerciseAudio(Exercises[y].getExercise_audio());
                     asignTotalTime(y);
                     startMainCountDown(totalTime,1,totalTime);
@@ -435,12 +437,20 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
                             ResumeCountDown();
                             recycler.smoothScrollToPosition(y-1);
                             y--;
+
                             CurrentExercise.setText(String.valueOf(y+1));
                             main_timer.cancel();
                             Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
+
+
+                            positive.setText(String.valueOf(Positive[y]));
+                            isometric.setText(String.valueOf(Isometric[y]));
+                            negative.setText(String.valueOf(Negative[y]));
+
                             asignTotalTime(y);
                             startMainCountDown(totalTime,1,totalTime);
                             if (y == 0){
@@ -470,8 +480,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     }
                 })
                         .show();
-
-
 
             }
         });
@@ -503,6 +511,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             CurrentExercise.setText(String.valueOf(y+1));
                             main_timer.cancel();
                             Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
+
+                            positive.setText(String.valueOf(Positive[y]));
+                            isometric.setText(String.valueOf(Isometric[y]));
+                            negative.setText(String.valueOf(Negative[y]));
+
                             asignTotalTime(y);
                             startMainCountDown(totalTime,1,totalTime);
                             if (y == elements-1){
@@ -527,7 +540,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         dialog.dismiss();
-
                         ResumeCountDown();
                     }
                 })
