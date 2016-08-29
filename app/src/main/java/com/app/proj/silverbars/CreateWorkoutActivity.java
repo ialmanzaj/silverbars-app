@@ -87,7 +87,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
         if (toolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Create Workout");
+            getSupportActionBar().setTitle(getResources().getString(R.string.text_create_workout));
             toolbar.setNavigationIcon(R.drawable.ic_clear_white_24dp);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -295,18 +295,10 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         //webView.getSettings().setUseWideViewPort(true);
 
         webView.getSettings().setJavaScriptEnabled(true);
-
         getBodyView();
     }
 
-    private  int containerDimensions(Context context) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        return width;
-    }
+
 
     private void getBodyView(){
         // ACCEDER A LA URL DEL HTML GUARDADO EN EL PHONE

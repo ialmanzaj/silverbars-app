@@ -50,7 +50,7 @@
     <!-- Strings related to activity_myworkouts -->
     <string name="blank_text_my_workouts">NO HAY WORKOUT AÚN</string>
     <string name="blank_text_my_workouts_saved">NO HAY WORKOUTS GUARDADOS AÚN</string>
-    <string name="text_create_workout">CREAR UN NUEVO WORKOUT</string>
+    <string name="text_create_workout">Crear una nueva rutina</string>
     <string name="explore_button">EXPLORAR</string>
 
     <!-- Strings related to activity_playlist picker -->
@@ -76,8 +76,8 @@
     <string name="rest_exercise">30s</string>
     <string name="rest_sets_text">Descanso entre Serie:</string>
     <string name="rest_sets">60s</string>
-    <string name="vibration_rep_text">Vibracion por Repetición</string>
-    <string name="vibration_set_text">Vibracion por Serie</string>
+    <string name="vibration_rep_text">Activar vibracion por repetición</string>
+    <string name="vibration_set_text">Activar vibracion por serie</string>
     <string name="tempo_text">Tempo en Reps</string>
     <string name="tempo_positive">3</string>
     <string name="tempo_isometric">1</string>
@@ -182,5 +182,8 @@
     <string name="CARDIO">CARDIO</string>
     <string name="ISOMETRIC">ISOMETRIC</string>
     <string name="PYLOMETRICS">PLIOMETRÍA</string>
+
+    <string name="save_workout">Guardar Rutina</string>
+    <string name="audio_exercise">Descargar audio de cada ejercicio</string>
 
 </resources>

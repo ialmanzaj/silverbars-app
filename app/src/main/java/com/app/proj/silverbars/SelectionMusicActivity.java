@@ -1,5 +1,6 @@
 package com.app.proj.silverbars;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -19,6 +20,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class SelectionMusicActivity extends AppCompatActivity {
+    private static final String TAG = "SelectionMusicActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +33,7 @@ public class SelectionMusicActivity extends AppCompatActivity {
 
         if (myToolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Music selection");
+            getSupportActionBar().setTitle(getResources().getString(R.string.music_selection));
 
             myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
@@ -77,6 +80,7 @@ public class SelectionMusicActivity extends AppCompatActivity {
         spotifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivityForResult(new Intent(SelectionMusicActivity.this, SpotifyMusic.class), 1);
 
             }
         });
@@ -93,21 +97,36 @@ public class SelectionMusicActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String[] position;
-        ArrayList<File> mySongs;
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null){
-            mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
-            position = data.getStringArrayExtra("positions");
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("positions", position);
-            returnIntent.putExtra("songs", mySongs);
-            setResult(RESULT_OK, returnIntent);
-            finish();
-        }
-        else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
-            mySongs = null;
-            position = null;
-            toast("No result");
+
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null){
+            Log.v(TAG,"RESULT_OK: YES");
+
+            if (data.hasExtra("playlist_spotify") && data.hasExtra("token")){
+
+                String playlist_spotify = data.getStringExtra("playlist_spotify");
+                String token =  data.getStringExtra("token");
+
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("playlist_spotify",playlist_spotify);
+                returnIntent.putExtra("token",token);
+                setResult(RESULT_OK,returnIntent);
+                finish();
+            }/*else if (data.hasExtra("songs") && data.hasExtra("positions")){
+
+                ArrayList<File> mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
+                String[] position = data.getStringArrayExtra("positions");
+
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("positions", position);
+                returnIntent.putExtra("songs", mySongs);
+                setResult(RESULT_OK, returnIntent);
+                finish();
+
+            }*/
+
+
+
+
         }
     }
 

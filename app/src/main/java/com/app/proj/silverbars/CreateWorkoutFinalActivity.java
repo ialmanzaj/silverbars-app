@@ -103,7 +103,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
         if (toolbar != null) {
 
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Save Workout");
+            getSupportActionBar().setTitle(getResources().getString(R.string.save_workout));
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

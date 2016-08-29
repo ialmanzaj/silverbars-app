@@ -46,7 +46,7 @@
     <!-- Strings related to activity_myworkouts -->
     <string name="blank_text_my_workouts">THERE\'S NO WORKOUT YET</string>
     <string name="blank_text_my_workouts_saved">THERE\'S NO SAVED WORKOUTS YET</string>
-    <string name="text_create_workout">Create a new one</string>
+    <string name="text_create_workout">Create a new workout</string>
     <string name="explore_button">EXPLORE</string>
 
     <!-- Strings related to activity_playlist picker -->
@@ -72,8 +72,8 @@
     <string name="rest_exercise">30s</string>
     <string name="rest_sets_text">Rest between Sets:</string>
     <string name="rest_sets">60s</string>
-    <string name="vibration_rep_text">Vibration per rep</string>
-    <string name="vibration_set_text">Vibration per set</string>
+    <string name="vibration_rep_text">Activate vibration per rep</string>
+    <string name="vibration_set_text">Activate vibration per set</string>
     <string name="tempo_text">Tempo in Reps</string>
     <string name="tempo_positive">3</string>
     <string name="tempo_isometric">1</string>
@@ -185,5 +185,11 @@
     <string name="ISOMETRIC">ISOMETRIC</string>
     <string name="PYLOMETRICS">PYLOMETRICS</string>
 
+    <string name="spotify_playlist" translatable="false">""</string>
+    <string name="spotify_token" translatable="false">""</string>
+
+    <string name="save_workout">Save Workout</string>
+
+    <string name="audio_exercise">Download audio of each exercise</string>
 
 </resources>

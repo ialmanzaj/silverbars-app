@@ -238,8 +238,7 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), MainScreenActivity.class));
                         finish();
                     }else if(responseCode == 500){
-                        Log.e(TAG,"error iniciando sesion");
-                        LoginManager.getInstance().logOut();
+                        POST(accessToken);
                     }else{
                         Log.e(TAG,"error desconocido");
                         LoginManager.getInstance().logOut();

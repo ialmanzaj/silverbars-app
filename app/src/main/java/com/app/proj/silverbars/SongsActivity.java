@@ -117,22 +117,22 @@ public class SongsActivity extends AppCompatActivity {
 
     public ArrayList<File> findSongs(File root){
 
-        ArrayList<File> al = new ArrayList<>();
+        ArrayList<File> songs = new ArrayList<>();
         if (root.listFiles() != null){
             File[] files = root.listFiles();
             for(File singleFile : files){
                 if (singleFile.isDirectory() && !singleFile.isHidden()){
-                    al.addAll(findSongs(singleFile));
+                    songs.addAll(findSongs(singleFile));
                 }
                 else{
                     if (singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".wav")){
                         if (SongDuration(this,singleFile)!=null && Long.valueOf(SongDuration(this,singleFile))>150000)
-                            al.add(singleFile);
+                            songs.add(singleFile);
                     }
                 }
             }
         }
-        return al;
+        return songs;
     }
 
     @Override

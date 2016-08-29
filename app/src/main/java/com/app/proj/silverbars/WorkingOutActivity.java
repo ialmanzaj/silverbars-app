@@ -1,9 +1,16 @@
 package com.app.proj.silverbars;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -17,16 +24,28 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.spotify.sdk.android.player.Config;
+import com.spotify.sdk.android.player.ConnectionStateCallback;
+import com.spotify.sdk.android.player.Connectivity;
+import com.spotify.sdk.android.player.Error;
+import com.spotify.sdk.android.player.Metadata;
+import com.spotify.sdk.android.player.PlaybackState;
+import com.spotify.sdk.android.player.Player;
+import com.spotify.sdk.android.player.PlayerEvent;
+import com.spotify.sdk.android.player.Spotify;
+import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,9 +60,12 @@ import static com.app.proj.silverbars.Utilities.getFileReady;
 import static com.app.proj.silverbars.Utilities.getUrlReady;
 import static com.app.proj.silverbars.Utilities.quitarMp3;
 
-public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener {
+public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener, Player.NotificationCallback, ConnectionStateCallback {
 
     private static final String TAG ="WorkingOut ACTIVITY";
+
+    private static final String CLIENT_ID = "20823679749441aeacf4e601f7d12270";
+
     static MediaPlayer mp;
     ArrayList<File> mySongs;
     ArrayList<File> playlist;
@@ -63,7 +85,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     private FrameLayout prvLayout;
     private FrameLayout nxtLayout;
-    private FrameLayout ModalLayout;
+    private RelativeLayout ModalLayout;
     private Button PauseButton;
     private boolean SelectedSongs = false, finish = false, START_TIMER = false,main = false,MAIN_TIMER = false;
     private RecyclerView recycler;
@@ -78,9 +100,18 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private int exercises_size = 0;
     private int RestByExercise = 0,RestBySet = 0;
     private int [] Positive,Negative,Isometric;
-    
+
     TextView positive,negative,isometric;
 
+    String spotify_playlist;
+
+    private SpotifyPlayer mPlayer;
+    private PlaybackState mCurrentPlaybackState;
+    private BroadcastReceiver mNetworkStateReceiver;
+    private Metadata mMetadata;
+    String Token;
+
+    Boolean Spotify_ = false,DownloadAudioExercise = false;
 
     // Inicializar Workouts
     List<WorkoutInfo> exercisesforRecycler = new ArrayList<>();
@@ -98,13 +129,26 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Exercises_reps = b.getIntArray("ExercisesReps");
         VibrationPerRep = b.getBoolean("VibrationPerRep");
         VibrationPerSet =  b.getBoolean("VibrationPerSet");
+        DownloadAudioExercise = b.getBoolean("audio_exercise");
+
         TotalSets = b.getInt("Sets");
 
         mySongs = (ArrayList) b.getParcelableArrayList("songlist");
         Log.v(TAG,"mysongs"+mySongs);
 
+        spotify_playlist = b.getString("playlist_spotify");
+        Token = b.getString("token");
 
-        String[] position = b.getStringArray("pos");
+        Log.v(TAG,"spotify_playlist: "+spotify_playlist);
+        Log.v(TAG,"Token: "+Token);
+
+        if (spotify_playlist != null && Token != null){
+            configPlayerSpotify(Token);
+
+        }
+
+        String[] song_names = b.getStringArray("pos");
+
         Positive = b.getIntArray("Array_Positive_Exercises");
         Isometric =  b.getIntArray("Array_Isometric_Exercises");
         Negative =  b.getIntArray("Array_Negative_Exercises");
@@ -112,10 +156,12 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Exercises = WorkoutActivity.ParsedExercises;
 
         exercises_size = Exercises.length;
+
+
         // tempo config
         tempo = Positive[y] + Isometric[y] + Negative[y];
 
-        //Log.v("Songs", Arrays.toString(position));
+        //Log.v("Songs", Arrays.toString(song_names));
         playlist = new ArrayList<>();
 
         // contadores de descanso y repeticiones actuales
@@ -126,8 +172,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         CurrentSet = (TextView) findViewById(R.id.CurrentSet);
         TextView totalSet = (TextView) findViewById(R.id.TotalSet);
         CurrentExercise = (TextView) findViewById(R.id.CurrentExercise);
-        
-        
+
+
         //tempo text
         positive = (TextView) findViewById(R.id.positive);
         isometric = (TextView) findViewById(R.id.isometric);
@@ -136,14 +182,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         positive.setText(String.valueOf(Positive[0]));
         isometric.setText(String.valueOf(Isometric[0]));
         negative.setText(String.valueOf(Negative[0]));
-        
-        
-        // Rest modal
-        ModalLayout = (FrameLayout) findViewById(R.id.ModalLayout);
-        headerText = (TextView) findViewById(R.id.headerText);
-        RestCounter_text = (TextView) findViewById(R.id.RestCounter_text);
-
-        final TextView totalExercise = (TextView) findViewById(R.id.TotalExercise);
 
         // next and preview button for exercise
         ImageButton prvExercise = (ImageButton) findViewById(R.id.prvExercise);
@@ -157,7 +195,22 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         PauseButton = (Button) findViewById(R.id.PauseButton);
         Button endbutton = (Button) findViewById(R.id.Endbutton);
 
-        RelativeLayout playerLayout = (RelativeLayout) findViewById(R.id.PlayerLayout);
+
+        LinearLayout playerLayout = (LinearLayout) findViewById(R.id.PlayerLayout);
+
+
+
+        // Rest modal
+        ModalLayout = (RelativeLayout) findViewById(R.id.ModalLayout);
+
+
+        headerText = (TextView) findViewById(R.id.headerText);
+        RestCounter_text = (TextView) findViewById(R.id.RestCounter_text);
+
+        final TextView totalExercise = (TextView) findViewById(R.id.TotalExercise);
+
+
+
 
         song_name = (TextView) findViewById(R.id.song_name);
         song_name.setSelected(true);
@@ -285,7 +338,22 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         //change to next music with swipe
         playerLayout.setOnTouchListener(new OnSwipeTouchListener(this){
             public void onSwipeRight() {
-                if (SelectedSongs){
+
+                if (Spotify_){
+
+                    if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
+                        mPlayer.skipToPrevious();
+
+                    }else {
+
+                        startPlaySpotify(spotify_playlist);
+                        PlayerPlay();
+                    }
+
+
+
+
+                }else if (SelectedSongs){
                     int playlist_size = playlist.size();
                     if (playlist_size > 1 && (x-1) >= 0 ){
                         btPlay.setVisibility(View.GONE);
@@ -294,7 +362,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         mp.release();
                         x = (x-1)%playlist.size();
                         u = Uri.parse(playlist.get(x).toString());
-                        
+
                         String songName = SongName(WorkingOutActivity.this,playlist.get(x));
                         song_name.setText(quitarMp3(songName));
                         String artist = SongArtist(WorkingOutActivity.this,playlist.get(x));
@@ -316,7 +384,18 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             }
 
             public void onSwipeLeft() {
-                if (SelectedSongs) {
+                if (Spotify_){
+
+                    if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
+                        mPlayer.skipToNext();
+
+                    }else {
+
+                        startPlaySpotify(spotify_playlist);
+                        PlayerPlay();
+                    }
+
+                } else if (SelectedSongs) {
                     int playlist_size = playlist.size();
                     if (playlist_size > 1 && x + 1 < playlist_size) {
                         btPlay.setVisibility(View.GONE);
@@ -331,9 +410,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         song_name.setText(songName);
 
                         String artist = SongArtist(WorkingOutActivity.this,playlist.get(x));
-                        
+
                         artist_name.setText(artist);
-                        
+
                         mp = MediaPlayer.create(getApplicationContext(), u);
                         mp.start();
                     } else {
@@ -361,6 +440,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         mp.pause();
                     }
                     ScreenOff();
+
                 }else{
                     ScreenOn();
 
@@ -491,7 +571,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             public void onClick(View view) {
 
                 PauseCountDown();
-                
+
                 new MaterialDialog.Builder(WorkingOutActivity.this)
                         .title("Desea pasar al siguiente ejercicio?")
                         .content("Esta seguro que quiere pasar al siguiente ejercicio?")
@@ -554,19 +634,20 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         btPlay.setOnClickListener(this);
         btPause.setOnClickListener(this);
 
-        if (mySongs != null && mySongs.size() > 0){
+        if (mySongs != null && mySongs.size() > 0 && song_names != null){
+
             SelectedSongs = true;
             for(int j = 0; j < mySongs.size(); j++){
-                for(int z = 0; z < position.length; z++)
-                    if (Objects.equals(position[z], SongName(this,mySongs.get(j)))){
+                for(int z = 0; z < song_names.length; z++)
+                    if (Objects.equals(song_names[z], SongName(this,mySongs.get(j)))){
                         z++;
                         playlist.add(mySongs.get(j));
                     }
             }
 
-            
+
             u = Uri.parse(playlist.get(x).toString());
-            
+
             String songName = SongName(this,playlist.get(x));
             song_name.setText(quitarMp3(songName));
 
@@ -585,17 +666,21 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     playMusic(playlist_size);
                 }
             });
-        }
-        else{
 
+        } else if (spotify_playlist != null && Token != null){
+
+           Log.v(TAG,"musica spotify");
+            Spotify_ = true;
+
+        } else {
+
+            playerLayout.setVisibility(View.GONE);
             song_name.setText(getResources().getString(R.string.no_song));
             btPlay.setEnabled(false);
             btPlay.setClickable(false);
             btPause.setEnabled(false);
             btPause.setClickable(false);
-            Log.v(TAG, (String) song_name.getText());
         }
-
 
         actual_start_time = 5;
         startInicialTimer(actual_start_time);
@@ -620,6 +705,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         START_TIMER = true;
     }
 
+    private int containerDimensions(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        return width;
+    }
 
 
     private void playMusic(final int playlist_size){
@@ -668,7 +761,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     // CONTADOR DE REPETICIONES
     public void performTick(long millisUntilFinished) {
         Format_Time = Math.round(millisUntilFinished * 0.001f);
-        Log.v(TAG,"Format_Time: "+Format_Time);
         //Log.v("Time",String.valueOf(Time_aux-tempo)+" / "+Format_Time);
 
         if (Time_aux-tempo == Format_Time){
@@ -705,19 +797,54 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    private void PlayerPause(){
+        btPlay.setVisibility(View.VISIBLE);
+        btPause.setVisibility(View.GONE);
+
+    }
+    private void PlayerPlay(){
+        btPlay.setVisibility(View.GONE);
+        btPause.setVisibility(View.VISIBLE);
+
+    }
+
     @Override
     public void onClick(View view) {
         int id = view.getId();
         switch (id){
             case R.id.btnPlay:
-                btPlay.setVisibility(View.GONE);
-                btPause.setVisibility(View.VISIBLE);
-                mp.start();
+                if (Spotify_){
+
+                    if (mCurrentPlaybackState != null && mCurrentPlaybackState.isActiveDevice){
+                        mPlayer.resume();
+                        PlayerPlay();
+
+                    }else {
+
+                        startPlaySpotify(spotify_playlist);
+                        PlayerPlay();
+                    }
+
+
+                }else {
+                    mp.start();
+                    PlayerPlay();
+                }
                 break;
             case R.id.btnPause:
-                btPlay.setVisibility(View.VISIBLE);
-                btPause.setVisibility(View.GONE);
-                mp.pause();
+
+                if (Spotify_){
+
+                    if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
+                        mPlayer.pause();
+                        PlayerPause();
+
+                    }
+
+                }else {
+                    mp.pause();
+                    PlayerPause();
+                }
                 break;
         }
     }
@@ -769,71 +896,81 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
     }
-    private void asignTotalTime(int position){
-        totalTime = (Exercises_reps[position] * tempo) + 5;
+    private void asignTotalTime(int song_names){
+        totalTime = (Exercises_reps[song_names] * tempo) + 5;
 
         Log.v(TAG,"totalTime: "+totalTime);
-        Log.v(TAG,"Exercises_reps[position]: "+Exercises_reps[position]);
+        Log.v(TAG,"Exercises_reps[song_names]: "+Exercises_reps[song_names]);
         Log.v(TAG,"tempo: "+tempo);
     }
 
-
-
     private void playExerciseAudio(String file){
         Log.v(TAG,"playExerciseAudio: "+file);
-        media = new MediaPlayer();
-        int maxVolume = 100;
-        final float volumeFull = (float)(Math.log(maxVolume)/Math.log(maxVolume));;
-        final float volumeHalf = (float)(Math.log(maxVolume-90)/Math.log(maxVolume));
-        if (media.isPlaying()) {
-            media.stop();
-            media.release();
+
+        if (DownloadAudioExercise){
+
             media = new MediaPlayer();
-        }
-        try {
+            final int maxVolume = 100;
+            final float volumeFull = (float)(Math.log(maxVolume)/Math.log(maxVolume));;
+            final float volumeHalf = (float)(Math.log(maxVolume-90)/Math.log(maxVolume));
+            if (media.isPlaying()) {
+                media.stop();
+                media.release();
+                media = new MediaPlayer();
+            }
+            try {
+                String[] audioDir = Exercises[y].getExercise_audio().split("exercises");
 
-            String[] audioDir = Exercises[y].getExercise_audio().split("exercises");
+                if (audioDir.length == 2){
 
-            if (audioDir.length == 2){
+                    String Parsedurl = "exercises"+audioDir[1];
+                    Log.v(TAG,"Parsedurl: "+Parsedurl);
+                    String[] splitName = Parsedurl.split("/");
+                    Log.v(TAG,"splitName: "+ Arrays.toString(splitName));
+                    String mp3Name = splitName[2];
+                    Log.v(TAG,"mp3Name: "+ mp3Name);
 
-                String Parsedurl = "exercises"+audioDir[1];
-                Log.v(TAG,"Parsedurl: "+Parsedurl);
-                String[] splitName = Parsedurl.split("/");
-                Log.v(TAG,"splitName: "+ Arrays.toString(splitName));
-                String mp3Name = splitName[2];
-                Log.v(TAG,"mp3Name: "+ mp3Name);
+                    media = MediaPlayer.create(this,Uri.parse(getFilesDir()+"/SilverbarsMp3/"+mp3Name));
 
-                media = MediaPlayer.create(this,Uri.parse(getFilesDir()+"/SilverbarsMp3/"+mp3Name));
+                }else {
 
-            }else {
+                    String[] mp3dir = file.split("/SilverbarsMp3/");
+                    media = MediaPlayer.create(this, Uri.parse(getFilesDir()+"/SilverbarsMp3/"+mp3dir[1]));
+                }
 
-                String[] mp3dir = file.split("/SilverbarsMp3/");
-                media = MediaPlayer.create(this, Uri.parse(getFilesDir()+"/SilverbarsMp3/"+mp3dir[1]));
+            } catch (Exception e) {
+                Log.e(TAG,"Exception",e);
             }
 
-        } catch (Exception e) {
-            Log.e(TAG,"Exception",e);
+            media.setOnPreparedListener(new MediaPlayer.OnPreparedListener(){
+                public void onPrepared(MediaPlayer arg0) {
+                    Log.e("ready!","ready!");
+                    if (mp!=null){
+                        if (mp.isPlaying())
+                            mp.setVolume(0.04f,0.04f);
+                    }
+                    if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
+                        mPlayer.pause();
+                    }
+                    media.start();
+                }} );
+
+            media.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    if (mp!=null && mp.isPlaying()) {
+                        mp.setVolume(volumeFull, volumeFull);
+                        mediaPlayer.release();
+                    }
+                    if (mCurrentPlaybackState != null && mCurrentPlaybackState.isActiveDevice){
+                        mediaPlayer.release();
+                        mPlayer.resume();
+                    }
+                }
+            });
+
         }
 
-        media.setOnPreparedListener(new MediaPlayer.OnPreparedListener(){
-            public void onPrepared(MediaPlayer arg0) {
-                Log.e("ready!","ready!");
-                if (mp!=null){
-                    if (mp.isPlaying())
-                        mp.setVolume(0.04f,0.04f);
-                }
-                media.start();
-            }} );
-
-        media.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                if (mp!=null && mp.isPlaying()) {
-                    mp.setVolume(volumeFull, volumeFull);
-                    mediaPlayer.release();
-                }
-            }
-        });
     }
 
 
@@ -940,6 +1077,52 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private void ScreenOff(){getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);}
 
 
+    private void configPlayerSpotify(String token){
+
+        if (mPlayer == null) {
+            Config playerConfig = new Config(getApplicationContext(), token, CLIENT_ID);
+
+            mPlayer = Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver() {
+                @Override
+                public void onInitialized(SpotifyPlayer player) {
+                    Log.v(TAG,"-- Player initialized --");
+                    mPlayer.setConnectivityStatus(getNetworkConnectivity(WorkingOutActivity.this));
+                    mPlayer.addConnectionStateCallback(WorkingOutActivity.this);
+                    mPlayer.addNotificationCallback(WorkingOutActivity.this);
+
+
+                }
+
+                @Override
+                public void onError(Throwable error) {
+                    Log.e(TAG,"Error in initialization: " + error.getMessage());
+                }
+            });
+        } else {
+            mPlayer.login(Token);
+            Log.e(TAG,"mPlayer.login(Token)");
+        }
+    }
+
+    public void startPlaySpotify(String uri_song) {
+        logStatus("Starting playback for " + uri_song);
+
+        mPlayer.play(uri_song,0,0);
+
+    }
+
+    private void updateView() {
+
+        Log.v(TAG,"mCurrentPlaybackState: "+mCurrentPlaybackState);
+        Log.v(TAG,"isLoggedIn: "+isLoggedIn());
+
+        if (mMetadata != null && mMetadata.currentTrack != null) {
+            song_name.setText(mMetadata.currentTrack.name);
+            artist_name.setText(mMetadata.currentTrack.artistName);
+            final String durationStr = String.format(" (%dms)", mMetadata.currentTrack.durationMs);
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -951,6 +1134,28 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         super.onResume();
         Log.v(TAG,"onResume");
 
+
+        // Set up the broadcast receiver for network events. Note that we also unregister
+        // this receiver again in onPause().
+        mNetworkStateReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (mPlayer != null) {
+                    Connectivity connectivity = getNetworkConnectivity(getBaseContext());
+                    Log.v(TAG,"Network state changed: " + connectivity.toString());
+                    mPlayer.setConnectivityStatus(connectivity);
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mNetworkStateReceiver, filter);
+
+        if (mPlayer != null) {
+            mPlayer.addNotificationCallback(WorkingOutActivity.this);
+            mPlayer.addConnectionStateCallback(WorkingOutActivity.this);
+        }
+
         if (pause){
             ResumeCountDown();
         }
@@ -960,6 +1165,19 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         super.onPause();
         Log.v(TAG,"onPause");
         PauseCountDown();
+
+        unregisterReceiver(mNetworkStateReceiver);
+
+        // Note that calling Spotify.destroyPlayer() will also remove any callbacks on whatever
+        // instance was passed as the refcounted owner. So in the case of this particular example,
+        // it's not strictly necessary to call these methods, however it is generally good practice
+        // and also will prevent your application from doing extra work in the background when
+        // paused.
+        if (mPlayer != null) {
+            mPlayer.removeNotificationCallback(WorkingOutActivity.this);
+            mPlayer.removeConnectionStateCallback(WorkingOutActivity.this);
+        }
+
     }
 
     @Override
@@ -971,6 +1189,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onDestroy() {
         ScreenOff();
+
+        Spotify.destroyPlayer(this);
         if (MAIN_TIMER && main_timer != null){
             main_timer.cancel();
         }
@@ -983,5 +1203,73 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
 
+    private Connectivity getNetworkConnectivity(Context context) {
+        ConnectivityManager connectivityManager;
+        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        if (activeNetwork != null && activeNetwork.isConnected()) {
+            return Connectivity.fromNetworkType(activeNetwork.getType());
+        } else {
+            return Connectivity.OFFLINE;
+        }
+    }
+
+    private boolean isLoggedIn() {
+        return mPlayer != null && mPlayer.isLoggedIn();
+    }
+
+    private void logStatus(String status) {
+        Log.i("SpotifySdkDemo", status);
+    }
+
+    @Override
+    public void onPlaybackEvent(PlayerEvent event) {
+        // Remember kids, always use the English locale when changing case for non-UI strings!
+        // Otherwise you'll end up with mysterious errors when running in the Turkish locale.
+        // See: http://java.sys-con.com/node/46241
+        logStatus("Player event: " + event);
+        mCurrentPlaybackState = mPlayer.getPlaybackState();
+        mMetadata = mPlayer.getMetadata();
+        logStatus("Player state: " + mCurrentPlaybackState);
+        logStatus("Metadata: " + mMetadata);
+
+        updateView();
+
+    }
+
+    @Override
+    public void onPlaybackError(Error error) {
+        logStatus("Player error: " + error);
+
+    }
+    @Override
+    public void onLoggedIn() {
+        Log.d(TAG, "User logged in");
+
+    }
+
+    @Override
+    public void onLoggedOut() {
+        Log.d(TAG, "User logged out");
+
+    }
+
+    @Override
+    public void onLoginFailed(int i) {
+        Log.d(TAG, "Login failed");
+
+    }
+
+    @Override
+    public void onTemporaryError() {
+        Log.d(TAG, "Temporary error occurred");
+
+    }
+
+    @Override
+    public void onConnectionMessage(String message) {
+        Log.d(TAG, "Received connection message: " + message);
+
+    }
 
 }

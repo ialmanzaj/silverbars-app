@@ -239,10 +239,7 @@
                                         android:textAlignment="center"
                                         android:id="@+id/RestbySet" />
 
-
-
                                 </LinearLayout>
-
                             </RelativeLayout>
 
 
@@ -258,8 +255,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/vibration_rep_text"
-                            android:textColor="@color/black"
-                            android:checked="true" />
+                            android:textColor="@color/black" />
 
                         <android.support.v7.widget.SwitchCompat
                             android:id="@+id/vibration_per_set"
@@ -273,12 +269,22 @@
                             android:layout_height="wrap_content"
                             android:text="@string/vibration_set_text"
                             android:textColor="@color/black"
-                            android:textSize="18sp"
-                            android:checked="true" />
+                            android:textSize="18sp" />
 
+                        <android.support.v7.widget.SwitchCompat
+                            android:id="@+id/voice_per_exercise"
+                            android:minHeight="45dp"
+                            android:theme="@style/MySwitch2"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/audio_exercise"
+                            android:textColor="@color/black"
+                            android:textSize="18sp" />
                     </LinearLayout>
-
-
                 </LinearLayout>
 
                 <LinearLayout

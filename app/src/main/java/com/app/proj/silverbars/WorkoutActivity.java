@@ -1,5 +1,6 @@
 package com.app.proj.silverbars;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -99,12 +100,12 @@ public class WorkoutActivity extends AppCompatActivity {
     private Button minusRestSets;
     TabHost Tab_layout;
     private TextView Positive, Negative, Isometric, Reps, Workout_name, Sets, RestbySet, RestbyExercise,RestSets_dialog,Sets_dialog;
-    private String[] position;
+    private String[] Songs_names;
     private int value = 0;
     private RecyclerView ExercisesRecycler;
     private RecyclerView.Adapter adapter;
     private int ExerciseReps = 1;
-    private ArrayList<File> mySongs;
+    private ArrayList<File> Songs_files;
 
     static public int[] Exercises_reps;
     static public int[] Positive_Exercises;
@@ -134,8 +135,9 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private LinearLayout error_layout;
 
-    private static boolean VibrationIsActivePerRep=true;
-    private static boolean VibrationIsActivePerSet=true;
+    private  boolean VibrationIsActivePerRep=false;
+    private  boolean VibrationIsActivePerSet=false;
+    private boolean DownloadAudioExercise = false;
 
     private String partes = "";
     private WebView webview;
@@ -144,6 +146,10 @@ public class WorkoutActivity extends AppCompatActivity {
     private  List<String> MusclesArray = new ArrayList<>();
     private  List<String> TypeExercises = new ArrayList<>();
 
+
+    String PlaylistSpotify,Token;
+    
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -194,7 +200,16 @@ public class WorkoutActivity extends AppCompatActivity {
         SwitchCompat enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
         SwitchCompat vibration_per_rep = (SwitchCompat) findViewById(R.id.vibration_per_rep);
         SwitchCompat vibration_per_set = (SwitchCompat) findViewById(R.id.vibration_per_set);
-        
+        SwitchCompat voice_per_exercise = (SwitchCompat) findViewById(R.id.voice_per_exercise);
+
+
+        voice_per_exercise.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+                DownloadAudioExercise = isChecked;
+            }
+        });
         
         ExercisesRecycler = (RecyclerView) findViewById(R.id.reciclador);
 
@@ -569,8 +584,8 @@ public class WorkoutActivity extends AppCompatActivity {
                         }else {
                             selectMusic.setBackgroundColor(getResources().getColor(R.color.white));
                         }
-                        Intent i = new Intent(getBaseContext(), SelectionMusicActivity.class);
-                        startActivityForResult(i,1);
+
+                        startActivityForResult(new Intent(WorkoutActivity.this, SelectionMusicActivity.class),1);
 
                         break;
                     default:
@@ -612,24 +627,34 @@ public class WorkoutActivity extends AppCompatActivity {
 
     }// on create close
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null){
+            Log.v(TAG,"RESULT_OK: YES");
 
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null){
 
-            mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
-            position = data.getStringArrayExtra("positions");
-            Log.v("Position",Arrays.toString(position));
-            Log.v("Songs",mySongs.toString());
-            toast("Activity result");
+            if (data.hasExtra("playlist_spotify") && data.hasExtra("token")){
 
-        }
-        else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
-            mySongs = null;
-            position = null;
-            toast("No result");
+                PlaylistSpotify = data.getStringExtra("playlist_spotify");
+                Token =  data.getStringExtra("token");
+
+
+                Log.v(TAG,"Token: "+Token);
+                Log.v(TAG,"PlaylistSpotify: "+PlaylistSpotify);
+
+            }/*else if (data.hasExtra("songs") && data.hasExtra("positions")){
+
+
+                Songs_files = (ArrayList<File>) data.getSerializableExtra("songs");
+                Songs_names = data.getStringArrayExtra("positions");
+                
+                Log.v("Songs_names: ",Arrays.toString(Songs_names));
+                Log.v("Songs_files: ",Songs_files.toString());
+
+            }*/
 
         }
 
@@ -651,8 +676,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, WorkingOutActivity.class);
         intent.putExtra("ExercisesReps",Exercises_reps);
-        intent.putExtra("pos",position);
-        intent.putExtra("songlist",mySongs);
+        intent.putExtra("pos",Songs_names);
+        intent.putExtra("songlist",Songs_files);
         intent.putExtra("Sets",sets);
         intent.putExtra("RestByExercise",restbyexercise);
         intent.putExtra("RestBySet",restbyset);
@@ -661,6 +686,10 @@ public class WorkoutActivity extends AppCompatActivity {
         intent.putExtra("Array_Positive_Exercises",Positive_Exercises);
         intent.putExtra("Array_Isometric_Exercises",Isometric_Exercises);
         intent.putExtra("Array_Negative_Exercises",Negative_Exercises);
+
+        intent.putExtra("playlist_spotify",PlaylistSpotify);
+        intent.putExtra("token",Token);
+        intent.putExtra("audio_exercise",DownloadAudioExercise);
         startActivity(intent);
     }
 
@@ -935,14 +964,18 @@ public class WorkoutActivity extends AppCompatActivity {
                                     if (Dir.isDirectory()) {
                                         File file = getFileReady(WorkoutActivity.this,"/SilverbarsMp3/"+mp3Name);
                                         if (!file.exists()) {
-                                            int position = i;
-                                            DownloadMp3(Parsedurl, mp3Name);
+
+                                            if (DownloadAudioExercise){
+                                                DownloadMp3(Parsedurl, mp3Name);
+                                            }
                                         }
                                     } else {
                                         boolean success = Dir.mkdir();
                                         if (success) {
-                                            int position = i;
-                                            DownloadMp3(Parsedurl, mp3Name);
+
+                                            if (DownloadAudioExercise){
+                                                DownloadMp3(Parsedurl, mp3Name);
+                                            }
                                         }else
                                             Log.e(TAG, "Error creating dir");
                                     }
@@ -952,7 +985,6 @@ public class WorkoutActivity extends AppCompatActivity {
                                     
                                     Tab_layout.setVisibility(View.GONE);
                                     error_layout.setVisibility(View.VISIBLE);
-                                    
                                 }
                                 
                                 Exercises_reps[i] = ExerciseswithReps[i].getRepetition();
@@ -1155,15 +1187,15 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
 
-    private String getImageName(int position){
-        String[] imageDir = ParsedExercises[position].getExercise_image().split("exercises");
+    private String getImageName(int Songs_names){
+        String[] imageDir = ParsedExercises[Songs_names].getExercise_image().split("exercises");
         String Parsedurl = "exercises" + imageDir[1];
         String[] imagesName = Parsedurl.split("/");
         return imagesName[2];
     }
 
-    private String getAudioName(int position){
-        String[] audioDir = ParsedExercises[position].getExercise_audio().split("exercises");;
+    private String getAudioName(int Songs_names){
+        String[] audioDir = ParsedExercises[Songs_names].getExercise_audio().split("exercises");;
         String Parsedurl = "exercises"+audioDir[1];
         String[] splitName = Parsedurl.split("/");
         return splitName[2];
