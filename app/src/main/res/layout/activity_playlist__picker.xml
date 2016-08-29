@@ -47,10 +47,11 @@
         android:layout_gravity="center_horizontal"
         android:layout_alignParentBottom="true">
         <Button
+            android:visibility="gone"
            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Limpiar"
+            android:text=""
             android:id="@+id/clean"
             android:background="@color/colorInactive" />
 
@@ -58,7 +59,7 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/done_text"
+            android:text="@string/choose"
             android:id="@+id/done"
             android:background="@color/colorSecondary" />
     </LinearLayout>

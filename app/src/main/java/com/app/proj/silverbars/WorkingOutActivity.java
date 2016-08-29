@@ -4,17 +4,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Environment;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -52,12 +49,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import static com.app.proj.silverbars.Utilities.SongArtist;
 import static com.app.proj.silverbars.Utilities.SongName;
-import static com.app.proj.silverbars.Utilities.getFileReady;
-import static com.app.proj.silverbars.Utilities.getUrlReady;
 import static com.app.proj.silverbars.Utilities.quitarMp3;
 
 public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener, Player.NotificationCallback, ConnectionStateCallback {
@@ -1190,7 +1184,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     protected void onDestroy() {
         ScreenOff();
 
-        Spotify.destroyPlayer(this);
+        if (mCurrentPlaybackState != null && mCurrentPlaybackState.isActiveDevice){
+            Spotify.destroyPlayer(this);
+        }
+
         if (MAIN_TIMER && main_timer != null){
             main_timer.cancel();
         }
@@ -1234,7 +1231,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         logStatus("Metadata: " + mMetadata);
 
         updateView();
-
     }
 
     @Override

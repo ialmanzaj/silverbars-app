@@ -186,4 +186,6 @@
     <string name="save_workout">Guardar Rutina</string>
     <string name="audio_exercise">Descargar audio de cada ejercicio</string>
 
+    <string name="only_premium">Only available for Premium users</string>
+
 </resources>

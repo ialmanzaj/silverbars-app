@@ -49,7 +49,7 @@
     <string name="text_create_workout">Create a new workout</string>
     <string name="explore_button">EXPLORE</string>
 
-    <!-- Strings related to activity_playlist picker -->
+
     <string name="clean_button_picker">Clean</string>
     <string name="ready_button_picker">OK</string>
 
@@ -189,7 +189,8 @@
     <string name="spotify_token" translatable="false">""</string>
 
     <string name="save_workout">Save Workout</string>
-
     <string name="audio_exercise">Download audio of each exercise</string>
+
+    <string name="only_premium">Solo disponible a usuarios Premium</string>
 
 </resources>

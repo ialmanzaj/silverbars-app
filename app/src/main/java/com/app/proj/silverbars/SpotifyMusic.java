@@ -9,13 +9,16 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -31,6 +34,7 @@ import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyCallback;
@@ -39,6 +43,9 @@ import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Pager;
 import kaaes.spotify.webapi.android.models.PlaylistSimple;
 import kaaes.spotify.webapi.android.models.SavedTrack;
+import kaaes.spotify.webapi.android.models.UserPrivate;
+import retrofit.RequestInterceptor;
+import retrofit.RestAdapter;
 import retrofit.client.Response;
 
 
@@ -69,16 +76,16 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
     private static final String TAG = "SpotifyMusic";
 
 
-
     private static final int REQUEST_CODE = 1337;
-
+    private LinearLayout premium_error;
 
     String SpotifyToken;
 
     List<String> songs = new ArrayList<>();
     List<String> playlists = new ArrayList<>();
 
-
+    Button done;
+    LinearLayout playlists_layout;
     private ListView ListMusic;
 
     @Override
@@ -86,10 +93,29 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spotify_music);
 
-        ListMusic = (ListView)findViewById(R.id.lvPlaylist);
+        ListMusic = (ListView) findViewById(R.id.lvPlaylist);
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
 
-        Button done = (Button) findViewById(R.id.done);
+        if (myToolbar != null) {
+
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Spotify");
+            myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+
+        }
+
+        premium_error = (LinearLayout) findViewById(R.id.only_premium);
+        playlists_layout = (LinearLayout) findViewById(R.id.playlists);
+
+        done = (Button) findViewById(R.id.done);
+
 
         done.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +138,7 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
                     }
                     for (int j = 0; j < playlists.size(); j++) {
                         if (j == selected[j]) {
-                            Log.v(TAG,"playlist: "+playlists.get(j));
+                            Log.v(TAG, "playlist: " + playlists.get(j));
                             currentPlaylist = playlists.get(j);
                             x++;
                         }
@@ -123,10 +149,9 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
                     Log.v("playlists", String.valueOf(playlists));
 
 
-
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("playlist_spotify",currentPlaylist);
-                    returnIntent.putExtra("token",SpotifyToken);
+                    returnIntent.putExtra("playlist_spotify", currentPlaylist);
+                    returnIntent.putExtra("token", SpotifyToken);
                     setResult(RESULT_OK, returnIntent);
                     finish();
 
@@ -138,13 +163,45 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
 
     }
 
+    Boolean USERPREMIUM = false;
 
+    private void getUserAuth(final String Token) {
 
-    public void SavedTracks(String Token){
         SpotifyApi api = new SpotifyApi();
 
         api.setAccessToken(Token);
 
+        SpotifyService spotify = api.getService();
+
+
+        spotify.getMe(new SpotifyCallback<UserPrivate>() {
+            @Override
+            public void failure(SpotifyError spotifyError) {
+                Log.e(TAG, "failure" + spotifyError);
+            }
+
+            @Override
+            public void success(UserPrivate userPrivate, Response response) {
+                Log.v(TAG, "userPrivate.product: " + userPrivate.product);
+
+                if (Objects.equals(userPrivate.product, "premium")) {
+                    USERPREMIUM = true;
+                    getPlaylist(Token);
+
+                }else {
+                    premium_error.setVisibility(View.VISIBLE);
+                }
+
+                Log.v(TAG, "USER" + USERPREMIUM);
+            }
+        });
+
+    }
+
+    private void getPlaylist(String Token) {
+
+        SpotifyApi api = new SpotifyApi();
+        api.setAccessToken(Token);
         SpotifyService spotify = api.getService();
 
         spotify.getMyPlaylists(new SpotifyCallback<Pager<PlaylistSimple>>() {
@@ -154,12 +211,10 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
 
                 String[] items = new String[playlistSimplePager.items.size()];
 
-                for (int a = 0;a<playlistSimplePager.items.size();a++){
-                    Log.v(TAG,"playlistSimplePager:"+playlistSimplePager.items.get(a).uri);
-
+                for (int a = 0; a < playlistSimplePager.items.size(); a++) {
+                    Log.v(TAG, "playlistSimplePager:" + playlistSimplePager.items.get(a).uri);
                     items[a] = playlistSimplePager.items.get(a).name;
                     playlists.add(playlistSimplePager.items.get(a).uri);
-
                 }
 
                 putElementsinList(items);
@@ -167,38 +222,41 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
 
             @Override
             public void failure(SpotifyError spotifyError) {
-                Log.e(TAG,"SpotifyError: "+spotifyError);
+                Log.e(TAG, "SpotifyError: " + spotifyError);
             }
 
         });
         spotify.getMySavedTracks(new SpotifyCallback<Pager<SavedTrack>>() {
             @Override
             public void success(Pager<SavedTrack> savedTrackPager, retrofit.client.Response response) {
-                Log.v("Response size",String.valueOf(response.getHeaders().size()));
-                Log.v("Pager size",String.valueOf(savedTrackPager.items.size()));
+                Log.v("Response size", String.valueOf(response.getHeaders().size()));
+                Log.v("Pager size", String.valueOf(savedTrackPager.items.size()));
 
                 String[] items = new String[savedTrackPager.items.size()];
 
-                for (int a = 0;a<savedTrackPager.items.size();a++){
+                for (int a = 0; a < savedTrackPager.items.size(); a++) {
                     items[a] = savedTrackPager.items.get(a).track.name;
                     songs.add(savedTrackPager.items.get(a).track.uri);
-                    Log.v(TAG,"SAVED: "+savedTrackPager.items.get(a).track.name);
+                    Log.v(TAG, "SAVED: " + savedTrackPager.items.get(a).track.name);
                 }
 
             }
+
             @Override
             public void failure(SpotifyError error) {
-               Log.e(TAG,"SpotifyError: "+error);
+                Log.e(TAG, "SpotifyError: " + error);
             }
         });
+
     }
 
-
+    private void toast(String text){
+        Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-
 
     }
 
@@ -224,16 +282,15 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
                 default:
                     logStatus("Auth result: " + response.getType());
             }
-
-
         }
     }
+
 
     private void onAuthenticationComplete(AuthenticationResponse authResponse) {
         // Once we have obtained an authorization token, we can proceed with creating a Player.
         Log.v(TAG,"Got authentication token");
 
-        SavedTracks(authResponse.getAccessToken());
+        getUserAuth(authResponse.getAccessToken());
         SpotifyToken = authResponse.getAccessToken();
 
         Log.v(TAG,"getAccessToken: "+authResponse.getAccessToken());
@@ -243,22 +300,22 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
     }
 
 
-
-
     private void putElementsinList(String[] items){
 
-        ArrayAdapter<String> adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
-        ListMusic.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        ListMusic.setAdapter(adp);
-    }
+        playlists_layout.setVisibility(View.VISIBLE);
+        done.setVisibility(View.VISIBLE);
 
+        ArrayAdapter<String> adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, android.R.id.text1, items);
+        ListMusic.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        ListMusic.setAdapter(adp);
+
+
+    }
 
 
     private void logStatus(String status) {
         Log.i("SpotifySdkDemo", status);
     }
-
-
 
 
     private void openLoginWindow() {
@@ -267,7 +324,6 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
                 .build();
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
     }
-
 
     @Override
     public void onLoggedIn() {
