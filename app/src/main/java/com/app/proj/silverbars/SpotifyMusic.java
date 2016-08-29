@@ -301,22 +301,17 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
 
 
     private void putElementsinList(String[] items){
-
         playlists_layout.setVisibility(View.VISIBLE);
         done.setVisibility(View.VISIBLE);
 
         ArrayAdapter<String> adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, android.R.id.text1, items);
         ListMusic.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         ListMusic.setAdapter(adp);
-
-
     }
-
 
     private void logStatus(String status) {
         Log.i("SpotifySdkDemo", status);
     }
-
 
     private void openLoginWindow() {
         final AuthenticationRequest request = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
@@ -334,13 +329,11 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
     @Override
     public void onLoggedOut() {
         Log.d(TAG, "User logged out");
-
     }
 
     @Override
     public void onLoginFailed(int i) {
         Log.d(TAG, "Login failed");
-
     }
 
     @Override
@@ -358,7 +351,6 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
 
     @Override
     protected void onDestroy() {
-
         super.onDestroy();
     }
 

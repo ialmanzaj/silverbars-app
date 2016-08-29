@@ -298,6 +298,12 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     if (SelectedSongs && MAIN_TIMER){
                         mp.start();
                     }
+                    if (spotify_playlist != null && Token != null){
+
+                        startPlaySpotify(spotify_playlist);
+                        PlayerPlay();
+
+                    }
 
                     ModalLayout.setVisibility(View.GONE);
                 }
@@ -967,9 +973,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     }
 
-
-
-
     private void showRestModal(int rest_time){
         Log.v(TAG,"Descanso: Empezo");
         main_timer.cancel();
@@ -994,10 +997,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         restTimer = new CountDownTimer(totalsecs, sec_interval) {
             @Override
             public void onTick(long millisUntilFinished) {
-
-                //Log.v(TAG,"millisUntilFinished:"+millisUntilFinished);
                 Format_Time_Rest =  Math.round(millisUntilFinished * 0.001f);
-                //Log.v(TAG,"Format_Time_Rest:"+Format_Time_Rest);
 
                 actualRest--;
                 RestCounter_text.setText(String.valueOf(actualRest));
@@ -1006,7 +1006,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         }.start();
 
     }
-
 
     private void PauseMusic(){if (SelectedSongs) {mp.pause();}}
 
@@ -1083,10 +1082,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     mPlayer.setConnectivityStatus(getNetworkConnectivity(WorkingOutActivity.this));
                     mPlayer.addConnectionStateCallback(WorkingOutActivity.this);
                     mPlayer.addNotificationCallback(WorkingOutActivity.this);
-
-
                 }
-
                 @Override
                 public void onError(Throwable error) {
                     Log.e(TAG,"Error in initialization: " + error.getMessage());
@@ -1094,7 +1090,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             });
         } else {
             mPlayer.login(Token);
-            Log.e(TAG,"mPlayer.login(Token)");
         }
     }
 
@@ -1162,11 +1157,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         unregisterReceiver(mNetworkStateReceiver);
 
-        // Note that calling Spotify.destroyPlayer() will also remove any callbacks on whatever
-        // instance was passed as the refcounted owner. So in the case of this particular example,
-        // it's not strictly necessary to call these methods, however it is generally good practice
-        // and also will prevent your application from doing extra work in the background when
-        // paused.
         if (mPlayer != null) {
             mPlayer.removeNotificationCallback(WorkingOutActivity.this);
             mPlayer.removeConnectionStateCallback(WorkingOutActivity.this);
