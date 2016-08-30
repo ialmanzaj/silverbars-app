@@ -190,7 +190,12 @@
 
     <string name="save_workout">Save Workout</string>
     <string name="audio_exercise">Download audio of each exercise</string>
+    <string name="only_premium">Only available for Premium users</string>
 
-    <string name="only_premium">Solo disponible a usuarios Premium</string>
+    <string name="premium">Only Premium</string>
+
+    <string name="skills">My Skills</string>
+    <string name="empty_playlist">There\'s no playlist</string>
+    <string name="results">My Results</string>
 
 </resources>

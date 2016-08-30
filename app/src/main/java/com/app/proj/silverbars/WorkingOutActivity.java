@@ -45,6 +45,7 @@ import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -105,6 +106,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private Metadata mMetadata;
     String Token;
 
+    private  List<String> Muscles = new ArrayList<>();
+
     Boolean Spotify_ = false,DownloadAudioExercise = false;
 
     // Inicializar Workouts
@@ -117,6 +120,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         Intent i = getIntent();
         Bundle b = i.getExtras();
+
+
+        Muscles = b.getStringArrayList("muscles");
+
+        Log.v(TAG,"muscles:"+Muscles);
 
         RestByExercise =  b.getInt("RestByExercise");
         RestBySet = b.getInt("RestBySet");
@@ -266,7 +274,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             main_timer.cancel();
                             ScreenOff();
                             Log.v(TAG,"results activity here");
-                            startActivity(new Intent(WorkingOutActivity.this,ResultsActivity.class));
+
+                            Intent intent = new Intent(WorkingOutActivity.this, ResultsActivity.class);
+                            intent.putExtra("muscles", (Serializable) Muscles);
+                            startActivity(intent);
                             finish();
                         }
                     }

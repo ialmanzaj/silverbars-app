@@ -15,6 +15,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -59,6 +60,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -154,7 +156,7 @@ public class WorkoutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         workoutId = intent.getIntExtra("id",0);
         workoutName = intent.getStringExtra("name");
         workoutImgUrl = intent.getStringExtra("image");
@@ -585,6 +587,8 @@ public class WorkoutActivity extends AppCompatActivity {
                             selectMusic.setBackgroundColor(getResources().getColor(R.color.white));
                         }
 
+
+
                         startActivityForResult(new Intent(WorkoutActivity.this, SelectionMusicActivity.class),1);
 
                         break;
@@ -686,6 +690,8 @@ public class WorkoutActivity extends AppCompatActivity {
         intent.putExtra("Array_Positive_Exercises",Positive_Exercises);
         intent.putExtra("Array_Isometric_Exercises",Isometric_Exercises);
         intent.putExtra("Array_Negative_Exercises",Negative_Exercises);
+
+        intent.putExtra("muscles", (Serializable) MusclesArray);
 
         intent.putExtra("playlist_spotify",PlaylistSpotify);
         intent.putExtra("token",Token);

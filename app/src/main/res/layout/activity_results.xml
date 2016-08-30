@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -21,26 +21,77 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-        </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
 
-    <ScrollView
-        android:id="@+id/muscles"
+            <Button
+                android:id="@+id/save"
+                android:text="Save"
+                android:background="@color/secondColor"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="5dp"/>
+
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+    <TabHost
+        android:layout_below="@+id/appbarlayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/tabHost2">
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <WebView
-                android:background="@color/white"
-                android:id="@+id/webview"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TabWidget
+                android:background="@color/colorPrimary"
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </TabWidget>
+            <FrameLayout
+                android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-            </WebView>
 
+                <ScrollView
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/muscles"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <WebView
+                            android:layout_weight="1"
+                            android:background="@color/white"
+                            android:id="@+id/webview"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                        </WebView>
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:id="@+id/content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </ScrollView>
+
+                <LinearLayout
+                    android:id="@+id/skills"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"></LinearLayout>
+            </FrameLayout>
         </LinearLayout>
-    </ScrollView>
+    </TabHost>
 
 
-</LinearLayout>
+
+
+</RelativeLayout>

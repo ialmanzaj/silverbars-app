@@ -32,14 +32,18 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 //import com.spotify.sdk.android.authenticationl.AuthenticationResponse;
 
 public class PlaylistPickerActivity extends AppCompatActivity {
+
+    private static final String TAG = "PlaylistPickerActivity";
+
     private ListView ListMusic, ListPlaylist;
-    private String[] items, songs, save_playlist;
-    private Button clean,done;
+    private String[] songs;
+    private String[] save_playlist;
     private long[] selected;
     private ArrayList<File> mySongs;
+    String[] position;
     private int Reps = 0, Tempo = 0;
     private String Playlist_name;
-    private String[] playlist, position;
+    private String[] playlist;
 
     private static String strSeparator = "__,__";
     private Toolbar toolbar;
@@ -50,7 +54,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_playlist__picker);
         ListPlaylist = (ListView)findViewById(R.id.SavedPlaylist);
-        done = (Button)findViewById(R.id.done);
+        Button done = (Button) findViewById(R.id.done);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         ImageView create_button = (ImageView) findViewById(R.id.create_playlist);
 
@@ -89,7 +93,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
             }
         });
 
-        clean = (Button)findViewById(R.id.clean);
+        Button clean = (Button) findViewById(R.id.clean);
         clean.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {}
@@ -97,26 +101,27 @@ public class PlaylistPickerActivity extends AppCompatActivity {
 
         mySongs = findSongs(Environment.getExternalStorageDirectory());
         if (mySongs.size() > 0) {
-            items = new String[mySongs.size()];
+            String[] items = new String[mySongs.size()];
             for (int i = 0; i < mySongs.size(); i++) {
                 items[i] = SongName(mySongs.get(i));
             }
             getUsersPlaylist(1);
-
-
         }
+
 
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final int spa2 = ListPlaylist.getCheckedItemPosition();
-                if(spa2 != -1){
+                final int selected = ListPlaylist.getCheckedItemPosition();
+                Log.v(TAG,"selected: "+selected);
+
+                if(selected != -1){
                     MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
                     int pos = ListPlaylist.getCheckedItemPosition();
                     String[] result = database.getPlaylist(pos+1);
-                    String[] songs = convertStringToArray(result[2]);
+                    String[] positions = convertStringToArray(result[2]);
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("positions",songs);
+                    returnIntent.putExtra("positions",positions);
                     returnIntent.putExtra("songs",mySongs);
                     setResult(RESULT_OK, returnIntent);
                     finish();
@@ -125,16 +130,18 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                     mySongs = null;
                     finish();
                 }
-
-
             }
         });
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+
         if (requestCode == 1 && resultCode == RESULT_OK && data != null){
+
             mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
             position = data.getStringArrayExtra("positions");
             MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
@@ -142,8 +149,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
             toast(Playlist_name);
             getUsersPlaylist(1);
             toast("Activity result");
-        }
-        else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
+        } else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
             mySongs = null;
             position = null;
             toast("No result");
@@ -190,18 +196,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
         }
         return title;
     }
-    private String SongArtist(File file){
-        String artist = null;
-        try{
-            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            Uri uri = Uri.fromFile(file);
-            mediaMetadataRetriever.setDataSource(this, uri);
-            artist = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-        }catch(Exception e){
-            Log.v("Exception",e.toString());
-        }
-        return artist;
-    }
+
     private String SongDuration(File file){
         String duration = null;
         try{MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
@@ -218,7 +213,6 @@ public class PlaylistPickerActivity extends AppCompatActivity {
         String str = "";
         for (int i = 0;i<array.length; i++) {
             str = str+array[i];
-            // Do not append comma at the end of last element
             if(i<array.length-1){
                 str = str+strSeparator;
             }
@@ -233,7 +227,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
         Log.v("Result",Arrays.toString(result));
         return result;
     }
-    public static String[] convertStringToArray(String str){
+    private String[] convertStringToArray(String str){
         return str.split(strSeparator);
     }
 
@@ -248,20 +242,15 @@ public class PlaylistPickerActivity extends AppCompatActivity {
             ListPlaylist.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             ListPlaylist.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                }
-
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {}
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
+                public void onNothingSelected(AdapterView<?> parent) {}
             });
             ListPlaylist.setAdapter(adp2);
         }
         else{
             String[] noResult = new String[1];
-            noResult[0] = "No Playlist";
+            noResult[0] = getResources().getString(R.string.empty_playlist);
             ArrayAdapter<String> adp2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, noResult);
             ListPlaylist.setAdapter(adp2);
         }

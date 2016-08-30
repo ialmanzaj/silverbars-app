@@ -19,8 +19,8 @@ android {
         applicationId "com.app.proj.silverbars"
         minSdkVersion 19
         targetSdkVersion 24
-        versionCode 41
-        versionName "1.4"
+        versionCode 3
+        versionName "1.1.1"
         multiDexEnabled true
     }
 
@@ -64,15 +64,8 @@ dependencies {
     //    compile 'com.parse.bolts:bolts-applinks:1.4.0'
     // This library handles authentication and authorization
 
-    //    compile 'com.spotify.sdk:spotify-auth:1.0.0-beta12@aar'
-
-    //    // This library handles music playback
     compile 'com.spotify.sdk:spotify-auth-beta21-noconnect-2.18c@aar'
     compile 'com.spotify.sdk:spotify-player-beta21-noconnect-2.18c@aar'
-
-    // RxJava itself
-
-// And ProGuard rules for RxJava!
 
 
     compile 'com.android.support:appcompat-v7:24.2.0'

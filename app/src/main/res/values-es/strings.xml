@@ -186,6 +186,11 @@
     <string name="save_workout">Guardar Rutina</string>
     <string name="audio_exercise">Descargar audio de cada ejercicio</string>
 
-    <string name="only_premium">Only available for Premium users</string>
+    <string name="premium">Solo Premium</string>
+    <string name="only_premium">Solo disponible a usuarios Premium</string>
+
+    <string name="skills">Mis habilidades</string>
+    <string name="empty_playlist">No hay ninguna lista de reproducción</string>
+    <string name="results">Mis  Resultados</string>
 
 </resources>

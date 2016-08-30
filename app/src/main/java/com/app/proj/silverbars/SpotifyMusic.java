@@ -85,9 +85,11 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
     List<String> playlists = new ArrayList<>();
 
     Button done;
-    LinearLayout playlists_layout;
+    LinearLayout playlists_layout,error_layout,progress_bar_;
     private ListView ListMusic;
+    Button error_reload;
 
+    Boolean auth_error = false,json_playlist_error = false,json_user_error = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +101,6 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
         setSupportActionBar(myToolbar);
 
         if (myToolbar != null) {
-
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Spotify");
             myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -108,15 +109,42 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
                     finish();
                 }
             });
-
         }
+
 
         premium_error = (LinearLayout) findViewById(R.id.only_premium);
         playlists_layout = (LinearLayout) findViewById(R.id.playlists);
+        error_layout = (LinearLayout) findViewById(R.id.error_layout);
+        error_reload = (Button) findViewById(R.id.error_reload_workout);
+
+        progress_bar_ = (LinearLayout) findViewById(R.id.progress_bar_);
+
+        error_reload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                progress_bar_.setVisibility(View.VISIBLE);
+                error_layout.setVisibility(View.GONE);
+
+                if (auth_error){
+                    openLoginWindow();
+
+                }else if(json_user_error){
+
+                    if (SpotifyToken != null){
+                        getUserAuth(SpotifyToken);
+                    }
+
+                }else if (json_playlist_error){
+
+                    if (SpotifyToken != null){
+                        getPlaylist(SpotifyToken);
+                    }
+
+                }
+            }
+        });
 
         done = (Button) findViewById(R.id.done);
-
-
         done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,6 +187,7 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
             }
         });
 
+
         openLoginWindow();
 
     }
@@ -168,9 +197,7 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
     private void getUserAuth(final String Token) {
 
         SpotifyApi api = new SpotifyApi();
-
         api.setAccessToken(Token);
-
         SpotifyService spotify = api.getService();
 
 
@@ -178,8 +205,9 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
             @Override
             public void failure(SpotifyError spotifyError) {
                 Log.e(TAG, "failure" + spotifyError);
+                error_layout.setVisibility(View.VISIBLE);
+                json_user_error = true;
             }
-
             @Override
             public void success(UserPrivate userPrivate, Response response) {
                 Log.v(TAG, "userPrivate.product: " + userPrivate.product);
@@ -191,8 +219,6 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
                 }else {
                     premium_error.setVisibility(View.VISIBLE);
                 }
-
-                Log.v(TAG, "USER" + USERPREMIUM);
             }
         });
 
@@ -210,7 +236,6 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
             public void success(Pager<PlaylistSimple> playlistSimplePager, Response response) {
 
                 String[] items = new String[playlistSimplePager.items.size()];
-
                 for (int a = 0; a < playlistSimplePager.items.size(); a++) {
                     Log.v(TAG, "playlistSimplePager:" + playlistSimplePager.items.get(a).uri);
                     items[a] = playlistSimplePager.items.get(a).name;
@@ -223,8 +248,9 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
             @Override
             public void failure(SpotifyError spotifyError) {
                 Log.e(TAG, "SpotifyError: " + spotifyError);
+                error_layout.setVisibility(View.VISIBLE);
+                json_playlist_error = true;
             }
-
         });
         spotify.getMySavedTracks(new SpotifyCallback<Pager<SavedTrack>>() {
             @Override
@@ -239,12 +265,12 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
                     songs.add(savedTrackPager.items.get(a).track.uri);
                     Log.v(TAG, "SAVED: " + savedTrackPager.items.get(a).track.name);
                 }
-
             }
-
             @Override
             public void failure(SpotifyError error) {
                 Log.e(TAG, "SpotifyError: " + error);
+                error_layout.setVisibility(View.VISIBLE);
+                json_playlist_error = true;
             }
         });
 
@@ -254,17 +280,6 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
         Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -278,29 +293,34 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
                     break;
                 case ERROR:
                     logStatus("Auth error: " + response.getError());
+                    error_layout.setVisibility(View.VISIBLE);
+                    auth_error = true;
                     break;
                 default:
                     logStatus("Auth result: " + response.getType());
+                    error_layout.setVisibility(View.VISIBLE);
+                    auth_error = true;
             }
         }
     }
 
 
     private void onAuthenticationComplete(AuthenticationResponse authResponse) {
-        // Once we have obtained an authorization token, we can proceed with creating a Player.
+
+        progress_bar_.setVisibility(View.GONE);
         Log.v(TAG,"Got authentication token");
 
-        getUserAuth(authResponse.getAccessToken());
         SpotifyToken = authResponse.getAccessToken();
+
+        getUserAuth(SpotifyToken);
 
         Log.v(TAG,"getAccessToken: "+authResponse.getAccessToken());
         Log.v(TAG,"getExpiresIn: "+authResponse.getExpiresIn());
-        Log.v(TAG,"class: "+authResponse.getAccessToken().getClass().getName());
-
     }
 
 
     private void putElementsinList(String[] items){
+        progress_bar_.setVisibility(View.GONE);
         playlists_layout.setVisibility(View.VISIBLE);
         done.setVisibility(View.VISIBLE);
 
@@ -323,7 +343,6 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
     @Override
     public void onLoggedIn() {
         Log.d(TAG, "User logged in");
-
     }
 
     @Override
@@ -334,11 +353,15 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
     @Override
     public void onLoginFailed(int i) {
         Log.d(TAG, "Login failed");
+        error_layout.setVisibility(View.VISIBLE);
+        auth_error = true;
     }
 
     @Override
     public void onTemporaryError() {
         Log.d(TAG, "Temporary error occurred");
+        error_layout.setVisibility(View.VISIBLE);
+        auth_error = true;
 
     }
 
@@ -348,10 +371,5 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
 
     }
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 
 }
