@@ -53,7 +53,7 @@ public class ExerciseListActivity extends AppCompatActivity {
 
         if (toolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Add Exercises");
+            getSupportActionBar().setTitle(getResources().getString(R.string.add_exercises));
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

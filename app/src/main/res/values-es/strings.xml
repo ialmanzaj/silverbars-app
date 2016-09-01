@@ -193,4 +193,11 @@
     <string name="empty_playlist">No hay ninguna lista de reproducción</string>
     <string name="results">Mis  Resultados</string>
 
+    <string name="create_playlist">Crea una nueva lista de reproducción</string>
+
+    <string name="title_playlist">Escribe el nombre de tu lista</string>
+    <string name="cancel">Cancelar</string>
+    <string name="playlist_name">Nombre de lista</string>
+
+    <string name="add_exercises_button">AÑADIR EJERCICIOS</string>
 </resources>

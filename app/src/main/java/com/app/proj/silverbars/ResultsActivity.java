@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -17,12 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TabHost;
-import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.app.proj.silverbars.Utilities.CreateNewView;
+import static com.app.proj.silverbars.Utilities.CreateNewViewProgression;
 import static com.app.proj.silverbars.Utilities.deleteCopiesofList;
 import static com.app.proj.silverbars.Utilities.removeLastChar;
 
@@ -33,7 +32,7 @@ public class ResultsActivity extends AppCompatActivity {
     String partes = "";
     Button save;
 
-    LinearLayout muscles_content_layout;
+    LinearLayout muscles_content_layout,skills_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +42,7 @@ public class ResultsActivity extends AppCompatActivity {
         Intent i = getIntent();
         Bundle b = i.getExtras();
         List<String> muscles1 = b.getStringArrayList("muscles");
+        List<String>  types  = b.getStringArrayList("types");
 
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -54,7 +54,7 @@ public class ResultsActivity extends AppCompatActivity {
 
         webView = (WebView) findViewById(R.id.webview);
         muscles_content_layout = (LinearLayout) findViewById(R.id.content);
-
+        skills_layout = (LinearLayout) findViewById(R.id.skills);
 
         TabHost Tab_layout = (TabHost) findViewById(R.id.tabHost2);
         Tab_layout.setup();
@@ -88,44 +88,33 @@ public class ResultsActivity extends AppCompatActivity {
         }
 
         setMusclesToView(muscles1);
+        setTypes(types);
+    }
+
+    private void setTypes(List<String> types){
+        List<String> types_oficial;
+        types_oficial = deleteCopiesofList(types);
+
+        for (int a =0; a<types_oficial.size();a++){
+
+            RelativeLayout relativeLayout = CreateNewView(this,types_oficial.get(a),100);
+            skills_layout.addView(relativeLayout);
+
+        }
 
     }
 
-
     private void setMusclesToView(List<String> musculos){
+
         if (musculos.size() > 0){
             List<String> musculos_oficial;
             musculos_oficial = deleteCopiesofList(musculos);
 
             for (int a = 0;a<musculos_oficial.size();a++) {
-
-                final TextView MuscleTextView = new TextView(this);
-
                 partes += "#"+ musculos_oficial.get(a) + ",";
-                MuscleTextView.setText(musculos_oficial.get(a));
-
-                MuscleTextView.setGravity(Gravity.START);
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    MuscleTextView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));
-                }else {
-                    MuscleTextView.setTextColor(getResources().getColor(R.color.gray_active_icon));
-                }
 
 
-                RelativeLayout relativeLayout = new RelativeLayout(this);
-                RelativeLayout.LayoutParams match_parent = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                relativeLayout.setLayoutParams(match_parent);
-                relativeLayout.setPadding(15,15,15,15);
-                relativeLayout.setMinimumHeight(45);
-
-               /* if (a%2 == 0){
-                    secundary_ColumnMuscle.addView(MuscleTextView);
-                }else {
-                    primary_ColumnMuscle.addView(MuscleTextView);
-
-                }*/
-                relativeLayout.addView(MuscleTextView);
+                RelativeLayout relativeLayout = CreateNewViewProgression(this,musculos_oficial.get(a),10);
                 muscles_content_layout.addView(relativeLayout);
             }
         }
@@ -145,13 +134,13 @@ public class ResultsActivity extends AppCompatActivity {
 
             }
         });
+
+
         webView.getSettings().setJavaScriptEnabled(true);
 
-        // ACCEDER A LA URL DEL HTML GUARDADO EN EL PHONE
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         String default_url = getResources().getString(R.string.muscle_path);
         String muscle_url = sharedPref.getString(getString(R.string.muscle_path),default_url);
-
         if (muscle_url.equals("/")){
             webView.loadUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/html/index.html");
         }else {

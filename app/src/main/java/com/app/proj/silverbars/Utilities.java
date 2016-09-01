@@ -1,17 +1,29 @@
 package com.app.proj.silverbars;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.NetworkOnMainThreadException;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,6 +42,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 import okhttp3.ResponseBody;
 
+import static com.app.proj.silverbars.WorkoutAdapter.containerDimensions;
+
 /**
  * Created by isaacalmanza on 08/10/16.
  */
@@ -37,7 +51,7 @@ public class Utilities {
 
     private static final String TAG = "Utilities";
 
-    /*public static int containerDimensions(Context context) {
+    public static int containerDimensions(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
@@ -45,7 +59,7 @@ public class Utilities {
         int width = size.x;
         return width;
     }
-*/
+
 
     /* Checks if external storage is available for read and write */
     public static boolean isExternalStorageWritable() {
@@ -462,6 +476,93 @@ public class Utilities {
                 if (output != null) {output.close();}
             }
         } catch (IOException e) { return false;}
+    }
+
+
+    public static RelativeLayout CreateNewView(Context context,String type, int progress){
+
+        TextView textView = new TextView(context);
+
+        // TEXT OF TYPE OF EXERCISES
+        RelativeLayout.LayoutParams layoutParams_of_textView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        textView.setGravity(Gravity.START);
+        textView.setLayoutParams(layoutParams_of_textView);
+        textView.setTextColor(context.getResources().getColor(R.color.black));
+        textView.setText(type);
+
+        // Progress
+        ProgressBar progressBar = new ProgressBar(context,null ,android.R.attr.progressBarStyleHorizontal);
+        RelativeLayout.LayoutParams layoutParams_Progress = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams_Progress.addRule(RelativeLayout.ALIGN_PARENT_END);
+        progressBar.setLayoutParams(layoutParams_Progress);
+        progressBar.getLayoutParams().width = containerDimensions(context) / 2;
+        progressBar.setMax(100);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            progressBar.setProgressTintList(ColorStateList.valueOf(Color.RED));
+            progressBar.setBackgroundTintList((ColorStateList.valueOf(Color.RED)));
+        }else {
+            progressBar.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+        }
+
+
+        progressBar.setProgress(progress);
+
+        RelativeLayout relativeLayout = new RelativeLayout(context);
+        RelativeLayout.LayoutParams match_parent = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        relativeLayout.setLayoutParams(match_parent);
+        relativeLayout.setPadding(15,15,15,15);
+        relativeLayout.setMinimumHeight(45);
+
+        relativeLayout.addView(textView);
+        relativeLayout.addView(progressBar);
+
+        return relativeLayout;
+    }
+
+    public static RelativeLayout CreateNewViewProgression(Context context,String type, int progress){
+
+        TextView textView = new TextView(context);
+
+        // TEXT OF TYPE OF EXERCISES
+        RelativeLayout.LayoutParams layoutParams_of_textView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        textView.setGravity(Gravity.START);
+        textView.setLayoutParams(layoutParams_of_textView);
+        textView.setTextColor(context.getResources().getColor(R.color.black));
+        textView.setText(type);
+
+        TextView progressPorcentaje = new TextView(context);
+        progressPorcentaje.setTextColor(context.getResources().getColor(R.color.black));
+        String progression = progress+"%";
+        progressPorcentaje.setText(progression);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            progressPorcentaje.setTextColor(context.getResources().getColor(android.R.color.holo_green_dark,null));
+        }else {
+            progressPorcentaje.setTextColor(context.getResources().getColor(android.R.color.holo_green_dark));
+        }
+
+
+        LinearLayout linearLayout = new LinearLayout(context);
+        RelativeLayout.LayoutParams layoutParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParam.addRule(RelativeLayout.ALIGN_PARENT_END);
+        linearLayout.setLayoutParams(layoutParam);
+
+
+        linearLayout.addView(progressPorcentaje);
+
+        RelativeLayout relativeLayout = new RelativeLayout(context);
+        RelativeLayout.LayoutParams match_parent = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        relativeLayout.setLayoutParams(match_parent);
+        relativeLayout.setPadding(15,15,15,15);
+        relativeLayout.setMinimumHeight(45);
+
+
+        relativeLayout.addView(textView);
+        relativeLayout.addView(linearLayout);
+
+        return relativeLayout;
     }
 
 }

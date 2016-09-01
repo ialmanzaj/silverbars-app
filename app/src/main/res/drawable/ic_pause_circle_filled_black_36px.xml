@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="75dp"
+    android:height="75dp"
+    android:viewportWidth="20"
+    android:viewportHeight="20">
+
+    <group
+            android:name="ic_pause_circle_filled_black_36px"
+            android:translateX="-2.000000"
+            android:translateY="-2.000000">
+        <path
+            android:name="Shape"
+            android:strokeWidth="1"
+            android:pathData="M 0 0 L 24 0 L 24 24 L 0 24 Z" />
+        <path
+            android:name="Shape"
+            android:fillColor="#602C8D"
+            android:strokeWidth="1"
+            android:pathData="M12,2 C6.48,2 2,6.48 2,12 C2,17.52 6.48,22 12,22 C17.52,22 22,17.52 22,12
+C22,6.48 17.52,2 12,2 L12,2 Z M11,16 L9,16 L9,8 L11,8 L11,16 L11,16 Z M15,16
+L13,16 L13,8 L15,8 L15,16 L15,16 Z" />
+    </group>
+</vector>

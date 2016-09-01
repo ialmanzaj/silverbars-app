@@ -49,17 +49,6 @@ public class SelectionMusicActivity extends AppCompatActivity {
         RelativeLayout spotifyButton = (RelativeLayout) findViewById(R.id.spotify);
         RelativeLayout soundcloudButton = (RelativeLayout) findViewById(R.id.soundcloud);
 
-//        songsButton.getLayoutParams().width = deviceWidth(SelectionMusicActivity.this);
-//        songsButton.getLayoutParams().height = deviceHeight(SelectionMusicActivity.this);
-//
-//        playlistButton.getLayoutParams().width = deviceWidth(SelectionMusicActivity.this);
-//        playlistButton.getLayoutParams().height = deviceHeight(SelectionMusicActivity.this);
-//
-//        spotifyButton.getLayoutParams().width = deviceWidth(SelectionMusicActivity.this);
-//        spotifyButton.getLayoutParams().height = deviceHeight(SelectionMusicActivity.this);
-//
-//        soundcloudButton.getLayoutParams().width = deviceWidth(SelectionMusicActivity.this);
-//        soundcloudButton.getLayoutParams().height = deviceHeight(SelectionMusicActivity.this);
 
         songsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +88,7 @@ public class SelectionMusicActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null){
-            Log.v(TAG,"RESULT_OK: YES");
+
 
             if (data.hasExtra("playlist_spotify") && data.hasExtra("token")){
 
@@ -111,7 +100,8 @@ public class SelectionMusicActivity extends AppCompatActivity {
                 returnIntent.putExtra("token",token);
                 setResult(RESULT_OK,returnIntent);
                 finish();
-            }/*else if (data.hasExtra("songs") && data.hasExtra("positions")){
+
+            }else if (data.hasExtra("songs") && data.hasExtra("positions")){
 
                 ArrayList<File> mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
                 String[] position = data.getStringArrayExtra("positions");
@@ -122,9 +112,7 @@ public class SelectionMusicActivity extends AppCompatActivity {
                 setResult(RESULT_OK, returnIntent);
                 finish();
 
-            }*/
-
-
+            }
 
 
         }
@@ -133,69 +121,5 @@ public class SelectionMusicActivity extends AppCompatActivity {
     public void toast(String text){
         Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
     }
-
-    public static int deviceWidth(Context context) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        return (size.x)/2;
-    }
-
-    public static int deviceHeight(Context context) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        return (size.y)/2;
-    }
-
-    public ArrayList<File> findSongs(File root){
-
-        ArrayList<File> al = new ArrayList<File>();
-        if (root.listFiles() != null){
-            File[] files = root.listFiles();
-            for(File singleFile : files){
-                if (singleFile.isDirectory() && !singleFile.isHidden()){
-                    al.addAll(findSongs(singleFile));
-                }
-                else{
-                    if (singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".wav")){
-                        if (SongDuration(singleFile)!=null && Long.valueOf(SongDuration(singleFile))>150000)
-                            al.add(singleFile);
-                    }
-                }
-            }
-        }
-        return al;
-    }
-
-    private String SongDuration(File file){
-        String duration = null;
-        try{MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            Uri uri = Uri.fromFile(file);
-            mediaMetadataRetriever.setDataSource(this, uri);
-            duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        }catch (Exception e){
-            Log.v("Exception",e.toString());
-        }
-        return duration;
-    }
-
-    private String SongName(File file){
-        String title = null;
-        try{
-            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            Uri uri = Uri.fromFile(file);
-            mediaMetadataRetriever.setDataSource(this, uri);
-            title = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-        }catch(Exception e){
-            Log.v("Exception",e.toString());
-        }
-        return title;
-    }
-
-
-
 
 }

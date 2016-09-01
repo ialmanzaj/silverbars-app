@@ -28,9 +28,6 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-//import com.spotify.sdk.android.authentication.AuthenticationClient;
-//import com.spotify.sdk.android.authenticationl.AuthenticationResponse;
-
 public class PlaylistPickerActivity extends AppCompatActivity {
 
     private static final String TAG = "PlaylistPickerActivity";
@@ -62,15 +59,15 @@ public class PlaylistPickerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new MaterialDialog.Builder(PlaylistPickerActivity.this)
-                        .title("Create a Playlist")
-                        .content("Type the name of your playlist")
-                        .negativeText("Cancel")
+                        .title(getResources().getString(R.string.create_playlist))
+                        .content(getResources().getString(R.string.title_playlist))
+                        .negativeText(getResources().getString(R.string.cancel))
                         .onNegative(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {dialog.dismiss();}
                         })
                         .inputType(InputType.TYPE_CLASS_TEXT)
-                        .input("Playlist name",null, new MaterialDialog.InputCallback() {
+                        .input(getResources().getString(R.string.playlist_name),null, new MaterialDialog.InputCallback() {
                             @Override
                             public void onInput(MaterialDialog dialog, CharSequence input) {
                                 Playlist_name = input.toString(); // Do something
@@ -79,25 +76,12 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                                 }
                                 Intent i = new Intent(PlaylistPickerActivity.this, SongsActivity.class);
                                 startActivityForResult(i,1);
-//                                MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
-//                                database.insertPlaylist(Playlist_name,convertArrayToString(playlist),1);
-//                                Log.v("Playlist",Arrays.toString(playlist));
-//                                toast(Playlist_name);
-//                                Intent returnIntent = new Intent();
-//                                returnIntent.putExtra("positions",playlist);
-//                                returnIntent.putExtra("songs",mySongs);
-//                                setResult(RESULT_OK, returnIntent);
-//                                finish();
                             }
                         }).show();
             }
         });
 
-        Button clean = (Button) findViewById(R.id.clean);
-        clean.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {}
-        });
+
 
         mySongs = findSongs(Environment.getExternalStorageDirectory());
         if (mySongs.size() > 0) {

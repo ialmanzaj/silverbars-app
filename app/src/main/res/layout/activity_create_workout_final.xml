@@ -52,8 +52,7 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/linearLayout3">
+                android:layout_height="wrap_content">
 
                 <RelativeLayout
                     android:layout_weight="1"
@@ -67,16 +66,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_camera_alt_black_24dp"
-                        android:id="@+id/imgProfile"
-                        android:contentDescription="" />
+                        android:id="@+id/imgProfile" />
                     <ImageView
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentEnd="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@android:drawable/ic_menu_edit"
-                        android:background="#00ffffff"
-                        android:contentDescription="" />
+                        android:background="#00ffffff" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -112,11 +109,10 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <RelativeLayout
                     android:paddingStart="15dp"
                     android:paddingEnd="15dp"
-
-
                     android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -127,154 +123,43 @@
                         android:layout_height="wrap_content"
                         android:text="@string/number_sets_text"
                         android:textColor="@color/black"
-                        android:textSize="18sp"
+                        android:textSize="20sp" />
 
-                        />
                     <LinearLayout
                         android:minHeight="45dp"
                         android:layout_alignParentEnd="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-
-
                         <TextView
-
                             android:layout_marginEnd="10dp"
-
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:textSize="22sp"
                             android:text="@string/number_sets"
                             android:minWidth="45dp"
-
                             android:textColor="@color/black"
                             android:gravity="center_vertical|center_horizontal"
                             android:id="@+id/Sets"
-                            android:textAlignment="center"
-                            />
-
-
-
+                            android:textAlignment="center" />
 
                     </LinearLayout>
-
-                </RelativeLayout>
-                <RelativeLayout
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp"
-
-
-                    android:gravity="center_vertical"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_centerVertical="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/rest_exercise_text"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-
-
-                        />
-                    <LinearLayout
-                        android:minHeight="45dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-
-
-                        <TextView
-
-                            android:layout_marginEnd="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-
-                            android:textSize="22sp"
-                            android:text="@string/rest_exercise"
-                            android:minWidth="45dp"
-
-                            android:textColor="@color/black"
-                            android:gravity="center_vertical|center_horizontal"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textAlignment="center"
-                            android:hint="@string/zero"
-                            android:id="@+id/RestbyExercise" />
-
-
-
-                    </LinearLayout>
-
-                </RelativeLayout>
-                <RelativeLayout
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp"
-
-
-                    android:gravity="center_vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_centerVertical="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/rest_sets_text"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
-
-
-                    <LinearLayout
-                        android:minHeight="45dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-
-                            android:layout_marginEnd="10dp"
-                            android:textSize="22sp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-
-                            android:minWidth="45dp"
-                            android:text="@string/rest_sets"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/black"
-                            android:gravity="center_vertical|center_horizontal"
-
-                            android:textAlignment="center"
-                            android:id="@+id/RestbySet" />
-
-
-
-                    </LinearLayout>
-
                 </RelativeLayout>
 
                 <TextView
+                    android:textSize="16sp"
                     android:paddingStart="15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="Exercises:"
-                    android:textColor="@color/colorPrimaryText" />
-
+                    android:text="@string/exercises_text"
+                    android:textColor="@color/dark_gray" />
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/final_recycler" />
 
-
-
             </LinearLayout>
-
-
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

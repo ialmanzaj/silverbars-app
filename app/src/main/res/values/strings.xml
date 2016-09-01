@@ -198,4 +198,12 @@
     <string name="empty_playlist">There\'s no playlist</string>
     <string name="results">My Results</string>
 
+    <string name="create_playlist">Create a new Playlist</string>
+    <string name="title_playlist">Type the name of your playlist</string>
+    <string name="cancel">Cancel</string>
+    <string name="playlist_name">Playlist name</string>
+    <string name="add_exercises_button">ADD EXERCISES</string>
+
+
 </resources>
+

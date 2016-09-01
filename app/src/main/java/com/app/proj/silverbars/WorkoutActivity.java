@@ -80,6 +80,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import static com.app.proj.silverbars.Utilities.CreateNewView;
 import static com.app.proj.silverbars.Utilities.convertArrayToString;
 import static com.app.proj.silverbars.Utilities.deleteCopiesofList;
 import static com.app.proj.silverbars.Utilities.getFileReady;
@@ -164,6 +165,7 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutLevel = intent.getStringExtra("level");
         mainMuscle = intent.getStringExtra("muscle");
         exercises = intent.getStringArrayExtra("exercises");
+
 
         Boolean user_workout = intent.getBooleanExtra("user_workout", false);
 
@@ -649,8 +651,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 Log.v(TAG,"Token: "+Token);
                 Log.v(TAG,"PlaylistSpotify: "+PlaylistSpotify);
 
-            }/*else if (data.hasExtra("songs") && data.hasExtra("positions")){
-
+            }else if (data.hasExtra("songs") && data.hasExtra("positions")){
 
                 Songs_files = (ArrayList<File>) data.getSerializableExtra("songs");
                 Songs_names = data.getStringArrayExtra("positions");
@@ -658,7 +659,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 Log.v("Songs_names: ",Arrays.toString(Songs_names));
                 Log.v("Songs_files: ",Songs_files.toString());
 
-            }*/
+            }
 
         }
 
@@ -692,6 +693,7 @@ public class WorkoutActivity extends AppCompatActivity {
         intent.putExtra("Array_Negative_Exercises",Negative_Exercises);
 
         intent.putExtra("muscles", (Serializable) MusclesArray);
+        intent.putExtra("types",(Serializable) TypeExercises);
 
         intent.putExtra("playlist_spotify",PlaylistSpotify);
         intent.putExtra("token",Token);
@@ -1089,7 +1091,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 mp3Dir = getFileReady(this,"/SilverbarsMp3/"+getAudioName(i));
 
                 if (!imgDir.exists()){
-                    Log.v(TAG,"img url "+ParsedExercises[i].getExercise_image());
+                    Log.v(TAG,"img url: "+ParsedExercises[i].getExercise_image());
                     DownloadImage(ParsedExercises[i].getExercise_image(),getImageName(i));
                 }
                 database.insertExercises(
@@ -1336,7 +1338,7 @@ public class WorkoutActivity extends AppCompatActivity {
             ISOMETRIC_ = (ISOMETRIC *100 / types.size());
             //Log.v(TAG,"porcentaje: "+ISOMETRIC_);
 
-            RelativeLayout relativeLayout = CreateNewView(getResources().getString(R.string.ISOMETRIC),ISOMETRIC_);
+            RelativeLayout relativeLayout = CreateNewView(this,getResources().getString(R.string.ISOMETRIC),ISOMETRIC_);
             contentInfo.addView(relativeLayout);
 
         }if (CARDIO > 0){
@@ -1344,7 +1346,7 @@ public class WorkoutActivity extends AppCompatActivity {
             CARDIO_ = ( CARDIO*100 / types.size());
             Log.v(TAG,"porcentaje: "+CARDIO_);
 
-            RelativeLayout relativeLayout = CreateNewView(getResources().getString(R.string.CARDIO),CARDIO_);
+            RelativeLayout relativeLayout = CreateNewView(this,getResources().getString(R.string.CARDIO),CARDIO_);
             contentInfo.addView(relativeLayout);
 
         }if (STRENGTH > 0){
@@ -1354,7 +1356,7 @@ public class WorkoutActivity extends AppCompatActivity {
             Log.v(TAG,"porcentaje: "+STRENGTH_);
 
 
-            RelativeLayout relativeLayout = CreateNewView(getResources().getString(R.string.STRENGTH),STRENGTH_);
+            RelativeLayout relativeLayout = CreateNewView(this,getResources().getString(R.string.STRENGTH),STRENGTH_);
             contentInfo.addView(relativeLayout);
 
         }if (PYLOMETRICS > 0) {
@@ -1364,54 +1366,13 @@ public class WorkoutActivity extends AppCompatActivity {
             PYLOMETRICS_ = ((PYLOMETRICS * 100 / types.size()));
             Log.v(TAG, "porcentaje: " + PYLOMETRICS_);
 
-            RelativeLayout relativeLayout = CreateNewView(getResources().getString(R.string.PYLOMETRICS),PYLOMETRICS_);
+            RelativeLayout relativeLayout = CreateNewView(this,getResources().getString(R.string.PYLOMETRICS),PYLOMETRICS_);
             contentInfo.addView(relativeLayout);
         }
 
 
     }
 
-    private RelativeLayout CreateNewView(String type,int progress){
-
-        TextView textView = new TextView(this);
-
-        // TEXT OF TYPE OF EXERCISES
-        RelativeLayout.LayoutParams layoutParams_of_textView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        textView.setGravity(Gravity.START);
-        textView.setLayoutParams(layoutParams_of_textView);
-        textView.setTextColor(getResources().getColor(R.color.black));
-        textView.setText(type);
-
-        // Progress
-        ProgressBar progressBar = new ProgressBar(this,null ,android.R.attr.progressBarStyleHorizontal);
-        RelativeLayout.LayoutParams layoutParams_Progress = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams_Progress.addRule(RelativeLayout.ALIGN_PARENT_END);
-        progressBar.setLayoutParams(layoutParams_Progress);
-        progressBar.getLayoutParams().width = containerDimensions(this) / 2;
-        progressBar.setMax(100);
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            progressBar.setProgressTintList(ColorStateList.valueOf(Color.RED));
-            progressBar.setBackgroundTintList((ColorStateList.valueOf(Color.RED)));
-        }else {
-            progressBar.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-        }
-
-
-        progressBar.setProgress(progress);
-
-        RelativeLayout relativeLayout = new RelativeLayout(this);
-        RelativeLayout.LayoutParams match_parent = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        relativeLayout.setLayoutParams(match_parent);
-        relativeLayout.setPadding(15,15,15,15);
-        relativeLayout.setMinimumHeight(45);
-
-        relativeLayout.addView(textView);
-        relativeLayout.addView(progressBar);
-
-        return relativeLayout;
-    }
 
 
     private int containerDimensions(Context context) {
@@ -1425,16 +1386,5 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-
-    }
 
 }

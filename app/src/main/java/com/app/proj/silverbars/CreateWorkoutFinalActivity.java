@@ -90,12 +90,6 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
         // cantidad de sets
         Sets = (TextView) findViewById(R.id.Sets);
 
-        //descanso entre ejercicio
-        RestbyExercise = (TextView) findViewById(R.id.RestbyExercise);
-
-        // descanso entre sets
-        RestbySet = (TextView) findViewById(R.id.RestbySet);
-
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -212,94 +206,6 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
         });
 
 
-        RestbyExercise.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                View v = new MaterialDialog.Builder(view.getContext())
-                        .title(R.string.rest_exercise_text)
-                        .customView(R.layout.edit_rest_exercise_setup, true)
-                        .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                dialog.dismiss();
-                                //On Dialog "Done" ClickListener
-                                RestbyExercise.setText(Rest_by_exercise_dialog.getText());
-                            }
-                        })
-                        .show()
-                        .getCustomView();
-                if (v != null) {
-                    Rest_by_exercise_dialog = (TextView) v.findViewById(R.id.Rest_exercise);
-                    Rest_by_exercise_dialog.setText(String.valueOf(RestbyExercise.getText()));
-
-
-                    plusRest = (Button) v.findViewById(R.id.plusRest);
-                    plusRest.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            plusTempo(Rest_by_exercise_dialog,plusRest,minusRest);
-                        }
-                    });
-                    minusRest = (Button) v.findViewById(R.id.minusRest);
-                    minusRest.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            minusTempo(Rest_by_exercise_dialog,minusRest,plusRest);
-                        }
-                    });
-                }
-
-
-            }
-        });
-
-
-
-        RestbySet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                View v = new MaterialDialog.Builder(view.getContext())
-                        .title(R.string.rest_sets_text)
-                        .customView(R.layout.edit_rest_sets_setup, true)
-                        .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                dialog.dismiss();
-                                //On Dialog "Done" ClickListener
-                                RestbySet.setText(RestSets_dialog.getText());
-                            }
-                        })
-                        .show()
-                        .getCustomView();
-
-                if (v != null) {
-
-                    RestSets_dialog = (TextView) v.findViewById(R.id.RestSets_dialog);
-                    RestSets_dialog.setText(String.valueOf(RestbySet.getText()));
-
-                    plusRestSets = (Button) v.findViewById(R.id.plusRestSets);
-                    plusRestSets.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            plusTempo(RestSets_dialog,plusRestSets,minusRestSets);
-
-
-
-                        }
-                    });
-                    minusRestSets = (Button) v.findViewById(R.id.minusRestSets);
-                    minusRestSets.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            minusTempo(RestSets_dialog,minusRestSets,plusRestSets);
-
-                        }
-                    });
-                }
-
-
-            }
-        });
 
 
 

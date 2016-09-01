@@ -33,12 +33,14 @@
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent">
+
                 <ImageButton
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_action_filter"
-                    android:background="@color/transparent"
                     android:contentDescription="@null"/>
+
             </LinearLayout>
 
 
@@ -103,7 +105,7 @@
         android:id="@+id/done_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ADD EXERCISES"
+        android:text="@string/add_exercises_button"
         android:textSize="18sp"
         android:layout_alignParentBottom="true"
         android:background="@color/secondColor" />
