@@ -61,6 +61,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.text.CollationElementIterator;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -132,6 +133,8 @@ public class WorkoutActivity extends AppCompatActivity {
     private List<WorkoutInfo> exercisesToRecycler = new ArrayList<>();
     public static JsonExercise[] ParsedExercises;
     public static JsonWorkoutReps[] ExerciseswithReps;
+
+    List<JsonExercise> exerciseList = new ArrayList<>();
 
 
     private static final String TAG ="WORKOUT ACTIVITY";
@@ -210,7 +213,6 @@ public class WorkoutActivity extends AppCompatActivity {
         voice_per_exercise.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-
                 DownloadAudioExercise = isChecked;
             }
         });
@@ -364,6 +366,7 @@ public class WorkoutActivity extends AppCompatActivity {
             //start button encendido ya que sin la data null exeption in Activity WORKINGOUT
             startButton.setEnabled(true);
             adapter = new ExerciseAdapter(exercisesToRecycler,WorkoutActivity.this);
+
             ExercisesRecycler.setAdapter(adapter);
             setMusclesToView(MusclesArray);
             putTypesInWorkout(TypeExercises);
@@ -679,8 +682,14 @@ public class WorkoutActivity extends AppCompatActivity {
         restbyexercise = Integer.parseInt(removeLastChar(RestbyExercise.getText().toString()));
         restbyset = Integer.parseInt(removeLastChar(RestbySet.getText().toString()));
 
+        Collections.addAll(exerciseList,ParsedExercises);
+
+        for (int a = 0;a<Exercises_reps.length;a++){
+            exerciseList.get(a).setRep(Exercises_reps[a]);
+        }
+
         Intent intent = new Intent(this, WorkingOutActivity.class);
-        intent.putExtra("ExercisesReps",Exercises_reps);
+        intent.putExtra("exercises", (Serializable) exerciseList);
         intent.putExtra("pos",Songs_names);
         intent.putExtra("songlist",Songs_files);
         intent.putExtra("Sets",sets);
@@ -691,9 +700,6 @@ public class WorkoutActivity extends AppCompatActivity {
         intent.putExtra("Array_Positive_Exercises",Positive_Exercises);
         intent.putExtra("Array_Isometric_Exercises",Isometric_Exercises);
         intent.putExtra("Array_Negative_Exercises",Negative_Exercises);
-
-        intent.putExtra("muscles", (Serializable) MusclesArray);
-        intent.putExtra("types",(Serializable) TypeExercises);
 
         intent.putExtra("playlist_spotify",PlaylistSpotify);
         intent.putExtra("token",Token);
@@ -951,6 +957,7 @@ public class WorkoutActivity extends AppCompatActivity {
                                     y++;
                                 }
                             }
+
                             Exercises_reps = new int[exercisesToRecycler.size()];
 
                             // inicializar tempo arrays por ejercicio
@@ -1005,6 +1012,7 @@ public class WorkoutActivity extends AppCompatActivity {
                             }
 
                             adapter = new ExerciseAdapter(exercisesToRecycler,WorkoutActivity.this);
+
                             ExercisesRecycler.setAdapter(adapter);
                             setMusclesToView(MusclesArray);
                             putTypesInWorkout(TypeExercises);

@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Parcelable;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -48,6 +49,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -78,10 +80,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     private CountDownTimer main_timer, restTimer, startTimer;
 
-    private FrameLayout prvExercise;
-    private FrameLayout nxtExercise;
-
-
     private LinearLayout ModalLayout;
 
     ImageButton pause_workout_button;
@@ -93,16 +91,18 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private boolean Songs_from_Phone = false, finish = false, INITIAL_TIMER = false,main = false,MAIN_TIMER = false;
     private RecyclerView recycler;
     private int TotalSets = 0, ActualSets = 0, Time_aux = 0,actualRest = 0,actual_start_time = 0;
-    AlertDialog alertDialog;
+
     private MediaPlayer media;
-    private JsonExercise[] Exercises;
-    private int[] Exercises_reps;
+
+
     private boolean VibrationPerSet = false,VibrationPerRep = false, pause=false,rest = false;
     private static final String FORMAT = "%2d";
 
     private int exercises_size = 0;
     private int RestByExercise = 0,RestBySet = 0;
     private int [] Positive,Negative,Isometric;
+
+
 
     TextView positive,negative,isometric;
 
@@ -114,13 +114,12 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private Metadata mMetadata;
     String Token;
 
-    private List<String> Muscles = new ArrayList<>();
-    private List<String> TypeExercises = new ArrayList<>();
 
     Boolean Music_Spotify = false,DownloadAudioExercise = false,BUTTON_PAUSE = false,onPause = false;
 
     // Inicializar Workouts
     List<WorkoutInfo> exercisesforRecycler = new ArrayList<>();
+    List<JsonExercise> exerciseList = new ArrayList<>();
 
     ImageButton prvLayout,nxtLayout;
 
@@ -131,17 +130,13 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         Intent i = getIntent();
         Bundle b = i.getExtras();
-
-
-        Muscles = b.getStringArrayList("muscles");
-        TypeExercises = b.getStringArrayList("types");
-
+        exerciseList = (ArrayList<JsonExercise>) b.getSerializable("exercises");
         //Log.v(TAG,"muscles:"+Muscles);
         //Log.v(TAG,"muscles:"+TypeExercises);
 
         RestByExercise =  b.getInt("RestByExercise");
         RestBySet = b.getInt("RestBySet");
-        Exercises_reps = b.getIntArray("ExercisesReps");
+
         VibrationPerRep = b.getBoolean("VibrationPerRep");
         VibrationPerSet =  b.getBoolean("VibrationPerSet");
         DownloadAudioExercise = b.getBoolean("audio_exercise");
@@ -168,9 +163,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Isometric =  b.getIntArray("Array_Isometric_Exercises");
         Negative =  b.getIntArray("Array_Negative_Exercises");
 
-        Exercises = WorkoutActivity.ParsedExercises;
 
-        exercises_size = Exercises.length;
+
+        exercises_size = exerciseList.size();
 
 
         // tempo config
@@ -180,7 +175,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         playlist = new ArrayList<>();
 
         // contadores de descanso y repeticiones actuales
-        actualReps = Exercises_reps[0];
+        actualReps = exerciseList.get(0).getRep();
         actualRest = RestByExercise;
 
         artist_name = (TextView) findViewById(R.id.artist_name);
@@ -197,16 +192,13 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         positive.setText(String.valueOf(Positive[0]));
         isometric.setText(String.valueOf(Isometric[0]));
         negative.setText(String.valueOf(Negative[0]));
-/*
-      *//*  // next and preview button for exercise
+
          prvLayout = (ImageButton) findViewById(R.id.prvExercise);
          nxtLayout = (ImageButton) findViewById(R.id.nxtExercise);
-*//*
         nxtLayout.setVisibility(View.VISIBLE);
 
-      *//*  prvExercise = (FrameLayout) findViewById(R.id.prvLayout);
-        nxtExercise = (FrameLayout) findViewById(R.id.nxtLayout);
-*/
+
+
 
         // buttons pause and finish workout
         pause_workout_button = (ImageButton) findViewById(R.id.PauseButton);
@@ -214,9 +206,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         play_workout_button = (ImageButton) findViewById(R.id.PlayButton);
 
 
-
         LinearLayout playerLayout = (LinearLayout) findViewById(R.id.PlayerLayout);
-
 
         // Rest modal
         ModalLayout = (LinearLayout) findViewById(R.id.ModalLayout);
@@ -235,7 +225,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Rep_timer_text = (TextView) findViewById(R.id.Rep_timer_text);
 
         //inicializar rep text
-        Rep_timer_text.setText(String.valueOf(Exercises_reps[0]));
+        Rep_timer_text.setText(String.valueOf(exerciseList.get(0).getRep()));
 
 
         Rep_timer_text.addTextChangedListener(new TextWatcher() {
@@ -252,15 +242,15 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         y++;
 
                         if (exercises_size > 1){
-                           /*
+
                             prvLayout.setVisibility(View.VISIBLE);
-                            prvExercise.setVisibility(View.VISIBLE);*/
+
 
                             if((y+1)==elements){
 
-                               /* nxtLayout.setVisibility(View.GONE);
-                                nxtExercise.setVisibility(View.GONE);
-*/
+                                nxtLayout.setVisibility(View.GONE);
+
+
                             }
                         }
 
@@ -286,10 +276,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
                             if (exercises_size > 1){
 
-                                /*nxtLayout.setVisibility(View.VISIBLE);
-                                nxtExercise.setVisibility(View.VISIBLE);
+                                nxtLayout.setVisibility(View.VISIBLE);
+
                                 prvLayout.setVisibility(View.GONE);
-                                prvExercise.setVisibility(View.GONE);*/
+
                             }
 
 
@@ -298,8 +288,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             ScreenOff();
 
                             Intent intent = new Intent(WorkingOutActivity.this, ResultsActivity.class);
-                            intent.putExtra("muscles", (Serializable) Muscles);
-                            intent.putExtra("types",(Serializable) TypeExercises);
+                            intent.putExtra("exercises", (Serializable) exerciseList);
+
                             startActivity(intent);
                             finish();
                         }
@@ -326,6 +316,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     startTimer.cancel();
                     Log.v(TAG,"Main TIMER: INICIADO");
 
+                    nxtLayout.setEnabled(true);
+                    prvLayout.setEnabled(true);
+
                     MAIN_TIMER = true;
                     ScreenOn();
                     asignTotalTime(y);
@@ -343,13 +336,17 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
                 }else if (actualRest == 0 && MAIN_TIMER){
                     Log.v(TAG,"Descanso: Terminado");
+
+                    nxtLayout.setEnabled(true);
+                    prvLayout.setEnabled(true);
+
                     restTimer.cancel();
                     rest = false;
 
-                    playExerciseAudio(Exercises[y].getExercise_audio());
+                    playExerciseAudio(exerciseList.get(y).getExercise_audio());
                     asignTotalTime(y);
                     startMainCountDown(totalTime,1,totalTime);
-                    Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
+                    Rep_timer_text.setText(String.valueOf(exerciseList.get(y).getRep()));
 
 
                     positive.setText(String.valueOf(Positive[y]));
@@ -367,7 +364,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        //change to next music with swipe
         playerLayout.setOnTouchListener(new OnSwipeTouchListener(this){
             public void onSwipeRight() {
 
@@ -512,10 +508,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-
-        for (JsonExercise Exercise : Exercises) {
+        for (JsonExercise Exercise : exerciseList) {
             exercisesforRecycler.add(new WorkoutInfo(Exercise.getExercise_name(), null,Exercise.getExercise_image()));
         }
+
+
 
 
         // Obtener el Recycler
@@ -534,10 +531,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         if (adapter.getItemCount() <= 1){
 
-//            /*prvLayout.setVisibility(View.GONE);
-//            prvExercise.setVisibility(View.GONE);
-//            nxtLayout.setVisibility(View.GONE);
-//            nxtExercise.setVisibility(View.VISIBLE);*/
+            prvLayout.setVisibility(View.GONE);
+            nxtLayout.setVisibility(View.GONE);
         }
 
         elements = adapter.getItemCount();
@@ -548,8 +543,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         totalSet.setText(String.valueOf(TotalSets));
         CurrentSet.setText("0");
-/*
-        prvExercise.setOnClickListener(new View.OnClickListener() {
+
+        prvLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -577,7 +572,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                                 y--;
                                 CurrentExercise.setText(String.valueOf(y+1));
                                 main_timer.cancel();
-                                Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
+                                Rep_timer_text.setText(String.valueOf(exerciseList.get(y).getRep()));
 
                                 positive.setText(String.valueOf(Positive[y]));
                                 isometric.setText(String.valueOf(Isometric[y]));
@@ -588,14 +583,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
                                 if (y == 0){
 
-                                   *//* prvLayout.setVisibility(View.GONE);
-                                    prvExercise.setVisibility(View.GONE);*//*
+                                    prvLayout.setVisibility(View.GONE);
+
                                 }
                                 else{
                                     if(y < elements-1 && exercises_size > 1){
 
-                                       *//* nxtLayout.setVisibility(View.VISIBLE);
-                                        nxtExercise.setVisibility(View.VISIBLE);*//*
+                                       nxtLayout.setVisibility(View.VISIBLE);
+
                                     }
                                 }
                                 if (pause){
@@ -617,11 +612,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 }).show();
 
             }
-        });*/
+        });
 
 
-        /*//darle al siguiente ejercicio
-        nxtExercise.setOnClickListener(new View.OnClickListener() {
+
+        nxtLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -652,7 +647,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             y++;
                             CurrentExercise.setText(String.valueOf(y+1));
                             main_timer.cancel();
-                            Rep_timer_text.setText(String.valueOf(Exercises_reps[y]));
+                            Rep_timer_text.setText(String.valueOf(exerciseList.get(y).getRep()));
 
                             positive.setText(String.valueOf(Positive[y]));
                             isometric.setText(String.valueOf(Isometric[y]));
@@ -662,12 +657,12 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             startMainCountDown(totalTime,1,totalTime);
                             if (y == elements-1){
                                 nxtLayout.setVisibility(View.GONE);
-                                nxtExercise.setVisibility(View.GONE);
+
                             }
                             else{
                                 if (y > 0 && exercises_size > 1){
                                     prvLayout.setVisibility(View.VISIBLE);
-                                    prvExercise.setVisibility(View.VISIBLE);
+
 
                                 }
                             }
@@ -695,7 +690,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 }).show();
 
             }
-        });*/
+        });
 
         // music controls
         btPlay = (ImageButton)findViewById(R.id.btnPlay);
@@ -758,8 +753,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     
 
     private void startInicialTimer(int seconds){
-        long  sec = (seconds+5) * 1000;
+        nxtLayout.setEnabled(false);
+        prvLayout.setEnabled(false);
 
+        long  sec = (seconds+5) * 1000;
         int sec_interval = 1000;
 
         startTimer = new CountDownTimer(sec, sec_interval) {
@@ -777,6 +774,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     
     private void showRestModal(int rest_time){
+        nxtLayout.setEnabled(false);
+        prvLayout.setEnabled(false);
+
         Log.v(TAG,"Descanso: Empezo");
         main_timer.cancel();
         rest = true;
@@ -907,7 +907,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
                 }else {
-                    mp.start();
+                    StartMusic();
                     PlayerPlay();
                 }
                 break;
@@ -975,8 +975,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
     }
-    private void asignTotalTime(int song_names){
-        totalTime = (Exercises_reps[song_names] * tempo) + 5;
+    private void asignTotalTime(int position){
+        totalTime = (exerciseList.get(position).getRep() * tempo) + 5;
 
       /*  Log.v(TAG,"totalTime: "+totalTime);
         Log.v(TAG,"Exercises_reps: "+Exercises_reps[song_names]);
@@ -1028,7 +1028,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
             try {
-                String[] audioDir = Exercises[y].getExercise_audio().split("exercises");
+                String[] audioDir = exerciseList.get(y).getExercise_audio().split("exercises");
 
                 if (audioDir.length == 2){
 

@@ -1,9 +1,11 @@
 package com.app.proj.silverbars;
 
+import java.io.Serializable;
+
 /**
  * Created by andre_000 on 6/13/2016.
  */
-public class JsonWorkoutReps {
+public class JsonWorkoutReps  implements Serializable {
 
     public int id;
     public String workout_id;

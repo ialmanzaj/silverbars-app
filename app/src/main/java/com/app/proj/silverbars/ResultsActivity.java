@@ -17,6 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TabHost;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,6 +36,10 @@ public class ResultsActivity extends AppCompatActivity {
 
     LinearLayout muscles_content_layout,skills_layout;
 
+    private  List<String> MusclesArray = new ArrayList<>();
+    private  List<String> TypeExercises = new ArrayList<>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +47,11 @@ public class ResultsActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         Bundle b = i.getExtras();
-        List<String> muscles1 = b.getStringArrayList("muscles");
-        List<String>  types  = b.getStringArrayList("types");
+
+
+        ArrayList<JsonExercise> exercises = (ArrayList<JsonExercise>) b.getSerializable("exercises");
+
+        Log.v(TAG,"exercises: "+ exercises);
 
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -87,9 +96,29 @@ public class ResultsActivity extends AppCompatActivity {
             scrollView.setFillViewport(true);
         }
 
-        setMusclesToView(muscles1);
-        setTypes(types);
+
+
+        if (exercises != null) {
+            for (int a = 0;a<exercises.size();a++){
+                exercises.get(a).getRep();
+
+            }
+
+
+            for(int a = 0; a < exercises.size(); a++){
+                Collections.addAll(MusclesArray, exercises.get(a).muscle);
+                Collections.addAll(TypeExercises, exercises.get(a).type_exercise);
+
+
+            }
+
+            setMusclesToView(MusclesArray);
+            setTypes(TypeExercises);
+        }
+
     }
+
+
 
     private void setTypes(List<String> types){
         List<String> types_oficial;
