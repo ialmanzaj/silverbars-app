@@ -289,7 +289,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/prvExercise"
-                                android:src="@drawable/ic_fast_rewind_black_36dp"
+                                android:src="@drawable/ic_fast_rewind_black_24px"
                                 android:background="#fff"
                                 android:layout_gravity="center"
                                 android:contentDescription="@null" />
@@ -352,7 +352,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/nxtExercise"
-                                android:src="@drawable/ic_fast_forward_black_36dp"
+                                android:src="@drawable/ic_fast_forward_black_24px"
                                 android:layout_gravity="center"
                                 android:background="@color/white"
                                 android:contentDescription="@null" />
@@ -450,7 +450,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/btnPlay"
-                                android:src="@drawable/ic_play_circle_outline_white_36dp"
+                                android:src="@drawable/ic_play_circle_outline_white_36px"
                                 android:background="#00ffffff"
                                 android:contentDescription="@string/resume_workout_text" />
 
@@ -458,7 +458,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:id="@+id/btnPause"
-                                android:src="@drawable/ic_pause_circle_outline_white_36dp"
+                                android:src="@drawable/ic_pause_circle_outline_white_36px"
                                 android:background="#00ffffff"
                                 android:visibility="gone"
                                 android:contentDescription="@string/pause_button" />

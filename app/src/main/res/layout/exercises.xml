@@ -54,6 +54,7 @@
                 android:id="@+id/workout_layout">
 
                 <TextView
+                    android:ellipsize="end"
                     android:id="@+id/nombre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -103,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="center"
-                android:src="@drawable/ic_reorder_grey_500_24dp"
+                android:src="@drawable/ic_reorder_white_24px"
                 android:contentDescription="@null" />
 
         </LinearLayout>
