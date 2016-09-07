@@ -1239,7 +1239,7 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
         OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com")
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com/v1/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();

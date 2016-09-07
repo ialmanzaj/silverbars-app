@@ -18,6 +18,7 @@ import android.widget.ScrollView;
 import android.widget.TabHost;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -99,18 +100,29 @@ public class ResultsActivity extends AppCompatActivity {
 
 
         if (exercises != null) {
-            for (int a = 0;a<exercises.size();a++){
-                exercises.get(a).getRep();
 
-            }
-
+            int porcentaje[] = new int[exercises.size()];
 
             for(int a = 0; a < exercises.size(); a++){
                 Collections.addAll(MusclesArray, exercises.get(a).muscle);
                 Collections.addAll(TypeExercises, exercises.get(a).type_exercise);
 
+                if (Objects.equals(exercises.get(a).getLevel(),"NORMAL")){
+                    porcentaje[a] = 3;
+                }else if (Objects.equals(exercises.get(a).getLevel(),"EASY")){
+                    porcentaje[a] = 1;
+                }else if (Objects.equals(exercises.get(a).getLevel(),"HARD")){
+                    porcentaje[a] = 5;
+                }else if (Objects.equals(exercises.get(a).getLevel(),"CHALLENGING")){
+                    porcentaje[a] = 8;
+                }
 
+                porcentaje[a] = porcentaje[a] * exercises.get(a).getRep();
+
+                Log.v(TAG,"exercise"+exercises.get(a).getExercise_name()+"porcentaje: "+porcentaje[a]);
             }
+
+
 
             setMusclesToView(MusclesArray);
             setTypes(TypeExercises);
@@ -118,6 +130,11 @@ public class ResultsActivity extends AppCompatActivity {
 
     }
 
+    private void getCountTimes(List<String> muscles){
+        List<String> muscles_ = new ArrayList<>();
+
+
+    }
 
 
     private void setTypes(List<String> types){

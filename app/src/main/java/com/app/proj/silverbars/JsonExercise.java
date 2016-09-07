@@ -16,12 +16,6 @@ public class JsonExercise implements Serializable {
     public String exercise_image;
     public int rep;
 
-//    @Override
-//    public String toString(){
-//        return (id+","+exercise_name+","+level+","+audio_url+","+type_exercise+","+muscle+","+exercise_audio+","+exercise_image);
-//    }
-
-
     public int getId() {
         return id;
     }

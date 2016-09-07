@@ -34,12 +34,15 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -229,20 +232,38 @@ public class LoginActivity extends AppCompatActivity {
 
                     int responseCode = httpURLConnection.getResponseCode();
 
+                    //  Here you read any answer from server.
+                    BufferedReader serverAnswer = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+
                     Log.v(TAG,"Sending 'POST' request to URL : " + url);
                     Log.v(TAG,"Response Code : " + responseCode);
+
 
                     if (responseCode == 200){
                         Log.v(TAG,"respuesta correcta ");
                         saveLogIn();
                         startActivity(new Intent(getApplicationContext(), MainScreenActivity.class));
                         finish();
+
+                        String line;
+                        while ((line = serverAnswer.readLine()) != null) {
+                            System.out.println("LINE: " +line);
+                            JSONObject json = new JSONObject(line);
+                            Log.v(TAG,"JSON:"+json.get("key"));
+
+
+                        }
+
+
                     }else if(responseCode == 500){
                         POST(accessToken);
                     }else{
                         Log.e(TAG,"error desconocido");
                         LoginManager.getInstance().logOut();
                     }
+
+                    wr.close();
+                    serverAnswer.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {

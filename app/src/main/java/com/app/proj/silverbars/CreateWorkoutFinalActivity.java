@@ -278,7 +278,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
         });
 
         OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com")
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com/v1/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
@@ -512,7 +512,6 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
                         if (guardado){
                             Log.v(TAG,"download complete "+imgName);
                         }
-
 
                     } else {
                         Log.v(TAG, "Download server contact failed");
