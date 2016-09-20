@@ -388,7 +388,7 @@ public class WorkoutActivity extends AppCompatActivity {
             for (int i = 0; i < ExerciseswithReps.length; i++){
 
                 ParsedExercises[i] = database.getExercise(Integer.valueOf(ExerciseswithReps[i].getExercise()));
-                Log.v(TAG,"ParsedExercises[i]"+ParsedExercises[i].getExercise_name());
+                Log.v(TAG,"Exercises"+ParsedExercises[i].getExercise_name());
 
 
                 Exercises_reps[i] = ExerciseswithReps[i].getRepetition();
@@ -674,7 +674,6 @@ public class WorkoutActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-
     private void LaunchWorkingOutActivity() {
         int sets,restbyexercise,restbyset;
 
@@ -829,23 +828,16 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
-
-
-    
     private void setMusclesToView(List<String> musculos){
         if (musculos.size() > 0){
             List<String> musculos_oficial;
             musculos_oficial = deleteCopiesofList(musculos);
 
             for (int a = 0;a<musculos_oficial.size();a++) {
-
                 final TextView MuscleTextView = new TextView(this);
-
                 partes += "#"+ musculos_oficial.get(a) + ",";
                 MuscleTextView.setText(musculos_oficial.get(a));
-
                 MuscleTextView.setGravity(Gravity.CENTER);
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     MuscleTextView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));
                 }else {
@@ -879,7 +871,6 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
         webview.getSettings().setJavaScriptEnabled(true);
-
         // ACCEDER A LA URL DEL HTML GUARDADO EN EL PHONE
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         String default_url = getResources().getString(R.string.muscle_path);
@@ -931,7 +922,7 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
         OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com")
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
@@ -952,7 +943,7 @@ public class WorkoutActivity extends AppCompatActivity {
                             int y = 0;
                             for (JsonWorkoutReps Rep : Reps) {
                                 String workout = Rep.getWorkout_id();
-                                if (workout.indexOf("workouts/" + workoutId) > 0) {
+                                if (workout.indexOf("v1/workouts/" + workoutId) > 0) {
                                     ExerciseswithReps[y] = Rep;
                                     y++;
                                 }
@@ -968,7 +959,6 @@ public class WorkoutActivity extends AppCompatActivity {
                             for (int i = 0; i <exercisesToRecycler.size() ; i++){
 
                                 try {
-
                                     String[] audioDir = ParsedExercises[i].getExercise_audio().split("exercises");
                                     String Parsedurl = "exercises" + audioDir[1];
                                     String[] splitName = Parsedurl.split("/");
@@ -1018,7 +1008,6 @@ public class WorkoutActivity extends AppCompatActivity {
                             putTypesInWorkout(TypeExercises);
                             startButton.setEnabled(true);
 
-
                         } else {
                             onErrorOn();
                             int statusCode = response.code();
@@ -1052,7 +1041,6 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private void DownloadMp3(final String url, final String getAudioName) {
         Log.v(TAG,"DownloadMp3: "+getAudioName);
-        
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
         final SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
@@ -1067,7 +1055,6 @@ public class WorkoutActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             boolean writtenToDisk = saveAudioInDevice(WorkoutActivity.this,response.body(),getAudioName);
                             Log.v(TAG, String.valueOf(writtenToDisk));
-
                         }
                         else {Log.e(TAG, "DownloadMp3, Download server failed:");}
                     }
@@ -1081,12 +1068,9 @@ public class WorkoutActivity extends AppCompatActivity {
         }.execute();
     }
 
-
-
     private void logMessage(String msg) {
         Log.v(TAG, msg);
     }
-
 
     //guardar ejercicios en la base de datos
     private void saveExercisesinDatabase(){
@@ -1119,21 +1103,16 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private void saveWorkoutinTableWorkouts(){
-
         String[] exercises_ids = new String[ParsedExercises.length];
         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
-
         File imgDir = getFileReady(this,"/SilverbarsImg/"+getWorkoutImage(workoutImgUrl));
-
         if (!imgDir.exists()){
             Log.v(TAG,"img url "+workoutImgUrl);
             DownloadImage(workoutImgUrl,getWorkoutImage(workoutImgUrl));
         }
-
         for (int i = 0; i < exercises_ids.length; i++){
             exercises_ids[i] = String.valueOf(ParsedExercises[i].getId());
         }
-
         if (!database.checkWorkouts(workoutId)) {
             database.insertWorkouts(
                     workoutId,
@@ -1149,7 +1128,7 @@ public class WorkoutActivity extends AppCompatActivity {
         }
         saveWorkout();
     }
-    
+
     private String getWorkoutImage(String workoutUrl){
         String[] workoutImgDir = workoutUrl.split("workouts");
         String Parsedurl = "workouts"+workoutImgDir[1];
@@ -1202,7 +1181,6 @@ public class WorkoutActivity extends AppCompatActivity {
         });
     }
 
-
     private String getImageName(int Songs_names){
         String[] imageDir = ParsedExercises[Songs_names].getExercise_image().split("exercises");
         String Parsedurl = "exercises" + imageDir[1];
@@ -1216,7 +1194,6 @@ public class WorkoutActivity extends AppCompatActivity {
         String[] splitName = Parsedurl.split("/");
         return splitName[2];
     }
-
 
 
     private void getExercisesFromAPI(){
@@ -1239,7 +1216,7 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
         OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com/v1/")
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.silverbarsapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
@@ -1249,8 +1226,7 @@ public class WorkoutActivity extends AppCompatActivity {
         for (int i = 0; i < exercises.length; i++){
             final int a = i;
             String [] parts = exercises[i].split("exercises");
-            exercises[i] = "/exercises"+parts[1];
-
+            exercises[i] = "v1/exercises"+parts[1];
 
             Call<JsonExercise> call = service.getExercises(exercises[i]);
             call.enqueue(new Callback<JsonExercise>() {
@@ -1263,44 +1239,34 @@ public class WorkoutActivity extends AppCompatActivity {
                         Tab_layout.setVisibility(View.VISIBLE);
 
                         exercisesToRecycler.add(new WorkoutInfo(ParsedExercises[a].exercise_name, String.valueOf(ExerciseReps), WorkoutActivity.ParsedExercises[a].getExercise_image()));
-
                         Collections.addAll(TypeExercises,ParsedExercises[a].getType_exercise());
 
                         Log.v(TAG,"TypeExercises"+TypeExercises);
-
                         //RECORRER CADA EJECICIOS BUSCANDO MUSCULOS
                         Collections.addAll(MusclesArray, ParsedExercises[a].muscle);
 
-                        if ( exercisesToRecycler.size() == exercises.length){
+                        if (exercisesToRecycler.size() == exercises.length){
                             getExerciseRepsFromAPI();
                         }
 
                     } else {
-
                         onErrorOn();
-
                         int statusCode = response.code();
                         ResponseBody errorBody = response.errorBody();
                         Log.e(TAG, "getExercisesFromAPI: "+errorBody);
                         Log.e(TAG, "statusCode: "+statusCode);
                     }
                 }
-
                 @Override
                 protected void finalize() throws Throwable {
                     super.finalize();
-
                 }
-
                 @Override
                 public void onFailure(Call<JsonExercise> call, Throwable t) {
                     Log.e(TAG,"getExercisesFromAPI, onFailure",t);
                     onErrorOn();
-                   
                 }
             });
-
-
         }
     }
 
@@ -1358,18 +1324,14 @@ public class WorkoutActivity extends AppCompatActivity {
             contentInfo.addView(relativeLayout);
 
         }if (STRENGTH > 0){
-
             Log.v(TAG,"porcentaje STRENGTH: "+STRENGTH+"/"+types.size());
             STRENGTH_ = ((STRENGTH*100/ types.size()));
             Log.v(TAG,"porcentaje: "+STRENGTH_);
-
 
             RelativeLayout relativeLayout = CreateNewView(this,getResources().getString(R.string.STRENGTH),STRENGTH_);
             contentInfo.addView(relativeLayout);
 
         }if (PYLOMETRICS > 0) {
-
-
             Log.v(TAG, "porcentaje PYLOMETRICS: " + PYLOMETRICS + "/" + types.size());
             PYLOMETRICS_ = ((PYLOMETRICS * 100 / types.size()));
             Log.v(TAG, "porcentaje: " + PYLOMETRICS_);
@@ -1378,21 +1340,7 @@ public class WorkoutActivity extends AppCompatActivity {
             contentInfo.addView(relativeLayout);
         }
 
-
     }
-
-
-
-    private int containerDimensions(Context context) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        return width;
-    }
-
-
 
 
 }

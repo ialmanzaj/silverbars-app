@@ -175,9 +175,7 @@ public class MainFragment extends Fragment {
 
     public void getWorkoutsData(final String muscle){
         progressBar.setVisibility(View.VISIBLE);
-
         muscleData = muscle;
-
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -198,24 +196,19 @@ public class MainFragment extends Fragment {
             }
         });
 
-
         OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com")
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.silverbarsapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
         SilverbarsService service = retrofit.create(SilverbarsService.class);
 
 
-
         Call<JsonWorkout[]> call = service.getWorkouts();
         call.enqueue(new Callback<JsonWorkout[]>() {
-
-
                     @Override
                     public void onResponse(Call<JsonWorkout[]> call, Response<JsonWorkout[]> response) {
                         if (response.isSuccessful()) {
-
                             recyclerView.removeAllViews();
                             recyclerView.removeAllViewsInLayout();
                             recyclerView.setAdapter(null);

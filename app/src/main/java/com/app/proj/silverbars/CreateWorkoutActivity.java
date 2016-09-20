@@ -337,7 +337,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     private void putExercisesinRecycler(final ArrayList<String> new_items_to_list){
 
         Log.v(TAG,"putExercisesinRecycler: "+new_items_to_list);
-
         empty_content.setVisibility(View.GONE);
         re_addExercise.setVisibility(View.VISIBLE);
         recycler.setVisibility(View.VISIBLE);
@@ -348,7 +347,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request original = chain.request();
-                // Customize the request
+
                 Request request = original.newBuilder()
                         .header("Accept", "application/json")
                         .header("Authorization", "auth-token")
@@ -356,13 +355,12 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                         .build();
                 okhttp3.Response response = chain.proceed(request);
                 Log.v("Response",response.toString());
-                // Customize or return the response
                 return response;
             }
         });
 
         OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com/v1/")
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.silverbarsapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
@@ -411,7 +409,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                             }
                         }
                     }
-
                     Context context = CreateWorkoutActivity.this;
                     adapter = new RecyclerExerciseSelectedAdapter(context,ExercisesToAdapter,CreateWorkoutActivity.this);
                     recycler.setAdapter(adapter);
@@ -431,10 +428,8 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                     ResponseBody errorBody = response.errorBody();
                     Log.e(TAG,errorBody.toString());
                     Log.e(TAG,"statusCode"+statusCode);
-
                 }
             }
-
             @Override
             public void onFailure(Call<JsonExercise[]> call, Throwable t) {
                 Log.e(TAG,"onFailure: ",t);
@@ -539,21 +534,12 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         }
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
     }
-
     @Override
-    protected void onStop() {
-        super.onStop();
-
-    }
-
-
+    protected void onStop() {super.onStop();}
     @Override
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-        mItemTouchHelper.startDrag(viewHolder);
-    }
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {mItemTouchHelper.startDrag(viewHolder);}
 }

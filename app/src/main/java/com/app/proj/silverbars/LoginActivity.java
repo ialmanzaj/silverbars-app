@@ -1,8 +1,5 @@
 package com.app.proj.silverbars;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,8 +7,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.net.ConnectivityManager;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -20,30 +15,30 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.ProfileTracker;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
@@ -98,38 +93,31 @@ public class LoginActivity extends AppCompatActivity {
             }
         } catch (PackageManager.NameNotFoundException e) {} catch (NoSuchAlgorithmException e) {}
 
+        if (isNetworkConnected()){
 
+            loginButton.setReadPermissions("public_profile", "email", "user_friends");
+            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    Log.v(TAG, "loginButton: onSuccess");
 
-        loginButton.setReadPermissions("public_profile", "email", "user_friends");
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.v(TAG, "loginButton: onSuccess");
+                    post(loginResult.getAccessToken().getToken());
 
-                POST(loginResult.getAccessToken().getToken());
+                }
+                @Override
+                public void onCancel() {
+                    Log.e(TAG, "facebook:onCancel");
 
-            }
-
-            @Override
-            public void onCancel() {
-                Log.e(TAG, "facebook:onCancel");
-
-            }
-            @Override
-            public void onError(FacebookException exception) {
-                Log.e(TAG, "facebook:onError", exception);
-            }
-
-        });
+                }
+                @Override
+                public void onError(FacebookException exception) {
+                    Log.e(TAG, "facebookonError", exception);
+                }
+            });
+        }
     }
 
-    private void saveLogIn(){
-        SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(getString(R.string.sign_in),true);
-        editor.apply();
-        Log.v(TAG,getString(R.string.sign_in));
-    }
+
     @Override
     protected void attachBaseContext(Context newBase){
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -141,50 +129,10 @@ public class LoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
-    public boolean isNetworkConnected() {
+    private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
         return cm.getActiveNetworkInfo() != null;
-    }
-
-    public void toast(String text){
-        Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
@@ -201,80 +149,88 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.v(TAG,"onResume");
-
-
     }
 
-    private void POST(final String accessToken){
 
-        new AsyncTask<Void,Void,Void>() {
 
+    private  void post(final String token) {
+
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
             @Override
-            protected Void doInBackground(Void... params) {
+            public Response intercept(Chain chain) throws IOException {
 
-                try {
+                RequestBody formBody = new FormBody.Builder()
+                        .add("grant_type", "convert_token")
+                        .add("client_id", "KHeJV3Sg8ShguiYyvDf9t6i3WPpMpDWlBLN93mgz")
+                        .add("client_secret", "1krO5gdrzs08Ej5WoGpLrQifbuDRNFxEnRqLKyHFJIFG2fPpGPE3t1J8nCS7K9NoSidUCibUUi985ipRiipjM0YV6PoUDMcXw08A4M8R7yfzECFGDHnxVBYgQfgjfc2e")
+                        .add("backend", "facebook")
+                        .add("token", token)
+                        .build();
 
-                    URL url = new URL("http://api.silverbarsapp.com/rest-auth/facebook/"); //Enter URL here
-                    HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
-                    httpURLConnection.setDoOutput(true);
-                    httpURLConnection.setRequestMethod("POST"); // here you are telling that it is a POST request, which can be changed into "PUT", "GET", "DELETE" etc.
-                    httpURLConnection.setRequestProperty("Content-Type", "application/json"); // here you are setting the `Content-Type` for the data you are sending which is `application/json`
-                    httpURLConnection.connect();
+                Request request = new Request.Builder()
+                        .url("https://api.silverbarsapp.com/")
+                        .post(formBody)
+                        .build();
 
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("access_token",accessToken);
-                    jsonObject.put("code", "183093092104411");
-
-                    DataOutputStream wr = new DataOutputStream(httpURLConnection.getOutputStream());
-                    wr.writeBytes(jsonObject.toString());
-                    wr.flush();
-                    wr.close();
-
-                    int responseCode = httpURLConnection.getResponseCode();
-
-                    //  Here you read any answer from server.
-                    BufferedReader serverAnswer = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-
-                    Log.v(TAG,"Sending 'POST' request to URL : " + url);
-                    Log.v(TAG,"Response Code : " + responseCode);
-
-
-                    if (responseCode == 200){
-                        Log.v(TAG,"respuesta correcta ");
-                        saveLogIn();
-                        startActivity(new Intent(getApplicationContext(), MainScreenActivity.class));
-                        finish();
-
-                        String line;
-                        while ((line = serverAnswer.readLine()) != null) {
-                            System.out.println("LINE: " +line);
-                            JSONObject json = new JSONObject(line);
-                            Log.v(TAG,"JSON:"+json.get("key"));
-
-
-                        }
-
-
-                    }else if(responseCode == 500){
-                        POST(accessToken);
-                    }else{
-                        Log.e(TAG,"error desconocido");
-                        LoginManager.getInstance().logOut();
-                    }
-
-                    wr.close();
-                    serverAnswer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return null;
+                okhttp3.Response response = chain.proceed(request);
+                Log.v(TAG,response.toString());
+                return response;
             }
+        });
+
+        OkHttpClient client = httpClient.build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.silverbarsapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+        SilverbarsService service = retrofit.create(SilverbarsService.class);
+        retrofit2.Call<AccessToken> call = service.getAccessToken();
+
+        call.enqueue(new retrofit2.Callback<AccessToken>() {
+            @Override
+            public void onResponse(retrofit2.Call<AccessToken> call, retrofit2.Response<AccessToken> response) {
+
+                if (response.isSuccessful()) {
+
+                    AccessToken accessToken = response.body();
+
+                    AuthPreferences authPreferences = new AuthPreferences(LoginActivity.this);
+                    authPreferences.setToken(accessToken.getAccess_token());
 
 
-        }.execute();
+                    saveLogIn();
+                    finish();
+                    startActivity(new Intent(LoginActivity.this,MainScreenActivity.class));
+                }else {
+
+                    int statusCode = response.code();
+                    ResponseBody errorBody = response.errorBody();
+                    Log.e(TAG,errorBody.toString());
+                    Log.e(TAG,"statusCode:"+statusCode);
+
+
+
+                }
+            }
+            @Override
+            public void onFailure(retrofit2.Call<AccessToken> call, Throwable t) {
+                Log.e(TAG,"getAccesstoken from server, onFailure",t);
+            }
+        });
+
+
     }
+
+    private void saveLogIn(){
+        SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(getString(R.string.sign_in),true);
+        editor.apply();
+        Log.v(TAG,getString(R.string.sign_in));
+    }
+
 
     @Override
     protected void onDestroy() {

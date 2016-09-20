@@ -78,7 +78,6 @@ public class ProgressionActivity extends AppCompatActivity {
         try {
             String partes = "";
             webview.loadUrl("javascript: ("+ "window.onload = function () {"+
-
                     "partes = Snap.selectAll('"+partes+"');"+
                     "partes.forEach( function(elem,i) {"+
                     "elem.attr({fill: '#602C8D',stroke: '#602C8D',});"+
@@ -89,4 +88,11 @@ public class ProgressionActivity extends AppCompatActivity {
         }
     }
 
+    private void getProgression(String token){
+        String url = "http://api.silverbarsapp.com/v1/progression/me/";
+
+
+
+
+    }
 }
