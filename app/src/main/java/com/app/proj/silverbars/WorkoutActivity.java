@@ -1,21 +1,12 @@
 package com.app.proj.silverbars;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.PorterDuff;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,17 +14,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TabHost;
@@ -42,33 +30,15 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.spotify.sdk.android.authentication.AuthenticationClient;
-import com.spotify.sdk.android.authentication.AuthenticationRequest;
-import com.spotify.sdk.android.authentication.AuthenticationResponse;
-import com.spotify.sdk.android.player.Config;
-import com.spotify.sdk.android.player.ConnectionStateCallback;
-import com.spotify.sdk.android.player.Connectivity;
-import com.spotify.sdk.android.player.Error;
-import com.spotify.sdk.android.player.PlaybackState;
-import com.spotify.sdk.android.player.Player;
-import com.spotify.sdk.android.player.PlayerEvent;
-import com.spotify.sdk.android.player.Spotify;
-import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
-import java.text.CollationElementIterator;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -85,7 +55,6 @@ import static com.app.proj.silverbars.Utilities.CreateNewView;
 import static com.app.proj.silverbars.Utilities.convertArrayToString;
 import static com.app.proj.silverbars.Utilities.deleteCopiesofList;
 import static com.app.proj.silverbars.Utilities.getFileReady;
-import static com.app.proj.silverbars.Utilities.getUrlReady;
 import static com.app.proj.silverbars.Utilities.removeLastChar;
 import static com.app.proj.silverbars.Utilities.saveWorkoutImgInDevice;
 import static com.app.proj.silverbars.Utilities.saveAudioInDevice;
@@ -929,7 +898,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
          SilverbarsService service = retrofit.create(SilverbarsService.class);
 
-        Call<JsonWorkoutReps[]> call = service.getReps();
+        Call<JsonWorkoutReps[]> call = service.getExerciseReps();
         call.enqueue(new Callback<JsonWorkoutReps[]>() {
                     @Override
                     public void onResponse(Call<JsonWorkoutReps[]> call, Response<JsonWorkoutReps[]> response) {
@@ -1228,7 +1197,7 @@ public class WorkoutActivity extends AppCompatActivity {
             String [] parts = exercises[i].split("exercises");
             exercises[i] = "v1/exercises"+parts[1];
 
-            Call<JsonExercise> call = service.getExercises(exercises[i]);
+            Call<JsonExercise> call = service.getExercise(exercises[i]);
             call.enqueue(new Callback<JsonExercise>() {
                 @Override
                 public void onResponse(Call<JsonExercise> call, Response<JsonExercise> response) {

@@ -45,7 +45,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.VH> {
     @Override
     public void onBindViewHolder(VH vh, int position) {
         Track t = tracks[position];
-        vh.tvArtist.setText(t.user.username);
+        //vh.tvArtist.setText(t.user.username);
         vh.tvTitle.setText(t.title);
     }
 

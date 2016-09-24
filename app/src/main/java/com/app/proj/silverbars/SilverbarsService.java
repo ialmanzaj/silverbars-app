@@ -7,14 +7,15 @@ import retrofit2.http.Url;
 
 
 public interface SilverbarsService {
+
     @GET("v1/workouts/?format=json")
     Call<JsonWorkout[]> getWorkouts();
 
     @GET
-    Call<JsonExercise> getExercises(@Url String url);
+    Call<JsonExercise> getExercise(@Url String url);
 
     @GET("v1/workout/?format=json")
-    Call<JsonWorkoutReps[]> getReps();
+    Call<JsonWorkoutReps[]> getExerciseReps();
 
    @GET("v1/exercises/?format=json")
     Call<JsonExercise[]> getAllExercises();
@@ -30,5 +31,12 @@ public interface SilverbarsService {
 
     @GET("auth/convert-token/")
     Call<AccessToken> getAccessToken();
+
+    @GET("auth/token/")
+    Call<AccessToken> getRefreshAccessToken();
+
+    @GET("v1/progression/me/")
+    Call<User.ProgressionMuscle[]> getProgression();
+
 
 }

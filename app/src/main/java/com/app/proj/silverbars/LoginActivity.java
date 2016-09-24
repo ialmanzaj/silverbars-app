@@ -24,21 +24,9 @@ import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
@@ -138,11 +126,14 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Log.v(TAG,"onStart");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.v(TAG,"onPause");
+
     }
 
     @Override
@@ -153,74 +144,20 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-    private  void post(final String token) {
+    private  void post(final String facebook_token) {
+
+        Authenticator authenticator = new Authenticator(this);
+
+        if (!authenticator.getInitalAccessToken(facebook_token).isEmpty()){
+
+            saveLogIn();
+            finish();
+            startActivity(new Intent(LoginActivity.this, MainScreenActivity.class));
 
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-
-                RequestBody formBody = new FormBody.Builder()
-                        .add("grant_type", "convert_token")
-                        .add("client_id", "KHeJV3Sg8ShguiYyvDf9t6i3WPpMpDWlBLN93mgz")
-                        .add("client_secret", "1krO5gdrzs08Ej5WoGpLrQifbuDRNFxEnRqLKyHFJIFG2fPpGPE3t1J8nCS7K9NoSidUCibUUi985ipRiipjM0YV6PoUDMcXw08A4M8R7yfzECFGDHnxVBYgQfgjfc2e")
-                        .add("backend", "facebook")
-                        .add("token", token)
-                        .build();
-
-                Request request = new Request.Builder()
-                        .url("https://api.silverbarsapp.com/")
-                        .post(formBody)
-                        .build();
-
-                okhttp3.Response response = chain.proceed(request);
-                Log.v(TAG,response.toString());
-                return response;
-            }
-        });
-
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.silverbarsapp.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-        SilverbarsService service = retrofit.create(SilverbarsService.class);
-        retrofit2.Call<AccessToken> call = service.getAccessToken();
-
-        call.enqueue(new retrofit2.Callback<AccessToken>() {
-            @Override
-            public void onResponse(retrofit2.Call<AccessToken> call, retrofit2.Response<AccessToken> response) {
-
-                if (response.isSuccessful()) {
-
-                    AccessToken accessToken = response.body();
-
-                    AuthPreferences authPreferences = new AuthPreferences(LoginActivity.this);
-                    authPreferences.setToken(accessToken.getAccess_token());
-
-
-                    saveLogIn();
-                    finish();
-                    startActivity(new Intent(LoginActivity.this,MainScreenActivity.class));
-                }else {
-
-                    int statusCode = response.code();
-                    ResponseBody errorBody = response.errorBody();
-                    Log.e(TAG,errorBody.toString());
-                    Log.e(TAG,"statusCode:"+statusCode);
-
-
-
-                }
-            }
-            @Override
-            public void onFailure(retrofit2.Call<AccessToken> call, Throwable t) {
-                Log.e(TAG,"getAccesstoken from server, onFailure",t);
-            }
-        });
-
-
+        }else {
+            Log.e(TAG,"access token error");
+        }
     }
 
     private void saveLogIn(){
@@ -230,7 +167,6 @@ public class LoginActivity extends AppCompatActivity {
         editor.apply();
         Log.v(TAG,getString(R.string.sign_in));
     }
-
 
     @Override
     protected void onDestroy() {

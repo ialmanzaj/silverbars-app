@@ -479,7 +479,7 @@ public class Utilities {
     }
 
 
-    public static RelativeLayout CreateNewView(Context context,String type, int progress){
+    public static RelativeLayout CreateNewView(Context context,String type_exercise, int progress){
 
         TextView textView = new TextView(context);
 
@@ -488,7 +488,8 @@ public class Utilities {
         textView.setGravity(Gravity.START);
         textView.setLayoutParams(layoutParams_of_textView);
         textView.setTextColor(context.getResources().getColor(R.color.black));
-        textView.setText(type);
+        textView.setText(type_exercise);
+
 
         // Progress
         ProgressBar progressBar = new ProgressBar(context,null ,android.R.attr.progressBarStyleHorizontal);
@@ -521,7 +522,7 @@ public class Utilities {
         return relativeLayout;
     }
 
-    public static RelativeLayout CreateNewViewProgression(Context context,String type, int progress){
+    public static RelativeLayout CreateNewViewProgression(Context context,String type_exercise, int progress){
 
         TextView textView = new TextView(context);
 
@@ -530,18 +531,15 @@ public class Utilities {
         textView.setGravity(Gravity.START);
         textView.setLayoutParams(layoutParams_of_textView);
         textView.setTextColor(context.getResources().getColor(R.color.black));
-        textView.setText(type);
+        textView.setText(type_exercise);
 
         TextView progressPorcentaje = new TextView(context);
         progressPorcentaje.setTextColor(context.getResources().getColor(R.color.black));
         String progression = progress+"%";
         progressPorcentaje.setText(progression);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            progressPorcentaje.setTextColor(context.getResources().getColor(android.R.color.holo_green_dark,null));
-        }else {
-            progressPorcentaje.setTextColor(context.getResources().getColor(android.R.color.holo_green_dark));
-        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {progressPorcentaje.setTextColor(context.getResources().getColor(R.color.colorSecondary,null));}else {
+            progressPorcentaje.setTextColor(context.getResources().getColor(R.color.colorSecondary));}
 
 
         LinearLayout linearLayout = new LinearLayout(context);
@@ -564,5 +562,57 @@ public class Utilities {
 
         return relativeLayout;
     }
+
+    public static RelativeLayout CreateProgression(Context context,String exercise,String level, int progress){
+
+        TextView text_exercise = new TextView(context);
+
+        // EXERCISES
+        RelativeLayout.LayoutParams layoutParams_of_textView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        text_exercise.setGravity(Gravity.START);
+        text_exercise.setLayoutParams(layoutParams_of_textView);
+        text_exercise.setTextColor(context.getResources().getColor(R.color.black));
+        text_exercise.setText(exercise);
+
+
+        TextView text_level = new TextView(context);
+        LinearLayout.LayoutParams layout_of_textView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layout_of_textView.setMarginEnd(25);
+        text_level.setLayoutParams(layout_of_textView);
+
+        text_level.setTextColor(context.getResources().getColor(R.color.black));
+        text_level.setText("Level: "+level);
+
+        TextView progressPorcentaje = new TextView(context);
+        progressPorcentaje.setTextColor(context.getResources().getColor(R.color.black));
+        String progression = progress+"%";
+        progressPorcentaje.setText(progression);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {progressPorcentaje.setTextColor(context.getResources().getColor(R.color.colorSecondary,null));}else {progressPorcentaje.setTextColor(context.getResources().getColor(R.color.colorSecondary));}
+
+
+        LinearLayout linearLayout = new LinearLayout(context);
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        RelativeLayout.LayoutParams layoutParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParam.addRule(RelativeLayout.ALIGN_PARENT_END);
+        linearLayout.setLayoutParams(layoutParam);
+
+        linearLayout.addView(text_level);
+        linearLayout.addView(progressPorcentaje);
+
+        RelativeLayout relativeLayout = new RelativeLayout(context);
+        RelativeLayout.LayoutParams match_parent = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        relativeLayout.setLayoutParams(match_parent);
+        relativeLayout.setPadding(15,15,15,15);
+        relativeLayout.setMinimumHeight(45);
+
+
+        relativeLayout.addView(text_exercise);
+        relativeLayout.addView(linearLayout);
+
+        return relativeLayout;
+    }
+
+
 
 }

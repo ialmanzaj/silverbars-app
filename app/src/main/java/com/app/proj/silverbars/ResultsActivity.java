@@ -49,9 +49,7 @@ public class ResultsActivity extends AppCompatActivity {
         Intent i = getIntent();
         Bundle b = i.getExtras();
 
-
         ArrayList<JsonExercise> exercises = (ArrayList<JsonExercise>) b.getSerializable("exercises");
-
         Log.v(TAG,"exercises: "+ exercises);
 
 
@@ -97,8 +95,6 @@ public class ResultsActivity extends AppCompatActivity {
             scrollView.setFillViewport(true);
         }
 
-
-
         if (exercises != null) {
 
             int porcentaje[] = new int[exercises.size()];
@@ -122,20 +118,14 @@ public class ResultsActivity extends AppCompatActivity {
                 Log.v(TAG,"exercise"+exercises.get(a).getExercise_name()+"porcentaje: "+porcentaje[a]);
             }
 
-
-
             setMusclesToView(MusclesArray);
             setTypes(TypeExercises);
         }
-
     }
 
     private void getCountTimes(List<String> muscles){
         List<String> muscles_ = new ArrayList<>();
-
-
     }
-
 
     private void setTypes(List<String> types){
         List<String> types_oficial;
@@ -184,6 +174,10 @@ public class ResultsActivity extends AppCompatActivity {
 
         webView.getSettings().setJavaScriptEnabled(true);
 
+        getBodyView();
+    }
+
+    private void getBodyView(){
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         String default_url = getResources().getString(R.string.muscle_path);
         String muscle_url = sharedPref.getString(getString(R.string.muscle_path),default_url);
@@ -193,6 +187,7 @@ public class ResultsActivity extends AppCompatActivity {
             String fileurl = "file://"+muscle_url;
             webView.loadUrl(fileurl);
         }
+
     }
 
 
