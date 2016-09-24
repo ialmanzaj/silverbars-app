@@ -211,11 +211,8 @@ public class Authenticator {
 
         try {
 
-
-
             Date refresh_token_hour = sdf.parse(preferences.getCurrentHour());
             Date current_date = sdf.parse(current_hour+":"+current_min+":"+current_second);
-
 
 
             Log.v(TAG,"last token hour: "+refresh_token_hour);
