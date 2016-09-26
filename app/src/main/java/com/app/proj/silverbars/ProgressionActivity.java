@@ -53,7 +53,8 @@ public class ProgressionActivity extends AppCompatActivity {
         progression_content_layout = (LinearLayout) findViewById(R.id.content);
 
         authPreferences = new AuthPreferences(this);
-        getProgression(authPreferences.getToken());
+        getProgressionAPI(authPreferences.getToken());
+
 
 
         if (toolbar != null){
@@ -107,26 +108,6 @@ public class ProgressionActivity extends AppCompatActivity {
         }
     }
 
-    private void getProgression(String token)   {
-
-        Authenticator authenticator = new Authenticator(this);
-
-        if (authenticator.isAuthenticated()){
-            Log.v(TAG,"refresh token: yes");
-
-            token = authenticator.refreshToken();
-
-            getProgressionAPI(token);
-
-        }else{
-            Log.v(TAG,"refresh token: no");
-            getProgressionAPI(token);
-
-        }
-
-
-
-    }
 
 
     private void getProgressionAPI(final String token){
@@ -146,7 +127,6 @@ public class ProgressionActivity extends AppCompatActivity {
                 return response;
             }
         });
-
 
         OkHttpClient client = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.silverbarsapp.com/")
@@ -179,26 +159,13 @@ public class ProgressionActivity extends AppCompatActivity {
         });
     }
 
-    private List<Integer> getIdMusclesProgress(List<User.ProgressionMuscle> muscles,String looking_obj){
-        Log.v(TAG,"looking_obj: "+looking_obj);
-        List<Integer> muscles_ids = new ArrayList<>();
-
-        for (int a = 0;a<muscles.size();a++){
-            if (Objects.equals(muscles.get(a).getMuscle(), looking_obj)){
-                muscles_ids.add(muscles.get(a).getId());
-            }
-        }
-
-        return muscles_ids;
-    }
-
 
     private void getMusclePorcentaje(List<User.ProgressionMuscle> muscles){
         Log.v(TAG,"getMusclePorcentaje");
 
         List<User.ProgressionMuscle> muscles_to_View = new ArrayList <>();
         List<String> muscles_ids = new ArrayList <>();
-        int progress = 0;
+        int progress;
 
         for (User.ProgressionMuscle user_progress : muscles) {
 

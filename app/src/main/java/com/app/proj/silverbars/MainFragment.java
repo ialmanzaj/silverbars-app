@@ -177,16 +177,18 @@ public class MainFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
         muscleData = muscle;
 
+
+        final AuthPreferences authPreferences = new AuthPreferences(getActivity());
+
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request original = chain.request();
 
-
                 Request request = original.newBuilder()
                         .header("Accept", "application/json")
-                        .header("Authorization", "auth-token")
+                        .header("Authorization", "Bearer " + authPreferences.getToken())
                         .method(original.method(), original.body())
                         .build();
 

@@ -870,6 +870,8 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private void getExerciseRepsFromAPI(){
+        final AuthPreferences authPreferences = new AuthPreferences(this);
+
         Log.v(TAG,"getExerciseRepsFromAPI");
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -880,7 +882,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
                 Request request = original.newBuilder()
                         .header("Accept", "application/json")
-                        .header("Authorization", "auth-token")
+                        .header("Authorization", "Bearer " + authPreferences.getToken())
                         .method(original.method(), original.body())
                         .build();
 
@@ -891,7 +893,7 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
         OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com/")
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.silverbarsapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
@@ -1167,6 +1169,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private void getExercisesFromAPI(){
 
+        final AuthPreferences authPreferences = new AuthPreferences(this);
+
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
             @Override
@@ -1175,7 +1179,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
                 Request request = original.newBuilder()
                         .header("Accept", "application/json")
-                        .header("Authorization", "auth-token")
+                        .header("Authorization", "Bearer " + authPreferences.getToken())
                         .method(original.method(), original.body())
                         .build();
                 okhttp3.Response response = chain.proceed(request);

@@ -99,17 +99,18 @@ public class ExerciseListActivity extends AppCompatActivity {
                 setResult(RESULT_OK, return_Intent);
                 finish();
 
-
                 //deselecionar todos los elementos elegidos
                 AllExercisesAdapter.selectedItems.clear();
             }
         });
 
         getExercisesFromAPI();
-
     }
 
     private void getExercisesFromAPI() {
+
+        final AuthPreferences authPreferences = new AuthPreferences(this);
+
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -118,7 +119,7 @@ public class ExerciseListActivity extends AppCompatActivity {
                 Request original = chain.request();
                 Request request = original.newBuilder()
                         .header("Accept", "application/json")
-                        .header("Authorization", "auth-token")
+                        .header("Authorization", "Bearer " + authPreferences.getToken())
                         .method(original.method(), original.body())
                         .build();
                 okhttp3.Response response = chain.proceed(request);
@@ -128,7 +129,7 @@ public class ExerciseListActivity extends AppCompatActivity {
         });
 
         OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://api.silverbarsapp.com/v1/")
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.silverbarsapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();

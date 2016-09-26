@@ -335,11 +335,12 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     }
 
     private void putExercisesinRecycler(final ArrayList<String> new_items_to_list){
-
         Log.v(TAG,"putExercisesinRecycler: "+new_items_to_list);
         empty_content.setVisibility(View.GONE);
         re_addExercise.setVisibility(View.VISIBLE);
         recycler.setVisibility(View.VISIBLE);
+
+        final AuthPreferences authPreferences = new AuthPreferences(this);
 
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -350,7 +351,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
                 Request request = original.newBuilder()
                         .header("Accept", "application/json")
-                        .header("Authorization", "auth-token")
+                        .header("Authorization", "Bearer " + authPreferences.getToken())
                         .method(original.method(), original.body())
                         .build();
                 okhttp3.Response response = chain.proceed(request);
@@ -386,9 +387,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                             //Log.v(TAG,""+AllExercisesList.get(a).getExercise_name()+" : "+new_items_to_list.get(c));
 
                             if (Objects.equals(AllExercisesList.get(a).getExercise_name(), new_items_to_list.get(c))){
-
                                 //.v(TAG,""+AllExercisesList.get(a).getExercise_name()+":"+Items_ids_from_activity.get(c));
-
                                 if (adapter == null){
                                     ExercisesToAdapter.add(AllExercisesList.get(a));
                                 }else {
@@ -405,7 +404,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                                     name = ExercisesToAdapter.get(c).muscle[b];
                                     MusclesArray.add(name);
                                 }
-
                             }
                         }
                     }
@@ -419,8 +417,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                     ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
                     mItemTouchHelper  = new ItemTouchHelper(callback);
                     mItemTouchHelper.attachToRecyclerView(recycler);
-
-
 
                 } else {
                     int statusCode = response.code();

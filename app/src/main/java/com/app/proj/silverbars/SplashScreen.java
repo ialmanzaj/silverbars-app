@@ -32,11 +32,17 @@ public class SplashScreen extends AppCompatActivity {
         if (signIn){
 
             startMainActivity();
+
+            Authenticator authenticator = new Authenticator(this);
+            if (!authenticator.isAuthenticated()){
+                authenticator.refreshToken();
+            }
+
+
+
             accessTokenTracker = new AccessTokenTracker() {
                 @Override
-                protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
-
-                }
+                protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {}
             };
 
         }else {

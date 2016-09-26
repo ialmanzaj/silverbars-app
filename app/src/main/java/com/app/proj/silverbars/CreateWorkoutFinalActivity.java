@@ -259,6 +259,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
     private void putExercisesinRecycler(){
 
+        final AuthPreferences authPreferences = new AuthPreferences(this);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -268,7 +269,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
                 Request request = original.newBuilder()
                         .header("Accept", "application/json")
-                        .header("Authorization", "auth-token")
+                        .header("Authorization", "Bearer " + authPreferences.getToken())
                         .method(original.method(), original.body())
                         .build();
                 okhttp3.Response response = chain.proceed(request);

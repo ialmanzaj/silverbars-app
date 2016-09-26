@@ -121,7 +121,7 @@ public class Authenticator {
     }
 
 
-    public String refreshToken(){
+    public void refreshToken(){
         Log.v(TAG,"refreshToken: called");
 
         final AuthPreferences preferences = new AuthPreferences(context);
@@ -170,9 +170,8 @@ public class Authenticator {
                     int current_min = c.get(Calendar.MINUTE);
                     int current_second = c.get(Calendar.SECOND);
 
-                    Log.v(TAG,"current_hour: "+current_hour);
-                    Log.v(TAG,"current_min: "+current_min);
-                    Log.v(TAG,"current_second: "+current_second);
+
+                    Log.v(TAG,"current hour: "+current_hour + ":" + current_min + ":" + current_second);
 
                     Log.v(TAG,"new accessToken: "+accessToken.getAccess_token());
                     Log.v(TAG,"token type: "+accessToken.getToken_type());
@@ -180,14 +179,12 @@ public class Authenticator {
                     Log.v(TAG,"new refresh token: "+accessToken.getRefresh_token());
                     Log.v(TAG,"scope: "+accessToken.getScope());
 
-
                     preferences.setToken(accessToken.getAccess_token());
                     preferences.setRefreshToken(accessToken.getRefresh_token());
                     preferences.setScope(accessToken.getScope());
                     preferences.setCurrentHour(current_hour+":"+current_min+":"+current_second);
                 }
             }
-
             @Override
             public void onFailure(Call<AccessToken> call, Throwable t) {
                 Log.e(TAG,"RefreshAccessToken, onFailure",t);
@@ -195,8 +192,8 @@ public class Authenticator {
         });
 
 
-        return preferences.getToken();
     }
+
 
     public Boolean isAuthenticated(){
 
@@ -218,9 +215,8 @@ public class Authenticator {
             Log.v(TAG,"last token hour: "+refresh_token_hour);
             Log.v(TAG,"current hour: "+current_date);
 
-            if (refresh_token_hour.after(current_date)){
+            if (current_date.after(refresh_token_hour)){
                 return true;
-
             }
 
         } catch (ParseException e){
