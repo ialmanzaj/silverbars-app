@@ -47,67 +47,17 @@ public class MainFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_fmain, container, false);
+        View rootview = inflater.inflate(R.layout.fragment_fmain, container, false);
+
+        progressBar = (ProgressBar)  rootview.findViewById(R.id.progress_bar);
+        recyclerView = (TwoWayView) rootview.findViewById(R.id.list);
 
 
+        noInternetConnectionLayout = (LinearLayout) rootview.findViewById(R.id.noInternetConnection_layout);
+        failedServerLayout = (LinearLayout) rootview.findViewById(R.id.failed_conection_layout);
+        swipeContainer = (SwipeRefreshLayout)rootview.findViewById(R.id.swipeContainer);
 
-    }
-
-    public boolean isOpened() {
-        return opened;
-    }
-
-    public void setOpened(boolean opened) {
-        this.opened = opened;
-    }
-
-    public String getMuscleData() {
-        return muscleData;
-    }
-
-    public void setMuscleData(String muscleData) {
-        this.muscleData = muscleData;
-    }
-
-
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-
-        muscleData = getArguments().getString("Muscle");
-        opened = getArguments().getBoolean("Opened");
-
-
-
-        progressBar = (ProgressBar) getView().findViewById(R.id.progress_bar);
-        recyclerView = (TwoWayView) getView().findViewById(R.id.list);
-
-
-        noInternetConnectionLayout = (LinearLayout) getView().findViewById(R.id.noInternetConnection_layout);
-        failedServerLayout = (LinearLayout) getView().findViewById(R.id.failed_conection_layout);
-        swipeContainer = (SwipeRefreshLayout) getView().findViewById(R.id.swipeContainer);
-
-
-        Button button_reload_no_internet = (Button) getView().findViewById(R.id.button_reload_no_internet);
-        button_reload_no_internet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (CheckInternet(getActivity().getApplicationContext())){
-                    swipeContainer.setVisibility(View.VISIBLE);
-                    getWorkoutsData(muscleData);
-                    noInternetConnectionLayout.setVisibility(View.GONE);
-                }else {
-                    noInternetConnectionLayout.setVisibility(View.VISIBLE);
-                }
-
-            }
-        });
-
-
-        Button button_failed_server = (Button) getView().findViewById(R.id.button_reload_failed_server);
+        Button button_failed_server = (Button) rootview.findViewById(R.id.button_reload_failed_server);
         button_failed_server.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,6 +73,38 @@ public class MainFragment extends Fragment {
             }
         });
 
+
+        Button button_reload_no_internet = (Button) rootview.findViewById(R.id.button_reload_no_internet);
+        button_reload_no_internet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (CheckInternet(getActivity().getApplicationContext())){
+                    swipeContainer.setVisibility(View.VISIBLE);
+                    getWorkoutsData(muscleData);
+                    noInternetConnectionLayout.setVisibility(View.GONE);
+                }else {
+                    noInternetConnectionLayout.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
+        return  rootview;
+    }
+
+
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+
+        muscleData = getArguments().getString("Muscle");
+        opened = getArguments().getBoolean("Opened");
+
+
         if (!opened){
 
             opened = true;
@@ -136,8 +118,8 @@ public class MainFragment extends Fragment {
                 noInternetConnectionLayout.setVisibility(View.VISIBLE);
 
             }
-        }
-        else{
+        } else {
+
             if (CheckInternet(getActivity().getApplicationContext())){
                 getWorkoutsData(muscleData);
                 swipeContainer.setVisibility(View.VISIBLE);
@@ -162,13 +144,12 @@ public class MainFragment extends Fragment {
                 }
             }
         });
+
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
-
     }
 
 
@@ -176,7 +157,6 @@ public class MainFragment extends Fragment {
     public void getWorkoutsData(final String muscle){
         progressBar.setVisibility(View.VISIBLE);
         muscleData = muscle;
-
 
         final AuthPreferences authPreferences = new AuthPreferences(getActivity());
 
@@ -193,7 +173,7 @@ public class MainFragment extends Fragment {
                         .build();
 
                 okhttp3.Response response = chain.proceed(request);
-                Log.v(TAG,response.toString());
+                Log.v(TAG,"getWorkouts code: "+response.code());
                 return response;
             }
         });
@@ -245,36 +225,46 @@ public class MainFragment extends Fragment {
                             swipeContainer.setRefreshing(false);
 
                         } else {
-                            int statusCode = response.code();
 
+                            int statusCode = response.code();
                             ResponseBody errorBody = response.errorBody();
                             Log.e(TAG,errorBody.toString());
+                            Log.e(TAG,"statusCode: "+statusCode);
+
+
                             progressBar.setVisibility(View.GONE);
                             swipeContainer.setVisibility(View.GONE);
                             failedServerLayout.setVisibility(View.VISIBLE);
-
                         }
                     }
                     @Override
                     protected void finalize() throws Throwable {
                         super.finalize();
-                        Log.v(TAG,"ha finalizado TASK() ");
+                        Log.v(TAG,"ha finalizado");
 
                     }
 
                     @Override
                     public void onFailure(Call<JsonWorkout[]> call, Throwable t) {
-                        Log.e(TAG,"getWorkoutsData, onFailure",t);
+                        Log.e(TAG,"getWorkoutsData, onFailure: ",t);
 
                         progressBar.setVisibility(View.GONE);
                         swipeContainer.setVisibility(View.GONE);
                         failedServerLayout.setVisibility(View.VISIBLE);
-
                     }
                 });
 
 
     }
+
+    public boolean isOpened() {
+        return opened;
+    }
+
+    public String getMuscleData() {
+        return muscleData;
+    }
+
 
     private boolean CheckInternet(Context context){
         ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);

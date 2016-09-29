@@ -7,6 +7,7 @@ import android.text.format.DateUtils;
 import android.util.Log;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -30,20 +31,25 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Authenticator {
 
+    private static final String CONSUMER_KEY = "KHeJV3Sg8ShguiYyvDf9t6i3WPpMpDWlBLN93mgz";
+
+    private static final String CONSUMER_SECRET = "1krO5gdrzs08Ej5WoGpLrQifbuDRNFxEnRqLKyHFJIFG2fPpGPE3t1J8nCS7K9NoSidUCibUUi985ipRiipjM0YV6PoUDMcXw08A4M8R7yfzECFGDHnxVBYgQfgjfc2e";
+
 
     private static final String TAG = "Authenticator";
+
     Context context;
+    private int code;
+
 
     public Authenticator(Context context){
         this.context = context;
-
     }
 
 
-    public String getInitalAccessToken(final String facebook_token) {
+    public void getInitalAccessToken(final String facebook_token) {
 
         final AuthPreferences authPreferences = new AuthPreferences(context);
-
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -52,8 +58,8 @@ public class Authenticator {
 
                 RequestBody formBody = new FormBody.Builder()
                         .add("grant_type", "convert_token")
-                        .add("client_id", "KHeJV3Sg8ShguiYyvDf9t6i3WPpMpDWlBLN93mgz")
-                        .add("client_secret", "1krO5gdrzs08Ej5WoGpLrQifbuDRNFxEnRqLKyHFJIFG2fPpGPE3t1J8nCS7K9NoSidUCibUUi985ipRiipjM0YV6PoUDMcXw08A4M8R7yfzECFGDHnxVBYgQfgjfc2e")
+                        .add("client_id", CONSUMER_KEY)
+                        .add("client_secret", CONSUMER_SECRET)
                         .add("backend", "facebook")
                         .add("token", facebook_token)
                         .build();
@@ -64,7 +70,7 @@ public class Authenticator {
                         .build();
 
                 okhttp3.Response response = chain.proceed(request);
-                Log.v(TAG, response.toString());
+                Log.v(TAG,"code: "+response.code());
                 return response;
             }
         });
@@ -74,6 +80,7 @@ public class Authenticator {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
+
         SilverbarsService service = retrofit.create(SilverbarsService.class);
         retrofit2.Call<AccessToken> call = service.getAccessToken();
 
@@ -82,26 +89,22 @@ public class Authenticator {
             public void onResponse(retrofit2.Call<AccessToken> call, retrofit2.Response<AccessToken> response) {
                 if (response.isSuccessful()) {
 
-                    Calendar c = Calendar.getInstance();
-                    int current_hour = c.get(Calendar.HOUR_OF_DAY);
-                    int current_min = c.get(Calendar.MINUTE);
-                    int current_second = c.get(Calendar.SECOND);
-
-                    Log.v(TAG,"current hour: "+current_hour + ":" + current_min + ":" + current_second);
-
                     AccessToken accessToken = response.body();
 
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    Calendar cal = Calendar.getInstance();
+                    Log.v(TAG,"current date: "+dateFormat.format(cal.getTime()));
+
+
                     Log.v(TAG, "initial accessToken: " + accessToken.getAccess_token());
-                    Log.v(TAG, "token type: " + accessToken.getToken_type());
                     Log.v(TAG, "Expires_in: " + accessToken.getExpires_in());
                     Log.v(TAG, "initial refresh token: " + accessToken.getRefresh_token());
-                    Log.v(TAG, "scope: " + accessToken.getScope());
 
 
                     authPreferences.setToken(accessToken.getAccess_token());
                     authPreferences.setRefreshToken(accessToken.getRefresh_token());
                     authPreferences.setScope(accessToken.getScope());
-                    authPreferences.setCurrentHour(current_hour+accessToken.getExpires_in()/3600 + ":" + current_min + ":" + current_second);
+                    authPreferences.setCurrentHour(dateFormat.format(cal.getTime()));
 
                 } else {
 
@@ -112,12 +115,9 @@ public class Authenticator {
                 }
             }
             @Override
-            public void onFailure(retrofit2.Call<AccessToken> call, Throwable t) {
-                Log.e(TAG, "getAccesstoken from server, onFailure", t);
-            }
+            public void onFailure(retrofit2.Call<AccessToken> call, Throwable t) {Log.e(TAG, "get Access token from server, onFailure", t);}
         });
 
-        return authPreferences.getToken();
     }
 
 
@@ -134,8 +134,8 @@ public class Authenticator {
 
                 RequestBody formBody = new FormBody.Builder()
                         .add("grant_type", "refresh_token")
-                        .add("client_id", "KHeJV3Sg8ShguiYyvDf9t6i3WPpMpDWlBLN93mgz")
-                        .add("client_secret", "1krO5gdrzs08Ej5WoGpLrQifbuDRNFxEnRqLKyHFJIFG2fPpGPE3t1J8nCS7K9NoSidUCibUUi985ipRiipjM0YV6PoUDMcXw08A4M8R7yfzECFGDHnxVBYgQfgjfc2e")
+                        .add("client_id", CONSUMER_KEY)
+                        .add("client_secret", CONSUMER_SECRET)
                         .add("refresh_token",preferences.getRefreshToken())
                         .build();
 
@@ -150,6 +150,7 @@ public class Authenticator {
             }
         });
 
+
         OkHttpClient client = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.silverbarsapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -163,15 +164,11 @@ public class Authenticator {
             @Override
             public void onResponse(Call<AccessToken> call, retrofit2.Response<AccessToken> response) {
                 if (response.isSuccessful()) {
+
                     AccessToken accessToken = response.body();
 
-                    Calendar c = Calendar.getInstance();
-                    int current_hour = c.get(Calendar.HOUR_OF_DAY);
-                    int current_min = c.get(Calendar.MINUTE);
-                    int current_second = c.get(Calendar.SECOND);
 
 
-                    Log.v(TAG,"current hour: "+current_hour + ":" + current_min + ":" + current_second);
 
                     Log.v(TAG,"new accessToken: "+accessToken.getAccess_token());
                     Log.v(TAG,"token type: "+accessToken.getToken_type());
@@ -179,15 +176,17 @@ public class Authenticator {
                     Log.v(TAG,"new refresh token: "+accessToken.getRefresh_token());
                     Log.v(TAG,"scope: "+accessToken.getScope());
 
+
+
                     preferences.setToken(accessToken.getAccess_token());
                     preferences.setRefreshToken(accessToken.getRefresh_token());
                     preferences.setScope(accessToken.getScope());
-                    preferences.setCurrentHour(current_hour+":"+current_min+":"+current_second);
+                    //preferences.setCurrentHour(current_hour+":"+current_min+":"+current_second);
                 }
             }
             @Override
             public void onFailure(Call<AccessToken> call, Throwable t) {
-                Log.e(TAG,"RefreshAccessToken, onFailure",t);
+                Log.e(TAG,"AccessToken, onFailure",t);
             }
         });
 
@@ -199,21 +198,17 @@ public class Authenticator {
 
         AuthPreferences preferences = new AuthPreferences(context);
 
-        Calendar c = Calendar.getInstance();
-        int current_hour = c.get(Calendar.HOUR_OF_DAY);
-        int current_min = c.get(Calendar.MINUTE);
-        int current_second = c.get(Calendar.SECOND);
-
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Calendar cal = Calendar.getInstance();
 
         try {
 
-            Date refresh_token_hour = sdf.parse(preferences.getCurrentHour());
-            Date current_date = sdf.parse(current_hour+":"+current_min+":"+current_second);
+            Date refresh_token_hour = dateFormat.parse(preferences.getCurrentHour());
+            Date current_date = dateFormat.parse(dateFormat.format(cal.getTime()));
 
 
-            Log.v(TAG,"last token hour: "+refresh_token_hour);
-            Log.v(TAG,"current hour: "+current_date);
+            Log.v(TAG,"last token date: "+refresh_token_hour);
+            Log.v(TAG,"current date: "+current_date);
 
             if (current_date.after(refresh_token_hour)){
                 return true;

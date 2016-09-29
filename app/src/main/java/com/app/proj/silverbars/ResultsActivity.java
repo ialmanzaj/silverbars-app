@@ -26,6 +26,7 @@ import java.util.Objects;
 import static com.app.proj.silverbars.Utilities.CreateNewView;
 import static com.app.proj.silverbars.Utilities.CreateNewViewProgression;
 import static com.app.proj.silverbars.Utilities.deleteCopiesofList;
+import static com.app.proj.silverbars.Utilities.injectJS;
 import static com.app.proj.silverbars.Utilities.removeLastChar;
 
 public class ResultsActivity extends AppCompatActivity {
@@ -34,9 +35,7 @@ public class ResultsActivity extends AppCompatActivity {
     WebView webView;
     String partes = "";
     Button save;
-
     LinearLayout muscles_content_layout,skills_layout;
-
     private  List<String> MusclesArray = new ArrayList<>();
     private  List<String> TypeExercises = new ArrayList<>();
 
@@ -137,7 +136,6 @@ public class ResultsActivity extends AppCompatActivity {
             skills_layout.addView(relativeLayout);
 
         }
-
     }
 
     private void setMusclesToView(List<String> musculos){
@@ -162,7 +160,7 @@ public class ResultsActivity extends AppCompatActivity {
                 webView.setWebViewClient(new WebViewClient(){
                     @Override
                     public void onPageFinished(WebView view, String url) {
-                        injectJS();
+                        injectJS(partes,webView);
                         super.onPageFinished(view, url);
                     }
 
@@ -178,6 +176,7 @@ public class ResultsActivity extends AppCompatActivity {
     }
 
     private void getBodyView(){
+
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         String default_url = getResources().getString(R.string.muscle_path);
         String muscle_url = sharedPref.getString(getString(R.string.muscle_path),default_url);
@@ -187,22 +186,7 @@ public class ResultsActivity extends AppCompatActivity {
             String fileurl = "file://"+muscle_url;
             webView.loadUrl(fileurl);
         }
-
     }
 
 
-    private void injectJS() {
-        try {
-            if (!Objects.equals(partes, "")){
-                partes = removeLastChar(partes);
-                webView.loadUrl("javascript: ("+ "window.onload = function () {"+
-                        "partes = Snap.selectAll('"+partes+"');"+
-                        "partes.forEach( function(elem,i) {"+
-                        "elem.attr({fill: '#602C8D',stroke: '#602C8D',});"+
-                        "});"+ "}"+  ")()");
-            }
-        } catch (Exception e) {
-            Log.e(TAG,"JAVASCRIPT Exception",e);
-        }
-    }
 }

@@ -61,7 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
                                 LoginManager.getInstance().logOut();
                                 saveLogOut();
                                 finish();
-                                MainScreenActivity.MainScreenActivity.finish();
+                                MainActivity.MainScreenActivity.finish();
                                 startActivity(new Intent(SettingsActivity.this,LoginActivity.class));
                             }
                         })

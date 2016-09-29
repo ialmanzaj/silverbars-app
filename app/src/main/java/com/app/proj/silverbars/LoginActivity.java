@@ -147,17 +147,11 @@ public class LoginActivity extends AppCompatActivity {
     private  void post(final String facebook_token) {
 
         Authenticator authenticator = new Authenticator(this);
+        authenticator.getInitalAccessToken(facebook_token);
 
-        if (!authenticator.getInitalAccessToken(facebook_token).isEmpty()){
-
-            saveLogIn();
-            finish();
-            startActivity(new Intent(LoginActivity.this, MainScreenActivity.class));
-
-
-        }else {
-            Log.e(TAG,"access token error");
-        }
+        saveLogIn();
+        finish();
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
     }
 
     private void saveLogIn(){

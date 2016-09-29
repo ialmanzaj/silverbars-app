@@ -5,13 +5,13 @@ import java.io.Serializable;
 
 public class JsonWorkout  implements Serializable {
 
-    public int id;
-    public String workout_name;
-    public String workout_image;
-    public int sets;
-    public String level;
-    public String main_muscle;
-    public String[] exercises;
+    private int id;
+    private String workout_name;
+    private String workout_image;
+    private int sets;
+    private String level;
+    private String main_muscle;
+    private String[] exercises;
 
     public JsonWorkout(int id, String workout_name, String workout_image, int sets, String level, String main_muscle, String[] exercises) {
         this.id = id;
@@ -36,16 +36,8 @@ public class JsonWorkout  implements Serializable {
         return workout_name;
     }
 
-    public void setWorkout_name(String workout_name) {
-        this.workout_name = workout_name;
-    }
-
     public String getWorkout_image() {
         return workout_image;
-    }
-
-    public void setWorkout_image(String workout_image) {
-        this.workout_image = workout_image;
     }
 
     public int getSets() {
@@ -60,16 +52,8 @@ public class JsonWorkout  implements Serializable {
         return level;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
-    }
-
     public String getMain_muscle() {
         return main_muscle;
-    }
-
-    public void setMain_muscle(String main_muscle) {
-        this.main_muscle = main_muscle;
     }
 
     public String[] getExercises() {
@@ -79,7 +63,6 @@ public class JsonWorkout  implements Serializable {
     public void setExercises(String[] exercises) {
         this.exercises = exercises;
     }
-
 
 
 }

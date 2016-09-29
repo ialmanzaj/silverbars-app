@@ -31,13 +31,13 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.app.proj.silverbars.Utilities.CreateProgression;
+import static com.app.proj.silverbars.Utilities.injectJS;
 import static com.app.proj.silverbars.Utilities.removeLastChar;
 
 public class ProgressionActivity extends AppCompatActivity {
     private static final String TAG = "PROGRESSION ACTIVITY";
     private WebView webview;
     String partes = "";
-
     AuthPreferences authPreferences;
     LinearLayout progression_content_layout;
 
@@ -50,31 +50,26 @@ public class ProgressionActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar_);
         setSupportActionBar(toolbar);
 
-        progression_content_layout = (LinearLayout) findViewById(R.id.content);
-
-        authPreferences = new AuthPreferences(this);
-        getProgressionAPI(authPreferences.getToken());
-
-
-
         if (toolbar != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(getResources().getString(R.string.progression_));
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    finish();
-                }
+                public void onClick(View v) {finish();}
             });
         }
 
 
+        progression_content_layout = (LinearLayout) findViewById(R.id.content);
+
+        authPreferences = new AuthPreferences(this);
+        getProgressionAPI(authPreferences.getToken());
+
         ScrollView scrollView = (ScrollView) findViewById(R.id.muscles);
         webview = (WebView) findViewById(R.id.WebView_progression);
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {scrollView.setFillViewport(true);}
-
-
     }
+
 
     private void getBodyView(){
 
@@ -89,26 +84,6 @@ public class ProgressionActivity extends AppCompatActivity {
             webview.loadUrl(fileurl);
         }
     }
-
-    private void injectJS() {
-        try {
-            if (!Objects.equals(partes, "")) {
-
-                partes = removeLastChar(partes);
-                webview.loadUrl("javascript: (" + "window.onload = function () {" +
-                        "partes = Snap.selectAll('" + partes + "');" +
-                        "partes.forEach( function(elem,i) {" +
-                        "elem.attr({fill: '#602C8D',stroke: '#602C8D',});" +
-                        "});" + "}" + ")()");
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
 
     private void getProgressionAPI(final String token){
 
@@ -145,8 +120,6 @@ public class ProgressionActivity extends AppCompatActivity {
                     User.ProgressionMuscle[] progression = response.body();
                     List<User.ProgressionMuscle> muscles_to_View = new ArrayList <>();
 
-
-
                     Collections.addAll(muscles_to_View,progression);
                     getMusclePorcentaje(muscles_to_View);
 
@@ -175,13 +148,14 @@ public class ProgressionActivity extends AppCompatActivity {
                 muscles_ids.add(user_progress.getMuscle());
 
             } else {
+
                 int index = muscles_ids.indexOf(user_progress.getMuscle());
                 int level = 1;
                 progress = muscles_to_View.get(index).getMuscle_activation() + user_progress.getMuscle_activation();
                 Log.v(TAG,"progress: "+progress);
 
-
                 if (progress >= 100) {
+
                     Log.v(TAG,"next level: yes");
                     progress = 100 - progress;
                     level++;
@@ -192,10 +166,7 @@ public class ProgressionActivity extends AppCompatActivity {
                     muscles_to_View.get(index).setLevel(level);
                     Log.v(TAG,"level: "+muscles_to_View.get(index).getLevel());
                     muscles_to_View.get(index).setMuscle_activation_progress(Integer.parseInt(real_progress));
-
                 } else {
-
-
 
                     muscles_to_View.get(index).setLevel(user_progress.getLevel());
                     muscles_to_View.get(index).setMuscle_activation_progress(progress);
@@ -207,6 +178,8 @@ public class ProgressionActivity extends AppCompatActivity {
 
         setMusclesToView(muscles_to_View);
     }
+
+
 
     private void setMusclesToView(List<User.ProgressionMuscle> musculos) {
         if (musculos.size() > 0) {
@@ -226,7 +199,7 @@ public class ProgressionActivity extends AppCompatActivity {
                 webview.setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageFinished(WebView view, String url) {
-                        injectJS();
+                        injectJS(partes,webview);
                         super.onPageFinished(view, url);
                     }
 
@@ -236,6 +209,7 @@ public class ProgressionActivity extends AppCompatActivity {
 
         webview.getSettings().setJavaScriptEnabled(true);
         getBodyView();
+
     }
 
 }

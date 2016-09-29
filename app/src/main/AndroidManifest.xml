@@ -51,7 +51,7 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainScreenActivity"
+            android:name=".MainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".WorkoutActivity"
@@ -112,6 +112,11 @@
 
         <activity android:name=".ResultsActivity"
             android:screenOrientation="portrait"></activity>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="b9ecbddcccca5a38f0e3e6340858c42f6798648f"
+            />
 
 
     </application>

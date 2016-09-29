@@ -18,41 +18,39 @@ public class SplashScreen extends AppCompatActivity {
     private static final String TAG = "SplashScreen";
     AccessTokenTracker accessTokenTracker;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         Boolean signIn = sharedPref.getBoolean(getString(R.string.sign_in), false);
 
 
+        Authenticator authenticator = new Authenticator(this);
+
         if (signIn){
 
-            startMainActivity();
-
-            Authenticator authenticator = new Authenticator(this);
             if (!authenticator.isAuthenticated()){
                 authenticator.refreshToken();
             }
 
-
-
             accessTokenTracker = new AccessTokenTracker() {
                 @Override
-                protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {}
+                protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+                    Log.v(TAG,"currentAccessToken: "+currentAccessToken);
+                }
             };
 
-        }else {
+
+            startMainActivity();
+            
+        } else {
             startLogin();
         }
-
     }
-
-
-
     @Override
     protected void attachBaseContext(Context newBase){
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -68,35 +66,30 @@ public class SplashScreen extends AppCompatActivity {
 
     private void startMainActivity(){
         Log.v(TAG,"startMainActivity");
-        Intent i = new Intent(SplashScreen.this, MainScreenActivity.class);
+        Intent i = new Intent(SplashScreen.this, MainActivity.class);
         startActivity(i);
         finish();
-
     }
 
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.v(TAG," onStart()");
-
+        Log.v(TAG," onStart");
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v(TAG,"onResume()");
-
+        Log.v(TAG,"onResume");
     }
 
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.v(TAG,"onPause()");
-
-
+        Log.v(TAG,"onPause");
     }
 
 
@@ -104,8 +97,6 @@ public class SplashScreen extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.v(TAG,"splash screen destruida");
-
-
     }
 
 }

@@ -1,6 +1,5 @@
 package com.app.proj.silverbars;
 
-//import android.support.design.widget.TabLayout;
 
 
 import android.os.Bundle;
@@ -16,9 +15,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WorkoutsFragment extends Fragment {
+public class MyWorkoutsFragment extends Fragment {
 
-    private static final String TAG = "WorkoutsFragment";
+    private static final String TAG = "MyWorkoutsFragment";
     View rootView;
 
 

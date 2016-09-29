@@ -5,9 +5,7 @@ import android.support.multidex.MultiDexApplication;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-/**
- * Created by roberto on 5/24/2016.
- */
+
 public class MyApp extends MultiDexApplication {
 
     @Override

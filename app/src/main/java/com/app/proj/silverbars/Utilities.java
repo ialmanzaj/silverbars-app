@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.os.NetworkOnMainThreadException;
@@ -20,6 +21,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.WebView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -34,6 +36,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -41,6 +44,10 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import static com.app.proj.silverbars.WorkoutAdapter.containerDimensions;
 
@@ -322,6 +329,66 @@ public class Utilities {
         return title;
     }
 
+    public static void DownloadImage(final Context context, String url, final String imgName){
+
+        Log.v(TAG,"DownloadImage ");
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
+                .build();
+        SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
+        Call<ResponseBody> call = downloadService.downloadFile(url);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+
+                    saveWorkoutImgInDevice(context,response.body(),imgName);
+
+                } else {
+                    Log.v(TAG,"State server contact failed");
+                }
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG,"DownloadImage, onFAILURE",t);
+            }
+        });
+    }
+
+    public static void DownloadMp3(final Context context, final String url, final String getAudioName) {
+        Log.v(TAG,"DownloadMp3: "+getAudioName);
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
+                .build();
+        final SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
+
+        new AsyncTask<Void, Long, Void>() {
+            @Override
+            protected Void doInBackground(Void... workouts_ids) {
+                Call<ResponseBody> call = downloadService.downloadFile(url);
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+
+                            saveAudioInDevice(context,response.body(),getAudioName);
+
+                        } else {
+                            Log.e(TAG, "DownloadMp3, Download server failed:");
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.e(TAG, "DownloadMp3: onFailure",t);
+                    }
+                });
+                return null;
+            };
+        }.execute();
+    }
+
+
 
     public static String quitarMp3(String song){
         if(song.contains(".mp3")){
@@ -476,6 +543,21 @@ public class Utilities {
                 if (output != null) {output.close();}
             }
         } catch (IOException e) { return false;}
+    }
+
+    public static void injectJS(String partes, WebView webView) {
+        try {
+            if (!Objects.equals(partes, "")){
+                partes = removeLastChar(partes);
+                webView.loadUrl("javascript: ("+ "window.onload = function () {"+
+                        "partes = Snap.selectAll('"+partes+"');"+
+                        "partes.forEach( function(elem,i) {"+
+                        "elem.attr({stroke:'#602C8D',fill:'#602C8D'});"+
+                        "});"+ "}"+  ")()");
+            }
+        } catch (Exception e) {
+            Log.e(TAG,"JAVASCRIPT Exception",e);
+        }
     }
 
 

@@ -48,6 +48,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.app.proj.silverbars.Utilities.deleteCopiesofList;
+import static com.app.proj.silverbars.Utilities.injectJS;
 
 
 public class CreateWorkoutActivity extends AppCompatActivity implements OnStartDragListener {
@@ -82,6 +83,8 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_workout);
 
+        create = this;
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -97,7 +100,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             });
         }
 
-        create = this;
+
         contentInfo = (LinearLayout)findViewById(R.id.content_info);
         primary_ColumnMuscle = (LinearLayout) findViewById(R.id.column1);
         secundary_ColumnMuscle = (LinearLayout) findViewById(R.id.column2);
@@ -126,8 +129,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                 }
             }
         });
-
-
 
         /// boton de siguiente
         Button nextButton = (Button) findViewById(R.id.Next);
@@ -201,7 +202,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         tabHost2.addTab(muscles);
 
         webView = (WebView) findViewById(R.id.WebView_create);
-
 
         getBodyView();
 
@@ -287,7 +287,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageFinished(WebView view, String url) {
-                injectJS();
+                injectJS(partes,webView);
                 super.onPageFinished(view, url);
             }
         });
@@ -313,26 +313,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         }
     }
 
-
-    private static String removeLastChar(String str) {
-        return str.substring(0,str.length()-1);
-    }
-
-    private void injectJS() {
-        try {
-            if (!Objects.equals(partes, "")){
-                partes = removeLastChar(partes);
-                webView.loadUrl("javascript: ("+ "window.onload = function () {"+
-                        "partes = Snap.selectAll('"+partes+"');"+
-                        "partes.forEach( function(elem,i) {"+
-                        "elem.attr({fill: '#602C8D',stroke: '#602C8D',});"+
-                        "});"+ "}"+  ")()");
-            }
-        } catch (Exception e) {
-            Log.e(TAG,"JAVASCRIPT Exception",e);
-
-        }
-    }
 
     private void putExercisesinRecycler(final ArrayList<String> new_items_to_list){
         Log.v(TAG,"putExercisesinRecycler: "+new_items_to_list);

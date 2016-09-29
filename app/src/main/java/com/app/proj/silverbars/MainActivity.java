@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -31,10 +30,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +42,9 @@ import retrofit2.Retrofit;
 import static com.app.proj.silverbars.Utilities.getFileReady;
 import static com.app.proj.silverbars.Utilities.saveHtmInDevice;
 
-public class MainScreenActivity extends AppCompatActivity {
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MAIN SCREEN ACTIVITY";
     private ViewPager view;
@@ -70,64 +67,37 @@ public class MainScreenActivity extends AppCompatActivity {
     private String muscle = "ALL";
     public Spinner spinner;
     private boolean Opened = false;
-    private FloatingActionButton fab_create_new_workout;
+    private FloatingActionButton ButtonCreateWorkout;
     LinearLayout settings;
 
     public static Activity MainScreenActivity;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG,"Main screenActivity creada");
+        setContentView(R.layout.activity_main_screen);
         FacebookSdk.sdkInitialize(getApplicationContext());
 
-        Fresco.initialize(this);
+        if (!Fresco.hasBeenInitialized()){
+            Fresco.initialize(this);
+        }
+
+        Fabric.with(this, new Crashlytics());
 
         MainScreenActivity = this;
 
-        setContentView(R.layout.activity_main_screen);
 
         settings = (LinearLayout) findViewById(R.id.settings);
         tagTitles = this.getResources().getStringArray(R.array.navigation_array);
 
-        Log.v(TAG,tagTitles[0]);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView) findViewById(R.id.left_drawer);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-
-        fab_create_new_workout = (FloatingActionButton) findViewById(R.id.fab);
-        
-        if (fab_create_new_workout != null) {
-            fab_create_new_workout.bringToFront();
-        }
-
-        fab_create_new_workout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainScreenActivity.this,CreateWorkoutActivity.class);
-                startActivityForResult(i,1);
-            }
-        });
-
-        Button_filter = (LinearLayout) toolbar.findViewById(R.id.Sort);
-
-        final ArrayList<DrawerItem> items_drawer = new ArrayList<DrawerItem>();
-        items_drawer.add(new DrawerItem(tagTitles[0],R.drawable.ic_home_black_24dp));
-        items_drawer.add(new DrawerItem(tagTitles[1],R.drawable.ic_apps_black_24dp));
-        items_drawer.add(new DrawerItem(tagTitles[2],R.drawable.ic_person_outline_black_24dp));
-
-        drawerList.setAdapter(new DrawerListAdapter(this, items_drawer));
-        drawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainScreenActivity.this,SettingsActivity.class);
-                startActivity(intent);
-            }
-        });
-
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
         toolbar.setTitle(tagTitles[0]);
         setSupportActionBar(toolbar);
@@ -143,6 +113,36 @@ public class MainScreenActivity extends AppCompatActivity {
         });
 
 
+
+        ButtonCreateWorkout = (FloatingActionButton) findViewById(R.id.fab);
+        ButtonCreateWorkout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this,CreateWorkoutActivity.class);
+                startActivityForResult(i,1);
+            }
+        });
+
+        Button_filter = (LinearLayout) toolbar.findViewById(R.id.Sort);
+
+        final ArrayList<DrawerItem> items_drawer = new ArrayList<DrawerItem>();
+        items_drawer.add(new DrawerItem(tagTitles[0],R.drawable.ic_home_black_24dp));
+        items_drawer.add(new DrawerItem(tagTitles[1],R.drawable.ic_apps_black_24dp));
+        items_drawer.add(new DrawerItem(tagTitles[2],R.drawable.ic_person_outline_black_24dp));
+
+
+
+        drawerList.setAdapter(new DrawerListAdapter(this, items_drawer));
+        drawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+
         if (savedInstanceState == null) {
             selectItem(0);
         }
@@ -152,7 +152,7 @@ public class MainScreenActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                new MaterialDialog.Builder(MainScreenActivity.this)
+                new MaterialDialog.Builder(MainActivity.this)
                         .title(R.string.filtertitle)
                         .items(R.array.filter_items_text)
                         .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
@@ -199,6 +199,7 @@ public class MainScreenActivity extends AppCompatActivity {
                 Log.e(TAG,"Error creating dir");
         }
 
+
     }//oncreate
 
     @Override
@@ -221,19 +222,23 @@ public class MainScreenActivity extends AppCompatActivity {
     }
 
     private void selectItem(int position) {
-
         // Reemplazar el contenido del layout principal por un fragmento
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
+
         switch (position){
-            case 0:// ALL WORKOUTS TAB
+            case 0:
                 if (currentFragment instanceof MainFragment) {
-                    break;//place your filtering logic here using currentFragment
+
+                    break;
+                    //place your filtering logic here using currentFragment
                 }else{
                     MainFragment main = new MainFragment();
                     Bundle bundle = new Bundle();
+
                     bundle.putString("Muscle",muscle);
                     bundle.putBoolean("Opened",Opened);
+
                     main.setArguments(bundle);
                     fragmentManager
                             .beginTransaction()
@@ -241,25 +246,26 @@ public class MainScreenActivity extends AppCompatActivity {
                             .addToBackStack(null)
                             .commit();
                     Button_filter.setVisibility(View.VISIBLE);
-                    fab_create_new_workout.setVisibility(View.VISIBLE);
+                    ButtonCreateWorkout.setVisibility(View.VISIBLE);
                     settings.setVisibility(View.GONE);
                     Opened = main.isOpened();
                 }
-
                 break;
+
             case 1:// MY WORKOUTS TAB
                 if (currentFragment instanceof MainFragment) {
                     muscle = ((MainFragment) currentFragment).getMuscleData();
                 }
                 fragmentManager
                         .beginTransaction()
-                        .replace(R.id.content_frame, new WorkoutsFragment(), null)
+                        .replace(R.id.content_frame, new MyWorkoutsFragment(), null)
                         .addToBackStack(null)
                         .commit();
                 Button_filter.setVisibility(View.GONE);
-                fab_create_new_workout.setVisibility(View.GONE);
+                ButtonCreateWorkout.setVisibility(View.GONE);
                 settings.setVisibility(View.GONE);
                 break;
+
             case 2:// PROFILE TAB
                 if (currentFragment instanceof MainFragment) {
                     muscle = ((MainFragment) currentFragment).getMuscleData();
@@ -269,15 +275,15 @@ public class MainScreenActivity extends AppCompatActivity {
                         .replace(R.id.content_frame, new ProfileFragment(), null)
                         .addToBackStack(null)
                         .commit();
+
                 Button_filter.setVisibility(View.GONE);
-                fab_create_new_workout.setVisibility(View.GONE);
+                ButtonCreateWorkout.setVisibility(View.GONE);
                 settings.setVisibility(View.VISIBLE);
                 break;
         }
         // Se actualiza el item seleccionado y el título, después de cerrar el drawer
         drawerList.setItemChecked(position, true);
         toolbar.setTitle(tagTitles[position]);
-
         drawerLayout.closeDrawer(drawerList);
     }
 
@@ -285,26 +291,11 @@ public class MainScreenActivity extends AppCompatActivity {
     @Override
     public void setTitle(CharSequence title) {
         itemTitle = title;
-//        getSupportActionBar().setTitle(itemTitle);
     }
-    public void WorkoutActivity(){
-        Intent intent = new Intent(getApplicationContext(), WorkoutActivity.class);
-        startActivity(intent);
-    }
-
 
     @Override
     public void onBackPressed(){
         finish();
-    }
-
-    public void fragmentLoaded(){
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
-        if (currentFragment instanceof MainFragment) {
-            muscle = ((MainFragment) currentFragment).getMuscleData();
-            //place your filtering logic here using currentFragment
-        }
     }
 
 
@@ -324,7 +315,7 @@ public class MainScreenActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (response.isSuccessful()) {
-                            Boolean write = saveHtmInDevice(MainScreenActivity.this,response.body(),"index.html");
+                            Boolean write = saveHtmInDevice(MainActivity.this,response.body(),"index.html");
                         }
                         else {Log.e(TAG, "Download server contact failed");}
                     }
@@ -337,12 +328,7 @@ public class MainScreenActivity extends AppCompatActivity {
                 return null;
             };
         }.execute();
-
-
-
     }
-
-    
 
 
     private void setMusclePath(File file){
@@ -353,16 +339,17 @@ public class MainScreenActivity extends AppCompatActivity {
         editor.apply();
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
-        Log.v(TAG,"onResume");
+        Log.v(TAG,"onStart");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
+        Log.v(TAG,"onResume");
     }
 
 
