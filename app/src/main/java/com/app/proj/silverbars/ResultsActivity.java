@@ -141,13 +141,12 @@ public class ResultsActivity extends AppCompatActivity {
     private void setMusclesToView(List<String> musculos){
 
         if (musculos.size() > 0){
+
             List<String> musculos_oficial;
             musculos_oficial = deleteCopiesofList(musculos);
 
             for (int a = 0;a<musculos_oficial.size();a++) {
                 partes += "#"+ musculos_oficial.get(a) + ",";
-
-
                 RelativeLayout relativeLayout = CreateNewViewProgression(this,musculos_oficial.get(a),10);
                 muscles_content_layout.addView(relativeLayout);
             }

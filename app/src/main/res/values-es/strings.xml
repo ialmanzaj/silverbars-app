@@ -200,4 +200,9 @@
     <string name="playlist_name">Nombre de lista</string>
 
     <string name="add_exercises_button">AÑADIR EJERCICIOS</string>
+
+
+    <string name="level">Nivel</string>
+
+
 </resources>

@@ -649,7 +649,6 @@ public class Utilities {
 
         TextView text_exercise = new TextView(context);
 
-        // EXERCISES
         RelativeLayout.LayoutParams layoutParams_of_textView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         text_exercise.setGravity(Gravity.START);
         text_exercise.setLayoutParams(layoutParams_of_textView);
@@ -659,11 +658,12 @@ public class Utilities {
 
         TextView text_level = new TextView(context);
         LinearLayout.LayoutParams layout_of_textView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layout_of_textView.setMarginEnd(25);
+        layout_of_textView.setMarginEnd(30);
         text_level.setLayoutParams(layout_of_textView);
 
-        text_level.setTextColor(context.getResources().getColor(R.color.black));
-        text_level.setText("Level: "+level);
+        text_level.setTextColor(context.getResources().getColor(R.color.gray_active_icon));
+        String level_ = context.getResources().getString(R.string.level)+": "+level;
+        text_level.setText(level_);
 
         TextView progressPorcentaje = new TextView(context);
         progressPorcentaje.setTextColor(context.getResources().getColor(R.color.black));

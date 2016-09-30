@@ -44,7 +44,6 @@ public class MainFragment extends Fragment {
     ProgressBar progressBar;
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.fragment_fmain, container, false);
@@ -159,6 +158,7 @@ public class MainFragment extends Fragment {
         muscleData = muscle;
 
         final AuthPreferences authPreferences = new AuthPreferences(getActivity());
+        Log.v(TAG,"token bearer:"+authPreferences.getToken());
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -223,7 +223,6 @@ public class MainFragment extends Fragment {
                             progressBar.setVisibility(View.GONE);
                             recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
                             swipeContainer.setRefreshing(false);
-
                         } else {
 
                             int statusCode = response.code();
@@ -243,7 +242,6 @@ public class MainFragment extends Fragment {
                         Log.v(TAG,"ha finalizado");
 
                     }
-
                     @Override
                     public void onFailure(Call<JsonWorkout[]> call, Throwable t) {
                         Log.e(TAG,"getWorkoutsData, onFailure: ",t);

@@ -28,8 +28,8 @@ public class SplashScreen extends AppCompatActivity {
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         Boolean signIn = sharedPref.getBoolean(getString(R.string.sign_in), false);
 
-
         Authenticator authenticator = new Authenticator(this);
+
 
         if (signIn){
 

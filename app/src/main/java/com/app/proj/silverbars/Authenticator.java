@@ -115,7 +115,7 @@ public class Authenticator {
                 }
             }
             @Override
-            public void onFailure(retrofit2.Call<AccessToken> call, Throwable t) {Log.e(TAG, "get Access token from server, onFailure", t);}
+            public void onFailure(retrofit2.Call<AccessToken> call, Throwable t) {Log.e(TAG, "get initial token, onFailure", t);}
         });
 
     }
@@ -167,6 +167,15 @@ public class Authenticator {
 
                     AccessToken accessToken = response.body();
 
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    Calendar cal = Calendar.getInstance();
+
+                    int hour = cal.get(Calendar.HOUR_OF_DAY)+1;
+                    Log.v(TAG,"hour "+hour);
+                    cal.set(Calendar.HOUR_OF_DAY,hour);
+                    Log.v(TAG,"refresh current date: "+dateFormat.format(cal.getTime()));
+
+
 
 
 
@@ -177,18 +186,18 @@ public class Authenticator {
                     Log.v(TAG,"scope: "+accessToken.getScope());
 
 
-
                     preferences.setToken(accessToken.getAccess_token());
                     preferences.setRefreshToken(accessToken.getRefresh_token());
                     preferences.setScope(accessToken.getScope());
-                    //preferences.setCurrentHour(current_hour+":"+current_min+":"+current_second);
+                    preferences.setCurrentHour(dateFormat.format(cal.getTime()));
                 }
             }
             @Override
             public void onFailure(Call<AccessToken> call, Throwable t) {
-                Log.e(TAG,"AccessToken, onFailure",t);
+                Log.e(TAG,"refresh accessToken, onFailure",t);
             }
         });
+
 
 
     }
@@ -210,9 +219,11 @@ public class Authenticator {
             Log.v(TAG,"last token date: "+refresh_token_hour);
             Log.v(TAG,"current date: "+current_date);
 
-            if (current_date.after(refresh_token_hour)){
+            if (refresh_token_hour.after(current_date)){
                 return true;
             }
+
+
 
         } catch (ParseException e){
             Log.e(TAG,"ParseException: "+e);

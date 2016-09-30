@@ -26,7 +26,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.facebook.FacebookSdk;
+import com.facebook.*;
+import com.facebook.AccessToken;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
 import java.io.File;
@@ -73,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
     public static Activity MainScreenActivity;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,11 +81,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_screen);
         FacebookSdk.sdkInitialize(getApplicationContext());
 
+        AuthPreferences authPreferences = new AuthPreferences(this);
+        Authenticator authenticator = new Authenticator(this);
+
+        if (authPreferences.getToken().isEmpty()){
+            authenticator.getInitalAccessToken(AccessToken.getCurrentAccessToken().getToken());
+        }
+
+
         if (!Fresco.hasBeenInitialized()){
             Fresco.initialize(this);
         }
 
         Fabric.with(this, new Crashlytics());
+
 
         MainScreenActivity = this;
 
@@ -229,9 +238,7 @@ public class MainActivity extends AppCompatActivity {
         switch (position){
             case 0:
                 if (currentFragment instanceof MainFragment) {
-
                     break;
-                    //place your filtering logic here using currentFragment
                 }else{
                     MainFragment main = new MainFragment();
                     Bundle bundle = new Bundle();
