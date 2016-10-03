@@ -1116,7 +1116,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         media.release();
                     }
 
-                    finish();
+                    finishActivity();
 
             }
         }).negativeText(getResources().getString(R.string.negative_dialog)).onNegative(new MaterialDialog.SingleButtonCallback() {
@@ -1135,6 +1135,16 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         }).show();
 
 
+    }
+
+
+    private void finishActivity(){
+
+        Intent intent = new Intent(WorkingOutActivity.this, ResultsActivity.class);
+        intent.putExtra("exercises", (Serializable) exerciseList);
+
+        startActivity(intent);
+        finish();
     }
 
     private void ScreenOn(){getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);}

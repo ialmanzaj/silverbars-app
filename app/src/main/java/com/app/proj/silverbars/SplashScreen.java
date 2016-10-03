@@ -30,7 +30,6 @@ public class SplashScreen extends AppCompatActivity {
 
         Authenticator authenticator = new Authenticator(this);
 
-
         if (signIn){
 
             if (!authenticator.isAuthenticated()){
@@ -98,5 +97,6 @@ public class SplashScreen extends AppCompatActivity {
         super.onDestroy();
         Log.v(TAG,"splash screen destruida");
     }
+
 
 }

@@ -90,9 +90,8 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="com.spotify.sdk.android.authenticator.LoginActivity"
+            android:name="com.spotify.sdk.android.authentication.LoginActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
 
         <activity
             android:screenOrientation="portrait" android:name=".SpotifyMusic" />

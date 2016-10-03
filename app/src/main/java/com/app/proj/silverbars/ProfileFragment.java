@@ -63,120 +63,26 @@ public class ProfileFragment extends Fragment {
         final int dpAsPixels = (int) (7*scale + 0.5f);
         myTeam = (RelativeLayout) rootView.findViewById(R.id.myTeam);
         myTeam.setClickable(true);
-        myTeam.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        myTeam.setBackgroundColor(getResources().getColor(R.color.onTouch));
-                        myTeam.setPadding(0,dpAsPixels,0,dpAsPixels);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        myTeam.setBackground(getResources().getDrawable(R.drawable.custom_border));
-                        myTeam.setPadding(0,dpAsPixels,0,dpAsPixels);
-                        break;
-                    default:
-                        break;
-                }
-                return false;
-            }
-        });
 
 
         Progression = (RelativeLayout) rootView.findViewById(R.id.Progression);
         Progression.setClickable(true);
-        Progression.setOnTouchListener(new View.OnTouchListener() {
+        Progression.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                Progression.setBackgroundColor(getResources().getColor(R.color.onTouch,null));
-                        }else {
-                            Progression.setBackgroundColor(getResources().getColor(R.color.onTouch));
-                        }
-                        Progression.setPadding(0,dpAsPixels,0,dpAsPixels);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            Progression.setBackground(getResources().getDrawable(R.drawable.custom_border,null));
-                        }else {
-                            Progression.setBackground(getResources().getDrawable(R.drawable.custom_border));
-                        }
-                        Progression.setPadding(0,dpAsPixels,0,dpAsPixels);
-
-                        startActivity(new Intent(getActivity(),ProgressionActivity.class));
-                        break;
-                    default:
-                        break;
-                }
-                return false;
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(),ProgressionActivity.class));
             }
         });
 
 
         skillsProgression = (RelativeLayout) rootView.findViewById(R.id.skillsProgression);
         skillsProgression.setClickable(true);
-        skillsProgression.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        skillsProgression.setBackgroundColor(getResources().getColor(R.color.onTouch));
-                        skillsProgression.setPadding(0,dpAsPixels,0,dpAsPixels);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        skillsProgression.setBackground(getResources().getDrawable(R.drawable.custom_border));
-                        skillsProgression.setPadding(0,dpAsPixels,0,dpAsPixels);
-                        break;
-                    default:
-                        break;
-                }
-                return false;
-            }
-        });
+
         sharedWorkouts = (RelativeLayout) rootView.findViewById(R.id.sharedWorkouts);
         sharedWorkouts.setClickable(true);
-        sharedWorkouts.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        sharedWorkouts.setBackgroundColor(getResources().getColor(R.color.onTouch));
-                        sharedWorkouts.setPadding(0,dpAsPixels,0,dpAsPixels);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        sharedWorkouts.setBackground(getResources().getDrawable(R.drawable.custom_border));
-                        sharedWorkouts.setPadding(0,dpAsPixels,0,dpAsPixels);
-                        break;
-                    default:
-                        break;
-                }
-                return false;
-            }
-        });
+
         history = (RelativeLayout) rootView.findViewById(R.id.history);
         history.setClickable(true);
-        history.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        history.setBackgroundColor(getResources().getColor(R.color.onTouch));
-                        history.setPadding(0,dpAsPixels,0,dpAsPixels);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        history.setBackground(getResources().getDrawable(R.drawable.custom_border));
-                        history.setPadding(0,dpAsPixels,0,dpAsPixels);
-                        break;
-                    default:
-                        break;
-                }
-                return false;
-            }
-        });
-
 
         return rootView;
     }

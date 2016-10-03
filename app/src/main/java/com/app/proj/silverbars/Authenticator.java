@@ -1,9 +1,6 @@
 package com.app.proj.silverbars;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.text.format.DateUtils;
 import android.util.Log;
 
 import java.io.IOException;
@@ -29,25 +26,21 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by isaacalmanza on 09/23/16.
  */
 
-public class Authenticator {
+class Authenticator {
 
     private static final String CONSUMER_KEY = "KHeJV3Sg8ShguiYyvDf9t6i3WPpMpDWlBLN93mgz";
 
     private static final String CONSUMER_SECRET = "1krO5gdrzs08Ej5WoGpLrQifbuDRNFxEnRqLKyHFJIFG2fPpGPE3t1J8nCS7K9NoSidUCibUUi985ipRiipjM0YV6PoUDMcXw08A4M8R7yfzECFGDHnxVBYgQfgjfc2e";
 
-
     private static final String TAG = "Authenticator";
 
     Context context;
-    private int code;
 
-
-    public Authenticator(Context context){
+    Authenticator(Context context){
         this.context = context;
     }
 
-
-    public void getInitalAccessToken(final String facebook_token) {
+    void getInitalAccessToken(final String facebook_token) {
 
         final AuthPreferences authPreferences = new AuthPreferences(context);
 
@@ -70,7 +63,7 @@ public class Authenticator {
                         .build();
 
                 okhttp3.Response response = chain.proceed(request);
-                Log.v(TAG,"code: "+response.code());
+                Log.v(TAG,"response code: "+response.code());
                 return response;
             }
         });
@@ -91,14 +84,20 @@ public class Authenticator {
 
                     AccessToken accessToken = response.body();
 
-                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                    Calendar cal = Calendar.getInstance();
-                    Log.v(TAG,"current date: "+dateFormat.format(cal.getTime()));
 
 
                     Log.v(TAG, "initial accessToken: " + accessToken.getAccess_token());
                     Log.v(TAG, "Expires_in: " + accessToken.getExpires_in());
                     Log.v(TAG, "initial refresh token: " + accessToken.getRefresh_token());
+
+
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    Calendar cal = Calendar.getInstance();
+
+                    int hour = cal.get(Calendar.HOUR_OF_DAY)+(accessToken.getExpires_in()/3600);
+                    Log.v(TAG,"hour "+hour);
+                    cal.set(Calendar.HOUR_OF_DAY,hour);
+                    Log.v(TAG,"current date: "+dateFormat.format(cal.getTime()));
 
 
                     authPreferences.setToken(accessToken.getAccess_token());
@@ -121,11 +120,10 @@ public class Authenticator {
     }
 
 
-    public void refreshToken(){
+    void refreshToken(){
         Log.v(TAG,"refreshToken: called");
 
         final AuthPreferences preferences = new AuthPreferences(context);
-
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
@@ -150,7 +148,6 @@ public class Authenticator {
             }
         });
 
-
         OkHttpClient client = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.silverbarsapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -167,18 +164,6 @@ public class Authenticator {
 
                     AccessToken accessToken = response.body();
 
-                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                    Calendar cal = Calendar.getInstance();
-
-                    int hour = cal.get(Calendar.HOUR_OF_DAY)+1;
-                    Log.v(TAG,"hour "+hour);
-                    cal.set(Calendar.HOUR_OF_DAY,hour);
-                    Log.v(TAG,"refresh current date: "+dateFormat.format(cal.getTime()));
-
-
-
-
-
                     Log.v(TAG,"new accessToken: "+accessToken.getAccess_token());
                     Log.v(TAG,"token type: "+accessToken.getToken_type());
                     Log.v(TAG,"Expires_in: "+accessToken.getExpires_in());
@@ -186,10 +171,23 @@ public class Authenticator {
                     Log.v(TAG,"scope: "+accessToken.getScope());
 
 
+
+                    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                    Calendar cal = Calendar.getInstance();
+
+                    int hour = cal.get(Calendar.HOUR_OF_DAY)+(accessToken.getExpires_in()/3600);
+                    Log.v(TAG,"hour "+hour);
+                    cal.set(Calendar.HOUR_OF_DAY,hour);
+                    Log.v(TAG,"refresh current date: "+dateFormat.format(cal.getTime()));
+
+
                     preferences.setToken(accessToken.getAccess_token());
                     preferences.setRefreshToken(accessToken.getRefresh_token());
                     preferences.setScope(accessToken.getScope());
                     preferences.setCurrentHour(dateFormat.format(cal.getTime()));
+
+
+                    Log.v(TAG,"new date refreshToken: "+preferences.getCurrentHour());
                 }
             }
             @Override
@@ -199,11 +197,11 @@ public class Authenticator {
         });
 
 
-
     }
 
 
-    public Boolean isAuthenticated(){
+
+    Boolean isAuthenticated(){
 
         AuthPreferences preferences = new AuthPreferences(context);
 

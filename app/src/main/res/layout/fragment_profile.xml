@@ -81,7 +81,7 @@
       android:gravity="center"
       android:paddingTop="7dp"
       android:paddingBottom="7dp"
-      android:background="@drawable/custom_border"
+
       android:id="@+id/Progression">
 
    <TextView
@@ -114,7 +114,7 @@
       android:gravity="center"
       android:paddingTop="7dp"
       android:paddingBottom="7dp"
-      android:background="@drawable/custom_border"
+
       android:id="@+id/skillsProgression">
 
    <TextView
@@ -181,7 +181,7 @@
       android:gravity="center"
       android:paddingTop="7dp"
       android:paddingBottom="7dp"
-      android:background="@drawable/custom_border"
+
       android:id="@+id/history">
 
    <TextView

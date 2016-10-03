@@ -41,6 +41,8 @@ public class ProgressionActivity extends AppCompatActivity {
     AuthPreferences authPreferences;
     LinearLayout progression_content_layout;
 
+    CustomDateView customDateView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,11 @@ public class ProgressionActivity extends AppCompatActivity {
 
 
         progression_content_layout = (LinearLayout) findViewById(R.id.content);
+
+        customDateView = (CustomDateView) findViewById(R.id.date);
+        customDateView.setNameDay("Sun");
+        customDateView.setNumberDay("2");
+
 
         authPreferences = new AuthPreferences(this);
         getProgressionAPI(authPreferences.getToken());
