@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,11 +15,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -66,12 +62,12 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     private  List<String> TypeExercises = new ArrayList<>();
     private static String strSeparator = "__,__";
     private int Items_size = 0;
-    JsonExercise[] parsedExercises;
+    Exercise[] parsedExercises;
 
     private String partes = "";
     public static Activity create;
     
-    private List<JsonExercise> ExercisesToAdapter = new ArrayList<>();
+    private List<Exercise> ExercisesToAdapter = new ArrayList<>();
 
     private LinearLayout primary_ColumnMuscle,secundary_ColumnMuscle,Progress,progressLayout,error_layout;
     LinearLayout contentInfo;
@@ -347,16 +343,16 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                 .build();
         SilverbarsService service = retrofit.create(SilverbarsService.class);
 
-        Call<JsonExercise[]> call = service.getAllExercises();
-        call.enqueue(new Callback<JsonExercise[]>() {
+        Call<Exercise[]> call = service.getAllExercises();
+        call.enqueue(new Callback<Exercise[]>() {
             @Override
-            public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
+            public void onResponse(Call<Exercise[]> call, Response<Exercise[]> response) {
 
                 if (response.isSuccessful()) {
 
                     parsedExercises = response.body();
 
-                    List<JsonExercise> AllExercisesList = new ArrayList<>();
+                    List<Exercise> AllExercisesList = new ArrayList<>();
 
                     Collections.addAll(AllExercisesList,parsedExercises);
 
@@ -376,12 +372,12 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                                     adapter.notifyItemInserted(ExercisesToAdapter.size());
                                 }
 
-                                //Collections.addAll(TypeExercises,ExercisesToAdapter.get(a).getType_exercise());
+                                //Collections.addAll(TypeExercises,ExercisesToAdapter.get(a).getTypes_exercise());
                                 //Log.v(TAG,"TypeExercises"+TypeExercises);
 
-                                for (int b = 0; b < ExercisesToAdapter.get(c).muscle.length; b++){
+                                for (int b = 0; b < ExercisesToAdapter.get(c).getMuscles().length; b++){
                                     String name;
-                                    name = ExercisesToAdapter.get(c).muscle[b];
+                                    name = ExercisesToAdapter.get(c).getMuscles()[b];
                                     MusclesArray.add(name);
                                 }
                             }
@@ -407,7 +403,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                 }
             }
             @Override
-            public void onFailure(Call<JsonExercise[]> call, Throwable t) {
+            public void onFailure(Call<Exercise[]> call, Throwable t) {
                 Log.e(TAG,"onFailure: ",t);
             }
         });

@@ -39,7 +39,7 @@ import static com.app.proj.silverbars.Utilities.saveExerciseImageInDevice;
 public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<RecyclerExerciseSelectedAdapter.selectedExercisesViewHolder>  implements ItemTouchHelperAdapter {
 
     private static final String TAG = "ExercisesAdapter";
-    private List<JsonExercise> mSelectedExercises;
+    private List<Exercise> mSelectedExercises;
 
     private final OnStartDragListener mDragStartListener;
     Context mContext;
@@ -87,7 +87,7 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
     }
 
 
-    public RecyclerExerciseSelectedAdapter(Context context, List<JsonExercise> exercises,OnStartDragListener dragStartListener) {
+    public RecyclerExerciseSelectedAdapter(Context context, List<Exercise> exercises, OnStartDragListener dragStartListener) {
 
         mDragStartListener = dragStartListener;
         mContext = context;
@@ -104,7 +104,7 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
 
     }
 
-    public List<JsonExercise> getSelectedExercisesJson(){
+    public List<Exercise> getSelectedExercisesJson(){
         return mSelectedExercises;
     }
 

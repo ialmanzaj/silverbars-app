@@ -142,16 +142,17 @@ public class LoginActivity extends AppCompatActivity {
         Log.v(TAG,"onResume");
     }
 
-
-
-    private  void post(final String facebook_token) {
+    private void post(String facebook_token) {
 
         Authenticator authenticator = new Authenticator(this);
         authenticator.getInitalAccessToken(facebook_token);
 
         saveLogIn();
-        finish();
+
+
+
         startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        finish();
     }
 
     private void saveLogIn(){

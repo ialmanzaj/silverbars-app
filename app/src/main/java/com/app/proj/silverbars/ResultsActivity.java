@@ -18,7 +18,6 @@ import android.widget.ScrollView;
 import android.widget.TabHost;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +26,6 @@ import static com.app.proj.silverbars.Utilities.CreateNewView;
 import static com.app.proj.silverbars.Utilities.CreateNewViewProgression;
 import static com.app.proj.silverbars.Utilities.deleteCopiesofList;
 import static com.app.proj.silverbars.Utilities.injectJS;
-import static com.app.proj.silverbars.Utilities.removeLastChar;
 
 public class ResultsActivity extends AppCompatActivity {
 
@@ -48,7 +46,7 @@ public class ResultsActivity extends AppCompatActivity {
         Intent i = getIntent();
         Bundle b = i.getExtras();
 
-        ArrayList<JsonExercise> exercises = (ArrayList<JsonExercise>) b.getSerializable("exercises");
+        ArrayList<Exercise> exercises = (ArrayList<Exercise>) b.getSerializable("exercises");
         Log.v(TAG,"exercises: "+ exercises);
 
 
@@ -99,8 +97,8 @@ public class ResultsActivity extends AppCompatActivity {
             int porcentaje[] = new int[exercises.size()];
 
             for(int a = 0; a < exercises.size(); a++){
-                Collections.addAll(MusclesArray, exercises.get(a).muscle);
-                Collections.addAll(TypeExercises, exercises.get(a).type_exercise);
+                Collections.addAll(MusclesArray, exercises.get(a).getMuscles());
+                Collections.addAll(TypeExercises, exercises.get(a).getTypes_exercise());
 
                 if (Objects.equals(exercises.get(a).getLevel(),"NORMAL")){
                     porcentaje[a] = 3;

@@ -20,7 +20,7 @@ import java.util.List;
 public class FinalExercisesAdapter extends RecyclerView.Adapter<FinalExercisesAdapter.ExerciseViewHolder> {
 
     private static final String TAG = "FinalExercisesAdapter";
-    private List<JsonExercise> mExercises = new ArrayList<>();
+    private List<Exercise> mExercises = new ArrayList<>();
     private int[] exercise_reps;
     private InputStream bmpInput;
 
@@ -52,7 +52,7 @@ public class FinalExercisesAdapter extends RecyclerView.Adapter<FinalExercisesAd
 
     }
 
-    public FinalExercisesAdapter(Context context,List<JsonExercise> mExercises,int[] exercise_reps) {
+    public FinalExercisesAdapter(Context context, List<Exercise> mExercises, int[] exercise_reps) {
         mContext = context;
         this.mExercises = mExercises;
         this.exercise_reps = exercise_reps;

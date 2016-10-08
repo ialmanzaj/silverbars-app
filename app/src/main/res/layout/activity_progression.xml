@@ -7,18 +7,22 @@
     android:orientation="vertical"
     tools:context="com.app.proj.silverbars.ProgressionActivity">
 
+
     <android.support.design.widget.AppBarLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="50dp"
         app:elevation="2dp">
-    <android.support.v7.widget.Toolbar
-        android:background="@color/colorPrimary"
-        android:id="@+id/toolbar_"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </android.support.v7.widget.Toolbar>
+
+                <android.support.v7.widget.Toolbar
+                    android:background="@color/colorPrimary"
+                    android:id="@+id/toolbar_"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </android.support.v7.widget.Toolbar>
+
+
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
@@ -155,12 +159,13 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-
             <WebView
                 android:layout_weight="1"
                 android:layout_marginTop="10dp"
                 android:id="@+id/WebView_progression"
                 android:layout_width="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:layout_height="0dp" />
 
             <LinearLayout

@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -45,7 +44,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.app.proj.silverbars.Utilities.getFileReady;
-import static com.app.proj.silverbars.Utilities.getUrlReady;
 import static com.app.proj.silverbars.Utilities.saveAudioInDevice;
 import static com.app.proj.silverbars.Utilities.saveWorkoutImgInDevice;
 
@@ -70,7 +68,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
     String workoutImage = "/";
     String[] exercises_ids;
-    List<JsonExercise> SelectedExercises = new ArrayList<>();
+    List<Exercise> SelectedExercises = new ArrayList<>();
 
 
     @Override
@@ -285,13 +283,13 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
                 .build();
         SilverbarsService service = retrofit.create(SilverbarsService.class);
 
-        Call<JsonExercise[]> call = service.getAllExercises();
-        call.enqueue(new Callback<JsonExercise[]>() {
+        Call<Exercise[]> call = service.getAllExercises();
+        call.enqueue(new Callback<Exercise[]>() {
             @Override
-            public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
+            public void onResponse(Call<Exercise[]> call, Response<Exercise[]> response) {
                 if (response.isSuccessful()) {
-                    JsonExercise[] exercises = response.body();
-                    List<JsonExercise> AllExercisesList = new ArrayList<>();
+                    Exercise[] exercises = response.body();
+                    List<Exercise> AllExercisesList = new ArrayList<>();
 
 
                     Collections.addAll(AllExercisesList,exercises);
@@ -307,7 +305,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
                         }
                     }
                     for (int a = 0; a<SelectedExercises.size();a++){
-                        exercises_ids[a] = String.valueOf(SelectedExercises.get(a).getId());
+                        exercises_ids[a] = String.valueOf(SelectedExercises.get(a).getExerciseId());
                     }
 
 
@@ -316,19 +314,19 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
                     for (int a = 0;a<SelectedExercises.size();a++){
 
-                        for (int b = 0;b<SelectedExercises.get(a).getMuscle().length;b++){
+                        for (int b = 0; b<SelectedExercises.get(a).getMuscles().length; b++){
 
-                            if (Objects.equals(SelectedExercises.get(a).getMuscle()[b], "CALVES")){LOWER_BODY = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscle()[b], "HAMSTRINGS")){LOWER_BODY = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscle()[b], "ADDUCTORS")){LOWER_BODY = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscle()[b], "CUADRICEPS")){LOWER_BODY = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscle()[b], "RECTUS-ABDOMINIS")){ABS = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscle()[b], "TRANSVERSUS-ABDOMINIS")){ABS = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscle()[b], "DELTOIDS")){UPPER_BODY = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscle()[b], "OBLIQUES")){UPPER_BODY = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscle()[b], "QUADRICEPS")){LOWER_BODY = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscle()[b], "PECTORALIS-MAJOR")){UPPER_BODY = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscle()[b], "TRICEPS")){UPPER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "CALVES")){LOWER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "HAMSTRINGS")){LOWER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "ADDUCTORS")){LOWER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "CUADRICEPS")){LOWER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "RECTUS-ABDOMINIS")){ABS = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "TRANSVERSUS-ABDOMINIS")){ABS = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "DELTOIDS")){UPPER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "OBLIQUES")){UPPER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "QUADRICEPS")){LOWER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "PECTORALIS-MAJOR")){UPPER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "TRICEPS")){UPPER_BODY = true;}
                         }
                         if (Objects.equals(SelectedExercises.get(a).getLevel(),"NORMAL")){
                             NORMAL = true;
@@ -408,7 +406,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<JsonExercise[]> call, Throwable t) {
+            public void onFailure(Call<Exercise[]> call, Throwable t) {
                 Log.e(TAG,"onFailure: ",t);
             }
         });
@@ -419,25 +417,25 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
         MySQLiteHelper database = new MySQLiteHelper(CreateWorkoutFinalActivity.this);
 
         for (int i = 0; i < SelectedExercises.size(); i++){
-            if (!database.checkExercise(SelectedExercises.get(i).getId()) ){
+            if (!database.checkExercise(SelectedExercises.get(i).getExerciseId()) ){
                 File imgDir,mp3Dir;
                 imgDir = getFileReady(this,"/SilverbarsImg/"+getImageName(i));
                 mp3Dir = getFileReady(this,"/SilverbarsMp3/"+getAudioName(i));
 
                 if (!imgDir.exists()){
-                    Log.v(TAG,"img url "+SelectedExercises.get(i).exercise_image);
-                    DownloadImage(SelectedExercises.get(i).exercise_image,getImageName(i));
+                    Log.v(TAG,"img url "+SelectedExercises.get(i).getExercise_image());
+                    DownloadImage(SelectedExercises.get(i).getExercise_image(),getImageName(i));
                 }
                 if (!mp3Dir.exists()){
-                    Log.v(TAG,"mp3 url "+SelectedExercises.get(i).exercise_audio);
-                    DownloadMp3(SelectedExercises.get(i).exercise_audio,getAudioName(i));
+                    Log.v(TAG,"mp3 url "+SelectedExercises.get(i).getExercise_audio());
+                    DownloadMp3(SelectedExercises.get(i).getExercise_audio(),getAudioName(i));
                 }
                 database.insertExercises(
-                        SelectedExercises.get(i).getId(),
+                        SelectedExercises.get(i).getExerciseId(),
                         SelectedExercises.get(i).getExercise_name(),
                         SelectedExercises.get(i).getLevel(),
-                        convertArrayToString(SelectedExercises.get(i).getType_exercise()),
-                        convertArrayToString(SelectedExercises.get(i).getMuscle()),
+                        convertArrayToString(SelectedExercises.get(i).getTypes_exercise()),
+                        convertArrayToString(SelectedExercises.get(i).getMuscles()),
                         mp3Dir.getPath(),
                         imgDir.getPath()
                 );
@@ -493,6 +491,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
         Log.v(TAG,"getImageName: "+imagesName[2]);
         return imagesName[2];
     }
+
 
     private void DownloadImage(String url, final String imgName){
         Log.v(TAG,"DownloadImage "+imgName);

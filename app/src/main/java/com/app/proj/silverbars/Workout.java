@@ -1,20 +1,22 @@
 package com.app.proj.silverbars;
 
 import java.io.Serializable;
+import java.util.List;
 
 
-public class JsonWorkout  implements Serializable {
+public class Workout implements Serializable {
 
-    private int id;
+    private int workout_id;
     private String workout_name;
     private String workout_image;
     private int sets;
     private String level;
     private String main_muscle;
-    private String[] exercises;
+    private ExercisesRep[] exercises;
 
-    public JsonWorkout(int id, String workout_name, String workout_image, int sets, String level, String main_muscle, String[] exercises) {
-        this.id = id;
+
+    public Workout(int workout_id, String workout_name, String workout_image, int sets, String level, String main_muscle,ExercisesRep[] exercises) {
+        this.workout_id = workout_id;
         this.workout_name = workout_name;
         this.workout_image = workout_image;
         this.sets = sets;
@@ -23,13 +25,8 @@ public class JsonWorkout  implements Serializable {
         this.exercises = exercises;
     }
 
-
     public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        return workout_id;
     }
 
     public String getWorkout_name() {
@@ -48,21 +45,16 @@ public class JsonWorkout  implements Serializable {
         this.sets = sets;
     }
 
-    public String getLevel() {
-        return level;
-    }
+    public String getLevel() {return level;}
 
     public String getMain_muscle() {
         return main_muscle;
     }
 
-    public String[] getExercises() {
+    public ExercisesRep[] getExercises() {
         return exercises;
     }
 
-    public void setExercises(String[] exercises) {
-        this.exercises = exercises;
-    }
 
 
 }

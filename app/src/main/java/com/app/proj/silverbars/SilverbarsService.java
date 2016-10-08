@@ -3,40 +3,40 @@ package com.app.proj.silverbars;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Url;
 
 
 public interface SilverbarsService {
 
-    @GET("v1/workouts/?format=json")
-    Call<JsonWorkout[]> getWorkouts();
+    @GET("v1/workouts/")
+    Call<Workout[]> getWorkouts();
 
-    @GET
-    Call<JsonExercise> getExercise(@Url String url);
+    @GET("v1/workout/")
+    Call<String[]> getExerciseReps();
 
-    @GET("v1/workout/?format=json")
-    Call<JsonWorkoutReps[]> getExerciseReps();
+    @GET("v1/exercises/")
+    Call<Exercise[]> getAllExercises();
 
-   @GET("v1/exercises/?format=json")
-    Call<JsonExercise[]> getAllExercises();
+    @GET("v1/exercises/{id}/")
+    Call<Exercise> getExercise(@Path("id") String id);
+
+    @GET("v1/muscles/{id}/")
+    Call<Muscle> getMuscle(@Path("id") int id);
 
     @GET
     Call<ResponseBody> downloadFile(@Url String fileUrl);
 
-    @GET
-    Call<SpotifyAdapter[]> SpotifyTracks();
-
     @GET("silverbarsmedias3/html/index.html")
     Call<ResponseBody> getMusclesTemplate();
-
-    @GET("auth/convert-token/")
-    Call<AccessToken> getAccessToken();
-
-    @GET("auth/token/")
-    Call<AccessToken> getRefreshAccessToken();
 
     @GET("v1/progression/me/")
     Call<User.ProgressionMuscle[]> getProgression();
 
+    @GET
+    Call<SpotifyAdapter[]> SpotifyTracks();
+
+
 
 }
+

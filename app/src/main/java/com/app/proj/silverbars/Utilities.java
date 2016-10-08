@@ -138,6 +138,47 @@ public class Utilities {
         return bitmap;
     }
 
+
+    public static String getAudioName(String audio_url){
+
+        String[] audioDir = audio_url.split("exercises");
+        String Parsedurl = "exercises" + audioDir[1];
+        String[] splitName = Parsedurl.split("/");
+        String mp3Name = splitName[2];
+
+
+        return mp3Name;
+    }
+
+    public static void createAudioDir(Context context,Boolean download,String url_audio){
+
+        String[] audioDir = url_audio.split("exercises");
+        String Parsedurl = "exercises" + audioDir[1];
+        String[] splitName = Parsedurl.split("/");
+        String mp3Name = splitName[2];
+
+        String url_dir_device = "exercises" + audioDir[1];
+
+
+        File Dir = getFileReady(context,"/SilverbarsMp3");
+        if (Dir.isDirectory()) {
+            File file = getFileReady(context,"/SilverbarsMp3/"+mp3Name);
+            if (!file.exists()) {
+                if (download){
+                    DownloadMp3(context,url_dir_device, mp3Name);
+                }
+            }
+        } else {
+            boolean success = Dir.mkdir();
+            if (success) {
+                if (download){
+                    DownloadMp3(context,url_dir_device, mp3Name);
+                }
+            }else
+                Log.e(TAG, "Error creating dir");
+        }
+    }
+
     public static boolean saveAudioInDevice(Context context,ResponseBody body, String getAudioName) {
 
         try {

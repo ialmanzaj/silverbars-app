@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
@@ -59,6 +61,10 @@ public class ProgressionActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {finish();}
             });
+
+
+            // hide toolbar
+            toolbar.animate().translationY(-toolbar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
         }
 
 
@@ -73,6 +79,10 @@ public class ProgressionActivity extends AppCompatActivity {
         getProgressionAPI(authPreferences.getToken());
 
         ScrollView scrollView = (ScrollView) findViewById(R.id.muscles);
+
+
+
+
         webview = (WebView) findViewById(R.id.WebView_progression);
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {scrollView.setFillViewport(true);}
     }

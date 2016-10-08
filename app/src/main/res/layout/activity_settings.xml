@@ -24,7 +24,7 @@
         android:gravity="center"
         android:paddingTop="7dp"
         android:paddingBottom="7dp"
-        android:background="@drawable/custom_border"
+
         android:id="@+id/close_session">
 
         <TextView

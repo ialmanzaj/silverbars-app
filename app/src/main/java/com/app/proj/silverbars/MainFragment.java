@@ -16,9 +16,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.facebook.internal.CollectionMapper;
+
 import org.lucasr.twowayview.widget.TwoWayView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import okhttp3.Interceptor;
@@ -36,13 +42,13 @@ public class MainFragment extends Fragment {
 
     private static final String TAG ="MAIN SCREEN FRAGMENT";
     public TwoWayView recyclerView;
-    public static JsonWorkout[] Workouts;
     private SwipeRefreshLayout swipeContainer;
     public String muscleData = "ALL";
     private boolean opened;
     LinearLayout noInternetConnectionLayout,failedServerLayout;
     ProgressBar progressBar;
 
+    List<Workout> workoutList  = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -153,87 +159,36 @@ public class MainFragment extends Fragment {
 
 
 
+
+
     public void getWorkoutsData(final String muscle){
         progressBar.setVisibility(View.VISIBLE);
         muscleData = muscle;
 
-        final AuthPreferences authPreferences = new AuthPreferences(getActivity());
-        Log.v(TAG,"token bearer:"+authPreferences.getToken());
+        AuthPreferences authPreferences = new AuthPreferences(getActivity());
+        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class,authPreferences.getToken());
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
-
-                Request request = original.newBuilder()
-                        .header("Accept", "application/json")
-                        .header("Authorization", "Bearer " + authPreferences.getToken())
-                        .method(original.method(), original.body())
-                        .build();
-
-                okhttp3.Response response = chain.proceed(request);
-                Log.v(TAG,"getWorkouts code: "+response.code());
-                return response;
-            }
-        });
-
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.silverbarsapp.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-        SilverbarsService service = retrofit.create(SilverbarsService.class);
+        Log.v(TAG,authPreferences.getToken());
 
 
-        Call<JsonWorkout[]> call = service.getWorkouts();
-        call.enqueue(new Callback<JsonWorkout[]>() {
+        Call<Workout[]> call = service.getWorkouts();
+        call.enqueue(new Callback<Workout[]>() {
                     @Override
-                    public void onResponse(Call<JsonWorkout[]> call, Response<JsonWorkout[]> response) {
+                    public void onResponse(Call<Workout[]> call, Response<Workout[]> response) {
                         if (response.isSuccessful()) {
-                            recyclerView.removeAllViews();
-                            recyclerView.removeAllViewsInLayout();
-                            recyclerView.setAdapter(null);
+                            onErrorViewoff();
 
-                            if (Objects.equals(muscle,"ALL")){
-                                Workouts = response.body();
-                            }
-                            else{
+                            Workout[] workouts = response.body();
+                            Collections.addAll(workoutList,workouts);
 
-                                JsonWorkout[] auxWorkout = response.body();
-                                JsonWorkout[] workoutFlag = null;
-                                int x = 0;
-                                for (JsonWorkout anAuxWorkout : auxWorkout) {
-                                    String muscleData = anAuxWorkout.getMain_muscle();
-                                    if (Objects.equals(muscle, muscleData)) {
-                                        x++;
-                                    }
-                                }
-                                Workouts = new JsonWorkout[x];
-                                int y = 0;
-                                for (JsonWorkout anAuxWorkout : auxWorkout) {
-                                    String muscleData = anAuxWorkout.getMain_muscle();
-                                    if (Objects.equals(muscle, muscleData)) {
-                                        Workouts[y] = anAuxWorkout;
-                                        //Log.v("Workout", Workouts[y].getWorkout_name());
-                                        y++;
-                                    }
-                                }
-                            }
-                            progressBar.setVisibility(View.GONE);
-                            recyclerView.setAdapter(new WorkoutAdapter(getActivity()));
-                            swipeContainer.setRefreshing(false);
+
+                            recyclerView.setAdapter(new WorkoutAdapter(getActivity(),workoutList));
+
                         } else {
 
-                            int statusCode = response.code();
-                            ResponseBody errorBody = response.errorBody();
-                            Log.e(TAG,errorBody.toString());
-                            Log.e(TAG,"statusCode: "+statusCode);
+                            Log.e(TAG,"statusCode: "+response.code());
 
-
-                            progressBar.setVisibility(View.GONE);
-                            swipeContainer.setVisibility(View.GONE);
-                            failedServerLayout.setVisibility(View.VISIBLE);
+                            onErrorViewOn();
                         }
                     }
                     @Override
@@ -243,14 +198,42 @@ public class MainFragment extends Fragment {
 
                     }
                     @Override
-                    public void onFailure(Call<JsonWorkout[]> call, Throwable t) {
+                    public void onFailure(Call<Workout[]> call, Throwable t) {
                         Log.e(TAG,"getWorkoutsData, onFailure: ",t);
 
-                        progressBar.setVisibility(View.GONE);
-                        swipeContainer.setVisibility(View.GONE);
-                        failedServerLayout.setVisibility(View.VISIBLE);
+                        onErrorViewOn();
                     }
                 });
+
+        /*
+        if (Objects.equals(muscle,"ALL")){
+
+
+
+        } else {
+
+            Workout[] auxWorkout = response.body();
+            Workout[] workoutFlag = null;
+            int x = 0;
+            for (Workout anAuxWorkout : auxWorkout) {
+                String muscleData = anAuxWorkout.getMain_muscle();
+                if (Objects.equals(muscle, muscleData)) {
+                    x++;
+                }
+            }
+            Workouts = new Workout[x];
+            int y = 0;
+            for (Workout anAuxWorkout : auxWorkout) {
+                String muscleData = anAuxWorkout.getMain_muscle();
+                if (Objects.equals(muscle, muscleData)) {
+                    Workouts[y] = anAuxWorkout;
+                    //Log.v("Workout", Workouts[y].getWorkout_name());
+                    y++;
+                }
+            }
+        }
+
+        */
 
 
     }
@@ -261,6 +244,18 @@ public class MainFragment extends Fragment {
 
     public String getMuscleData() {
         return muscleData;
+    }
+
+    private void onErrorViewOn(){
+        progressBar.setVisibility(View.GONE);
+        swipeContainer.setVisibility(View.GONE);
+        failedServerLayout.setVisibility(View.VISIBLE);
+
+    }
+    private void onErrorViewoff(){
+        progressBar.setVisibility(View.GONE);
+        swipeContainer.setRefreshing(false);
+
     }
 
 

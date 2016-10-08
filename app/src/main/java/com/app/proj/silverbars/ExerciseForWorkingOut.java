@@ -20,24 +20,20 @@ import java.util.List;
 
 import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
 
-/**
- * Created by andre_000 on 4/12/2016.
- */
-
 
 // ADAPTER FOR WORKING OUT ACTIVITY
-public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.WorkoutsViewHolder> {
+public class ExerciseForWorkingOut extends RecyclerView.Adapter<ExerciseForWorkingOut.WorkoutsViewHolder> {
 
     private static final String TAG = "Workout Adapter";
-    private List<WorkoutInfo> workouts;
+    private List<Exercise> exercises;
     private Context context;
 
     public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {
 
         //public ImageView imagen;
-        public TextView nombre;
-        public TextView next;
-        public RelativeLayout Layout;
+         TextView nombre;
+         TextView next;
+         RelativeLayout Layout;
 
         SimpleDraweeView imagen_cache;
         ImageView imageView_local;
@@ -46,21 +42,21 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
             super(v);
             imagen_cache = (SimpleDraweeView) v.findViewById(R.id.imagen_cache);
             imageView_local = (ImageView) v.findViewById(R.id.imagen_local);
-            //imagen = (ImageView) v.findViewById(R.id.imagen);
+
             nombre = (TextView) v.findViewById(R.id.nombre);
             Layout = (RelativeLayout) v.findViewById(R.id.Layout);
-//            next = (TextView) v.findViewById(R.id.next);
+
         }
     }
 
-    public WorkoutsAdapter(List<WorkoutInfo> workouts, Context context) {
-        this.workouts = workouts;
+    public ExerciseForWorkingOut(Context context, List<Exercise> exercises) {
         this.context = context;
+        this.exercises = exercises;
     }
 
     @Override
     public int getItemCount() {
-        return workouts.size();
+        return exercises.size();
     }
 
     @Override
@@ -75,19 +71,19 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
         int position = viewHolder.getAdapterPosition();
 
-        viewHolder.nombre.setText(workouts.get(position).getNombre());
+        viewHolder.nombre.setText(exercises.get(position).getExercise_image());
         viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
 
 
-        String[] imageDir = WorkoutActivity.ParsedExercises[a].getExercise_image().split("exercises");
+        String[] imageDir = exercises.get(position).getExercise_image().split("exercises");
 
         if (imageDir.length == 2){
-            Uri uri = Uri.parse(WorkoutActivity.ParsedExercises[position].getExercise_image());
+            Uri uri = Uri.parse(exercises.get(position).getExercise_image());
             viewHolder.imagen_cache.setImageURI(uri);
 
         }else {
             viewHolder.imageView_local.setVisibility(View.VISIBLE);
-            Bitmap bitmap = loadExerciseImageFromDevice(context,WorkoutActivity.ParsedExercises[a].getExercise_image());
+            Bitmap bitmap = loadExerciseImageFromDevice(context,exercises.get(position).getExercise_image());
             viewHolder.imageView_local.setImageBitmap(bitmap);
         }
 

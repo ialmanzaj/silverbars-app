@@ -32,7 +32,7 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
 
     private static final String TAG = "AllExercisesAdapter";
     private Context mContext;
-    private List<JsonExercise> mExercises = new ArrayList<>();
+    private List<Exercise> mExercises = new ArrayList<>();
 
     public static SparseBooleanArray selectedItems = new SparseBooleanArray();
 
@@ -60,7 +60,7 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
         }
     }
 
-    public AllExercisesAdapter(Context context,List<JsonExercise> exercises) {
+    public AllExercisesAdapter(Context context,List<Exercise> exercises) {
         mContext = context;
         mExercises = exercises;
 

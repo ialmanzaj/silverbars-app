@@ -5,31 +5,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Parcelable;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -49,7 +42,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -118,8 +110,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     Boolean Music_Spotify = false,DownloadAudioExercise = false,BUTTON_PAUSE = false,onPause = false;
 
     // Inicializar Workouts
-    List<WorkoutInfo> exercisesforRecycler = new ArrayList<>();
-    List<JsonExercise> exerciseList = new ArrayList<>();
+    
+    List<Exercise> exercisesforRecycler = new ArrayList<>();
 
     ImageButton prvLayout,nxtLayout;
 
@@ -130,7 +122,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         Intent i = getIntent();
         Bundle b = i.getExtras();
-        exerciseList = (ArrayList<JsonExercise>) b.getSerializable("exercises");
+        exercisesforRecycler = (ArrayList<Exercise>) b.getSerializable("exercises");
         //Log.v(TAG,"muscles:"+Muscles);
         //Log.v(TAG,"muscles:"+TypeExercises);
 
@@ -165,7 +157,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
 
-        exercises_size = exerciseList.size();
+        exercises_size = exercisesforRecycler.size();
 
 
         // tempo config
@@ -175,7 +167,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         playlist = new ArrayList<>();
 
         // contadores de descanso y repeticiones actuales
-        actualReps = exerciseList.get(0).getRep();
+        actualReps = exercisesforRecycler.get(0).getRep();
         actualRest = RestByExercise;
 
         artist_name = (TextView) findViewById(R.id.artist_name);
@@ -225,7 +217,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Rep_timer_text = (TextView) findViewById(R.id.Rep_timer_text);
 
         //inicializar rep text
-        Rep_timer_text.setText(String.valueOf(exerciseList.get(0).getRep()));
+        Rep_timer_text.setText(String.valueOf(exercisesforRecycler.get(0).getRep()));
 
 
         Rep_timer_text.addTextChangedListener(new TextWatcher() {
@@ -288,7 +280,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             ScreenOff();
 
                             Intent intent = new Intent(WorkingOutActivity.this, ResultsActivity.class);
-                            intent.putExtra("exercises", (Serializable) exerciseList);
+                            intent.putExtra("exercises", (Serializable) exercisesforRecycler);
 
                             startActivity(intent);
                             finish();
@@ -343,10 +335,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     restTimer.cancel();
                     rest = false;
 
-                    playExerciseAudio(exerciseList.get(y).getExercise_audio());
+                    playExerciseAudio(exercisesforRecycler.get(y).getExercise_audio());
                     asignTotalTime(y);
                     startMainCountDown(totalTime,1,totalTime);
-                    Rep_timer_text.setText(String.valueOf(exerciseList.get(y).getRep()));
+                    Rep_timer_text.setText(String.valueOf(exercisesforRecycler.get(y).getRep()));
 
 
                     positive.setText(String.valueOf(Positive[y]));
@@ -508,12 +500,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        for (JsonExercise Exercise : exerciseList) {
-            exercisesforRecycler.add(new WorkoutInfo(Exercise.getExercise_name(), null,Exercise.getExercise_image()));
-        }
-
-
-
+        
 
         // Obtener el Recycler
         recycler = (RecyclerView) findViewById(R.id.reciclador);
@@ -526,7 +513,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
         // Crear un nuevo adaptador
-        RecyclerView.Adapter adapter = new WorkoutsAdapter(exercisesforRecycler, getApplicationContext());
+        RecyclerView.Adapter adapter = new ExerciseForWorkingOut(this,exercisesforRecycler);
         recycler.setAdapter(adapter);
 
         if (adapter.getItemCount() <= 1){
@@ -572,7 +559,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                                 y--;
                                 CurrentExercise.setText(String.valueOf(y+1));
                                 main_timer.cancel();
-                                Rep_timer_text.setText(String.valueOf(exerciseList.get(y).getRep()));
+                                Rep_timer_text.setText(String.valueOf(exercisesforRecycler.get(y).getRep()));
 
                                 positive.setText(String.valueOf(Positive[y]));
                                 isometric.setText(String.valueOf(Isometric[y]));
@@ -647,7 +634,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             y++;
                             CurrentExercise.setText(String.valueOf(y+1));
                             main_timer.cancel();
-                            Rep_timer_text.setText(String.valueOf(exerciseList.get(y).getRep()));
+                            Rep_timer_text.setText(String.valueOf(exercisesforRecycler.get(y).getRep()));
 
                             positive.setText(String.valueOf(Positive[y]));
                             isometric.setText(String.valueOf(Isometric[y]));
@@ -976,7 +963,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     }
     private void asignTotalTime(int position){
-        totalTime = (exerciseList.get(position).getRep() * tempo) + 5;
+        totalTime = (exercisesforRecycler.get(position).getRep() * tempo) + 5;
 
       /*  Log.v(TAG,"totalTime: "+totalTime);
         Log.v(TAG,"Exercises_reps: "+Exercises_reps[song_names]);
@@ -1028,7 +1015,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
             try {
-                String[] audioDir = exerciseList.get(y).getExercise_audio().split("exercises");
+                String[] audioDir = exercisesforRecycler.get(y).getExercise_audio().split("exercises");
 
                 if (audioDir.length == 2){
 
@@ -1141,7 +1128,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private void finishActivity(){
 
         Intent intent = new Intent(WorkingOutActivity.this, ResultsActivity.class);
-        intent.putExtra("exercises", (Serializable) exerciseList);
+        intent.putExtra("exercises", (Serializable) exercisesforRecycler);
 
         startActivity(intent);
         finish();

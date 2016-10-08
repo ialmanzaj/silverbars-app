@@ -34,6 +34,7 @@ public class User {
         public String getMuscle(){
             return muscle;
         }
+
         public String getPerson(){
             return person;
         }

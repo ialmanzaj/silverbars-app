@@ -42,8 +42,8 @@ public class SavedWorkoutsFragment extends Fragment {
         if (database.getWorkouts(1) != null){
 
             local_workouts.setVisibility(View.VISIBLE);
-            List<JsonWorkout> workouts = new ArrayList<>();
-            JsonWorkout[] ParsedWorkouts = database.getWorkouts(1);
+            List<Workout> workouts = new ArrayList<>();
+            Workout[] ParsedWorkouts = database.getWorkouts(1);
             Collections.addAll(workouts, ParsedWorkouts);
 
             local_workouts.setAdapter(new savedWorkoutAdapter(getActivity(),workouts,false));

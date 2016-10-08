@@ -38,8 +38,8 @@ public class ExerciseListActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
 
     private ArrayList<String> sExercises_Id = new ArrayList<>();
-    List<JsonExercise> OriginalExerciseListAll = new ArrayList<>();
-    List<JsonExercise> ExercisesNoSelected = new ArrayList<>();
+    List<Exercise> OriginalExerciseListAll = new ArrayList<>();
+    List<Exercise> ExercisesNoSelected = new ArrayList<>();
     ArrayList<String> SelectedItemsIds = new ArrayList<>();
 
     private LinearLayout error_layout;
@@ -135,16 +135,16 @@ public class ExerciseListActivity extends AppCompatActivity {
                 .build();
         SilverbarsService service = retrofit.create(SilverbarsService.class);
 
-        Call<JsonExercise[]> call = service.getAllExercises();
-        call.enqueue(new Callback<JsonExercise[]>() {
+        Call<Exercise[]> call = service.getAllExercises();
+        call.enqueue(new Callback<Exercise[]>() {
             @Override
-            public void onResponse(Call<JsonExercise[]> call, Response<JsonExercise[]> response) {
+            public void onResponse(Call<Exercise[]> call, Response<Exercise[]> response) {
 
                 if (response.isSuccessful()) {
 
                     onErrorOff();
 
-                    JsonExercise[] parsedExercises = response.body();
+                    Exercise[] parsedExercises = response.body();
                     Collections.addAll(OriginalExerciseListAll,parsedExercises);
 
                     Log.v(TAG,"OriginalExerciseListAll size: "+OriginalExerciseListAll.size());
@@ -195,7 +195,7 @@ public class ExerciseListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<JsonExercise[]> call, Throwable t) {
+            public void onFailure(Call<Exercise[]> call, Throwable t) {
                 Log.e(TAG,"onFailure: ",t);
                 onErrorOn();
             }

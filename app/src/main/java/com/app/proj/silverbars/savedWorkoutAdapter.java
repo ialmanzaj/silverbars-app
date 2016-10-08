@@ -38,7 +38,7 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
     private static final int TYPE_WORKOUT = 0;
     private static final int TYPE_VIEW_MORE = 1;
     private static final String TAG = "savedWorkoutAdapter";
-    private List<JsonWorkout> workouts;
+    private List<Workout> workouts;
     private final Activity context;
     private Boolean user_workout  = false;
 
@@ -65,7 +65,7 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
     }
 
 
-    public savedWorkoutAdapter(Activity context, List<JsonWorkout> workouts,Boolean user_workout) {
+    public savedWorkoutAdapter(Activity context, List<Workout> workouts, Boolean user_workout) {
         this.context = context;
         this.workouts = workouts;
         this.user_workout = user_workout;

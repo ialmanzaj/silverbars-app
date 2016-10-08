@@ -43,9 +43,9 @@ public class UserWorkoutsFragment extends Fragment {
 
         if (database.getUserWorkouts(1) != null){
             my_workouts.setVisibility(View.VISIBLE);
-            List<JsonWorkout> my_workouts_list= new ArrayList<>();
+            List<Workout> my_workouts_list= new ArrayList<>();
 
-            JsonWorkout[] MyWorkouts = database.getUserWorkouts(1);
+            Workout[] MyWorkouts = database.getUserWorkouts(1);
             Collections.addAll(my_workouts_list, MyWorkouts);
             Log.v(TAG,"my workout size: "+my_workouts_list);
 

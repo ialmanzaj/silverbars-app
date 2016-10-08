@@ -26,8 +26,8 @@ import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
 
     private static final String TAG = "EXERCISE ADAPTER";
-    private List<WorkoutInfo> exercises;
-    private InputStream bmpInput;
+
+    private List<Exercise> exercises;
 
     private Button plusPositive;
     private Button minusPositive;
@@ -36,17 +36,18 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     private Button plusNegative;
     private Button minusNegative;
     private TextView Positive, Negative, Isometric;
-    Context mContext;
+
+    Context context;
 
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
         //public ImageView imagen;
-        public TextView nombre;
-        public TextView next;
-        public TextView repetitions;
-        public TextView positive;
-        public TextView negative;
-        public TextView isometric;
+        TextView nombre;
+        TextView next;
+        TextView repetitions;
+        TextView positive;
+        TextView negative;
+        TextView isometric;
 
         SimpleDraweeView imagen_cache;
         ImageView imageView_local;
@@ -54,12 +55,13 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
         public ExerciseViewHolder(View v) {
             super(v);
-            //imagen = (ImageView) v.findViewById(R.id.imagen);
+
             nombre = (TextView) v.findViewById(R.id.nombre);
             repetitions = (TextView) v.findViewById(R.id.repetitions);
 
             imagen_cache = (SimpleDraweeView) v.findViewById(R.id.imagen);
             imageView_local = (ImageView) v.findViewById(R.id.imagen_local);
+
 
             positive = (TextView) v.findViewById(R.id.positive);
             isometric = (TextView) v.findViewById(R.id.isometric);
@@ -67,8 +69,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         }
     }
 
-    public ExerciseAdapter(List<WorkoutInfo> exercises, Context context) {
-        mContext = context;
+    public ExerciseAdapter(Context context,List<Exercise> exercises) {
+        this.context = context;
         this.exercises = exercises;
     }
 
@@ -85,28 +87,37 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     }
 
     @Override
-    public void onBindViewHolder(final ExerciseViewHolder viewHolder, final int i) {
+    public void onBindViewHolder(final ExerciseViewHolder viewHolder,int i) {
+
          final int a = viewHolder.getAdapterPosition();
 
-        viewHolder.nombre.setText(WorkoutActivity.ParsedExercises[a].getExercise_name());
+        viewHolder.nombre.setText(exercises.get(a).getExercise_name());
+
         viewHolder.repetitions.setText(String.valueOf(WorkoutActivity.Exercises_reps[a]));
 
-        String[] imageDir = WorkoutActivity.ParsedExercises[a].getExercise_image().split("exercises");
+        String[] imageDir = exercises.get(a).getExercise_image().split("exercises");
 
         Log.v(TAG,"imageDir "+ Arrays.toString(imageDir));
         Log.v(TAG,"imageDir lenght: "+ imageDir.length);
 
         if (imageDir.length == 2){
             Log.v(TAG,"img from json");
+
+
             viewHolder.imagen_cache.setVisibility(View.VISIBLE);
-            Uri uri = Uri.parse(WorkoutActivity.ParsedExercises[a].getExercise_image());
+            Uri uri = Uri.parse(exercises.get(a).getExercise_image());
             viewHolder.imagen_cache.setImageURI(uri);
+
         }else {
             Log.v(TAG,"img from local");
+
             Bitmap bmp;
             viewHolder.imageView_local.setVisibility(View.VISIBLE);
-            Log.v(TAG,"image: "+WorkoutActivity.ParsedExercises[a].getExercise_image());
-            bmp = loadExerciseImageFromDevice(mContext,WorkoutActivity.ParsedExercises[a].getExercise_image());
+            Log.v(TAG,"image: " +exercises.get(a).getExercise_image());
+
+
+
+            bmp = loadExerciseImageFromDevice(context,exercises.get(a).getExercise_image());
             viewHolder.imageView_local.setImageBitmap(bmp);
         }
 
@@ -201,7 +212,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                                 minusTempo(Negative,minusNegative,plusNegative);
                             }
                         });
-
 
                 }
 
