@@ -39,12 +39,11 @@ import static com.app.proj.silverbars.Utilities.saveExerciseImageInDevice;
 public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<RecyclerExerciseSelectedAdapter.selectedExercisesViewHolder>  implements ItemTouchHelperAdapter {
 
     private static final String TAG = "ExercisesAdapter";
-    private List<Exercise> mSelectedExercises;
+    private List<ExerciseRep> mSelectedExercises;
 
     private final OnStartDragListener mDragStartListener;
+
     Context mContext;
-
-
 
     public static class selectedExercisesViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder {
@@ -87,7 +86,7 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
     }
 
 
-    public RecyclerExerciseSelectedAdapter(Context context, List<Exercise> exercises, OnStartDragListener dragStartListener) {
+    public RecyclerExerciseSelectedAdapter(Context context, List<ExerciseRep> exercises, OnStartDragListener dragStartListener) {
 
         mDragStartListener = dragStartListener;
         mContext = context;
@@ -104,7 +103,7 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
 
     }
 
-    public List<Exercise> getSelectedExercisesJson(){
+    public List<ExerciseRep> getSelectedExercisesJson(){
         return mSelectedExercises;
     }
 
@@ -113,7 +112,7 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
     public ArrayList<String> getSelectedExercisesName(){
         ArrayList<String> exercises = new ArrayList<>();
         for (int a = 0;a<mSelectedExercises.size();a++){
-            exercises.add(mSelectedExercises.get(a).getExercise_name());
+            exercises.add(mSelectedExercises.get(a).getExercise().getExercise_name());
         }
         return exercises;
     }
@@ -121,7 +120,7 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
     public int[] getExerciseReps() {
         int[] exercises_reps = new int[mSelectedExercises.size()];
         for (int a = 0; a < mSelectedExercises.size(); a++) {
-            exercises_reps[a] = mSelectedExercises.get(a).getRep();
+            exercises_reps[a] = mSelectedExercises.get(a).getRepetition();
         }
 
         return exercises_reps;
@@ -185,13 +184,13 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
 
         final int a = viewHolder.getAdapterPosition();
 
-        viewHolder.nombre.setText(mSelectedExercises.get(a).getExercise_name());
-        mSelectedExercises.get(a).setRep(1);
+        viewHolder.nombre.setText(mSelectedExercises.get(a).getExercise().getExercise_name());
+        mSelectedExercises.get(a).setRepetition(1);
 
 
         //Log.v(TAG,"Exercises selected: "+mSelectedExercises.get(a).getExercise_name());
 
-        Uri uri = Uri.parse(mSelectedExercises.get(a).getExercise_image());
+        Uri uri = Uri.parse(mSelectedExercises.get(a).getExercise().getExercise_image());
         viewHolder.imagen.setImageURI(uri);
 
 
@@ -255,7 +254,7 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
                                 dialog.dismiss();
                                 //On Dialog "Done" ClickListener
                                 viewHolder.repetitions.setText(String.valueOf(NewRepValue(reps_dialog)));
-                                mSelectedExercises.get(a).setRep(NewRepValue(reps_dialog));
+                                mSelectedExercises.get(a).setRepetition(NewRepValue(reps_dialog));
                             }
                         })
                         .show()
@@ -264,7 +263,7 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
                 if (v != null) {
 
                     DialogName = (TextView) v.findViewById(R.id.ExerciseName);
-                    DialogName.setText(mSelectedExercises.get(a).getExercise_name());
+                    DialogName.setText(mSelectedExercises.get(a).getExercise().getExercise_name());
 
                    /* for (int indice = 0;indice < mSelectedExercises.size();indice++){
                         Log.v(TAG,"mSelectedExercises: "+mSelectedExercises.get(indice).getExercise_name());
@@ -273,7 +272,7 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
 */
                     ActualRepValue = Integer.valueOf(viewHolder.repetitions.getText().toString());
                     reps_dialog = (TextView) v.findViewById(R.id.Reps);
-                    mSelectedExercises.get(a).setRep(ActualRepValue);
+                    mSelectedExercises.get(a).setRepetition(ActualRepValue);
                     reps_dialog.setText(String.valueOf(ActualRepValue));
 
 

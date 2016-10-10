@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
+import static com.app.proj.silverbars.Utilities.convertMusclesObjToString;
+import static com.app.proj.silverbars.Utilities.convertStringToArray;
 import static com.app.proj.silverbars.Utilities.getUrlReady;
 
 /**
@@ -47,7 +49,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String KEY_IDPLIST = "id";
     public static final String KEY_PNAME = "name";
     public static final String KEY_SONGNAME = "songname";
-    public static final String KEY_USERID = "user_id";
+    private static final String KEY_USERID = "user_id";
     //    Workouts table Columns names
     public static final String KEY_IDWORKOUTS = "id";
     public static final String KEY_WORKOUTNAME = "workout_name";
@@ -92,6 +94,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             KEY_PNAME+" TEXT, " +
             KEY_SONGNAME+" varchar, " +
             KEY_USERID+" integer)";
+
     private static final String CREATE_TABLE_WORKOUTS = "CREATE TABLE IF NOT EXISTS "+
             TABLE_WORKOUTS+"(" +
             KEY_IDWORKOUTS+" INTEGER PRIMARY KEY NOT NULL," +
@@ -330,7 +333,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         }
     }
 
-    public Exercise getExercise(int exerciseId) {
+   /* public Exercise getExercise(int exerciseId) {
 
         Exercise exercise = new Exercise();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -338,7 +341,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         if (row.moveToFirst()) {
 
-            exercise = new Exercise(row.getInt(0), row.getString(1), row.getString(2), convertStringToArray(row.getString(3)), convertStringToArray(row.getString(4)), row.getString(5), row.getString(6));
+            exercise = new Exercise(row.getInt(0), row.getString(1), row.getString(2), convertStringToArray(row.getString(3)), convertStringToMuscles(row.getString(4)), row.getString(5), row.getString(6));
         } else {
             Log.e(TAG, "getExercise, Database error: No exercises found");
         }
@@ -350,7 +353,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         }
         return exercise;
     }
-
+*/
     public int[] getExercisesIds(){
 
         int[] exercisesids = null;
@@ -382,7 +385,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         return exercisesids;
     }
 
-    public Exercise[] getAllExercises(){
+   /* public Exercise[] getAllExercises(){
 
         Exercise[] exercises = null;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -407,7 +410,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         return exercises;
 
-    }
+    }*/
 
 
     public boolean checkExercise(int id){
@@ -453,7 +456,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         }
     }
 
-    public Workout[] getWorkouts(int id){
+   /* public Workout[] getWorkouts(int id){
         Workout[] workouts = null;
         String local = "true";
         SQLiteDatabase db = this.getReadableDatabase();
@@ -481,7 +484,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             e.printStackTrace();
         }
         return workouts;
-    }
+    }*/
 
     public boolean checkLocalWorkouts(int workout_id){
         boolean check;
@@ -539,10 +542,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         }
     }
 
-    public Workout[] getUserWorkouts(int id){
+    /*public Workout[] getUserWorkouts(int workout_id){
         Workout[] workouts = null;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_USER_WORKOUTS+" WHERE "+KEY_USERID+"="+id,null);
+        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_USER_WORKOUTS+" WHERE "+KEY_USERID+"="+workout_id,null);
         int i = 0;
         if (row.moveToFirst()){
             row.moveToFirst();
@@ -565,7 +568,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             e.printStackTrace();
         }
         return workouts;
-    }
+    }*/
 
     public void addNewUserWorkout(int workoutId,int exercisesId, int repetitions){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -583,34 +586,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
 
 
-
-    public LocalWorkouts[] getUserWorkout(int workoutId){
-        LocalWorkouts[] workouts = null;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_USER_WORKOUT+" WHERE "+KEY_WORKOUTSID+" = "+workoutId,null);
-        int i = 0;
-        if (row.moveToFirst()){
-            workouts = new LocalWorkouts[row.getCount()];
-            row.moveToFirst();
-            workouts[i] = new LocalWorkouts(row.getInt(0),String.valueOf(row.getInt(1)),String.valueOf(row.getInt(2)),row.getInt(3));
-
-            while(row.moveToNext()){
-                i++;
-                workouts[i] = new LocalWorkouts(row.getInt(0),String.valueOf(row.getInt(1)),String.valueOf(row.getInt(2)),row.getInt(3));
-            }
-
-        } else{
-            Log.i(TAG,"local workout, database: No workouts found");
-        }
-        db.close();
-        try {
-            BD_backup();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return workouts;
-    }
 
 
 
@@ -641,11 +616,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         boolean check;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor row = db.rawQuery("SELECT * FROM "+TABLE_USER_WORKOUTS+" WHERE "+KEY_IDWORKOUTS+" = "+workout_id,null);
-
         if (row.moveToFirst()){
             check = true;
-        }
-        else{
+        } else {
             Log.e(TAG,"checkLocalWorkouts, Database Error: No user workouts found");
             check = false;
         }
@@ -659,54 +632,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
 
 
-
-    public void insertWorkout(int workoutId, int exercisesId, int repetitions){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(KEY_WORKOUTSID,workoutId);
-        cv.put(KEY_WORKOUTEX,exercisesId);
-        cv.put(KEY_REPETITION,repetitions);
-        db.insert(TABLE_WORKOUT,null,cv);
-        db.close();
-        try {
-            BD_backup();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public LocalWorkouts[] getWorkout(int workoutId){
-        LocalWorkouts[] workouts = null;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_WORKOUT+" WHERE "+KEY_WORKOUTSID+" = "+workoutId,null);
-        int i = 0;
-        if (row.moveToFirst()){
-            workouts = new LocalWorkouts[row.getCount()];
-            row.moveToFirst();
-            workouts[i] = new LocalWorkouts(row.getInt(0),String.valueOf(row.getInt(1)),String.valueOf(row.getInt(2)),row.getInt(3));
-
-            while(row.moveToNext()){
-                i++;
-                workouts[i] = new LocalWorkouts(row.getInt(0),String.valueOf(row.getInt(1)),String.valueOf(row.getInt(2)),row.getInt(3));
-            }
-        }
-        else{
-            Log.e(TAG,"getWorkout, Database error: No saved workouts found");
-        }
-        db.close();
-        try {
-            BD_backup();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return workouts;
-    }
-
     public String checkWorkoutLocal(int workout_id){
         String check;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_WORKOUTS+" WHERE "+KEY_IDWORKOUTS+" = "+workout_id,null);
+        Cursor row = db.rawQuery("SELECT * FROM "+ TABLE_WORKOUTS +" WHERE "+ KEY_IDWORKOUTS +" = "+workout_id,null);
 
         if (row.moveToFirst()){
             check = row.getString(8);
@@ -724,26 +653,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         return check;
     }
 
-    public boolean checkWorkout(int workoutId, int exerciseId){
-        boolean check;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_WORKOUT+" WHERE "+KEY_WORKOUTSID+" = "+workoutId+" AND "+KEY_WORKOUTEX+" = "+exerciseId,null);
 
-        if (row.moveToFirst()){
-            check = true;
-        }
-        else{
-            Log.e(TAG,"checkWorkout, Database Error: No saved workouts found");
-            check = false;
-        }
-        db.close();
-        try {
-            BD_backup();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return check;
-    }
 
 
     public int getWorkoutId(int usersid, String workout_name){
@@ -827,9 +737,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
 
 
-    public static String[] convertStringToArray(String str){
-        return str.split(strSeparator);
-    }
+
 
 
 

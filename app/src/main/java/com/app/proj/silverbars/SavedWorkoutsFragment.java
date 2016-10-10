@@ -38,7 +38,7 @@ public class SavedWorkoutsFragment extends Fragment {
             }
         });
 
-        MySQLiteHelper database = new MySQLiteHelper(getContext());
+       /* MySQLiteHelper database = new MySQLiteHelper(getContext());
         if (database.getWorkouts(1) != null){
 
             local_workouts.setVisibility(View.VISIBLE);
@@ -51,7 +51,7 @@ public class SavedWorkoutsFragment extends Fragment {
         }else {
             EmpyStateSavedWorkout.setVisibility(View.VISIBLE);
         }
-
+*/
 
         return rootview;
     }

@@ -115,7 +115,7 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
                     @Override
                     public void onClick(View v) {
                         Intent i = new Intent(context, WorkoutActivity.class);
-                        i.putExtra("id", workouts.get(position).getId());
+                        i.putExtra("id", workouts.get(position).getWorkoutId());
                         i.putExtra("name", workouts.get(position).getWorkout_name());
                         i.putExtra("image",workouts.get(position).getWorkout_image());
                         i.putExtra("sets", workouts.get(position).getSets());

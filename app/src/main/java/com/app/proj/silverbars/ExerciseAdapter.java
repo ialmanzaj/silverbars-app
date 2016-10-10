@@ -27,7 +27,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     private static final String TAG = "EXERCISE ADAPTER";
 
-    private List<Exercise> exercises;
+    private List<ExerciseRep> exercises;
 
     private Button plusPositive;
     private Button minusPositive;
@@ -69,7 +69,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         }
     }
 
-    public ExerciseAdapter(Context context,List<Exercise> exercises) {
+    public ExerciseAdapter(Context context,List<ExerciseRep> exercises) {
         this.context = context;
         this.exercises = exercises;
     }
@@ -91,21 +91,18 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
          final int a = viewHolder.getAdapterPosition();
 
-        viewHolder.nombre.setText(exercises.get(a).getExercise_name());
+        viewHolder.nombre.setText(exercises.get(a).getExercise().getExercise_name());
+        viewHolder.repetitions.setText(String.valueOf(exercises.get(a).getRepetition()));
 
-        viewHolder.repetitions.setText(String.valueOf(WorkoutActivity.Exercises_reps[a]));
 
-        String[] imageDir = exercises.get(a).getExercise_image().split("exercises");
-
-        Log.v(TAG,"imageDir "+ Arrays.toString(imageDir));
-        Log.v(TAG,"imageDir lenght: "+ imageDir.length);
+        String[] imageDir = exercises.get(a).getExercise().getExercise_image().split("exercises");
 
         if (imageDir.length == 2){
             Log.v(TAG,"img from json");
 
 
             viewHolder.imagen_cache.setVisibility(View.VISIBLE);
-            Uri uri = Uri.parse(exercises.get(a).getExercise_image());
+            Uri uri = Uri.parse(exercises.get(a).getExercise().getExercise_image());
             viewHolder.imagen_cache.setImageURI(uri);
 
         }else {
@@ -113,11 +110,11 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
             Bitmap bmp;
             viewHolder.imageView_local.setVisibility(View.VISIBLE);
-            Log.v(TAG,"image: " +exercises.get(a).getExercise_image());
+            Log.v(TAG,"image: " +exercises.get(a).getExercise().getExercise_image());
 
 
 
-            bmp = loadExerciseImageFromDevice(context,exercises.get(a).getExercise_image());
+            bmp = loadExerciseImageFromDevice(context,exercises.get(a).getExercise().getExercise_image());
             viewHolder.imageView_local.setImageBitmap(bmp);
         }
 
@@ -144,13 +141,11 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                                 viewHolder.negative.setText(Negative.getText());
 
                                 //colocar nuevos valores a cada parte del tempo
-                                WorkoutActivity.Positive_Exercises[a] = getIntValuefromTextView(Positive);
-                                WorkoutActivity.Negative_Exercises[a] = getIntValuefromTextView(Negative);
-                                WorkoutActivity.Isometric_Exercises[a] = getIntValuefromTextView(Isometric);
 
-                                Log.v(TAG,"Positive_Exercises"+a+":"+WorkoutActivity.Positive_Exercises[a]);
-                                Log.v(TAG,"Isometric"+a+":"+WorkoutActivity.Isometric_Exercises[a]);
-                                Log.v(TAG,"Negative"+a+":"+WorkoutActivity.Negative_Exercises[a]);
+                                exercises.get(a).setTempo_isometric(getIntfromTextView(Isometric));
+                                exercises.get(a).setTempo_negative(getIntfromTextView(Negative));
+                                exercises.get(a).setTempo_positive(getIntfromTextView(Positive));
+
 
                             }
                         })
@@ -224,7 +219,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                 }
             }
 
-            public int getIntValuefromTextView(TextView textView){
+            public int getIntfromTextView(TextView textView){
                 return Integer.valueOf(textView.getText().toString());
             }
 

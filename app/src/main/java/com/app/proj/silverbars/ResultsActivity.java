@@ -94,7 +94,7 @@ public class ResultsActivity extends AppCompatActivity {
 
         if (exercises != null) {
 
-            int porcentaje[] = new int[exercises.size()];
+            /*int porcentaje[] = new int[exercises.size()];
 
             for(int a = 0; a < exercises.size(); a++){
                 Collections.addAll(MusclesArray, exercises.get(a).getMuscles());
@@ -116,7 +116,7 @@ public class ResultsActivity extends AppCompatActivity {
             }
 
             setMusclesToView(MusclesArray);
-            setTypes(TypeExercises);
+            setTypes(TypeExercises);*/
         }
     }
 

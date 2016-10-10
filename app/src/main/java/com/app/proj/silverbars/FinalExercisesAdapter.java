@@ -20,7 +20,7 @@ import java.util.List;
 public class FinalExercisesAdapter extends RecyclerView.Adapter<FinalExercisesAdapter.ExerciseViewHolder> {
 
     private static final String TAG = "FinalExercisesAdapter";
-    private List<Exercise> mExercises = new ArrayList<>();
+    private List<ExerciseRep> mExercises = new ArrayList<>();
     private int[] exercise_reps;
     private InputStream bmpInput;
 
@@ -46,13 +46,14 @@ public class FinalExercisesAdapter extends RecyclerView.Adapter<FinalExercisesAd
             imagen = (SimpleDraweeView) v.findViewById(R.id.imagen);
 
             repetitions = (TextView) itemView.findViewById(R.id.repetitions);
+
             img_handle = (ImageView) itemView.findViewById(R.id.handle);
             img_handle.setVisibility(View.GONE);
         }
 
     }
 
-    public FinalExercisesAdapter(Context context, List<Exercise> mExercises, int[] exercise_reps) {
+    public FinalExercisesAdapter(Context context, List<ExerciseRep> mExercises, int[] exercise_reps) {
         mContext = context;
         this.mExercises = mExercises;
         this.exercise_reps = exercise_reps;
@@ -79,87 +80,14 @@ public class FinalExercisesAdapter extends RecyclerView.Adapter<FinalExercisesAd
         final int a = viewHolder.getAdapterPosition();
 
         //asignar nombre y repeticiones a cada elemento del recycler.
-        viewHolder.nombre.setText(mExercises.get(a).getExercise_name());
+        viewHolder.nombre.setText(mExercises.get(a).getExercise().getExercise_name());
         viewHolder.repetitions.setText(String.valueOf(exercise_reps[a]));
 
 
-
-
-        Uri uri = Uri.parse((mExercises.get(a).getExercise_image()));
+        Uri uri = Uri.parse((mExercises.get(a).getExercise().getExercise_image()));
         viewHolder.imagen.setImageURI(uri);
 
-
-
-        Bitmap bmp;
-
-       /* //Setting values to each recylerView Element
-        String[] imageDir = mExercises.get(a).getExercise_image().split("exercises");
-
-
-        Log.v("Image Array", Arrays.toString(imageDir));
-
-        if (imageDir.length < 2){
-
-            bmp = loadExerciseImageFromDevice(mContext,mExercises.get(a).getExercise_image());
-            viewHolder.imagen.setImageBitmap(bmp);
-
-        }else{
-            String Parsedurl = "exercises"+imageDir[1];
-            String[] imagesName = Parsedurl.split("/");
-            String imgName = imagesName[2];
-            bmp = loadExerciseImageFromDevice(mContext,imgName);
-
-            if (bmp != null){
-                viewHolder.imagen.setImageBitmap(bmp);
-            }
-            else{
-                DownloadImage(Parsedurl,viewHolder,imgName);
-            }
-        }*/
-
-
     }
-
-
-
-
-/*
-
-    private void DownloadImage(final String url, final ExerciseViewHolder vh, final String imgName) {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
-                .build();
-
-        final SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
-
-        new AsyncTask<Void, Long, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-
-                Call<ResponseBody> call = downloadService.downloadFile(url);
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        Bitmap bitmap = null;
-                        if (response.isSuccessful()) {
-                            boolean writtenToDisk = saveExerciseImageInDevice(mContext,response.body(),imgName);
-                            if(writtenToDisk){bitmap = loadExerciseImageFromDevice(mContext,imgName);}
-                            vh.imagen.setImageBitmap(bitmap);
-                        }
-                        else {
-                            Log.e(TAG, "DownloadImage, Download failed :(");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Log.e(TAG,"DownloadImage, onFailure :(",t);
-                    }
-                });
-                return null;
-            };
-        }.execute();
-    }
-*/
 
 
 

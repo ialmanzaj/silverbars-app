@@ -39,7 +39,7 @@ public class UserWorkoutsFragment extends Fragment {
             }
         });
 
-        MySQLiteHelper database = new MySQLiteHelper(getContext());
+        /*MySQLiteHelper database = new MySQLiteHelper(getContext());
 
         if (database.getUserWorkouts(1) != null){
             my_workouts.setVisibility(View.VISIBLE);
@@ -54,7 +54,7 @@ public class UserWorkoutsFragment extends Fragment {
 
         }else {
             EmpyStateMyWorkouts.setVisibility(View.VISIBLE);
-        }
+        }*/
 
         return roootview;
     }

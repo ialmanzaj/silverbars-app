@@ -1,5 +1,6 @@
 package com.app.proj.silverbars;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -59,20 +60,20 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     private ItemTouchHelper mItemTouchHelper;
 
     private  List<String> MusclesArray = new ArrayList<>();
-    private  List<String> TypeExercises = new ArrayList<>();
+
     private static String strSeparator = "__,__";
-    private int Items_size = 0;
+
     Exercise[] parsedExercises;
 
     private String partes = "";
     public static Activity create;
     
-    private List<Exercise> ExercisesToAdapter = new ArrayList<>();
+    private List<ExerciseRep> ExercisesToAdapter = new ArrayList<>();
 
     private LinearLayout primary_ColumnMuscle,secundary_ColumnMuscle,Progress,progressLayout,error_layout;
     LinearLayout contentInfo;
 
-    ArrayList<String> Items_id;
+    ArrayList<String> exercises_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,19 +113,20 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
         progressLayout = (LinearLayout) findViewById(R.id.progress_bar_);
         error_layout = (LinearLayout) findViewById(R.id.error_layout);
-        Button button_error_reload = (Button) findViewById(R.id.error_reload_workout);
 
+        Button button_error_reload = (Button) findViewById(R.id.error_reload_workout);
         button_error_reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 error_layout.setVisibility(View.GONE);
                 Progress.setVisibility(View.VISIBLE);
 
-                if (Items_id.size() > 0){
-                    putExercisesinRecycler(Items_id);
+                if (exercises_id.size() > 0){
+                    putExercisesinRecycler(exercises_id);
                 }
             }
         });
+
 
         /// boton de siguiente
         Button nextButton = (Button) findViewById(R.id.Next);
@@ -176,18 +178,16 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
         // RECYCLER DONDE ESTAN LOS EJERCICIOS ELEGIDOS
         recycler = (RecyclerView) findViewById(R.id.recycler_exercises_selected);
-        RecyclerView.LayoutManager lManager = new LinearLayoutManager(this);
-        recycler.setLayoutManager(lManager);
+
+        recycler.setLayoutManager( new LinearLayoutManager(this) );
 
 
         //Defining Tabs
         TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost3);
-
         tabHost2.setup();
 
         TabHost.TabSpec rutina = tabHost2.newTabSpec(getResources().getString(R.string.tab_overview));
         TabHost.TabSpec muscles = tabHost2.newTabSpec(getResources().getString(R.string.tab_muscles));
-
         rutina.setIndicator(getResources().getString(R.string.tab_overview));
         rutina.setContent(R.id.rutina_);
 
@@ -199,15 +199,9 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
         webView = (WebView) findViewById(R.id.WebView_create);
 
+
+
         getBodyView();
-
-        if (adapter != null){
-            if (adapter.getItemCount() > 0) {
-                Log.v(TAG,"hay algo: "+adapter.getSelectedExercisesName());
-            }
-        }
-
-
 
     }//  close create workout
 
@@ -220,11 +214,11 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         if (requestCode == 1 ) {
             if (resultCode == RESULT_OK && data != null){
 
-                    if (data.hasExtra("Items")) {
-                        Items_id = data.getStringArrayListExtra("Items");
+                    if (data.hasExtra("exercises")) {
+                        exercises_id = data.getStringArrayListExtra("exercises");
 
-                        if (Items_id.size() > 0){
-                            putExercisesinRecycler(Items_id);
+                        if (exercises_id.size() > 0){
+                            putExercisesinRecycler(exercises_id);
 
                         }
                     }
@@ -232,29 +226,25 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
         }else if (requestCode == 2 ) {
             Log.v(TAG, "requestCode: 2");
-
             if (resultCode == RESULT_OK && data != null){
 
-                if (data.hasExtra("Items")) {
-
-                    Items_id = data.getStringArrayListExtra("Items");
-                    putExercisesinRecycler(Items_id);
+                if (data.hasExtra("exercises")) {
+                    exercises_id = data.getStringArrayListExtra("exercises");
+                    putExercisesinRecycler(exercises_id);
                 }
+
+
+
+
             }
 
-        } else if (requestCode == 3){
-            if (resultCode == RESULT_OK && data != null){
-
-                ArrayList<String> exercises_id = data.getStringArrayListExtra("exercises");
-
-                //getExercisesFromJson(exercises_id);
-            }
         }
 
 
     }
 
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void setMusclesToView(List<String> musculos){
         if (musculos.size() > 0){
             List<String> musculos_oficial;
@@ -309,39 +299,20 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         }
     }
 
-
-    private void putExercisesinRecycler(final ArrayList<String> new_items_to_list){
-        Log.v(TAG,"putExercisesinRecycler: "+new_items_to_list);
+    private void setEmpty_contentOn(){
         empty_content.setVisibility(View.GONE);
         re_addExercise.setVisibility(View.VISIBLE);
         recycler.setVisibility(View.VISIBLE);
 
-        final AuthPreferences authPreferences = new AuthPreferences(this);
+    }
 
+    private void putExercisesinRecycler(final ArrayList<String> new_items_to_list){
+        Log.v(TAG,"putExercisesinRecycler: "+new_items_to_list);
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
+        setEmpty_contentOn();
 
-                Request request = original.newBuilder()
-                        .header("Accept", "application/json")
-                        .header("Authorization", "Bearer " + authPreferences.getToken())
-                        .method(original.method(), original.body())
-                        .build();
-                okhttp3.Response response = chain.proceed(request);
-                Log.v("Response",response.toString());
-                return response;
-            }
-        });
-
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.silverbarsapp.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-        SilverbarsService service = retrofit.create(SilverbarsService.class);
+        AuthPreferences authPreferences = new AuthPreferences(this);
+        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class,authPreferences.getToken());
 
         Call<Exercise[]> call = service.getAllExercises();
         call.enqueue(new Callback<Exercise[]>() {
@@ -363,29 +334,36 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                             //Log.v(TAG,""+AllExercisesList.get(a).getExercise_name()+" : "+new_items_to_list.get(c));
 
                             if (Objects.equals(AllExercisesList.get(a).getExercise_name(), new_items_to_list.get(c))){
-                                //.v(TAG,""+AllExercisesList.get(a).getExercise_name()+":"+Items_ids_from_activity.get(c));
+                                //.v(TAG,""+AllExercisesList.get(a).getExercise_name()+":"+exercises_ids_from_activity.get(c));
                                 if (adapter == null){
-                                    ExercisesToAdapter.add(AllExercisesList.get(a));
+
+
+                                    ExercisesToAdapter.add(new ExerciseRep(AllExercisesList.get(a)));
+
                                 }else {
-                                    ExercisesToAdapter.add(AllExercisesList.get(a));
-                                    Log.v(TAG,"ITEM INSERTED:"+( ExercisesToAdapter.size()));
+
+                                    ExercisesToAdapter.add(new ExerciseRep(AllExercisesList.get(a)));
+                                    Log.v(TAG,"ITEM INSERTED:"+(ExercisesToAdapter.size()));
                                     adapter.notifyItemInserted(ExercisesToAdapter.size());
+
                                 }
 
                                 //Collections.addAll(TypeExercises,ExercisesToAdapter.get(a).getTypes_exercise());
                                 //Log.v(TAG,"TypeExercises"+TypeExercises);
 
-                                for (int b = 0; b < ExercisesToAdapter.get(c).getMuscles().length; b++){
+                                for (int b = 0; b < ExercisesToAdapter.get(c).getExercise().getMuscles().length; b++){
                                     String name;
-                                    name = ExercisesToAdapter.get(c).getMuscles()[b];
+                                    name = ExercisesToAdapter.get(c).getExercise().getMuscles()[b].getMuscleName();
                                     MusclesArray.add(name);
                                 }
                             }
                         }
                     }
-                    Context context = CreateWorkoutActivity.this;
-                    adapter = new RecyclerExerciseSelectedAdapter(context,ExercisesToAdapter,CreateWorkoutActivity.this);
-                    recycler.setAdapter(adapter);
+
+
+
+                    adapter = new RecyclerExerciseSelectedAdapter(CreateWorkoutActivity.this,ExercisesToAdapter,CreateWorkoutActivity.this);
+                    recycler.setAdapter( adapter );
 
                     setMusclesToView(MusclesArray);
                     //putTypesInWorkout(TypeExercises);
@@ -395,11 +373,8 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                     mItemTouchHelper.attachToRecyclerView(recycler);
 
                 } else {
-                    int statusCode = response.code();
 
-                    ResponseBody errorBody = response.errorBody();
-                    Log.e(TAG,errorBody.toString());
-                    Log.e(TAG,"statusCode"+statusCode);
+                    Log.e(TAG,"statusCode: "+response.code());
                 }
             }
             @Override
@@ -510,8 +485,10 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     protected void onStart() {
         super.onStart();
     }
+
     @Override
     protected void onStop() {super.onStop();}
+
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {mItemTouchHelper.startDrag(viewHolder);}
 }

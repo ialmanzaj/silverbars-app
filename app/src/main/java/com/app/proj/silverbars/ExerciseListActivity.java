@@ -37,7 +37,7 @@ public class ExerciseListActivity extends AppCompatActivity {
     Button add_button;
     private RecyclerView.Adapter adapter;
 
-    private ArrayList<String> sExercises_Id = new ArrayList<>();
+    private ArrayList<String> exercises_id = new ArrayList<>();
     List<Exercise> OriginalExerciseListAll = new ArrayList<>();
     List<Exercise> ExercisesNoSelected = new ArrayList<>();
     ArrayList<String> SelectedItemsIds = new ArrayList<>();
@@ -47,7 +47,10 @@ public class ExerciseListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_exercise_list);
+
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -65,8 +68,9 @@ public class ExerciseListActivity extends AppCompatActivity {
 
         Progress = (LinearLayout) findViewById(R.id.progress_bar_);
         error_layout = (LinearLayout) findViewById(R.id.error_layout);
-        Button button_error_reload = (Button) findViewById(R.id.error_reload_workout);
 
+
+        Button button_error_reload = (Button) findViewById(R.id.error_reload_workout);
         button_error_reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,23 +83,24 @@ public class ExerciseListActivity extends AppCompatActivity {
 
 
         recycler = (RecyclerView) findViewById(R.id.recycler);
-        RecyclerView.LayoutManager lManager = new LinearLayoutManager(this);
-        recycler.setLayoutManager(lManager);
+        recycler.setLayoutManager(new LinearLayoutManager(this));
+
+
 
         add_button = (Button) findViewById(R.id.done_button);
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 for (int i = 0; i < OriginalExerciseListAll.size(); i++){
                     if (AllExercisesAdapter.selectedItems.get(i)){
-                        sExercises_Id.add(OriginalExerciseListAll.get(i).getExercise_name());
+                        exercises_id.add(OriginalExerciseListAll.get(i).getExercise_name());
                     }
                 }
 
+
                 // enviar items a la actividad anterior
                 Intent return_Intent = new Intent();
-                return_Intent.putExtra("Items",sExercises_Id);
+                return_Intent.putExtra("exercises",exercises_id);
                 setResult(RESULT_OK, return_Intent);
                 finish();
 
@@ -109,46 +114,20 @@ public class ExerciseListActivity extends AppCompatActivity {
 
     private void getExercisesFromAPI() {
 
-        final AuthPreferences authPreferences = new AuthPreferences(this);
-
-
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
-                Request request = original.newBuilder()
-                        .header("Accept", "application/json")
-                        .header("Authorization", "Bearer " + authPreferences.getToken())
-                        .method(original.method(), original.body())
-                        .build();
-                okhttp3.Response response = chain.proceed(request);
-                Log.v("Response",response.toString());
-                return response;
-            }
-        });
-
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.silverbarsapp.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-        SilverbarsService service = retrofit.create(SilverbarsService.class);
+        AuthPreferences authPreferences = new AuthPreferences(this);
+        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class,authPreferences.getToken());
 
         Call<Exercise[]> call = service.getAllExercises();
         call.enqueue(new Callback<Exercise[]>() {
             @Override
             public void onResponse(Call<Exercise[]> call, Response<Exercise[]> response) {
-
                 if (response.isSuccessful()) {
-
                     onErrorOff();
-
-                    Exercise[] parsedExercises = response.body();
-                    Collections.addAll(OriginalExerciseListAll,parsedExercises);
-
+                    
+                    Collections.addAll(OriginalExerciseListAll,response.body());
                     Log.v(TAG,"OriginalExerciseListAll size: "+OriginalExerciseListAll.size());
 
+                    
                     try {
 
                         Intent i = getIntent();
@@ -169,28 +148,24 @@ public class ExerciseListActivity extends AppCompatActivity {
                             }
                         }
                     }catch (NullPointerException e){
-                        Log.e(TAG, "no se ha seleccionado ningun ejercicio todavia");
+                        Log.i(TAG, "no se ha seleccionado ningun ejercicio todavia");
                     }
 
 
                     if (ExercisesNoSelected.isEmpty()){
                         adapter = new AllExercisesAdapter(ExerciseListActivity.this,OriginalExerciseListAll);
-                        //Log.v(TAG,"OriginalExerciseListAll: active");
+                       
                     }else {
                         adapter = new AllExercisesAdapter(ExerciseListActivity.this,ExercisesNoSelected);
-                        //Log.v(TAG,"ExercisesNoSelected: active");
+                        
                     }
 
-
-
                     recycler.setAdapter(adapter);
+                    
                 } else {
-                    int statusCode = response.code();
-                    ResponseBody errorBody = response.errorBody();
-                    Log.e(TAG,errorBody.toString());
-                    Log.e(TAG,"statusCode"+statusCode);
+                    
+                    Log.e(TAG,"statusCode"+response.code());
                     onErrorOn();
-
                 }
             }
 
@@ -201,14 +176,14 @@ public class ExerciseListActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
+    
     private void onErrorOn(){
         error_layout.setVisibility(View.VISIBLE);
         recycler.setVisibility(View.GONE);
         add_button.setVisibility(View.GONE);
     }
+    
+    
     private void onErrorOff(){
         Progress.setVisibility(View.GONE);
         error_layout.setVisibility(View.GONE);

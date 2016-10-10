@@ -1,21 +1,33 @@
 package com.app.proj.silverbars;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-import java.util.List;
+public class Exercise implements Parcelable {
 
+    @SerializedName("id")
+    int id;
 
+    @SerializedName("exercise_name")
+    String exercise_name;
 
-public class Exercise implements Serializable {
+    @SerializedName("level")
+    String level;
 
-    private int id;
-    private String exercise_name;
-    private String level;
-    private String[] type_exercise;
-    private String exercise_audio;
-    private String exercise_image;
-    private Muscle[] muscles;
+    @SerializedName("type_exercise")
+    String[] type_exercise;
+
+    @SerializedName("exercise_audio")
+    String exercise_audio;
+
+    @SerializedName("exercise_image")
+    String exercise_image;
+
+    @SerializedName("muscles")
+    Muscle[] muscles;
+
 
     public Exercise(){}
 
@@ -27,8 +39,40 @@ public class Exercise implements Serializable {
         this.muscles = muscles;
         this.exercise_audio = exercise_audio;
         this.exercise_image = exercise_image;
-
     }
+
+    protected Exercise(Parcel in) {
+        id = in.readInt();
+        exercise_name = in.readString();
+        level = in.readString();
+        type_exercise = in.createStringArray();
+        muscles = in.createTypedArray(Muscle.CREATOR);
+        exercise_audio = in.readString();
+        exercise_image = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeInt(id);
+        parcel.writeString(exercise_name);
+        parcel.writeString(level);
+        parcel.writeStringArray(type_exercise);
+        parcel.writeTypedArray(muscles,flags);
+        parcel.writeString(exercise_audio);
+        parcel.writeString(exercise_image);
+    }
+
+    public static final Creator<Exercise> CREATOR = new Creator<Exercise>() {
+        @Override
+        public Exercise createFromParcel(Parcel in) {
+            return new Exercise(in);
+        }
+
+        @Override
+        public Exercise[] newArray(int size) {
+            return new Exercise[size];
+        }
+    };
 
     public int getExerciseId() {
         return id;
@@ -54,6 +98,11 @@ public class Exercise implements Serializable {
 
     public String getExercise_image() {
         return exercise_image;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
 

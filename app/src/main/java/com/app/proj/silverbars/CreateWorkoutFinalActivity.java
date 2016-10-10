@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -43,9 +42,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.app.proj.silverbars.PlaylistPickerActivity.convertArrayToString;
+import static com.app.proj.silverbars.Utilities.DownloadImage;
+import static com.app.proj.silverbars.Utilities.DownloadMp3;
+import static com.app.proj.silverbars.Utilities.getExerciseAudioName;
 import static com.app.proj.silverbars.Utilities.getFileReady;
-import static com.app.proj.silverbars.Utilities.saveAudioInDevice;
-import static com.app.proj.silverbars.Utilities.saveWorkoutImgInDevice;
+import static com.app.proj.silverbars.Utilities.getExerciseImageName;
 
 public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
@@ -68,7 +70,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
     String workoutImage = "/";
     String[] exercises_ids;
-    List<Exercise> SelectedExercises = new ArrayList<>();
+    List<ExerciseRep> SelectedExercises = new ArrayList<>();
 
 
     @Override
@@ -106,7 +108,6 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
                 }
             });
         }
-
 
         workoutName = (AutoCompleteTextView) findViewById(R.id.workoutName);
 
@@ -257,55 +258,32 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
     private void putExercisesinRecycler(){
 
-        final AuthPreferences authPreferences = new AuthPreferences(this);
+        AuthPreferences authPreferences = new AuthPreferences(this);
+        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class,authPreferences.getToken());
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
-
-                Request request = original.newBuilder()
-                        .header("Accept", "application/json")
-                        .header("Authorization", "Bearer " + authPreferences.getToken())
-                        .method(original.method(), original.body())
-                        .build();
-                okhttp3.Response response = chain.proceed(request);
-                Log.v("Response",response.toString());
-                return response;
-            }
-        });
-
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.silverbarsapp.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-        SilverbarsService service = retrofit.create(SilverbarsService.class);
 
         Call<Exercise[]> call = service.getAllExercises();
         call.enqueue(new Callback<Exercise[]>() {
             @Override
             public void onResponse(Call<Exercise[]> call, Response<Exercise[]> response) {
                 if (response.isSuccessful()) {
-                    Exercise[] exercises = response.body();
+
                     List<Exercise> AllExercisesList = new ArrayList<>();
 
-
-                    Collections.addAll(AllExercisesList,exercises);
+                    Collections.addAll(AllExercisesList,response.body());
 
                     for (int c = 0;c < Exercises.size();c++){
                         for (int a = 0; a < AllExercisesList.size();a++){
 
                             if (Objects.equals(AllExercisesList.get(a).getExercise_name(), Exercises.get(c))){
 
-                                SelectedExercises.add(AllExercisesList.get(a));
+                                SelectedExercises.add(new ExerciseRep(AllExercisesList.get(a)));
 
                             }
                         }
                     }
                     for (int a = 0; a<SelectedExercises.size();a++){
-                        exercises_ids[a] = String.valueOf(SelectedExercises.get(a).getExerciseId());
+                        exercises_ids[a] = String.valueOf(SelectedExercises.get(a).getExercise().getExerciseId());
                     }
 
 
@@ -314,27 +292,27 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
                     for (int a = 0;a<SelectedExercises.size();a++){
 
-                        for (int b = 0; b<SelectedExercises.get(a).getMuscles().length; b++){
+                        for (int b = 0; b<SelectedExercises.get(a).getExercise().getMuscles().length; b++){
 
-                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "CALVES")){LOWER_BODY = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "HAMSTRINGS")){LOWER_BODY = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "ADDUCTORS")){LOWER_BODY = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "CUADRICEPS")){LOWER_BODY = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "RECTUS-ABDOMINIS")){ABS = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "TRANSVERSUS-ABDOMINIS")){ABS = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "DELTOIDS")){UPPER_BODY = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "OBLIQUES")){UPPER_BODY = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "QUADRICEPS")){LOWER_BODY = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "PECTORALIS-MAJOR")){UPPER_BODY = true;}
-                            if (Objects.equals(SelectedExercises.get(a).getMuscles()[b], "TRICEPS")){UPPER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getExercise().getMuscles()[b], "CALVES")){LOWER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getExercise().getMuscles()[b], "HAMSTRINGS")){LOWER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getExercise().getMuscles()[b], "ADDUCTORS")){LOWER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getExercise().getMuscles()[b], "CUADRICEPS")){LOWER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getExercise().getMuscles()[b], "RECTUS-ABDOMINIS")){ABS = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getExercise().getMuscles()[b], "TRANSVERSUS-ABDOMINIS")){ABS = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getExercise().getMuscles()[b], "DELTOIDS")){UPPER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getExercise().getMuscles()[b], "OBLIQUES")){UPPER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getExercise().getMuscles()[b], "QUADRICEPS")){LOWER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getExercise().getMuscles()[b], "PECTORALIS-MAJOR")){UPPER_BODY = true;}
+                            if (Objects.equals(SelectedExercises.get(a).getExercise().getMuscles()[b], "TRICEPS")){UPPER_BODY = true;}
                         }
-                        if (Objects.equals(SelectedExercises.get(a).getLevel(),"NORMAL")){
+                        if (Objects.equals(SelectedExercises.get(a).getExercise().getLevel(),"NORMAL")){
                             NORMAL = true;
-                        }else if (Objects.equals(SelectedExercises.get(a).getLevel(),"EASY")){
+                        }else if (Objects.equals(SelectedExercises.get(a).getExercise().getLevel(),"EASY")){
                             EASY = true;
-                        }else if (Objects.equals(SelectedExercises.get(a).getLevel(),"HARD")){
+                        }else if (Objects.equals(SelectedExercises.get(a).getExercise().getLevel(),"HARD")){
                             HARD = true;
-                        }else if (Objects.equals(SelectedExercises.get(a).getLevel(),"CHALLENGING")){
+                        }else if (Objects.equals(SelectedExercises.get(a).getExercise().getLevel(),"CHALLENGING")){
                             CHALLENGING = true;
                         }
 
@@ -395,13 +373,8 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
                     RecyclerView.Adapter adapter = new FinalExercisesAdapter(context, SelectedExercises,reps);
                     recycler.setAdapter(adapter);
 
-
-
-
                 } else {
-                    int statusCode = response.code();
-                    ResponseBody errorBody = response.errorBody();
-                    Log.e(TAG,errorBody.toString());
+                    Log.v(TAG,"statusCode:"+response.code());
                 }
             }
 
@@ -414,35 +387,38 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
     }
 
     private void saveWorkoutInDB(){
-        MySQLiteHelper database = new MySQLiteHelper(CreateWorkoutFinalActivity.this);
+
+       /* MySQLiteHelper database = new MySQLiteHelper(CreateWorkoutFinalActivity.this);
 
         for (int i = 0; i < SelectedExercises.size(); i++){
-            if (!database.checkExercise(SelectedExercises.get(i).getExerciseId()) ){
+            if (!database.checkExercise(SelectedExercises.get(i).getExercise().getExerciseId()) ){
                 File imgDir,mp3Dir;
-                imgDir = getFileReady(this,"/SilverbarsImg/"+getImageName(i));
-                mp3Dir = getFileReady(this,"/SilverbarsMp3/"+getAudioName(i));
+                imgDir = getFileReady(this,"/SilverbarsImg/"+ getExerciseImageName(SelectedExercises.get(i).getExercise().getExercise_image()));
+                mp3Dir = getFileReady(this,"/SilverbarsMp3/"+ getExerciseAudioName(SelectedExercises.get(i).getExercise().getExercise_audio()));
 
                 if (!imgDir.exists()){
-                    Log.v(TAG,"img url "+SelectedExercises.get(i).getExercise_image());
-                    DownloadImage(SelectedExercises.get(i).getExercise_image(),getImageName(i));
+                    Log.v(TAG,"img url "+SelectedExercises.get(i).getExercise().getExercise_image());
+                    DownloadImage(this,SelectedExercises.get(i).getExercise().getExercise_image(), getExerciseImageName(SelectedExercises.get(i).getExercise().getExercise_image()));
                 }
                 if (!mp3Dir.exists()){
-                    Log.v(TAG,"mp3 url "+SelectedExercises.get(i).getExercise_audio());
-                    DownloadMp3(SelectedExercises.get(i).getExercise_audio(),getAudioName(i));
+                    Log.v(TAG,"mp3 url "+SelectedExercises.get(i).getExercise().getExercise_audio());
+                    DownloadMp3(this,SelectedExercises.get(i).getExercise().getExercise_audio(), getExerciseAudioName(SelectedExercises.get(i).getExercise().getExercise_audio()));
                 }
                 database.insertExercises(
-                        SelectedExercises.get(i).getExerciseId(),
-                        SelectedExercises.get(i).getExercise_name(),
-                        SelectedExercises.get(i).getLevel(),
-                        convertArrayToString(SelectedExercises.get(i).getTypes_exercise()),
-                        convertArrayToString(SelectedExercises.get(i).getMuscles()),
+                        SelectedExercises.get(i).getExercise().getExerciseId(),
+                        SelectedExercises.get(i).getExercise().getExercise_name(),
+                        SelectedExercises.get(i).getExercise().getLevel(),
+                        convertArrayToString(SelectedExercises.get(i).getExercise().getTypes_exercise()),
+                        convertArrayToString(SelectedExercises.get(i).getExercise().getMuscles()),
                         mp3Dir.getPath(),
                         imgDir.getPath()
                 );
             }
         }
-        saveWorkoutinData();
+        saveWorkoutinData();*/
     }
+
+
 
     private void saveWorkoutinData(){
 
@@ -484,110 +460,9 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
         }
     }
 
-    private String getImageName(int position){
-        String[] imageDir = SelectedExercises.get(position).getExercise_image().split("exercises");
-        String Parsedurl = "exercises" + imageDir[1];
-        String[] imagesName = Parsedurl.split("/");
-        Log.v(TAG,"getImageName: "+imagesName[2]);
-        return imagesName[2];
-    }
-
-
-    private void DownloadImage(String url, final String imgName){
-        Log.v(TAG,"DownloadImage "+imgName);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
-                .build();
-        SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
-        Call<ResponseBody> call = downloadService.downloadFile(url);
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    if (response.isSuccessful()) {
-
-                        Boolean guardado = saveWorkoutImgInDevice(CreateWorkoutFinalActivity.this,response.body(),imgName);
-
-                        if (guardado){
-                            Log.v(TAG,"download complete "+imgName);
-                        }
-
-                    } else {
-                        Log.v(TAG, "Download server contact failed");
-                    }
-                } else {
-                    Log.v(TAG,"State server contact failed");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e(TAG,"onFAILURE",t);
-            }
-        });
-    }
-
-    private void DownloadMp3(final String url, final String audioName) {
-        Log.v(TAG,"DownloadMp3 "+audioName);
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
-                .build();
-        final SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
-
-        new AsyncTask<Void, Long, Void>() {
-            @Override
-            protected Void doInBackground(Void... workouts_ids) {
-                Call<ResponseBody> call = downloadService.downloadFile(url);
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if (response.isSuccessful()) {
-                            Boolean guardado = saveAudioInDevice(CreateWorkoutFinalActivity.this,response.body(),audioName);
-
-                            if (guardado){
-                                Log.v(TAG,"download complete "+audioName);
-                            }
-
-                        }
-                        else {Log.e(TAG, "Download server contact failed");}
-                    }
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Log.e(TAG, "DownloadMp3: onFailure",t);
-                    }
-                });
-                return null;
-            };
-        }.execute();
-    }
-
-
-    private String getAudioName(int position){
-        String[] audioDir = SelectedExercises.get(position).getExercise_audio().split("exercises");;
-        String Parsedurl = "exercises"+audioDir[1];
-        String[] splitName = Parsedurl.split("/");
-        Log.v(TAG,"getAudioName: "+splitName[2]);
-        return splitName[2];
-    }
-
-
-
-    private static String convertArrayToString(String[] array){
-        String str = "";
-        for (int i = 0;i<array.length; i++) {
-            str = str+array[i];
-            if(i<array.length-1){
-                str = str+strSeparator;
-            }
-        }
-        return str;
-    }
-
 
 
     private void plusTempo(TextView view, Button button, Button button2){
-
-
         if(view == Rest_by_exercise_dialog){
             String[] elements = view.getText().toString().split("s");
             value = Integer.parseInt(elements[0]);

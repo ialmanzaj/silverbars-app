@@ -22,10 +22,10 @@ import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
 
 
 // ADAPTER FOR WORKING OUT ACTIVITY
-public class ExerciseForWorkingOut extends RecyclerView.Adapter<ExerciseForWorkingOut.WorkoutsViewHolder> {
+public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWorkingOutAdapter.WorkoutsViewHolder> {
 
     private static final String TAG = "Workout Adapter";
-    private List<Exercise> exercises;
+    private List<ExerciseRep> exercises;
     private Context context;
 
     public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {
@@ -49,7 +49,7 @@ public class ExerciseForWorkingOut extends RecyclerView.Adapter<ExerciseForWorki
         }
     }
 
-    public ExerciseForWorkingOut(Context context, List<Exercise> exercises) {
+    public ExerciseWorkingOutAdapter(Context context, List<ExerciseRep> exercises) {
         this.context = context;
         this.exercises = exercises;
     }
@@ -71,19 +71,19 @@ public class ExerciseForWorkingOut extends RecyclerView.Adapter<ExerciseForWorki
 
         int position = viewHolder.getAdapterPosition();
 
-        viewHolder.nombre.setText(exercises.get(position).getExercise_image());
+        viewHolder.nombre.setText(exercises.get(position).getExercise().getExercise_image());
         viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
 
 
-        String[] imageDir = exercises.get(position).getExercise_image().split("exercises");
+        String[] imageDir = exercises.get(position).getExercise().getExercise_image().split("exercises");
 
         if (imageDir.length == 2){
-            Uri uri = Uri.parse(exercises.get(position).getExercise_image());
+            Uri uri = Uri.parse(exercises.get(position).getExercise().getExercise_image());
             viewHolder.imagen_cache.setImageURI(uri);
 
         }else {
             viewHolder.imageView_local.setVisibility(View.VISIBLE);
-            Bitmap bitmap = loadExerciseImageFromDevice(context,exercises.get(position).getExercise_image());
+            Bitmap bitmap = loadExerciseImageFromDevice(context,exercises.get(position).getExercise().getExercise_image());
             viewHolder.imageView_local.setImageBitmap(bitmap);
         }
 

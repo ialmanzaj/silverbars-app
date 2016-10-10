@@ -27,6 +27,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -139,40 +143,86 @@ public class Utilities {
     }
 
 
-    public static String getAudioName(String audio_url){
+    public static String getWorkoutImage(String url){
+        String[] workoutImgDir = url.split("workouts");
+        String Parsedurl = "workouts"+workoutImgDir[1];
+        String[] imagesName = Parsedurl.split("/");
+        String workoutImgName = imagesName[2];
+        Log.v(TAG,"Image Name: "+workoutImgName);
+        return workoutImgName;
+    }
 
+    public static String convertMusclesObjToString(Muscle[] muscles){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("muscles", new JSONArray(muscles));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return json.toString();
+    }
+
+
+/*
+    public static Muscle[] convertStringToMuscles(String muscles){
+        JSONObject json = new JSONObject();
+        Muscle[] muscles1 = null;
+        JSONArray jArray = null;
+        try {
+             jArray = json.getJSONArray(muscles);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (jArray != null) {
+            muscles1 = new Muscle[jArray.length()];
+            muscles1 = jArray;
+
+        }
+        return muscles1;
+    }
+*/
+
+    public static String getExerciseId(String url){
+        return url.split("exercises")[1].split("/")[1];
+    }
+
+    public static String getExerciseAudioName(String audio_url){
         String[] audioDir = audio_url.split("exercises");
         String Parsedurl = "exercises" + audioDir[1];
         String[] splitName = Parsedurl.split("/");
-        String mp3Name = splitName[2];
-
-
-        return mp3Name;
+        return splitName[2];
     }
 
-    public static void createAudioDir(Context context,Boolean download,String url_audio){
 
-        String[] audioDir = url_audio.split("exercises");
-        String Parsedurl = "exercises" + audioDir[1];
-        String[] splitName = Parsedurl.split("/");
-        String mp3Name = splitName[2];
+    public static String getExerciseImageName(String url){
+        String[] imageDir = url.split("exercises");
+        String Parsedurl = "exercises" + imageDir[1];
+        String[] imagesName = Parsedurl.split("/");
+        Log.v(TAG,"getExerciseImageName: "+imagesName[2]);
+        return imagesName[2];
+    }
 
-        String url_dir_device = "exercises" + audioDir[1];
 
+    public static void createExerciseAudio(Context context, Boolean download, String mp3_url){
 
+        String url_dir_device = "exercises" + mp3_url;
         File Dir = getFileReady(context,"/SilverbarsMp3");
+
         if (Dir.isDirectory()) {
-            File file = getFileReady(context,"/SilverbarsMp3/"+mp3Name);
+            File file = getFileReady(context,"/SilverbarsMp3/"+getExerciseAudioName(mp3_url));
             if (!file.exists()) {
                 if (download){
-                    DownloadMp3(context,url_dir_device, mp3Name);
+                    DownloadMp3(context,url_dir_device, getExerciseAudioName(mp3_url));
                 }
             }
         } else {
             boolean success = Dir.mkdir();
             if (success) {
                 if (download){
-                    DownloadMp3(context,url_dir_device, mp3Name);
+                    DownloadMp3(context,url_dir_device, getExerciseAudioName(mp3_url));
                 }
             }else
                 Log.e(TAG, "Error creating dir");
@@ -188,8 +238,8 @@ public class Utilities {
 
             InputStream input = null;
             OutputStream outputStream = null;
-
             boolean success = true;
+
             if (!Folder.isDirectory()) {
                 Log.v(TAG,"Creating Dir");
                 success = Folder.mkdir();
@@ -229,8 +279,8 @@ public class Utilities {
     }
 
     public static boolean saveWorkoutImgInDevice(Context context, ResponseBody body, String workoutimg) {
-
         Log.v(TAG,"saveWorkoutImgInDevice: "+workoutimg);
+
 
         try {
             File Folder = getFileReady(context,"/SilverbarsImg/");
@@ -311,15 +361,17 @@ public class Utilities {
         return str;
     }
 
+    public static String[] convertStringToArray(String str){
+        return str.split(strSeparator);
+    }
+
 
     public static String getUrlReady(Context context,String url){
-        String dir = context.getFilesDir()+url;
-        return dir;
+        return context.getFilesDir()+url;
     }
 
     public static File getFileReady(Context context,String url){
-        File Dir = new File(context.getFilesDir()+url);
-        return Dir;
+        return new File(context.getFilesDir()+url);
     }
 
 
@@ -371,23 +423,18 @@ public class Utilities {
     }
 
     public static void DownloadImage(final Context context, String url, final String imgName){
-
         Log.v(TAG,"DownloadImage ");
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
         SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
         Call<ResponseBody> call = downloadService.downloadFile(url);
-
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-
                     saveWorkoutImgInDevice(context,response.body(),imgName);
-
-                } else {
-                    Log.v(TAG,"State server contact failed");
                 }
             }
             @Override
@@ -397,7 +444,7 @@ public class Utilities {
         });
     }
 
-    public static void DownloadMp3(final Context context, final String url, final String getAudioName) {
+    public static void DownloadMp3(final Context context, final String audio_url, final String getAudioName) {
         Log.v(TAG,"DownloadMp3: "+getAudioName);
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
@@ -407,7 +454,7 @@ public class Utilities {
         new AsyncTask<Void, Long, Void>() {
             @Override
             protected Void doInBackground(Void... workouts_ids) {
-                Call<ResponseBody> call = downloadService.downloadFile(url);
+                Call<ResponseBody> call = downloadService.downloadFile(audio_url);
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -735,6 +782,7 @@ public class Utilities {
 
         return relativeLayout;
     }
+
 
 
 
