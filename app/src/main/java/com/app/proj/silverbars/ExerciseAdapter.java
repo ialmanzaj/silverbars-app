@@ -18,6 +18,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     private static final String TAG = "EXERCISE ADAPTER";
 
-    private List<ExerciseRep> exercises;
+    private ArrayList<ExerciseRep> exercises;
 
     private Button plusPositive;
     private Button minusPositive;
@@ -69,7 +70,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         }
     }
 
-    public ExerciseAdapter(Context context,List<ExerciseRep> exercises) {
+    public ExerciseAdapter(Context context,ArrayList<ExerciseRep> exercises) {
         this.context = context;
         this.exercises = exercises;
     }
@@ -77,6 +78,10 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     @Override
     public int getItemCount() {
         return exercises.size();
+    }
+
+    public ArrayList<ExerciseRep> getExercises() {
+        return exercises;
     }
 
     @Override
@@ -106,7 +111,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             viewHolder.imagen_cache.setImageURI(uri);
 
         }else {
-            Log.v(TAG,"img from local");
 
             Bitmap bmp;
             viewHolder.imageView_local.setVisibility(View.VISIBLE);
@@ -260,7 +264,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
         });
     }
-
 
 
 }

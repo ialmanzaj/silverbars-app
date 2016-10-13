@@ -93,12 +93,12 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
         switch (viewholder.getItemViewType()) {
             case TYPE_WORKOUT:
 
-                Log.v(TAG,"Image: "+ workouts.get(position).getWorkout_image());
+                //Log.v(TAG,"Image: "+ workouts.get(position).getWorkout_image());
                 viewholder.img.setVisibility(View.VISIBLE);
 
                 String[] workoutImgDir = workouts.get(position).getWorkout_image().split(context.getFilesDir().getPath()+"/SilverbarsImg/");
-                Log.v(TAG,"workoutImgDir"+ Arrays.toString(workoutImgDir));
-                Log.v(TAG,"workoutImgDir lenghth"+ workoutImgDir.length);
+                //Log.v(TAG,"workoutImgDir"+ Arrays.toString(workoutImgDir));
+                //Log.v(TAG,"workoutImgDir lenghth"+ workoutImgDir.length);
 
 
                 if (workoutImgDir.length == 2){
@@ -120,7 +120,7 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
                         i.putExtra("image",workouts.get(position).getWorkout_image());
                         i.putExtra("sets", workouts.get(position).getSets());
                         i.putExtra("level", workouts.get(position).getLevel());
-                        i.putExtra("muscle", workouts.get(position).getMain_muscle());
+                        i.putExtra("main_muscle", workouts.get(position).getMainMuscle());
                         i.putExtra("exercises", workouts.get(position).getExercises());
                         i.putExtra("user_workout",user_workout);
                         context.startActivity(i);
@@ -141,49 +141,6 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
         return position < getItemCount() ? TYPE_WORKOUT : TYPE_VIEW_MORE;
     }
 
-    private void DownloadImage(String url, final VH viewholder, final String workoutImgName){
-
-        Log.v(TAG,"DownloadImage");
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
-                .build();
-        SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
-        Call<ResponseBody> call = downloadService.downloadFile(url);
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Bitmap bitmap = null;
-                    if (response.isSuccessful()) {
-
-                        boolean writtenToDisk = saveWorkoutImgInDevice(context,response.body(),workoutImgName);
-
-                        if(writtenToDisk){
-                            bitmap = loadWorkoutImageFromDevice(context,workoutImgName);
-                        }
-
-                        viewholder.img.setImageBitmap(bitmap);
-
-                    } else {
-                        Log.v(TAG, "Download server contact failed");
-                    }
-
-
-
-                } else {
-                    Log.v(TAG, "State: server contact failed");
-                }
-            }
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e(TAG,"onFAILURE",t);
-            }
-        });
-    }
-
-    
-    
     private static int containerDimensions(Context context) {
 
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);

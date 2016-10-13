@@ -15,7 +15,7 @@
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
-        android:name=".MyApp"
+        android:name=".SilverbarsApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher_app"
         android:label="@string/app_name"
@@ -62,11 +62,16 @@
             android:screenOrientation="portrait" />
         <!-- <activity android:name=".Myworkouts" /> -->
         <activity android:name=".PlaylistPickerActivity" />
+
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/FullyTranslucent"
+            tools:replace="android:theme"
+            />
+
         <activity
             android:name=".CreateWorkoutActivity"
             android:screenOrientation="portrait" />
@@ -114,8 +119,7 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="b9ecbddcccca5a38f0e3e6340858c42f6798648f"
-            />
+            android:value="b9ecbddcccca5a38f0e3e6340858c42f6798648f" />
 
 
     </application>

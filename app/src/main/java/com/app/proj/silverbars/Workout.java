@@ -65,9 +65,10 @@ public class Workout implements Parcelable {
     public void setSets(int sets) {
         this.sets = sets;
     }
+
     public String getLevel() {return level;}
 
-    public String getMain_muscle() {
+    public String getMainMuscle() {
         return main_muscle;
     }
 

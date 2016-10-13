@@ -27,6 +27,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -152,38 +155,32 @@ public class Utilities {
         return workoutImgName;
     }
 
-    public static String convertMusclesObjToString(Muscle[] muscles){
-        JSONObject json = new JSONObject();
-        try {
-            json.put("muscles", new JSONArray(muscles));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public static String convertMusclesToString(Muscle[] muscles) {
+        Gson gson = new Gson();
+        String jsonInString = gson.toJson(muscles);
+        Log.v(TAG, jsonInString);
 
-        return json.toString();
+        return jsonInString;
+    }
+
+    public static String convertExercisesToString(ExerciseRep[] exercises) {
+        Gson gson = new Gson();
+        String jsonInString = gson.toJson(exercises);
+        Log.v(TAG, jsonInString);
+        return jsonInString;
+    }
+    public static ExerciseRep[] convertStringToExercises(String jsonInString) {
+        Gson gson = new Gson();
+        ExerciseRep[] exercises = gson.fromJson(jsonInString, ExerciseRep[].class);
+        return exercises;
     }
 
 
-/*
-    public static Muscle[] convertStringToMuscles(String muscles){
-        JSONObject json = new JSONObject();
-        Muscle[] muscles1 = null;
-        JSONArray jArray = null;
-        try {
-             jArray = json.getJSONArray(muscles);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        if (jArray != null) {
-            muscles1 = new Muscle[jArray.length()];
-            muscles1 = jArray;
-
-        }
-        return muscles1;
+    public static Muscle[] convertMusclesToString(String jsonInString) {
+        Gson gson = new Gson();
+        Muscle[] muscles = gson.fromJson(jsonInString, Muscle[].class);
+        return muscles;
     }
-*/
 
     public static String getExerciseId(String url){
         return url.split("exercises")[1].split("/")[1];
@@ -420,6 +417,22 @@ public class Utilities {
             Log.e(TAG,"Exception: ",e);
         }
         return title;
+    }
+
+
+    public static String convertMusclesToByte(Muscle[] muscles){
+        Gson gson = new Gson();
+        return gson.toJson(muscles);
+    }
+
+    public static Muscle[] convertBytesToMuscles(byte[] bytes){
+
+        String json = new String(bytes);
+        Gson gson = new Gson();
+        Muscle[] muscles = gson.fromJson(json, new TypeToken<ArrayList<Muscle>>()
+        {}.getType());
+
+        return muscles;
     }
 
     public static void DownloadImage(final Context context, String url, final String imgName){

@@ -31,19 +31,17 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import static com.app.proj.silverbars.PlaylistPickerActivity.convertArrayToString;
 import static com.app.proj.silverbars.Utilities.CreateNewView;
 import static com.app.proj.silverbars.Utilities.DownloadImage;
-import static com.app.proj.silverbars.Utilities.convertArrayToString;
-import static com.app.proj.silverbars.Utilities.convertMusclesObjToString;
+import static com.app.proj.silverbars.Utilities.convertMusclesToString;
 import static com.app.proj.silverbars.Utilities.createExerciseAudio;
 import static com.app.proj.silverbars.Utilities.deleteCopiesofList;
 import static com.app.proj.silverbars.Utilities.getExerciseAudioName;
@@ -81,8 +79,8 @@ public class WorkoutActivity extends AppCompatActivity {
             RestSets_dialog,
             Sets_dialog;
 
-    private RecyclerView ExercisesRecycler;
-    private RecyclerView.Adapter adapter;
+    private RecyclerView RecyclerforExercises;
+    private ExerciseAdapter adapter;
     private WebView webview;
     private TextView Rest_by_exercise_dialog;
 
@@ -105,7 +103,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private int workoutId = 0, workoutSets = 0;
     private String workoutName, workoutLevel, mainMuscle, workoutImgUrl;
 
-    private ArrayList<ExerciseRep> exercisesToRecycler = new ArrayList<>();
+
 
     private  int ISOMETRIC = 0,CARDIO = 0,PYLOMETRICS = 0,STRENGTH = 0;
 
@@ -115,12 +113,12 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private String partes = "";
 
-    private  List<String> MusclesArray = new ArrayList<>();
-    private  List<String> TypeExercises = new ArrayList<>();
-    
     String PlaylistSpotify,Token;
 
-    ArrayList<ExerciseRep> exercises_json;
+
+    private  List<String> MusclesArray = new ArrayList<>();
+    private  List<String> TypeExercises = new ArrayList<>();
+    private ArrayList<ExerciseRep> exercises_json;
 
     
     @Override
@@ -136,7 +134,7 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutImgUrl = bundle.getString("image");
         workoutSets = bundle.getInt("sets", 1);
         workoutLevel = bundle.getString("level");
-        mainMuscle = bundle.getString("muscles");
+        mainMuscle = bundle.getString("main_muscle");
         Boolean user_workout = bundle.getBoolean("user_workout", false);
         exercises_json =  intent.getParcelableArrayListExtra("exercises");
 
@@ -173,11 +171,9 @@ public class WorkoutActivity extends AppCompatActivity {
                 DownloadAudioExercise = isChecked;
 
                 if (DownloadAudioExercise){
-
-                    if (exercisesToRecycler.size() > 0){
-
-                        for (int a = 0;a<exercisesToRecycler.size();a++){
-                            createExerciseAudio(WorkoutActivity.this, DownloadAudioExercise, exercisesToRecycler.get(a).getExercise().getExercise_name());
+                    if (exercises_json.size() > 0){
+                        for (int a = 0;a<exercises_json.size();a++){
+                            createExerciseAudio(WorkoutActivity.this, DownloadAudioExercise, exercises_json.get(a).getExercise().getExercise_name());
                         }
 
                     }
@@ -186,7 +182,7 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         });
         
-        ExercisesRecycler = (RecyclerView) findViewById(R.id.reciclador);
+        RecyclerforExercises = (RecyclerView) findViewById(R.id.reciclador);
 
         final RelativeLayout selectMusic = (RelativeLayout) findViewById(R.id.SelectMusic);
 
@@ -244,14 +240,14 @@ public class WorkoutActivity extends AppCompatActivity {
         Tab_layout.addTab(muscles);
 
 
-        if (ExercisesRecycler != null){
-            ExercisesRecycler.setNestedScrollingEnabled(false);
-            ExercisesRecycler.setHasFixedSize(false);
+        if (RecyclerforExercises != null){
+            RecyclerforExercises.setNestedScrollingEnabled(false);
+            RecyclerforExercises.setHasFixedSize(false);
         }
 
 
         RecyclerView.LayoutManager lManager = new LinearLayoutManager(this);
-        ExercisesRecycler.setLayoutManager(lManager);
+        RecyclerforExercises.setLayoutManager(lManager);
 
         ScrollView scrollView = (ScrollView) findViewById(R.id.muscles);
 
@@ -279,49 +275,64 @@ public class WorkoutActivity extends AppCompatActivity {
                     isTouched = false;
 
                     if (isChecked && !loadLocal){
-                        Log.v(TAG,"respuesta:"+respuesta_recibida);
                         saveExercisesinDatabase();
                     }else{
 
                         MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
                         loadLocal = false;
-                        database.updateLocal(workoutId,"false");
+                        database.updateWorkoutLocal(workoutId,"false");
                         logMessage("Switch off");
                     }
                 }
             }
         });
 
+        Log.v(TAG,"workoutId: "+workoutId);
+        Log.v(TAG, "local workout: "+database.checkLocalWorkouts(workoutId));
+
 
         //COMPROBAR SI EL WORKOUT ESTA ACTIVADO EN LA BASE DE DATOS - SAVED WORKOUTS
-        if (database.checkLocalWorkouts(workoutId) && Objects.equals(database.checkWorkoutLocal(workoutId), "true")){
-           /* loadLocal = true;
-            enableLocal.setChecked(true);
-            
-            
-            Workout[] workouts = database.getWorkout(workoutId);
+        if (Objects.equals(database.checkLocalWorkouts(workoutId), "true")){
+            //Log.v(TAG,"workoutId: "+workoutId);
 
-            
-            for (int i = 0; i < workouts.length; i++){
+
+            loadLocal = true;
+            enableLocal.setChecked(true);
+
+            WorkoutReps[] workouts_database = database.getExerciseReps(workoutId);
+            ArrayList<ExerciseRep> exerciseReps = new ArrayList<>();
+
+
+            for (int i =0;i < workouts_database.length;i++){
                 
-                Exercise exercise = database.getExercise(Integer.valueOf(workouts[i].getExerciseId()));
-                
+                Exercise exercise = database.getExercise(Integer.valueOf(workouts_database[i].getExercise()));
+
+                exerciseReps.add(new ExerciseRep(exercise, workouts_database[i].getRepetition(), 0));
+
+                //Log.v(TAG, exerciseReps.get(i).getExercise().getExercise_name());
+
+
+                for (Muscle muscle: exercise.getMuscles()) {
+                    Collections.addAll(MusclesArray, muscle.getMuscleName());
+                }
+
                 Collections.addAll(TypeExercises,exercise.getTypes_exercise());
 
-                Log.v(TAG,"MusclesArray: "+MusclesArray);
-                Log.v(TAG,"TypeExercises: "+TypeExercises);
-
-                //agregar json a array exercisesToRecycler
-                //exercisesToRecycler.add(exercise);
+                //Log.v(TAG,"MusclesArray: "+MusclesArray);
+                //Log.v(TAG,"TypeExercises: "+TypeExercises);
             }
-            
 
-            ExercisesRecycler.setAdapter(new ExerciseAdapter(this,exercisesToRecycler));
+
+
+            
+            adapter = new ExerciseAdapter(this,exerciseReps);
+            RecyclerforExercises.setAdapter(adapter);
+
             setMusclesToView(MusclesArray);
             putTypesInWorkout(TypeExercises);
-*/
+
         }else if (user_workout && database.checkUserWorkouts(workoutId) ){
-           /*
+          /*
             //USER WORKOUTS
             togle_no_internet.setVisibility(View.GONE);// this only for workouts in API
 
@@ -329,7 +340,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
             for (int i = 0; i < workout.length; i++){
 
-                Exercise exercise = database.getExercise(Integer.valueOf(workout[i].getExerciseId()));
+                Exercise exercise = database.getExercise(Integer.valueOf(workout[i].getExercises()));
                 Log.v(TAG,"Exercises"+exercise.getExercise_name());
 
                 
@@ -346,9 +357,10 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-            ExercisesRecycler.setAdapter(new ExerciseAdapter(this,exercisesToRecycler));
+            RecyclerforExercises.setAdapter(new ExerciseAdapter(this,exercisesToRecycler));
             setMusclesToView(MusclesArray);
-            putTypesInWorkout(TypeExercises);*/
+            putTypesInWorkout(TypeExercises);
+            */
 
         } else {
             
@@ -560,24 +572,22 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
     private void putExercisesInAdapter(ArrayList<ExerciseRep> exercises){
+        Log.v(TAG,"putExercisesInAdapter");
 
         for (ExerciseRep exerciseRep:exercises){
-
-            exercisesToRecycler.add(exerciseRep);
 
             Collections.addAll(TypeExercises, exerciseRep.getExercise().getTypes_exercise());
 
             for (Muscle muscle:  exerciseRep.getExercise().getMuscles()){
                 Collections.addAll(MusclesArray,muscle.getMuscleName());
             }
-
         }
 
-        ExercisesRecycler.setAdapter(new ExerciseAdapter(this,exercisesToRecycler));
+        adapter = new ExerciseAdapter(this,exercises);
+        RecyclerforExercises.setAdapter(adapter);
         setMusclesToView(MusclesArray);
         putTypesInWorkout(TypeExercises);
     }
-
 
 
     private void LaunchWorkingOutActivity() {
@@ -590,7 +600,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
         Intent intent = new Intent(this, WorkingOutActivity.class);
-        intent.putParcelableArrayListExtra("exercises", exercisesToRecycler);
+        intent.putParcelableArrayListExtra("exercises", adapter.getExercises());
         intent.putExtra("songs",Songs_names);
         intent.putExtra("songlist",Songs_files);
         intent.putExtra("Sets",sets);
@@ -603,7 +613,6 @@ public class WorkoutActivity extends AppCompatActivity {
         intent.putExtra("play_exercise_audio",DownloadAudioExercise);
         startActivity(intent);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -750,14 +759,17 @@ public class WorkoutActivity extends AppCompatActivity {
     @SuppressLint("SetJavaScriptEnabled")
     private void setMusclesToView(List<String> musculos){
         if (musculos.size() > 0){
-            List<String> musculos_oficial;
-            musculos_oficial = deleteCopiesofList(musculos);
+
+            List<String> musculos_oficial =  deleteCopiesofList(musculos);
+
 
             for (int a = 0;a<musculos_oficial.size();a++) {
+
                 final TextView MuscleTextView = new TextView(this);
                 partes += "#"+ musculos_oficial.get(a) + ",";
                 MuscleTextView.setText(musculos_oficial.get(a));
                 MuscleTextView.setGravity(Gravity.CENTER);
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     MuscleTextView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));
                 }else {
@@ -770,6 +782,8 @@ public class WorkoutActivity extends AppCompatActivity {
                     primary_ColumnMuscle.addView(MuscleTextView);
 
                 }
+
+
 
 
             }
@@ -806,58 +820,76 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-
-
     //guardar ejercicios en la base de datos
     private void saveExercisesinDatabase(){
 
-       /* MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
-        
-        for (int i = 0; i < exercisesToRecycler.size(); i++){
-            
-            if (!database.checkExercise(exercisesToRecycler.get(i).getExercise().getExerciseId()) ){
+       MySQLiteHelper database = new MySQLiteHelper(this);
+
+        for (int i = 0; i < exercises_json.size(); i++){
+            if (!database.checkExercise(exercises_json.get(i).getExercise().getExerciseId()) ){
+                String img_name,img_url,mp3_name,mp3_url;
                 File ExerciseImgFile,ExerciseMp3File;
-                ExerciseImgFile = getFileReady(this,"/SilverbarsImg/"+ getExerciseImageName(exercisesToRecycler.get(i).getExercise().getExercise_image()));
-                ExerciseMp3File = getFileReady(this,"/SilverbarsMp3/"+getExerciseAudioName(exercisesToRecycler.get(i).getExercise().getExercise_audio()));
+
+                img_name = getExerciseImageName(exercises_json.get(i).getExercise().getExercise_image());
+                img_url = exercises_json.get(i).getExercise().getExercise_image();
+                mp3_name = getExerciseAudioName(exercises_json.get(i).getExercise().getExercise_audio());
+
+                ExerciseImgFile = getFileReady(this,"/SilverbarsImg/"+ img_name);
+                ExerciseMp3File = getFileReady(this,"/SilverbarsMp3/"+ mp3_name);
 
                 if (!ExerciseImgFile.exists()){
-                    Log.v(TAG,"img url: "+ exercisesToRecycler.get(i).getExercise().getExercise_image());
-                    DownloadImage(this, exercisesToRecycler.get(i).getExercise().getExercise_image(), getExerciseImageName(exercisesToRecycler.get(i).getExercise().getExercise_image()));
+                    DownloadImage(this, img_url, img_name);
                 }
                 
                 database.insertExercises(
-                        exercisesToRecycler.get(i).getExercise().getExerciseId(),
-                        exercisesToRecycler.get(i).getExercise().getExercise_name(),
-                        exercisesToRecycler.get(i).getExercise().getLevel(),
-                        convertArrayToString(exercisesToRecycler.get(i).getExercise().getTypes_exercise()),
-                        convertMusclesObjToString(exercisesToRecycler.get(i).getExercise().getMuscles()),
+                        exercises_json.get(i).getExercise().getExerciseId(),
+                        exercises_json.get(i).getExercise().getExercise_name(),
+                        exercises_json.get(i).getExercise().getLevel(),
+                        convertArrayToString(exercises_json.get(i).getExercise().getTypes_exercise()),
+                        convertMusclesToString(exercises_json.get(i).getExercise().getMuscles()),
                         ExerciseMp3File.getPath(),
                         ExerciseImgFile.getPath()
                 );
             }else{
-                database.updateLocal(workoutId,"true");
+                database.updateWorkoutLocal(workoutId,"true");
             }
         }
-        saveWorkoutinTableWorkouts();*/
+
+        saveWorkout();
     }
 
-    private void saveWorkoutinTableWorkouts(){
-        
-        /*String[] exercises_ids = new String[exercisesToRecycler.size()];
+    private void insertExerciseReps() {
+        MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
+        for (int i = 0; i < exercises_json.size(); i++) {
+            if (!database.checkExerciseRep(workoutId, exercises_json.get(i).getExercise().getExerciseId())) {
+                database.insertExerciseRep(
+                        workoutId,
+                        exercises_json.get(i).getExercise().getExerciseId(),
+                        exercises_json.get(i).getRepetition()
+                );
+            }
+        }
+
+    }
+
+    private void saveWorkout(){
+
         MySQLiteHelper database = new MySQLiteHelper(this);
-        
         File WorkoutImgFile = getFileReady(this,"/SilverbarsImg/"+getWorkoutImage(workoutImgUrl));
-        
+
+
         if (!WorkoutImgFile.exists()){
-            Log.v(TAG,"img url "+workoutImgUrl);
+            //Log.v(TAG,"img url "+workoutImgUrl);
             DownloadImage(this,workoutImgUrl,getWorkoutImage(workoutImgUrl));
         }
 
+        String[] exercises_ids = new String[exercises_json.size()];
         for (int i = 0; i < exercises_ids.length; i++){
-            exercises_ids[i] = String.valueOf(exercisesToRecycler.get(i).getExercise().getExerciseId());
+            exercises_ids[i] = String.valueOf(exercises_json.get(i).getExercise().getExerciseId());
         }
+
         if (!database.checkLocalWorkouts(workoutId)) {
-            database.insertWorkouts(
+            database.insertLocalWorkout(
                     workoutId,
                     workoutName,
                     WorkoutImgFile.getPath(),
@@ -865,11 +897,11 @@ public class WorkoutActivity extends AppCompatActivity {
                     workoutLevel,
                     mainMuscle,
                     convertArrayToString(exercises_ids),
-                    1,
                     "true"
             );
-        }*/
+        }
 
+        insertExerciseReps();
     }
 
     private void getCountTimes(List<String> list){
@@ -894,20 +926,20 @@ public class WorkoutActivity extends AppCompatActivity {
         List<String> typesExercise_to_Layout;
         typesExercise_to_Layout = deleteCopiesofList(types);
 
-        Log.v(TAG,"typesExercise_to_Layout: "+typesExercise_to_Layout);
-        Log.v(TAG,"typesExercise_to_Layout size: "+typesExercise_to_Layout.size());
+        //Log.v(TAG,"typesExercise_to_Layout: "+typesExercise_to_Layout);
+        //Log.v(TAG,"typesExercise_to_Layout size: "+typesExercise_to_Layout.size());
 
 
-        Log.v(TAG,"ISOMETRIC: "+ISOMETRIC);
-        Log.v(TAG,"CARDIO: "+CARDIO);
-        Log.v(TAG,"PYLOMETRICS: "+PYLOMETRICS);
-        Log.v(TAG,"STRENGTH: "+STRENGTH);
+        //Log.v(TAG,"ISOMETRIC: "+ISOMETRIC);
+        //Log.v(TAG,"CARDIO: "+CARDIO);
+        //Log.v(TAG,"PYLOMETRICS: "+PYLOMETRICS);
+        //Log.v(TAG,"STRENGTH: "+STRENGTH);
 
 
         int ISOMETRIC_ = 0, CARDIO_ = 0, STRENGTH_ = 0, PYLOMETRICS_ = 0;
 
         if (ISOMETRIC > 0){
-            Log.v(TAG,"porcentaje ISOMETRIC: "+ISOMETRIC+"/"+types.size());
+            //Log.v(TAG,"porcentaje ISOMETRIC: "+ISOMETRIC+"/"+types.size());
             ISOMETRIC_ = (ISOMETRIC *100 / types.size());
             //Log.v(TAG,"porcentaje: "+ISOMETRIC_);
 
@@ -915,25 +947,25 @@ public class WorkoutActivity extends AppCompatActivity {
             contentInfo.addView(relativeLayout);
 
         }if (CARDIO > 0){
-            Log.v(TAG,"porcentaje CARDIO: "+CARDIO+"/"+types.size());
+            //Log.v(TAG,"porcentaje CARDIO: "+CARDIO+"/"+types.size());
             CARDIO_ = ( CARDIO*100 / types.size());
-            Log.v(TAG,"porcentaje: "+CARDIO_);
+            //Log.v(TAG,"porcentaje: "+CARDIO_);
 
             RelativeLayout relativeLayout = CreateNewView(this,getResources().getString(R.string.CARDIO),CARDIO_);
             contentInfo.addView(relativeLayout);
 
         }if (STRENGTH > 0){
-            Log.v(TAG,"porcentaje STRENGTH: "+STRENGTH+"/"+types.size());
+            //Log.v(TAG,"porcentaje STRENGTH: "+STRENGTH+"/"+types.size());
             STRENGTH_ = ((STRENGTH*100/ types.size()));
-            Log.v(TAG,"porcentaje: "+STRENGTH_);
+            //Log.v(TAG,"porcentaje: "+STRENGTH_);
 
             RelativeLayout relativeLayout = CreateNewView(this,getResources().getString(R.string.STRENGTH),STRENGTH_);
             contentInfo.addView(relativeLayout);
 
         }if (PYLOMETRICS > 0) {
-            Log.v(TAG, "porcentaje PYLOMETRICS: " + PYLOMETRICS + "/" + types.size());
+            //Log.v(TAG, "porcentaje PYLOMETRICS: " + PYLOMETRICS + "/" + types.size());
             PYLOMETRICS_ = ((PYLOMETRICS * 100 / types.size()));
-            Log.v(TAG, "porcentaje: " + PYLOMETRICS_);
+            //Log.v(TAG, "porcentaje: " + PYLOMETRICS_);
 
             RelativeLayout relativeLayout = CreateNewView(this,getResources().getString(R.string.PYLOMETRICS),PYLOMETRICS_);
             contentInfo.addView(relativeLayout);

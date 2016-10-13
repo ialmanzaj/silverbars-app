@@ -4,10 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.net.Uri;
-import android.os.Parcelable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +19,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.like.LikeButton;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -84,16 +81,12 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                 Uri uri = Uri.parse(workouts.get(position).getWorkout_image());
                 viewHolder.img.setImageURI(uri);
 
-
-
-
                 viewHolder.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-
                         ArrayList<ExerciseRep> exerciseRepList = new ArrayList<>();
-                        Collections.addAll(exerciseRepList, workouts.get(position).getExercises() );
+                        Collections.addAll(exerciseRepList, workouts.get(position).getExercises());
 
                         Intent i = new Intent(context, WorkoutActivity.class);
                         i.putExtra("workout_id", workouts.get(position).getWorkoutId());
@@ -101,7 +94,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
                         i.putExtra("image", workouts.get(position).getWorkout_image());
                         i.putExtra("sets", workouts.get(position).getSets());
                         i.putExtra("level", workouts.get(position).getLevel());
-                        i.putExtra("muscles", workouts.get(position).getMain_muscle());
+                        i.putExtra("main_muscle", workouts.get(position).getMainMuscle());
                         i.putParcelableArrayListExtra("exercises",  exerciseRepList);
                         context.startActivity(i);
                     }

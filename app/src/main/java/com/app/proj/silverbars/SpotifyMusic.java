@@ -292,12 +292,12 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
                     onAuthenticationComplete(response);
                     break;
                 case ERROR:
-                    logStatus("Auth error: " + response.getError());
+                    logStatus("TokenAuthenticator error: " + response.getError());
                     error_layout.setVisibility(View.VISIBLE);
                     auth_error = true;
                     break;
                 default:
-                    logStatus("Auth result: " + response.getType());
+                    logStatus("TokenAuthenticator result: " + response.getType());
                     error_layout.setVisibility(View.VISIBLE);
                     auth_error = true;
             }

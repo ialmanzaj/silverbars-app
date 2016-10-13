@@ -52,8 +52,8 @@ import static com.app.proj.silverbars.Utilities.quitarMp3;
 public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener, Player.NotificationCallback, ConnectionStateCallback {
 
     private static final String TAG ="WorkingOut ACTIVITY";
-
     private static final String CLIENT_ID = "20823679749441aeacf4e601f7d12270";
+
 
     static MediaPlayer mp;
     ArrayList<File> mySongs;
@@ -158,6 +158,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         isometric.setText(String.valueOf(exercisesforRecycler.get(0).getTempo_isometric()));
         negative.setText(String.valueOf(exercisesforRecycler.get(0).getTempo_negative()));
 
+        // controls UI
         prvLayout = (ImageButton) findViewById(R.id.prvExercise);
         nxtLayout = (ImageButton) findViewById(R.id.nxtExercise);
         nxtLayout.setVisibility(View.VISIBLE);
@@ -1156,8 +1157,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         registerReceiver(mNetworkStateReceiver, filter);
 
         if (mPlayer != null) {
-            mPlayer.addNotificationCallback(WorkingOutActivity.this);
-            mPlayer.addConnectionStateCallback(WorkingOutActivity.this);
+            mPlayer.addNotificationCallback(this);
+            mPlayer.addConnectionStateCallback(this);
         }
 
         if (onPause){
@@ -1176,8 +1177,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         
         unregisterReceiver(mNetworkStateReceiver);
         if (mPlayer != null) {
-            mPlayer.removeNotificationCallback(WorkingOutActivity.this);
-            mPlayer.removeConnectionStateCallback(WorkingOutActivity.this);
+            mPlayer.removeNotificationCallback(this);
+            mPlayer.removeConnectionStateCallback(this);
         }
     }
 

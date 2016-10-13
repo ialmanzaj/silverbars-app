@@ -97,10 +97,7 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
 
     @Override
     public int getItemCount() {
-
-        //Log.v(TAG,"getItemCount, size: "+mSelectedExercises.size());
         return mSelectedExercises.size();
-
     }
 
     public List<ExerciseRep> getSelectedExercisesJson(){
@@ -188,32 +185,8 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
         mSelectedExercises.get(a).setRepetition(1);
 
 
-        //Log.v(TAG,"Exercises selected: "+mSelectedExercises.get(a).getExercise_name());
-
         Uri uri = Uri.parse(mSelectedExercises.get(a).getExercise().getExercise_image());
         viewHolder.imagen.setImageURI(uri);
-
-
-
-        Bitmap bmp = null;
-        /*if (imageDir.length < 2){
-            String[] imageDir = mSelectedExercises.get(a).getExercise_image().split("exercises");
-            bmp = loadExerciseImageFromDevice(mContext,mSelectedExercises.get(a).getExercise_image());
-            viewHolder.imagen.setImageBitmap(bmp);
-        }else {
-            String Parsedurl = "exercises" + imageDir[1];
-            String[] imagesName = Parsedurl.split("/");
-            String imgName = imagesName[2];
-            bmp = loadExerciseImageFromDevice(mContext,imgName);
-
-            if (bmp != null) {
-                viewHolder.imagen.setImageBitmap(bmp);
-            } else {
-                DownloadImage(Parsedurl, viewHolder, imgName);
-            }
-        }*/
-
-
 
 
 
@@ -370,39 +343,7 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
 
     }
 
-    private void DownloadImage(final String url, final selectedExercisesViewHolder vh, final String imgName) {
-        Log.v(TAG,"DownloadImage()");
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
-                .build();
-        final SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
 
-        new AsyncTask<Void, Long, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                Call<ResponseBody> call = downloadService.downloadFile(url);
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        Bitmap bitmap = null;
-                        if (response.isSuccessful()) {
-                            boolean writtenToDisk = saveExerciseImageInDevice(mContext,response.body(),imgName);
-                            if(writtenToDisk){bitmap = loadExerciseImageFromDevice(mContext,imgName);}
-                            vh.imagen.setImageBitmap(bitmap);
-                        }
-                        else {
-                            Log.e(TAG, "Download server contact failed");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Log.v("Failure", t.toString());
-                    }
-                });
-                return null;
-            };
-        }.execute();
-    }
 
 
 }

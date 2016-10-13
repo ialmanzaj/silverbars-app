@@ -38,20 +38,21 @@ public class SavedWorkoutsFragment extends Fragment {
             }
         });
 
-       /* MySQLiteHelper database = new MySQLiteHelper(getContext());
-        if (database.getWorkouts(1) != null){
+        MySQLiteHelper database = new MySQLiteHelper(getActivity());
 
+        if (database.getLocalWorkouts() != null){
             local_workouts.setVisibility(View.VISIBLE);
+
             List<Workout> workouts = new ArrayList<>();
-            Workout[] ParsedWorkouts = database.getWorkouts(1);
-            Collections.addAll(workouts, ParsedWorkouts);
+            Workout[] databaseWorkouts = database.getLocalWorkouts();
+            Collections.addAll(workouts, databaseWorkouts);
+
+
 
             local_workouts.setAdapter(new savedWorkoutAdapter(getActivity(),workouts,false));
-
         }else {
             EmpyStateSavedWorkout.setVisibility(View.VISIBLE);
         }
-*/
 
         return rootview;
     }

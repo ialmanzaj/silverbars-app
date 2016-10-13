@@ -11,6 +11,12 @@ repositories {
 }
 
 android {
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+
     lintOptions {
         abortOnError false
     }
@@ -29,8 +35,7 @@ android {
 
     dexOptions
             {
-
-                javaMaxHeapSize "2048M"
+                javaMaxHeapSize "12g"
                 preDexLibraries = false
             }
 
@@ -94,7 +99,7 @@ dependencies {
     compile 'io.reactivex:rxandroid:0.23.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.squareup.okhttp3:okhttp:3.3.1'
+
     compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
     compile 'com.google.guava:guava:18.0'
     compile 'com.github.inaka:tinytask:v1'
@@ -108,12 +113,21 @@ dependencies {
     compile 'com.facebook.fresco:fresco:0.13.0'
     compile 'com.android.support:multidex:1.0.1'
 
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+
+
+    compile 'com.fasterxml.jackson.core:jackson-core:2.5.3'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.5.3'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.5.3'
+
     compile('com.crashlytics.sdk.android:crashlytics:2.6.4@aar') {
         transitive = true;
     }
 
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
+
 
 }
 

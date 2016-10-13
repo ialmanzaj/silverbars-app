@@ -12,21 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class ExerciseListActivity extends AppCompatActivity {
@@ -40,19 +28,20 @@ public class ExerciseListActivity extends AppCompatActivity {
     private ArrayList<String> exercises_id = new ArrayList<>();
     List<Exercise> OriginalExerciseListAll = new ArrayList<>();
     List<Exercise> ExercisesNoSelected = new ArrayList<>();
-    ArrayList<String> SelectedItemsIds = new ArrayList<>();
+    ArrayList<String> ExercisesSelected = new ArrayList<>();
 
     private LinearLayout error_layout;
     private LinearLayout Progress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_exercise_list);
 
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         if (toolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -86,7 +75,6 @@ public class ExerciseListActivity extends AppCompatActivity {
         recycler.setLayoutManager(new LinearLayoutManager(this));
 
 
-
         add_button = (Button) findViewById(R.id.done_button);
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +84,6 @@ public class ExerciseListActivity extends AppCompatActivity {
                         exercises_id.add(OriginalExerciseListAll.get(i).getExercise_name());
                     }
                 }
-
 
                 // enviar items a la actividad anterior
                 Intent return_Intent = new Intent();
@@ -114,67 +101,60 @@ public class ExerciseListActivity extends AppCompatActivity {
 
     private void getExercisesFromAPI() {
 
+
         AuthPreferences authPreferences = new AuthPreferences(this);
-        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class,authPreferences.getToken());
+        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class, authPreferences.getAccessToken());
 
-        Call<Exercise[]> call = service.getAllExercises();
-        call.enqueue(new Callback<Exercise[]>() {
-            @Override
-            public void onResponse(Call<Exercise[]> call, Response<Exercise[]> response) {
-                if (response.isSuccessful()) {
-                    onErrorOff();
-                    
-                    Collections.addAll(OriginalExerciseListAll,response.body());
-                    Log.v(TAG,"OriginalExerciseListAll size: "+OriginalExerciseListAll.size());
+        RestAPI restAPI = new RestAPI(service);
 
-                    
-                    try {
 
-                        Intent i = getIntent();
-                        Bundle b = i.getExtras();
+        OriginalExerciseListAll = restAPI.getAllExercises();
+        Log.v(TAG,"OriginalExerciseListAll size: "+OriginalExerciseListAll.size());
 
-                        SelectedItemsIds = b.getStringArrayList("items_selected");
-                        Log.v(TAG,"items recibido: "+SelectedItemsIds);
+        if (!OriginalExerciseListAll.isEmpty()){
+            onErrorOff();
 
-                        ExercisesNoSelected = OriginalExerciseListAll;
 
-                        for (int c = 0;c < SelectedItemsIds.size();c++){
-                            for (int a = 0; a < OriginalExerciseListAll.size(); a++){
+            try {
 
-                                //ejercicio seleccionado lo elimina en la siguiente seleccion
-                                if (Objects.equals(OriginalExerciseListAll.get(a).getExercise_name(), SelectedItemsIds.get(c))){
-                                    ExercisesNoSelected.remove(a);
-                                }
-                            }
+                Intent i = getIntent();
+                Bundle b = i.getExtras();
+
+                ExercisesSelected = b.getStringArrayList("exercises");
+                Log.v(TAG,"exercise recibido: "+ExercisesSelected);
+
+                ExercisesNoSelected = OriginalExerciseListAll;
+
+                for (int c = 0;c < ExercisesSelected.size();c++){
+                    for (int a = 0; a < OriginalExerciseListAll.size(); a++){
+
+                        //ejercicio seleccionado lo elimina en la siguiente seleccion
+                        if (Objects.equals(OriginalExerciseListAll.get(a).getExercise_name(), ExercisesSelected.get(c))){
+                            ExercisesNoSelected.remove(a);
                         }
-                    }catch (NullPointerException e){
-                        Log.i(TAG, "no se ha seleccionado ningun ejercicio todavia");
                     }
-
-
-                    if (ExercisesNoSelected.isEmpty()){
-                        adapter = new AllExercisesAdapter(ExerciseListActivity.this,OriginalExerciseListAll);
-                       
-                    }else {
-                        adapter = new AllExercisesAdapter(ExerciseListActivity.this,ExercisesNoSelected);
-                        
-                    }
-
-                    recycler.setAdapter(adapter);
-                    
-                } else {
-                    
-                    Log.e(TAG,"statusCode"+response.code());
-                    onErrorOn();
                 }
+            }catch (NullPointerException e){
+                Log.i(TAG, "no se ha seleccionado ningun ejercicio todavia");
             }
 
-            @Override
-            public void onFailure(Call<Exercise[]> call, Throwable t) {
-                Log.e(TAG,"onFailure: ",t);
-                onErrorOn();
+
+            if (ExercisesNoSelected.isEmpty()){
+
+                adapter = new AllExercisesAdapter(ExerciseListActivity.this,OriginalExerciseListAll);
+
+            }else {
+
+                adapter = new AllExercisesAdapter(ExerciseListActivity.this,ExercisesNoSelected);
             }
-        });
+
+            recycler.setAdapter(adapter);
+
+        }else {
+
+            onErrorOn();
+        }
+
     }
     
     private void onErrorOn(){

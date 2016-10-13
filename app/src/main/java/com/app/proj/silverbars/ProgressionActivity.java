@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -18,10 +17,8 @@ import android.widget.ScrollView;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -34,7 +31,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.app.proj.silverbars.Utilities.CreateProgression;
 import static com.app.proj.silverbars.Utilities.injectJS;
-import static com.app.proj.silverbars.Utilities.removeLastChar;
 
 public class ProgressionActivity extends AppCompatActivity {
     private static final String TAG = "PROGRESSION ACTIVITY";
@@ -76,7 +72,7 @@ public class ProgressionActivity extends AppCompatActivity {
 
 
         authPreferences = new AuthPreferences(this);
-        getProgressionAPI(authPreferences.getToken());
+        getProgressionAPI(authPreferences.getAccessToken());
 
         ScrollView scrollView = (ScrollView) findViewById(R.id.muscles);
 

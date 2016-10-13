@@ -28,21 +28,9 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.app.proj.silverbars.Utilities.deleteCopiesofList;
 import static com.app.proj.silverbars.Utilities.injectJS;
@@ -60,10 +48,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     private ItemTouchHelper mItemTouchHelper;
 
     private  List<String> MusclesArray = new ArrayList<>();
-
-    private static String strSeparator = "__,__";
-
-    Exercise[] parsedExercises;
 
     private String partes = "";
     public static Activity create;
@@ -134,15 +118,19 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             @Override
             public void onClick(View view) {
                 if ( adapter != null ){
+
                     if (adapter.getItemCount() > 0){
+
                         Intent intent = new Intent(CreateWorkoutActivity.this, CreateWorkoutFinalActivity.class);
                         intent.putExtra("exercises", adapter.getSelectedExercisesName());
                         intent.putExtra("reps",adapter.getExerciseReps());
                         startActivityForResult(intent,3);
+
                     }else {
                         Toast.makeText(CreateWorkoutActivity.this, getResources().getString(R.string.exercises_no_selected),
                                 Toast.LENGTH_SHORT).show();
                     }
+
                 }else {
                     Toast.makeText(CreateWorkoutActivity.this, getResources().getString(R.string.exercises_no_selected),
                             Toast.LENGTH_SHORT).show();
@@ -169,8 +157,8 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CreateWorkoutActivity.this,ExerciseListActivity.class);
-                intent.putExtra("items_selected",adapter.getSelectedExercisesName() );
-                Log.v(TAG,"items_selected"+adapter.getSelectedExercisesName() );
+                intent.putExtra("exercises",adapter.getSelectedExercisesName() );
+                Log.v(TAG,"exercises: "+adapter.getSelectedExercisesName() );
                 startActivityForResult(intent,2);
             }
         });
@@ -205,6 +193,66 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     }//  close create workout
 
+    private void putExercisesinRecycler(final ArrayList<String> new_items_to_list){
+        //Log.v(TAG,"putExercisesinRecycler: "+new_items_to_list);
+
+        setEmptyContentOff();
+
+        AuthPreferences authPreferences = new AuthPreferences(this);
+        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class,authPreferences.getAccessToken());
+
+
+        RestAPI  restAPI = new RestAPI(service);
+
+        List<Exercise> AllExercisesList = restAPI.getAllExercises();
+
+        for (int c = 0;c < new_items_to_list.size();c++){
+            for (int a = 0; a < AllExercisesList.size(); a++){
+
+                // si el item seleccionado esta en  la lista principal agregalo
+                //Log.v(TAG,""+AllExercisesList.get(a).getExercise_name()+" : "+new_items_to_list.get(c));
+
+                if (Objects.equals(AllExercisesList.get(a).getExercise_name(), new_items_to_list.get(c))){
+                    //.v(TAG,""+AllExercisesList.get(a).getExercise_name()+":"+exercises_ids_from_activity.get(c));
+                    if (adapter == null){
+
+                        ExercisesToAdapter.add(new ExerciseRep(AllExercisesList.get(a)));
+
+                    }else {
+
+                        ExercisesToAdapter.add(new ExerciseRep(AllExercisesList.get(a)));
+                        //Log.v(TAG,"ITEM INSERTED:"+(ExercisesToAdapter.size()));
+                        adapter.notifyItemInserted(ExercisesToAdapter.size());
+
+                    }
+
+                    //Collections.addAll(TypeExercises,ExercisesToAdapter.get(a).getTypes_exercise());
+                    //Log.v(TAG,"TypeExercises"+TypeExercises);
+
+                    for (int b = 0; b < ExercisesToAdapter.get(c).getExercise().getMuscles().length; b++){
+                        String name;
+                        name = ExercisesToAdapter.get(c).getExercise().getMuscles()[b].getMuscleName();
+                        MusclesArray.add(name);
+                    }
+                }
+            }
+        }
+
+
+
+        adapter = new RecyclerExerciseSelectedAdapter(this,ExercisesToAdapter,this);
+        recycler.setAdapter( adapter );
+
+        setMusclesToView(MusclesArray);
+        //putTypesInWorkout(TypeExercises);
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        mItemTouchHelper  = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(recycler);
+
+
+    }
+
 
 
     @Override
@@ -237,11 +285,9 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
 
             }
-
         }
-
-
     }
+
 
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -299,92 +345,15 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         }
     }
 
-    private void setEmpty_contentOn(){
+    private void setEmptyContentOff(){
         empty_content.setVisibility(View.GONE);
         re_addExercise.setVisibility(View.VISIBLE);
         recycler.setVisibility(View.VISIBLE);
-
     }
 
-    private void putExercisesinRecycler(final ArrayList<String> new_items_to_list){
-        Log.v(TAG,"putExercisesinRecycler: "+new_items_to_list);
-
-        setEmpty_contentOn();
-
-        AuthPreferences authPreferences = new AuthPreferences(this);
-        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class,authPreferences.getToken());
-
-        Call<Exercise[]> call = service.getAllExercises();
-        call.enqueue(new Callback<Exercise[]>() {
-            @Override
-            public void onResponse(Call<Exercise[]> call, Response<Exercise[]> response) {
-
-                if (response.isSuccessful()) {
-
-                    parsedExercises = response.body();
-
-                    List<Exercise> AllExercisesList = new ArrayList<>();
-
-                    Collections.addAll(AllExercisesList,parsedExercises);
-
-                    for (int c = 0;c < new_items_to_list.size();c++){
-                        for (int a = 0; a < AllExercisesList.size(); a++){
-
-                            // si el item seleccionado esta en  la lista principal agregalo
-                            //Log.v(TAG,""+AllExercisesList.get(a).getExercise_name()+" : "+new_items_to_list.get(c));
-
-                            if (Objects.equals(AllExercisesList.get(a).getExercise_name(), new_items_to_list.get(c))){
-                                //.v(TAG,""+AllExercisesList.get(a).getExercise_name()+":"+exercises_ids_from_activity.get(c));
-                                if (adapter == null){
-
-
-                                    ExercisesToAdapter.add(new ExerciseRep(AllExercisesList.get(a)));
-
-                                }else {
-
-                                    ExercisesToAdapter.add(new ExerciseRep(AllExercisesList.get(a)));
-                                    Log.v(TAG,"ITEM INSERTED:"+(ExercisesToAdapter.size()));
-                                    adapter.notifyItemInserted(ExercisesToAdapter.size());
-
-                                }
-
-                                //Collections.addAll(TypeExercises,ExercisesToAdapter.get(a).getTypes_exercise());
-                                //Log.v(TAG,"TypeExercises"+TypeExercises);
-
-                                for (int b = 0; b < ExercisesToAdapter.get(c).getExercise().getMuscles().length; b++){
-                                    String name;
-                                    name = ExercisesToAdapter.get(c).getExercise().getMuscles()[b].getMuscleName();
-                                    MusclesArray.add(name);
-                                }
-                            }
-                        }
-                    }
 
 
 
-                    adapter = new RecyclerExerciseSelectedAdapter(CreateWorkoutActivity.this,ExercisesToAdapter,CreateWorkoutActivity.this);
-                    recycler.setAdapter( adapter );
-
-                    setMusclesToView(MusclesArray);
-                    //putTypesInWorkout(TypeExercises);
-
-                    ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
-                    mItemTouchHelper  = new ItemTouchHelper(callback);
-                    mItemTouchHelper.attachToRecyclerView(recycler);
-
-                } else {
-
-                    Log.e(TAG,"statusCode: "+response.code());
-                }
-            }
-            @Override
-            public void onFailure(Call<Exercise[]> call, Throwable t) {
-                Log.e(TAG,"onFailure: ",t);
-            }
-        });
-
-
-    }
 
 
     private  int ISOMETRIC = 0,CARDIO = 0,PYLOMETRICS = 0,STRENGTH = 0;

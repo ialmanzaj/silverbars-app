@@ -77,23 +77,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(TAG,"Main screenActivity creada");
+        Log.v(TAG,"Main Activity creada");
         setContentView(R.layout.activity_main_screen);
         FacebookSdk.sdkInitialize(getApplicationContext());
-
-        AuthPreferences authPreferences = new AuthPreferences(this);
-        Authenticator authenticator = new Authenticator(this);
-
-        if (authPreferences.getToken().isEmpty()){
-            authenticator.getInitalAccessToken(AccessToken.getCurrentAccessToken().getToken());
-        }
 
 
         if (!Fresco.hasBeenInitialized()){
             Fresco.initialize(this);
         }
-
-        Fabric.with(this, new Crashlytics());
 
 
         MainScreenActivity = this;
