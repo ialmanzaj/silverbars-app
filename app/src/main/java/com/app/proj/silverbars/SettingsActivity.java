@@ -32,7 +32,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (toolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Opciones");
-            toolbar.setNavigationIcon(R.drawable.ic_clear_white_24dp);
+            toolbar.setNavigationIcon(R.drawable.ic_clear_white_24px);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -61,7 +61,6 @@ public class SettingsActivity extends AppCompatActivity {
                                 LoginManager.getInstance().logOut();
                                 saveLogOut();
                                 finish();
-                                MainActivity.MainScreenActivity.finish();
                                 startActivity(new Intent(SettingsActivity.this,LoginActivity.class));
                             }
                         })

@@ -18,7 +18,7 @@
             android:id="@+id/create_playlist"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_add_white_36dp"
+            android:src="@drawable/ic_add_white_24px"
             android:background="@color/transparent"
             android:layout_gravity="right"
             android:layout_marginEnd="10dp"/>

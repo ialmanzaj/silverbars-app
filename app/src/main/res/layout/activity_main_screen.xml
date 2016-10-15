@@ -82,7 +82,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="15dp"
-            android:src="@drawable/ic_add_white_24dp"
+            android:src="@drawable/ic_add_white_24px"
             app:fabSize="normal"
             app:backgroundTint="@color/colorSecondary"
             android:layout_alignParentEnd="true" />

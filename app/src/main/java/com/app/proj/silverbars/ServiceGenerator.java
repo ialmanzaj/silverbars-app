@@ -41,12 +41,9 @@ public class ServiceGenerator {
         return createService(serviceClass,null);
     }
 
-    public static <S> S createService(Class<S> serviceClass, String token) {
+    public static <S> S createService(Class<S> serviceClass, final String token) {
         if (token != null) {
-            Gson gson = new Gson();
 
-            final AccessToken accessToken = gson.fromJson(token,AccessToken.class);
-            Log.v(TAG,"Token: "+accessToken.getAccess_token());
 
             //logging interceptor
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -60,7 +57,7 @@ public class ServiceGenerator {
                     Request original = chain.request();
                     Request.Builder requestBuilder = original.newBuilder()
                             .header("Accept", "application/json")
-                            .header("Authorization", "Bearer " + accessToken.getAccess_token())
+                            .header("Authorization", "Bearer " + token)
                             .method(original.method(), original.body());
 
                     Request request = requestBuilder.build();
@@ -80,9 +77,11 @@ public class ServiceGenerator {
     public static <S> S createService(final Class<S> serviceClass, final String token, final Context context) {
         if (token != null && context != null) {
 
-            final Gson gson = new Gson();
-            final AccessToken accessToken = gson.fromJson(token,AccessToken.class);
-            Log.v(TAG,"Token: "+accessToken.getAccess_token());
+            //logging interceptor
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            httpClient.addInterceptor(logging);
 
             httpClient.addInterceptor(new Interceptor() {
                 @Override
@@ -90,7 +89,7 @@ public class ServiceGenerator {
                     Request original = chain.request();
                     Request.Builder requestBuilder = original.newBuilder()
                             .header("Accept", "application/json")
-                            .header("Authorization", "Bearer " + accessToken.getAccess_token())
+                            .header("Authorization", "Bearer " + token)
                             .method(original.method(), original.body());
                     Request request = requestBuilder.build();
                     Response response = chain.proceed(request);
@@ -106,32 +105,22 @@ public class ServiceGenerator {
                     System.out.println("Authenticating for response: " + response);
                     System.out.println("Challenges: " + response.challenges());
 
-                    final AuthPreferences preferences = new AuthPreferences(context);
-
-                    LoginService loginService = ServiceGenerator.createService(LoginService.class);
-                    Call<AccessToken> call = loginService.getRefreshAccessToken("refresh_token",CONSUMER_KEY,CONSUMER_SECRET,accessToken.getRefresh_token());
-
-                    AccessToken refresh_token = call.execute().body();
-
-                    if (refresh_token != null){
-
-                        String new_token = gson.toJson(refresh_token,AccessToken.class);
-                        preferences.setAccessToken(new_token);
-
-                        if (responseCount(response) >= 1) {
-                            return null; // If we've failed 3 times, give up.
-                        }
+                    TokenAuthenticator tokenAuthenticator = new TokenAuthenticator(context);
+                    tokenAuthenticator.setRefreshToken(token);
+                    String refresh_token = tokenAuthenticator.getToken();
 
 
-                        return response.request().newBuilder()
-                                .header("Accept", "application/json")
-                                .header("Authorization", "Bearer " + refresh_token.getAccess_token())
-                                .build();
 
-                    }else {
-
-                        return null;
+                    if (responseCount(response) >= 3) {
+                        return null; // If we've failed 3 times, give up.
                     }
+
+
+                    return response.request().newBuilder()
+                            .header("Accept", "application/json")
+                            .header("Authorization", "Bearer " + refresh_token)
+                            .build();
+
                 }
 
                 private int responseCount(Response response) {

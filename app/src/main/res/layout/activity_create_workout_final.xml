@@ -65,7 +65,7 @@
                         android:layout_centerVertical="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_camera_alt_black_24dp"
+                        android:src="@drawable/ic_camera_alt_black_24px"
                         android:id="@+id/imgProfile" />
                     <ImageView
                         android:layout_alignParentBottom="true"

@@ -72,7 +72,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         if (toolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(getResources().getString(R.string.text_create_workout));
-            toolbar.setNavigationIcon(R.drawable.ic_clear_white_24dp);
+            toolbar.setNavigationIcon(R.drawable.ic_clear_white_24px);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -202,9 +202,9 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class,authPreferences.getAccessToken());
 
 
-        RestAPI  restAPI = new RestAPI(service);
+       // RestAPI  restAPI = new RestAPI(service);
 
-        List<Exercise> AllExercisesList = restAPI.getAllExercises();
+        List<Exercise> AllExercisesList = //restAPI.getAllExercises();
 
         for (int c = 0;c < new_items_to_list.size();c++){
             for (int a = 0; a < AllExercisesList.size(); a++){

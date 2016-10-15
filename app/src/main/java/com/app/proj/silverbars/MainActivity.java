@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MAIN SCREEN ACTIVITY";
     private ViewPager view;
-    private SimpleTabAdapter adapter;
+
     private Button songs;
     private String email,name;
     private int id;
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton ButtonCreateWorkout;
     LinearLayout settings;
 
-    public static Activity MainScreenActivity;
+
 
 
     @Override
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        MainScreenActivity = this;
+
 
 
         settings = (LinearLayout) findViewById(R.id.settings);
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         drawerList = (ListView) findViewById(R.id.left_drawer);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24px);
         toolbar.setTitle(tagTitles[0]);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -126,9 +126,9 @@ public class MainActivity extends AppCompatActivity {
         Button_filter = (LinearLayout) toolbar.findViewById(R.id.Sort);
 
         final ArrayList<DrawerItem> items_drawer = new ArrayList<DrawerItem>();
-        items_drawer.add(new DrawerItem(tagTitles[0],R.drawable.ic_home_black_24dp));
+        items_drawer.add(new DrawerItem(tagTitles[0],R.drawable.ic_home_black_24px));
         items_drawer.add(new DrawerItem(tagTitles[1],R.drawable.ic_apps_black_24dp));
-        items_drawer.add(new DrawerItem(tagTitles[2],R.drawable.ic_person_outline_black_24dp));
+        items_drawer.add(new DrawerItem(tagTitles[2],R.drawable.ic_person_outline_black_24px));
 
 
 

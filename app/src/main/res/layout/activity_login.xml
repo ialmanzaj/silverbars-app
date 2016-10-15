@@ -17,7 +17,7 @@
 
         <ImageView
             android:id="@+id/logo"
-            android:src="@drawable/silverbars_logo_black"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -82,7 +82,7 @@
 
         <Button
             android:layout_centerHorizontal="true"
-            android:background="@color/blue"
+            android:background="@color/thirdColor"
             android:text="Login with facebook"
             android:id="@+id/login_button"
             android:layout_width="wrap_content"

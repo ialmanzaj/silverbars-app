@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+/**
+ * Created by isaacalmanza on 09/23/16.
+ */
 /**
  * TODO: document your custom view class.
  */

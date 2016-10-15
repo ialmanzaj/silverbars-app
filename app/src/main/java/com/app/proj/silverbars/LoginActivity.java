@@ -196,16 +196,11 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void FacebookLogin(String facebook_token) {
-
-
         logo.setVisibility(View.GONE);
         mProgressView.setVisibility(View.VISIBLE);
 
 
-
         LoginService loginService = ServiceGenerator.createService(LoginService.class);
-        final AuthPreferences authPreferences = new AuthPreferences(this);
-
 
         Call<AccessToken> call = loginService.getAccessToken("convert_token",CONSUMER_KEY,CONSUMER_SECRET,"facebook",facebook_token);
         call.enqueue(new Callback<AccessToken>() {
@@ -214,6 +209,8 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Gson gson = new Gson();
 
+
+                    AuthPreferences authPreferences = new AuthPreferences(LoginActivity.this);
                     String token = gson.toJson(response.body(),AccessToken.class);
                     authPreferences.setAccessToken(token);
 

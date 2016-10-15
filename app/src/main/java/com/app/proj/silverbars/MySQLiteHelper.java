@@ -20,9 +20,6 @@ import static com.app.proj.silverbars.Utilities.convertStringToArray;
 import static com.app.proj.silverbars.Utilities.convertStringToExercises;
 import static com.app.proj.silverbars.Utilities.getUrlReady;
 
-/**
- * Created by andre_000 on 5/18/2016.
- */
 
 public class MySQLiteHelper extends SQLiteOpenHelper {
 
@@ -47,11 +44,15 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String KEY_EMAIL = "email";
     public static final String KEY_NAME = "name";
     public static final String KEY_ACTIVE = "active";
+
+
     //    Playlists Table Columns names
     public static final String KEY_IDPLIST = "id";
     public static final String KEY_PNAME = "name";
     public static final String KEY_SONGNAME = "songname";
     private static final String KEY_USERID = "user_id";
+
+
     //    Workouts table Columns names
     public static final String KEY_IDWORKOUTS = "id";
     public static final String KEY_WORKOUTNAME = "workout_name";
@@ -61,11 +62,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String KEY_MAINMUSCLE = "main_muscle";
     public static final String KEY_EXERCISES = "exercises";
     public static final String KEY_LOCAL = "local";
+
     //    Workout table Columns names
     public static final String KEY_IDWORKOUT = "id";
     public static final String KEY_WORKOUTSID = "workout_id";
     public static final String KEY_WORKOUTEX = "exercise";
     public static final String KEY_REPETITION = "repetition";
+
+
     //    Exercises table Column names
     public static final String KEY_ID_EXERCISE_LOCAL = "idLocal";
     public static final String KEY_IDEXERCISE = "id";
