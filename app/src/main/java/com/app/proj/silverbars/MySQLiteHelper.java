@@ -19,7 +19,9 @@ import java.util.Arrays;
 import static com.app.proj.silverbars.Utilities.convertStringToArray;
 import static com.app.proj.silverbars.Utilities.convertStringToExercises;
 import static com.app.proj.silverbars.Utilities.getUrlReady;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 
 public class MySQLiteHelper extends SQLiteOpenHelper {
 

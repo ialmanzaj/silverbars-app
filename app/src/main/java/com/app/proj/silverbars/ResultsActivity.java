@@ -27,6 +27,9 @@ import static com.app.proj.silverbars.Utilities.CreateNewViewProgression;
 import static com.app.proj.silverbars.Utilities.deleteCopiesofList;
 import static com.app.proj.silverbars.Utilities.injectJS;
 
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 public class ResultsActivity extends AppCompatActivity {
 
     private static final String TAG = "ResultsActivity";

@@ -15,7 +15,9 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     private static final String TAG = "SettingsActivity";

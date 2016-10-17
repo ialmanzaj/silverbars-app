@@ -3,9 +3,6 @@ package com.app.proj.silverbars;
 /**
  * Created by isaacalmanza on 08/05/16.
  */
-
-
-
 import android.support.v7.widget.helper.ItemTouchHelper;
 
 /**

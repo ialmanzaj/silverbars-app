@@ -47,7 +47,9 @@ import kaaes.spotify.webapi.android.models.UserPrivate;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.client.Response;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 
 public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateCallback {
 

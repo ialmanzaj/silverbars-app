@@ -17,6 +17,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 public class FinalExercisesAdapter extends RecyclerView.Adapter<FinalExercisesAdapter.ExerciseViewHolder> {
 
     private static final String TAG = "FinalExercisesAdapter";

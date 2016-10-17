@@ -1,7 +1,7 @@
 package com.app.proj.silverbars;
 
 /**
- * Created by andre_000 on 6/29/2016.
+ * Created by isaacalmanza on 10/04/16.
  */
 public class SpotifyAdapter {
 

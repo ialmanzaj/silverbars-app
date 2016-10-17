@@ -1,5 +1,7 @@
 package com.app.proj.silverbars;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 
 public class User {
 

@@ -48,7 +48,9 @@ import static com.app.proj.silverbars.Utilities.SongArtist;
 import static com.app.proj.silverbars.Utilities.SongName;
 import static com.app.proj.silverbars.Utilities.getExerciseAudioName;
 import static com.app.proj.silverbars.Utilities.quitarMp3;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener, Player.NotificationCallback, ConnectionStateCallback {
 
     private static final String TAG ="WorkingOut ACTIVITY";

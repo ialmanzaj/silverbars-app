@@ -23,7 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
 
     private static final String TAG = "EXERCISE ADAPTER";

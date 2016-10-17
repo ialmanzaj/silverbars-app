@@ -50,7 +50,9 @@ import static com.app.proj.silverbars.Utilities.getFileReady;
 import static com.app.proj.silverbars.Utilities.getWorkoutImage;
 import static com.app.proj.silverbars.Utilities.injectJS;
 import static com.app.proj.silverbars.Utilities.removeLastChar;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 
 public class WorkoutActivity extends AppCompatActivity {
 

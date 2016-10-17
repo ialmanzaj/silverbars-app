@@ -31,7 +31,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.app.proj.silverbars.Utilities.CreateProgression;
 import static com.app.proj.silverbars.Utilities.injectJS;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 public class ProgressionActivity extends AppCompatActivity {
     private static final String TAG = "PROGRESSION ACTIVITY";
     private WebView webview;

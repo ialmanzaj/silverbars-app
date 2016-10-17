@@ -26,7 +26,9 @@ import retrofit2.Retrofit;
 
 import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
 import static com.app.proj.silverbars.Utilities.saveExerciseImageInDevice;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 
 public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapter.AllExercisesViewHolder> {
 

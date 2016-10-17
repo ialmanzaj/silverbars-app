@@ -4,7 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 public class Exercise implements Parcelable {
 
     @SerializedName("id")

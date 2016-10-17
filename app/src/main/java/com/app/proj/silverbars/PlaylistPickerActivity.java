@@ -28,6 +28,10 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 public class PlaylistPickerActivity extends AppCompatActivity {
 
     private static final String TAG = "PlaylistPickerActivity";

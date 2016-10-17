@@ -2,7 +2,9 @@ package com.app.proj.silverbars;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 
 public class Workout implements Parcelable {
 

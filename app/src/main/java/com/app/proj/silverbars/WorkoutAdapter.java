@@ -21,7 +21,9 @@ import com.like.LikeButton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 
 public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
 

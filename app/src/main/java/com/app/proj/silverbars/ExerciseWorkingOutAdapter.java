@@ -20,7 +20,9 @@ import java.util.List;
 
 import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
 
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 // ADAPTER FOR WORKING OUT ACTIVITY
 public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWorkingOutAdapter.WorkoutsViewHolder> {
 

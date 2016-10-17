@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 public class ProgressAdapter extends RecyclerView.Adapter<ProgressAdapter.ProgressViewHolder> {
     private List<ProgressInfo> items;
     private Context context;

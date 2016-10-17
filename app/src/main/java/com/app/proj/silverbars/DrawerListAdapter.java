@@ -9,7 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 public class DrawerListAdapter extends ArrayAdapter<DrawerItem> {
 
     public DrawerListAdapter(Context context, List objects) {

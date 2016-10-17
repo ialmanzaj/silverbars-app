@@ -5,7 +5,9 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 public interface LoginService {
 
     @FormUrlEncoded

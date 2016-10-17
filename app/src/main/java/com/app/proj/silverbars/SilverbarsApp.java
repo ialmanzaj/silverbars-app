@@ -8,7 +8,9 @@ import com.crashlytics.android.Crashlytics;
 
 import io.fabric.sdk.android.Fabric;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 
 public class SilverbarsApp extends MultiDexApplication {
 

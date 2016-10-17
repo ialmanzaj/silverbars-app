@@ -15,7 +15,9 @@ import org.lucasr.twowayview.widget.TwoWayView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 
 public class UserWorkoutsFragment extends Fragment {
 

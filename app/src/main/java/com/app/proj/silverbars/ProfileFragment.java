@@ -27,7 +27,9 @@ import static com.app.proj.silverbars.Utilities.loadProfileImageFromCache;
 import static com.app.proj.silverbars.Utilities.loadWorkoutImageFromDevice;
 import static com.app.proj.silverbars.Utilities.saveWorkoutImgInDevice;
 import static com.facebook.Profile.getCurrentProfile;
-
+/**
+ * Created by isaacalmanza on 10/04/16.
+ */
 public class ProfileFragment extends Fragment {
 
     private static final String TAG = "ProfileFragment";

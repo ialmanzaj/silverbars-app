@@ -9,9 +9,7 @@ import android.widget.TextView;
 /**
  * Created by isaacalmanza on 09/23/16.
  */
-/**
- * TODO: document your custom view class.
- */
+
 public class CustomDateView extends LinearLayout {
 
     private TextView NameDay;
