@@ -29,13 +29,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     // Database Name
     public static final String DATABASE_NAME = "SilverbarsData";
+
+
     //     Database tables name
     public static final String TABLE_USERS = "users";
     public static final String TABLE_PLAYLISTS = "playlists";
     public static final String TABLE_WORKOUTS = "workouts";
     public static final String TABLE_USER_WORKOUTS = "user_workouts";
-    public static final String TABLE_USER_WORKOUT = "user_workout";
-    public static final String TABLE_WORKOUT = "workout";
+    public static final String TABLE_EXERCISES_REP = "exercises_reps";
     public static final String TABLE_EXERCISES = "exercises";
 
 
@@ -63,15 +64,20 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String KEY_EXERCISES = "exercises";
     public static final String KEY_LOCAL = "local";
 
-    //    Workout table Columns names
-    public static final String KEY_IDWORKOUT = "id";
-    public static final String KEY_WORKOUTSID = "workout_id";
+
+
+    //    Exercise-rep table Columns names
+    public static final String KEY_EXERCISEREPID = "exercise_rep_id";
     public static final String KEY_WORKOUTEX = "exercise";
     public static final String KEY_REPETITION = "repetition";
+    public static final String KEY_SECONDS = "seconds";
+    public static final String KEY_TEMPO_POSITIVE = "tempo_positive";
+    public static final String KEY_TEMPO_ISOMETRIC = "tempo_isometric";
+    public static final String KEY_TEMPO_NEGATIVE = "tempo_negative";
+
 
 
     //    Exercises table Column names
-    public static final String KEY_ID_EXERCISE_LOCAL = "idLocal";
     public static final String KEY_IDEXERCISE = "id";
     public static final String KEY_EXERCISENAME = "exercise_name";
     public static final String KEY_EXERCISELEVEL = "level";
@@ -81,6 +87,15 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public static final String KEY_EXERCISE_IMAGE = "exercise_image";
 
 
+    //   USER Workouts table Columns names
+    public static final String KEY_IDUSERWORKOUTS = "id";
+    public static final String KEY_USER_WORKOUTNAME = "workout_name";
+    public static final String KEY_USER_WORKOUTIMG = "workout_image";
+    public static final String KEY_USER_SETS = "sets";
+    public static final String KEY_USER_LEVEL = "level";
+    public static final String KEY_USER_MAINMUSCLE = "main_muscle";
+
+
     private final Context myContext;
 
     public MySQLiteHelper(Context context) {
@@ -88,18 +103,39 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         myContext = context;
     }
 
+
     private static final String CREATE_TABLE_USERS = "CREATE TABLE IF NOT EXISTS "+
             TABLE_USERS+"(" +
             KEY_IDUSER+" INTEGER PRIMARY KEY, " +
             KEY_NAME+" TEXT, " +
             KEY_EMAIL+" varchar, " +
             KEY_ACTIVE+" integer)";
+
     private static final String CREATE_TABLE_PLAYLISTS = "CREATE TABLE IF NOT EXISTS "+
             TABLE_PLAYLISTS+"(" +
             KEY_IDPLIST+" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
             KEY_PNAME+" TEXT, " +
             KEY_SONGNAME+" varchar, " +
             KEY_USERID+" integer)";
+
+    private static final String CREATE_TABLE_EXERCISES = "CREATE TABLE IF NOT EXISTS "+
+            TABLE_EXERCISES+"(" +
+            KEY_IDEXERCISE+" INTEGER PRIMARY KEY NOT NULL," +
+            KEY_EXERCISENAME+" TEXT, " +
+            KEY_EXERCISELEVEL+" TEXT, " +
+            KEY_TYPE_EXERCISE+" VARCHAR, " +
+            KEY_MUSCLE+" varchar, " +
+            KEY_EXERCISE_AUDIO + " varchar, " +
+            KEY_EXERCISE_IMAGE+" VARCHAR)";
+
+
+    private static final String CREATE_TABLE_EXERCISE_REP = "CREATE TABLE IF NOT EXISTS "+
+            TABLE_EXERCISES_REP +"(" +
+            KEY_EXERCISEREPID + " INTEGER PRIMARY KEY NOT NULL," +
+            KEY_WORKOUTEX + " INTEGER REFERENCE"+TABLE_EXERCISES+", " +
+            KEY_REPETITION + " integer, " +
+            KEY_SECONDS + " integer)";
+
 
     private static final String CREATE_TABLE_WORKOUTS = "CREATE TABLE IF NOT EXISTS "+
             TABLE_WORKOUTS+"(" +
@@ -109,44 +145,21 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             KEY_SETS+" INTEGER, " +
             KEY_LEVEL+" TEXT, " +
             KEY_MAINMUSCLE+" TEXT, " +
-            KEY_EXERCISES+" varchar, "+
+            KEY_EXERCISES + " INTEGER REFERENCE"+ TABLE_EXERCISES_REP + ", " +
             KEY_LOCAL+" TEXT )";
 
-    private static final String CREATE_TABLE_WORKOUT = "CREATE TABLE IF NOT EXISTS "+
-            TABLE_WORKOUT+"(" +
-            KEY_IDWORKOUT+" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-            KEY_WORKOUTSID+" INTEGER REFERENCE"+TABLE_WORKOUTS+"," +
-            KEY_WORKOUTEX+" INTEGER REFERENCE"+TABLE_EXERCISES+", " +
-            KEY_REPETITION+" integer)";
 
     private static final String CREATE_TABLE_USER_WORKOUTS = "CREATE TABLE IF NOT EXISTS "+
             TABLE_USER_WORKOUTS+"(" +
-            KEY_IDWORKOUTS+" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-            KEY_WORKOUTNAME+" TEXT, " +
-            KEY_WORKOUTIMG+" varchar, " +
-            KEY_SETS+" INTEGER, " +
-            KEY_LEVEL+" TEXT, " +
-            KEY_MAINMUSCLE+" TEXT, " +
+            KEY_IDUSERWORKOUTS+" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+            KEY_USER_WORKOUTNAME+" TEXT, " +
+            KEY_USER_WORKOUTIMG+" varchar, " +
+            KEY_USER_SETS+" INTEGER, " +
+            KEY_USER_LEVEL+" TEXT, " +
+            KEY_USER_MAINMUSCLE+" TEXT, " +
             KEY_USERID+" INTEGER, "+
-            KEY_EXERCISES+" varchar )";
+            KEY_EXERCISES + " INTEGER REFERENCE"+ TABLE_EXERCISES_REP+" )";
 
-    private static final String CREATE_TABLE_USER_WORKOUT = "CREATE TABLE IF NOT EXISTS "+
-            TABLE_USER_WORKOUT+"(" +
-            KEY_WORKOUTSID+"  INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"+
-            KEY_WORKOUTEX+" INTEGER REFERENCE"+TABLE_EXERCISES+", " +
-            KEY_REPETITION+" integer)";
-
-
-
-    private static final String CREATE_TABLE_EXERCISES = "CREATE TABLE IF NOT EXISTS "+
-            TABLE_EXERCISES+"(" +
-            KEY_IDEXERCISE+" INTEGER PRIMARY KEY NOT NULL," +
-            KEY_EXERCISENAME+" TEXT, " +
-            KEY_EXERCISELEVEL+" TEXT, " +
-            KEY_TYPE_EXERCISE+" VARCHAR, " +
-            KEY_MUSCLE+" varchar, " +
-            KEY_EXERCISE_AUDIO+" varchar, " +
-            KEY_EXERCISE_IMAGE+" VARCHAR)";
 //            "FOREIGN KEY("+KEY_USERID+") REFERENCES "+TABLE_USERS+"("+KEY_IDUSER+")";
 
     @Override
@@ -154,9 +167,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         database.execSQL(CREATE_TABLE_USERS);
         database.execSQL(CREATE_TABLE_PLAYLISTS);
         database.execSQL(CREATE_TABLE_WORKOUTS);
-        database.execSQL(CREATE_TABLE_WORKOUT);
+        database.execSQL(CREATE_TABLE_EXERCISE_REP);
         database.execSQL(CREATE_TABLE_EXERCISES);
-        database.execSQL(CREATE_TABLE_USER_WORKOUT);
         database.execSQL(CREATE_TABLE_USER_WORKOUTS);
         if (!database.isReadOnly()) {
             // Enable foreign key constraints
@@ -170,7 +182,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         Log.w(MySQLiteHelper.class.getName(),
                 "Upgrading database from version " + oldVersion + " to "
                         + newVersion + ", which will destroy all old data");
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS +", "+TABLE_PLAYLISTS+", "+TABLE_WORKOUTS+", "+TABLE_WORKOUT+", "+TABLE_EXERCISES+", "+TABLE_USER_WORKOUTS+", "+TABLE_USER_WORKOUT);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS +", "+TABLE_PLAYLISTS+", "+TABLE_WORKOUTS+", "+TABLE_EXERCISES_REP+", "+TABLE_EXERCISES+", "+TABLE_USER_WORKOUTS);
         onCreate(db);
     }
 
@@ -403,6 +415,70 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         return check;
     }
 
+    public boolean checkExerciseRep(int workoutId){
+        boolean check;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor row = db.rawQuery("SELECT"+ KEY_EXERCISES + "FROM "+ TABLE_WORKOUTS+" WHERE "+KEY_IDWORKOUTS+" = "+workoutId,null);
+        if (row.moveToFirst()){
+            check = true;
+        } else{
+            Log.i(TAG,"check ExerciseRep: No exercise rep found");
+            check = false;
+        }
+        db.close();
+        try {
+            BD_backup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return check;
+    }
+
+
+    public void insertExerciseRep(int exerciseId, int repetitions,int seconds){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_EXERCISEREPID,exerciseId);
+        cv.put(KEY_WORKOUTEX,exerciseId);
+        cv.put(KEY_REPETITION,repetitions);
+        cv.put(KEY_SECONDS,seconds);
+        db.insert(TABLE_EXERCISES_REP,null,cv);
+        db.close();
+        try {
+            BD_backup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ExerciseRep getExerciseRep(int exerciseId) {
+        ExerciseRep exercise = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor row = db.rawQuery("SELECT * FROM " + TABLE_EXERCISES_REP + " WHERE " + KEY_EXERCISEREPID + " = " + exerciseId, null);
+        if (row.moveToFirst()) {
+            exercise = new ExerciseRep(getExercise(row.getInt(0)), row.getInt(1), row.getInt(2));
+        } else {
+            Log.i(TAG, "No exercise found");
+        }
+        db.close();
+        try {
+            BD_backup();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return exercise;
+    }
+
+    private ExerciseRep[] getExercises(String[] exercises_ids){
+        ExerciseRep[] exercises = new ExerciseRep[exercises_ids.length];
+
+        for (int a = 0;a<exercises_ids.length;a++){
+            exercises[a] = getExerciseRep(Integer.parseInt(exercises_ids[a]));
+        }
+
+        return exercises;
+    }
+
     public void insertLocalWorkout(int id, String name, String imgFile, int sets, String level, String mainMuscle, String exercises, String local){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -431,13 +507,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         if (row.moveToFirst()){
             row.moveToFirst();
             workouts = new Workout[row.getCount()];
-            workouts[i] = new Workout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5),convertStringToExercises(row.getString(6)));
-            Log.v(TAG,"getLocalWorkouts, Database workouts: "+ Arrays.toString(workouts));
 
+            workouts[i] = new Workout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5), getExercises( convertStringToArray(row.getString(6))) );
+            Log.v(TAG,"LocalWorkouts Database: "+ Arrays.toString(workouts));
             while(row.moveToNext()){
                 i++;
-                workouts[i] = new Workout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5),convertStringToExercises(row.getString(6)));
-                Log.v(TAG,"getLocalWorkouts,Database: More than 1 result");
+                workouts[i] = new Workout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5), getExercises( convertStringToArray(row.getString(6))) );
+                Log.v(TAG,"Local Workouts, Database: "+ Arrays.toString(workouts));
             }
         } else {
             Log.i(TAG,"GET Local workouts: No saved workouts found");
@@ -454,7 +530,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public boolean checkLocalWorkouts(int workout_id){
         boolean check;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_WORKOUTS+" WHERE "+KEY_IDWORKOUTS+" = "+workout_id,null);
+        Cursor row = db.rawQuery("SELECT * FROM "+ TABLE_WORKOUTS +" WHERE "+ KEY_IDWORKOUTS +" = "+workout_id,null);
         if (row.moveToFirst()){
             check = true;
         } else{
@@ -470,66 +546,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         return check;
     }
 
-
-    public boolean checkExerciseRep(int workoutId, int exerciseId){
-        boolean check;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_WORKOUT+" WHERE "+KEY_WORKOUTSID+" = "+workoutId+" AND "+KEY_WORKOUTEX+" = "+exerciseId,null);
-        if (row.moveToFirst()){
-            check = true;
-        } else{
-            Log.i(TAG,"checkExerciseRep, Database Error: No saved workouts found");
-            check = false;
-        }
-        db.close();
-        try {
-            BD_backup();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return check;
-    }
-
-    public void insertExerciseRep(int workoutId, int exercisesId, int repetitions){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(KEY_WORKOUTSID,workoutId);
-        cv.put(KEY_WORKOUTEX,exercisesId);
-        cv.put(KEY_REPETITION,repetitions);
-        db.insert(TABLE_WORKOUT,null,cv);
-        db.close();
-        try {
-            BD_backup();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public WorkoutReps[] getExerciseReps(int workoutId){
-        WorkoutReps[] workouts = null;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_WORKOUT+" WHERE "+KEY_WORKOUTSID+" = "+workoutId,null);
-        int i = 0;
-        if (row.moveToFirst()){
-            workouts = new WorkoutReps[row.getCount()];
-            row.moveToFirst();
-            workouts[i] = new WorkoutReps(row.getInt(0),String.valueOf(row.getInt(1)),String.valueOf(row.getInt(2)),row.getInt(3));
-            while(row.moveToNext()){
-                i++;
-                workouts[i] = new WorkoutReps(row.getInt(0),String.valueOf(row.getInt(1)),String.valueOf(row.getInt(2)),row.getInt(3));
-            }
-        } else{
-            Log.i(TAG,"getExerciseReps, Database error: No saved workouts found");
-        }
-        db.close();
-        try {
-            BD_backup();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return workouts;
-    }
 
 
 
@@ -568,19 +584,18 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
 
 
-    public Workout[] getUserWorkout(int workoutId){
+    /*public Workout[] getUserWorkout(int workoutId){
         Workout[] workouts = null;
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_USER_WORKOUTS+" WHERE "+KEY_WORKOUTSID+" = "+workoutId,null);
+        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_USER_WORKOUTS+" WHERE "+ KEY_IDUSERWORKOUTS + " = "+workoutId,null);
         int i = 0;
         if (row.moveToFirst()){
             row.moveToFirst();
             workouts = new Workout[row.getCount()];
-            workouts[i] = new Workout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5),convertStringToExercises(row.getString(6)));
-
+            workouts[i] = new Workout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5),(row.getString(6)));
             while(row.moveToNext()){
                 i++;
-                workouts[i] = new Workout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5),convertStringToExercises(row.getString(6)));
+                workouts[i] = new Workout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5),(row.getString(6)));
                 Log.v(TAG,"getLocalWorkouts, Database workouts: "+ Arrays.toString(workouts));
             }
         }
@@ -595,46 +610,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         }
         return workouts;
     }
-
-
-    public void addNewUserExerciseRep(int exercise_id, int reps){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(KEY_WORKOUTEX,exercise_id);
-        cv.put(KEY_REPETITION,reps);
-        db.insert(TABLE_USER_WORKOUT,null,cv);
-        db.close();
-        try {
-            BD_backup();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-/*
-
-    public int getUserWorkoutSize(){
-        int size = 0;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor row = db.rawQuery("SELECT * FROM "+TABLE_USER_WORKOUTS,null);
-        if (row.moveToFirst()){
-            size = row.getCount();
-        }
-        else{
-            Log.e(TAG,"getUserWorkoutSize, database error: No user workouts found");
-        }
-        db.close();
-        try {
-            BD_backup();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return size;
-    }
 */
-
-
 
     public boolean checkUserWorkouts(int workout_id){
         boolean check;

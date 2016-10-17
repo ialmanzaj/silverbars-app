@@ -106,6 +106,7 @@ public class MainFragment extends Fragment {
 
 
 
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -119,10 +120,13 @@ public class MainFragment extends Fragment {
             opened = true;
 
             if (CheckInternet(getActivity().getApplicationContext())){
+
                 getWorkoutsData(muscleData);
                 swipeContainer.setVisibility(View.VISIBLE);
                 noInternetConnectionLayout.setVisibility(View.GONE);
+
             }
+
             else{
                 swipeContainer.setVisibility(View.GONE);
                 noInternetConnectionLayout.setVisibility(View.VISIBLE);
@@ -131,11 +135,12 @@ public class MainFragment extends Fragment {
         } else {
 
             if (CheckInternet(getActivity().getApplicationContext())){
+
                 getWorkoutsData(muscleData);
                 swipeContainer.setVisibility(View.VISIBLE);
                 noInternetConnectionLayout.setVisibility(View.GONE);
-            }
-            else{
+
+            } else{
                 swipeContainer.setVisibility(View.GONE);
                 noInternetConnectionLayout.setVisibility(View.VISIBLE);
 
@@ -148,8 +153,7 @@ public class MainFragment extends Fragment {
             public void onRefresh() {
                 if (CheckInternet(getActivity().getApplicationContext())){
                     getWorkoutsData(muscleData);
-                }
-                else{
+                } else{
                     swipeContainer.setRefreshing(false);
                 }
             }
@@ -163,56 +167,47 @@ public class MainFragment extends Fragment {
     }
 
 
-
-    public void getWorkoutsData(final String muscle){
-        progressBar.setVisibility(View.VISIBLE);
+    public void getWorkoutsData(String muscle){
         muscleData = muscle;
 
+        if (!swipeContainer.isRefreshing()){
+            progressBar.setVisibility(View.VISIBLE);
+        }
 
-            AuthPreferences authPreferences = new AuthPreferences(getActivity());
-            SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class,authPreferences.getAccessToken(),getActivity());
+        TokenAuthenticator tokenAuthenticator = new TokenAuthenticator(getActivity());
+        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class,tokenAuthenticator.getToken(),getActivity());
 
-            Call<Workout[]> call = service.getWorkouts();
-            call.enqueue(new Callback<Workout[]>() {
-                @Override
-                public void onResponse(Call<Workout[]> call, Response<Workout[]> response) {
-                    if (response.isSuccessful()) {
+        service.getWorkouts().enqueue(new Callback<Workout[]>() {
+            @Override
+            public void onResponse(Call<Workout[]> call, Response<Workout[]> response) {
+                if (response.isSuccessful()) {
+                    onErrorViewoff();
 
-                        onErrorViewoff();
-                        Collections.addAll(workouts,response.body());
+                    Collections.addAll(workouts,response.body());
+                    recyclerView.setAdapter(new WorkoutAdapter(getActivity(),workouts));
 
 
-                        adapter = new WorkoutAdapter(getActivity(),workouts);
-                        recyclerView.setAdapter(adapter);
-
-                    } else {
-
-                        onErrorViewOn();
-                        Log.e(TAG,"statusCode: "+response.code());
-
-                    }
-                }
-                @Override
-                protected void finalize() throws Throwable {
-                    super.finalize();
-                    Log.v(TAG,"ha finalizado");
+                } else {
+                    onErrorViewOn();
+                    Log.e(TAG,"statusCode: "+response.code());
 
                 }
-                @Override
-                public void onFailure(Call<Workout[]> call, Throwable t) {
-                    Log.e(TAG,"get Workouts Data, onFailure: ",t);
-                }
-            });
+            }
+            @Override
+            public void onFailure(Call<Workout[]> call, Throwable t) {
+                Log.e(TAG,"get Workouts Data, onFailure: ",t);
+                onErrorViewOn();
+            }
+        });
 
 
-
-            if (Objects.equals(muscle, "ALL")) {
-
+           /*
+           if (Objects.equals(muscle, "ALL")) {
                 recyclerView.setAdapter(new WorkoutAdapter(getActivity(), workouts));
 
-            } else {
+           } else {
 
-               /*// Workout[] auxWorkout = response.body();
+               Workout[] auxWorkout = response.body();
                 Workout[] workoutFlag = null;
                 int x = 0;
                 for (Workout workout : workouts) {
@@ -231,11 +226,8 @@ public class MainFragment extends Fragment {
                         y++;
                     }
                 }
-
-            }*/
-
-
-            }
+           }
+            */
 
 
 

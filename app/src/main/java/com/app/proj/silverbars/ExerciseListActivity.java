@@ -16,6 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class ExerciseListActivity extends AppCompatActivity {
 
@@ -63,8 +67,6 @@ public class ExerciseListActivity extends AppCompatActivity {
         button_error_reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                error_layout.setVisibility(View.GONE);
-                Progress.setVisibility(View.VISIBLE);
                 getExercisesFromAPI();
 
             }
@@ -101,60 +103,63 @@ public class ExerciseListActivity extends AppCompatActivity {
 
     private void getExercisesFromAPI() {
 
+        TokenAuthenticator tokenAuthenticator = new TokenAuthenticator(this);
+        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class, tokenAuthenticator.getToken());
 
-        AuthPreferences authPreferences = new AuthPreferences(this);
-        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class, authPreferences.getAccessToken());
-
-        RestAPI restAPI = new RestAPI(service);
-
-
-        OriginalExerciseListAll = restAPI.getAllExercises();
-        Log.v(TAG,"OriginalExerciseListAll size: "+OriginalExerciseListAll.size());
-
-        if (!OriginalExerciseListAll.isEmpty()){
-            onErrorOff();
+        service.getAllExercises().enqueue(new Callback<Exercise[]>() {
+            @Override
+            public void onResponse(Call<Exercise[]> call, Response<Exercise[]> response) {
+                if (response.isSuccessful()){
+                    onErrorOff();
 
 
-            try {
+                    try {
+                        Intent i = getIntent();
+                        Bundle bundle = i.getExtras();
 
-                Intent i = getIntent();
-                Bundle b = i.getExtras();
 
-                ExercisesSelected = b.getStringArrayList("exercises");
-                Log.v(TAG,"exercise recibido: "+ExercisesSelected);
+                        ExercisesSelected = bundle.getStringArrayList("exercises");
+                        Log.v(TAG,"exercise recibido: "+ExercisesSelected);
 
-                ExercisesNoSelected = OriginalExerciseListAll;
+                        ExercisesNoSelected = OriginalExerciseListAll;
 
-                for (int c = 0;c < ExercisesSelected.size();c++){
-                    for (int a = 0; a < OriginalExerciseListAll.size(); a++){
+                        for (int c = 0;c < ExercisesSelected.size();c++){
+                            for (int a = 0; a < OriginalExerciseListAll.size(); a++){
 
-                        //ejercicio seleccionado lo elimina en la siguiente seleccion
-                        if (Objects.equals(OriginalExerciseListAll.get(a).getExercise_name(), ExercisesSelected.get(c))){
-                            ExercisesNoSelected.remove(a);
+                                //ejercicio seleccionado lo elimina en la siguiente seleccion
+                                if (Objects.equals(OriginalExerciseListAll.get(a).getExercise_name(), ExercisesSelected.get(c))){
+                                    ExercisesNoSelected.remove(a);
+                                }
+                            }
                         }
+                    }catch (NullPointerException e){
+                        Log.i(TAG, "no se ha seleccionado ningun ejercicio todavia");
                     }
+
+                    if (ExercisesNoSelected.isEmpty()){
+
+                        adapter = new AllExercisesAdapter(ExerciseListActivity.this,OriginalExerciseListAll);
+
+                    }else {
+
+                        adapter = new AllExercisesAdapter(ExerciseListActivity.this,ExercisesNoSelected);
+                    }
+
+                    recycler.setAdapter(adapter);
+
+
+                }else {
+
+                    onErrorOn();
                 }
-            }catch (NullPointerException e){
-                Log.i(TAG, "no se ha seleccionado ningun ejercicio todavia");
+
+
             }
-
-
-            if (ExercisesNoSelected.isEmpty()){
-
-                adapter = new AllExercisesAdapter(ExerciseListActivity.this,OriginalExerciseListAll);
-
-            }else {
-
-                adapter = new AllExercisesAdapter(ExerciseListActivity.this,ExercisesNoSelected);
+            @Override
+            public void onFailure(Call<Exercise[]> call, Throwable t) {
+                onErrorOn();
             }
-
-            recycler.setAdapter(adapter);
-
-        }else {
-
-            onErrorOn();
-        }
-
+        });
     }
     
     private void onErrorOn(){
@@ -170,7 +175,6 @@ public class ExerciseListActivity extends AppCompatActivity {
         recycler.setVisibility(View.VISIBLE);
         add_button.setVisibility(View.VISIBLE);
     }
-
 
 
 

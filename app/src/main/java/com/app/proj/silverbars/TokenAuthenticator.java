@@ -7,6 +7,9 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
+import okhttp3.Authenticator;
+import okhttp3.Request;
+import okhttp3.Route;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -15,7 +18,7 @@ import retrofit2.Response;
  * Created by isaacalmanza on 09/23/16.
  */
 
-public class TokenAuthenticator {
+public class TokenAuthenticator implements Authenticator{
 
     private static final String TAG = "TokenAuthenticator";
     private static final String CONSUMER_KEY = "KHeJV3Sg8ShguiYyvDf9t6i3WPpMpDWlBLN93mgz";
@@ -54,15 +57,16 @@ public class TokenAuthenticator {
     public String getToken(){
         String token = "";
         if (authPreferences.getAccessToken() != null){
-            AccessToken accessToken = gson.fromJson(token,AccessToken.class);
+            AccessToken accessToken = gson.fromJson(authPreferences.getAccessToken(),AccessToken.class);
             token = accessToken.getAccess_token();
-
         }
 
         return token;
     }
 
 
-
-
+    @Override
+    public Request authenticate(Route route, okhttp3.Response response) throws IOException {
+        return null;
+    }
 }

@@ -27,8 +27,13 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.app.proj.silverbars.PlaylistPickerActivity.convertArrayToString;
 
@@ -241,125 +246,130 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
     private void putExercisesinRecycler(){
 
-        AuthPreferences authPreferences = new AuthPreferences(this);
-        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class, authPreferences.getAccessToken());
+        TokenAuthenticator tokenAuthenticator = new TokenAuthenticator(this);
+        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class, tokenAuthenticator.getToken());
 
-        RestAPI restAPI = new RestAPI(service);
+        Call<Exercise[]> call = service.getAllExercises();
+        call.enqueue(new Callback<Exercise[]>() {
+            @Override
+            public void onResponse(Call<Exercise[]> call, Response<Exercise[]> response) {
 
-        List<Exercise> AllExercisesList = restAPI.getAllExercises();
+                List<Exercise> AllExercisesList = new ArrayList<>();
+                Collections.addAll(AllExercisesList, response.body());
 
+                for (int c = 0;c < Exercises.size();c++){
+                    for (int a = 0; a < AllExercisesList.size();a++){
 
-        if (!AllExercisesList.isEmpty()){
+                        if (Objects.equals(AllExercisesList.get(a).getExercise_name(), Exercises.get(c))){
 
-            for (int c = 0;c < Exercises.size();c++){
-                for (int a = 0; a < AllExercisesList.size();a++){
+                            SelectedExercises.add(new ExerciseRep(AllExercisesList.get(a)));
 
-                    if (Objects.equals(AllExercisesList.get(a).getExercise_name(), Exercises.get(c))){
-
-                        SelectedExercises.add(new ExerciseRep(AllExercisesList.get(a)));
-
+                        }
                     }
                 }
-            }
-            for (int a = 0; a<SelectedExercises.size();a++){
-                exercises_ids[a] = String.valueOf(SelectedExercises.get(a).getExercise().getExerciseId());
-            }
-
-
-            Boolean UPPER_BODY = false,LOWER_BODY = false,ABS = false,FULL_BODY=false,NORMAL= false,EASY = false,HARD = false,CHALLENGING = false;
-
-
-            for (int a = 0;a<SelectedExercises.size();a++){
-
-                for (int b = 0; b<SelectedExercises.get(a).getExercise().getMuscles().length; b++){
-
-                    Muscle muscle = SelectedExercises.get(a).getExercise().getMuscles()[b];
-
-                    if (Objects.equals(muscle.getMuscleName(), "CALVES")){LOWER_BODY = true;}
-                    if (Objects.equals(muscle.getMuscleName(), "HAMSTRINGS")){LOWER_BODY = true;}
-                    if (Objects.equals(muscle.getMuscleName(), "ADDUCTORS")){LOWER_BODY = true;}
-                    if (Objects.equals(muscle.getMuscleName(), "CUADRICEPS")){LOWER_BODY = true;}
-                    if (Objects.equals(muscle.getMuscleName(), "RECTUS-ABDOMINIS")){ABS = true;}
-                    if (Objects.equals(muscle.getMuscleName(), "TRANSVERSUS-ABDOMINIS")){ABS = true;}
-                    if (Objects.equals(muscle.getMuscleName(), "DELTOIDS")){UPPER_BODY = true;}
-                    if (Objects.equals(muscle.getMuscleName(), "OBLIQUES")){UPPER_BODY = true;}
-                    if (Objects.equals(muscle.getMuscleName(), "QUADRICEPS")){LOWER_BODY = true;}
-                    if (Objects.equals(muscle.getMuscleName(), "PECTORALIS-MAJOR")){UPPER_BODY = true;}
-                    if (Objects.equals(muscle.getMuscleName(), "TRICEPS")){UPPER_BODY = true;}
-                }
-                Exercise exercise = SelectedExercises.get(a).getExercise();
-
-                if (Objects.equals(exercise.getLevel(),"NORMAL")){
-                    NORMAL = true;
-                }else if (Objects.equals(exercise.getLevel(),"EASY")){
-                    EASY = true;
-                }else if (Objects.equals(exercise.getLevel(),"HARD")){
-                    HARD = true;
-                }else if (Objects.equals(exercise.getLevel(),"CHALLENGING")){
-                    CHALLENGING = true;
+                for (int a = 0; a<SelectedExercises.size();a++){
+                    exercises_ids[a] = String.valueOf(SelectedExercises.get(a).getExercise().getExerciseId());
                 }
 
+
+                Boolean UPPER_BODY = false,LOWER_BODY = false,ABS = false,FULL_BODY=false,NORMAL= false,EASY = false,HARD = false,CHALLENGING = false;
+
+
+                for (int a = 0;a<SelectedExercises.size();a++){
+
+                    for (int b = 0; b<SelectedExercises.get(a).getExercise().getMuscles().length; b++){
+
+                        Muscle muscle = SelectedExercises.get(a).getExercise().getMuscles()[b];
+
+                        if (Objects.equals(muscle.getMuscleName(), "CALVES")){LOWER_BODY = true;}
+                        if (Objects.equals(muscle.getMuscleName(), "HAMSTRINGS")){LOWER_BODY = true;}
+                        if (Objects.equals(muscle.getMuscleName(), "ADDUCTORS")){LOWER_BODY = true;}
+                        if (Objects.equals(muscle.getMuscleName(), "CUADRICEPS")){LOWER_BODY = true;}
+                        if (Objects.equals(muscle.getMuscleName(), "RECTUS-ABDOMINIS")){ABS = true;}
+                        if (Objects.equals(muscle.getMuscleName(), "TRANSVERSUS-ABDOMINIS")){ABS = true;}
+                        if (Objects.equals(muscle.getMuscleName(), "DELTOIDS")){UPPER_BODY = true;}
+                        if (Objects.equals(muscle.getMuscleName(), "OBLIQUES")){UPPER_BODY = true;}
+                        if (Objects.equals(muscle.getMuscleName(), "QUADRICEPS")){LOWER_BODY = true;}
+                        if (Objects.equals(muscle.getMuscleName(), "PECTORALIS-MAJOR")){UPPER_BODY = true;}
+                        if (Objects.equals(muscle.getMuscleName(), "TRICEPS")){UPPER_BODY = true;}
+                    }
+                    Exercise exercise = SelectedExercises.get(a).getExercise();
+
+                    if (Objects.equals(exercise.getLevel(),"NORMAL")){
+                        NORMAL = true;
+                    }else if (Objects.equals(exercise.getLevel(),"EASY")){
+                        EASY = true;
+                    }else if (Objects.equals(exercise.getLevel(),"HARD")){
+                        HARD = true;
+                    }else if (Objects.equals(exercise.getLevel(),"CHALLENGING")){
+                        CHALLENGING = true;
+                    }
+
+                }
+
+                if (CHALLENGING){
+                    LEVEL = "CHALLENGING";
+                    HARD = false;
+                    EASY = false;
+                    NORMAL = false;
+                }else if (HARD){
+                    LEVEL = "HARD";
+                    NORMAL = false;
+                    EASY = false;
+                }else if (NORMAL){
+                    LEVEL = "NORMAL";
+                    EASY = false;
+                }else if (EASY){
+                    LEVEL = "EASY";
+                }
+
+                Log.v(TAG,"LEVEL: "+LEVEL);
+                Log.v(TAG,"CHALLENGING: "+CHALLENGING);
+                Log.v(TAG,"HARD:"+HARD);
+                Log.v(TAG,"EASY:"+EASY);
+                Log.v(TAG,"NORMAL:"+NORMAL);
+
+
+                if (LOWER_BODY && UPPER_BODY && ABS){
+                    MAIN_MUSCLE = "FULL BODY";
+                    FULL_BODY = true;
+                    UPPER_BODY = false;
+                    ABS = false;
+                    LOWER_BODY = false;
+                }else if (!LOWER_BODY && UPPER_BODY && ABS) {
+                    UPPER_BODY = true;
+                    ABS = false;
+                    MAIN_MUSCLE = "UPPER BODY";
+
+                }else if (LOWER_BODY && !UPPER_BODY && ABS){
+                    MAIN_MUSCLE = "LOWER BODY";
+                    LOWER_BODY = true;
+                    ABS = false;
+                }else if (!LOWER_BODY && !UPPER_BODY && ABS){
+                    ABS = true;
+                    MAIN_MUSCLE = "ABS/CORE";
+                }
+
+                Log.v(TAG,"MAIN_MUSCLE: "+MAIN_MUSCLE);
+                Log.v(TAG,"lower:"+LOWER_BODY);
+                Log.v(TAG,"upper:"+UPPER_BODY);
+                Log.v(TAG,"ABS:"+ABS);
+                Log.v(TAG,"FULL:"+FULL_BODY);
+
+
+
+                Context context = CreateWorkoutFinalActivity.this;
+                RecyclerView.Adapter adapter = new FinalExercisesAdapter(context, SelectedExercises,reps);
+                recycler.setAdapter(adapter);
             }
 
-            if (CHALLENGING){
-                LEVEL = "CHALLENGING";
-                HARD = false;
-                EASY = false;
-                NORMAL = false;
-            }else if (HARD){
-                LEVEL = "HARD";
-                NORMAL = false;
-                EASY = false;
-            }else if (NORMAL){
-                LEVEL = "NORMAL";
-                EASY = false;
-            }else if (EASY){
-                LEVEL = "EASY";
+            @Override
+            public void onFailure(Call<Exercise[]> call, Throwable t) {
+
             }
-
-            Log.v(TAG,"LEVEL: "+LEVEL);
-            Log.v(TAG,"CHALLENGING: "+CHALLENGING);
-            Log.v(TAG,"HARD:"+HARD);
-            Log.v(TAG,"EASY:"+EASY);
-            Log.v(TAG,"NORMAL:"+NORMAL);
+        });
 
 
-            if (LOWER_BODY && UPPER_BODY && ABS){
-                MAIN_MUSCLE = "FULL BODY";
-                FULL_BODY = true;
-                UPPER_BODY = false;
-                ABS = false;
-                LOWER_BODY = false;
-            }else if (!LOWER_BODY && UPPER_BODY && ABS) {
-                UPPER_BODY = true;
-                ABS = false;
-                MAIN_MUSCLE = "UPPER BODY";
-
-            }else if (LOWER_BODY && !UPPER_BODY && ABS){
-                MAIN_MUSCLE = "LOWER BODY";
-                LOWER_BODY = true;
-                ABS = false;
-            }else if (!LOWER_BODY && !UPPER_BODY && ABS){
-                ABS = true;
-                MAIN_MUSCLE = "ABS/CORE";
-            }
-
-            Log.v(TAG,"MAIN_MUSCLE: "+MAIN_MUSCLE);
-            Log.v(TAG,"lower:"+LOWER_BODY);
-            Log.v(TAG,"upper:"+UPPER_BODY);
-            Log.v(TAG,"ABS:"+ABS);
-            Log.v(TAG,"FULL:"+FULL_BODY);
-
-
-
-            Context context = CreateWorkoutFinalActivity.this;
-            RecyclerView.Adapter adapter = new FinalExercisesAdapter(context, SelectedExercises,reps);
-            recycler.setAdapter(adapter);
-
-        }else {
-
-
-        }
 
 
 
@@ -403,7 +413,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
     private void saveWorkoutinData(){
 
-        String name = workoutName.getText().toString();
+      /*  String name = workoutName.getText().toString();
         int workoutSets = actual_set;
         String workoutLevel = LEVEL;
         String mainMuscle = MAIN_MUSCLE;
@@ -439,6 +449,10 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
             Toast.makeText(CreateWorkoutFinalActivity.this, "Elija un nombre para su rutina",
                     Toast.LENGTH_SHORT).show();
         }
+        */
+
+
+
     }
 
 

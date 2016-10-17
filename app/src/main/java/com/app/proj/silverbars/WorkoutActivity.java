@@ -173,7 +173,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 if (DownloadAudioExercise){
                     if (exercises_json.size() > 0){
                         for (int a = 0;a<exercises_json.size();a++){
-                            createExerciseAudio(WorkoutActivity.this, DownloadAudioExercise, exercises_json.get(a).getExercise().getExercise_name());
+                            createExerciseAudio(WorkoutActivity.this, DownloadAudioExercise, exercises_json.get(a).getExercise().getExercise_audio());
                         }
 
                     }
@@ -294,38 +294,12 @@ public class WorkoutActivity extends AppCompatActivity {
         //COMPROBAR SI EL WORKOUT ESTA ACTIVADO EN LA BASE DE DATOS - SAVED WORKOUTS
         if (Objects.equals(database.checkLocalWorkouts(workoutId), "true")){
             //Log.v(TAG,"workoutId: "+workoutId);
-
-
             loadLocal = true;
             enableLocal.setChecked(true);
 
-            WorkoutReps[] workouts_database = database.getExerciseReps(workoutId);
-            ArrayList<ExerciseRep> exerciseReps = new ArrayList<>();
-
-
-            for (int i =0;i < workouts_database.length;i++){
-                
-                Exercise exercise = database.getExercise(Integer.valueOf(workouts_database[i].getExercise()));
-
-                exerciseReps.add(new ExerciseRep(exercise, workouts_database[i].getRepetition(), 0));
-
-                //Log.v(TAG, exerciseReps.get(i).getExercise().getExercise_name());
-
-
-                for (Muscle muscle: exercise.getMuscles()) {
-                    Collections.addAll(MusclesArray, muscle.getMuscleName());
-                }
-
-                Collections.addAll(TypeExercises,exercise.getTypes_exercise());
-
-                //Log.v(TAG,"MusclesArray: "+MusclesArray);
-                //Log.v(TAG,"TypeExercises: "+TypeExercises);
-            }
-
-
 
             
-            adapter = new ExerciseAdapter(this,exerciseReps);
+            //adapter = new ExerciseAdapter(this,exerciseReps);
             RecyclerforExercises.setAdapter(adapter);
 
             setMusclesToView(MusclesArray);
@@ -827,7 +801,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         for (int i = 0; i < exercises_json.size(); i++){
             if (!database.checkExercise(exercises_json.get(i).getExercise().getExerciseId()) ){
-                String img_name,img_url,mp3_name,mp3_url;
+                String img_name,img_url,mp3_name;
                 File ExerciseImgFile,ExerciseMp3File;
 
                 img_name = getExerciseImageName(exercises_json.get(i).getExercise().getExercise_image());
@@ -859,9 +833,12 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     private void insertExerciseReps() {
-        MySQLiteHelper database = new MySQLiteHelper(WorkoutActivity.this);
+
+        MySQLiteHelper database = new MySQLiteHelper(this);
+
+
         for (int i = 0; i < exercises_json.size(); i++) {
-            if (!database.checkExerciseRep(workoutId, exercises_json.get(i).getExercise().getExerciseId())) {
+            if (!database.checkExerciseRep(workoutId)) {
                 database.insertExerciseRep(
                         workoutId,
                         exercises_json.get(i).getExercise().getExerciseId(),
@@ -870,16 +847,16 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         }
 
+
     }
 
     private void saveWorkout(){
 
         MySQLiteHelper database = new MySQLiteHelper(this);
+
         File WorkoutImgFile = getFileReady(this,"/SilverbarsImg/"+getWorkoutImage(workoutImgUrl));
 
-
         if (!WorkoutImgFile.exists()){
-            //Log.v(TAG,"img url "+workoutImgUrl);
             DownloadImage(this,workoutImgUrl,getWorkoutImage(workoutImgUrl));
         }
 

@@ -204,7 +204,6 @@ public class Utilities {
 
 
     public static void createExerciseAudio(Context context, Boolean download, String mp3_url){
-
         String url_dir_device = "exercises" + mp3_url;
         File Dir = getFileReady(context,"/SilverbarsMp3");
 
@@ -275,13 +274,13 @@ public class Utilities {
         return false;
     }
 
-    public static boolean saveWorkoutImgInDevice(Context context, ResponseBody body, String workoutimg) {
-        Log.v(TAG,"saveWorkoutImgInDevice: "+workoutimg);
+    public static boolean saveWorkoutImgInDevice(Context context, ResponseBody body, String workout_img) {
+        Log.v(TAG,"saveWorkoutImgInDevice: "+workout_img);
 
 
         try {
             File Folder = getFileReady(context,"/SilverbarsImg/");
-            File futureStudioIconFile = getFileReady(context,"/SilverbarsImg/"+workoutimg);
+            File futureStudioIconFile = getFileReady(context,"/SilverbarsImg/"+workout_img);
 
             InputStream input = null;
             OutputStream outputStream = null;
@@ -795,6 +794,8 @@ public class Utilities {
 
         return relativeLayout;
     }
+    
+   
 
 
 

@@ -107,6 +107,18 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     ImageButton prvLayout,nxtLayout;
 
+    private final Player.OperationCallback mOperationCallback = new Player.OperationCallback() {
+        @Override
+        public void onSuccess() {
+            logStatus("OK!");
+        }
+
+        @Override
+        public void onError(Error error) {
+            logStatus("ERROR:" + error);
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -320,7 +332,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 if (Music_Spotify){
 
                     if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
-                        mPlayer.skipToPrevious();
+                        mPlayer.skipToPrevious(mOperationCallback);
 
                     }else {
 
@@ -366,7 +378,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 if (Music_Spotify){
 
                     if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
-                        mPlayer.skipToNext();
+                        mPlayer.skipToNext(mOperationCallback);
 
                     }else {
 
@@ -837,7 +849,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 if (Music_Spotify){
 
                     if (mCurrentPlaybackState != null && mCurrentPlaybackState.isActiveDevice){
-                        mPlayer.resume();
+                        mPlayer.resume(mOperationCallback);
                         PlayerPlay();
 
                     }else {
@@ -857,7 +869,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 if (Music_Spotify){
 
                     if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
-                        mPlayer.pause();
+                        mPlayer.pause(mOperationCallback);
                         PlayerPause();
 
                     }
@@ -995,7 +1007,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             mp.setVolume(0.04f,0.04f);
                     }
                     if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
-                        mPlayer.pause();
+                        mPlayer.pause(mOperationCallback);
                     }
                     media.start();
                 }} );
@@ -1009,7 +1021,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     }
                     if (mCurrentPlaybackState != null && mCurrentPlaybackState.isActiveDevice){
                         mediaPlayer.release();
-                        mPlayer.resume();
+                        mPlayer.resume(mOperationCallback);
                     }
                 }
             });
@@ -1075,9 +1087,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
     private void launchResultsActivity(){
-
         Intent intent = new Intent(WorkingOutActivity.this, ResultsActivity.class);
-        intent.putExtra("exercises", exercisesforRecycler);
+        intent.putParcelableArrayListExtra("exercises", exercisesforRecycler);
         startActivity(intent);
         finish();
     }
@@ -1095,7 +1106,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 @Override
                 public void onInitialized(SpotifyPlayer player) {
                     Log.v(TAG,"-- Player initialized --");
-                    mPlayer.setConnectivityStatus(getNetworkConnectivity(WorkingOutActivity.this));
+                    mPlayer.setConnectivityStatus(mOperationCallback,getNetworkConnectivity(WorkingOutActivity.this));
                     mPlayer.addConnectionStateCallback(WorkingOutActivity.this);
                     mPlayer.addNotificationCallback(WorkingOutActivity.this);
                 }
@@ -1111,7 +1122,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     public void startPlaySpotify(String uri_song) {
         logStatus("Starting playback for " + uri_song);
-        mPlayer.play(uri_song,0,0);
+        mPlayer.playUri(mOperationCallback,uri_song,0,0);
     }
 
     private void updateView() {
@@ -1148,7 +1159,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 if (mPlayer != null) {
                     Connectivity connectivity = getNetworkConnectivity(getBaseContext());
                     Log.v(TAG,"Network state changed: " + connectivity.toString());
-                    mPlayer.setConnectivityStatus(connectivity);
+                    mPlayer.setConnectivityStatus(mOperationCallback,connectivity);
                 }
             }
         };
@@ -1168,18 +1179,18 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
     @Override
     protected void onPause() {
-        super.onPause();
         Log.v(TAG,"onPause");
         
         PauseCountDown();
         onPause = true;
-
         
         unregisterReceiver(mNetworkStateReceiver);
         if (mPlayer != null) {
             mPlayer.removeNotificationCallback(this);
             mPlayer.removeConnectionStateCallback(this);
         }
+
+        super.onPause();
     }
 
     @Override

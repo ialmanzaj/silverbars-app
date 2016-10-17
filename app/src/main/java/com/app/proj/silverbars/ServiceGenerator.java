@@ -26,9 +26,6 @@ public class ServiceGenerator {
 
     public static final String API_BASE_URL = "https://api.silverbarsapp.com";
     private static final String TAG = "Service Generator";
-    private static final String CONSUMER_KEY = "KHeJV3Sg8ShguiYyvDf9t6i3WPpMpDWlBLN93mgz";
-    private static final String CONSUMER_SECRET = "1krO5gdrzs08Ej5WoGpLrQifbuDRNFxEnRqLKyHFJIFG2fPpGPE3t1J8nCS7K9NoSidUCibUUi985ipRiipjM0YV6PoUDMcXw08A4M8R7yfzECFGDHnxVBYgQfgjfc2e";
-
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
 
@@ -80,8 +77,8 @@ public class ServiceGenerator {
             //logging interceptor
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            //httpClient.addInterceptor(logging);
 
-            httpClient.addInterceptor(logging);
 
             httpClient.addInterceptor(new Interceptor() {
                 @Override
@@ -105,16 +102,16 @@ public class ServiceGenerator {
                     System.out.println("Authenticating for response: " + response);
                     System.out.println("Challenges: " + response.challenges());
 
-                    TokenAuthenticator tokenAuthenticator = new TokenAuthenticator(context);
-                    tokenAuthenticator.setRefreshToken(token);
-                    String refresh_token = tokenAuthenticator.getToken();
-
-
-
                     if (responseCount(response) >= 3) {
                         return null; // If we've failed 3 times, give up.
                     }
 
+                    TokenAuthenticator tokenAuthenticator = new TokenAuthenticator(context);
+                    tokenAuthenticator.setRefreshToken(token);
+                    String refresh_token = tokenAuthenticator.getToken();
+
+                    Log.v(TAG,"old token:"+token);
+                    Log.v(TAG,"new token:"+refresh_token);
 
                     return response.request().newBuilder()
                             .header("Accept", "application/json")
