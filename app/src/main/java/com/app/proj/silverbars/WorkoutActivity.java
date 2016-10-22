@@ -577,6 +577,8 @@ public class WorkoutActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, WorkingOutActivity.class);
         intent.putParcelableArrayListExtra("exercises", adapter.getExercises());
+
+
         intent.putExtra("songs",Songs_names);
         intent.putExtra("songlist",Songs_files);
         intent.putExtra("Sets",sets);

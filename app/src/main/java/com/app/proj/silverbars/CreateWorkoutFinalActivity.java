@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -34,8 +33,6 @@ import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.app.proj.silverbars.PlaylistPickerActivity.convertArrayToString;
 
 public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
@@ -246,8 +243,8 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
     private void putExercisesinRecycler(){
 
-        TokenAuthenticator tokenAuthenticator = new TokenAuthenticator(this);
-        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class, tokenAuthenticator.getToken());
+
+        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class);
 
         Call<Exercise[]> call = service.getAllExercises();
         call.enqueue(new Callback<Exercise[]>() {

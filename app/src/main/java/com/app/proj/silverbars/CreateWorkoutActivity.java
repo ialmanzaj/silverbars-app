@@ -72,6 +72,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         setSupportActionBar(toolbar);
 
         if (toolbar != null) {
+
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(getResources().getString(R.string.text_create_workout));
             toolbar.setNavigationIcon(R.drawable.ic_clear_white_24px);
@@ -201,8 +202,8 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
         setEmptyContentOff();
 
-        TokenAuthenticator tokenAuthenticator = new TokenAuthenticator(this);
-        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class,tokenAuthenticator.getToken());
+
+        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class);
 
         service.getAllExercises().enqueue(new Callback<Exercise[]>() {
             @Override

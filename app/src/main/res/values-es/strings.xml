@@ -169,7 +169,7 @@
 
     <string name="next">Siguiente</string>
     <string name="empty_create">La Rutinas esta vacia :(</string>
-    <string name="add_exercises">Agregar ejercicios</string>
+    <string name="add_exercises_title">Agregar Ejercicios</string>
     <string name="add_more">Agregar más ejercicios</string>
 
     <string name="songs">Mis Canciones</string>

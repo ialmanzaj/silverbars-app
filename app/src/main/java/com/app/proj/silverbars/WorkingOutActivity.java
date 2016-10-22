@@ -55,8 +55,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     private static final String TAG ="WorkingOut ACTIVITY";
     private static final String CLIENT_ID = "20823679749441aeacf4e601f7d12270";
-
-
     static MediaPlayer mp;
     ArrayList<File> mySongs;
     ArrayList<File> playlist;
@@ -129,6 +127,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Bundle b = i.getExtras();
 
         exercisesforRecycler = b.getParcelableArrayList("exercises");
+
+
         RestByExercise =  b.getInt("RestByExercise");
         RestBySet = b.getInt("RestBySet");
         VibrationPerRep = b.getBoolean("VibrationPerRep");

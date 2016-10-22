@@ -1,5 +1,6 @@
 package com.app.proj.silverbars;
 
+import android.accounts.Account;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +24,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.andretietz.retroauth.AuthAccountManager;
+import com.andretietz.retroauth.AuthenticationActivity;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -44,8 +47,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import static com.facebook.Profile.getCurrentProfile;
 
-public class LoginActivity extends AppCompatActivity {
+
+public class LoginActivity extends AuthenticationActivity {
 
     private static final int REQUEST_READ_CONTACTS = 0;
 
@@ -83,7 +88,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         Log.v(TAG,"LoginActivity creada");
-
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
@@ -145,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
 
-                    LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile"));
+                    LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile", "email", "user_friends"));
 
 
                 }
@@ -201,18 +205,21 @@ public class LoginActivity extends AppCompatActivity {
 
 
         LoginService loginService = ServiceGenerator.createService(LoginService.class);
-
-        Call<AccessToken> call = loginService.getAccessToken("convert_token",CONSUMER_KEY,CONSUMER_SECRET,"facebook",facebook_token);
-        call.enqueue(new Callback<AccessToken>() {
+        loginService.getAccessToken("convert_token",CONSUMER_KEY,CONSUMER_SECRET,"facebook",facebook_token).enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
                 if (response.isSuccessful()) {
-                    Gson gson = new Gson();
+
+                    String user;
+                    user = response.body().getAccess_token();
 
 
-                    AuthPreferences authPreferences = new AuthPreferences(LoginActivity.this);
-                    String token = gson.toJson(response.body(),AccessToken.class);
-                    authPreferences.setAccessToken(token);
+                    Account account = createOrGetAccount(user);
+
+                    storeToken(account, getString(R.string.authentication_TOKEN),  response.body().getAccess_token(),  response.body().getRefresh_token());
+
+                    // finishes the activity and set this account to the "current-active" one
+                    finalizeAuthentication(account);
 
                     saveLogIn();
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));

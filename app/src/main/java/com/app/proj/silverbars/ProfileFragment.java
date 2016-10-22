@@ -49,7 +49,12 @@ public class ProfileFragment extends Fragment {
 
         //profiles settings
         profile_name = (TextView) rootView.findViewById(R.id.Profile_name);
+
+
         String name = getCurrentProfile().getFirstName()+" "+getCurrentProfile().getLastName();
+
+
+
         profile_name.setText(name);
         profile_image = (ImageView) rootView.findViewById(R.id.profile_image);
         Bitmap bmp = loadProfileImageFromCache(getActivity(),getCurrentProfile().getId());

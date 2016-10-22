@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.andretietz.retroauth.AuthAccountManager;
+
 import org.lucasr.twowayview.widget.TwoWayView;
 
 import java.util.ArrayList;
@@ -29,9 +31,6 @@ import retrofit2.Response;
 /**
  * Created by isaacalmanza on 10/04/16.
  */
-
-
-
 public class MainFragment extends Fragment {
 
     private static final String TAG = "MAIN FRAGMENT";
@@ -46,17 +45,20 @@ public class MainFragment extends Fragment {
 
     ProgressBar progressBar;
 
-    List<Workout> workouts  = new ArrayList<>();
+    List<Workout> mWorkouts  = new ArrayList<>();
 
     private WorkoutAdapter adapter;
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.fragment_fmain, container, false);
 
+
         progressBar = (ProgressBar)  rootview.findViewById(R.id.progress_bar);
         recyclerView = (TwoWayView) rootview.findViewById(R.id.list);
-
 
         noInternetConnectionLayout = (LinearLayout) rootview.findViewById(R.id.noInternetConnection_layout);
         failedServerLayout = (LinearLayout) rootview.findViewById(R.id.failed_conection_layout);
@@ -172,67 +174,67 @@ public class MainFragment extends Fragment {
     public void getWorkoutsData(String muscle){
         muscleData = muscle;
 
-        if (!swipeContainer.isRefreshing()){
+
+        if (adapter == null){
             progressBar.setVisibility(View.VISIBLE);
-        }
 
-        TokenAuthenticator tokenAuthenticator = new TokenAuthenticator(getActivity());
-        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class,tokenAuthenticator.getToken(),getActivity());
-
-        service.getWorkouts().enqueue(new Callback<Workout[]>() {
-            @Override
-            public void onResponse(Call<Workout[]> call, Response<Workout[]> response) {
-                if (response.isSuccessful()) {
-                    onErrorViewoff();
-
-                    Collections.addAll(workouts,response.body());
-                    recyclerView.setAdapter(new WorkoutAdapter(getActivity(),workouts));
+            SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class);
+            service.getWorkouts().enqueue(new Callback<Workout[]>() {
+                @Override
+                public void onResponse(Call<Workout[]> call, Response<Workout[]> response) {
+                    if (response.isSuccessful()) {
+                        onErrorViewoff();
 
 
-                } else {
+                        Collections.addAll(mWorkouts,response.body());
+
+
+                        adapter = new WorkoutAdapter(getActivity(),mWorkouts);
+                        recyclerView.setAdapter(adapter);
+
+
+                    } else {
+                        onErrorViewOn();
+                        Log.e(TAG,"statusCode: "+response.code());
+                    }
+                }
+                @Override
+                public void onFailure(Call<Workout[]> call, Throwable t) {
+                    Log.e(TAG,"Workouts, onFailure: ",t);
                     onErrorViewOn();
-                    Log.e(TAG,"statusCode: "+response.code());
-
                 }
-            }
-            @Override
-            public void onFailure(Call<Workout[]> call, Throwable t) {
-                Log.e(TAG,"get Workouts Data, onFailure: ",t);
-                onErrorViewOn();
-            }
-        });
+            });
 
 
-           /*
-           if (Objects.equals(muscle, "ALL")) {
-                recyclerView.setAdapter(new WorkoutAdapter(getActivity(), workouts));
+        }else {
 
-           } else {
+            swipeContainer.setRefreshing(false);
 
-               Workout[] auxWorkout = response.body();
-                Workout[] workoutFlag = null;
-                int x = 0;
-                for (Workout workout : workouts) {
-                    String muscleData = workout.getMainMuscle();
-                    if (Objects.equals(muscle, muscleData)) {
-                        x++;
+
+            if (Objects.equals(muscle, "ALL")) {
+                recyclerView.setAdapter(new WorkoutAdapter(getActivity(), mWorkouts));
+
+            } else {
+                adapter = null;
+
+                List<Workout> mWorkoutFiltered = new ArrayList<>();
+
+                for (Workout workout: mWorkouts){
+                    String main_muscle = workout.getMainMuscle();
+                    if(Objects.equals(muscle, main_muscle)){
+
+                        mWorkoutFiltered.add(workout);
                     }
+
                 }
-                Workouts = new Workout[x];
-                int y = 0;
-                for (Workout anAuxWorkout : auxWorkout) {
-                    String muscleData = anAuxWorkout.getMainMuscle();
-                    if (Objects.equals(muscle, muscleData)) {
-                        Workouts[y] = anAuxWorkout;
-                        //Log.v("Workout", Workouts[y].getWorkout_name());
-                        y++;
-                    }
-                }
-           }
-            */
+
+                adapter = new WorkoutAdapter(getActivity(),mWorkoutFiltered);
+                recyclerView.setAdapter(adapter);
+            }
 
 
 
+        }
 
     }
 

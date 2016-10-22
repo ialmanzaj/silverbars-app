@@ -1,7 +1,6 @@
 package com.app.proj.silverbars;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,9 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,20 +16,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.facebook.*;
-import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -43,35 +36,22 @@ import retrofit2.Retrofit;
 import static com.app.proj.silverbars.Utilities.getFileReady;
 import static com.app.proj.silverbars.Utilities.saveHtmInDevice;
 
-import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MAIN SCREEN ACTIVITY";
-    private ViewPager view;
-
-    private Button songs;
-    private String email,name;
-    private int id;
-    private TextView emailView, nameView, Username, title;
-
-    private MySQLiteHelper database;
     private DrawerLayout drawerLayout;
     private ListView drawerList;
-    private ActionBarDrawerToggle drawerToggle;
+ 
     public LinearLayout Button_filter;
-    private CharSequence activityTitle;
     private CharSequence itemTitle;
-    private String[] tagTitles =  new String[3];;
+    private String[] menuTitles =  new String[3];;
     private Toolbar toolbar;
-    private List<String> spinnerArray = new ArrayList<String>();
     private String muscle = "ALL";
     public Spinner spinner;
     private boolean Opened = false;
     private FloatingActionButton ButtonCreateWorkout;
     LinearLayout settings;
-
-
 
 
     @Override
@@ -80,40 +60,43 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG,"Main Activity creada");
         setContentView(R.layout.activity_main_screen);
         FacebookSdk.sdkInitialize(getApplicationContext());
-
-
+        
         if (!Fresco.hasBeenInitialized()){
             Fresco.initialize(this);
         }
 
-
-
-
-
         settings = (LinearLayout) findViewById(R.id.settings);
-        tagTitles = this.getResources().getStringArray(R.array.navigation_array);
+        
+        menuTitles = this.getResources().getStringArray(R.array.navigation_array);
 
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerList = (ListView) findViewById(R.id.left_drawer);
-
+        
+        
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24px);
-        toolbar.setTitle(tagTitles[0]);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (drawerLayout.isDrawerOpen(drawerList)){
-                    drawerLayout.closeDrawer(drawerList);
+        
+        if (toolbar != null){
+            
+            toolbar.setNavigationIcon(R.drawable.ic_menu_white_24px);
+            toolbar.setTitle(menuTitles[0]);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (drawerLayout.isDrawerOpen(drawerList)){
+                        drawerLayout.closeDrawer(drawerList);
+                    }
+                    else
+                        drawerLayout.openDrawer(drawerList);
                 }
-                else
-                    drawerLayout.openDrawer(drawerList);
-            }
-        });
+            });
+            
+        }
+        
+       
 
-
-
+        
         ButtonCreateWorkout = (FloatingActionButton) findViewById(R.id.fab);
         ButtonCreateWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,22 +109,24 @@ public class MainActivity extends AppCompatActivity {
         Button_filter = (LinearLayout) toolbar.findViewById(R.id.Sort);
 
         final ArrayList<DrawerItem> items_drawer = new ArrayList<DrawerItem>();
-        items_drawer.add(new DrawerItem(tagTitles[0],R.drawable.ic_home_black_24px));
-        items_drawer.add(new DrawerItem(tagTitles[1],R.drawable.ic_apps_black_24dp));
-        items_drawer.add(new DrawerItem(tagTitles[2],R.drawable.ic_person_outline_black_24px));
-
-
-
+        
+        
+        items_drawer.add(new DrawerItem(menuTitles[0],R.drawable.ic_home_black_24px));
+        items_drawer.add(new DrawerItem(menuTitles[1],R.drawable.ic_apps_black_24dp));
+        items_drawer.add(new DrawerItem(menuTitles[2],R.drawable.ic_person_outline_black_24px));
+        
         drawerList.setAdapter(new DrawerListAdapter(this, items_drawer));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
+        
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
             }
         });
+
 
         if (savedInstanceState == null) {
             selectItem(0);
@@ -281,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
         }
         // Se actualiza el item seleccionado y el título, después de cerrar el drawer
         drawerList.setItemChecked(position, true);
-        toolbar.setTitle(tagTitles[position]);
+        toolbar.setTitle(menuTitles[position]);
         drawerLayout.closeDrawer(drawerList);
     }
 
@@ -327,8 +312,7 @@ public class MainActivity extends AppCompatActivity {
             };
         }.execute();
     }
-
-
+    
     private void setMusclePath(File file){
         Log.v(TAG,"setMusclePath: "+file.getPath());
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
@@ -336,7 +320,6 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(getString(R.string.muscle_path), file.getPath());
         editor.apply();
     }
-
 
     @Override
     protected void onStart() {

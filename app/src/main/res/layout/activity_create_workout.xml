@@ -143,7 +143,7 @@
                             android:background="@color/secondColor"
                             android:id="@+id/add_exercises"
                             android:layout_gravity="center_horizontal"
-                            android:text="@string/add_exercises"
+                            android:text="@string/add_exercises_button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
                     </LinearLayout>

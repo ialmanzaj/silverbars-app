@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,7 +52,7 @@ public class ExerciseListActivity extends AppCompatActivity {
 
         if (toolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(getResources().getString(R.string.add_exercises));
+            getSupportActionBar().setTitle(getResources().getString(R.string.add_exercises_title));
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -105,8 +106,8 @@ public class ExerciseListActivity extends AppCompatActivity {
 
     private void getExercisesFromAPI() {
 
-        TokenAuthenticator tokenAuthenticator = new TokenAuthenticator(this);
-        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class, tokenAuthenticator.getToken());
+
+        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class);
 
         service.getAllExercises().enqueue(new Callback<Exercise[]>() {
             @Override
@@ -114,6 +115,7 @@ public class ExerciseListActivity extends AppCompatActivity {
                 if (response.isSuccessful()){
                     onErrorOff();
 
+                    Collections.addAll(OriginalExerciseListAll,response.body());
 
                     try {
                         Intent i = getIntent();

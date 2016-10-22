@@ -8,7 +8,6 @@
     <string name="agree">Agree</string>
     <string name="disagree">Disagree</string>
 
-
     <string name="choose">Choose</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_login">Sign in</string>
@@ -29,7 +28,6 @@
 
     <string name="facebook_app_id" translatable="false">183093092104411</string>
     <string name="fb_login_protocol_scheme" translatable="false">183093092104411</string>
-
 
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
@@ -75,9 +73,11 @@
     <string name="vibration_rep_text">Activate vibration per rep</string>
     <string name="vibration_set_text">Activate vibration per set</string>
     <string name="tempo_text">Tempo in Reps</string>
+
     <string name="tempo_positive">3</string>
     <string name="tempo_isometric">1</string>
     <string name="tempo_negative">3</string>
+
     <string name="select_music_text">Select your music</string>
     <string name="exercises_text">Exercises</string>
     <string name="start_button">START</string>
@@ -170,7 +170,7 @@
 
     <string name="next">Next</string>
     <string name="empty_create">The Workout is empty :(</string>
-    <string name="add_exercises">Add exercises</string>
+    <string name="add_exercises_title">Add Exercises</string>
     <string name="add_more">Add more exercises</string>
 
     <string name="songs">My Songs</string>
@@ -204,9 +204,14 @@
     <string name="playlist_name">Playlist name</string>
     <string name="add_exercises_button">ADD EXERCISES</string>
 
-
     <string name="level">Level</string>
 
+
+    <!---           Strings for authentication       -->
+    <string name="com.andretietz.retroauth.authentication.ACTION" translatable="false">@string/authentication_ACTION</string>
+    <string name="authentication_ACTION" translatable="false">com.app.proj.silverbars.ACTION</string>
+    <string name="authentication_ACCOUNT" translatable="false">com.app.proj.silverbars.ACCOUNT</string>
+    <string name="authentication_TOKEN" translatable="false">com.app.proj.silverbars.TOKEN</string>
 
 </resources>
 

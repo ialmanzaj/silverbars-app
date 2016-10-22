@@ -1,12 +1,17 @@
 package com.app.proj.silverbars;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.andretietz.retroauth.AuthAccountManager;
+import com.andretietz.retroauth.AuthenticationActivity;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.FacebookSdk;
@@ -28,7 +33,12 @@ public class SplashScreen extends AppCompatActivity {
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         Boolean signIn = sharedPref.getBoolean(getString(R.string.sign_in), false);
 
-        if (signIn){
+
+        AuthAccountManager authAccountManager = new AuthAccountManager();
+        Account activeAccount = authAccountManager
+                .getActiveAccount(getString(R.string.authentication_ACCOUNT));
+
+        if (activeAccount != null){
 
             accessTokenTracker = new AccessTokenTracker() {
                 @Override
@@ -52,14 +62,15 @@ public class SplashScreen extends AppCompatActivity {
 
     private void startLogin(){
         Log.v(TAG,"startLogin");
-        Intent i = new Intent(SplashScreen.this, LoginActivity.class);
+        Intent i = new Intent(this,LoginActivity.class);
+        i.putExtra(AccountManager.KEY_ACCOUNT_TYPE, getString(R.string.authentication_ACCOUNT));
         startActivity(i);
         finish();
     }
 
     private void startMainActivity(){
         Log.v(TAG,"startMainActivity");
-        Intent i = new Intent(SplashScreen.this, MainActivity.class);
+        Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();
     }

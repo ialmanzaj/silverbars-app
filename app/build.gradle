@@ -87,16 +87,19 @@ dependencies {
     compile 'com.github.coyarzun89:fabtransitionactivity:0.2.0'
     compile 'com.google.android.gms:play-services-appindexing:9.6.1'
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
+
     compile 'com.afollestad.material-dialogs:core:0.8.5.9'
+
     compile 'org.lucasr.twowayview:core:1.0.0-SNAPSHOT@aar'
     compile 'org.lucasr.twowayview:layouts:1.0.0-SNAPSHOT@aar'
+
     compile 'com.github.jd-alexander:LikeButton:0.2.0'
     compile 'com.pnikosis:materialish-progress:1.7'
+
     compile 'com.anjlab.android.iab.v3:library:1.0.32'
     compile 'io.reactivex:rxjava:1.1.8'
     compile 'io.reactivex:rxandroid:0.23.0'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+
 
     compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
     compile 'com.google.guava:guava:18.0'
@@ -110,8 +113,6 @@ dependencies {
     compile 'com.facebook.fresco:fresco:0.13.0'
     compile 'com.android.support:multidex:1.0.1'
 
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 
 
     compile 'com.fasterxml.jackson.core:jackson-core:2.5.3'
@@ -124,6 +125,13 @@ dependencies {
 
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
+
+
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    compile 'com.andretietz.retroauth:retroauth-android:2.1.4'
 
 
 }
