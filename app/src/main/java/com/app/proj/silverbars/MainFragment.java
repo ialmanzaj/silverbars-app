@@ -16,8 +16,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.andretietz.retroauth.AuthAccountManager;
-
 import org.lucasr.twowayview.widget.TwoWayView;
 
 import java.util.ArrayList;
@@ -35,8 +33,8 @@ public class MainFragment extends Fragment {
 
     private static final String TAG = "MAIN FRAGMENT";
     public TwoWayView recyclerView;
-    private SwipeRefreshLayout swipeContainer;
 
+    private SwipeRefreshLayout swipeContainer;
 
     public String muscleData = "ALL";
     private boolean opened;
@@ -115,9 +113,10 @@ public class MainFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-
         muscleData = getArguments().getString("Muscle");
         opened = getArguments().getBoolean("Opened");
+
+        Log.v(TAG,"MUSCLE DATA CHANGED: "+muscleData);
 
 
         if (!opened){
@@ -131,7 +130,7 @@ public class MainFragment extends Fragment {
 
             }
 
-            else{
+            else {
                 swipeContainer.setVisibility(View.GONE);
                 noInternetConnectionLayout.setVisibility(View.VISIBLE);
 
@@ -171,31 +170,43 @@ public class MainFragment extends Fragment {
     }
 
 
-    public void getWorkoutsData(String muscle){
+    private void getWorkoutsData(String muscle){
         muscleData = muscle;
 
 
-        if (adapter == null){
+        if (!swipeContainer.isRefreshing()){
             progressBar.setVisibility(View.VISIBLE);
+        }
 
-            SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class);
-            service.getWorkouts().enqueue(new Callback<Workout[]>() {
-                @Override
-                public void onResponse(Call<Workout[]> call, Response<Workout[]> response) {
-                    if (response.isSuccessful()) {
+
+        MainService service = ServiceGenerator.createService(MainService.class);
+        service.getWorkouts().enqueue(new Callback<Workout[]>() {
+            @Override
+            public void onResponse(Call<Workout[]> call, Response<Workout[]> response) {
+                if (response.isSuccessful()) {
                         onErrorViewoff();
-
+                        progressBar.setVisibility(View.GONE);
 
                         Collections.addAll(mWorkouts,response.body());
 
+                        if (adapter != null){
 
-                        adapter = new WorkoutAdapter(getActivity(),mWorkouts);
-                        recyclerView.setAdapter(adapter);
+                            if (adapter.getItemCount() != mWorkouts.size()){
 
+
+
+                            }
+                        }else {
+
+                            putItemsInAdapter(mWorkouts);
+                        }
+
+                        swipeContainer.setRefreshing(false);
 
                     } else {
-                        onErrorViewOn();
+
                         Log.e(TAG,"statusCode: "+response.code());
+                        onErrorViewOn();
                     }
                 }
                 @Override
@@ -203,38 +214,43 @@ public class MainFragment extends Fragment {
                     Log.e(TAG,"Workouts, onFailure: ",t);
                     onErrorViewOn();
                 }
-            });
+        });
 
 
-        }else {
-
-            swipeContainer.setRefreshing(false);
+    }
 
 
-            if (Objects.equals(muscle, "ALL")) {
-                recyclerView.setAdapter(new WorkoutAdapter(getActivity(), mWorkouts));
 
-            } else {
-                adapter = null;
 
-                List<Workout> mWorkoutFiltered = new ArrayList<>();
+    private void putItemsInAdapter(List<Workout> workouts){
+        adapter = new WorkoutAdapter(getActivity(),workouts);
+        recyclerView.setAdapter(adapter);
+    }
 
-                for (Workout workout: mWorkouts){
-                    String main_muscle = workout.getMainMuscle();
-                    if(Objects.equals(muscle, main_muscle)){
+    public void filterWorkouts(String muscle){
+        recyclerView.swapAdapter(adapter,false);
 
-                        mWorkoutFiltered.add(workout);
-                    }
 
+        if(Objects.equals(muscle, "ALL")) {
+
+            adapter.setItems(mWorkouts);
+
+        } else {
+
+            List<Workout> mWorkoutFiltered = new ArrayList<>();
+
+            for (Workout workout: mWorkouts){
+                String main_muscle = workout.getMainMuscle();
+                if(Objects.equals(muscle, main_muscle)){
+                    mWorkoutFiltered.add(workout);
                 }
-
-                adapter = new WorkoutAdapter(getActivity(),mWorkoutFiltered);
-                recyclerView.setAdapter(adapter);
             }
 
-
-
+            adapter.setItems(mWorkoutFiltered);
         }
+
+
+        adapter.notifyDataSetChanged();
 
     }
 
@@ -247,18 +263,11 @@ public class MainFragment extends Fragment {
     }
 
     private void onErrorViewOn(){
-        Log.v(TAG,"onErrorViewOn");
-        progressBar.setVisibility(View.GONE);
-        swipeContainer.setVisibility(View.GONE);
         failedServerLayout.setVisibility(View.VISIBLE);
-
     }
 
-
     private void onErrorViewoff(){
-        Log.v(TAG,"onErrorViewoff");
-        progressBar.setVisibility(View.GONE);
-        swipeContainer.setRefreshing(false);
+        failedServerLayout.setVisibility(View.GONE);
     }
 
 

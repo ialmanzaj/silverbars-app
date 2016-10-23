@@ -244,7 +244,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
     private void putExercisesinRecycler(){
 
 
-        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class);
+        MainService service = ServiceGenerator.createService(MainService.class);
 
         Call<Exercise[]> call = service.getAllExercises();
         call.enqueue(new Callback<Exercise[]>() {

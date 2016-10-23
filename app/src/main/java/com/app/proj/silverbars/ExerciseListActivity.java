@@ -107,7 +107,7 @@ public class ExerciseListActivity extends AppCompatActivity {
     private void getExercisesFromAPI() {
 
 
-        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class);
+        MainService service = ServiceGenerator.createService(MainService.class);
 
         service.getAllExercises().enqueue(new Callback<Exercise[]>() {
             @Override

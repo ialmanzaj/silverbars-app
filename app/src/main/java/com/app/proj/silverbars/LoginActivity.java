@@ -210,18 +210,19 @@ public class LoginActivity extends AuthenticationActivity {
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
                 if (response.isSuccessful()) {
 
+                    AccessToken accessToken = response.body();
                     String user;
-                    user = response.body().getAccess_token();
+                    user = accessToken.getAccess_token();
 
 
                     Account account = createOrGetAccount(user);
 
-                    storeToken(account, getString(R.string.authentication_TOKEN),  response.body().getAccess_token(),  response.body().getRefresh_token());
+                    storeToken(account, getString(R.string.authentication_TOKEN),  accessToken.getAccess_token(),  accessToken.getRefresh_token());
 
                     // finishes the activity and set this account to the "current-active" one
                     finalizeAuthentication(account);
 
-                    saveLogIn();
+
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
 
@@ -237,13 +238,13 @@ public class LoginActivity extends AuthenticationActivity {
 
     }
 
-    private void saveLogIn(){
+   /* private void saveLogIn(){
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(getString(R.string.sign_in),true);
         editor.apply();
         Log.v(TAG,getString(R.string.sign_in));
-    }
+    }*/
 
     @Override
     protected void onDestroy() {

@@ -4,13 +4,11 @@ package com.app.proj.silverbars;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -99,7 +97,7 @@ public class ProfileFragment extends Fragment {
                 .baseUrl("http://graph.facebook.com/")
                 .build();
         String url_complete = url + "/picture?type=large";
-        SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
+        MainService downloadService = retrofit.create(MainService.class);
         Call<ResponseBody> call = downloadService.downloadFile(url_complete);
 
         call.enqueue(new Callback<ResponseBody>() {

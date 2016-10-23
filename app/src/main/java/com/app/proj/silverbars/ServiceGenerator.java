@@ -31,20 +31,18 @@ public class ServiceGenerator {
     private static final String TAG = "Service Generator";
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
+    private static Retroauth.Builder builder = new Retroauth.Builder<>(AndroidAuthenticationHandler.create(new TokenProvider()))
+            .baseUrl(API_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create());
+
+
     public static <S> S createService(Class<S> serviceClass) {
-
-        TokenProvider tokenProvider = new TokenProvider();
-
-        Retroauth.Builder builder = new Retroauth.Builder<>(AndroidAuthenticationHandler.create(tokenProvider))
-                        .baseUrl(API_BASE_URL)
-                        .addConverterFactory(GsonConverterFactory.create());
 
         //logging interceptor
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
 
         httpClient.addInterceptor(logging);
-
 
         OkHttpClient client = httpClient.build();
         Retrofit retrofit = builder.client(client).build();

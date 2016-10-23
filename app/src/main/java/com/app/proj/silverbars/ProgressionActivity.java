@@ -124,7 +124,7 @@ public class ProgressionActivity extends AppCompatActivity {
                 .client(client)
                 .build();
 
-        SilverbarsService service = retrofit.create(SilverbarsService.class);
+        MainService service = retrofit.create(MainService.class);
         retrofit2.Call<User.ProgressionMuscle[]> call = service.getProgression();
 
         call.enqueue(new Callback<User.ProgressionMuscle[]>() {

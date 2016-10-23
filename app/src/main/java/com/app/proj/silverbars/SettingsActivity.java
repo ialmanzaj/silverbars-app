@@ -1,5 +1,6 @@
 package com.app.proj.silverbars;
 
+import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,7 @@ import android.widget.RelativeLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.andretietz.retroauth.AuthAccountManager;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 /**
@@ -44,6 +46,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         }
 
+
+
         close_session = (RelativeLayout) findViewById(R.id.close_session);
         close_session.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,10 +64,19 @@ public class SettingsActivity extends AppCompatActivity {
                             @Override
                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 dialog.dismiss();
+
+                                //facebook logout
                                 LoginManager.getInstance().logOut();
-                                saveLogOut();
+
+
+                                AuthAccountManager authAccountManager = new AuthAccountManager();
+                                authAccountManager.removeActiveAccount(getString(R.string.authentication_ACCOUNT));
+
+
+                                Intent intent = new Intent(SettingsActivity.this,LoginActivity.class);
+                                intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, getString(R.string.authentication_ACCOUNT));
+                                startActivity(intent);
                                 finish();
-                                startActivity(new Intent(SettingsActivity.this,LoginActivity.class));
                             }
                         })
                         .negativeText(getResources().getString(R.string.negative_dialog)).onNegative(new MaterialDialog.SingleButtonCallback() {

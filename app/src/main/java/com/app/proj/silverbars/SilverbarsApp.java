@@ -18,15 +18,13 @@ public class SilverbarsApp extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
-
-        Fabric.with(this, new Crashlytics());
-
         if (!BuildConfig.DEBUG) {
-            Log.d("Ez", "Release mode. Crashlytics enable");
-            //Fabric.with(this, new Crashlytics());
+            Log.d("SilverbarsApp", "Release mode. Crashlytics enable");
+            Fabric.with(this, new Crashlytics());
         } else {
-            Log.d("Ez", "Debug mode. Crashlytics disable");
+            Log.d("SilverbarsApp", "Debug mode. Crashlytics disable");
         }
+
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/OpenSans-Regular.ttf")

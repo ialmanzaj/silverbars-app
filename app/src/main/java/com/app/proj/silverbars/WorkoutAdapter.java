@@ -29,7 +29,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
 
     private static final int TYPE_WORKOUT = 0;
     private static final int TYPE_VIEW_MORE = 1;
-    private static final String TAG = "WORKOUT ADAPTER";
+    private static final String TAG = "WorkoutAdapter";
     Context context;
     List<Workout> workouts;
 
@@ -123,5 +123,11 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.VH> {
         int height = size.y;
         return height;
     }
+    public void setItems(List<Workout> workouts){
+        this.workouts = workouts;
+    }
 
+    public List<Workout> getWorkouts() {
+        return workouts;
+    }
 }

@@ -32,7 +32,9 @@ public class TokenProvider implements Provider<Account, AndroidTokenType, Androi
 
     @Override
     public Request authenticateRequest(Request request, AndroidToken androidToken) {
-        // this is an example of adding the token to the header of a request
+        Log.v(TAG,"authenticateRequest: "+androidToken.token);
+        Log.v(TAG,"authenticateRequest: "+androidToken.refreshToken);
+
         return request.newBuilder()
                 .header("Authorization", "Bearer " + androidToken.token)
                 .build();
@@ -40,9 +42,15 @@ public class TokenProvider implements Provider<Account, AndroidTokenType, Androi
 
     @Override
     public boolean retryRequired(int i, okhttp3.Response response, TokenStorage<Account, AndroidTokenType, AndroidToken> tokenStorage, Account account, AndroidTokenType androidTokenType, AndroidToken androidToken) {
-        // this is an optional (sample) implementation
+        Log.v(TAG,"retryRequired");
+
         if (!response.isSuccessful()) {
+            Log.v(TAG,"code: "+response.code());
             if (response.code() == 401) {
+                Log.v(TAG,"android-token: "+androidToken.token);
+                Log.v(TAG,"android-refresh-token: "+androidToken.refreshToken);
+
+
                 tokenStorage.removeToken(account, androidTokenType, androidToken);
 
                 if (androidToken.refreshToken != null) {
@@ -51,17 +59,18 @@ public class TokenProvider implements Provider<Account, AndroidTokenType, Androi
 
                     try {
 
-                        Response<AccessToken> refreshResponse = loginService.getRefreshAccessToken("refresh_token",CONSUMER_KEY,CONSUMER_SECRET,androidToken.token).execute();
+                        Response<AccessToken> refreshResponse = loginService.getRefreshAccessToken("refresh_token",CONSUMER_KEY,CONSUMER_SECRET,androidToken.refreshToken).execute();
 
                         if (refreshResponse.isSuccessful()){
 
                             AccessToken accessToken = refreshResponse.body();
                             Log.v(TAG,"accessToken:"+accessToken.getAccess_token());
+
+
                             tokenStorage.storeToken(account, androidTokenType,
-                                    new AndroidToken(accessToken.getAccess_token(), androidToken.refreshToken));
+                                    new AndroidToken(accessToken.getAccess_token(), accessToken.getRefresh_token()));
 
                         }
-
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

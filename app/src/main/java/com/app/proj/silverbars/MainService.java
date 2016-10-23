@@ -9,7 +9,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Url;
 
 
-public interface SilverbarsService {
+public interface MainService {
 
 
     @Authenticated({R.string.authentication_ACCOUNT,

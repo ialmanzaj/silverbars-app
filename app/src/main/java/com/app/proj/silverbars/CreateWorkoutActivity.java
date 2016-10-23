@@ -198,13 +198,10 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     }//  close create workout
 
     private void putExercisesinRecycler(final ArrayList<String> new_items_to_list){
-        //Log.v(TAG,"putExercisesinRecycler: "+new_items_to_list);
 
         setEmptyContentOff();
 
-
-        SilverbarsService service = ServiceGenerator.createService(SilverbarsService.class);
-
+        MainService service = ServiceGenerator.createService(MainService.class);
         service.getAllExercises().enqueue(new Callback<Exercise[]>() {
             @Override
             public void onResponse(Call<Exercise[]> call, Response<Exercise[]> response) {
@@ -223,7 +220,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                             if (Objects.equals(AllExercisesList.get(a).getExercise_name(), new_items_to_list.get(c))){
                                 //.v(TAG,""+AllExercisesList.get(a).getExercise_name()+":"+exercises_ids_from_activity.get(c));
                                 if (adapter == null){
-
                                     ExercisesToAdapter.add(new ExerciseRep(AllExercisesList.get(a)));
 
                                 }else {
@@ -248,7 +244,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
 
                     adapter = new RecyclerExerciseSelectedAdapter(CreateWorkoutActivity.this,ExercisesToAdapter,CreateWorkoutActivity.this);
-                    recycler.setAdapter( adapter );
+                    recycler.setAdapter(adapter);
 
                     setMusclesToView(mMuscles);
                     //putTypesInWorkout(TypeExercises);

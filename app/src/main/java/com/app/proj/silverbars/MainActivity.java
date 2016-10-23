@@ -142,17 +142,17 @@ public class MainActivity extends AppCompatActivity {
                         .items(R.array.filter_items_text)
                         .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
-                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                            public boolean onSelection(MaterialDialog dialog, View view, int indice, CharSequence text) {
                                 android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 
-                                if (which != -1) {
-                                    Log.v(TAG, String.valueOf(which));
-                                    String[] Items = getResources().getStringArray(R.array.filter_items);
+                                if (indice != -1) {
+                                    Log.v(TAG, String.valueOf(indice));
+                                    String[] Muscles = getResources().getStringArray(R.array.filter_items);
 
-                                    Log.v(TAG, Items[which]);
+                                    Log.v(TAG, Muscles[indice]);
                                     Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
                                     if (currentFragment instanceof MainFragment) {
-                                        ((MainFragment) currentFragment).getWorkoutsData(Items[which]);
+                                        ((MainFragment) currentFragment).filterWorkouts(Muscles[indice]);
 
 
                                     }
@@ -287,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/")
                 .build();
 
-        final SilverbarsService downloadhtmlService = retrofit.create(SilverbarsService.class);
+        final MainService downloadhtmlService = retrofit.create(MainService.class);
 
         new AsyncTask<Void, Long, Void>() {
             @Override

@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
-import android.os.NetworkOnMainThreadException;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,33 +29,20 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-
-import static com.app.proj.silverbars.WorkoutAdapter.containerDimensions;
 
 /**
  * Created by isaacalmanza on 08/10/16.
@@ -440,7 +426,7 @@ public class Utilities {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
-        SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
+        MainService downloadService = retrofit.create(MainService.class);
         Call<ResponseBody> call = downloadService.downloadFile(url);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -461,7 +447,7 @@ public class Utilities {
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
-        final SilverbarsService downloadService = retrofit.create(SilverbarsService.class);
+        final MainService downloadService = retrofit.create(MainService.class);
 
         new AsyncTask<Void, Long, Void>() {
             @Override
