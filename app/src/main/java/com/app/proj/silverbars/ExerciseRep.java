@@ -12,18 +12,18 @@ import com.google.gson.annotations.SerializedName;
 public class ExerciseRep implements Parcelable{
 
     @SerializedName("exercise")
-    Exercise exercise;
+    private Exercise exercise;
 
     @SerializedName("repetition")
-    int repetition;
+    private int repetition;
 
     @SerializedName("seconds")
-    int seconds;
+    private int seconds;
 
 
-    int tempo_positive;
-    int tempo_negative;
-    int tempo_isometric;
+    private int tempo_positive;
+    private int tempo_negative;
+    private int tempo_isometric;
 
 
     public ExerciseRep(Exercise exercise) {

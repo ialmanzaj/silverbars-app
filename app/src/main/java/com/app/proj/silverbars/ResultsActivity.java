@@ -1,5 +1,6 @@
 package com.app.proj.silverbars;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -40,6 +41,8 @@ public class ResultsActivity extends AppCompatActivity {
     private  List<String> MusclesArray = new ArrayList<>();
     private  List<String> TypeExercises = new ArrayList<>();
 
+    ArrayList<ExerciseRep> exercises = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,7 @@ public class ResultsActivity extends AppCompatActivity {
         Intent i = getIntent();
         Bundle b = i.getExtras();
 
-        ArrayList<Exercise> exercises = (ArrayList<Exercise>) b.getSerializable("exercises");
+        exercises = b.getParcelableArrayList("exercises");
         Log.v(TAG,"exercises: "+ exercises);
 
 
@@ -97,29 +100,32 @@ public class ResultsActivity extends AppCompatActivity {
 
         if (exercises != null) {
 
-            /*int porcentaje[] = new int[exercises.size()];
+            int porcentaje[] = new int[exercises.size()];
 
             for(int a = 0; a < exercises.size(); a++){
-                Collections.addAll(MusclesArray, exercises.get(a).getMuscles());
-                Collections.addAll(TypeExercises, exercises.get(a).getTypes_exercise());
 
-                if (Objects.equals(exercises.get(a).getLevel(),"NORMAL")){
+                for (Muscle muscle: exercises.get(a).getExercise().getMuscles()){
+                    Collections.addAll(MusclesArray, muscle.getMuscleName());
+                }
+                Collections.addAll(TypeExercises, exercises.get(a).getExercise().getTypes_exercise());
+
+                if (Objects.equals(exercises.get(a).getExercise().getLevel(),"NORMAL")){
                     porcentaje[a] = 3;
-                }else if (Objects.equals(exercises.get(a).getLevel(),"EASY")){
+                }else if (Objects.equals(exercises.get(a).getExercise().getLevel(),"EASY")){
                     porcentaje[a] = 1;
-                }else if (Objects.equals(exercises.get(a).getLevel(),"HARD")){
+                }else if (Objects.equals(exercises.get(a).getExercise().getLevel(),"HARD")){
                     porcentaje[a] = 5;
-                }else if (Objects.equals(exercises.get(a).getLevel(),"CHALLENGING")){
+                }else if (Objects.equals(exercises.get(a).getExercise().getLevel(),"CHALLENGING")){
                     porcentaje[a] = 8;
                 }
 
-                porcentaje[a] = porcentaje[a] * exercises.get(a).getRep();
+                porcentaje[a] = porcentaje[a] * exercises.get(a).getRepetition();
 
-                Log.v(TAG,"exercise"+exercises.get(a).getExercise_name()+"porcentaje: "+porcentaje[a]);
+                Log.v(TAG,"exercise"+exercises.get(a).getExercise().getExercise_name()+"porcentaje: "+porcentaje[a]);
             }
 
             setMusclesToView(MusclesArray);
-            setTypes(TypeExercises);*/
+            setTypes(TypeExercises);
         }
     }
 
@@ -128,8 +134,7 @@ public class ResultsActivity extends AppCompatActivity {
     }
 
     private void setTypes(List<String> types){
-        List<String> types_oficial;
-        types_oficial = deleteCopiesofList(types);
+        List<String> types_oficial = deleteCopiesofList(types);
 
         for (int a =0; a<types_oficial.size();a++){
 
@@ -139,10 +144,11 @@ public class ResultsActivity extends AppCompatActivity {
         }
     }
 
+
+    @SuppressLint("SetJavaScriptEnabled")
     private void setMusclesToView(List<String> musculos){
 
         if (musculos.size() > 0){
-
             List<String> musculos_oficial;
             musculos_oficial = deleteCopiesofList(musculos);
 
@@ -156,7 +162,6 @@ public class ResultsActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
                 webView.setWebViewClient(new WebViewClient(){
                     @Override
                     public void onPageFinished(WebView view, String url) {
@@ -165,13 +170,11 @@ public class ResultsActivity extends AppCompatActivity {
                     }
 
                 });
-
             }
         });
 
 
         webView.getSettings().setJavaScriptEnabled(true);
-
         getBodyView();
     }
 

@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                         .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View view, int indice, CharSequence text) {
-                                android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                                FragmentManager fragmentManager = getSupportFragmentManager();
 
                                 if (indice != -1) {
                                     Log.v(TAG, String.valueOf(indice));
@@ -153,8 +154,6 @@ public class MainActivity extends AppCompatActivity {
                                     Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
                                     if (currentFragment instanceof MainFragment) {
                                         ((MainFragment) currentFragment).filterWorkouts(Muscles[indice]);
-
-
                                     }
                                 }
                                 return true;
@@ -167,48 +166,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        File Dir = getFileReady(this,"/html/");
-        if (Dir.isDirectory()){
-            Log.v(TAG,"EXISTE DIR"+Dir.getPath());
-            File file = getFileReady(this,"/html/"+"index.html");
-            if (!file.exists()){
-                MuscleTemplateDownload();
-                setMusclePath(file);
-            }else
-                setMusclePath(file);
-        }else {
-            boolean success = Dir.mkdir();
-            if (success)
-                MuscleTemplateDownload();
-            else
-                Log.e(TAG,"Error creating dir");
-        }
 
-
+        saveBodyTemplate();
     }//oncreate
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
 
-    /* La escucha del ListView en el Drawer */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
-
-    public String getMuscle() {
-        return muscle;
-    }
 
     private void selectItem(int position) {
+
         // Reemplazar el contenido del layout principal por un fragmento
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
 
         switch (position){
@@ -216,25 +183,27 @@ public class MainActivity extends AppCompatActivity {
                 if (currentFragment instanceof MainFragment) {
                     break;
                 }else{
-                    MainFragment main = new MainFragment();
-                    Bundle bundle = new Bundle();
 
+                    MainFragment mainFragment = new MainFragment();
+
+                    Bundle bundle = new Bundle();
                     bundle.putString("Muscle",muscle);
                     bundle.putBoolean("Opened",Opened);
+                    mainFragment.setArguments(bundle);
 
-                    main.setArguments(bundle);
+
                     fragmentManager
                             .beginTransaction()
-                            .replace(R.id.content_frame, main, null)
+                            .replace(R.id.content_frame, mainFragment, null)
                             .addToBackStack(null)
                             .commit();
+
                     Button_filter.setVisibility(View.VISIBLE);
                     ButtonCreateWorkout.setVisibility(View.VISIBLE);
                     settings.setVisibility(View.GONE);
-                    Opened = main.isOpened();
+                    Opened = mainFragment.isOpened();
                 }
                 break;
-
             case 1:// MY WORKOUTS TAB
                 if (currentFragment instanceof MainFragment) {
                     muscle = ((MainFragment) currentFragment).getMuscleData();
@@ -269,6 +238,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle(menuTitles[position]);
         drawerLayout.closeDrawer(drawerList);
     }
+
+
 
     /* Método auxiliar para setear el titulo de la action bar */
     @Override
@@ -312,6 +283,45 @@ public class MainActivity extends AppCompatActivity {
             };
         }.execute();
     }
+
+    private void saveBodyTemplate(){
+        File Dir = getFileReady(this,"/html/");
+        if (Dir.isDirectory()){
+            Log.v(TAG,"EXISTE DIR"+Dir.getPath());
+            File file = getFileReady(this,"/html/"+"index.html");
+            if (!file.exists()){
+                MuscleTemplateDownload();
+                setMusclePath(file);
+            }else
+                setMusclePath(file);
+        }else {
+            boolean success = Dir.mkdir();
+            if (success)
+                MuscleTemplateDownload();
+            else
+                Log.e(TAG,"Error creating dir");
+        }
+
+    }
+
+    public String getMuscle() {
+        return muscle;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    /* La escucha del ListView en el Drawer */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
     
     private void setMusclePath(File file){
         Log.v(TAG,"setMusclePath: "+file.getPath());
@@ -333,5 +343,15 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG,"onResume");
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.v(TAG,"onRestart");
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.v(TAG,"onDestroy");
+    }
 }

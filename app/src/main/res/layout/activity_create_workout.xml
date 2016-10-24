@@ -214,7 +214,7 @@
         android:background="@color/white"
         android:gravity="center_horizontal|center_vertical"
         android:visibility="gone"
-        android:id="@+id/progress_bar_"
+        android:id="@+id/progress"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

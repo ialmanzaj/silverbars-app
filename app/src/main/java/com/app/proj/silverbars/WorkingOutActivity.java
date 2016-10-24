@@ -127,8 +127,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Bundle b = i.getExtras();
 
         exercisesforRecycler = b.getParcelableArrayList("exercises");
-
-
         RestByExercise =  b.getInt("RestByExercise");
         RestBySet = b.getInt("RestBySet");
         VibrationPerRep = b.getBoolean("VibrationPerRep");
@@ -484,7 +482,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
         // Crear un nuevo adaptador
-        RecyclerView.Adapter adapter = new ExerciseWorkingOutAdapter(this,exercisesforRecycler);
+        ExerciseWorkingOutAdapter adapter = new ExerciseWorkingOutAdapter(this,exercisesforRecycler);
         recycler.setAdapter(adapter);
 
         if (adapter.getItemCount() <= 1){
@@ -492,14 +490,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             nxtLayout.setVisibility(View.GONE);
         }
 
-
         elements = adapter.getItemCount();
         CurrentExercise.setText("1");
 
-
         totalExercise.setText(String.valueOf(elements));
         totalSet.setText(String.valueOf(TotalSets));
-
 
         totalSet.setText(String.valueOf(TotalSets));
         CurrentSet.setText("0");

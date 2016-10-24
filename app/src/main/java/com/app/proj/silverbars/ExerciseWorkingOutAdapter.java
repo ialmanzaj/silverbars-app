@@ -73,7 +73,7 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
 
         int position = viewHolder.getAdapterPosition();
 
-        viewHolder.nombre.setText(exercises.get(position).getExercise().getExercise_image());
+        viewHolder.nombre.setText(exercises.get(position).getExercise().getExercise_name());
         viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
 
 
@@ -91,7 +91,6 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
 
 
     }
-
 
     private int containerDimensions(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);

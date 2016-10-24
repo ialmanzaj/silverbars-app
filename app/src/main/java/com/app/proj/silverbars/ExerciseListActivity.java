@@ -108,7 +108,6 @@ public class ExerciseListActivity extends AppCompatActivity {
 
 
         MainService service = ServiceGenerator.createService(MainService.class);
-
         service.getAllExercises().enqueue(new Callback<Exercise[]>() {
             @Override
             public void onResponse(Call<Exercise[]> call, Response<Exercise[]> response) {

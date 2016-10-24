@@ -352,7 +352,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
 
    public Exercise getExercise(int exerciseId) {
-        Exercise exercise = new Exercise();
+        Exercise exercise = null;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor row = db.rawQuery("SELECT * FROM " + TABLE_EXERCISES + " WHERE " + KEY_IDEXERCISE + " = " + exerciseId, null);
 

@@ -1,10 +1,8 @@
 package com.app.proj.silverbars;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
@@ -26,24 +24,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
-import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
-import static com.app.proj.silverbars.Utilities.saveExerciseImageInDevice;
-
-
-public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<RecyclerExerciseSelectedAdapter.selectedExercisesViewHolder>  implements ItemTouchHelperAdapter {
+public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSelectedAdapter.selectedExercisesViewHolder>  implements ItemTouchHelperAdapter {
 
     private static final String TAG = "ExercisesAdapter";
     private List<ExerciseRep> mSelectedExercises;
 
     private final OnStartDragListener mDragStartListener;
 
-    Context mContext;
+    private Context mContext;
 
     public static class selectedExercisesViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder {
@@ -86,8 +75,7 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
     }
 
 
-    public RecyclerExerciseSelectedAdapter(Context context, List<ExerciseRep> exercises, OnStartDragListener dragStartListener) {
-
+    public ExercisesSelectedAdapter(Context context, List<ExerciseRep> exercises, OnStartDragListener dragStartListener) {
         mDragStartListener = dragStartListener;
         mContext = context;
         mSelectedExercises = exercises;
@@ -100,10 +88,9 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
         return mSelectedExercises.size();
     }
 
-    public List<ExerciseRep> getSelectedExercisesJson(){
+    public List<ExerciseRep> getSelectedExercises(){
         return mSelectedExercises;
     }
-
 
 
     public ArrayList<String> getSelectedExercisesName(){
@@ -112,15 +99,6 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
             exercises.add(mSelectedExercises.get(a).getExercise().getExercise_name());
         }
         return exercises;
-    }
-
-    public int[] getExerciseReps() {
-        int[] exercises_reps = new int[mSelectedExercises.size()];
-        for (int a = 0; a < mSelectedExercises.size(); a++) {
-            exercises_reps[a] = mSelectedExercises.get(a).getRepetition();
-        }
-
-        return exercises_reps;
     }
 
 
@@ -133,7 +111,6 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
             Collections.swap(mSelectedExercises,fromPosition, toPosition);
             notifyItemMoved(fromPosition, toPosition);
 
-
             notifyDataSetChanged();
         }catch (IndexOutOfBoundsException e){
             Log.e(TAG,"IndexOutOfBoundsException",e);
@@ -142,17 +119,21 @@ public class RecyclerExerciseSelectedAdapter extends RecyclerView.Adapter<Recycl
         return true;
     }
 
+    public void add(ExerciseRep exerciseRep){
+        this.mSelectedExercises.add(exerciseRep);
+    }
+
+
 
     @Override
     public void onItemDismiss(int position) {
-
 
        try {
 
             mSelectedExercises.remove(position);
             notifyItemRemoved(position);
 
-           notifyItemRangeChanged(position, getItemCount());
+            notifyItemRangeChanged(position, getItemCount());
 
 
             Log.v(TAG,"item eliminado de lista");

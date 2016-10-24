@@ -10,28 +10,25 @@ import com.google.gson.annotations.SerializedName;
 public class Exercise implements Parcelable {
 
     @SerializedName("id")
-    int id;
+    private int id;
 
     @SerializedName("exercise_name")
-    String exercise_name;
+    private String exercise_name;
 
     @SerializedName("level")
-    String level;
+    private String level;
 
     @SerializedName("type_exercise")
-    String[] type_exercise;
+    private String[] type_exercise;
 
     @SerializedName("exercise_audio")
-    String exercise_audio;
+    private String exercise_audio;
 
     @SerializedName("exercise_image")
-    String exercise_image;
+    private String exercise_image;
 
     @SerializedName("muscles")
-    Muscle[] muscles;
-
-
-    public Exercise(){}
+    private Muscle[] muscles;
 
     public Exercise(int id, String exercise_name, String level, String[] type_exercise, Muscle[] muscles, String exercise_audio, String exercise_image) {
         this.id = id;
