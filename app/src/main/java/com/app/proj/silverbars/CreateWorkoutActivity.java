@@ -43,7 +43,7 @@ import static com.app.proj.silverbars.Utilities.injectJS;
 public class CreateWorkoutActivity extends AppCompatActivity implements OnStartDragListener {
 
 
-    private static final String TAG = "CreateWorkoutActivity" ;
+    private static final String TAG = "CreateWorkout" ;
     private WebView webView;
     private RecyclerView recycler;
     private ExercisesSelectedAdapter adapter;
@@ -59,7 +59,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     
     private List<ExerciseRep> mExercisesAdapter = new ArrayList<>();
 
-    private LinearLayout primary_ColumnMuscle,secundary_ColumnMuscle,ProgressView,progressLayout,error_layout;
+    private LinearLayout primary_ColumnMuscle,secundary_ColumnMuscle, ProgressView,mErrorView;
     private LinearLayout contentView;
 
     private ArrayList<String> exercises_id;
@@ -100,21 +100,20 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             scrollView.setFillViewport(true);
         }
 
-
-        progressLayout = (LinearLayout) findViewById(R.id.progress_bar_);
-        error_layout = (LinearLayout) findViewById(R.id.error_layout);
+        
+        mErrorView = (LinearLayout) findViewById(R.id.error_layout);
 
         Button button_error_reload = (Button) findViewById(R.id.error_reload_workout);
         button_error_reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
                 if (exercises_id.size() > 0){
                     onErrorViewOff();
                     onProgressOn();
                     putExercisesinRecycler(exercises_id);
                 }
+
             }
         });
 
@@ -124,7 +123,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if ( adapter != null ){
+                if (adapter != null){
 
                     if (adapter.getItemCount() > 0){
 
@@ -215,8 +214,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                         if (adapter == null){
                             Collections.addAll(AllExercisesList,response.body());
 
-
-
+                            
                             mExercisesAdapter = findExerciseByName(new_exercises);
                             adapter = new ExercisesSelectedAdapter(CreateWorkoutActivity.this,mExercisesAdapter,CreateWorkoutActivity.this);
 
@@ -270,35 +268,33 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             }
 
         getMuscles(exerciseList);
-
         return exerciseList;
     }
 
     private void getMuscles(List<ExerciseRep> exercises){
-
         for (int b = 0; b < exercises.get(b).getExercise().getMuscles().length; b++){
             String name;
             name = exercises.get(b).getExercise().getMuscles()[b].getMuscleName();
             mMuscles.add(name);
         }
-
     }
 
+    
     private void onErrorViewOn(){
-        error_layout.setVisibility(View.VISIBLE);
+        mErrorView.setVisibility(View.VISIBLE);
         ProgressView.setVisibility(View.GONE);
     }
     private void onErrorViewOff(){
-        error_layout.setVisibility(View.GONE);
+        mErrorView.setVisibility(View.GONE);
 
     }
     private void onProgressOn(){
-        error_layout.setVisibility(View.GONE);
+        mErrorView.setVisibility(View.GONE);
         ProgressView.setVisibility(View.VISIBLE);
     }
 
     private void onProgressOff(){
-        error_layout.setVisibility(View.GONE);
+        mErrorView.setVisibility(View.GONE);
         ProgressView.setVisibility(View.GONE);
     }
 
@@ -328,8 +324,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                     exercises_id = data.getStringArrayListExtra("exercises");
                     putExercisesinRecycler(exercises_id);
                 }
-
-
 
 
             }
