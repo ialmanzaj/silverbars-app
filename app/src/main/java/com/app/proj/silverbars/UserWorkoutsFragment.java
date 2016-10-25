@@ -52,7 +52,7 @@ public class UserWorkoutsFragment extends Fragment {
             Log.v(TAG,"my workout size: "+my_workouts_list);
 
 
-            my_workouts.setAdapter(new savedWorkoutAdapter(getActivity(),my_workouts_list,true));
+            my_workouts.setAdapter(new SavedWorkoutsAdapter(getActivity(),my_workouts_list,true));
 
         }else {
             EmpyStateMyWorkouts.setVisibility(View.VISIBLE);

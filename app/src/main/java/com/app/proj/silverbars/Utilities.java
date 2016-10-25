@@ -70,6 +70,7 @@ public class Utilities {
         return false;
     }
 
+
     public static Bitmap loadExerciseImageFromDevice(Context context, String imageURI) {
         Bitmap bitmap = null;
         String[] imageDir = imageURI.split("SilverbarsImg");
@@ -87,9 +88,8 @@ public class Utilities {
         return bitmap;
     }
 
-    public static boolean saveExerciseImageInDevice(Context context, ResponseBody body, String imgName) {
 
-        Log.v(TAG,"saveExerciseImageInDevice: "+imgName);
+    public static boolean saveExerciseImageInDevice(Context context, ResponseBody body, String imgName) {
         try {
             File futureStudioIconFile = getFileReady(context,"/SilverbarsImg/"+imgName);
             InputStream input = null;
@@ -122,6 +122,7 @@ public class Utilities {
         } catch (IOException e) {return false;}
     }
 
+
     public static Bitmap loadWorkoutImageFromDevice(Context context, String imageURI) {
         Bitmap bitmap = null;
         File file = getFileReady(context,"/SilverbarsImg/"+imageURI);
@@ -140,6 +141,7 @@ public class Utilities {
         Log.v(TAG,"Image Name: "+workoutImgName);
         return workoutImgName;
     }
+
 
     public static String convertMusclesToString(Muscle[] muscles) {
         Gson gson = new Gson();
@@ -184,7 +186,6 @@ public class Utilities {
         String[] imageDir = url.split("exercises");
         String Parsedurl = "exercises" + imageDir[1];
         String[] imagesName = Parsedurl.split("/");
-        Log.v(TAG,"getExerciseImageName: "+imagesName[2]);
         return imagesName[2];
     }
 
@@ -211,12 +212,11 @@ public class Utilities {
         }
     }
 
-    public static boolean saveAudioInDevice(Context context,ResponseBody body, String getAudioName) {
+    public static boolean saveAudioInDevice(Context context,ResponseBody body, String audioName) {
 
         try {
-
             File Folder = getFileReady(context,"/SilverbarsMp3/");
-            File mp3file = new File(context.getFilesDir()+"/SilverbarsMp3/"+getAudioName);
+            File mp3file = new File(context.getFilesDir()+"/SilverbarsMp3/"+audioName);
 
             InputStream input = null;
             OutputStream outputStream = null;
@@ -261,8 +261,6 @@ public class Utilities {
     }
 
     public static boolean saveWorkoutImgInDevice(Context context, ResponseBody body, String workout_img) {
-        Log.v(TAG,"saveWorkoutImgInDevice: "+workout_img);
-
 
         try {
             File Folder = getFileReady(context,"/SilverbarsImg/");
@@ -421,14 +419,13 @@ public class Utilities {
     }
 
     public static void DownloadImage(final Context context, String url, final String imgName){
-        Log.v(TAG,"DownloadImage ");
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
+
         MainService downloadService = retrofit.create(MainService.class);
-        Call<ResponseBody> call = downloadService.downloadFile(url);
-        call.enqueue(new Callback<ResponseBody>() {
+        downloadService.downloadFile(url).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -436,45 +433,30 @@ public class Utilities {
                 }
             }
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e(TAG,"DownloadImage, onFAILURE",t);
-            }
+            public void onFailure(Call<ResponseBody> call, Throwable t) {Log.e(TAG,"DownloadImage: onFAILURE",t);}
         });
     }
 
-    public static void DownloadMp3(final Context context, final String audio_url, final String getAudioName) {
-        Log.v(TAG,"DownloadMp3: "+getAudioName);
+
+    public static void DownloadMp3(final Context context, String audio_url, final String getAudioName) {
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
-        final MainService downloadService = retrofit.create(MainService.class);
 
-        new AsyncTask<Void, Long, Void>() {
+        MainService downloadService = retrofit.create(MainService.class);
+        downloadService.downloadFile(audio_url).enqueue(new Callback<ResponseBody>() {
             @Override
-            protected Void doInBackground(Void... workouts_ids) {
-                Call<ResponseBody> call = downloadService.downloadFile(audio_url);
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if (response.isSuccessful()) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    saveAudioInDevice(context,response.body(),getAudioName);
+                } else
+                    Log.e(TAG, "DownloadMp3, Download server failed:");
 
-                            saveAudioInDevice(context,response.body(),getAudioName);
-
-                        } else {
-                            Log.e(TAG, "DownloadMp3, Download server failed:");
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Log.e(TAG, "DownloadMp3: onFailure",t);
-                    }
-                });
-                return null;
-            };
-        }.execute();
+            }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {Log.e(TAG, "DownloadMp3: onFailure",t);}
+        });
     }
-
-
 
     public static String quitarMp3(String song){
         if(song.contains(".mp3")){
@@ -630,6 +612,7 @@ public class Utilities {
             }
         } catch (IOException e) { return false;}
     }
+
 
     public static void injectJS(String partes, WebView webView) {
         try {

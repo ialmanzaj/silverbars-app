@@ -32,9 +32,6 @@ public class TokenProvider implements Provider<Account, AndroidTokenType, Androi
 
     @Override
     public Request authenticateRequest(Request request, AndroidToken androidToken) {
-        Log.v(TAG,"authenticateRequest: "+androidToken.token);
-        Log.v(TAG,"authenticateRequest: "+androidToken.refreshToken);
-
         return request.newBuilder()
                 .header("Authorization", "Bearer " + androidToken.token)
                 .build();
@@ -47,10 +44,6 @@ public class TokenProvider implements Provider<Account, AndroidTokenType, Androi
         if (!response.isSuccessful()) {
             Log.v(TAG,"code: "+response.code());
             if (response.code() == 401) {
-                Log.v(TAG,"android-token: "+androidToken.token);
-                Log.v(TAG,"android-refresh-token: "+androidToken.refreshToken);
-
-
                 tokenStorage.removeToken(account, androidTokenType, androidToken);
 
                 if (androidToken.refreshToken != null) {
@@ -75,7 +68,6 @@ public class TokenProvider implements Provider<Account, AndroidTokenType, Androi
                         e.printStackTrace();
                     }
                 }
-
                 return true;
             }
         }

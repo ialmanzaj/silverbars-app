@@ -473,12 +473,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         ExerciseRep[] exercises = new ExerciseRep[exercises_ids.length];
 
         for (int a = 0;a<exercises_ids.length;a++){
-            Log.v(TAG,"id: "+exercises_ids[a]);
-
-
-
-            //exercises[a] = getExerciseRep(Integer.parseInt(exercises_ids[a]));
-            Log.v(TAG,"exercises: "+ Arrays.toString(exercises));
+            exercises[a] = getExerciseRep(Integer.parseInt(exercises_ids[a]));
+            Log.v(TAG,"exercises: "+ exercises[a].getExercise().getExercise_name());
+            Log.v(TAG,"rep: "+ exercises[a].getRepetition());
         }
 
         return exercises;

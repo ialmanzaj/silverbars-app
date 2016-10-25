@@ -20,24 +20,21 @@ import android.widget.TextView;
 
 import com.like.LikeButton;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-
 import static com.app.proj.silverbars.Utilities.loadWorkoutImageFromDevice;
-import static com.app.proj.silverbars.Utilities.saveWorkoutImgInDevice;
 
 
-public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapter.VH> {
+public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdapter.VH> {
+
+    private static final String TAG = "SavedWorkoutsAdapter";
+
 
     private static final int TYPE_WORKOUT = 0;
     private static final int TYPE_VIEW_MORE = 1;
-    private static final String TAG = "savedWorkoutAdapter";
+
     private List<Workout> workouts;
     private final Activity context;
     private Boolean user_workout  = false;
@@ -65,7 +62,7 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
     }
 
 
-    public savedWorkoutAdapter(Activity context, List<Workout> workouts, Boolean user_workout) {
+    public SavedWorkoutsAdapter(Activity context, List<Workout> workouts, Boolean user_workout) {
         this.context = context;
         this.workouts = workouts;
         this.user_workout = user_workout;
@@ -73,7 +70,7 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
 
     @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = null;
+        View v;
         switch (viewType) {
             case TYPE_WORKOUT:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_workout, parent, false);
@@ -93,12 +90,9 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
         switch (viewholder.getItemViewType()) {
             case TYPE_WORKOUT:
 
-                //Log.v(TAG,"Image: "+ workouts.get(position).getWorkout_image());
                 viewholder.img.setVisibility(View.VISIBLE);
 
                 String[] workoutImgDir = workouts.get(position).getWorkout_image().split(context.getFilesDir().getPath()+"/SilverbarsImg/");
-                //Log.v(TAG,"workoutImgDir"+ Arrays.toString(workoutImgDir));
-                //Log.v(TAG,"workoutImgDir lenghth"+ workoutImgDir.length);
 
 
                 if (workoutImgDir.length == 2){
@@ -114,6 +108,11 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
                 viewholder.btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
+
+                        ArrayList<ExerciseRep> exercises = new ArrayList<>();
+                        Collections.addAll(exercises,workouts.get(position).getExercises());
+
                         Intent i = new Intent(context, WorkoutActivity.class);
                         i.putExtra("id", workouts.get(position).getWorkoutId());
                         i.putExtra("name", workouts.get(position).getWorkout_name());
@@ -121,7 +120,7 @@ public class savedWorkoutAdapter extends RecyclerView.Adapter<savedWorkoutAdapte
                         i.putExtra("sets", workouts.get(position).getSets());
                         i.putExtra("level", workouts.get(position).getLevel());
                         i.putExtra("main_muscle", workouts.get(position).getMainMuscle());
-                        i.putExtra("exercises", workouts.get(position).getExercises());
+                        i.putParcelableArrayListExtra("exercises", exercises);
                         i.putExtra("user_workout",user_workout);
                         context.startActivity(i);
                     }

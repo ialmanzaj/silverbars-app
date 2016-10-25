@@ -49,7 +49,7 @@ public class SavedWorkoutsFragment extends Fragment {
 
 
 
-            local_workouts.setAdapter(new savedWorkoutAdapter(getActivity(),workouts,false));
+            local_workouts.setAdapter(new SavedWorkoutsAdapter(getActivity(),workouts,false));
         }else {
             EmpyStateSavedWorkout.setVisibility(View.VISIBLE);
         }

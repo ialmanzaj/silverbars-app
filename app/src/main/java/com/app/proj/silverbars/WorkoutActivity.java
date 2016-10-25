@@ -807,9 +807,9 @@ public class WorkoutActivity extends AppCompatActivity {
             
             insertExercises();
             
-        }else{
+        }else
             database.updateWorkoutLocal(workoutId,"true");
-        }
+
        
     }
 
@@ -830,6 +830,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 ExerciseImgFile = getFileReady(this,"/SilverbarsImg/"+ img_name);
                 ExerciseMp3File = getFileReady(this,"/SilverbarsMp3/"+ mp3_name);
 
+
                 if (!ExerciseImgFile.exists()){
                     DownloadImage(this, img_url, img_name);
                 }
@@ -847,16 +848,17 @@ public class WorkoutActivity extends AppCompatActivity {
         }
 
 
-        //Insert exercises reps in database
+       //Insert exercises reps in database
         for (int i = 0; i < mExercises.size(); i++){
             if (!database.checkExerciseRep(mExercises.get(i).getExercise().getExerciseId()) ){
                 database.insertExerciseRep(
                         mExercises.get(i).getExercise().getExerciseId(),
                         mExercises.get(i).getRepetition(),
-                        mExercises.get(i).getRepetition()
+                        mExercises.get(i).getSeconds()
                 );
             }
         }
+
 
         insertWorkout();
     }
@@ -868,7 +870,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         MySQLiteHelper database = new MySQLiteHelper(this);
 
-        // Save workout data  in databse
+        // Save workout data  in database
         File WorkoutImgFile = getFileReady(this,"/SilverbarsImg/"+getWorkoutImage(workoutImgUrl));
         if (!WorkoutImgFile.exists()){
             DownloadImage(this,workoutImgUrl,getWorkoutImage(workoutImgUrl));
@@ -878,6 +880,7 @@ public class WorkoutActivity extends AppCompatActivity {
         for (int i = 0; i < exercises_ids.length; i++){
             exercises_ids[i] = String.valueOf(mExercises.get(i).getExercise().getExerciseId());
         }
+
         if (!database.checkLocalWorkouts(workoutId)) {
             database.insertLocalWorkout(
                     workoutId,
