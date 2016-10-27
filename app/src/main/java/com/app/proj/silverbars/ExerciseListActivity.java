@@ -153,6 +153,7 @@ public class ExerciseListActivity extends AppCompatActivity {
 
                 }else {
 
+                    Log.e(TAG,"response "+response.code());
                     onErrorOn();
                 }
 
@@ -160,9 +161,13 @@ public class ExerciseListActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<Exercise[]> call, Throwable t) {
+                Log.e(TAG,"onFailure ",t);
                 onErrorOn();
             }
         });
+
+
+
     }
     
     private void onErrorOn(){

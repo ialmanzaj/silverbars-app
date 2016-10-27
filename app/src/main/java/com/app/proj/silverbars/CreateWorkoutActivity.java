@@ -166,7 +166,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
                 Intent intent = new Intent(CreateWorkoutActivity.this,ExerciseListActivity.class);
                 intent.putExtra("exercises",adapter.getSelectedExercisesName());
-                startActivityForResult(intent,2);
+                startActivityForResult(intent,1);
             }
         });
 
@@ -221,24 +221,31 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                             onProgressOff();
                             recycler.setAdapter(adapter);
 
-                            setMusclesToView(mMuscles);
+
                             //putTypesInWorkout(TypeExercises);
+                            setmMuscles(mExercisesAdapter);
 
                             ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
                             mItemTouchHelper  = new ItemTouchHelper(callback);
                             mItemTouchHelper.attachToRecyclerView(recycler);
 
+
                         }else {
 
-                            for (ExerciseRep exercise: findExerciseByName(new_exercises) ){
-                                Log.v(TAG,"exercise: "+exercise.getExercise().getExercise_name());
+                            addNewExercisesToAdapter(new_exercises);
+                        }
 
-                                mExercisesAdapter.add(exercise);
-                                adapter.notifyItemInserted(mExercisesAdapter.size());
-                            }
+                        if (adapter != null){
 
-                            Log.v(TAG,"names "+adapter.getSelectedExercisesName());
-                            Log.v(TAG,"size "+adapter.getItemCount());
+
+                            adapter.setOnDataChangeListener(new ExercisesSelectedAdapter.OnDataChangeListener() {
+                                @Override
+                                public void onDataChanged(int size) {
+                                    Log.v(TAG,"onDataChanged");
+                                    setmMuscles(adapter.getSelectedExercises());
+                                }
+                            });
+
                         }
                     }else
                         onErrorViewOn();
@@ -267,35 +274,35 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                 }
             }
 
-        getMuscles(exerciseList);
+
         return exerciseList;
     }
 
-    private void getMuscles(List<ExerciseRep> exercises){
-        for (int b = 0; b < exercises.get(b).getExercise().getMuscles().length; b++){
-            String name;
-            name = exercises.get(b).getExercise().getMuscles()[b].getMuscleName();
-            mMuscles.add(name);
+
+    private void addNewExercisesToAdapter(List<String> exercises){
+
+        for (ExerciseRep exercise: findExerciseByName(exercises) ){
+            mExercisesAdapter.add(exercise);
+            adapter.notifyItemInserted(mExercisesAdapter.size());
         }
+
+        setmMuscles(adapter.getSelectedExercises());
     }
 
-    
-    private void onErrorViewOn(){
-        mErrorView.setVisibility(View.VISIBLE);
-        ProgressView.setVisibility(View.GONE);
-    }
-    private void onErrorViewOff(){
-        mErrorView.setVisibility(View.GONE);
+    private void setmMuscles(List<ExerciseRep> exercises){
+        Log.v(TAG,"setmMuscles true");
+        mMuscles.clear();
 
-    }
-    private void onProgressOn(){
-        mErrorView.setVisibility(View.GONE);
-        ProgressView.setVisibility(View.VISIBLE);
-    }
+        for (ExerciseRep exerciseRep: exercises){
+            Log.v(TAG,"exercise: "+exerciseRep.getExercise().getExercise_name());
+            for (Muscle muscle: exerciseRep.getExercise().getMuscles()){
 
-    private void onProgressOff(){
-        mErrorView.setVisibility(View.GONE);
-        ProgressView.setVisibility(View.GONE);
+                mMuscles.add(muscle.getMuscleName());
+                Log.v(TAG,"muscle: "+muscle.getMuscleName());
+            }
+        }
+
+        setMusclesToView(mMuscles);
     }
 
 
@@ -314,50 +321,54 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
                         }
                     }
-            }
 
-        }else if (requestCode == 2 ) {
-            Log.v(TAG, "requestCode: 2");
-            if (resultCode == RESULT_OK && data != null){
-
-                if (data.hasExtra("exercises")) {
-                    exercises_id = data.getStringArrayListExtra("exercises");
-                    putExercisesinRecycler(exercises_id);
-                }
 
 
             }
+
         }
+
     }
 
 
-
-    @SuppressLint("SetJavaScriptEnabled")
+    
     private void setMusclesToView(List<String> musculos){
+        Log.v(TAG,"setMusclesToView: "+musculos);
+
+        partes = "";
+
+
         if (musculos.size() > 0){
-            List<String> musculos_oficial;
-            musculos_oficial = deleteCopiesofList(musculos);
-            for (int a = 0;a<musculos_oficial.size();a++) {
-                final TextView MuscleTextView = new TextView(this);
 
-                partes += "#"+ musculos_oficial.get(a) + ",";
-                MuscleTextView.setText(musculos_oficial.get(a));
-                MuscleTextView.setGravity(Gravity.CENTER);
+            
+            List<String> mMusclesFinal = deleteCopiesofList(musculos);
+            
+           
+            
+            for (int a = 0;a<mMusclesFinal.size();a++) {
+                TextView mMusclesTextView = new TextView(this);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    MuscleTextView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));
-                }else {
-                    MuscleTextView.setTextColor(getResources().getColor(R.color.gray_active_icon));
-                }
+                partes += "#"+ mMusclesFinal.get(a) + ",";
+
+                Log.v(TAG,"partes:" +partes);
+
+                mMusclesTextView.setText(mMusclesFinal.get(a));
+                mMusclesTextView.setGravity(Gravity.CENTER);
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {mMusclesTextView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));}else {mMusclesTextView.setTextColor(getResources().getColor(R.color.gray_active_icon));}
 
                 if (a%2 == 0){
-                    //secundary_ColumnMuscle.addView(MuscleTextView);
+                    //secundary_ColumnMuscle.addView(mMusclesTextView);
                 }else {
-                    //primary_ColumnMuscle.addView(MuscleTextView);
+                    //primary_ColumnMuscle.addView(mMusclesTextView);
                 }
+                
+                
             }
         }
 
+        webView.reload();
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -498,4 +509,26 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {mItemTouchHelper.startDrag(viewHolder);}
+
+
+
+
+    private void onErrorViewOn(){
+        mErrorView.setVisibility(View.VISIBLE);
+        ProgressView.setVisibility(View.GONE);
+    }
+    private void onErrorViewOff(){
+        mErrorView.setVisibility(View.GONE);
+
+    }
+    private void onProgressOn(){
+        mErrorView.setVisibility(View.GONE);
+        ProgressView.setVisibility(View.VISIBLE);
+    }
+
+    private void onProgressOff(){
+        mErrorView.setVisibility(View.GONE);
+        ProgressView.setVisibility(View.GONE);
+    }
+
 }

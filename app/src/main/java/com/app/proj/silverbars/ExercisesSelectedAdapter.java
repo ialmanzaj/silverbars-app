@@ -34,8 +34,19 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
 
     private Context mContext;
 
-    public static class selectedExercisesViewHolder extends RecyclerView.ViewHolder implements
-            ItemTouchHelperViewHolder {
+
+
+    OnDataChangeListener mOnDataChangeListener;
+
+    public void setOnDataChangeListener(OnDataChangeListener onDataChangeListener){
+        mOnDataChangeListener = onDataChangeListener;
+    }
+
+    public interface OnDataChangeListener{
+        public void onDataChanged(int size);
+    }
+
+    public static class selectedExercisesViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
 
         // Campos respectivos de un item
         private ImageView img_handle;
@@ -101,8 +112,6 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
         return exercises;
     }
 
-
-
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
 
@@ -112,6 +121,7 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
             notifyItemMoved(fromPosition, toPosition);
 
             notifyDataSetChanged();
+
         }catch (IndexOutOfBoundsException e){
             Log.e(TAG,"IndexOutOfBoundsException",e);
         }
@@ -123,28 +133,27 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
         this.mSelectedExercises.add(exerciseRep);
     }
 
+    private void notifyActivity(){
+        Log.v(TAG,"notifyActivity true");
+
+
+        mOnDataChangeListener.onDataChanged(mSelectedExercises.size());
+
+    }
 
 
     @Override
     public void onItemDismiss(int position) {
 
-       try {
+        mSelectedExercises.remove(position);
+        notifyItemRemoved(position);
 
-            mSelectedExercises.remove(position);
-            notifyItemRemoved(position);
-
-            notifyItemRangeChanged(position, getItemCount());
-
-
-            Log.v(TAG,"item eliminado de lista");
-            Log.v(TAG,"size: "+mSelectedExercises.size());
-
-        }catch (IndexOutOfBoundsException e){
-           Log.e(TAG,"IndexOutOfBoundsException",e);
-       }
+        notifyItemRangeChanged(position, getItemCount());
+        notifyActivity();
 
 
-
+        Log.v(TAG,"item eliminado de lista");
+        Log.v(TAG,"size: "+mSelectedExercises.size());
     }
 
 
@@ -155,6 +164,7 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
                 .inflate(R.layout.exercises, viewGroup, false);
         return new selectedExercisesViewHolder(v);
     }
+
 
 
     @Override
@@ -323,6 +333,8 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
         });
 
     }
+
+
 
 
 
