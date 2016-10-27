@@ -14,10 +14,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-
-
 import static com.app.proj.silverbars.Utilities.convertStringToArray;
-import static com.app.proj.silverbars.Utilities.convertStringToExercises;
 import static com.app.proj.silverbars.Utilities.getUrlReady;
 /**
  * Created by isaacalmanza on 10/04/16.
@@ -26,12 +23,14 @@ import static com.app.proj.silverbars.Utilities.getUrlReady;
 public class MySQLiteHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "MySQLiteHelper";
+
     private static String strSeparator = "__,__";
+
     // Database Version
     public static final int DATABASE_VERSION = 1;
+
     // Database Name
     public static final String DATABASE_NAME = "SilverbarsData";
-
 
     //     Database tables name
     public static final String TABLE_USERS = "users";

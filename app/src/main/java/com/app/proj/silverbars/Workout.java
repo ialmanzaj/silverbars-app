@@ -7,8 +7,9 @@ import android.os.Parcelable;
  */
 
 public class Workout implements Parcelable {
+    
 
-    private int workout_id;
+    private int id;
     private String workout_name;
     private String workout_image;
     private int sets;
@@ -16,8 +17,8 @@ public class Workout implements Parcelable {
     private String main_muscle;
     private ExerciseRep[] exercises;
 
-    public Workout(int workout_id, String workout_name, String workout_image, int sets, String level, String main_muscle,ExerciseRep[] exercises) {
-        this.workout_id = workout_id;
+    public Workout(int id, String workout_name, String workout_image, int sets, String level, String main_muscle,ExerciseRep[] exercises) {
+        this.id = id;
         this.workout_name = workout_name;
         this.workout_image = workout_image;
         this.sets = sets;
@@ -27,7 +28,7 @@ public class Workout implements Parcelable {
     }
 
     protected Workout(Parcel in) {
-        workout_id = in.readInt();
+        id = in.readInt();
         workout_name = in.readString();
         workout_image = in.readString();
         sets = in.readInt();
@@ -49,7 +50,7 @@ public class Workout implements Parcelable {
     };
 
     public int getWorkoutId() {
-        return workout_id;
+        return id;
     }
 
     public String getWorkout_name() {
@@ -85,7 +86,7 @@ public class Workout implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(workout_id);
+        parcel.writeInt(id);
         parcel.writeString(workout_name);
         parcel.writeString(workout_image);
         parcel.writeInt(sets);

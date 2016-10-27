@@ -32,6 +32,7 @@ public class TokenProvider implements Provider<Account, AndroidTokenType, Androi
 
     @Override
     public Request authenticateRequest(Request request, AndroidToken androidToken) {
+        Log.v(TAG,"token:"+androidToken.token);
         return request.newBuilder()
                 .header("Authorization", "Bearer " + androidToken.token)
                 .build();
@@ -57,7 +58,7 @@ public class TokenProvider implements Provider<Account, AndroidTokenType, Androi
                         if (refreshResponse.isSuccessful()){
 
                             AccessToken accessToken = refreshResponse.body();
-                            Log.v(TAG,"accessToken:"+accessToken.getAccess_token());
+                            Log.v(TAG,"accessToken: "+accessToken.getAccess_token());
 
 
                             tokenStorage.storeToken(account, androidTokenType,

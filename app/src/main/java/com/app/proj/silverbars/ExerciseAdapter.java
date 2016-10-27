@@ -101,6 +101,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         viewHolder.nombre.setText(exercises.get(a).getExercise().getExercise_name());
         viewHolder.repetitions.setText(String.valueOf(exercises.get(a).getRepetition()));
 
+        Log.v(TAG,"img "+exercises.get(a).getExercise().getExercise_image());
 
         String[] imageDir = exercises.get(a).getExercise().getExercise_image().split("exercises");
 
@@ -113,11 +114,10 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             viewHolder.imagen_cache.setImageURI(uri);
 
         }else {
-
+            Log.v(TAG,"img from local");
             Bitmap bmp;
             viewHolder.imageView_local.setVisibility(View.VISIBLE);
             Log.v(TAG,"image: " +exercises.get(a).getExercise().getExercise_image());
-
 
 
             bmp = loadExerciseImageFromDevice(context,exercises.get(a).getExercise().getExercise_image());
@@ -137,7 +137,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                 View v = new MaterialDialog.Builder(view.getContext())
                         .title(R.string.rep_edit)
                         .customView(R.layout.edit_exercise_dialog, true)
-                        .positiveText("Done").onPositive(new MaterialDialog.SingleButtonCallback() {
+                        .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 dialog.dismiss();
@@ -151,8 +151,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                                 exercises.get(a).setTempo_isometric(getIntfromTextView(Isometric));
                                 exercises.get(a).setTempo_negative(getIntfromTextView(Negative));
                                 exercises.get(a).setTempo_positive(getIntfromTextView(Positive));
-
-
                             }
                         })
                         .show()

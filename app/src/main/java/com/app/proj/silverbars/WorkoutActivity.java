@@ -56,7 +56,7 @@ import static com.app.proj.silverbars.Utilities.removeLastChar;
 
 public class WorkoutActivity extends AppCompatActivity {
 
-    private static final String TAG = "WORKOUT ACTIVITY";
+    private static final String TAG = "WorkoutActivity";
 
     // UI FIELDS
     private Button plusSets;
@@ -294,20 +294,19 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
         //COMPROBAR SI EL WORKOUT ESTA ACTIVADO EN LA BASE DE DATOS - SAVED WORKOUTS
-        if (Objects.equals(database.checkLocalWorkouts(workoutId), "true")){
-            //Log.v(TAG,"workoutId: "+workoutId);
+        if (database.checkLocalWorkouts(workoutId)){
+            Log.v(TAG,"LOCAL WORKOUT ON");
+
             loadLocal = true;
             enableLocal.setChecked(true);
 
 
-            
-            //adapter = new ExerciseAdapter(this,exerciseReps);
-            RecyclerforExercises.setAdapter(adapter);
 
-            setMusclesToView(MusclesArray);
-            putTypesInWorkout(TypeExercises);
+            putExercisesInAdapter(mExercises);
+
 
         }else if (user_workout && database.checkUserWorkouts(workoutId) ){
+            Log.v(TAG,"USER WORKOUT ON");
           /*
             //USER WORKOUTS
             togle_no_internet.setVisibility(View.GONE);// this only for workouts in API
@@ -339,6 +338,7 @@ public class WorkoutActivity extends AppCompatActivity {
             */
 
         } else {
+            Log.v(TAG,"WORKOUT FROM API ON");
             
             loadLocal = false;
             enableLocal.setChecked(false);
@@ -548,9 +548,12 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
     private void putExercisesInAdapter(ArrayList<ExerciseRep> exercises){
-        Log.v(TAG,"putExercisesInAdapter");
 
-        for (ExerciseRep exerciseRep:exercises){
+        for (ExerciseRep exerciseRep: exercises){
+
+            exerciseRep.setTempo_positive(1);
+            exerciseRep.setTempo_isometric(1);
+            exerciseRep.setTempo_negative(1);
 
             Collections.addAll(TypeExercises, exerciseRep.getExercise().getTypes_exercise());
 
@@ -964,15 +967,6 @@ public class WorkoutActivity extends AppCompatActivity {
         }
     }
 
-   /* private void onErrorViewOn(){
-        Tab_layout.setVisibility(View.GONE);
-        error_layout.setVisibility(View.VISIBLE);
-    }
-
-    private void onErrorViewOff(){
-        error_layout.setVisibility(View.GONE);
-        Tab_layout.setVisibility(View.VISIBLE);
-    }*/
 
     private void logMessage(String msg) {
         Log.v(TAG, msg);

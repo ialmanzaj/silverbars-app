@@ -141,7 +141,6 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
     }
 
     private static int containerDimensions(Context context) {
-
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();

@@ -112,7 +112,6 @@ public class Utilities {
                 }
                 outputStream.flush();
                 return true;
-
             } catch (IOException e) {
                 return false;
             } finally {
@@ -151,17 +150,6 @@ public class Utilities {
         return jsonInString;
     }
 
-    public static String convertExercisesToString(ExerciseRep[] exercises) {
-        Gson gson = new Gson();
-        String jsonInString = gson.toJson(exercises);
-        Log.v(TAG, jsonInString);
-        return jsonInString;
-    }
-    public static ExerciseRep[] convertStringToExercises(String jsonInString) {
-        Gson gson = new Gson();
-        ExerciseRep[] exercises = gson.fromJson(jsonInString, ExerciseRep[].class);
-        return exercises;
-    }
 
 
     public static Muscle[] convertMusclesToString(String jsonInString) {
@@ -170,9 +158,6 @@ public class Utilities {
         return muscles;
     }
 
-    public static String getExerciseId(String url){
-        return url.split("exercises")[1].split("/")[1];
-    }
 
     public static String getExerciseAudioName(String audio_url){
         String[] audioDir = audio_url.split("exercises");
@@ -192,7 +177,7 @@ public class Utilities {
 
     public static void createExerciseAudio(Context context, Boolean download, String mp3_url){
         String url_dir_device = "exercises" + mp3_url;
-        File Dir = getFileReady(context,"/SilverbarsMp3");
+        File Dir = getFileReady(context,"/SilverbarsMp3/");
 
         if (Dir.isDirectory()) {
             File file = getFileReady(context,"/SilverbarsMp3/"+getExerciseAudioName(mp3_url));
