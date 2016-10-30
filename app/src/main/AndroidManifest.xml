@@ -116,7 +116,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <activity
-            android:screenOrientation="portrait" android:name=".SpotifyMusic" />
+            android:screenOrientation="portrait" android:name=".SpotifyActivity" />
 
         <activity android:name=".SelectionMusicActivity"
             android:screenOrientation="portrait"/>

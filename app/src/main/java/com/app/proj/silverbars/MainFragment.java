@@ -31,7 +31,7 @@ import retrofit2.Response;
  */
 public class MainFragment extends Fragment {
 
-    private static final String TAG = "MAIN FRAGMENT";
+    private static final String TAG = "MainFragment";
     public TwoWayView recyclerView;
 
     private SwipeRefreshLayout swipeContainer;
@@ -44,10 +44,7 @@ public class MainFragment extends Fragment {
     ProgressBar progressBar;
 
     List<Workout> mWorkouts  = new ArrayList<>();
-
     private WorkoutAdapter adapter;
-
-
 
 
     @Override
@@ -102,54 +99,6 @@ public class MainFragment extends Fragment {
             }
         });
 
-        return  rootview;
-    }
-
-
-
-
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        muscleData = getArguments().getString("Muscle");
-        opened = getArguments().getBoolean("Opened");
-
-        Log.v(TAG,"MUSCLE DATA CHANGED: "+muscleData);
-
-
-        if (!opened){
-            opened = true;
-
-            if (CheckInternet(getActivity().getApplicationContext())){
-
-                getWorkoutsData(muscleData);
-                swipeContainer.setVisibility(View.VISIBLE);
-                noInternetConnectionLayout.setVisibility(View.GONE);
-
-            }
-
-            else {
-                swipeContainer.setVisibility(View.GONE);
-                noInternetConnectionLayout.setVisibility(View.VISIBLE);
-
-            }
-        } else {
-
-            if (CheckInternet(getActivity().getApplicationContext())){
-
-                getWorkoutsData(muscleData);
-                swipeContainer.setVisibility(View.VISIBLE);
-                noInternetConnectionLayout.setVisibility(View.GONE);
-
-            } else{
-                swipeContainer.setVisibility(View.GONE);
-                noInternetConnectionLayout.setVisibility(View.VISIBLE);
-
-            }
-        }
-
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -167,12 +116,28 @@ public class MainFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
+        return  rootview;
     }
+
+
+
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        muscleData = getArguments().getString("Muscle");
+
+        getWorkoutsData(muscleData);
+
+    }
+
 
 
     private void getWorkoutsData(String muscle){
         muscleData = muscle;
-
 
         if (!swipeContainer.isRefreshing()){
             progressBar.setVisibility(View.VISIBLE);
@@ -252,14 +217,6 @@ public class MainFragment extends Fragment {
 
         adapter.notifyDataSetChanged();
 
-    }
-
-    public boolean isOpened() {
-        return opened;
-    }
-
-    public String getMuscleData() {
-        return muscleData;
     }
 
     private void onErrorViewOn(){

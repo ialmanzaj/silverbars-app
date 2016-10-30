@@ -35,7 +35,6 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
     private Context mContext;
 
 
-
     OnDataChangeListener mOnDataChangeListener;
 
     public void setOnDataChangeListener(OnDataChangeListener onDataChangeListener){
@@ -45,6 +44,7 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
     public interface OnDataChangeListener{
         public void onDataChanged(int size);
     }
+
 
     public static class selectedExercisesViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
 
@@ -61,11 +61,10 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
 
         public selectedExercisesViewHolder(View itemView) {
             super(itemView);
-            //imagen = (ImageView) itemView.findViewById(R.id.imagen);
+
+
             nombre = (TextView) itemView.findViewById(R.id.nombre);
-
             imagen = (SimpleDraweeView) itemView.findViewById(R.id.imagen);
-
             img_handle = (ImageView) itemView.findViewById(R.id.handle);
             unchecked = (ImageView) itemView.findViewById(R.id.unchecked);
             checked = (ImageView) itemView.findViewById(R.id.checked);
@@ -136,9 +135,7 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
     private void notifyActivity(){
         Log.v(TAG,"notifyActivity true");
 
-
         mOnDataChangeListener.onDataChanged(mSelectedExercises.size());
-
     }
 
 
@@ -147,13 +144,9 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
 
         mSelectedExercises.remove(position);
         notifyItemRemoved(position);
-
         notifyItemRangeChanged(position, getItemCount());
         notifyActivity();
 
-
-        Log.v(TAG,"item eliminado de lista");
-        Log.v(TAG,"size: "+mSelectedExercises.size());
     }
 
 
@@ -204,19 +197,18 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
             @Override
             public void onClick(View view) {
 
-                //Log.v(TAG,"value of a: "+a);
-                //Log.v(TAG,"item: "+mSelectedExercises.get(a).getExercise_name());
+
 
 
 
                 View v = new MaterialDialog.Builder(view.getContext())
                         .title(R.string.rep_edit)
                         .customView(R.layout.edit_reps_setup, true)
-                        .positiveText("Done").onPositive(new MaterialDialog.SingleButtonCallback() {
+                        .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                 dialog.dismiss();
-                                //On Dialog "Done" ClickListener
+
                                 viewHolder.repetitions.setText(String.valueOf(NewRepValue(reps_dialog)));
                                 mSelectedExercises.get(a).setRepetition(NewRepValue(reps_dialog));
                             }
@@ -229,11 +221,6 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
                     DialogName = (TextView) v.findViewById(R.id.ExerciseName);
                     DialogName.setText(mSelectedExercises.get(a).getExercise().getExercise_name());
 
-                   /* for (int indice = 0;indice < mSelectedExercises.size();indice++){
-                        Log.v(TAG,"mSelectedExercises: "+mSelectedExercises.get(indice).getExercise_name());
-                        Log.v(TAG,"position in list: "+indice);
-                    }
-*/
                     ActualRepValue = Integer.valueOf(viewHolder.repetitions.getText().toString());
                     reps_dialog = (TextView) v.findViewById(R.id.Reps);
                     mSelectedExercises.get(a).setRepetition(ActualRepValue);

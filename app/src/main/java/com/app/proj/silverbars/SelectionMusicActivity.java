@@ -1,18 +1,11 @@
 package com.app.proj.silverbars;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -71,7 +64,7 @@ public class SelectionMusicActivity extends AppCompatActivity {
         spotifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(SelectionMusicActivity.this, SpotifyMusic.class), 1);
+                startActivityForResult(new Intent(SelectionMusicActivity.this, SpotifyActivity.class), 1);
 
             }
         });

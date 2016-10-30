@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andretietz.retroauth.AuthAccountManager;
 import com.andretietz.retroauth.AuthenticationActivity;
@@ -101,9 +102,8 @@ public class LoginActivity extends AuthenticationActivity {
         container = (RelativeLayout) findViewById(R.id.container);
 
 
-
-
         callbackManager = CallbackManager.Factory.create();
+
 
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
@@ -117,43 +117,51 @@ public class LoginActivity extends AuthenticationActivity {
         } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {}
 
 
+
+
             login.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Log.v(TAG,"onclick");
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        container.setBackgroundColor(getResources().getColor(R.color.black,getTheme()));
-                    }else {
-                        container.setBackgroundColor(getResources().getColor(R.color.black));
-                    }
+                    if (isNetworkConnected()){
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                container.setBackgroundColor(getResources().getColor(R.color.black,getTheme()));
+                            }else {
+                                container.setBackgroundColor(getResources().getColor(R.color.black));
+                            }
 
 
-                    slogan_login.setVisibility(View.VISIBLE);
-                    login.setVisibility(View.GONE);
+                        slogan_login.setVisibility(View.VISIBLE);
+                        login.setVisibility(View.GONE);
 
-                    LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                        @Override
-                        public void onSuccess(LoginResult loginResult) {
-                            Log.v(TAG, "loginButton: onSuccess");
-                            FacebookLogin(loginResult.getAccessToken().getToken());
+                        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                            @Override
+                            public void onSuccess(LoginResult loginResult) {
+                                Log.v(TAG, "loginButton: onSuccess");
+                                FacebookLogin(loginResult.getAccessToken().getToken());
 
-                        }
-                        @Override
-                        public void onCancel() {
-                            Log.e(TAG, "facebook: onCancel");
-                        }
-                        @Override
-                        public void onError(FacebookException exception) {
-                            Log.e(TAG, "facebook Error", exception);
-                        }
-                    });
+                            }
+                            @Override
+                            public void onCancel() {
+                                Log.e(TAG, "facebook: onCancel");
+                            }
+                            @Override
+                            public void onError(FacebookException exception) {
+                                Log.e(TAG, "facebook Error", exception);
+                            }
+                        });
 
-                    LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile", "email", "user_friends"));
+                        LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile", "email", "user_friends"));
 
+                    }else
+                        Toast.makeText(LoginActivity.this, "Please, Connect to internet", Toast.LENGTH_LONG).show();
 
                 }
             });
+
+
 
 
 

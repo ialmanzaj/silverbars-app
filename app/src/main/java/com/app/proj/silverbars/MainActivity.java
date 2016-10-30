@@ -4,17 +4,20 @@ package com.app.proj.silverbars;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -40,19 +43,24 @@ import static com.app.proj.silverbars.Utilities.saveHtmInDevice;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MAIN SCREEN ACTIVITY";
-    private DrawerLayout drawerLayout;
-    private ListView drawerList;
- 
+    private static final String TAG = "MainActivity";
+
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+    
+    
     public LinearLayout Button_filter;
     private CharSequence itemTitle;
-    private String[] menuTitles =  new String[3];;
+    private String[] mMenuTitles =  new String[3];;
     private Toolbar toolbar;
     private String muscle = "ALL";
     public Spinner spinner;
-    private boolean Opened = false;
-    private FloatingActionButton ButtonCreateWorkout;
-    LinearLayout settings;
+
+    private FloatingActionButton mButtonCreateWorkout;
+    private LinearLayout settings;
 
 
     @Override
@@ -61,45 +69,54 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG,"Main Activity creada");
         setContentView(R.layout.activity_main_screen);
         FacebookSdk.sdkInitialize(getApplicationContext());
-        
-        if (!Fresco.hasBeenInitialized()){
-            Fresco.initialize(this);
-        }
 
-        settings = (LinearLayout) findViewById(R.id.settings);
-        
-        menuTitles = this.getResources().getStringArray(R.array.navigation_array);
+        mTitle = mDrawerTitle = getTitle();
 
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerList = (ListView) findViewById(R.id.left_drawer);
-        
-        
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        
-        if (toolbar != null){
-            
-            toolbar.setNavigationIcon(R.drawable.ic_menu_white_24px);
-            toolbar.setTitle(menuTitles[0]);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (drawerLayout.isDrawerOpen(drawerList)){
-                        drawerLayout.closeDrawer(drawerList);
-                    }
-                    else
-                        drawerLayout.openDrawer(drawerList);
-                }
-            });
-            
-        }
-        
-       
+        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24px);
 
-        
-        ButtonCreateWorkout = (FloatingActionButton) findViewById(R.id.fab);
-        ButtonCreateWorkout.setOnClickListener(new View.OnClickListener() {
+
+        mMenuTitles = getResources().getStringArray(R.array.navigation_array);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+
+        ArrayList<DrawerItem> items_drawer = new ArrayList<>();
+        items_drawer.add(new DrawerItem(mMenuTitles[0],R.drawable.ic_home_black_24px));
+        items_drawer.add(new DrawerItem(mMenuTitles[1],R.drawable.ic_apps_black_24dp));
+        items_drawer.add(new DrawerItem(mMenuTitles[2],R.drawable.ic_person_outline_black_24px));
+
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                toolbar, R.string.drawer_open, R.string.drawer_close) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                getSupportActionBar().setTitle(mTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getSupportActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+
+
+        mButtonCreateWorkout = (FloatingActionButton) findViewById(R.id.fab);
+        mButtonCreateWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this,CreateWorkoutActivity.class);
@@ -109,17 +126,11 @@ public class MainActivity extends AppCompatActivity {
 
         Button_filter = (LinearLayout) toolbar.findViewById(R.id.Sort);
 
-        final ArrayList<DrawerItem> items_drawer = new ArrayList<DrawerItem>();
-        
-        
-        items_drawer.add(new DrawerItem(menuTitles[0],R.drawable.ic_home_black_24px));
-        items_drawer.add(new DrawerItem(menuTitles[1],R.drawable.ic_apps_black_24dp));
-        items_drawer.add(new DrawerItem(menuTitles[2],R.drawable.ic_person_outline_black_24px));
-        
-        drawerList.setAdapter(new DrawerListAdapter(this, items_drawer));
-        drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        
+        mDrawerList.setAdapter(new DrawerListAdapter(this, items_drawer));
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        settings = (LinearLayout) findViewById(R.id.settings);
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -171,6 +182,12 @@ public class MainActivity extends AppCompatActivity {
     }//oncreate
 
 
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
 
     private void selectItem(int position) {
 
@@ -188,64 +205,114 @@ public class MainActivity extends AppCompatActivity {
 
                     Bundle bundle = new Bundle();
                     bundle.putString("Muscle",muscle);
-                    bundle.putBoolean("Opened",Opened);
                     mainFragment.setArguments(bundle);
-
 
                     fragmentManager
                             .beginTransaction()
-                            .replace(R.id.content_frame, mainFragment, null)
-                            .addToBackStack(null)
+                            .replace(R.id.content_frame, mainFragment)
                             .commit();
 
                     Button_filter.setVisibility(View.VISIBLE);
-                    ButtonCreateWorkout.setVisibility(View.VISIBLE);
+                    mButtonCreateWorkout.setVisibility(View.VISIBLE);
                     settings.setVisibility(View.GONE);
-                    Opened = mainFragment.isOpened();
                 }
                 break;
-            case 1:// MY WORKOUTS TAB
-                if (currentFragment instanceof MainFragment) {
-                    muscle = ((MainFragment) currentFragment).getMuscleData();
+            case 1:// MY WORKOUTS
+                if (currentFragment instanceof MyWorkoutsFragment) {
+                    break;
+                }else {
+                    
+                    fragmentManager
+                            .beginTransaction()
+                            .replace(R.id.content_frame, new MyWorkoutsFragment())
+                            .commit();
+
+                    Button_filter.setVisibility(View.GONE);
+                    mButtonCreateWorkout.setVisibility(View.GONE);
+                    settings.setVisibility(View.GONE);
                 }
-                fragmentManager
-                        .beginTransaction()
-                        .replace(R.id.content_frame, new MyWorkoutsFragment(), null)
-                        .addToBackStack(null)
-                        .commit();
-                Button_filter.setVisibility(View.GONE);
-                ButtonCreateWorkout.setVisibility(View.GONE);
-                settings.setVisibility(View.GONE);
                 break;
+            
+            case 2:
+                // PROFILE 
+                if (currentFragment instanceof ProfileFragment) {
+                   break;
+                }else {
 
-            case 2:// PROFILE TAB
-                if (currentFragment instanceof MainFragment) {
-                    muscle = ((MainFragment) currentFragment).getMuscleData();
+                    fragmentManager
+                            .beginTransaction()
+                            .replace(R.id.content_frame, new ProfileFragment())
+                            .commit();
+
+                    Button_filter.setVisibility(View.GONE);
+                    mButtonCreateWorkout.setVisibility(View.GONE);
+                    settings.setVisibility(View.VISIBLE);
                 }
-                fragmentManager
-                        .beginTransaction()
-                        .replace(R.id.content_frame, new ProfileFragment(), null)
-                        .addToBackStack(null)
-                        .commit();
-
-                Button_filter.setVisibility(View.GONE);
-                ButtonCreateWorkout.setVisibility(View.GONE);
-                settings.setVisibility(View.VISIBLE);
                 break;
         }
+
+        
+
         // Se actualiza el item seleccionado y el título, después de cerrar el drawer
-        drawerList.setItemChecked(position, true);
-        toolbar.setTitle(menuTitles[position]);
-        drawerLayout.closeDrawer(drawerList);
+        mDrawerList.setItemChecked(position, true);
+        toolbar.setTitle(mMenuTitles[position]);
+        mDrawerLayout.closeDrawer(mDrawerList);
     }
 
 
 
-    /* Método auxiliar para setear el titulo de la action bar */
     @Override
     public void setTitle(CharSequence title) {
-        itemTitle = title;
+        mTitle = title;
+        getSupportActionBar().setTitle(mTitle);
     }
+
+
+    /* Called whenever we call invalidateOptionsMenu() */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        // If the nav drawer is open, hide action items related to the content view
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        // Handle your other action bar items...
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
     public void onBackPressed(){
@@ -254,34 +321,26 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void MuscleTemplateDownload(){
-        Log.v(TAG,"MuscleTemplateDownload");
+
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/")
                 .build();
 
-        final MainService downloadhtmlService = retrofit.create(MainService.class);
-
-        new AsyncTask<Void, Long, Void>() {
+        MainService downloadhtmlService = retrofit.create(MainService.class);
+        downloadhtmlService.getMusclesTemplate().enqueue(new Callback<ResponseBody>() {
             @Override
-            protected Void doInBackground(Void... voids) {
-                Call<ResponseBody> call = downloadhtmlService.getMusclesTemplate();
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Boolean write = saveHtmInDevice(MainActivity.this,response.body(),"index.html");
+                }
+                else {Log.e(TAG, "Download server contact failed");}
+            }
 
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if (response.isSuccessful()) {
-                            Boolean write = saveHtmInDevice(MainActivity.this,response.body(),"index.html");
-                        }
-                        else {Log.e(TAG, "Download server contact failed");}
-                    }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.e(TAG, "Download server contact failed",t);}
+        });
 
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Log.e(TAG, "Download server contact failed",t);
-                    }
-                });
-                return null;
-            };
-        }.execute();
+
     }
 
     private void saveBodyTemplate(){
@@ -308,20 +367,9 @@ public class MainActivity extends AppCompatActivity {
         return muscle;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
 
-    /* La escucha del ListView en el Drawer */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
+
+
     
     private void setMusclePath(File file){
         Log.v(TAG,"setMusclePath: "+file.getPath());

@@ -386,6 +386,8 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
 
     private void getBodyView(){
+
+        
         // ACCEDER A LA URL DEL HTML GUARDADO EN EL PHONE
         SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         String default_url = getResources().getString(R.string.muscle_path);
@@ -509,8 +511,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {mItemTouchHelper.startDrag(viewHolder);}
-
-
 
 
     private void onErrorViewOn(){

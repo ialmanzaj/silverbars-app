@@ -51,7 +51,7 @@ import retrofit.client.Response;
  * Created by isaacalmanza on 10/04/16.
  */
 
-public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateCallback {
+public class SpotifyActivity extends AppCompatActivity implements  ConnectionStateCallback {
 
     static final String EXTRA_TOKEN = "EXTRA_TOKEN";
     private static final String KEY_CURRENT_QUERY = "CURRENT_QUERY";
@@ -75,7 +75,7 @@ public class SpotifyMusic extends AppCompatActivity implements  ConnectionStateC
     private static final String TEST_ALBUM_URI = "spotify:album:2lYmxilk8cXJlxxXmns1IU";
     @SuppressWarnings("SpellCheckingInspection")
     private static final String TEST_QUEUE_SONG_URI = "spotify:track:5EEOjaJyWvfMglmEwf9bG3";
-    private static final String TAG = "SpotifyMusic";
+    private static final String TAG = "SpotifyActivity";
 
 
     private static final int REQUEST_CODE = 1337;
