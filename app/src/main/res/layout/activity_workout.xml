@@ -5,30 +5,31 @@
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-        <android.support.design.widget.AppBarLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    <android.support.design.widget.AppBarLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/appbarlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:elevation="2dp">
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="?android:attr/actionBarSize"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:background="@color/colorPrimary">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="@string/start_button"
-                android:layout_gravity="end"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                android:layout_marginEnd="5dp"
-                android:id="@+id/start_button"
-                android:background="@color/secondColor" />
-        </android.support.v7.widget.Toolbar>
-        </android.support.design.widget.AppBarLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary">
+                <Button
+                    android:theme="@style/ButtonRed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/start_button"
+                    android:layout_gravity="end"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:layout_marginEnd="5dp"
+                    android:id="@+id/start_button" />
+
+            </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
 
     <TabHost
         android:layout_width="match_parent"

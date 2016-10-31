@@ -11,18 +11,14 @@
         android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="50dp"
         app:elevation="2dp">
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="50dp"
             app:elevation="2dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:background="@color/colorPrimary"
-            android:layout_above="@+id/content_frame"
-            android:layout_alignParentStart="true">
+            android:background="@color/colorPrimary">
 
             <LinearLayout
                 android:gravity="center_vertical|center_horizontal"
@@ -56,6 +52,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <TextView
             android:textSize="22sp"
             android:layout_gravity="center_horizontal"
@@ -93,22 +90,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recycler"
-        android:layout_centerHorizontal="true"
         android:layout_above="@+id/done_button"
         android:layout_below="@+id/appbarlayout" />
 
     <Button
+        android:theme="@style/ButtonRed"
         android:id="@+id/done_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/add_exercises_button"
         android:textSize="18sp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/secondColor" />
+        android:layout_alignParentBottom="true" />
 
 
 </RelativeLayout>

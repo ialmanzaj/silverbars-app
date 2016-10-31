@@ -4,4 +4,6 @@
         <item name="colorAccent">@color/secondColor</item>
         <item name="android:progressBackgroundTint">@color/light_gray</item>
     </style>
+
+
 </resources>

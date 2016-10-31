@@ -36,7 +36,7 @@ public class ResultsActivity extends AppCompatActivity {
     private static final String TAG = "ResultsActivity";
     WebView webView;
     String partes = "";
-    Button save;
+    Button mSaveResultsButton;
     LinearLayout muscles_content_layout,skills_layout;
     private  List<String> MusclesArray = new ArrayList<>();
     private  List<String> TypeExercises = new ArrayList<>();
@@ -58,11 +58,10 @@ public class ResultsActivity extends AppCompatActivity {
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle(getResources().getString(R.string.results));
 
-        if (myToolbar != null) {
-            getSupportActionBar().setTitle(getResources().getString(R.string.results));
-        }
 
+        
         webView = (WebView) findViewById(R.id.webview);
         muscles_content_layout = (LinearLayout) findViewById(R.id.content);
         skills_layout = (LinearLayout) findViewById(R.id.skills);
@@ -83,8 +82,8 @@ public class ResultsActivity extends AppCompatActivity {
         Tab_layout.addTab(skills);
 
 
-        save = (Button) findViewById(R.id.save);
-        save.setOnClickListener(new View.OnClickListener() {
+        mSaveResultsButton = (Button) findViewById(R.id.save);
+        mSaveResultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
@@ -176,6 +175,11 @@ public class ResultsActivity extends AppCompatActivity {
 
         webView.getSettings().setJavaScriptEnabled(true);
         getBodyView();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     private void getBodyView(){

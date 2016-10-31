@@ -4,38 +4,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.app.proj.silverbars.CreateWorkoutFinalActivity">
+    tools:context=".CreateWorkoutFinalActivity">
+
     <android.support.design.widget.AppBarLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="50dp"
         app:elevation="2dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="50dp"
             app:elevation="2dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:background="@color/colorPrimary"
-            android:layout_above="@+id/content_frame"
-            android:layout_alignParentStart="true">
+            android:background="@color/colorPrimary">
 
             <Button
                 android:id="@+id/Save"
                 android:text="Save"
-                android:background="@color/secondColor"
+                android:theme="@style/ButtonRed"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="end"
                 android:layout_marginEnd="5dp"/>
+
 
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
+
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -52,7 +51,8 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                tools:ignore="DisableBaselineAlignment">
 
                 <RelativeLayout
                     android:layout_weight="1"

@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context="com.app.proj.silverbars.SavedWorkoutsFragment">
+    android:background="@color/white"
+    tools:context=".SavedWorkoutsFragment">
 
         <LinearLayout
             android:orientation="vertical"
@@ -15,25 +16,26 @@
             android:visibility="gone"
             android:background="@color/white">
 
-            <TextView
-                android:textColor="@color/black"
-                android:textSize="22sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/blank_text_my_workouts_saved"
-                android:layout_gravity="center"
-                android:gravity="center" />
-            <Button
-                android:layout_marginTop="10dp"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                android:background="@color/colorSecondary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/explore_button"
-                android:id="@+id/explore"
-                android:layout_gravity="center"
-                android:gravity="center" />
+                <TextView
+                    android:textColor="@color/black"
+                    android:textSize="22sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/blank_text_my_workouts_saved"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+
+                <Button
+                    android:layout_marginTop="10dp"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                   android:theme="@style/ButtonCreate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/explore_button"
+                    android:id="@+id/explore"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
 
         </LinearLayout>
 
@@ -48,5 +50,7 @@
             app:twowayview_layoutManager="GridLayoutManager"
             app:twowayview_numColumns="2"
             android:orientation="vertical" />
+
+
 
 </LinearLayout>

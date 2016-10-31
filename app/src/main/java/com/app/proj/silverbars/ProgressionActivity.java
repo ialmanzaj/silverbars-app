@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.v4.view.NestedScrollingParentHelper;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -35,36 +38,37 @@ import static com.app.proj.silverbars.Utilities.injectJS;
  * Created by isaacalmanza on 10/04/16.
  */
 public class ProgressionActivity extends AppCompatActivity {
-    private static final String TAG = "PROGRESSION ACTIVITY";
-    private WebView webview;
-    String partes = "";
-    AuthPreferences authPreferences;
-    LinearLayout progression_content_layout;
 
+    private static final String TAG = "ProgressionActivity";
+
+    private WebView mMusclesWebView;
+    String partes = "";
+
+    LinearLayout progression_content_layout;
     CustomDateView customDateView;
+    private  Toolbar mToolbar;;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progression);
 
-        Toolbar toolbar;
-        toolbar = (Toolbar) findViewById(R.id.toolbar_);
-        setSupportActionBar(toolbar);
 
-        if (toolbar != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(getResources().getString(R.string.progression_));
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar_);
+        setSupportActionBar(mToolbar);
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.progression_));
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {finish();}
             });
 
 
-            // hide toolbar
-            toolbar.animate().translationY(-toolbar.getBottom()).setInterpolator(new AccelerateInterpolator()).start();
-        }
-
+        AppBarLayout appBarLayout = (AppBarLayout)findViewById(R.id.appbar);
+        appBarLayout.setExpanded(false, true);
 
         progression_content_layout = (LinearLayout) findViewById(R.id.content);
 
@@ -73,16 +77,16 @@ public class ProgressionActivity extends AppCompatActivity {
         customDateView.setNumberDay("2");
 
 
-        authPreferences = new AuthPreferences(this);
-        getProgressionAPI(authPreferences.getAccessToken());
-
-        ScrollView scrollView = (ScrollView) findViewById(R.id.muscles);
+        mMusclesWebView = (WebView) findViewById(R.id.webview);
 
 
+        NestedScrollView nestedScrollView = (NestedScrollView) findViewById(R.id.main_content);
 
 
-        webview = (WebView) findViewById(R.id.WebView_progression);
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {scrollView.setFillViewport(true);}
+
+        getProgressionAPI();
+
+
     }
 
 
@@ -93,41 +97,19 @@ public class ProgressionActivity extends AppCompatActivity {
         String default_url = getResources().getString(R.string.muscle_path);
         String muscle_url = sharedPref.getString(getString(R.string.muscle_path),default_url);
         if (muscle_url.equals("/")){
-            webview.loadUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/html/index.html");
+            mMusclesWebView.loadUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/html/index.html");
         }else {
             String fileurl = "file://"+muscle_url;
-            webview.loadUrl(fileurl);
+            mMusclesWebView.loadUrl(fileurl);
         }
     }
 
-    private void getProgressionAPI(final String token){
+    private void getProgressionAPI(){
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
 
-                Request request = new Request.Builder()
-                        .header("Authorization", "Bearer " + token)
-                        .url("https://api.silverbarsapp.com/v1/progression/me/")
-                        .build();
+        MainService service = ServiceGenerator.createService(MainService.class);
 
-                okhttp3.Response response = chain.proceed(request);
-                Log.v(TAG,response.toString());
-                return response;
-            }
-        });
-
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.silverbarsapp.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-
-        MainService service = retrofit.create(MainService.class);
-        retrofit2.Call<User.ProgressionMuscle[]> call = service.getProgression();
-
-        call.enqueue(new Callback<User.ProgressionMuscle[]>() {
+        service.getProgression().enqueue(new Callback<User.ProgressionMuscle[]>() {
             @Override
             public void onResponse(Call<User.ProgressionMuscle[]> call, retrofit2.Response<User.ProgressionMuscle[]> response) {
                 if (response.isSuccessful()) {
@@ -211,10 +193,10 @@ public class ProgressionActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                webview.setWebViewClient(new WebViewClient() {
+                mMusclesWebView.setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageFinished(WebView view, String url) {
-                        injectJS(partes,webview);
+                        injectJS(partes,mMusclesWebView);
                         super.onPageFinished(view, url);
                     }
 
@@ -222,7 +204,7 @@ public class ProgressionActivity extends AppCompatActivity {
             }
         });
 
-        webview.getSettings().setJavaScriptEnabled(true);
+        mMusclesWebView.getSettings().setJavaScriptEnabled(true);
         getBodyView();
 
     }
