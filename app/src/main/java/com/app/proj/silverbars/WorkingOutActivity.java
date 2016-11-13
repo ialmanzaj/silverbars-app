@@ -53,22 +53,32 @@ import static com.app.proj.silverbars.Utilities.quitarMp3;
  */
 public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener, Player.NotificationCallback, ConnectionStateCallback {
 
-    private static final String TAG ="WorkingOut ACTIVITY";
+    private static final String TAG ="WorkingOut";
+
     private static final String CLIENT_ID = "20823679749441aeacf4e601f7d12270";
+
+
+
+
     static MediaPlayer mp;
-    ArrayList<File> mySongs;
+    ArrayList<File> mySongsList;
     ArrayList<File> playlist;
+
     private ImageButton btPlay;
     private ImageButton btPause;
+
     private Uri u;
     private int x = 0, y=0, elements = 0, ActualTimeMain=0, tempo = 0, actualReps, Format_Time,Format_Time_Rest,ActualTimeRest=0;
     private int totalTime;
+
+
     private TextView Rep_timer_text;
     private TextView song_name, artist_name;
     private TextView CurrentSet;
     private TextView CurrentExercise;
     private TextView RestCounter_text;
     private TextView headerText;
+
 
     private CountDownTimer main_timer, restTimer, startTimer;
 
@@ -106,23 +116,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     ArrayList<ExerciseRep> exercisesforRecycler = new ArrayList<>();
 
     ImageButton prvLayout,nxtLayout;
-
-    private final Player.OperationCallback mOperationCallback = new Player.OperationCallback() {
-        @Override
-        public void onSuccess() {
-            logStatus("OK!");
-        }
-
-        @Override
-        public void onError(Error error) {
-            logStatus("ERROR:" + error);
-        }
-    };
+    
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_working_out);
+        
         Intent i = getIntent();
         Bundle b = i.getExtras();
 
@@ -133,9 +134,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         VibrationPerSet =  b.getBoolean("VibrationPerSet");
         play_exercise_audio = b.getBoolean("play_exercise_audio");
         TotalSets = b.getInt("Sets");
-        mySongs = (ArrayList) b.getParcelableArrayList("songlist");
+        mySongsList = (ArrayList) b.getParcelableArrayList("songlist");
         spotify_playlist = b.getString("playlist_spotify");
         Token = b.getString("token");
+
 
         // inicialize tempo
         tempo = exercisesforRecycler.get(y).getTempo_positive() + exercisesforRecycler.get(y).getTempo_isometric() + exercisesforRecycler.get(y).getTempo_negative();
@@ -278,7 +280,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 if (actual_start_time == 0 && INITIAL_TIMER){
                     INITIAL_TIMER = false;
                     startTimer.cancel();
-                    Log.v(TAG,"Main TIMER: INICIADO");
+                    Log.v(TAG,"Main timer");
 
                     nxtLayout.setEnabled(true);
                     prvLayout.setEnabled(true);
@@ -648,14 +650,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         btPlay.setOnClickListener(this);
         btPause.setOnClickListener(this);
 
-        if (mySongs != null && mySongs.size() > 0 && song_names != null){
+        if (mySongsList != null && mySongsList.size() > 0 && song_names != null){
 
             Songs_from_Phone = true;
-            for(int j = 0; j < mySongs.size(); j++){
+            for(int j = 0; j < mySongsList.size(); j++){
                 for(int z = 0; z < song_names.length; z++)
-                    if (Objects.equals(song_names[z], SongName(this,mySongs.get(j)))){
+                    if (Objects.equals(song_names[z], SongName(this,mySongsList.get(j)))){
                         z++;
-                        playlist.add(mySongs.get(j));
+                        playlist.add(mySongsList.get(j));
                     }
             }
 
@@ -906,13 +908,17 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
     private void ResumeCountDown(){
-        pause = false;
         Log.v(TAG,"ResumeCountDown: activado");
         Log.v(TAG,"rest flag: "+rest);
 
+        pause = false;
+      
+        
         if (rest){
+            
             Log.v(TAG,"ActualTimeRest: "+ActualTimeRest);
             startRestTimer(ActualTimeRest);
+            
         }else {
 
             if (MAIN_TIMER){
@@ -924,17 +930,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         }
 
-
     }
+    
+    
+    //asign time for each repetition
     private void asignTotalTime(int position){
         totalTime = (exercisesforRecycler.get(position).getRepetition() * tempo) + 5;
-
-      /*  Log.v(TAG,"totalTime: "+totalTime);
-        Log.v(TAG,"Exercises_reps: "+Exercises_reps[song_names]);
-        Log.v(TAG,"tempo: "+tempo);*/
     }
-
-
+    
 
     private void playMusic(final int playlist_size){
         if (playlist_size>1){
@@ -1084,7 +1087,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
     private void launchResultsActivity(){
-        Intent intent = new Intent(WorkingOutActivity.this, ResultsActivity.class);
+        Intent intent = new Intent(this, ResultsActivity.class);
         intent.putParcelableArrayListExtra("exercises", exercisesforRecycler);
         startActivity(intent);
         finish();
@@ -1117,6 +1120,19 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    private final Player.OperationCallback mOperationCallback = new Player.OperationCallback() {
+        @Override
+        public void onSuccess() {
+            logStatus("OK!");
+        }
+
+        @Override
+        public void onError(Error error) {
+            logStatus("ERROR:" + error);
+        }
+    };
+
+
     public void startPlaySpotify(String uri_song) {
         logStatus("Starting playback for " + uri_song);
         mPlayer.playUri(mOperationCallback,uri_song,0,0);
@@ -1135,20 +1151,18 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onStart() {
-        super.onStart();
         Log.v(TAG,"onStart");
 
         if (onPause){
             ResumeCountDown();
         }
-
+        
+        super.onStart();
     }
 
     @Override
     protected void onResume() {
-        super.onResume();
         Log.v(TAG,"onResume");
-
 
         mNetworkStateReceiver = new BroadcastReceiver() {
             @Override
@@ -1172,7 +1186,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         if (onPause){
             ResumeCountDown();
         }
-
+        super.onResume();
     }
     @Override
     protected void onPause() {
@@ -1192,8 +1206,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onBackPressed(){
-        Log.v(TAG,"BUTTON BACK PRESSED: CLICK");
+        Log.v(TAG,"onBackPressed");
         DialogFinalize();
+        
     }
 
     @Override
@@ -1201,18 +1216,13 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         Log.v(TAG,"onDestroy");
         ScreenOff();
 
-        if (mCurrentPlaybackState != null && mCurrentPlaybackState.isActiveDevice){
-            Spotify.destroyPlayer(this);
-        }
+        if (mCurrentPlaybackState != null && mCurrentPlaybackState.isActiveDevice){Spotify.destroyPlayer(this);}
 
-        if (MAIN_TIMER && main_timer != null){
-            main_timer.cancel();
-        }
+        if (MAIN_TIMER && main_timer != null){main_timer.cancel();}
 
-        if (media!=null){
-            media.release();
-        }
+        if (media!=null){media.release();}
 
+        
         super.onDestroy();
     }
 

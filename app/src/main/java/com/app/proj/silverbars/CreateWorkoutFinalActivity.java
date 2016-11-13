@@ -243,8 +243,9 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
     private void putExercisesinRecycler(){
 
-
         MainService service = ServiceGenerator.createService(MainService.class);
+
+
 
         Call<Exercise[]> call = service.getAllExercises();
         call.enqueue(new Callback<Exercise[]>() {
@@ -365,11 +366,6 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
             }
         });
-
-
-
-
-
 
 
     }

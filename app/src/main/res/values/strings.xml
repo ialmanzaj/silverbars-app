@@ -44,7 +44,7 @@
     <!-- Strings related to activity_myworkouts -->
     <string name="blank_text_my_workouts">THERE\'S NO WORKOUT YET</string>
     <string name="blank_text_my_workouts_saved">THERE\'S NO SAVED WORKOUTS YET</string>
-    <string name="text_create_workout">Create a new workout</string>
+    <string name="text_create_workout">Create new workout</string>
     <string name="explore_button">EXPLORE</string>
 
 

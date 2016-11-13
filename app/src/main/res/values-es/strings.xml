@@ -50,7 +50,7 @@
     <!-- Strings related to activity_myworkouts -->
     <string name="blank_text_my_workouts">NO HAY WORKOUT AÚN</string>
     <string name="blank_text_my_workouts_saved">NO HAY WORKOUTS GUARDADOS AÚN</string>
-    <string name="text_create_workout">Crear una nueva rutina</string>
+    <string name="text_create_workout">Crear nueva rutina</string>
     <string name="explore_button">EXPLORAR</string>
 
     <!-- Strings related to activity_playlist picker -->

@@ -25,6 +25,7 @@ import java.util.Objects;
 
 import static com.app.proj.silverbars.Utilities.CreateNewView;
 import static com.app.proj.silverbars.Utilities.CreateNewViewProgression;
+import static com.app.proj.silverbars.Utilities.CreateProgression;
 import static com.app.proj.silverbars.Utilities.deleteCopiesofList;
 import static com.app.proj.silverbars.Utilities.injectJS;
 
@@ -33,15 +34,16 @@ import static com.app.proj.silverbars.Utilities.injectJS;
  */
 public class ResultsActivity extends AppCompatActivity {
 
+
     private static final String TAG = "ResultsActivity";
-    WebView webView;
-    String partes = "";
-    Button mSaveResultsButton;
+    private WebView webView;
+    private String partes = "";
+    private Button mSaveResultsButton;
     LinearLayout muscles_content_layout,skills_layout;
-    private  List<String> MusclesArray = new ArrayList<>();
+    private  List<Muscle> MusclesArray = new ArrayList<>();
     private  List<String> TypeExercises = new ArrayList<>();
 
-    ArrayList<ExerciseRep> exercises = new ArrayList<>();
+    private ArrayList<ExerciseRep> exercises = new ArrayList<>();
 
 
     @Override
@@ -86,16 +88,16 @@ public class ResultsActivity extends AppCompatActivity {
         mSaveResultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                MainService mainService = ServiceGenerator.createService(MainService.class);
+
+
+                //mainService.saveMyProgression()
                 finish();
             }
 
         });
 
-
-        ScrollView scrollView = (ScrollView) findViewById(R.id.muscles);
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            scrollView.setFillViewport(true);
-        }
 
         if (exercises != null) {
 
@@ -103,10 +105,8 @@ public class ResultsActivity extends AppCompatActivity {
 
             for(int a = 0; a < exercises.size(); a++){
 
-                for (Muscle muscle: exercises.get(a).getExercise().getMuscles()){
-                    Collections.addAll(MusclesArray, muscle.getMuscleName());
-                }
                 Collections.addAll(TypeExercises, exercises.get(a).getExercise().getTypes_exercise());
+
 
                 if (Objects.equals(exercises.get(a).getExercise().getLevel(),"NORMAL")){
                     porcentaje[a] = 3;
@@ -120,7 +120,18 @@ public class ResultsActivity extends AppCompatActivity {
 
                 porcentaje[a] = porcentaje[a] * exercises.get(a).getRepetition();
 
-                Log.v(TAG,"exercise"+exercises.get(a).getExercise().getExercise_name()+"porcentaje: "+porcentaje[a]);
+
+                for (Muscle muscle: exercises.get(a).getExercise().getMuscles()){
+                    muscle.setMuscle_activation(porcentaje[a]);
+
+                    Collections.addAll(MusclesArray, muscle);
+
+                    //Log.d(TAG,"muscle: "+muscle.getMuscle_activation());
+
+                }
+
+
+                //Log.v(TAG,"exercise"+exercises.get(a).getExercise().getExercise_name()+"porcentaje: "+porcentaje[a]);
             }
 
             setMusclesToView(MusclesArray);
@@ -144,16 +155,75 @@ public class ResultsActivity extends AppCompatActivity {
     }
 
 
+
+
+
+    private List<Muscle> deleteCopiesofMuscle(List<Muscle> muscles){
+        List<Muscle> muscle_to_return = new ArrayList<>();
+        List<String> names_muscles = new ArrayList<>();
+
+
+        for (Muscle muscle: muscles){
+
+            //Log.d(TAG,"muscle: "+muscle.getMuscleName());
+
+            if (!names_muscles.contains(muscle.getMuscleName())){
+
+                muscle_to_return.add(muscle);
+                names_muscles.add(muscle.getMuscleName());
+
+            }else {
+                //Log.d(TAG,"index: "+names_muscles.indexOf(muscle.getMuscleName()));
+
+                int index  = names_muscles.indexOf(muscle.getMuscleName());
+
+                Muscle muscleSelected = muscle_to_return.get(index);
+
+                int progression = muscleSelected.getMuscle_activation() + muscle.getMuscle_activation();
+                Log.d(TAG,"progression before: "+progression);
+
+                if (progression > 100){
+                    progression = progression - 100;
+
+                    muscleSelected.setProgression_level(muscleSelected.getProgression_level()+1);
+
+                }
+
+                Log.d(TAG,"progression after: "+progression);
+
+                muscleSelected.setMuscle_activation(progression);
+
+                muscle_to_return.set(index,muscleSelected);
+
+                Log.d(TAG,"size: "+muscle_to_return.size());
+
+            }
+        }
+        return muscle_to_return;
+    }
+
+
+
+
     @SuppressLint("SetJavaScriptEnabled")
-    private void setMusclesToView(List<String> musculos){
+    private void setMusclesToView(List<Muscle> musculos){
 
         if (musculos.size() > 0){
-            List<String> musculos_oficial;
-            musculos_oficial = deleteCopiesofList(musculos);
+
+            List<Muscle> musculos_oficial = deleteCopiesofMuscle(musculos);
+
 
             for (int a = 0;a<musculos_oficial.size();a++) {
-                partes += "#"+ musculos_oficial.get(a) + ",";
-                RelativeLayout relativeLayout = CreateNewViewProgression(this,musculos_oficial.get(a),10);
+
+                String muscleName = musculos_oficial.get(a).getMuscleName();
+                int progression = musculos_oficial.get(a).getMuscle_activation();
+                int level = musculos_oficial.get(a).getProgression_level();
+
+                // for webview
+                partes += "#"+ muscleName + ",";
+
+
+                RelativeLayout relativeLayout = CreateProgression(this,muscleName,String.valueOf(level),progression);
                 muscles_content_layout.addView(relativeLayout);
             }
         }
@@ -167,7 +237,6 @@ public class ResultsActivity extends AppCompatActivity {
                         injectJS(partes,webView);
                         super.onPageFinished(view, url);
                     }
-
                 });
             }
         });

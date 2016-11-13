@@ -19,9 +19,14 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -109,22 +114,46 @@ public class ProgressionActivity extends AppCompatActivity {
 
         MainService service = ServiceGenerator.createService(MainService.class);
 
-        service.getProgression().enqueue(new Callback<User.ProgressionMuscle[]>() {
+        service.getProgression().enqueue(new Callback<List<User.ProgressionMuscle>>() {
             @Override
-            public void onResponse(Call<User.ProgressionMuscle[]> call, retrofit2.Response<User.ProgressionMuscle[]> response) {
+            public void onResponse(Call<List<User.ProgressionMuscle>> call, retrofit2.Response<List<User.ProgressionMuscle>> response) {
                 if (response.isSuccessful()) {
 
-                    User.ProgressionMuscle[] progression = response.body();
-                    List<User.ProgressionMuscle> muscles_to_View = new ArrayList <>();
+                    List<User.ProgressionMuscle> muscles_to_View = response.body();
 
-                    Collections.addAll(muscles_to_View,progression);
+
+                    for (User.ProgressionMuscle progressionMuscle: muscles_to_View){
+                        Log.d(TAG,"progressionMuscle: "+progressionMuscle.getDate());
+                        Log.d(TAG,"progressionMuscle: "+progressionMuscle.getLevel());
+
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+                        try {
+
+                            Date date = dateFormat.parse(progressionMuscle.getDate());
+                            System.out.println(date);
+                            System.out.println(dateFormat.format(date));
+
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                      /*  Calendar c = Calendar.getInstance();
+                        c.setTime();
+                        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);*/
+                    }
+
+
+
                     getMusclePorcentaje(muscles_to_View);
+                }else {
+                    Log.e(TAG,"code: "+response.code());
 
                 }
             }
             @Override
-            public void onFailure(Call<User.ProgressionMuscle[]> call, Throwable t) {
-                Log.e(TAG,"progrssion from server, onFailure",t);
+            public void onFailure(Call<List<User.ProgressionMuscle>> call, Throwable t) {
+                Log.e(TAG,"progrssio, onFailure",t);
             }
         });
     }
@@ -135,6 +164,7 @@ public class ProgressionActivity extends AppCompatActivity {
 
         List<User.ProgressionMuscle> muscles_to_View = new ArrayList <>();
         List<String> muscles_ids = new ArrayList <>();
+
         int progress;
 
         for (User.ProgressionMuscle user_progress : muscles) {
@@ -175,6 +205,7 @@ public class ProgressionActivity extends AppCompatActivity {
 
         setMusclesToView(muscles_to_View);
     }
+
 
 
 

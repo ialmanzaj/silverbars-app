@@ -145,20 +145,18 @@ public class MainFragment extends Fragment {
 
 
         MainService service = ServiceGenerator.createService(MainService.class);
-        service.getWorkouts().enqueue(new Callback<Workout[]>() {
+        service.getWorkouts().enqueue(new Callback<List<Workout>>() {
             @Override
-            public void onResponse(Call<Workout[]> call, Response<Workout[]> response) {
+            public void onResponse(Call<List<Workout>> call, Response<List<Workout>> response) {
                 if (response.isSuccessful()) {
                         onErrorViewoff();
                         progressBar.setVisibility(View.GONE);
 
-                        Collections.addAll(mWorkouts,response.body());
+                        mWorkouts = response.body();
 
                         if (adapter != null){
 
                             if (adapter.getItemCount() != mWorkouts.size()){
-
-
 
                             }
                         }else {
@@ -169,13 +167,12 @@ public class MainFragment extends Fragment {
                         swipeContainer.setRefreshing(false);
 
                     } else {
-
                         Log.e(TAG,"statusCode: "+response.code());
                         onErrorViewOn();
                     }
                 }
                 @Override
-                public void onFailure(Call<Workout[]> call, Throwable t) {
+                public void onFailure(Call<List<Workout>> call, Throwable t) {
                     Log.e(TAG,"Workouts, onFailure: ",t);
                     onErrorViewOn();
                 }

@@ -5,19 +5,24 @@ package com.app.proj.silverbars;
 
 public class User {
 
-     int id;
-     String username;
+     private int id;
+     private String username;
 
+    public int getId() {
+        return id;
+    }
 
+    public String getUsername() {
+        return username;
+    }
 
-    public class ProgressionMuscle{
-
-        int id;
-        String muscle;
-        String person;
-        int muscle_activation_progress;
-        int level;
-        String date;
+    public class ProgressionMuscle {
+        private int id;
+        private String muscle;
+        private String person;
+        private int muscle_activation_progress;
+        private int level;
+        private String date;
 
         public ProgressionMuscle(int id,String muscle,String person,int muscle_activation_progress,int level,String date){
             this.id = id;
