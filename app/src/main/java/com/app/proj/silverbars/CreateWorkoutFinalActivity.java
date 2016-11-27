@@ -386,7 +386,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
                 }
                 if (!mp3Dir.exists()){
                     Log.v(TAG,"mp3 url "+SelectedExercises.get(i).getExercise().getExercise_audio());
-                    DownloadMp3(this,SelectedExercises.get(i).getExercise().getExercise_audio(), getExerciseAudioName(SelectedExercises.get(i).getExercise().getExercise_audio()));
+                    downloadAudio(this,SelectedExercises.get(i).getExercise().getExercise_audio(), getExerciseAudioName(SelectedExercises.get(i).getExercise().getExercise_audio()));
                 }
                 database.insertExercises(
                         SelectedExercises.get(i).getExercise().getExerciseId(),

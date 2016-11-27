@@ -9,7 +9,6 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,8 +49,12 @@ import retrofit2.Retrofit;
 public class Utilities {
 
     private static final String TAG = "Utilities";
+    private   String strSeparator = "__,__";
 
-    public static int containerDimensions(Context context) {
+    public Utilities (){}
+
+
+    public  int containerDimensions(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
@@ -62,7 +65,7 @@ public class Utilities {
 
 
     /* Checks if external storage is available for read and write */
-    public static boolean isExternalStorageWritable() {
+    public  boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             return true;
@@ -71,7 +74,7 @@ public class Utilities {
     }
 
 
-    public static Bitmap loadExerciseImageFromDevice(Context context, String imageURI) {
+    public  Bitmap loadExerciseImageFromDevice(Context context, String imageURI) {
         Bitmap bitmap = null;
         String[] imageDir = imageURI.split("SilverbarsImg");
         if (imageDir.length < 2){
@@ -89,7 +92,7 @@ public class Utilities {
     }
 
 
-    public static boolean saveExerciseImageInDevice(Context context, ResponseBody body, String imgName) {
+    public  boolean saveExerciseImageInDevice(Context context, ResponseBody body, String imgName) {
         try {
             File futureStudioIconFile = getFileReady(context,"/SilverbarsImg/"+imgName);
             InputStream input = null;
@@ -122,7 +125,7 @@ public class Utilities {
     }
 
 
-    public static Bitmap loadWorkoutImageFromDevice(Context context, String imageURI) {
+    public  Bitmap loadWorkoutImageFromDevice(Context context, String imageURI) {
         Bitmap bitmap = null;
         File file = getFileReady(context,"/SilverbarsImg/"+imageURI);
         if (file.exists()){
@@ -132,7 +135,7 @@ public class Utilities {
     }
 
 
-    public static String getWorkoutImage(String url){
+    public String getWorkoutImage(String url){
         String[] workoutImgDir = url.split("workouts");
         String Parsedurl = "workouts"+workoutImgDir[1];
         String[] imagesName = Parsedurl.split("/");
@@ -142,7 +145,7 @@ public class Utilities {
     }
 
 
-    public static String convertMusclesToString(Muscle[] muscles) {
+    public String convertMusclesToString(Muscle[] muscles) {
         Gson gson = new Gson();
         String jsonInString = gson.toJson(muscles);
         Log.v(TAG, jsonInString);
@@ -152,14 +155,14 @@ public class Utilities {
 
 
 
-    public static Muscle[] convertMusclesToString(String jsonInString) {
+    public Muscle[] convertMusclesToString(String jsonInString) {
         Gson gson = new Gson();
         Muscle[] muscles = gson.fromJson(jsonInString, Muscle[].class);
         return muscles;
     }
 
 
-    public static String getExerciseAudioName(String audio_url){
+    public String getExerciseAudioName(String audio_url){
         String[] audioDir = audio_url.split("exercises");
         String Parsedurl = "exercises" + audioDir[1];
         String[] splitName = Parsedurl.split("/");
@@ -175,7 +178,7 @@ public class Utilities {
     }
 
 
-    public static void createExerciseAudio(Context context, Boolean download, String mp3_url){
+    public void createExerciseAudio(Context context, Boolean download, String mp3_url){
         String url_dir_device = "exercises" + mp3_url;
         File Dir = getFileReady(context,"/SilverbarsMp3/");
 
@@ -183,21 +186,21 @@ public class Utilities {
             File file = getFileReady(context,"/SilverbarsMp3/"+getExerciseAudioName(mp3_url));
             if (!file.exists()) {
                 if (download){
-                    DownloadMp3(context,url_dir_device, getExerciseAudioName(mp3_url));
+                    downloadAudio(context,url_dir_device, getExerciseAudioName(mp3_url));
                 }
             }
         } else {
             boolean success = Dir.mkdir();
             if (success) {
                 if (download){
-                    DownloadMp3(context,url_dir_device, getExerciseAudioName(mp3_url));
+                    downloadAudio(context,url_dir_device, getExerciseAudioName(mp3_url));
                 }
             }else
                 Log.e(TAG, "Error creating dir");
         }
     }
 
-    public static boolean saveAudioInDevice(Context context,ResponseBody body, String audioName) {
+    public boolean saveAudioInDevice(Context context,ResponseBody body, String audioName) {
 
         try {
             File Folder = getFileReady(context,"/SilverbarsMp3/");
@@ -245,7 +248,7 @@ public class Utilities {
         return false;
     }
 
-    public static boolean saveWorkoutImgInDevice(Context context, ResponseBody body, String workout_img) {
+    public boolean saveWorkoutImgInDevice(Context context, ResponseBody body, String workout_img) {
 
         try {
             File Folder = getFileReady(context,"/SilverbarsImg/");
@@ -293,7 +296,7 @@ public class Utilities {
         return false;
     }
 
-    public static Bitmap loadProfileImageFromCache(Context context, String imageURI) {
+    public Bitmap loadProfileImageFromCache(Context context, String imageURI) {
         Bitmap bitmap = null;
         String[] imageDir = imageURI.split("SilverbarsImg");
 
@@ -313,8 +316,8 @@ public class Utilities {
 
 
 
-    public static String strSeparator = "__,__";
-    public static String convertArrayToString(String[] array){
+
+    public  String convertArrayToString(String[] array){
         String str = "";
         for (int i = 0;i<array.length; i++) {
             str = str+array[i];
@@ -326,24 +329,24 @@ public class Utilities {
         return str;
     }
 
-    public static String[] convertStringToArray(String str){
+    public  String[] convertStringToArray(String str){
         return str.split(strSeparator);
     }
 
 
-    public static String getUrlReady(Context context,String url){
+    public  String getUrlReady(Context context,String url){
         return context.getFilesDir()+url;
     }
 
-    public static File getFileReady(Context context,String url){
+    public  File getFileReady(Context context,String url){
         return new File(context.getFilesDir()+url);
     }
 
 
-    public static String removeLastChar(String str) {return str.substring(0,str.length()-1);}
+    public  String removeLastChar(String str) {return str.substring(0,str.length()-1);}
 
 
-    public static String SongArtist(Context context,File file){
+    public  String SongArtist(Context context,File file){
         String artist = null;
         try{
             MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
@@ -356,7 +359,7 @@ public class Utilities {
         return artist;
     }
 
-    public static String SongDuration(Context context,File file){
+    public  String getSongDuration(Context context, File file){
         String duration = null;
         try{MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
             Uri uri = Uri.fromFile(file);
@@ -369,7 +372,7 @@ public class Utilities {
     }
 
 
-    public static String SongName(Context context,File file){
+    public  String getSongName(Context context, File file){
         String title = null;
         try{
             if (file.getPath().contains("/storage/emulated/0/Download/")){
@@ -388,22 +391,8 @@ public class Utilities {
     }
 
 
-    public static String convertMusclesToByte(Muscle[] muscles){
-        Gson gson = new Gson();
-        return gson.toJson(muscles);
-    }
 
-    public static Muscle[] convertBytesToMuscles(byte[] bytes){
-
-        String json = new String(bytes);
-        Gson gson = new Gson();
-        Muscle[] muscles = gson.fromJson(json, new TypeToken<ArrayList<Muscle>>()
-        {}.getType());
-
-        return muscles;
-    }
-
-    public static void DownloadImage(final Context context, String url, final String imgName){
+    public  void DownloadImage(final Context context, String url, final String imgName){
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
@@ -423,7 +412,7 @@ public class Utilities {
     }
 
 
-    public static void DownloadMp3(final Context context, String audio_url, final String getAudioName) {
+    public  void downloadAudio(final Context context, String audio_url, final String getAudioName) {
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
                 .build();
@@ -435,15 +424,15 @@ public class Utilities {
                 if (response.isSuccessful()) {
                     saveAudioInDevice(context,response.body(),getAudioName);
                 } else
-                    Log.e(TAG, "DownloadMp3, Download server failed:");
+                    Log.e(TAG, "downloadAudio, Download server failed:");
 
             }
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {Log.e(TAG, "DownloadMp3: onFailure",t);}
+            public void onFailure(Call<ResponseBody> call, Throwable t) {Log.e(TAG, "downloadAudio: onFailure",t);}
         });
     }
 
-    public static String quitarMp3(String song){
+    public String removeLastMp3(String song){
         if(song.contains(".mp3")){
             song =  song.replace(".mp3","");
         }if (song.contains("-")){
@@ -452,7 +441,7 @@ public class Utilities {
         return song;
     }
 
-    public static List<String> deleteCopiesofList(List<String> list){
+    public  List<String> deleteCopiesofList(List<String> list){
         List<String> real_list = new ArrayList<>();
 
         for (int a = 0; a<list.size();a++) {
@@ -465,7 +454,7 @@ public class Utilities {
 
 
 
-    public static class WrappingLinearLayoutManager extends LinearLayoutManager {
+    public  static class WrappingLinearLayoutManager extends LinearLayoutManager {
 
         public WrappingLinearLayoutManager(Context context) {
             super(context);
@@ -561,7 +550,7 @@ public class Utilities {
 
 
 
-    public static boolean saveHtmInDevice(Context context,ResponseBody body, String name) {
+    public  boolean saveHtmInDevice(Context context,ResponseBody body, String name) {
 
         try {
             File file = getFileReady(context,"/html/"+name);
@@ -599,7 +588,7 @@ public class Utilities {
     }
 
 
-    public static void injectJS(String partes, WebView webView) {
+    public void injectJS(String partes, WebView webView) {
         try {
             if (!Objects.equals(partes, "")){
                 partes = removeLastChar(partes);
@@ -615,7 +604,7 @@ public class Utilities {
     }
 
 
-    public static RelativeLayout CreateNewView(Context context,String type_exercise, int progress){
+    public RelativeLayout createRelativeProgress(Context context, String type_exercise, int progress){
 
         TextView textView = new TextView(context);
 
@@ -658,7 +647,7 @@ public class Utilities {
         return relativeLayout;
     }
 
-    public static RelativeLayout CreateNewViewProgression(Context context,String type_exercise, int progress){
+    public RelativeLayout createViewProgression(Context context, String type_exercise, int progress){
 
         TextView textView = new TextView(context);
 
@@ -699,7 +688,7 @@ public class Utilities {
         return relativeLayout;
     }
 
-    public static RelativeLayout CreateProgression(Context context,String exercise,String level, int progress){
+    public  RelativeLayout createProgressionView(Context context, String exercise, String level, int progress){
 
         TextView text_exercise = new TextView(context);
 

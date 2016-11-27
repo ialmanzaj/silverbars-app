@@ -36,54 +36,59 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.app.proj.silverbars.Utilities.deleteCopiesofList;
-import static com.app.proj.silverbars.Utilities.injectJS;
-
 
 public class CreateWorkoutActivity extends AppCompatActivity implements OnStartDragListener {
 
+    private static final String TAG = "CreateWorkout";
 
-    private static final String TAG = "CreateWorkout" ;
-    private WebView webView;
-    private RecyclerView recycler;
-    private ExercisesSelectedAdapter adapter;
-    private Button mButtonReAdd;
 
     private LinearLayout empty_content;
+    private WebView webView;
+    private Button mButtonReAdd;
+    private RecyclerView recycler;
+
+    private LinearLayout primary_ColumnMuscle,secundary_ColumnMuscle, ProgressView,mErrorView;
+    private LinearLayout contentView;
+
+
     private ItemTouchHelper mItemTouchHelper;
+
 
     private  List<String> mMuscles = new ArrayList<>();
     private List<Exercise> AllExercisesList = new ArrayList<Exercise>();
 
     private String partes = "";
+
+    private ExercisesSelectedAdapter adapter;
     
     private List<ExerciseRep> mExercisesAdapter = new ArrayList<>();
 
-    private LinearLayout primary_ColumnMuscle,secundary_ColumnMuscle, ProgressView,mErrorView;
-    private LinearLayout contentView;
-
     private ArrayList<String> exercises_id;
+
+    private Utilities utilities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_workout);
 
+        utilities = new Utilities();
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if (toolbar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(getResources().getString(R.string.text_create_workout));
-            toolbar.setNavigationIcon(R.drawable.ic_clear_white_24px);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.text_create_workout));
+        toolbar.setNavigationIcon(R.drawable.ic_clear_white_24px);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     finish();
                 }
             });
-        }
+
 
 
         contentView = (LinearLayout)findViewById(R.id.content_info);
@@ -96,9 +101,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
         ScrollView scrollView = (ScrollView) findViewById(R.id.muscles_);
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            scrollView.setFillViewport(true);
-        }
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {scrollView.setFillViewport(true);}
 
         
         mErrorView = (LinearLayout) findViewById(R.id.error_layout);
@@ -337,14 +340,12 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
         partes = "";
 
-
         if (musculos.size() > 0){
 
             
-            List<String> mMusclesFinal = deleteCopiesofList(musculos);
+            List<String> mMusclesFinal = utilities.deleteCopiesofList(musculos);
             
-           
-            
+
             for (int a = 0;a<mMusclesFinal.size();a++) {
                 TextView mMusclesTextView = new TextView(this);
 
@@ -363,7 +364,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
                 }else {
                     //primary_ColumnMuscle.addView(mMusclesTextView);
                 }
-                
+
                 
             }
         }
@@ -372,7 +373,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageFinished(WebView view, String url) {
-                injectJS(partes,webView);
+                utilities.injectJS(partes,webView);
                 super.onPageFinished(view, url);
             }
         });
@@ -427,7 +428,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     private void putTypesInWorkout(List<String> types){
         List<String> typesExercise;
-        typesExercise = deleteCopiesofList(types);
+        typesExercise = utilities.deleteCopiesofList(types);
         getCountTimes(typesExercise);
 
         Log.v(TAG,"ISOMETRIC: "+ISOMETRIC);

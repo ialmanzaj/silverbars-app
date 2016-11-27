@@ -16,9 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.app.proj.silverbars.Utilities.SongDuration;
-import static com.app.proj.silverbars.Utilities.SongName;
-import static com.app.proj.silverbars.Utilities.quitarMp3;
+
 
 
 public class SongsActivity extends AppCompatActivity {
@@ -31,11 +29,15 @@ public class SongsActivity extends AppCompatActivity {
 
     ArrayList<File> canciones_url;
 
+    private Utilities utilities;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_songs);
-        Log.v(TAG,"SongsActivity: empezo");
+
+        utilities = new Utilities();
+
 
         ListMusic = (ListView)findViewById(R.id.lvPlaylist);
 
@@ -52,7 +54,7 @@ public class SongsActivity extends AppCompatActivity {
                 String[] items = new String[canciones_url.size()];
 
                 for (int i = 0; i < canciones_url.size(); i++) {
-                    items[i] = quitarMp3(SongName(this,canciones_url.get(i)));
+                    items[i] = utilities.removeLastMp3(utilities.getSongName(this,canciones_url.get(i)));
                 }
 
                 //Log.v(TAG,"items: "+ Arrays.toString(items));
@@ -82,7 +84,7 @@ public class SongsActivity extends AppCompatActivity {
                             }
                             for(int j = 0; j < canciones_url.size(); j++){
                                 if (j == selected[j]){
-                                    playlist[x] = SongName(SongsActivity.this,canciones_url.get(j));
+                                    playlist[x] = utilities.getSongName(SongsActivity.this,canciones_url.get(j));
                                     x++;
                                 }
                             }
@@ -126,7 +128,7 @@ public class SongsActivity extends AppCompatActivity {
                 }
                 else{
                     if (singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".wav")){
-                        if (SongDuration(this,singleFile)!=null && Long.valueOf(SongDuration(this,singleFile))>150000)
+                        if (utilities.getSongDuration(this,singleFile)!=null && Long.valueOf(utilities.getSongDuration(this,singleFile))>150000)
                             songs.add(singleFile);
                     }
                 }

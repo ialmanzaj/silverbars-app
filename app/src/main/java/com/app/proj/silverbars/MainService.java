@@ -16,7 +16,6 @@ import retrofit2.http.Url;
 
 public interface MainService {
 
-
     @Authenticated({R.string.authentication_ACCOUNT,
             R.string.authentication_TOKEN})
     @GET("v1/workouts/")
@@ -39,20 +38,22 @@ public interface MainService {
 
     @Authenticated({R.string.authentication_ACCOUNT,
             R.string.authentication_TOKEN})
-    @GET("v1/progression/me/")
-    Call<List<User.ProgressionMuscle>> getProgression();
+
+    @GET("v1/progression/")
+    Call<List<MuscleProgression>> getProgression();
 
     @Authenticated({R.string.authentication_ACCOUNT, R.string.authentication_TOKEN})
     @FormUrlEncoded
-    @POST("v1/progression/me/")
-    Call<User.ProgressionMuscle> saveMyProgression(@Field("muscle") String muscle,@Field("muscle_activation_progress") String muscle_activation_progress,
-                                                   @Field("level") String level, @Field("date") String date);
+    @POST("v1/progression/")
+    Call<MuscleProgression> saveMyProgression(@Field("muscle") Muscle muscle, @Field("muscle_activation_progress") String muscle_activation_progress,
+                                                   @Field("person") int person,@Field("level") String level, @Field("date") String date);
+
+    @GET("v1/profile/")
+    Call<Person> getMyProfile();
+
 
     @GET
     Call<ResponseBody> downloadFile(@Url String fileUrl);
-
-    @GET("silverbarsmedias3/html/index.html")
-    Call<ResponseBody> getMusclesTemplate();
 
     @GET
     Call<SpotifyAdapter[]> SpotifyTracks();

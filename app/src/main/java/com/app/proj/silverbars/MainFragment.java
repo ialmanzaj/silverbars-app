@@ -49,17 +49,23 @@ public class MainFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.fragment_fmain, container, false);
+        return inflater.inflate(R.layout.fragment_fmain, container, false);
+    }
+    
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
 
-        progressBar = (ProgressBar)  rootview.findViewById(R.id.progress_bar);
-        recyclerView = (TwoWayView) rootview.findViewById(R.id.list);
+        progressBar = (ProgressBar)  view.findViewById(R.id.progress_bar);
+        recyclerView = (TwoWayView) view.findViewById(R.id.list);
 
-        noInternetConnectionLayout = (LinearLayout) rootview.findViewById(R.id.noInternetConnection_layout);
-        failedServerLayout = (LinearLayout) rootview.findViewById(R.id.failed_conection_layout);
-        swipeContainer = (SwipeRefreshLayout)rootview.findViewById(R.id.swipeContainer);
+        noInternetConnectionLayout = (LinearLayout) view.findViewById(R.id.noInternetConnection_layout);
+        failedServerLayout = (LinearLayout) view.findViewById(R.id.failed_conection_layout);
+        swipeContainer = (SwipeRefreshLayout)view.findViewById(R.id.swipeContainer);
 
-        Button button_failed_server = (Button) rootview.findViewById(R.id.button_reload_failed_server);
+        Button button_failed_server = (Button) view.findViewById(R.id.button_reload_failed_server);
         button_failed_server.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,7 +88,7 @@ public class MainFragment extends Fragment {
         });
 
 
-        Button button_reload_no_internet = (Button) rootview.findViewById(R.id.button_reload_no_internet);
+        Button button_reload_no_internet = (Button) view.findViewById(R.id.button_reload_no_internet);
         button_reload_no_internet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,13 +122,7 @@ public class MainFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
-        return  rootview;
     }
-
-
-
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

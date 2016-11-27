@@ -63,27 +63,33 @@ public class LoginActivity extends AuthenticationActivity {
             "foo@example.com:hello", "bar@example.com:world"
     };
     private static final String TAG = "LoginActivity";
-    
+
     private static final String CONSUMER_KEY = "KHeJV3Sg8ShguiYyvDf9t6i3WPpMpDWlBLN93mgz";
     private static final String CONSUMER_SECRET = "1krO5gdrzs08Ej5WoGpLrQifbuDRNFxEnRqLKyHFJIFG2fPpGPE3t1J8nCS7K9NoSidUCibUUi985ipRiipjM0YV6PoUDMcXw08A4M8R7yfzECFGDHnxVBYgQfgjfc2e";
 
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+
     private View mProgressView;
     private View mLoginFormView;
-    private Button login;
+
+    private Button mLoginButton;
     CallbackManager callbackManager;
+
     ProfileTracker profileTracker;
     String basicMail, basicPass, email, name;
+
     ImageButton RefreshButton;
     View login_button;
     private MySQLiteHelper database;
+
     boolean checkUser = false;
-    ImageView logo;
+    ImageView mLogo;
     TextView slogan;
 
     RelativeLayout container;
     TextView slogan_login;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -92,10 +98,12 @@ public class LoginActivity extends AuthenticationActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
-        mProgressView = findViewById(R.id.login_progress);
-        login = (Button) findViewById(R.id.login_button);
 
-        logo = (ImageView) findViewById(R.id.logo);
+
+        mProgressView = findViewById(R.id.login_progress);
+        mLoginButton = (Button) findViewById(R.id.login_button);
+
+        mLogo = (ImageView) findViewById(R.id.logo);
         slogan = (TextView) findViewById(R.id.slogan);
 
         slogan_login = (TextView) findViewById(R.id.slogan_login);
@@ -119,10 +127,11 @@ public class LoginActivity extends AuthenticationActivity {
 
 
 
-            login.setOnClickListener(new View.OnClickListener() {
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Log.v(TAG,"onclick");
+
 
                     if (isNetworkConnected()){
 
@@ -134,7 +143,7 @@ public class LoginActivity extends AuthenticationActivity {
 
 
                         slogan_login.setVisibility(View.VISIBLE);
-                        login.setVisibility(View.GONE);
+                        mLoginButton.setVisibility(View.GONE);
 
                         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                             @Override
@@ -155,60 +164,17 @@ public class LoginActivity extends AuthenticationActivity {
 
                         LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile", "email", "user_friends"));
 
+
+
                     }else
                         Toast.makeText(LoginActivity.this, "Please, Connect to internet", Toast.LENGTH_LONG).show();
-
                 }
             });
 
-
-
-
-
-
     }
-
-
-    @Override
-    protected void attachBaseContext(Context newBase){
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getActiveNetworkInfo() != null;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.v(TAG,"onStart");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.v(TAG,"onPause");
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.v(TAG,"onResume");
-    }
-
-
 
     private void FacebookLogin(String facebook_token) {
-        logo.setVisibility(View.GONE);
+        mLogo.setVisibility(View.GONE);
         mProgressView.setVisibility(View.VISIBLE);
 
 
@@ -246,18 +212,30 @@ public class LoginActivity extends AuthenticationActivity {
 
     }
 
-   /* private void saveLogIn(){
-        SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(getString(R.string.sign_in),true);
-        editor.apply();
-        Log.v(TAG,getString(R.string.sign_in));
-    }*/
+
+    @Override
+    protected void attachBaseContext(Context newBase){
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+
+
+
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.v(TAG,"Login activity onDestroy");
     }
 }
 

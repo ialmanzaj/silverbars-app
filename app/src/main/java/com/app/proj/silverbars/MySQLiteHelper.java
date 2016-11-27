@@ -14,8 +14,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-import static com.app.proj.silverbars.Utilities.convertStringToArray;
-import static com.app.proj.silverbars.Utilities.getUrlReady;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
@@ -98,10 +97,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
 
     private final Context myContext;
+    private Utilities utilities;
 
     public MySQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         myContext = context;
+        utilities = new Utilities();
     }
 
 
@@ -355,7 +356,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor row = db.rawQuery("SELECT * FROM " + TABLE_EXERCISES + " WHERE " + KEY_IDEXERCISE + " = " + exerciseId, null);
         if (row.moveToFirst()) {
-            exercise = new Exercise(row.getInt(0), row.getString(1), row.getString(2), convertStringToArray(row.getString(3)), Utilities.convertMusclesToString(row.getString(4)), row.getString(5), row.getString(6));
+            exercise = new Exercise(row.getInt(0), row.getString(1), row.getString(2), utilities.convertStringToArray(row.getString(3)), utilities.convertMusclesToString(row.getString(4)), row.getString(5), row.getString(6));
         } else {
             Log.i(TAG,"Exercise not found: "+exerciseId);
         }
@@ -378,7 +379,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
              while(row.moveToNext()){
                  i++;
-                 exercises[i] = new Exercise(row.getInt(0),row.getString(1),row.getString(2),convertStringToArray(row.getString(3)), Utilities.convertMusclesToString(row.getString(4)),row.getString(5),row.getString(6));
+                 exercises[i] = new Exercise(row.getInt(0),row.getString(1),row.getString(2),utilities.convertStringToArray(row.getString(3)), utilities.convertMusclesToString(row.getString(4)),row.getString(5),row.getString(6));
             }
         } else {
             Log.i(TAG,"No exercises found");
@@ -510,11 +511,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             workouts = new Workout[row.getCount()];
 
 
-            workouts[i] = new Workout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5), getExercises( convertStringToArray(row.getString(6))) );
+            workouts[i] = new Workout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5), getExercises( utilities.convertStringToArray(row.getString(6))) );
             Log.v(TAG,"LocalWorkouts Database: "+ Arrays.toString(workouts));
             while(row.moveToNext()){
                 i++;
-                workouts[i] = new Workout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5), getExercises( convertStringToArray(row.getString(6))) );
+                workouts[i] = new Workout(row.getInt(0),row.getString(1),row.getString(2),row.getInt(3),row.getString(4),row.getString(5), getExercises( utilities.convertStringToArray(row.getString(6))) );
                 Log.v(TAG,"Local Workouts, Database: "+ Arrays.toString(workouts));
             }
         } else {
@@ -669,7 +670,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         fis = new FileInputStream(dbFile);
 
-        String directorio = getUrlReady(myContext,"/Database");
+        String directorio = utilities.getUrlReady(myContext,"/Database");
 
         File d = new File(directorio);
         if (!d.exists()) {

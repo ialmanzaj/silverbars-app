@@ -39,15 +39,10 @@ import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
-import static com.app.proj.silverbars.Utilities.SongArtist;
-import static com.app.proj.silverbars.Utilities.SongName;
-import static com.app.proj.silverbars.Utilities.getExerciseAudioName;
-import static com.app.proj.silverbars.Utilities.quitarMp3;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
@@ -56,9 +51,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private static final String TAG ="WorkingOut";
 
     private static final String CLIENT_ID = "20823679749441aeacf4e601f7d12270";
-
-
-
 
     static MediaPlayer mp;
     ArrayList<File> mySongsList;
@@ -117,12 +109,15 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     ImageButton prvLayout,nxtLayout;
     
-    
+
+    private Utilities utilities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_working_out);
+
+        utilities = new Utilities();
         
         Intent i = getIntent();
         Bundle b = i.getExtras();
@@ -356,9 +351,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         x = (x-1)%playlist.size();
                         u = Uri.parse(playlist.get(x).toString());
 
-                        String songName = SongName(WorkingOutActivity.this,playlist.get(x));
-                        song_name.setText(quitarMp3(songName));
-                        String artist = SongArtist(WorkingOutActivity.this,playlist.get(x));
+                        String songName = utilities.getSongName(WorkingOutActivity.this,playlist.get(x));
+                        song_name.setText(utilities.removeLastMp3(songName));
+                        String artist = utilities.SongArtist(WorkingOutActivity.this,playlist.get(x));
 
                         artist_name.setText(artist);
                         mp = MediaPlayer.create(getApplicationContext(),u);
@@ -398,11 +393,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                         x = (x + 1) % playlist.size();
                         u = Uri.parse(playlist.get(x).toString());
 
-                        String songName = SongName(WorkingOutActivity.this,playlist.get(x));
+                        String songName = utilities.getSongName(WorkingOutActivity.this,playlist.get(x));
 
                         song_name.setText(songName);
 
-                        String artist = SongArtist(WorkingOutActivity.this,playlist.get(x));
+                        String artist = utilities.SongArtist(WorkingOutActivity.this,playlist.get(x));
 
                         artist_name.setText(artist);
 
@@ -655,7 +650,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             Songs_from_Phone = true;
             for(int j = 0; j < mySongsList.size(); j++){
                 for(int z = 0; z < song_names.length; z++)
-                    if (Objects.equals(song_names[z], SongName(this,mySongsList.get(j)))){
+                    if (Objects.equals(song_names[z], utilities.getSongName(this,mySongsList.get(j)))){
                         z++;
                         playlist.add(mySongsList.get(j));
                     }
@@ -664,10 +659,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
             u = Uri.parse(playlist.get(x).toString());
 
-            String songName = SongName(this,playlist.get(x));
-            song_name.setText(quitarMp3(songName));
+            String songName = utilities.getSongName(this,playlist.get(x));
+            song_name.setText(utilities.removeLastMp3(songName));
 
-            String artist = SongArtist(WorkingOutActivity.this,playlist.get(x));
+            String artist = utilities.SongArtist(WorkingOutActivity.this,playlist.get(x));
             artist_name.setText(artist);
 
             Log.v(TAG, (String) song_name.getText());
@@ -943,9 +938,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         if (playlist_size>1){
             x = (x+1)%playlist.size();
             u = Uri.parse(playlist.get(x).toString());
-            String songName = SongName(this,playlist.get(x));
-            song_name.setText(quitarMp3(songName));
-            String artist = SongArtist(this,playlist.get(x));
+            String songName = utilities.getSongName(this,playlist.get(x));
+            song_name.setText(utilities.removeLastMp3(songName));
+            String artist = utilities.SongArtist(this,playlist.get(x));
             artist_name.setText(artist);
 
             mp = MediaPlayer.create(getApplicationContext(),u);
@@ -987,7 +982,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
                 if (audioDir.length == 2){
 
-                    media = MediaPlayer.create(this,Uri.parse(getFilesDir()+"/SilverbarsMp3/"+getExerciseAudioName(exercisesforRecycler.get(y).getExercise().getExercise_audio())));
+                    media = MediaPlayer.create(this,Uri.parse(getFilesDir()+"/SilverbarsMp3/"+utilities.getExerciseAudioName(exercisesforRecycler.get(y).getExercise().getExercise_audio())));
 
                 }else {
 

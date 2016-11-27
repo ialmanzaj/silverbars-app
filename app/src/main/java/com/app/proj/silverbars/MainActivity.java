@@ -37,8 +37,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static com.app.proj.silverbars.Utilities.getFileReady;
-import static com.app.proj.silverbars.Utilities.saveHtmInDevice;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -62,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton mButtonCreateWorkout;
     private LinearLayout settings;
 
+    private Utilities utilities;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         mTitle = mDrawerTitle = getTitle();
+
+        utilities = new Utilities();
 
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -251,7 +254,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        
 
         // Se actualiza el item seleccionado y el título, después de cerrar el drawer
         mDrawerList.setItemChecked(position, true);
@@ -259,26 +261,19 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
-
-
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
         getSupportActionBar().setTitle(mTitle);
     }
 
-
     /* Called whenever we call invalidateOptionsMenu() */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
-        // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         //menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -300,11 +295,10 @@ public class MainActivity extends AppCompatActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
+        // true, then it has handled the ap icon touch event
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
@@ -325,16 +319,16 @@ public class MainActivity extends AppCompatActivity {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/")
                 .build();
 
-        MainService downloadhtmlService = retrofit.create(MainService.class);
-        downloadhtmlService.getMusclesTemplate().enqueue(new Callback<ResponseBody>() {
+        MainService mDownloadService = retrofit.create(MainService.class);
+        
+        mDownloadService.downloadFile("silverbarsmedias3/html/index.html").enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    Boolean write = saveHtmInDevice(MainActivity.this,response.body(),"index.html");
+                    Boolean write = utilities.saveHtmInDevice(MainActivity.this,response.body(),"index.html");
                 }
                 else {Log.e(TAG, "Download server contact failed");}
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                         Log.e(TAG, "Download server contact failed",t);}
@@ -344,10 +338,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveBodyTemplate(){
-        File Dir = getFileReady(this,"/html/");
+        File Dir = utilities.getFileReady(this,"/html/");
         if (Dir.isDirectory()){
             Log.v(TAG,"EXISTE DIR"+Dir.getPath());
-            File file = getFileReady(this,"/html/"+"index.html");
+            File file = utilities.getFileReady(this,"/html/"+"index.html");
             if (!file.exists()){
                 MuscleTemplateDownload();
                 setMusclePath(file);
@@ -366,10 +360,6 @@ public class MainActivity extends AppCompatActivity {
     public String getMuscle() {
         return muscle;
     }
-
-
-
-
     
     private void setMusclePath(File file){
         Log.v(TAG,"setMusclePath: "+file.getPath());

@@ -40,8 +40,6 @@ public class TokenProvider implements Provider<Account, AndroidTokenType, Androi
 
     @Override
     public boolean retryRequired(int i, okhttp3.Response response, TokenStorage<Account, AndroidTokenType, AndroidToken> tokenStorage, Account account, AndroidTokenType androidTokenType, AndroidToken androidToken) {
-        Log.v(TAG,"retryRequired");
-
         if (!response.isSuccessful()) {
             Log.v(TAG,"code: "+response.code());
             if (response.code() == 401) {

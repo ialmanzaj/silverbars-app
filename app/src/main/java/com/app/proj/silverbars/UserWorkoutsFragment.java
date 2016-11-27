@@ -2,6 +2,7 @@ package com.app.proj.silverbars;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,15 +27,21 @@ public class UserWorkoutsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_user_workouts, container, false);
+    }
+    
 
-        View roootview = inflater.inflate(R.layout.fragment_user_workouts, container, false);
-        TwoWayView my_workouts = (TwoWayView) roootview.findViewById(R.id.recycler_my_workouts);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        LinearLayout EmpyStateMyWorkouts = (LinearLayout) roootview.findViewById(R.id.empty_state_my_workouts);
+        TwoWayView my_workouts = (TwoWayView) view.findViewById(R.id.recycler_my_workouts);
 
-        Button create = (Button) roootview.findViewById(R.id.create_workout);
+        LinearLayout EmpyStateMyWorkouts = (LinearLayout) view.findViewById(R.id.empty_state_my_workouts);
 
-        create.setOnClickListener(new View.OnClickListener() {
+        Button mButtonCreateWorkout = (Button) view.findViewById(R.id.create_workout);
+
+        mButtonCreateWorkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(),CreateWorkoutActivity.class));
@@ -57,11 +64,8 @@ public class UserWorkoutsFragment extends Fragment {
         }else {
             EmpyStateMyWorkouts.setVisibility(View.VISIBLE);
         }*/
-
-        return roootview;
     }
-
-
-
-
+    
+    
+    
 }

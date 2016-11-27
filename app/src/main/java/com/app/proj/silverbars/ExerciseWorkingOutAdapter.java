@@ -18,21 +18,16 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
-import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
-
-/**
- * Created by isaacalmanza on 10/04/16.
- */
-// ADAPTER FOR WORKING OUT ACTIVITY
 public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWorkingOutAdapter.WorkoutsViewHolder> {
 
     private static final String TAG = "Workout Adapter";
     private List<ExerciseRep> exercises;
     private Context context;
+    private Utilities utilities;
+
 
     public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {
 
-        //public ImageView imagen;
          TextView nombre;
          TextView next;
          RelativeLayout Layout;
@@ -44,7 +39,6 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
             super(v);
             imagen_cache = (SimpleDraweeView) v.findViewById(R.id.imagen_cache);
             imageView_local = (ImageView) v.findViewById(R.id.imagen_local);
-
             nombre = (TextView) v.findViewById(R.id.nombre);
             Layout = (RelativeLayout) v.findViewById(R.id.Layout);
 
@@ -54,6 +48,7 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
     public ExerciseWorkingOutAdapter(Context context, List<ExerciseRep> exercises) {
         this.context = context;
         this.exercises = exercises;
+        utilities = new Utilities();
     }
 
     @Override
@@ -85,7 +80,7 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
 
         }else {
             viewHolder.imageView_local.setVisibility(View.VISIBLE);
-            Bitmap bitmap = loadExerciseImageFromDevice(context,exercises.get(position).getExercise().getExercise_image());
+            Bitmap bitmap = utilities.loadExerciseImageFromDevice(context,exercises.get(position).getExercise().getExercise_image());
             viewHolder.imageView_local.setImageBitmap(bitmap);
         }
 

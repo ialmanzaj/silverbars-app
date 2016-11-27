@@ -34,22 +34,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.app.proj.silverbars.PlaylistPickerActivity.convertArrayToString;
-import static com.app.proj.silverbars.Utilities.CreateNewView;
-import static com.app.proj.silverbars.Utilities.DownloadImage;
-import static com.app.proj.silverbars.Utilities.convertMusclesToString;
-import static com.app.proj.silverbars.Utilities.createExerciseAudio;
-import static com.app.proj.silverbars.Utilities.deleteCopiesofList;
-import static com.app.proj.silverbars.Utilities.getExerciseAudioName;
-import static com.app.proj.silverbars.Utilities.getExerciseImageName;
-import static com.app.proj.silverbars.Utilities.getFileReady;
-import static com.app.proj.silverbars.Utilities.getWorkoutImage;
-import static com.app.proj.silverbars.Utilities.injectJS;
-import static com.app.proj.silverbars.Utilities.removeLastChar;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
@@ -121,12 +110,16 @@ public class WorkoutActivity extends AppCompatActivity {
     private  List<String> MusclesArray = new ArrayList<>();
     private  List<String> TypeExercises = new ArrayList<>();
     private ArrayList<ExerciseRep> mExercises;
+    private Utilities utilities;
 
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
+
+
+        utilities = new Utilities();
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -175,7 +168,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 if (DownloadAudioExercise){
                     if (mExercises.size() > 0){
                         for (int a = 0;a<mExercises.size();a++){
-                            createExerciseAudio(WorkoutActivity.this, DownloadAudioExercise, mExercises.get(a).getExercise().getExercise_audio());
+                            utilities.createExerciseAudio(WorkoutActivity.this, DownloadAudioExercise, mExercises.get(a).getExercise().getExercise_audio());
                         }
 
                     }
@@ -574,8 +567,8 @@ public class WorkoutActivity extends AppCompatActivity {
         int sets,restbyexercise,restbyset;
 
         sets = Integer.parseInt(Sets.getText().toString());
-        restbyexercise = Integer.parseInt(removeLastChar(RestbyExercise.getText().toString()));
-        restbyset = Integer.parseInt(removeLastChar(RestbySet.getText().toString()));
+        restbyexercise = Integer.parseInt(utilities.removeLastChar(RestbyExercise.getText().toString()));
+        restbyset = Integer.parseInt(utilities.removeLastChar(RestbySet.getText().toString()));
 
 
         Intent intent = new Intent(this, WorkingOutActivity.class);
@@ -741,7 +734,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private void setMusclesToView(List<String> musculos){
         if (musculos.size() > 0){
 
-            List<String> musculos_oficial =  deleteCopiesofList(musculos);
+            List<String> musculos_oficial =  utilities.deleteCopiesofList(musculos);
 
 
             for (int a = 0;a<musculos_oficial.size();a++) {
@@ -776,7 +769,7 @@ public class WorkoutActivity extends AppCompatActivity {
                 webview.setWebViewClient(new WebViewClient(){
                     @Override
                     public void onPageFinished(WebView view, String url) {
-                        injectJS(partes,webview);
+                        utilities.injectJS(partes,webview);
                         super.onPageFinished(view, url);
                     }
 
@@ -826,16 +819,16 @@ public class WorkoutActivity extends AppCompatActivity {
                 String img_name,img_url,mp3_name;
                 File ExerciseImgFile,ExerciseMp3File;
 
-                img_name = getExerciseImageName(mExercises.get(i).getExercise().getExercise_image());
+                img_name = utilities.getExerciseImageName(mExercises.get(i).getExercise().getExercise_image());
                 img_url = mExercises.get(i).getExercise().getExercise_image();
-                mp3_name = getExerciseAudioName(mExercises.get(i).getExercise().getExercise_audio());
+                mp3_name = utilities.getExerciseAudioName(mExercises.get(i).getExercise().getExercise_audio());
 
-                ExerciseImgFile = getFileReady(this,"/SilverbarsImg/"+ img_name);
-                ExerciseMp3File = getFileReady(this,"/SilverbarsMp3/"+ mp3_name);
+                ExerciseImgFile = utilities.getFileReady(this,"/SilverbarsImg/"+ img_name);
+                ExerciseMp3File = utilities.getFileReady(this,"/SilverbarsMp3/"+ mp3_name);
 
 
                 if (!ExerciseImgFile.exists()){
-                    DownloadImage(this, img_url, img_name);
+                    utilities.DownloadImage(this, img_url, img_name);
                 }
                 
                 database.insertExercises(
@@ -843,7 +836,7 @@ public class WorkoutActivity extends AppCompatActivity {
                         mExercises.get(i).getExercise().getExercise_name(),
                         mExercises.get(i).getExercise().getLevel(),
                         convertArrayToString(mExercises.get(i).getExercise().getTypes_exercise()),
-                        convertMusclesToString(mExercises.get(i).getExercise().getMuscles()),
+                        utilities.convertMusclesToString(mExercises.get(i).getExercise().getMuscles()),
                         ExerciseMp3File.getPath(),
                         ExerciseImgFile.getPath()
                 );
@@ -874,9 +867,9 @@ public class WorkoutActivity extends AppCompatActivity {
         MySQLiteHelper database = new MySQLiteHelper(this);
 
         // Save workout data  in database
-        File WorkoutImgFile = getFileReady(this,"/SilverbarsImg/"+getWorkoutImage(workoutImgUrl));
+        File WorkoutImgFile = utilities.getFileReady(this,"/SilverbarsImg/"+ utilities.getWorkoutImage(workoutImgUrl));
         if (!WorkoutImgFile.exists()){
-            DownloadImage(this,workoutImgUrl,getWorkoutImage(workoutImgUrl));
+            utilities.DownloadImage(this,workoutImgUrl, utilities.getWorkoutImage(workoutImgUrl));
         }
 
         String[] exercises_ids = new String[mExercises.size()];
@@ -919,7 +912,7 @@ public class WorkoutActivity extends AppCompatActivity {
         getCountTimes(types);
 
         List<String> typesExercise_to_Layout;
-        typesExercise_to_Layout = deleteCopiesofList(types);
+        typesExercise_to_Layout = utilities.deleteCopiesofList(types);
 
         //Log.v(TAG,"typesExercise_to_Layout: "+typesExercise_to_Layout);
         //Log.v(TAG,"typesExercise_to_Layout size: "+typesExercise_to_Layout.size());
@@ -938,7 +931,7 @@ public class WorkoutActivity extends AppCompatActivity {
             ISOMETRIC_ = (ISOMETRIC *100 / types.size());
             //Log.v(TAG,"porcentaje: "+ISOMETRIC_);
 
-            RelativeLayout relativeLayout = CreateNewView(this,getResources().getString(R.string.ISOMETRIC),ISOMETRIC_);
+            RelativeLayout relativeLayout = utilities.createRelativeProgress(this,getResources().getString(R.string.ISOMETRIC),ISOMETRIC_);
             contentInfo.addView(relativeLayout);
 
         }if (CARDIO > 0){
@@ -946,7 +939,7 @@ public class WorkoutActivity extends AppCompatActivity {
             CARDIO_ = ( CARDIO*100 / types.size());
             //Log.v(TAG,"porcentaje: "+CARDIO_);
 
-            RelativeLayout relativeLayout = CreateNewView(this,getResources().getString(R.string.CARDIO),CARDIO_);
+            RelativeLayout relativeLayout = utilities.createRelativeProgress(this,getResources().getString(R.string.CARDIO),CARDIO_);
             contentInfo.addView(relativeLayout);
 
         }if (STRENGTH > 0){
@@ -954,7 +947,7 @@ public class WorkoutActivity extends AppCompatActivity {
             STRENGTH_ = ((STRENGTH*100/ types.size()));
             //Log.v(TAG,"porcentaje: "+STRENGTH_);
 
-            RelativeLayout relativeLayout = CreateNewView(this,getResources().getString(R.string.STRENGTH),STRENGTH_);
+            RelativeLayout relativeLayout = utilities.createRelativeProgress(this,getResources().getString(R.string.STRENGTH),STRENGTH_);
             contentInfo.addView(relativeLayout);
 
         }if (PYLOMETRICS > 0) {
@@ -962,7 +955,7 @@ public class WorkoutActivity extends AppCompatActivity {
             PYLOMETRICS_ = ((PYLOMETRICS * 100 / types.size()));
             //Log.v(TAG, "porcentaje: " + PYLOMETRICS_);
 
-            RelativeLayout relativeLayout = CreateNewView(this,getResources().getString(R.string.PYLOMETRICS),PYLOMETRICS_);
+            RelativeLayout relativeLayout = utilities.createRelativeProgress(this,getResources().getString(R.string.PYLOMETRICS),PYLOMETRICS_);
             contentInfo.addView(relativeLayout);
         }
     }

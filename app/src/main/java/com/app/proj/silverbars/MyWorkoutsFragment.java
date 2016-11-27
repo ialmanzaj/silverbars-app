@@ -3,6 +3,7 @@ package com.app.proj.silverbars;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,20 +19,23 @@ import java.util.List;
 public class MyWorkoutsFragment extends Fragment {
 
     private static final String TAG = "MyWorkoutsFragment";
-    View rootView;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.activity_my_workouts, container, false);
+        return  inflater.inflate(R.layout.activity_my_workouts, container, false);
+    }
 
-        ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
-        TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
+        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        return rootView;
     }
 
     private void setupViewPager(ViewPager viewPager) {

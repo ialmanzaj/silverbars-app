@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.app.proj.silverbars.Utilities.loadExerciseImageFromDevice;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
@@ -41,16 +41,17 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     private TextView Positive, Negative, Isometric;
 
     Context context;
+    private Utilities utilities;
 
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
-        //public ImageView imagen;
         TextView nombre;
         TextView next;
         TextView repetitions;
         TextView positive;
         TextView negative;
         TextView isometric;
+
 
         SimpleDraweeView imagen_cache;
         ImageView imageView_local;
@@ -64,8 +65,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
             imagen_cache = (SimpleDraweeView) v.findViewById(R.id.imagen);
             imageView_local = (ImageView) v.findViewById(R.id.imagen_local);
-
-
             positive = (TextView) v.findViewById(R.id.positive);
             isometric = (TextView) v.findViewById(R.id.isometric);
             negative = (TextView) v.findViewById(R.id.negative);
@@ -75,6 +74,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     public ExerciseAdapter(Context context,ArrayList<ExerciseRep> exercises) {
         this.context = context;
         this.exercises = exercises;
+        utilities = new Utilities();
     }
 
     @Override
@@ -120,7 +120,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             Log.v(TAG,"image: " +exercises.get(a).getExercise().getExercise_image());
 
 
-            bmp = loadExerciseImageFromDevice(context,exercises.get(a).getExercise().getExercise_image());
+            bmp = utilities.loadExerciseImageFromDevice(context,exercises.get(a).getExercise().getExercise_image());
             viewHolder.imageView_local.setImageBitmap(bmp);
         }
 

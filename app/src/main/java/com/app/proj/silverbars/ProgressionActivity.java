@@ -2,43 +2,28 @@ package com.app.proj.silverbars;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.view.NestedScrollingParentHelper;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.app.proj.silverbars.Utilities.CreateProgression;
-import static com.app.proj.silverbars.Utilities.injectJS;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
@@ -53,11 +38,14 @@ public class ProgressionActivity extends AppCompatActivity {
     CustomDateView customDateView;
     private  Toolbar mToolbar;;
 
+    private Utilities mUtilities;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progression);
 
+        mUtilities = new Utilities();
 
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar_);
@@ -114,15 +102,15 @@ public class ProgressionActivity extends AppCompatActivity {
 
         MainService service = ServiceGenerator.createService(MainService.class);
 
-        service.getProgression().enqueue(new Callback<List<User.ProgressionMuscle>>() {
+        service.getProgression().enqueue(new Callback<List<MuscleProgression>>() {
             @Override
-            public void onResponse(Call<List<User.ProgressionMuscle>> call, retrofit2.Response<List<User.ProgressionMuscle>> response) {
+            public void onResponse(Call<List<MuscleProgression>> call, retrofit2.Response<List<MuscleProgression>> response) {
                 if (response.isSuccessful()) {
 
-                    List<User.ProgressionMuscle> muscles_to_View = response.body();
+                    List<MuscleProgression> mMusclesProgress = response.body();
 
 
-                    for (User.ProgressionMuscle progressionMuscle: muscles_to_View){
+                    for (MuscleProgression progressionMuscle: mMusclesProgress){
                         Log.d(TAG,"progressionMuscle: "+progressionMuscle.getDate());
                         Log.d(TAG,"progressionMuscle: "+progressionMuscle.getLevel());
 
@@ -145,41 +133,41 @@ public class ProgressionActivity extends AppCompatActivity {
 
 
 
-                    getMusclePorcentaje(muscles_to_View);
+                    getMusclePorcentaje(mMusclesProgress);
                 }else {
                     Log.e(TAG,"code: "+response.code());
 
                 }
             }
             @Override
-            public void onFailure(Call<List<User.ProgressionMuscle>> call, Throwable t) {
+            public void onFailure(Call<List<MuscleProgression>> call, Throwable t) {
                 Log.e(TAG,"progrssio, onFailure",t);
             }
         });
     }
 
 
-    private void getMusclePorcentaje(List<User.ProgressionMuscle> muscles){
+    private void getMusclePorcentaje(List<MuscleProgression> muscles){
         Log.v(TAG,"getMusclePorcentaje");
 
-        List<User.ProgressionMuscle> muscles_to_View = new ArrayList <>();
-        List<String> muscles_ids = new ArrayList <>();
+        List<MuscleProgression> mMusclesProgress = new ArrayList <>();
+        List<String> muscles_names = new ArrayList <>();
 
         int progress;
 
-        for (User.ProgressionMuscle user_progress : muscles) {
+        for (MuscleProgression user_progress : muscles) {
 
-            if (!muscles_ids.contains(user_progress.getMuscle())) {
+            if (!muscles_names.contains(user_progress.getMuscle())) {
 
-                muscles_to_View.add(user_progress);
-                muscles_ids.add(user_progress.getMuscle());
+                mMusclesProgress.add(user_progress);
+                muscles_names.add(user_progress.getMuscle());
 
             } else {
 
-                int index = muscles_ids.indexOf(user_progress.getMuscle());
-                int level = 1;
-                progress = muscles_to_View.get(index).getMuscle_activation() + user_progress.getMuscle_activation();
-                Log.v(TAG,"progress: "+progress);
+                int index = muscles_names.indexOf(user_progress.getMuscle());
+                int level = user_progress.getLevel();
+                progress = mMusclesProgress.get(index).getMuscle_activation() + user_progress.getMuscle_activation();
+               
 
                 if (progress >= 100) {
 
@@ -190,32 +178,33 @@ public class ProgressionActivity extends AppCompatActivity {
                     String real_progress = String.valueOf(progress);
                     real_progress = real_progress.split("-")[1];
 
-                    muscles_to_View.get(index).setLevel(level);
-                    Log.v(TAG,"level: "+muscles_to_View.get(index).getLevel());
-                    muscles_to_View.get(index).setMuscle_activation_progress(Integer.parseInt(real_progress));
+                    mMusclesProgress.get(index).setLevel(level);
+                    Log.v(TAG,"level: "+mMusclesProgress.get(index).getLevel());
+                    mMusclesProgress.get(index).setMuscle_activation_progress(Integer.parseInt(real_progress));
+
                 } else {
 
-                    muscles_to_View.get(index).setLevel(user_progress.getLevel());
-                    muscles_to_View.get(index).setMuscle_activation_progress(progress);
+                    mMusclesProgress.get(index).setLevel(user_progress.getLevel());
+                    mMusclesProgress.get(index).setMuscle_activation_progress(progress);
                 }
 
 
             }
         }
 
-        setMusclesToView(muscles_to_View);
+        setMusclesToView(mMusclesProgress);
     }
 
 
 
 
-    private void setMusclesToView(List<User.ProgressionMuscle> musculos) {
+    private void setMusclesToView(List<MuscleProgression> musculos) {
         if (musculos.size() > 0) {
 
             for (int a = 0; a < musculos.size(); a++) {
                 partes += "#" + musculos.get(a).getMuscle() + ",";
 
-                RelativeLayout relativeLayout = CreateProgression(this,musculos.get(a).getMuscle(), String.valueOf(musculos.get(a).getLevel()),musculos.get(a).getMuscle_activation());
+                RelativeLayout relativeLayout = mUtilities.createProgressionView(this,musculos.get(a).getMuscle(), String.valueOf(musculos.get(a).getLevel()),musculos.get(a).getMuscle_activation());
                 progression_content_layout.addView(relativeLayout);
             }
         }
@@ -227,7 +216,7 @@ public class ProgressionActivity extends AppCompatActivity {
                 mMusclesWebView.setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageFinished(WebView view, String url) {
-                        injectJS(partes,mMusclesWebView);
+                        mUtilities.injectJS(partes,mMusclesWebView);
                         super.onPageFinished(view, url);
                     }
 

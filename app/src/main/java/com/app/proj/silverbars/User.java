@@ -1,70 +1,38 @@
 package com.app.proj.silverbars;
+
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
 
 public class User {
 
+    @SerializedName("id")
      private int id;
+
+    @SerializedName("username")
      private String username;
+
+    @SerializedName("first_name")
+    private String first_name;
+
+    @SerializedName("last_name")
+    private String last_name;
+
 
     public int getId() {
         return id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUsername() {return username;}
+
+    public String getFirst_name() {
+        return first_name;
     }
 
-    public class ProgressionMuscle {
-        private int id;
-        private String muscle;
-        private String person;
-        private int muscle_activation_progress;
-        private int level;
-        private String date;
-
-        public ProgressionMuscle(int id,String muscle,String person,int muscle_activation_progress,int level,String date){
-            this.id = id;
-            this.muscle = muscle;
-            this.person = person;
-            this.muscle_activation_progress = muscle_activation_progress;
-            this.level = level;
-            this.date = date;
-
-        }
-
-        public int getId(){
-            return id;
-        }
-
-        public String getMuscle(){
-            return muscle;
-        }
-
-        public String getPerson(){
-            return person;
-        }
-
-        public int getLevel(){
-            return level;
-        }
-
-        public int getMuscle_activation() {
-            return muscle_activation_progress;
-        }
-
-        public void setLevel(int level) {
-            this.level = level;
-        }
-
-        public void setMuscle_activation_progress(int muscle_activation_progress) {
-            this.muscle_activation_progress = muscle_activation_progress;
-        }
-
-        public String getDate() {
-            return date;
-        }
+    public String getLast_name() {
+        return last_name;
     }
 
 
