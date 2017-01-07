@@ -1,25 +1,14 @@
 package com.app.proj.silverbars;
 
-import android.content.Context;
-import android.util.Log;
-
+import com.andretietz.retroauth.AndroidAuthenticationHandler;
 import com.andretietz.retroauth.Retroauth;
-import com.google.gson.Gson;
 
-import java.io.IOException;
-
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.Route;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import com.andretietz.retroauth.AndroidAuthenticationHandler;
+import static com.app.proj.silverbars.Constants.API_URL;
 
 /**
  * Created by isaacalmanza on 10/04/16.
@@ -27,12 +16,14 @@ import com.andretietz.retroauth.AndroidAuthenticationHandler;
 
 public class ServiceGenerator {
 
-    public static final String API_BASE_URL = "https://api.silverbarsapp.com";
-    private static final String TAG = "Service Generator";
+
+    private static final String TAG = ServiceGenerator.class.getSimpleName();
+
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
+
     private static Retroauth.Builder builder = new Retroauth.Builder<>(AndroidAuthenticationHandler.create(new TokenProvider()))
-            .baseUrl(API_BASE_URL)
+            .baseUrl(API_URL)
             .addConverterFactory(GsonConverterFactory.create());
 
 
@@ -49,7 +40,6 @@ public class ServiceGenerator {
 
         return retrofit.create(serviceClass);
     }
-
 
 
 

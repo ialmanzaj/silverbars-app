@@ -7,7 +7,7 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
 import io.fabric.sdk.android.Fabric;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
@@ -29,11 +29,5 @@ public class SilverbarsApp extends MultiDexApplication {
             Log.d("SilverbarsApp", "Debug mode. Crashlytics disable");
         }
 
-
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/OpenSans-Regular.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        );
     }
 }

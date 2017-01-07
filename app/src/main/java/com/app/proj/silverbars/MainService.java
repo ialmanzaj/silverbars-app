@@ -1,6 +1,11 @@
 package com.app.proj.silverbars;
 
 import com.andretietz.retroauth.Authenticated;
+import com.app.proj.silverbars.models.Exercise;
+import com.app.proj.silverbars.models.Muscle;
+import com.app.proj.silverbars.models.MuscleProgression;
+import com.app.proj.silverbars.models.Person;
+import com.app.proj.silverbars.models.Workout;
 
 import java.util.List;
 
@@ -51,13 +56,8 @@ public interface MainService {
     @GET("v1/profile/")
     Call<Person> getMyProfile();
 
-
     @GET
     Call<ResponseBody> downloadFile(@Url String fileUrl);
-
-    @GET
-    Call<SpotifyAdapter[]> SpotifyTracks();
-
 
 }
 

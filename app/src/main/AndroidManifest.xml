@@ -38,7 +38,7 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
         <activity
-            android:name=".SplashScreen"
+            android:name=".activities.SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -47,7 +47,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -69,17 +69,17 @@
         </service>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".WorkoutActivity"
+            android:name=".activities.WorkoutActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".WorkingOutActivity"
+            android:name=".activities.WorkingOutActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <!-- <activity android:name=".Myworkouts" /> -->
-        <activity android:name=".PlaylistPickerActivity" />
+        <activity android:name=".activities.PlaylistPickerActivity" />
 
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -90,22 +90,22 @@
             tools:replace="android:theme" />
 
         <activity
-            android:name=".CreateWorkoutActivity"
+            android:name=".activities.CreateWorkoutActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CreateWorkoutFinalActivity"
-            android:parentActivityName=".CreateWorkoutActivity"
+            android:name=".activities.CreateWorkoutFinalActivity"
+            android:parentActivityName=".activities.CreateWorkoutActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CreateWorkoutActivity" />
+                android:value=".activities.CreateWorkoutActivity" />
         </activity>
 
         <activity
-            android:name=".ExerciseListActivity"
+            android:name=".activities.ExerciseListActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ProgressionActivity" />
+        <activity android:name=".activities.ProgressionActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -116,22 +116,22 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <activity
-            android:screenOrientation="portrait" android:name=".SpotifyActivity" />
+            android:screenOrientation="portrait" android:name=".activities.SpotifyActivity" />
 
-        <activity android:name=".SelectionMusicActivity"
+        <activity android:name=".activities.SelectionMusicActivity"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".SongsActivity"
+        <activity android:name=".activities.SongsActivity"
             android:screenOrientation="portrait"/>
 
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Theme.AppCompat" />
-        <activity android:name=".SettingsActivity"
+        <activity android:name=".activities.SettingsActivity"
 
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".ResultsActivity"
+        <activity android:name=".activities.ResultsActivity"
             android:screenOrientation="portrait"></activity>
 
         <meta-data

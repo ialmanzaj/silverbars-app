@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/container"
-    tools:context="com.app.proj.silverbars.LoginActivity">
+    tools:context="com.app.proj.silverbars.activities.LoginActivity">
 
 
     <LinearLayout

@@ -1,24 +1,21 @@
 package com.app.proj.silverbars;
 
 import android.accounts.Account;
-import android.content.Context;
 import android.util.Log;
 
 import com.andretietz.retroauth.AndroidToken;
 import com.andretietz.retroauth.AndroidTokenType;
 import com.andretietz.retroauth.Provider;
 import com.andretietz.retroauth.TokenStorage;
-import com.google.gson.Gson;
+import com.app.proj.silverbars.models.AccessToken;
 
 import java.io.IOException;
 
-import okhttp3.Authenticator;
 import okhttp3.Request;
-import okhttp3.Route;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
+
+import static com.app.proj.silverbars.Constants.CONSUMER_KEY;
+import static com.app.proj.silverbars.Constants.CONSUMER_SECRET;
 
 /**
  * Created by isaacalmanza on 09/23/16.
@@ -27,12 +24,10 @@ import retrofit2.Retrofit;
 public class TokenProvider implements Provider<Account, AndroidTokenType, AndroidToken>{
 
     private static final String TAG = "TokenProvider";
-    private static final String CONSUMER_KEY = "KHeJV3Sg8ShguiYyvDf9t6i3WPpMpDWlBLN93mgz";
-    private static final String CONSUMER_SECRET = "1krO5gdrzs08Ej5WoGpLrQifbuDRNFxEnRqLKyHFJIFG2fPpGPE3t1J8nCS7K9NoSidUCibUUi985ipRiipjM0YV6PoUDMcXw08A4M8R7yfzECFGDHnxVBYgQfgjfc2e";
 
     @Override
     public Request authenticateRequest(Request request, AndroidToken androidToken) {
-        Log.v(TAG,"token:"+androidToken.token);
+        Log.d(TAG,"token:"+androidToken.token);
         return request.newBuilder()
                 .header("Authorization", "Bearer " + androidToken.token)
                 .build();
@@ -41,7 +36,7 @@ public class TokenProvider implements Provider<Account, AndroidTokenType, Androi
     @Override
     public boolean retryRequired(int i, okhttp3.Response response, TokenStorage<Account, AndroidTokenType, AndroidToken> tokenStorage, Account account, AndroidTokenType androidTokenType, AndroidToken androidToken) {
         if (!response.isSuccessful()) {
-            Log.v(TAG,"code: "+response.code());
+            Log.d(TAG,"code: "+response.code());
             if (response.code() == 401) {
                 tokenStorage.removeToken(account, androidTokenType, androidToken);
 
@@ -51,12 +46,12 @@ public class TokenProvider implements Provider<Account, AndroidTokenType, Androi
 
                     try {
 
-                        Response<AccessToken> refreshResponse = loginService.getRefreshAccessToken("refresh_token",CONSUMER_KEY,CONSUMER_SECRET,androidToken.refreshToken).execute();
+                        Response<AccessToken> refreshResponse = loginService.refreshAccessToken("refresh_token",CONSUMER_KEY,CONSUMER_SECRET,androidToken.refreshToken).execute();
 
                         if (refreshResponse.isSuccessful()){
 
                             AccessToken accessToken = refreshResponse.body();
-                            Log.v(TAG,"accessToken: "+accessToken.getAccess_token());
+                            Log.d(TAG,"accessToken: "+accessToken.getAccess_token());
 
 
                             tokenStorage.storeToken(account, androidTokenType,

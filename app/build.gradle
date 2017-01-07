@@ -1,5 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
+apply plugin: 'org.greenrobot.greendao'
 
 
 repositories {
@@ -21,16 +23,20 @@ android {
         abortOnError false
     }
 
-    compileSdkVersion 24
+    compileSdkVersion 25
     buildToolsVersion '24.0.3'
 
     defaultConfig {
         applicationId "com.app.proj.silverbars"
         minSdkVersion 19
-        targetSdkVersion 24
-        versionCode 44
-        versionName "1.2.2"
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1"
         multiDexEnabled true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     dexOptions {
@@ -66,21 +72,13 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
 
-    compile 'com.spotify.sdk:spotify-auth-beta23-noconnect-2.20b@aar'
-    compile 'com.spotify.sdk:spotify-player-beta23-noconnect-2.20b@aar'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:support-v4:25.1.0'
+    compile 'com.android.support:design:25.1.0'
 
-
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.android.support:design:24.2.1'
     compile 'com.github.arimorty:floatingsearchview:1.1.2'
     compile 'com.facebook.android:facebook-android-sdk:4.12.0'
-    compile 'com.baoyz.actionsheet:library:1.1.5'
-    compile 'com.github.vignesh-iopex:confirmdialog:2.0-rc1'
-    compile 'com.yarolegovich:lovely-dialog:1.0.4'
-    compile 'com.github.coyarzun89:fabtransitionactivity:0.2.0'
-    compile 'com.google.android.gms:play-services-appindexing:9.6.1'
-    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
+    compile 'com.google.android.gms:play-services-appindexing:9.8.0'
 
     compile 'com.afollestad.material-dialogs:core:0.8.5.9'
 
@@ -91,12 +89,9 @@ dependencies {
     compile 'com.pnikosis:materialish-progress:1.7'
 
     compile 'com.anjlab.android.iab.v3:library:1.0.32'
-    compile 'io.reactivex:rxjava:1.1.8'
-    compile 'io.reactivex:rxandroid:0.23.0'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 
     compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
+
     compile 'com.google.guava:guava:18.0'
     compile 'com.github.inaka:tinytask:v1'
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -119,11 +114,31 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
 
+    compile 'com.spotify.sdk:spotify-auth-beta23-noconnect-2.20b@aar'
+    compile 'com.spotify.sdk:spotify-player-beta23-noconnect-2.20b@aar'
+
+
+    compile 'io.reactivex:rxjava:1.1.8'
+    compile 'io.reactivex:rxandroid:0.23.0'
+
+
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     compile 'com.andretietz.retroauth:retroauth-android:2.1.4'
 
 
+    compile 'org.greenrobot:greendao:3.2.0'
+
+
+    compile 'com.jakewharton:butterknife:8.4.0'
+    compile 'com.jakewharton:butterknife-compiler:8.4.0'
+
+}
+
+retrolambda {
+    jvmArgs '-noverify'
 }
 

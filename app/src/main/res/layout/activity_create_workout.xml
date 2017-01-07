@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:background="@color/white"
     android:layout_height="match_parent"
-    tools:context=".CreateWorkoutActivity">
+    tools:context=".activities.CreateWorkoutActivity">
 
     <android.support.design.widget.AppBarLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
