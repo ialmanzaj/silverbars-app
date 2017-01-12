@@ -56,20 +56,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private static final String TAG = WorkingOutActivity.class.getSimpleName();
 
 
-    static MediaPlayer mp;
-
-
-
-    ArrayList<File> mySongsList;
-    ArrayList<File> playlist;
-
     private ImageButton btPlay;
     private ImageButton btPause;
-
-    private Uri u;
-    private int x = 0, y=0, elements = 0, ActualTimeMain=0, tempo = 0, actualReps, Format_Time,Format_Time_Rest,ActualTimeRest=0;
-    private int totalTime;
-
 
     private TextView Rep_timer_text;
     private TextView song_name, artist_name;
@@ -78,14 +66,33 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private TextView RestCounter_text;
     private TextView headerText;
 
-
-    private CountDownTimer main_timer, restTimer, startTimer;
-
     private LinearLayout ModalLayout;
 
     ImageButton pause_workout_button;
     ImageButton finish_workout_button;
     ImageButton play_workout_button;
+
+    TextView positive,negative,isometric;
+
+    ImageButton prvLayout,nxtLayout;
+
+    LinearLayout playerLayout;
+
+    private static MediaPlayer mp;
+
+
+    ArrayList<File> mySongsList;
+    ArrayList<File> playlist;
+
+
+    private Uri u;
+    private int x = 0, y=0, elements = 0, ActualTimeMain=0, tempo = 0, actualReps, Format_Time,Format_Time_Rest,ActualTimeRest=0;
+    private int totalTime;
+
+
+    private CountDownTimer main_timer, restTimer, startTimer;
+
+
 
     private boolean Songs_from_Phone = false, finish = false, INITIAL_TIMER = false,main = false,MAIN_TIMER = false;
     private RecyclerView recycler;
@@ -95,14 +102,12 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     private boolean VibrationPerSet = false,VibrationPerRep = false, pause=false,rest = false;
 
-
     private int exercises_size = 0;
     private int RestByExercise = 0,RestBySet = 0;
 
 
-    TextView positive,negative,isometric;
-
     String spotify_playlist;
+
 
     private SpotifyPlayer mPlayer;
     private PlaybackState mCurrentPlaybackState;
@@ -110,16 +115,16 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private Metadata mMetadata;
     String Token;
 
+
+
     Boolean Music_Spotify = false,play_exercise_audio = false,BUTTON_PAUSE = false,onPause = false;
 
     ArrayList<ExerciseRep> exercisesforRecycler = new ArrayList<>();
 
-    ImageButton prvLayout,nxtLayout;
+
     
 
     private Utilities utilities;
-
-
 
 
 
@@ -193,7 +198,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         play_workout_button = (ImageButton) findViewById(R.id.PlayButton);
 
 
-        LinearLayout playerLayout = (LinearLayout) findViewById(R.id.PlayerLayout);
+        playerLayout = (LinearLayout) findViewById(R.id.PlayerLayout);
 
         // Rest modal
         ModalLayout = (LinearLayout) findViewById(R.id.ModalLayout);
@@ -578,8 +583,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
             }
         });
-
-
 
         nxtLayout.setOnClickListener(new View.OnClickListener() {
             @Override

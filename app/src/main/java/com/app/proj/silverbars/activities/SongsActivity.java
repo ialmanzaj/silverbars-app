@@ -27,9 +27,7 @@ public class SongsActivity extends AppCompatActivity {
     private static final String TAG = SongsActivity.class.getSimpleName();
 
 
-
     private ListView ListMusic;
-
 
 
     private long[] selected;

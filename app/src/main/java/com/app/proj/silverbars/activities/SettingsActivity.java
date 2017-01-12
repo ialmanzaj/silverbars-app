@@ -18,6 +18,9 @@ import com.andretietz.retroauth.AuthAccountManager;
 import com.app.proj.silverbars.R;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
+
+import butterknife.BindView;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
@@ -25,8 +28,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     private static final String TAG = SettingsActivity.class.getSimpleName();
 
-    private RelativeLayout close_session;
-
+    @BindView(R.id.close_session) RelativeLayout close_session;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
 
     @Override
@@ -35,28 +38,23 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
 
-
         FacebookSdk.sdkInitialize(getApplicationContext());
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Opciones");
 
 
         toolbar.setNavigationIcon(R.drawable.ic_clear_white_24px);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                     finish();
                 }
-            });
+        });
 
 
-
-        close_session = (RelativeLayout) findViewById(R.id.close_session);
         close_session.setOnClickListener(new View.OnClickListener() {
             @Override
                 public void onClick(View view) {

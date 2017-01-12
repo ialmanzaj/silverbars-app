@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.BindView;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
@@ -46,6 +48,7 @@ import java.util.List;
 public class WorkoutActivity extends AppCompatActivity {
 
     private static final String TAG = WorkoutActivity.class.getSimpleName();
+    
 
     // UI FIELDS
     private Button plusSets;
@@ -54,11 +57,25 @@ public class WorkoutActivity extends AppCompatActivity {
     private Button minusRest;
     private Button plusRestSets;
     private Button minusRestSets;
-    TabHost Tab_layout;
-    private LinearLayout primary_ColumnMuscle,secundary_ColumnMuscle,Progress;
-    LinearLayout contentInfo;
-    private LinearLayout error_layout;
-    private TextView Positive;
+
+
+
+    @BindView()TabHost Tab_layout;
+
+    @BindView() LinearLayout primary_ColumnMuscle;
+    @BindView() LinearLayout secundary_ColumnMuscle;
+    @BindView() LinearLayout Progress;
+
+
+    @BindView()LinearLayout contentInfo;
+    
+    @BindView() LinearLayout error_layout;
+    Button button_error_reload;
+
+
+
+
+    @BindView() TextView Positive;
 
     private TextView Negative,
             Isometric,
@@ -70,12 +87,24 @@ public class WorkoutActivity extends AppCompatActivity {
             RestSets_dialog,
             Sets_dialog;
 
-    private RecyclerView RecyclerforExercises;
+    @BindView() RecyclerView list;
+
+    @BindView() WebView webview;
+
+    @BindView() TextView Rest_by_exercise_dialog;
+
+    @BindView() Toolbar myToolbar;
+
+    @BindView()SwitchCompat enableLocal;
+    @BindView()SwitchCompat vibration_per_rep;
+    @BindView()SwitchCompat vibration_per_set;
+    @BindView()SwitchCompat vibration_per_set;
+
+    @BindView()SwitchCompat voice_per_exercise;
+
+
+
     private ExerciseAdapter adapter;
-    private WebView webview;
-    private TextView Rest_by_exercise_dialog;
-
-
 
     //VARIABLES
     private String[] Songs_names;
@@ -94,8 +123,6 @@ public class WorkoutActivity extends AppCompatActivity {
     private int workoutId = 0, workoutSets = 0;
     private String workoutName, workoutLevel, mainMuscle, workoutImgUrl;
 
-
-
     private  int ISOMETRIC = 0,CARDIO = 0,PYLOMETRICS = 0,STRENGTH = 0;
 
     private  boolean VibrationIsActivePerRep=false;
@@ -106,13 +133,14 @@ public class WorkoutActivity extends AppCompatActivity {
 
     String PlaylistSpotify,Token;
 
-
     private  List<String> MusclesArray = new ArrayList<>();
     private  List<String> TypeExercises = new ArrayList<>();
     private ArrayList<ExerciseRep> mExercises;
 
 
     private Utilities utilities = new Utilities();
+
+    Boolean user_workout;
 
     
     @Override
@@ -130,9 +158,13 @@ public class WorkoutActivity extends AppCompatActivity {
         workoutSets = bundle.getInt("sets", 1);
         workoutLevel = bundle.getString("level");
         mainMuscle = bundle.getString("main_muscle");
-
-        Boolean user_workout = bundle.getBoolean("user_workout", false);
+        user_workout = bundle.getBoolean("user_workout", false);
         mExercises =  intent.getParcelableArrayListExtra("exercises");
+
+
+
+
+
 
 
         startButton = (Button) findViewById(R.id.start_button);
@@ -145,7 +177,16 @@ public class WorkoutActivity extends AppCompatActivity {
         Progress = (LinearLayout) findViewById(R.id.progress_bar_);
 
         error_layout = (LinearLayout) findViewById(R.id.error_layout);
-        Button button_error_reload = (Button) findViewById(R.id.error_reload_workout);
+
+         button_error_reload = (Button) findViewById(R.id.error_reload_workout);
+
+        enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
+        vibration_per_rep = (SwitchCompat) findViewById(R.id.vibration_per_rep);
+        vibration_per_set = (SwitchCompat) findViewById(R.id.vibration_per_set);
+
+
+
+
         button_error_reload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,11 +197,11 @@ public class WorkoutActivity extends AppCompatActivity {
         });
 
 
-        SwitchCompat enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
-        SwitchCompat vibration_per_rep = (SwitchCompat) findViewById(R.id.vibration_per_rep);
-        SwitchCompat vibration_per_set = (SwitchCompat) findViewById(R.id.vibration_per_set);
 
-        SwitchCompat voice_per_exercise = (SwitchCompat) findViewById(R.id.voice_per_exercise);
+
+
+
+        voice_per_exercise = (SwitchCompat) findViewById(R.id.voice_per_exercise);
         voice_per_exercise.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -177,8 +218,10 @@ public class WorkoutActivity extends AppCompatActivity {
                 }
             }
         });
+
+
         
-        RecyclerforExercises = (RecyclerView) findViewById(R.id.reciclador);
+        list = (RecyclerView) findViewById(R.id.reciclador);
 
         final RelativeLayout selectMusic = (RelativeLayout) findViewById(R.id.SelectMusic);
 
@@ -196,52 +239,37 @@ public class WorkoutActivity extends AppCompatActivity {
         // Web view
         webview = (WebView) findViewById(R.id.webview);
 
+
         // layout to put local workouts
         togle_no_internet = (RelativeLayout) findViewById(R.id.togle_no_internet);
 
+
         //  TOOL BAR - BACK BUTTON  ADDED
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        myToolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
         setSupportActionBar(myToolbar);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(workoutName);
-            myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-            });
 
 
-        //Defining Tabs
-        Tab_layout = (TabHost) findViewById(R.id.tabHost2);
-        Tab_layout.setup();
-
-        TabHost.TabSpec overview = Tab_layout.newTabSpec(getResources().getString(R.string.tab_overview));
-        TabHost.TabSpec muscles = Tab_layout.newTabSpec(getResources().getString(R.string.tab_muscles));
-        TabHost.TabSpec exercises = Tab_layout.newTabSpec(getResources().getString(R.string.tab_exercises));
-
-        overview.setIndicator(getResources().getString(R.string.tab_overview));
-        overview.setContent(R.id.overview);
-
-        muscles.setIndicator(getResources().getString(R.string.tab_muscles));
-        muscles.setContent(R.id.muscles);
-
-        exercises.setIndicator(getResources().getString(R.string.tab_exercises));
-        exercises.setContent(R.id.exercises);
-
-        Tab_layout.addTab(overview);
-        Tab_layout.addTab(exercises);
-        Tab_layout.addTab(muscles);
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 
-        if (RecyclerforExercises != null){
-            RecyclerforExercises.setNestedScrollingEnabled(false);
-            RecyclerforExercises.setHasFixedSize(false);
+        if (list != null){
+            list.setNestedScrollingEnabled(false);
+            list.setHasFixedSize(false);
         }
 
 
         RecyclerView.LayoutManager lManager = new LinearLayoutManager(this);
-        RecyclerforExercises.setLayoutManager(lManager);
+        list.setLayoutManager(lManager);
 
         ScrollView scrollView = (ScrollView) findViewById(R.id.muscles);
 
@@ -255,6 +283,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         //SWITCH save local workout BUTTON CONFIGURACIONES
         enableLocal.setEnabled(true);
+
         enableLocal.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -262,6 +291,8 @@ public class WorkoutActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
         enableLocal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -271,8 +302,6 @@ public class WorkoutActivity extends AppCompatActivity {
                     if (isChecked && !loadLocal){
 
                     }else{
-
-
                         logMessage("Switch off");
                     }
                 }
@@ -480,6 +509,31 @@ public class WorkoutActivity extends AppCompatActivity {
     }// on create close
 
 
+    private void setupTabs(){
+
+        //Defining Tabs
+        Tab_layout = (TabHost) findViewById(R.id.tabHost2);
+        Tab_layout.setup();
+
+        TabHost.TabSpec overview = Tab_layout.newTabSpec(getResources().getString(R.string.tab_overview));
+        TabHost.TabSpec muscles = Tab_layout.newTabSpec(getResources().getString(R.string.tab_muscles));
+        TabHost.TabSpec exercises = Tab_layout.newTabSpec(getResources().getString(R.string.tab_exercises));
+
+        overview.setIndicator(getResources().getString(R.string.tab_overview));
+        overview.setContent(R.id.overview);
+
+        muscles.setIndicator(getResources().getString(R.string.tab_muscles));
+        muscles.setContent(R.id.muscles);
+
+        exercises.setIndicator(getResources().getString(R.string.tab_exercises));
+        exercises.setContent(R.id.exercises);
+
+        Tab_layout.addTab(overview);
+        Tab_layout.addTab(exercises);
+        Tab_layout.addTab(muscles);
+    }
+
+
 
     private void putExercisesInAdapter(ArrayList<ExerciseRep> exercises){
 
@@ -497,7 +551,7 @@ public class WorkoutActivity extends AppCompatActivity {
         }
 
         adapter = new ExerciseAdapter(this,exercises);
-        RecyclerforExercises.setAdapter(adapter);
+        list.setAdapter(adapter);
         setMusclesToView(MusclesArray);
         putTypesInWorkout(TypeExercises);
     }

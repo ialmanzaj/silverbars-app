@@ -3,14 +3,8 @@ package com.app.proj.silverbars.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.app.proj.silverbars.MainService;
@@ -18,6 +12,9 @@ import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.ServiceGenerator;
 import com.app.proj.silverbars.adapters.WorkoutsAdapter;
 import com.app.proj.silverbars.models.Workout;
+import com.app.proj.silverbars.presenters.BasePresenter;
+import com.app.proj.silverbars.presenters.MainWorkoutsPresenter;
+import com.app.proj.silverbars.viewsets.MainWorkoutsView;
 
 import org.lucasr.twowayview.widget.TwoWayView;
 
@@ -25,40 +22,47 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import butterknife.BindView;
 /**
  * Created by isaacalmanza on 10/04/16.
  */
-public class MainWorkoutsFragment extends Fragment {
+public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsView{
 
     private static final String TAG = MainWorkoutsFragment.class.getSimpleName();
 
     private MainService service = ServiceGenerator.createService(MainService.class);
 
-    public TwoWayView recyclerView;
 
-    private SwipeRefreshLayout swipeContainer;
+    MainWorkoutsPresenter mMainWorkoutsPresenter;
 
-    public String muscleData = "ALL";
-    private boolean opened;
-    Button button_reload_no_internet;
-    Button button_failed_server;
 
-    LinearLayout noInternetConnectionLayout,failedServerLayout;
 
-    ProgressBar progressBar;
+
+    @BindView(R.id.list) TwoWayView list;
+    @BindView(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
+
+
+
 
     List<Workout> mWorkouts  = new ArrayList<>();
     private WorkoutsAdapter adapter;
 
+    public String muscleData = "ALL";
+    private boolean opened;
+
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_fmain, container, false);
+    protected int getFragmentLayout() {
+        return R.layout.fragment_fmain;
     }
+
+    @Override
+    protected BasePresenter getPresenter() {
+        return mMainWorkoutsPresenter;
+    }
+
 
 
     @Override
@@ -66,20 +70,9 @@ public class MainWorkoutsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-
         muscleData = getArguments().getString("Muscle");
         getWorkoutsData(muscleData);
 
-
-        progressBar = (ProgressBar)  view.findViewById(R.id.progress_bar);
-        recyclerView = (TwoWayView) view.findViewById(R.id.list);
-
-        noInternetConnectionLayout = (LinearLayout) view.findViewById(R.id.noInternetConnection_layout);
-        failedServerLayout = (LinearLayout) view.findViewById(R.id.failed_conection_layout);
-        swipeContainer = (SwipeRefreshLayout)view.findViewById(R.id.swipeContainer);
-
-        button_failed_server = (Button) view.findViewById(R.id.button_reload_failed_server);
-        button_reload_no_internet = (Button) view.findViewById(R.id.button_reload_no_internet);
     }
 
 
@@ -106,54 +99,17 @@ public class MainWorkoutsFragment extends Fragment {
         }
 
 
-
-        service.getWorkouts().enqueue(new Callback<List<Workout>>() {
-            @Override
-            public void onResponse(Call<List<Workout>> call, Response<List<Workout>> response) {
-                if (response.isSuccessful()) {
-                        onErrorViewoff();
-                        progressBar.setVisibility(View.GONE);
-
-                        mWorkouts = response.body();
-
-                        if (adapter != null){
-
-                            if (adapter.getItemCount() != mWorkouts.size()){
-
-                            }
-                        }else {
-
-                            putItemsInAdapter(mWorkouts);
-                        }
-
-                        swipeContainer.setRefreshing(false);
-
-                    } else {
-                        Log.e(TAG,"statusCode: "+response.code());
-                        onErrorViewOn();
-                    }
-                }
-                @Override
-                public void onFailure(Call<List<Workout>> call, Throwable t) {
-                    Log.e(TAG,"Workouts, onFailure: ",t);
-                    onErrorViewOn();
-                }
-        });
-
-
     }
 
 
     private void putItemsInAdapter(List<Workout> workouts){
         adapter = new WorkoutsAdapter(getActivity(),workouts);
-        recyclerView.setAdapter(adapter);
+        list.setAdapter(adapter);
     }
 
 
-
-
     public void filterWorkouts(String muscle){
-        recyclerView.swapAdapter(adapter,false);
+        list.swapAdapter(adapter,false);
 
 
         if(Objects.equals(muscle, "ALL")) {
@@ -180,14 +136,35 @@ public class MainWorkoutsFragment extends Fragment {
     }
 
 
-    private void onErrorViewOn(){
-        failedServerLayout.setVisibility(View.VISIBLE);
+    @Override
+    public void getWorkouts(List<Workout> workouts) {
+        mWorkouts = workouts;
+
+        if (adapter != null){
+
+            if (adapter.getItemCount() != mWorkouts.size()){
+
+
+            }
+
+        }else {
+
+            putItemsInAdapter(mWorkouts);
+        }
+
+        swipeContainer.setRefreshing(false);
     }
 
-    private void onErrorViewoff(){
-        failedServerLayout.setVisibility(View.GONE);
+
+
+
+    @Override
+    public void displayNetworkError() {
+
     }
 
+    @Override
+    public void displayServerError() {
 
-
+    }
 }

@@ -43,22 +43,25 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-
+import static com.app.proj.silverbars.Constants.AMAZON_S3_URL;
 
 
 public class MainActivity extends AppCompatActivity {
 
+
     private static final String TAG = MainActivity.class.getSimpleName();
+
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    
-    
+
     public LinearLayout Button_filter;
+
     private CharSequence itemTitle;
+
     private String[] mMenuTitles =  new String[3];;
     private Toolbar toolbar;
     private String muscle = "ALL";
@@ -73,9 +76,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(TAG,"Main Activity creada");
         setContentView(R.layout.activity_main_screen);
+        Log.v(TAG,"Main Activity creada");
+
+        //facebook init
         FacebookSdk.sdkInitialize(getApplicationContext());
+
+
 
         mTitle = mDrawerTitle = getTitle();
 
@@ -322,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void MuscleTemplateDownload(){
 
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/")
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(AMAZON_S3_URL)
                 .build();
 
         MainService mDownloadService = retrofit.create(MainService.class);

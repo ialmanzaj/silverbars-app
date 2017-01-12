@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.BindView;
+
 
 public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSelectedAdapter.selectedExercisesViewHolder>  implements ItemTouchHelperAdapter {
 
@@ -39,14 +41,10 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
 
     private Context mContext;
 
-
     OnDataChangeListener mOnDataChangeListener;
 
-    public void setOnDataChangeListener(OnDataChangeListener onDataChangeListener){
-        mOnDataChangeListener = onDataChangeListener;
-    }
+    public void setOnDataChangeListener(OnDataChangeListener onDataChangeListener){mOnDataChangeListener = onDataChangeListener;}
 
-    
     public interface OnDataChangeListener{
         public void onDataChanged(int size);
     }
@@ -65,27 +63,21 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
     public class selectedExercisesViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
 
         // Campos respectivos de un item
-        private ImageView img_handle;
-        private TextView nombre;
-        private TextView next;
-        private ImageView unchecked, checked;
-        private TextView repetitions;
-        private LinearLayout workout_layout;
+        @BindView(R.id.nombre) TextView nombre;
 
-        SimpleDraweeView imagen;
+        @BindView(R.id.handle) ImageView img_handle;
+        @BindView(R.id.unchecked) ImageView unchecked;
+        @BindView(R.id.checked) ImageView checked;
+        @BindView(R.id.repetitions) TextView repetitions;
+        @BindView(R.id.workout_layout) LinearLayout workout_layout;
+
+
+        @BindView(R.id.imagen) SimpleDraweeView imagen;
 
 
         public selectedExercisesViewHolder(View itemView) {
             super(itemView);
 
-
-            nombre = (TextView) itemView.findViewById(R.id.nombre);
-            imagen = (SimpleDraweeView) itemView.findViewById(R.id.imagen);
-            img_handle = (ImageView) itemView.findViewById(R.id.handle);
-            unchecked = (ImageView) itemView.findViewById(R.id.unchecked);
-            checked = (ImageView) itemView.findViewById(R.id.checked);
-            repetitions = (TextView) itemView.findViewById(R.id.repetitions);
-            workout_layout = (LinearLayout) itemView.findViewById(R.id.workout_layout);
 
         }
         

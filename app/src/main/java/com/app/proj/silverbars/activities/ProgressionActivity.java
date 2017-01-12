@@ -1,7 +1,5 @@
 package com.app.proj.silverbars.activities;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.NestedScrollView;
@@ -15,11 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.app.proj.silverbars.CustomDateView;
-import com.app.proj.silverbars.MainService;
-import com.app.proj.silverbars.models.MuscleProgression;
 import com.app.proj.silverbars.R;
-import com.app.proj.silverbars.ServiceGenerator;
+import com.app.proj.silverbars.models.MuscleProgression;
 import com.app.proj.silverbars.utils.Utilities;
+import com.app.proj.silverbars.viewsets.ProgressionActivityView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,35 +24,35 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
+import butterknife.BindView;
 
 
 /**
  * Created by isaacalmanza on 10/04/16.
  */
-public class ProgressionActivity extends AppCompatActivity {
+public class ProgressionActivity extends AppCompatActivity implements ProgressionActivityView{
 
     private static final String TAG = ProgressionActivity.class.getSimpleName();
 
-    private WebView mMusclesWebView;
-    String partes = "";
 
-    LinearLayout progression_content_layout;
-    CustomDateView customDateView;
-    private  Toolbar mToolbar;;
+    @BindView(R.id.webview) WebView mMusclesWebView;
+    @BindView(R.id.content) LinearLayout progression_content_layout;
+    @BindView(R.id.date) CustomDateView customDateView;
+    @BindView(R.id.toolbar_) Toolbar mToolbar;
+    @BindView(R.id.appbar) AppBarLayout appBarLayout;
+
+    @BindView(R.id.main_content) NestedScrollView nestedScrollView;
 
     private Utilities mUtilities;
+
+    String partes = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progression);
 
-        mUtilities = new Utilities();
 
-
-        mToolbar = (Toolbar) findViewById(R.id.toolbar_);
         setSupportActionBar(mToolbar);
 
 
@@ -67,96 +64,43 @@ public class ProgressionActivity extends AppCompatActivity {
             });
 
 
-        AppBarLayout appBarLayout = (AppBarLayout)findViewById(R.id.appbar);
         appBarLayout.setExpanded(false, true);
 
-        progression_content_layout = (LinearLayout) findViewById(R.id.content);
 
-        customDateView = (CustomDateView) findViewById(R.id.date);
+
         customDateView.setNameDay("Sun");
         customDateView.setNumberDay("2");
 
 
-        mMusclesWebView = (WebView) findViewById(R.id.webview);
-
-
-        NestedScrollView nestedScrollView = (NestedScrollView) findViewById(R.id.main_content);
-
-
-
-        getProgressionAPI();
+        //getProgressionAPI();
 
 
     }
 
+    @Override
+    public void getMusclesProgresions(List<MuscleProgression> progressions) {
 
-    private void getBodyView(){
+        for (MuscleProgression progressionMuscle: progressions){
+            //Log.d(TAG,"progressionMuscle: "+progressionMuscle.getDate());
+            //Log.d(TAG,"progressionMuscle: "+progressionMuscle.getLevel());
 
-        // ACCEDER A LA URL DEL HTML GUARDADO EN EL PHONE
-        SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias", Context.MODE_PRIVATE);
-        String default_url = getResources().getString(R.string.muscle_path);
-        String muscle_url = sharedPref.getString(getString(R.string.muscle_path),default_url);
-        if (muscle_url.equals("/")){
-            mMusclesWebView.loadUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/html/index.html");
-        }else {
-            String fileurl = "file://"+muscle_url;
-            mMusclesWebView.loadUrl(fileurl);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+            try {
+
+                Date date = dateFormat.parse(progressionMuscle.getDate());
+                System.out.println(date);
+                System.out.println(dateFormat.format(date));
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
+
+        getMusclePorcentaje(progressions);
     }
-
-    private void getProgressionAPI(){
-
-
-        MainService service = ServiceGenerator.createService(MainService.class);
-
-        service.getProgression().enqueue(new Callback<List<MuscleProgression>>() {
-            @Override
-            public void onResponse(Call<List<MuscleProgression>> call, retrofit2.Response<List<MuscleProgression>> response) {
-                if (response.isSuccessful()) {
-
-                    List<MuscleProgression> mMusclesProgress = response.body();
-
-
-                    for (MuscleProgression progressionMuscle: mMusclesProgress){
-                        Log.d(TAG,"progressionMuscle: "+progressionMuscle.getDate());
-                        Log.d(TAG,"progressionMuscle: "+progressionMuscle.getLevel());
-
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
-                        try {
-
-                            Date date = dateFormat.parse(progressionMuscle.getDate());
-                            System.out.println(date);
-                            System.out.println(dateFormat.format(date));
-
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                      /*  Calendar c = Calendar.getInstance();
-                        c.setTime();
-                        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);*/
-                    }
-
-
-
-                    getMusclePorcentaje(mMusclesProgress);
-                }else {
-                    Log.e(TAG,"code: "+response.code());
-
-                }
-            }
-            @Override
-            public void onFailure(Call<List<MuscleProgression>> call, Throwable t) {
-                Log.e(TAG,"progrssio, onFailure",t);
-            }
-        });
-    }
-
 
     private void getMusclePorcentaje(List<MuscleProgression> muscles){
-        Log.v(TAG,"getMusclePorcentaje");
-
         List<MuscleProgression> mMusclesProgress = new ArrayList <>();
         List<String> muscles_names = new ArrayList <>();
 
@@ -174,7 +118,7 @@ public class ProgressionActivity extends AppCompatActivity {
                 int index = muscles_names.indexOf(user_progress.getMuscle());
                 int level = user_progress.getLevel();
                 progress = mMusclesProgress.get(index).getMuscle_activation() + user_progress.getMuscle_activation();
-               
+
 
                 if (progress >= 100) {
 
@@ -201,8 +145,6 @@ public class ProgressionActivity extends AppCompatActivity {
 
         setMusclesToView(mMusclesProgress);
     }
-
-
 
 
     private void setMusclesToView(List<MuscleProgression> musculos) {
@@ -232,8 +174,19 @@ public class ProgressionActivity extends AppCompatActivity {
         });
 
         mMusclesWebView.getSettings().setJavaScriptEnabled(true);
-        getBodyView();
+
+        mUtilities.getBodyView(this,mMusclesWebView);
+    }
+
+
+
+    @Override
+    public void displayNetworkError() {
 
     }
 
+    @Override
+    public void displayServerError() {
+
+    }
 }

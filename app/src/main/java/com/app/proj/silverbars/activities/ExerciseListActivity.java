@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import com.app.proj.silverbars.MainService;
 import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.ServiceGenerator;
-import com.app.proj.silverbars.adapters.AllExercisesAdapter;
+import com.app.proj.silverbars.adapters.ExercisesAdapter;
 import com.app.proj.silverbars.models.Exercise;
 
 import java.util.ArrayList;
@@ -34,20 +34,23 @@ public class ExerciseListActivity extends AppCompatActivity {
 
     private static final String TAG = ExerciseListActivity.class.getSimpleName();
 
-
-
     Toolbar toolbar;
-    RecyclerView recycler;
+    RecyclerView list;
     Button add_button;
-    private RecyclerView.Adapter adapter;
-
-    private ArrayList<String> exercises_id = new ArrayList<>();
-    List<Exercise> OriginalExerciseListAll = new ArrayList<>();
-    List<Exercise> ExercisesNoSelected = new ArrayList<>();
-    ArrayList<String> ExercisesSelected = new ArrayList<>();
 
     private LinearLayout error_layout;
     private LinearLayout Progress;
+
+    
+    
+    private RecyclerView.Adapter adapter;
+
+    private ArrayList<String> exercises_id = new ArrayList<>();
+    
+    
+    List<Exercise> OriginalExerciseListAll = new ArrayList<>();
+    List<Exercise> ExercisesNoSelected = new ArrayList<>();
+    ArrayList<String> ExercisesSelected = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,8 +90,8 @@ public class ExerciseListActivity extends AppCompatActivity {
         });
 
 
-        recycler = (RecyclerView) findViewById(R.id.recycler);
-        recycler.setLayoutManager(new LinearLayoutManager(this));
+        list = (RecyclerView) findViewById(R.id.list);
+        list.setLayoutManager(new LinearLayoutManager(this));
 
 
         add_button = (Button) findViewById(R.id.done_button);
@@ -96,7 +99,7 @@ public class ExerciseListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 for (int i = 0; i < OriginalExerciseListAll.size(); i++){
-                    if (AllExercisesAdapter.selectedItems.get(i)){
+                    if (ExercisesAdapter.selectedItems.get(i)){
                         exercises_id.add(OriginalExerciseListAll.get(i).getExercise_name());
                     }
                 }
@@ -108,7 +111,7 @@ public class ExerciseListActivity extends AppCompatActivity {
                 finish();
 
                 //deselecionar todos los elementos elegidos
-                AllExercisesAdapter.selectedItems.clear();
+                ExercisesAdapter.selectedItems.clear();
             }
         });
 
@@ -152,14 +155,14 @@ public class ExerciseListActivity extends AppCompatActivity {
 
                     if (ExercisesNoSelected.isEmpty()){
 
-                        adapter = new AllExercisesAdapter(ExerciseListActivity.this,OriginalExerciseListAll);
+                        adapter = new ExercisesAdapter(ExerciseListActivity.this,OriginalExerciseListAll);
 
                     }else {
 
-                        adapter = new AllExercisesAdapter(ExerciseListActivity.this,ExercisesNoSelected);
+                        adapter = new ExercisesAdapter(ExerciseListActivity.this,ExercisesNoSelected);
                     }
 
-                    recycler.setAdapter(adapter);
+                    list.setAdapter(adapter);
 
 
                 }else {
@@ -183,7 +186,7 @@ public class ExerciseListActivity extends AppCompatActivity {
     
     private void onErrorOn(){
         error_layout.setVisibility(View.VISIBLE);
-        recycler.setVisibility(View.GONE);
+        list.setVisibility(View.GONE);
         add_button.setVisibility(View.GONE);
     }
     
@@ -191,7 +194,7 @@ public class ExerciseListActivity extends AppCompatActivity {
     private void onErrorOff(){
         Progress.setVisibility(View.GONE);
         error_layout.setVisibility(View.GONE);
-        recycler.setVisibility(View.VISIBLE);
+        list.setVisibility(View.VISIBLE);
         add_button.setVisibility(View.VISIBLE);
     }
 

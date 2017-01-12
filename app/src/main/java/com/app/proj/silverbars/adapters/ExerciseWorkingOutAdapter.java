@@ -21,9 +21,13 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
+import butterknife.BindView;
+
 public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWorkingOutAdapter.WorkoutsViewHolder> {
 
-    private static final String TAG = "Workout Adapter";
+    private static final String TAG = ExerciseWorkingOutAdapter.class.getSimpleName();
+
+
     private List<ExerciseRep> exercises;
     private Context context;
     private Utilities utilities;
@@ -31,12 +35,10 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
 
     public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {
 
-         TextView nombre;
-         TextView next;
-         RelativeLayout Layout;
-
-        SimpleDraweeView imagen_cache;
-        ImageView imageView_local;
+        @BindView() TextView nombre;
+        @BindView()RelativeLayout Layout;
+        @BindView()SimpleDraweeView imagen_cache;
+        @BindView()ImageView imageView_local;
 
         public WorkoutsViewHolder(View v) {
             super(v);

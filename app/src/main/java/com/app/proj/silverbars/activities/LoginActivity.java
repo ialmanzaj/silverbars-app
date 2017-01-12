@@ -108,7 +108,6 @@ public class LoginActivity extends AuthenticationActivity implements LoginView{
 
 
 
-
         mLoginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

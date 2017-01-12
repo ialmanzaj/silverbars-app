@@ -1,8 +1,6 @@
 package com.app.proj.silverbars.activities;
 
 import android.content.Intent;
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -13,11 +11,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.app.proj.silverbars.R;
+import com.app.proj.silverbars.utils.Utilities;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,7 +32,11 @@ public class PlaylistPickerActivity extends AppCompatActivity {
     private static final String TAG = PlaylistPickerActivity.class.getSimpleName();
 
     private ListView ListMusic, ListPlaylist;
-    private String[] songs;
+    private Toolbar toolbar;
+    Button done;
+    ImageView create_button;
+
+
     private String[] save_playlist;
     private long[] selected;
     private ArrayList<File> mySongs;
@@ -44,17 +46,23 @@ public class PlaylistPickerActivity extends AppCompatActivity {
     private String[] playlist;
 
     private static String strSeparator = "__,__";
-    private Toolbar toolbar;
+    private String[] songs;
+
+
+    private Utilities utilities;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_playlist__picker);
+
+
         ListPlaylist = (ListView)findViewById(R.id.SavedPlaylist);
-        Button done = (Button) findViewById(R.id.done);
+
+        done = (Button) findViewById(R.id.done);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        ImageView create_button = (ImageView) findViewById(R.id.create_playlist);
+
+        create_button = (ImageView) findViewById(R.id.create_playlist);
 
         create_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,8 +131,6 @@ public class PlaylistPickerActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
         if (requestCode == 1 && resultCode == RESULT_OK && data != null){
 
            /* mySongs = (ArrayList<File>) data.getSerializableExtra("songs");
@@ -139,73 +145,13 @@ public class PlaylistPickerActivity extends AppCompatActivity {
         } else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
             mySongs = null;
             position = null;
-            toast("No result");
+
+
+            utilities.toast(this,"No result");
         }
     }
 
-    public void toast(String text){
-        Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
-    }
 
-    public ArrayList<File> findSongs(File root){
-        ArrayList<File> al = new ArrayList<File>();
-        if (root.listFiles() != null){
-            File[] files = root.listFiles();
-            for(File singleFile : files){
-                if (singleFile.isDirectory() && !singleFile.isHidden()){
-                    al.addAll(findSongs(singleFile));
-                }
-                else{
-                    if (singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".wav")){
-                        if (SongDuration(singleFile)!=null && Long.valueOf(SongDuration(singleFile))>150000)
-                        al.add(singleFile);
-                    }
-                }
-            }
-        }
-        return al;
-    }
-
-    @Override
-    public void onBackPressed(){
-        finish();
-    }
-
-    private String SongName(File file){
-        String title = null;
-        try{
-            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            Uri uri = Uri.fromFile(file);
-            mediaMetadataRetriever.setDataSource(this, uri);
-            title = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-        }catch(Exception e){
-            Log.v("Exception",e.toString());
-        }
-        return title;
-    }
-
-    private String SongDuration(File file){
-        String duration = null;
-        try{MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            Uri uri = Uri.fromFile(file);
-            mediaMetadataRetriever.setDataSource(this, uri);
-            duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        }catch (Exception e){
-            Log.v("Exception",e.toString());
-        }
-        return duration;
-    }
-
-    public static String convertArrayToString(String[] array){
-        String str = "";
-        for (int i = 0;i<array.length; i++) {
-            str = str+array[i];
-            if(i<array.length-1){
-                str = str+strSeparator;
-            }
-        }
-        return str;
-    }
 
   /*  public String[] getPlaylist(int userId){
         String[] result;
@@ -214,10 +160,6 @@ public class PlaylistPickerActivity extends AppCompatActivity {
         Log.v("Result",Arrays.toString(result));
         return result;
     }*/
-
-    private String[] convertStringToArray(String str){
-        return str.split(strSeparator);
-    }
 
     /*private void getUsersPlaylist(int userId){
         if (getPlaylist(userId)!=null){
@@ -238,4 +180,11 @@ public class PlaylistPickerActivity extends AppCompatActivity {
             ListPlaylist.setAdapter(adp2);
         }
     }*/
+
+
+    @Override
+    public void onBackPressed(){
+        finish();
+    }
+
 }

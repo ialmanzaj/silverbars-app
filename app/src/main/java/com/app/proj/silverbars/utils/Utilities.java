@@ -55,9 +55,61 @@ import static com.app.proj.silverbars.Constants.BODY_URL;
 public class Utilities {
 
     private static final String TAG = "Utilities";
+
+
     private   String strSeparator = "__,__";
 
+
+
     public Utilities (){}
+
+
+    public ArrayList<File> findSongs(Context context,File root){
+        ArrayList<File> songs = new ArrayList<File>();
+        if (root.listFiles() != null){
+            File[] files = root.listFiles();
+            for(File singleFile : files){
+                if (singleFile.isDirectory() && !singleFile.isHidden()){
+                    songs.addAll(findSongs(context,singleFile));
+                }
+                else{
+                    if (singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".wav")){
+                        if (SongDuration(context,singleFile)!=null && Long.valueOf(SongDuration(context,singleFile))>150000)
+                            songs.add(singleFile);
+                    }
+                }
+            }
+        }
+        return songs;
+    }
+
+
+    public String SongName(Context context,File file){
+        String title = null;
+        try{
+            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+            Uri uri = Uri.fromFile(file);
+            mediaMetadataRetriever.setDataSource(context, uri);
+            title = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+        }catch(Exception e){
+            Log.v("Exception",e.toString());
+        }
+        return title;
+    }
+
+    public String SongDuration(Context context,File file){
+        String duration = null;
+        try{MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+            Uri uri = Uri.fromFile(file);
+            mediaMetadataRetriever.setDataSource(context, uri);
+            duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        }catch (Exception e){
+            Log.v("Exception",e.toString());
+        }
+        return duration;
+    }
+
+
 
     public void toast(Context context,String text){
         Toast.makeText(context.getApplicationContext(),text,Toast.LENGTH_SHORT).show();

@@ -21,6 +21,7 @@ import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.activities.ProgressionActivity;
 import com.app.proj.silverbars.utils.Utilities;
 
+import butterknife.BindView;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,9 +39,16 @@ public class ProfileFragment extends Fragment {
     
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager lManager;
-    private RelativeLayout myTeam, Progression, skillsProgression, sharedWorkouts, history;
-    private TextView mProfileName;
-    private ImageView profile_image;
+
+
+    @BindView()RelativeLayout myTeam;
+    @BindView()RelativeLayout Progression;
+    @BindView()RelativeLayout skillsProgression;
+    @BindView()RelativeLayout sharedWorkouts;
+    @BindView()RelativeLayout history;
+
+    @BindView() TextView mProfileName;
+    @BindView() ImageView profile_image;
 
     private Utilities utilities;
 

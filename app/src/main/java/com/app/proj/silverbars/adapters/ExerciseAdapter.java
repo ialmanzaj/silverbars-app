@@ -22,6 +22,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+
 
 /**
  * Created by isaacalmanza on 10/04/16.
@@ -30,39 +32,46 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     private static final String TAG = ExerciseAdapter.class.getSimpleName();
 
-    
-    private Button plusPositive;
-    private Button minusPositive;
-    private Button plusIsometric;
-    private Button minusIsometric;
-    private Button plusNegative;
-    private Button minusNegative;
-    private TextView Positive, Negative, Isometric;
-
-    Context context;
+    private Context context;
     private Utilities utilities;
-
 
     private ArrayList<ExerciseRep> exercises;
 
+
+
+    public ExerciseAdapter(Context context,ArrayList<ExerciseRep> exercises) {
+        this.context = context;
+        this.exercises = exercises;
+    }
+
     public class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
-        TextView nombre;
-        TextView next;
-        TextView repetitions;
-        TextView positive;
-        TextView negative;
-        TextView isometric;
+        @BindView() TextView nombre;
+        @BindView() TextView next;
+        @BindView() TextView repetitions;
+        @BindView() TextView positive;
+        @BindView() TextView negative;
+        @BindView() TextView isometric;
 
 
-        SimpleDraweeView imagen_cache;
-        ImageView imageView_local;
+        @BindView() SimpleDraweeView imagen_cache;
+        @BindView() ImageView imageView_local;
 
 
         private TextView DialogName, Reps;
         private Button plusRep, minusRep;
         private int value = 0;
         private int ActualRepValue = 0;
+
+
+        private Button plusPositive;
+        private Button minusPositive;
+        private Button plusIsometric;
+        private Button minusIsometric;
+        private Button plusNegative;
+        private Button minusNegative;
+        private TextView Positive, Negative, Isometric;
+
 
         public ExerciseViewHolder(View dialog) {
             super(dialog);
@@ -85,7 +94,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
                 @Override
                 public void onClick(View view) {
-
 
                 }
             });
@@ -220,11 +228,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         }
     }
 
-    public ExerciseAdapter(Context context,ArrayList<ExerciseRep> exercises) {
-        this.context = context;
-        this.exercises = exercises;
-        utilities = new Utilities();
-    }
+
 
     
     @Override

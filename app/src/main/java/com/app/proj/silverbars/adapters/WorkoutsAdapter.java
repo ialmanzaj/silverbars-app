@@ -28,7 +28,7 @@ import java.util.List;
  * Created by isaacalmanza on 10/04/16.
  */
 
-public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.VH> {
+public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.WorkoutHolder> {
 
 
     private static final String TAG = WorkoutsAdapter.class.getSimpleName();
@@ -45,14 +45,14 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.VH> {
     }
 
 
-    public class VH extends RecyclerView.ViewHolder {
+    public class WorkoutHolder extends RecyclerView.ViewHolder {
 
         FrameLayout layout;
         TextView text;
         Button btn;
         SimpleDraweeView img;
 
-        public VH(View itemview) {
+        public WorkoutHolder(View itemview) {
             super(itemview);
 
             img = (SimpleDraweeView) itemview.findViewById(R.id.img);
@@ -62,42 +62,39 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.VH> {
         }
 
         public void setButtonListener(){
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            btn.setOnClickListener(view -> {
 
-                    Workout workout = (Workout) view.getTag();
+                Workout workout = (Workout) view.getTag();
 
-                    ArrayList<ExerciseRep> exerciseRepList = new ArrayList<>();
-                    Collections.addAll(exerciseRepList,workout.getExercises());
+                ArrayList<ExerciseRep> exerciseRepList = new ArrayList<>();
+                Collections.addAll(exerciseRepList,workout.getExercises());
 
-                    Intent i = new Intent(context, WorkoutActivity.class);
-                    i.putExtra("workout_id", workout.getWorkoutId());
-                    i.putExtra("name", workout.getWorkout_name());
-                    i.putExtra("image", workout.getWorkout_image());
-                    i.putExtra("sets", workout.getSets());
-                    i.putExtra("level", workout.getLevel());
-                    i.putExtra("main_muscle", workout.getMainMuscle());
-                    i.putParcelableArrayListExtra("exercises",  exerciseRepList);
-                    context.startActivity(i);
-                }
+                Intent i = new Intent(context, WorkoutActivity.class);
+                i.putExtra("workout_id", workout.getWorkoutId());
+                i.putExtra("name", workout.getWorkout_name());
+                i.putExtra("image", workout.getWorkout_image());
+                i.putExtra("sets", workout.getSets());
+                i.putExtra("level", workout.getLevel());
+                i.putExtra("main_muscle", workout.getMainMuscle());
+                i.putParcelableArrayListExtra("exercises",  exerciseRepList);
+                context.startActivity(i);
             });
         }
     }
 
     @Override
-    public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+    public WorkoutHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         switch (viewType) {
             case TYPE_WORKOUT:
                 View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_workout, parent, false);
-                return new VH(v);
+                return new WorkoutHolder(v);
         }
         return null;
     }
 
     @Override
-    public void onBindViewHolder(VH viewHolder, int position) {
+    public void onBindViewHolder(WorkoutHolder viewHolder, int position) {
 
         int height = containerDimensions(context);
         viewHolder.layout.getLayoutParams().height = height / 3;

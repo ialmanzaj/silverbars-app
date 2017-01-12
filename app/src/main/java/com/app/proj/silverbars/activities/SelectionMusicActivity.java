@@ -21,21 +21,18 @@ public class SelectionMusicActivity extends AppCompatActivity {
 
     private static final String TAG = SelectionMusicActivity.class.getSimpleName();
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selection_music);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(myToolbar);
-
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.music_selection));
-
-
-
 
         myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override

@@ -45,12 +45,15 @@ import butterknife.BindView;
 
 public class CreateWorkoutActivity extends AppCompatActivity implements CreateWorkoutView,OnStartDragListener {
 
-
     private static final String TAG = CreateWorkoutActivity.class.getSimpleName();
+
 
     private Utilities utilities = new Utilities();
 
+
     private MainService service = ServiceGenerator.createService(MainService.class);
+
+
 
     @BindView(R.id.content_empty) LinearLayout empty_content;
 
@@ -71,6 +74,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
 
     @BindView(R.id.Next) Button nextButton;
     @BindView(R.id.add_exercises) Button addExercise;
+
 
 
     private  int ISOMETRIC = 0,CARDIO = 0,PYLOMETRICS = 0,STRENGTH = 0;
@@ -108,14 +112,11 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
 
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                     finish();
                 }
-            });
-
-
-
+        });
 
 
         ScrollView scrollView = (ScrollView) findViewById(R.id.muscles_);
@@ -197,6 +198,16 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
         mItemTouchHelper.attachToRecyclerView(list);
 
 
+        setupTabs();
+
+
+        utilities.getBodyView(this,webView);
+
+    }//  close create workout
+
+
+    private void setupTabs(){
+
         //Defining Tabs
         TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost3);
         tabHost2.setup();
@@ -212,17 +223,11 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
         tabHost2.addTab(rutina);
         tabHost2.addTab(muscles);
 
-        utilities.getBodyView(this,webView);
-
-    }//  close create workout
+    }
 
     private void setExercisesSelected(final List<String> new_exercises){
 
-
-
-
     }
-
 
     private List<ExerciseRep> findExerciseByName(List<String> exercises_names){
         //Log.v(TAG,"exercise names:"+exercises_names);
@@ -456,15 +461,12 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
         });*/
     }
 
-    @Override
-    public void displayServerError() {
-
-    }
 
     @Override
-    public void displayNetworkError() {
+    public void displayServerError() {}
 
-    }
+    @Override
+    public void displayNetworkError() {}
 
 
     @Override
@@ -477,6 +479,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
 
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {mItemTouchHelper.startDrag(viewHolder);}
+
 
     private void setEmptyContentOff(){
         empty_content.setVisibility(View.GONE);

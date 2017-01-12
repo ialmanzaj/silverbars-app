@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -18,21 +17,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.proj.silverbars.R;
-import com.app.proj.silverbars.utils.Utilities;
 import com.app.proj.silverbars.activities.WorkoutActivity;
 import com.app.proj.silverbars.models.ExerciseRep;
 import com.app.proj.silverbars.models.Workout;
-import com.like.LikeButton;
+import com.app.proj.silverbars.utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdapter.ViewHolder> {
 
-    private static final String TAG = "SavedWorkoutsAdapter";
+    private static final String TAG = SavedWorkoutsAdapter.class.getSimpleName();
 
 
     private static final int TYPE_WORKOUT = 0;
@@ -44,7 +44,6 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
 
     private Utilities utilities;
 
-
     public SavedWorkoutsAdapter(Activity activity, List<Workout> workouts, Boolean user_workout) {
         this.activity = activity;
         this.workouts = workouts;
@@ -53,20 +52,19 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
 
     public  class ViewHolder extends RecyclerView.ViewHolder {
 
-        FrameLayout layout;
-        ImageView img;
-        TextView text;
-        Button btn;
-        LikeButton like;
+        @BindView(R.id.layout)FrameLayout layout;
+        @BindView(R.id.img_local)ImageView img;
+        @BindView(R.id.text)TextView text;
+        @BindView(R.id.btn)Button btn;
+
+
         int mPosition;
 
         public ViewHolder(View v) {
             super(v);
 
-            layout = (CardView) v.findViewById(R.id.layout);
-            img  = (ImageView) v.findViewById(R.id.img_local);
-            text = (TextView)  v.findViewById(R.id.text);
-            btn  = (Button)    v.findViewById(R.id.btn);
+            //binding views
+            ButterKnife.bind(this,itemView);
         }
 
 
@@ -97,10 +95,8 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
                 }
             });
 
-
         }
     }
-
 
 
     @Override
@@ -113,8 +109,6 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
 
         int height = containerDimensions(activity);
         viewholder.layout.getLayoutParams().height = height / 3;
-
-        utilities = new Utilities();
 
         String[] workoutImgDir = workouts.get(position).getWorkout_image().split(activity.getFilesDir().getPath()+"/SilverbarsImg/");
 

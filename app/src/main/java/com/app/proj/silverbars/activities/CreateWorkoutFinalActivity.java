@@ -37,6 +37,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import butterknife.BindView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,7 +45,7 @@ import retrofit2.Response;
 public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
     
-    private static final String TAG = "CreateWorkoutFinal";
+    private static final String TAG = CreateWorkoutFinalActivity.class.getSimpleName();
 
     private MainService service = ServiceGenerator.createService(MainService.class);
 
@@ -52,21 +53,31 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
     private static String strSeparator = "__,__";
 
-    
-    Toolbar toolbar;
-    ImageView imgProfile;
-    
-    AutoCompleteTextView workoutName;
-    
-    Button mSaveButton;
-    RecyclerView recycler;
 
-    TextView mRestbyExerciseDialog;
-    
-    TextView mTotalSets;
-    
-    TextView RestbySet, RestbyExercise,RestSets_dialog,Sets_dialog;
-    Button plusSets,minusSets,plusRest,minusRest,plusRestSets,minusRestSets;
+    @BindView()Toolbar toolbar;
+    @BindView()ImageView imgProfile;
+
+    @BindView()AutoCompleteTextView workoutName;
+
+    @BindView()Button mSaveButton;
+    @BindView()RecyclerView list;
+
+    @BindView()TextView mRestbyExerciseDialog;
+
+    @BindView()TextView mTotalSets;
+
+    @BindView()TextView RestbySet;
+    @BindView()TextView RestbyExercise;
+    @BindView()TextView RestSets_dialog;
+    @BindView()TextView Sets_dialog;
+
+    @BindView()Button plusSets;
+    @BindView()Button minusSets;
+    @BindView()Button plusRest;
+    @BindView()Button minusRest;
+    @BindView()Button plusRestSets;
+    @BindView()Button minusRestSets;
+
     
     int value = 0,actual_set;
     
@@ -96,7 +107,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
         
 
 
-        recycler = (RecyclerView) findViewById(R.id.final_recycler);
+        list = (RecyclerView) findViewById(R.id.final_recycler);
         workoutName = (AutoCompleteTextView) findViewById(R.id.workoutName);
         mSaveButton = (Button) findViewById(R.id.Save);
         
@@ -135,7 +146,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
        
         RecyclerView.LayoutManager lManager = new Utilities.WrappingLinearLayoutManager(this);
-        recycler.setLayoutManager(lManager);
+        list.setLayoutManager(lManager);
 
         imgProfile = (ImageView) findViewById(R.id.imgProfile);
 
@@ -330,8 +341,8 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
 
                     Context context = CreateWorkoutFinalActivity.this;
-                    RecyclerView.Adapter adapter = new CreateFinalWorkoutExercisesAdapter(context, SelectedExercises,reps);
-                    recycler.setAdapter(adapter);
+                    RecyclerView.Adapter adapter = new CreateFinalWorkoutExercisesAdapter(context, SelectedExercises);
+                    list.setAdapter(adapter);
 
 
                 }else {

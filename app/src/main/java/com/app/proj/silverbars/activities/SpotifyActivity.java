@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import butterknife.BindView;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
@@ -35,36 +36,36 @@ import retrofit.client.Response;
 
 import static com.app.proj.silverbars.Constants.CLIENT_ID;
 import static com.app.proj.silverbars.Constants.REDIRECT_URI;
+import static com.app.proj.silverbars.Constants.REQUEST_CODE;
 
 /**
  * Created by isaacalmanza on 10/04/16.
  */
 
-public class SpotifyActivity extends AppCompatActivity implements  ConnectionStateCallback {
+public class SpotifyActivity extends AppCompatActivity  {
 
     private static final String TAG = SpotifyActivity.class.getSimpleName();
 
 
-    private static final int REQUEST_CODE = 1337;
+    @BindView(R.id.toolbar) Toolbar myToolbar;
+
+    @BindView(R.id.only_premium) LinearLayout premium_error;
+    @BindView(R.id.done) Button done;
+    @BindView(R.id.playlists) LinearLayout playlists_layout;
+    @BindView(R.id.error_layout)LinearLayout error_layout;
+    @BindView(R.id.progress_bar_)LinearLayout progress_bar_;
+    @BindView(R.id.lvPlaylist) ListView ListMusic;
+    @BindView(R.id.error_reload_workout) Button error_reload;
 
 
-
-
-    private LinearLayout premium_error;
 
     String SpotifyToken;
 
     List<String> songs = new ArrayList<>();
     List<String> playlists = new ArrayList<>();
 
-    Button done;
-    LinearLayout playlists_layout,error_layout,progress_bar_;
-    private ListView ListMusic;
-    Button error_reload;
-
+    Boolean USERPREMIUM = false;
     Boolean auth_error = false,json_playlist_error = false,json_user_error = false;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,33 +73,9 @@ public class SpotifyActivity extends AppCompatActivity implements  ConnectionSta
         setContentView(R.layout.activity_spotify_music);
 
 
-
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Spotify");
+        setupToolbar();
 
 
-        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-        });
-
-
-
-        ListMusic = (ListView) findViewById(R.id.lvPlaylist);
-
-
-        premium_error = (LinearLayout) findViewById(R.id.only_premium);
-        playlists_layout = (LinearLayout) findViewById(R.id.playlists);
-        error_layout = (LinearLayout) findViewById(R.id.error_layout);
-        error_reload = (Button) findViewById(R.id.error_reload_workout);
-
-        progress_bar_ = (LinearLayout) findViewById(R.id.progress_bar_);
-        done = (Button) findViewById(R.id.done);
 
         error_reload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,101 +150,12 @@ public class SpotifyActivity extends AppCompatActivity implements  ConnectionSta
 
     }
 
-    Boolean USERPREMIUM = false;
 
-    private void getUserAuth(final String Token) {
-
-        SpotifyApi api = new SpotifyApi();
-        api.setAccessToken(Token);
-        SpotifyService spotify = api.getService();
-
-
-        spotify.getMe(new SpotifyCallback<UserPrivate>() {
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e(TAG, "failure" + spotifyError);
-                error_layout.setVisibility(View.VISIBLE);
-                json_user_error = true;
-            }
-            @Override
-            public void success(UserPrivate userPrivate, Response response) {
-                Log.d(TAG, "userPrivate.product: " + userPrivate.product);
-
-                if (Objects.equals(userPrivate.product, "premium")) {
-                    USERPREMIUM = true;
-                    getPlaylist(Token);
-
-                }else {
-                    premium_error.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-    }
-
-    private void getPlaylist(String Token) {
-
-        SpotifyApi api = new SpotifyApi();
-        api.setAccessToken(Token);
-        SpotifyService spotify = api.getService();
-
-        spotify.getMyPlaylists(new SpotifyCallback<Pager<PlaylistSimple>>() {
-
-            @Override
-            public void success(Pager<PlaylistSimple> playlistSimplePager, Response response) {
-
-                String[] items = new String[playlistSimplePager.items.size()];
-                for (int a = 0; a < playlistSimplePager.items.size(); a++) {
-
-                    Log.d(TAG, "playlistSimplePager:" + playlistSimplePager.items.get(a).uri);
-
-                    items[a] = playlistSimplePager.items.get(a).name;
-                    playlists.add(playlistSimplePager.items.get(a).uri);
-                }
-
-                putElementsinList(items);
-            }
-
-            @Override
-            public void failure(SpotifyError spotifyError) {
-                Log.e(TAG, "SpotifyError: " + spotifyError);
-                error_layout.setVisibility(View.VISIBLE);
-                json_playlist_error = true;
-            }
-        });
-        spotify.getMySavedTracks(new SpotifyCallback<Pager<SavedTrack>>() {
-            @Override
-            public void success(Pager<SavedTrack> savedTrackPager, retrofit.client.Response response) {
-                //Log.v("Response size", String.valueOf(response.getHeaders().size()));
-                //Log.v("Pager size", String.valueOf(savedTrackPager.items.size()));
-
-                String[] items = new String[savedTrackPager.items.size()];
-
-                for (int a = 0; a < savedTrackPager.items.size(); a++) {
-                    items[a] = savedTrackPager.items.get(a).track.name;
-                    songs.add(savedTrackPager.items.get(a).track.uri);
-                    Log.d(TAG, "SAVED: " + savedTrackPager.items.get(a).track.name);
-                }
-            }
-            @Override
-            public void failure(SpotifyError error) {
-                Log.e(TAG, "SpotifyError: " + error);
-                error_layout.setVisibility(View.VISIBLE);
-                json_playlist_error = true;
-            }
-        });
-
-    }
-
-    private void toast(String text){
-        Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
-    }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
          if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
             switch (response.getType()) {
@@ -285,6 +173,21 @@ public class SpotifyActivity extends AppCompatActivity implements  ConnectionSta
                     auth_error = true;
             }
         }
+    }
+
+    private void setupToolbar(){
+        setSupportActionBar(myToolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Spotify");
+
+        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
 
@@ -316,46 +219,8 @@ public class SpotifyActivity extends AppCompatActivity implements  ConnectionSta
         Log.i("SpotifySdkDemo", status);
     }
 
-    private void openLoginWindow() {
-        final AuthenticationRequest request = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
-                .setScopes(new String[]{"user-read-private", "playlist-read", "playlist-read-private", "streaming","user-library-read"})
-                .build();
-        AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
-    }
-
-    @Override
-    public void onLoggedIn() {
-        Log.d(TAG, "User logged in");
-    }
-
-    @Override
-    public void onLoggedOut() {
-        Log.d(TAG, "User logged out");
-    }
-
-    @Override
-    public void onLoginFailed(int i) {
-        Log.d(TAG, "Login failed");
-        error_layout.setVisibility(View.VISIBLE);
-        auth_error = true;
-    }
 
 
-    @Override
-    public void onTemporaryError() {
-        Log.d(TAG, "Temporary error occurred");
-        error_layout.setVisibility(View.VISIBLE);
-        auth_error = true;
-
-    }
-
-    @Override
-    public void onConnectionMessage(String message) {
-        Log.d(TAG, "Received connection message: " + message);
-
-
-
-    }
 
 
 }

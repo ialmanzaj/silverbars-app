@@ -11,9 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 
-import com.app.proj.silverbars.MainService;
 import com.app.proj.silverbars.R;
-import com.app.proj.silverbars.ServiceGenerator;
 import com.app.proj.silverbars.models.ExerciseRep;
 import com.app.proj.silverbars.models.Muscle;
 import com.app.proj.silverbars.utils.Utilities;
@@ -23,6 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import butterknife.BindView;
+
 
 /**
  * Created by isaacalmanza on 10/04/16.
@@ -31,23 +31,24 @@ public class ResultsActivity extends AppCompatActivity {
 
     private static final String TAG = ResultsActivity.class.getSimpleName();
 
-    private WebView webView;
-    private String partes = "";
 
-    private Button mSaveResultsButton;
 
-    LinearLayout mContentLayout,mSkillsLayout;
+    @BindView(R.id.toolbar) Toolbar myToolbar;
+
+    @BindView(R.id.save) Button mSaveResultsButton;
+    @BindView(R.id.webview) WebView webView;
+
+    @BindView(R.id.content)LinearLayout mContentLayout;
+    @BindView(R.id.skills)LinearLayout mSkillsLayout;
 
 
     private  List<Muscle> mMuscles = new ArrayList<>();
     private  List<String> mTypeExercises = new ArrayList<>();
-
-
     private ArrayList<ExerciseRep> mExercises = new ArrayList<>();
 
-    MainService mainService = ServiceGenerator.createService(MainService.class);;
-
     private Utilities mUtilities = new Utilities();
+
+    private String partes = "";
 
 
 
@@ -62,17 +63,10 @@ public class ResultsActivity extends AppCompatActivity {
         mExercises = b.getParcelableArrayList("exercises");
 
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setTitle(getResources().getString(R.string.results));
 
 
-
-
-        webView = (WebView) findViewById(R.id.webview);
-        mContentLayout = (LinearLayout) findViewById(R.id.content);
-        mSkillsLayout = (LinearLayout) findViewById(R.id.skills);
-        mSaveResultsButton = (Button) findViewById(R.id.save);
 
         TabHost Tab_layout = (TabHost) findViewById(R.id.tabHost2);
         Tab_layout.setup();

@@ -17,6 +17,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
@@ -41,12 +43,12 @@ public class CreateFinalWorkoutExercisesAdapter extends RecyclerView.Adapter<Cre
 
     public class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
-         ImageView img_handle;
-         TextView nombre;
-         TextView next;
-         TextView repetitions;
+        @BindView() ImageView img_handle;
+        @BindView() TextView nombre;
+        @BindView() TextView next;
+        @BindView() TextView repetitions;
 
-        SimpleDraweeView imagen;
+        @BindView() SimpleDraweeView imagen;
 
         public ExerciseViewHolder(View v) {
             super(v);

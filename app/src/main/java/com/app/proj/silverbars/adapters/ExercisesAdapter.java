@@ -17,19 +17,26 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
 
-public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapter.AllExercisesViewHolder> {
+public class ExercisesAdapter extends RecyclerView.Adapter<ExercisesAdapter.AllExercisesViewHolder> {
 
-    private static final String TAG = "AllExercisesAdapter";
+    private static final String TAG = ExercisesAdapter.class.getSimpleName();
+
+
     private Context mContext;
+
+
     private List<Exercise> mExercises = new ArrayList<>();
 
     public static SparseBooleanArray selectedItems = new SparseBooleanArray();
 
-    public AllExercisesAdapter(Context context,List<Exercise> exercises) {
+    public ExercisesAdapter(Context context, List<Exercise> exercises) {
         mContext = context;
         mExercises = exercises;
     }
@@ -37,43 +44,34 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
 
     public class AllExercisesViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView nombre;
-        public TextView next;
-        public ImageView unchecked, checked;
-
-        SimpleDraweeView imagen;
+        @BindView(R.id.nombre) TextView nombre;
+        @BindView(R.id.unchecked) ImageView unchecked;
+        @BindView(R.id.checked) ImageView checked;
+        @BindView(R.id.imagen) SimpleDraweeView imagen;
 
 
 
         public AllExercisesViewHolder(View itemView) {
             super(itemView);
-            nombre = (TextView) itemView.findViewById(R.id.nombre);
-            imagen = (SimpleDraweeView) itemView.findViewById(R.id.imagen);
-            unchecked = (ImageView) itemView.findViewById(R.id.unchecked);
-            checked = (ImageView) itemView.findViewById(R.id.checked);
+
+            //binding views
+            ButterKnife.bind(this,itemView);
         }
 
         public void setListener(){
+            itemView.setOnClickListener(view -> {
 
+                if (selectedItems.get((Integer) view.getTag(), false)) {
+                    selectedItems.delete((Integer) view.getTag());
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+                    checked.setVisibility(View.GONE);
+                    unchecked.setVisibility(View.VISIBLE);
 
-                @Override
-                public void onClick(View view) {
+                } else {
 
-                    if (selectedItems.get((Integer) view.getTag(), false)) {
-                        selectedItems.delete((Integer) view.getTag());
-
-                        checked.setVisibility(View.GONE);
-                        unchecked.setVisibility(View.VISIBLE);
-
-                    } else {
-
-                        selectedItems.put((Integer) view.getTag(), true);
-                        unchecked.setVisibility(View.GONE);
-                        checked.setVisibility(View.VISIBLE);
-                    }
-
+                    selectedItems.put((Integer) view.getTag(), true);
+                    unchecked.setVisibility(View.GONE);
+                    checked.setVisibility(View.VISIBLE);
                 }
 
             });

@@ -22,6 +22,9 @@ public class LoginInteractor {
 
     private LoginService loginService;
 
+    public LoginInteractor(LoginService loginService){
+        this.loginService = loginService;
+    }
 
 
 
