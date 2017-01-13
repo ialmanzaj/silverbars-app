@@ -1,16 +1,12 @@
 package com.app.proj.silverbars.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -48,6 +44,7 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
         this.activity = activity;
         this.workouts = workouts;
         this.user_workout = user_workout;
+        utilities = new Utilities();
     }
 
     public  class ViewHolder extends RecyclerView.ViewHolder {
@@ -60,11 +57,11 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
 
         int mPosition;
 
-        public ViewHolder(View v) {
-            super(v);
+        public ViewHolder(View view) {
+            super(view);
 
             //binding views
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this,view);
         }
 
 
@@ -107,7 +104,7 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
     @Override
     public void onBindViewHolder(ViewHolder viewholder,  int position) {
 
-        int height = containerDimensions(activity);
+        int height = utilities .containerDimensionsHeight(activity);
         viewholder.layout.getLayoutParams().height = height / 3;
 
         String[] workoutImgDir = workouts.get(position).getWorkout_image().split(activity.getFilesDir().getPath()+"/SilverbarsImg/");
@@ -129,16 +126,6 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
     @Override
     public int getItemCount() {
         return workouts.size();
-    }
-
-
-    private static int containerDimensions(Context context) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int height = size.y;
-        return height;
     }
 
 

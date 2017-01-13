@@ -73,13 +73,12 @@ public class LoginActivity extends AuthenticationActivity implements LoginView{
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
 
         Log.v(TAG,"LoginActivity creada");
 
-
-
         FacebookSdk.sdkInitialize(getApplicationContext());
-        setContentView(R.layout.activity_login);
+
 
 
         mProgressView = findViewById(R.id.login_progress);

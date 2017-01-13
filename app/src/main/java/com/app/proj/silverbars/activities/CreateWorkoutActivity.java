@@ -51,10 +51,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
     private Utilities utilities = new Utilities();
 
 
-    private MainService service = ServiceGenerator.createService(MainService.class);
-
-
-
     @BindView(R.id.content_empty) LinearLayout empty_content;
 
     @BindView(R.id.WebView_create) WebView webView;

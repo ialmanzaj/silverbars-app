@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by isaacalmanza on 10/04/16.
@@ -43,23 +44,17 @@ public class CreateFinalWorkoutExercisesAdapter extends RecyclerView.Adapter<Cre
 
     public class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView() ImageView img_handle;
-        @BindView() TextView nombre;
-        @BindView() TextView next;
-        @BindView() TextView repetitions;
+        @BindView(R.id.handle) ImageView img_handle;
+        @BindView(R.id.nombre) TextView nombre;
+        @BindView(R.id.repetitions) TextView repetitions;
 
-        @BindView() SimpleDraweeView imagen;
+        @BindView(R.id.imagen) SimpleDraweeView imagen;
 
-        public ExerciseViewHolder(View v) {
-            super(v);
-            nombre = (TextView) itemView.findViewById(R.id.nombre);
+        public ExerciseViewHolder(View view) {
+            super(view);
 
-            imagen = (SimpleDraweeView) v.findViewById(R.id.imagen);
-
-            repetitions = (TextView) itemView.findViewById(R.id.repetitions);
-
-            img_handle = (ImageView) itemView.findViewById(R.id.handle);
-            img_handle.setVisibility(View.GONE);
+            //binding views
+            ButterKnife.bind(this,view);
         }
 
     }
@@ -82,7 +77,7 @@ public class CreateFinalWorkoutExercisesAdapter extends RecyclerView.Adapter<Cre
     @Override
     public void onBindViewHolder(ExerciseViewHolder viewHolder, int position) {
 
-
+        viewHolder.img_handle.setVisibility(View.GONE);
         //asignar nombre y repeticiones a cada elemento del recycler.
         viewHolder.nombre.setText(mExercises.get(position).getExercise().getExercise_name());
         viewHolder.repetitions.setText(String.valueOf(mExercises.get(position).getRepetition()));

@@ -56,11 +56,11 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         @BindView(R.id.btn)Button btn;
         @BindView(R.id.img)SimpleDraweeView img;
 
-        public WorkoutHolder(View itemview) {
-            super(itemview);
+        public WorkoutHolder(View view) {
+            super(view);
 
             //binding views
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this,view);
         }
 
 

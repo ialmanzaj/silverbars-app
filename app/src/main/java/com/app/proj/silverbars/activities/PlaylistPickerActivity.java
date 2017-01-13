@@ -66,31 +66,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
 
 
 
-        mCreatePlaylistBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new MaterialDialog.Builder(PlaylistPickerActivity.this)
-                        .title(getResources().getString(R.string.create_playlist))
-                        .content(getResources().getString(R.string.title_playlist))
-                        .negativeText(getResources().getString(R.string.cancel))
-                        .onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {dialog.dismiss();}
-                        })
-                        .inputType(InputType.TYPE_CLASS_TEXT)
-                        .input(getResources().getString(R.string.playlist_name),null, new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(MaterialDialog dialog, CharSequence input) {
-                                Playlist_name = input.toString(); // Do something
-                                if (Objects.equals(Playlist_name, "")){
-                                    Playlist_name = "Playlist 1";
-                                }
-                                Intent i = new Intent(PlaylistPickerActivity.this, SongsActivity.class);
-                                startActivityForResult(i,1);
-                            }
-                        }).show();
-            }
-        });
+        mCreatePlaylistBt.setOnClickListener(v -> dialog());
 
 
 
@@ -182,6 +158,30 @@ public class PlaylistPickerActivity extends AppCompatActivity {
             ListPlaylist.setAdapter(adp2);
         }
     }*/
+
+    private void dialog(){
+
+        new MaterialDialog.Builder(this)
+                .title(getResources().getString(R.string.create_playlist))
+                .content(getResources().getString(R.string.title_playlist))
+                .negativeText(getResources().getString(R.string.cancel))
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {dialog.dismiss();}
+                })
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input(getResources().getString(R.string.playlist_name),null, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        Playlist_name = input.toString(); // Do something
+                        if (Objects.equals(Playlist_name, "")){
+                            Playlist_name = "Playlist 1";
+                        }
+                        Intent i = new Intent(PlaylistPickerActivity.this, SongsActivity.class);
+                        startActivityForResult(i,1);
+                    }
+                }).show();
+    }
 
 
     @Override

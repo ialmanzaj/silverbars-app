@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSelectedAdapter.selectedExercisesViewHolder>  implements ItemTouchHelperAdapter {
@@ -75,9 +76,12 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
         @BindView(R.id.imagen) SimpleDraweeView imagen;
 
 
-        public selectedExercisesViewHolder(View itemView) {
-            super(itemView);
+        public selectedExercisesViewHolder(View view) {
+            super(view);
 
+
+            //binding views
+            ButterKnife.bind(this,view);
 
         }
         

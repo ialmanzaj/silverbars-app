@@ -2,26 +2,24 @@ package com.app.proj.silverbars.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.proj.silverbars.R;
-import com.app.proj.silverbars.utils.Utilities;
 import com.app.proj.silverbars.models.ExerciseRep;
+import com.app.proj.silverbars.utils.Utilities;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWorkingOutAdapter.WorkoutsViewHolder> {
 
@@ -32,29 +30,29 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
     private Context context;
     private Utilities utilities;
 
-
-    public static class WorkoutsViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView() TextView nombre;
-        @BindView()RelativeLayout Layout;
-        @BindView()SimpleDraweeView imagen_cache;
-        @BindView()ImageView imageView_local;
-
-        public WorkoutsViewHolder(View v) {
-            super(v);
-            imagen_cache = (SimpleDraweeView) v.findViewById(R.id.imagen_cache);
-            imageView_local = (ImageView) v.findViewById(R.id.imagen_local);
-            nombre = (TextView) v.findViewById(R.id.nombre);
-            Layout = (RelativeLayout) v.findViewById(R.id.Layout);
-
-        }
-    }
-
     public ExerciseWorkingOutAdapter(Context context, List<ExerciseRep> exercises) {
         this.context = context;
         this.exercises = exercises;
         utilities = new Utilities();
     }
+
+    public class WorkoutsViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.nombre) TextView nombre;
+        @BindView(R.id.Layout)RelativeLayout Layout;
+        @BindView(R.id.imagen_cache)SimpleDraweeView imagen_cache;
+        @BindView(R.id.imagen_local)ImageView imageView_local;
+
+        public WorkoutsViewHolder(View view) {
+            super(view);
+
+            //binding views
+            ButterKnife.bind(this,view);
+
+        }
+    }
+
+
 
     @Override
     public int getItemCount() {
@@ -74,7 +72,7 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
         int position = viewHolder.getAdapterPosition();
 
         viewHolder.nombre.setText(exercises.get(position).getExercise().getExercise_name());
-        viewHolder.Layout.getLayoutParams().width = containerDimensions(context);
+        viewHolder.Layout.getLayoutParams().width = utilities.containerDimensionsWidth(context);
 
 
         String[] imageDir = exercises.get(position).getExercise().getExercise_image().split("exercises");
@@ -92,14 +90,6 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
 
     }
 
-    private int containerDimensions(Context context) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        return width;
-    }
 
 
 

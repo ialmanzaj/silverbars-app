@@ -3,9 +3,7 @@ package com.app.proj.silverbars.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +11,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.app.proj.silverbars.R;
-import com.app.proj.silverbars.utils.Utilities;
 import com.app.proj.silverbars.models.ExerciseRep;
+import com.app.proj.silverbars.utils.Utilities;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
@@ -46,16 +43,16 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     public class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView() TextView nombre;
-        @BindView() TextView next;
-        @BindView() TextView repetitions;
-        @BindView() TextView positive;
-        @BindView() TextView negative;
-        @BindView() TextView isometric;
+        @BindView(R.id.nombre) TextView nombre;
+
+        @BindView(R.id.repetitions) TextView repetitions;
+        @BindView(R.id.positive) TextView positive;
+        @BindView(R.id.negative) TextView negative;
+        @BindView(R.id.isometric) TextView isometric;
 
 
-        @BindView() SimpleDraweeView imagen_cache;
-        @BindView() ImageView imageView_local;
+        @BindView(R.id.imagen) SimpleDraweeView imagen_cache;
+        @BindView(R.id.imagen_local) ImageView imageView_local;
 
 
         private TextView DialogName, Reps;
@@ -64,81 +61,30 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         private int ActualRepValue = 0;
 
 
-        private Button plusPositive;
-        private Button minusPositive;
-        private Button plusIsometric;
-        private Button minusIsometric;
-        private Button plusNegative;
-        private Button minusNegative;
-        private TextView Positive, Negative, Isometric;
 
+        public ExerciseViewHolder(View view) {
+            super(view);
 
-        public ExerciseViewHolder(View dialog) {
-            super(dialog);
-
-            nombre = (TextView) dialog.findViewById(R.id.nombre);
-            repetitions = (TextView) dialog.findViewById(R.id.repetitions);
-
-            imagen_cache = (SimpleDraweeView) dialog.findViewById(R.id.imagen);
-            imageView_local = (ImageView) dialog.findViewById(R.id.imagen_local);
-
-
-            positive = (TextView) dialog.findViewById(R.id.positive);
-            isometric = (TextView) dialog.findViewById(R.id.isometric);
-            negative = (TextView) dialog.findViewById(R.id.negative);
+            //binding views
+            ButterKnife.bind(this,view);
         }
 
 
         public void setListener(){
-            itemView.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
 
         }
 
-        public int getIntfromTextView(TextView textView){
-            return Integer.valueOf(textView.getText().toString());
-        }
 
-        public void plusTempo(TextView view, Button button, Button button2){
+       /* private void dialogImplementation(View view,int position){
 
-            value = Integer.parseInt(view.getText().toString());
-            view.setText(String.valueOf(value+1));
-            value++;
-            if (value == 10){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value > 1){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
+             Button plusPositive;
+             Button minusPositive;
+             Button plusIsometric;
+             Button minusIsometric;
+             Button plusNegative;
+             Button minusNegative;
+             TextView Positive, Negative, Isometric;
 
-
-        }
-
-        public void minusTempo(TextView view, Button button, Button button2){
-            value = Integer.parseInt(view.getText().toString());
-            view.setText(String.valueOf(value = value-1));
-            Log.d(TAG,"value:"+value);
-            if (value == 0){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else {
-                button.setEnabled(true);
-                button.setClickable(true);
-                value--;
-            }
-
-
-        }
-
-        private void dialogImplementation(View view,int position){
             View dialog = new MaterialDialog.Builder(view.getContext())
                     .title(R.string.rep_edit)
                     .customView(R.layout.edit_exercise_dialog, true)
@@ -225,7 +171,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                 plusRep.setClickable(false);
             }
 
-        }
+        }*/
     }
 
 

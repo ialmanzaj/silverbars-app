@@ -48,15 +48,15 @@ public class ExercisesAdapter extends RecyclerView.Adapter<ExercisesAdapter.AllE
         @BindView(R.id.checked) ImageView checked;
         @BindView(R.id.imagen) SimpleDraweeView imagen;
 
-        public AllExercisesViewHolder(View itemView) {
-            super(itemView);
+        public AllExercisesViewHolder(View view) {
+            super(view);
 
             //binding views
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this,view);
         }
 
         public void setListener(){
-            itemView.setOnClickListener(view -> {
+           /* itemView.setOnClickListener(view -> {
 
                 if (selectedItems.get((Integer) view.getTag(), false)) {
                     selectedItems.delete((Integer) view.getTag());
@@ -71,7 +71,7 @@ public class ExercisesAdapter extends RecyclerView.Adapter<ExercisesAdapter.AllE
                     checked.setVisibility(View.VISIBLE);
                 }
 
-            });
+            });*/
         }
     }
 
