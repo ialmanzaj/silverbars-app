@@ -64,7 +64,6 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        utilities = new Utilities();
 
         //profiles settings
         mProfileName = (TextView) view.findViewById(R.id.Profile_name);

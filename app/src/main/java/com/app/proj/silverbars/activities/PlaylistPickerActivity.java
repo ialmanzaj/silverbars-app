@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
 
-
+import butterknife.BindView;
 
 
 /**
@@ -31,19 +31,27 @@ public class PlaylistPickerActivity extends AppCompatActivity {
 
     private static final String TAG = PlaylistPickerActivity.class.getSimpleName();
 
-    private ListView ListMusic, ListPlaylist;
-    private Toolbar toolbar;
-    Button done;
-    ImageView create_button;
+    private ListView ListMusic;
+    @BindView(R.id.SavedPlaylist) ListView ListPlaylist;
+    
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.done) Button mDoneBt;
+    @BindView(R.id.create_playlist)ImageView mCreatePlaylistBt;
 
 
     private String[] save_playlist;
+    
     private long[] selected;
+    
     private ArrayList<File> mySongs;
+    
     String[] position;
+    
     private int Reps = 0, Tempo = 0;
+    
     private String Playlist_name;
     private String[] playlist;
+    
 
     private static String strSeparator = "__,__";
     private String[] songs;
@@ -57,14 +65,8 @@ public class PlaylistPickerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_playlist__picker);
 
 
-        ListPlaylist = (ListView)findViewById(R.id.SavedPlaylist);
 
-        done = (Button) findViewById(R.id.done);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        create_button = (ImageView) findViewById(R.id.create_playlist);
-
-        create_button.setOnClickListener(new View.OnClickListener() {
+        mCreatePlaylistBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new MaterialDialog.Builder(PlaylistPickerActivity.this)
@@ -102,7 +104,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
         }
 */
 
-        done.setOnClickListener(new View.OnClickListener() {
+        mDoneBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final int selected = ListPlaylist.getCheckedItemPosition();

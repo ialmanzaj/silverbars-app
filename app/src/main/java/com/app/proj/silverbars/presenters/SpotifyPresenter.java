@@ -3,6 +3,7 @@ package com.app.proj.silverbars.presenters;
 import android.app.Activity;
 import android.util.Log;
 
+import com.app.proj.silverbars.interactors.SpotifyInteractor;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -21,13 +22,24 @@ public class SpotifyPresenter extends BasePresenter implements ConnectionStateCa
 
     private static final String TAG = SpotifyPresenter.class.getSimpleName();
 
+    private SpotifyInteractor interactor;
 
-    private void openLoginWindow(Activity activity) {
+    public SpotifyPresenter(SpotifyInteractor interactor){
+        this.interactor = interactor;
+    }
+
+    public void openLoginWindow(Activity activity) {
         final AuthenticationRequest request = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
                 .setScopes(new String[]{"user-read-private", "playlist-read", "playlist-read-private", "streaming","user-library-read"})
                 .build();
         AuthenticationClient.openLoginActivity(activity, REQUEST_CODE, request);
     }
+
+
+    public void initService(String token){
+        interactor.initService(token);
+    }
+
 
     @Override
     public void onStart() {

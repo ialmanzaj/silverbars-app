@@ -28,6 +28,7 @@ import com.app.proj.silverbars.utils.Utilities;
 import com.app.proj.silverbars.models.Exercise;
 import com.app.proj.silverbars.models.ExerciseRep;
 import com.app.proj.silverbars.models.Muscle;
+import com.app.proj.silverbars.viewsets.CreateWorkoutFinalView;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -42,43 +43,24 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CreateWorkoutFinalActivity extends AppCompatActivity {
+public class CreateWorkoutFinalActivity extends AppCompatActivity implements CreateWorkoutFinalView{
 
     
     private static final String TAG = CreateWorkoutFinalActivity.class.getSimpleName();
 
-    private MainService service = ServiceGenerator.createService(MainService.class);
+    @BindView(R.id.toolbar)Toolbar toolbar;
+    @BindView(R.id.imgProfile)ImageView imgProfile;
+
+    @BindView(R.id.workoutName)AutoCompleteTextView workoutName;
+
+    @BindView(R.id.Save)Button mSaveButton;
+    @BindView(R.id.list)RecyclerView list;
+
+    @BindView(R.id.Sets) TextView mTotalSets;
+
 
     private static String MAIN_MUSCLE,LEVEL;
 
-    private static String strSeparator = "__,__";
-
-
-    @BindView()Toolbar toolbar;
-    @BindView()ImageView imgProfile;
-
-    @BindView()AutoCompleteTextView workoutName;
-
-    @BindView()Button mSaveButton;
-    @BindView()RecyclerView list;
-
-    @BindView()TextView mRestbyExerciseDialog;
-
-    @BindView()TextView mTotalSets;
-
-    @BindView()TextView RestbySet;
-    @BindView()TextView RestbyExercise;
-    @BindView()TextView RestSets_dialog;
-    @BindView()TextView Sets_dialog;
-
-    @BindView()Button plusSets;
-    @BindView()Button minusSets;
-    @BindView()Button plusRest;
-    @BindView()Button minusRest;
-    @BindView()Button plusRestSets;
-    @BindView()Button minusRestSets;
-
-    
     int value = 0,actual_set;
     
     int[] reps;
@@ -89,6 +71,8 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
     
     List<ExerciseRep> SelectedExercises = new ArrayList<>();
     ArrayList<String> mExercisesIdsSelected = new ArrayList<>();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,39 +88,11 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
         mTotalSets.setText(String.valueOf(actual_set));
         exercises_ids = new String[mExercisesIdsSelected.size()];
-        
 
 
-        list = (RecyclerView) findViewById(R.id.final_recycler);
-        workoutName = (AutoCompleteTextView) findViewById(R.id.workoutName);
-        mSaveButton = (Button) findViewById(R.id.Save);
-        
-        // cantidad de sets
-        mTotalSets = (TextView) findViewById(R.id.Sets);
+        setupToolbar();
 
 
-
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getResources().getString(R.string.save_workout));
-        
-        
-        
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View dialog) {
-                Intent return_Intent = new Intent();
-                return_Intent.putExtra("exercises",mExercisesIdsSelected);
-                setResult(RESULT_OK, return_Intent);
-                finish();
-            }
-        });
-        
-
-        
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,11 +102,13 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
 
        
         RecyclerView.LayoutManager lManager = new Utilities.WrappingLinearLayoutManager(this);
+
         list.setLayoutManager(lManager);
 
-        imgProfile = (ImageView) findViewById(R.id.imgProfile);
 
         RelativeLayout changeImg = (RelativeLayout) findViewById(R.id.chageImg);
+
+
         changeImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View dialog) {
@@ -161,8 +119,6 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
             }
 
         });
-
-
 
         //addImg = (ImageView) findViewById(R.id.addImg);
         //addText = (TextView) findViewById(R.id.addText);
@@ -182,7 +138,10 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
             }
         });
 
+
+
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -205,6 +164,8 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
                 }
 
             }
+
+
             if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
@@ -228,231 +189,40 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
         }
     }
 
+    private void setupToolbar(){
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.save_workout));
 
-    private void putExercisesinRecycler(){
-
-        service.getAllExercises().enqueue(new Callback<Exercise[]>() {
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<Exercise[]> call, Response<Exercise[]> response) {
-                if(response.isSuccessful()){
+            public void onClick(View dialog) {
 
-                    List<Exercise> AllExercisesList = new ArrayList<>();
-                    Collections.addAll(AllExercisesList, response.body());
-
-                    for (int c = 0;c < mExercisesIdsSelected.size();c++){
-                        for (int a = 0; a < AllExercisesList.size();a++){
-
-                            if (Objects.equals(AllExercisesList.get(a).getExercise_name(), mExercisesIdsSelected.get(c))){
-
-                                SelectedExercises.add(new ExerciseRep(AllExercisesList.get(a)));
-
-                            }
-                        }
-                    }
-                    for (int a = 0; a<SelectedExercises.size();a++){
-                        exercises_ids[a] = String.valueOf(SelectedExercises.get(a).getExercise().getExerciseId());
-                    }
-
-
-                    Boolean UPPER_BODY = false,LOWER_BODY = false,ABS = false,FULL_BODY=false,NORMAL= false,EASY = false,HARD = false,CHALLENGING = false;
-
-
-                    for (int a = 0;a<SelectedExercises.size();a++){
-
-                        for (int b = 0; b<SelectedExercises.get(a).getExercise().getMuscles().length; b++){
-
-                            Muscle muscle = SelectedExercises.get(a).getExercise().getMuscles()[b];
-
-                            if (Objects.equals(muscle.getMuscleName(), "CALVES")){LOWER_BODY = true;}
-                            if (Objects.equals(muscle.getMuscleName(), "HAMSTRINGS")){LOWER_BODY = true;}
-                            if (Objects.equals(muscle.getMuscleName(), "ADDUCTORS")){LOWER_BODY = true;}
-                            if (Objects.equals(muscle.getMuscleName(), "CUADRICEPS")){LOWER_BODY = true;}
-                            if (Objects.equals(muscle.getMuscleName(), "RECTUS-ABDOMINIS")){ABS = true;}
-                            if (Objects.equals(muscle.getMuscleName(), "TRANSVERSUS-ABDOMINIS")){ABS = true;}
-                            if (Objects.equals(muscle.getMuscleName(), "DELTOIDS")){UPPER_BODY = true;}
-                            if (Objects.equals(muscle.getMuscleName(), "OBLIQUES")){UPPER_BODY = true;}
-                            if (Objects.equals(muscle.getMuscleName(), "QUADRICEPS")){LOWER_BODY = true;}
-                            if (Objects.equals(muscle.getMuscleName(), "PECTORALIS-MAJOR")){UPPER_BODY = true;}
-                            if (Objects.equals(muscle.getMuscleName(), "TRICEPS")){UPPER_BODY = true;}
-                        }
-                        Exercise exercise = SelectedExercises.get(a).getExercise();
-
-                        if (Objects.equals(exercise.getLevel(),"NORMAL")){
-                            NORMAL = true;
-                        }else if (Objects.equals(exercise.getLevel(),"EASY")){
-                            EASY = true;
-                        }else if (Objects.equals(exercise.getLevel(),"HARD")){
-                            HARD = true;
-                        }else if (Objects.equals(exercise.getLevel(),"CHALLENGING")){
-                            CHALLENGING = true;
-                        }
-
-                    }
-
-                    if (CHALLENGING){
-                        LEVEL = "CHALLENGING";
-                        HARD = false;
-                        EASY = false;
-                        NORMAL = false;
-                    }else if (HARD){
-                        LEVEL = "HARD";
-                        NORMAL = false;
-                        EASY = false;
-                    }else if (NORMAL){
-                        LEVEL = "NORMAL";
-                        EASY = false;
-                    }else if (EASY){
-                        LEVEL = "EASY";
-                    }
-
-                    Log.d(TAG,"LEVEL: "+LEVEL);
-                    Log.d(TAG,"CHALLENGING: "+CHALLENGING);
-                    Log.d(TAG,"HARD:"+HARD);
-                    Log.d(TAG,"EASY:"+EASY);
-                    Log.d(TAG,"NORMAL:"+NORMAL);
-
-
-                    if (LOWER_BODY && UPPER_BODY && ABS){
-                        MAIN_MUSCLE = "FULL BODY";
-                        FULL_BODY = true;
-                        UPPER_BODY = false;
-                        ABS = false;
-                        LOWER_BODY = false;
-                    }else if (!LOWER_BODY && UPPER_BODY && ABS) {
-                        UPPER_BODY = true;
-                        ABS = false;
-                        MAIN_MUSCLE = "UPPER BODY";
-
-                    }else if (LOWER_BODY && !UPPER_BODY && ABS){
-                        MAIN_MUSCLE = "LOWER BODY";
-                        LOWER_BODY = true;
-                        ABS = false;
-                    }else if (!LOWER_BODY && !UPPER_BODY && ABS){
-                        ABS = true;
-                        MAIN_MUSCLE = "ABS/CORE";
-                    }
-
-                    Log.d(TAG,"MAIN_MUSCLE: "+MAIN_MUSCLE);
-                    Log.d(TAG,"lower:"+LOWER_BODY);
-                    Log.d(TAG,"upper:"+UPPER_BODY);
-                    Log.d(TAG,"ABS:"+ABS);
-                    Log.d(TAG,"FULL:"+FULL_BODY);
-
-
-
-                    Context context = CreateWorkoutFinalActivity.this;
-                    RecyclerView.Adapter adapter = new CreateFinalWorkoutExercisesAdapter(context, SelectedExercises);
-                    list.setAdapter(adapter);
-
-
-                }else {
-
-                }
-
+                Intent return_Intent = new Intent();
+                return_Intent.putExtra("exercises",mExercisesIdsSelected);
+                setResult(RESULT_OK, return_Intent);
+                finish();
             }
-            @Override
-            public void onFailure(Call<Exercise[]> call, Throwable t) {
 
-            }
+
         });
-
-
-    }
-
-
-    private void plusTempo(TextView view, Button button, Button button2){
-        if(view == mRestbyExerciseDialog){
-            String[] elements = view.getText().toString().split("s");
-            value = Integer.parseInt(elements[0]);
-            value = value + 5;
-            view.setText(String.valueOf(value+"s"));
-            if (value == 60){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value > 0){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else if(view == RestSets_dialog){
-            String[] elements = view.getText().toString().split("s");
-            value = Integer.parseInt(elements[0]);
-            value = value + 10;
-            view.setText(String.valueOf(value+"s"));
-            if (value == 180){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value > 0){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else{
-            value = Integer.parseInt(view.getText().toString());
-            view.setText(String.valueOf(value+1));
-            value++;
-            if (value == 10){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value > 1){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }
-
-    }
-
-    private void minusTempo(TextView view, Button button, Button button2){
-
-        if(view == mRestbyExerciseDialog){
-            String[] elements = view.getText().toString().split("s");
-            value = Integer.parseInt(elements[0]);
-            value = value - 5;
-            view.setText(String.valueOf(value+"s"));
-            if (value == 0){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value < 60){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else if(view == RestSets_dialog){
-            String[] elements = view.getText().toString().split("s");
-            value = Integer.parseInt(elements[0]);
-            value = value - 10;
-            view.setText(String.valueOf(value+"s"));
-            if (value == 0){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value < 180){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else{
-            value = Integer.parseInt(view.getText().toString());
-            view.setText(String.valueOf(value-1));
-            value--;
-            if ((value)==1){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value < 10){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }
     }
 
     private void dialogImplementation(View view){
+        TextView mRestbyExerciseDialog;
+
+        TextView RestbySet;
+        TextView RestbyExercise;
+        TextView RestSets_dialog;
+
+        Button plusRest;
+        Button minusRest;
+        Button plusRestSets;
+        Button minusRestSets;
+
+        TextView Sets_dialog;
+        Button plusSets;
+        Button minusSets;
 
         View dialog = new MaterialDialog.Builder(view.getContext())
                 .title(R.string.set_edit)
@@ -461,8 +231,12 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         dialog.dismiss();
-                        mTotalSets.setText(Sets_dialog.getText());
-                        actual_set = Integer.getInteger(Sets_dialog.getText().toString());
+
+                        if ( ){
+                            mTotalSets.setText(Sets_dialog.getText());
+                            actual_set = Integer.getInteger(Sets_dialog.getText().toString());
+                        }
+
                     }
                 })
                 .show()
@@ -478,7 +252,6 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    plusTempo(Sets_dialog,plusSets,minusSets);
 
                 }
             });
@@ -487,30 +260,131 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    minusTempo(Sets_dialog,minusSets,plusSets);
                 }
             });
 
-
-            int setsValue = Integer.parseInt(mTotalSets.getText().toString());
-            if (setsValue <= 1){
-                plusSets.setEnabled(true);
-                plusSets.setClickable(true);
-                minusSets.setEnabled(false);
-                minusSets.setClickable(false);
-            }else if(setsValue >=10){
-                plusSets.setEnabled(false);
-                plusSets.setClickable(false);
-                minusSets.setEnabled(true);
-                minusSets.setClickable(true);
-            }
         }
     }
 
 
+    @Override
+    public void displayNetworkError() {
+        
+    }
+
+    @Override
+    public void displayServerError() {
+
+    }
+
+    @Override
+    public void displayExercises(List<Exercise> exercises) {
+
+        for (int c = 0;c < mExercisesIdsSelected.size();c++){
+            for (int a = 0; a < exercises.size();a++){
+
+                if (Objects.equals(exercises.get(a).getExercise_name(), mExercisesIdsSelected.get(c))){
+                    SelectedExercises.add(new ExerciseRep(exercises.get(a)));
+                }
+            }
+        }
+
+
+        for (int a = 0; a<SelectedExercises.size();a++){
+            exercises_ids[a] = String.valueOf(SelectedExercises.get(a).getExercise().getExerciseId());
+        }
+
+
+        Boolean UPPER_BODY = false,LOWER_BODY = false,ABS = false,FULL_BODY=false,NORMAL= false,EASY = false,HARD = false,CHALLENGING = false;
+
+
+        for (int a = 0;a<SelectedExercises.size();a++){
+
+            for (int b = 0; b<SelectedExercises.get(a).getExercise().getMuscles().length; b++){
+
+                Muscle muscle = SelectedExercises.get(a).getExercise().getMuscles()[b];
+
+                if (Objects.equals(muscle.getMuscleName(), "CALVES")){LOWER_BODY = true;}
+                if (Objects.equals(muscle.getMuscleName(), "HAMSTRINGS")){LOWER_BODY = true;}
+                if (Objects.equals(muscle.getMuscleName(), "ADDUCTORS")){LOWER_BODY = true;}
+                if (Objects.equals(muscle.getMuscleName(), "CUADRICEPS")){LOWER_BODY = true;}
+                if (Objects.equals(muscle.getMuscleName(), "RECTUS-ABDOMINIS")){ABS = true;}
+                if (Objects.equals(muscle.getMuscleName(), "TRANSVERSUS-ABDOMINIS")){ABS = true;}
+                if (Objects.equals(muscle.getMuscleName(), "DELTOIDS")){UPPER_BODY = true;}
+                if (Objects.equals(muscle.getMuscleName(), "OBLIQUES")){UPPER_BODY = true;}
+                if (Objects.equals(muscle.getMuscleName(), "QUADRICEPS")){LOWER_BODY = true;}
+                if (Objects.equals(muscle.getMuscleName(), "PECTORALIS-MAJOR")){UPPER_BODY = true;}
+                if (Objects.equals(muscle.getMuscleName(), "TRICEPS")){UPPER_BODY = true;}
+            }
+            Exercise exercise = SelectedExercises.get(a).getExercise();
+
+            if (Objects.equals(exercise.getLevel(),"NORMAL")){
+                NORMAL = true;
+            }else if (Objects.equals(exercise.getLevel(),"EASY")){
+                EASY = true;
+            }else if (Objects.equals(exercise.getLevel(),"HARD")){
+                HARD = true;
+            }else if (Objects.equals(exercise.getLevel(),"CHALLENGING")){
+                CHALLENGING = true;
+            }
+
+        }
+
+        if (CHALLENGING){
+            LEVEL = "CHALLENGING";
+            HARD = false;
+            EASY = false;
+            NORMAL = false;
+        }else if (HARD){
+            LEVEL = "HARD";
+            NORMAL = false;
+            EASY = false;
+        }else if (NORMAL){
+            LEVEL = "NORMAL";
+            EASY = false;
+        }else if (EASY){
+            LEVEL = "EASY";
+        }
+
+        Log.d(TAG,"LEVEL: "+LEVEL);
+        Log.d(TAG,"CHALLENGING: "+CHALLENGING);
+        Log.d(TAG,"HARD:"+HARD);
+        Log.d(TAG,"EASY:"+EASY);
+        Log.d(TAG,"NORMAL:"+NORMAL);
+
+
+        if (LOWER_BODY && UPPER_BODY && ABS){
+            MAIN_MUSCLE = "FULL BODY";
+            FULL_BODY = true;
+            UPPER_BODY = false;
+            ABS = false;
+            LOWER_BODY = false;
+        }else if (!LOWER_BODY && UPPER_BODY && ABS) {
+            UPPER_BODY = true;
+            ABS = false;
+            MAIN_MUSCLE = "UPPER BODY";
+
+        }else if (LOWER_BODY && !UPPER_BODY && ABS){
+            MAIN_MUSCLE = "LOWER BODY";
+            LOWER_BODY = true;
+            ABS = false;
+        }else if (!LOWER_BODY && !UPPER_BODY && ABS){
+            ABS = true;
+            MAIN_MUSCLE = "ABS/CORE";
+        }
+
+        Log.d(TAG,"MAIN_MUSCLE: "+MAIN_MUSCLE);
+        Log.d(TAG,"lower:"+LOWER_BODY);
+        Log.d(TAG,"upper:"+UPPER_BODY);
+        Log.d(TAG,"ABS:"+ABS);
+        Log.d(TAG,"FULL:"+FULL_BODY);
 
 
 
 
+        RecyclerView.Adapter adapter = new CreateFinalWorkoutExercisesAdapter(this, SelectedExercises);
+        list.setAdapter(adapter);
+
+    }
 }
 

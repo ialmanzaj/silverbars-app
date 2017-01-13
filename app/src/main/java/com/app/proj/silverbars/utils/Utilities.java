@@ -56,10 +56,7 @@ public class Utilities {
 
     private static final String TAG = "Utilities";
 
-
     private   String strSeparator = "__,__";
-
-
 
     public Utilities (){}
 
@@ -127,7 +124,7 @@ public class Utilities {
         }
     }
 
-    public  int containerDimensions(Context context) {
+    public  int containerDimensionsWidth(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
@@ -135,6 +132,17 @@ public class Utilities {
         int width = size.x;
         return width;
     }
+
+
+    public int containerDimensionsHeight(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+        return height;
+    }
+
 
 
     /* Checks if external storage is available for read and write */
@@ -694,7 +702,7 @@ public class Utilities {
         RelativeLayout.LayoutParams layoutParams_Progress = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         layoutParams_Progress.addRule(RelativeLayout.ALIGN_PARENT_END);
         progressBar.setLayoutParams(layoutParams_Progress);
-        progressBar.getLayoutParams().width = containerDimensions(context) / 2;
+        progressBar.getLayoutParams().width = containerDimensionsWidth(context) / 2;
         progressBar.setMax(100);
 
 

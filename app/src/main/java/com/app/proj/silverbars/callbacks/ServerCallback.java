@@ -5,4 +5,8 @@ package com.app.proj.silverbars.callbacks;
  */
 
 public interface ServerCallback {
+
+    void onServerError();
+    void onNetworkError();
+
 }

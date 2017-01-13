@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import butterknife.BindView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,15 +35,17 @@ public class ExerciseListActivity extends AppCompatActivity {
 
     private static final String TAG = ExerciseListActivity.class.getSimpleName();
 
-    Toolbar toolbar;
-    RecyclerView list;
-    Button add_button;
 
-    private LinearLayout error_layout;
-    private LinearLayout Progress;
 
-    
-    
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.list)RecyclerView list;
+    @BindView(R.id.add)Button mAddExercisesbt;
+
+    @BindView(R.id.error_layout) LinearLayout error_layout;
+    @BindView(R.id.loading) LinearLayout mLoadingView;
+    @BindView(R.id.reload)Button mReload;
+
+
     private RecyclerView.Adapter adapter;
 
     private ArrayList<String> exercises_id = new ArrayList<>();
@@ -58,30 +61,11 @@ public class ExerciseListActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_exercise_list);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        setupToolbar();
 
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getResources().getString(R.string.add_exercises_title));
-
-
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
-                }
-        });
-
-
-
-        Progress = (LinearLayout) findViewById(R.id.progress_bar_);
-        error_layout = (LinearLayout) findViewById(R.id.error_layout);
-
-
-        Button button_error_reload = (Button) findViewById(R.id.error_reload_workout);
-        button_error_reload.setOnClickListener(new View.OnClickListener() {
+        mReload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getExercisesFromAPI();
@@ -89,13 +73,12 @@ public class ExerciseListActivity extends AppCompatActivity {
             }
         });
 
-
-        list = (RecyclerView) findViewById(R.id.list);
+        
         list.setLayoutManager(new LinearLayoutManager(this));
 
 
-        add_button = (Button) findViewById(R.id.done_button);
-        add_button.setOnClickListener(new View.OnClickListener() {
+
+        mAddExercisesbt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 for (int i = 0; i < OriginalExerciseListAll.size(); i++){
@@ -118,11 +101,23 @@ public class ExerciseListActivity extends AppCompatActivity {
         getExercisesFromAPI();
     }
 
+    private void setupToolbar(){
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.add_exercises_title));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
     private void getExercisesFromAPI() {
 
 
         MainService service = ServiceGenerator.createService(MainService.class);
-        service.getAllExercises().enqueue(new Callback<Exercise[]>() {
+        service.getExercises().enqueue(new Callback<Exercise[]>() {
             @Override
             public void onResponse(Call<Exercise[]> call, Response<Exercise[]> response) {
                 if (response.isSuccessful()){
@@ -187,15 +182,15 @@ public class ExerciseListActivity extends AppCompatActivity {
     private void onErrorOn(){
         error_layout.setVisibility(View.VISIBLE);
         list.setVisibility(View.GONE);
-        add_button.setVisibility(View.GONE);
+        mAddExercisesbt.setVisibility(View.GONE);
     }
     
     
     private void onErrorOff(){
-        Progress.setVisibility(View.GONE);
+        mLoadingView.setVisibility(View.GONE);
         error_layout.setVisibility(View.GONE);
         list.setVisibility(View.VISIBLE);
-        add_button.setVisibility(View.VISIBLE);
+        mAddExercisesbt.setVisibility(View.VISIBLE);
     }
 
 

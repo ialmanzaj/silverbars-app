@@ -11,31 +11,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.app.proj.silverbars.R;
+import com.app.proj.silverbars.presenters.SpotifyPresenter;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
-import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
-import com.spotify.sdk.android.player.ConnectionStateCallback;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
-import kaaes.spotify.webapi.android.SpotifyApi;
-import kaaes.spotify.webapi.android.SpotifyCallback;
-import kaaes.spotify.webapi.android.SpotifyError;
-import kaaes.spotify.webapi.android.SpotifyService;
-import kaaes.spotify.webapi.android.models.Pager;
-import kaaes.spotify.webapi.android.models.PlaylistSimple;
-import kaaes.spotify.webapi.android.models.SavedTrack;
-import kaaes.spotify.webapi.android.models.UserPrivate;
-import retrofit.client.Response;
 
-import static com.app.proj.silverbars.Constants.CLIENT_ID;
-import static com.app.proj.silverbars.Constants.REDIRECT_URI;
 import static com.app.proj.silverbars.Constants.REQUEST_CODE;
 
 /**
@@ -47,17 +33,22 @@ public class SpotifyActivity extends AppCompatActivity  {
     private static final String TAG = SpotifyActivity.class.getSimpleName();
 
 
-    @BindView(R.id.toolbar) Toolbar myToolbar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
-    @BindView(R.id.only_premium) LinearLayout premium_error;
-    @BindView(R.id.done) Button done;
+    @BindView(R.id.only_premium) LinearLayout mPremiumView;
+
+    @BindView(R.id.done) Button mDoneButton;
+
     @BindView(R.id.playlists) LinearLayout playlists_layout;
-    @BindView(R.id.error_layout)LinearLayout error_layout;
-    @BindView(R.id.progress_bar_)LinearLayout progress_bar_;
-    @BindView(R.id.lvPlaylist) ListView ListMusic;
-    @BindView(R.id.error_reload_workout) Button error_reload;
+
+    @BindView(R.id.error_layout)LinearLayout mErrorView;
+    @BindView(R.id.loading)LinearLayout mLoadingView;
+    @BindView(R.id.reload) Button mReloadButton;
+
+    @BindView(R.id.music_selection) ListView mListMusicSelection;
 
 
+    SpotifyPresenter mSpotifyPresenter;
 
     String SpotifyToken;
 
@@ -77,39 +68,38 @@ public class SpotifyActivity extends AppCompatActivity  {
 
 
 
-        error_reload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                progress_bar_.setVisibility(View.VISIBLE);
-                error_layout.setVisibility(View.GONE);
+        mReloadButton.setOnClickListener(view -> {
 
-                if (auth_error){
-                    openLoginWindow();
 
-                }else if(json_user_error){
+            mLoadingView.setVisibility(View.VISIBLE);
+            mErrorView.setVisibility(View.GONE);
 
-                    if (SpotifyToken != null){
-                        getUserAuth(SpotifyToken);
-                    }
+            if (auth_error){
+                mSpotifyPresenter.openLoginWindow(this);
 
-                }else if (json_playlist_error){
+            }else if(json_user_error){
 
-                    if (SpotifyToken != null){
-                        getPlaylist(SpotifyToken);
-                    }
-
+                if (SpotifyToken != null){
+                    mSpotifyPresenter.initService(SpotifyToken);
                 }
+
+            }else if (json_playlist_error){
+
+                if (SpotifyToken != null){
+                    getPlaylist(SpotifyToken);
+                }
+
             }
         });
 
 
-        done.setOnClickListener(new View.OnClickListener() {
+        mDoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                final int choice = ListMusic.getCount();
+                final int choice = mListMusicSelection.getCount();
                 long[] selected = new long[choice];
-                final SparseBooleanArray spa = ListMusic.getCheckedItemPositions();
+                final SparseBooleanArray spa = mListMusicSelection.getCheckedItemPositions();
                 if (spa.size() != 0) {
 
                     String currentPlaylist = null;
@@ -119,7 +109,7 @@ public class SpotifyActivity extends AppCompatActivity  {
                     }
                     for (int i = 0; i < choice; i++) {
                         if (spa.get(i)) {
-                            selected[i] = ListMusic.getItemIdAtPosition(i);
+                            selected[i] = mListMusicSelection.getItemIdAtPosition(i);
                         }
                     }
                     for (int j = 0; j < playlists.size(); j++) {
@@ -146,7 +136,8 @@ public class SpotifyActivity extends AppCompatActivity  {
         });
 
 
-        openLoginWindow();
+        //open login screen
+        mSpotifyPresenter.openLoginWindow(this);
 
     }
 
@@ -164,24 +155,24 @@ public class SpotifyActivity extends AppCompatActivity  {
                     break;
                 case ERROR:
                     logStatus("TokenProvider error: " + response.getError());
-                    error_layout.setVisibility(View.VISIBLE);
+                    mErrorView.setVisibility(View.VISIBLE);
                     auth_error = true;
                     break;
                 default:
                     logStatus("TokenProvider result: " + response.getType());
-                    error_layout.setVisibility(View.VISIBLE);
+                    mErrorView.setVisibility(View.VISIBLE);
                     auth_error = true;
             }
         }
     }
 
     private void setupToolbar(){
-        setSupportActionBar(myToolbar);
+        setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Spotify");
 
-        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -193,7 +184,7 @@ public class SpotifyActivity extends AppCompatActivity  {
 
     private void onAuthenticationComplete(AuthenticationResponse authResponse) {
 
-        progress_bar_.setVisibility(View.GONE);
+        mLoadingView.setVisibility(View.GONE);
         Log.v(TAG,"Got authentication token");
 
         SpotifyToken = authResponse.getAccessToken();
@@ -206,21 +197,20 @@ public class SpotifyActivity extends AppCompatActivity  {
 
 
     private void putElementsinList(String[] items){
-        progress_bar_.setVisibility(View.GONE);
+        mLoadingView.setVisibility(View.GONE);
         playlists_layout.setVisibility(View.VISIBLE);
-        done.setVisibility(View.VISIBLE);
+        mDoneButton.setVisibility(View.VISIBLE);
 
         ArrayAdapter<String> adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, android.R.id.text1, items);
-        ListMusic.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        ListMusic.setAdapter(adp);
+        mListMusicSelection.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        mListMusicSelection.setAdapter(adp);
     }
+
+
 
     private void logStatus(String status) {
         Log.i("SpotifySdkDemo", status);
     }
-
-
-
 
 
 }

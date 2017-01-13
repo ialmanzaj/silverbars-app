@@ -9,6 +9,8 @@ import android.widget.LinearLayout;
 import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.activities.CreateWorkoutActivity;
 import com.app.proj.silverbars.presenters.BasePresenter;
+import com.app.proj.silverbars.presenters.UserWorkoutsPresenter;
+import com.app.proj.silverbars.viewsets.UserWorkoutsView;
 
 import org.lucasr.twowayview.widget.TwoWayView;
 
@@ -18,14 +20,16 @@ import butterknife.BindView;
  * Created by isaacalmanza on 10/04/16.
  */
 
-public class UserWorkoutsFragment extends BaseFragment {
+public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsView{
 
     private static final String TAG = UserWorkoutsFragment.class.getSimpleName();
 
-    @BindView(R.id.recycler_my_workouts) TwoWayView mMyWorkoutView;
-    @BindView(R.id.empty_state_my_workouts) LinearLayout EmpyStateMyWorkouts;
-    @BindView(R.id.create_workout) Button mCreateWorkoutButton;
+    @BindView(R.id.list_my_workouts) TwoWayView mMyWorkoutView;
+    @BindView(R.id.empty_view) LinearLayout EmpyStateMyWorkouts;
+    @BindView(R.id.create) Button mCreateWorkoutButton;
 
+
+    UserWorkoutsPresenter mUserWorkoutsPresenter;
 
     @Override
     protected int getFragmentLayout() {
@@ -34,8 +38,10 @@ public class UserWorkoutsFragment extends BaseFragment {
 
     @Override
     protected BasePresenter getPresenter() {
-        return null;
+        return mUserWorkoutsPresenter;
     }
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -43,7 +49,7 @@ public class UserWorkoutsFragment extends BaseFragment {
 
 
         mCreateWorkoutButton.setOnClickListener(view -> startActivity(new Intent(getActivity(),CreateWorkoutActivity.class)));
-
-
     }
+
+
 }

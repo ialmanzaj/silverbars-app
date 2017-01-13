@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/recycler"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/done_button"
+        android:layout_above="@+id/add"
         android:layout_below="@+id/appbarlayout" />
 
     <Button

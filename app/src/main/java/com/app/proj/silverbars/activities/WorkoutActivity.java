@@ -174,11 +174,11 @@ public class WorkoutActivity extends AppCompatActivity {
         primary_ColumnMuscle = (LinearLayout) findViewById(R.id.column1);
         secundary_ColumnMuscle = (LinearLayout) findViewById(R.id.column2);
 
-        Progress = (LinearLayout) findViewById(R.id.progress_bar_);
+        Progress = (LinearLayout) findViewById(R.id.loading);
 
         error_layout = (LinearLayout) findViewById(R.id.error_layout);
 
-         button_error_reload = (Button) findViewById(R.id.error_reload_workout);
+         button_error_reload = (Button) findViewById(R.id.reload);
 
         enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
         vibration_per_rep = (SwitchCompat) findViewById(R.id.vibration_per_rep);

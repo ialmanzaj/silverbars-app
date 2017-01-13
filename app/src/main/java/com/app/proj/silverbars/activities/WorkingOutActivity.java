@@ -113,15 +113,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private PlaybackState mCurrentPlaybackState;
     private BroadcastReceiver mNetworkStateReceiver;
     private Metadata mMetadata;
-    String Token;
-
-
+    private String Token;
 
     Boolean Music_Spotify = false,play_exercise_audio = false,BUTTON_PAUSE = false,onPause = false;
 
     ArrayList<ExerciseRep> exercisesforRecycler = new ArrayList<>();
-
-
     
 
     private Utilities utilities;
@@ -133,8 +129,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_working_out);
 
-        utilities = new Utilities();
-        
         Intent i = getIntent();
         Bundle b = i.getExtras();
 
@@ -515,145 +509,136 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         totalSet.setText(String.valueOf(TotalSets));
         CurrentSet.setText("0");
 
-        prvLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        prvLayout.setOnClickListener(view -> {
 
-                PauseCountDown();
+            PauseCountDown();
 
-                new MaterialDialog.Builder(WorkingOutActivity.this)
-                        .title("Desea regresar al ejercicio anterior?")
-                        .content("Esta seguro que quiere regresar al ejercicio anterior?")
-                        .titleColor(getResources().getColor(R.color.colorPrimaryText))
-                        .contentColor(getResources().getColor(R.color.colorPrimaryText))
-                        .positiveColor(getResources().getColor(R.color.colorPrimaryText))
-                        .negativeColor(getResources().getColor(R.color.colorPrimaryText))
-                        .backgroundColor(Color.WHITE)
-                        .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
-                            ResumeCountDown();
-
-
-                            if (MAIN_TIMER){
-
-                                recycler.smoothScrollToPosition(y-1);
-                                y--;
-                                CurrentExercise.setText(String.valueOf(y+1));
-                                main_timer.cancel();
-                                Rep_timer_text.setText(String.valueOf(exercisesforRecycler.get(y).getRepetition()));
-
-                                positive.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_positive()));
-                                isometric.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_isometric()));
-                                negative.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_negative()));
-
-                                asignTotalTime(y);
-                                startMainCountDown(totalTime,1,totalTime);
-
-                                if (y == 0){
-
-                                    prvLayout.setVisibility(View.GONE);
-
-                                }
-                                else{
-                                    if(y < elements-1 && exercises_size > 1){
-
-                                       nxtLayout.setVisibility(View.VISIBLE);
-
-                                    }
-                                }
-                                if (pause){
-                                    PauseCountDown();
-                                    PauseMusic();
-                                    
-                                }
-
-                            }
-                    }
-                }).negativeText(getResources().getString(R.string.negative_dialog)).onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
+            new MaterialDialog.Builder(WorkingOutActivity.this)
+                    .title("Desea regresar al ejercicio anterior?")
+                    .content("Esta seguro que quiere regresar al ejercicio anterior?")
+                    .titleColor(getResources().getColor(R.color.colorPrimaryText))
+                    .contentColor(getResources().getColor(R.color.colorPrimaryText))
+                    .positiveColor(getResources().getColor(R.color.colorPrimaryText))
+                    .negativeColor(getResources().getColor(R.color.colorPrimaryText))
+                    .backgroundColor(Color.WHITE)
+                    .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
                         ResumeCountDown();
-
-                    }
-                }).show();
-
-            }
-        });
-
-        nxtLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                PauseCountDown();
-
-                new MaterialDialog.Builder(WorkingOutActivity.this)
-                        .title("Desea pasar al siguiente ejercicio?")
-                        .content("Esta seguro que quiere pasar al siguiente ejercicio?")
-                        .titleColor(getResources().getColor(R.color.colorPrimaryText))
-                        .contentColor(getResources().getColor(R.color.colorPrimaryText))
-                        .positiveColor(getResources().getColor(R.color.colorPrimaryText))
-                        .negativeColor(getResources().getColor(R.color.colorPrimaryText))
-                        .backgroundColor(Color.WHITE)
-                        .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            dialog.dismiss();
-
-
-                        if (!BUTTON_PAUSE){
-                            ResumeCountDown();
-                        }
 
 
                         if (MAIN_TIMER){
 
-                            recycler.smoothScrollToPosition(y+1);
-                            y++;
+                            recycler.smoothScrollToPosition(y-1);
+                            y--;
                             CurrentExercise.setText(String.valueOf(y+1));
                             main_timer.cancel();
-
                             Rep_timer_text.setText(String.valueOf(exercisesforRecycler.get(y).getRepetition()));
 
                             positive.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_positive()));
                             isometric.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_isometric()));
                             negative.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_negative()));
 
-
                             asignTotalTime(y);
                             startMainCountDown(totalTime,1,totalTime);
 
-                            if (y == elements-1){
-                                nxtLayout.setVisibility(View.GONE);
-                            } else{
-                                if (y > 0 && exercises_size > 1){
-                                    prvLayout.setVisibility(View.VISIBLE);
+                            if (y == 0){
+
+                                prvLayout.setVisibility(View.GONE);
+
+                            }
+                            else{
+                                if(y < elements-1 && exercises_size > 1){
+
+                                   nxtLayout.setVisibility(View.VISIBLE);
+
                                 }
                             }
-
                             if (pause){
                                 PauseCountDown();
                                 PauseMusic();
+
                             }
 
-
                         }
+                }
+            }).negativeText(getResources().getString(R.string.negative_dialog)).onNegative(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    dialog.dismiss();
+
+                    ResumeCountDown();
+
+                }
+            }).show();
+
+        });
+
+        nxtLayout.setOnClickListener(view -> {
+
+            PauseCountDown();
+
+            new MaterialDialog.Builder(WorkingOutActivity.this)
+                    .title("Desea pasar al siguiente ejercicio?")
+                    .content("Esta seguro que quiere pasar al siguiente ejercicio?")
+                    .titleColor(getResources().getColor(R.color.colorPrimaryText))
+                    .contentColor(getResources().getColor(R.color.colorPrimaryText))
+                    .positiveColor(getResources().getColor(R.color.colorPrimaryText))
+                    .negativeColor(getResources().getColor(R.color.colorPrimaryText))
+                    .backgroundColor(Color.WHITE)
+                    .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
+                @Override
+                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+
+
+                    if (!BUTTON_PAUSE){
+                        ResumeCountDown();
                     }
-                }).negativeText(getResources().getString(R.string.negative_dialog)).onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
-                            dialog.dismiss();
-                            ResumeCountDown();
+
+                    if (MAIN_TIMER){
+
+                        recycler.smoothScrollToPosition(y+1);
+                        y++;
+                        CurrentExercise.setText(String.valueOf(y+1));
+                        main_timer.cancel();
+
+                        Rep_timer_text.setText(String.valueOf(exercisesforRecycler.get(y).getRepetition()));
+
+                        positive.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_positive()));
+                        isometric.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_isometric()));
+                        negative.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_negative()));
+
+
+                        asignTotalTime(y);
+                        startMainCountDown(totalTime,1,totalTime);
+
+                        if (y == elements-1){
+                            nxtLayout.setVisibility(View.GONE);
+                        } else{
+                            if (y > 0 && exercises_size > 1){
+                                prvLayout.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                        if (pause){
+                            PauseCountDown();
+                            PauseMusic();
+                        }
 
 
                     }
-                }).show();
+                }
+            }).negativeText(getResources().getString(R.string.negative_dialog)).onNegative((dialog, which) -> {
 
-            }
+                    dialog.dismiss();
+                    ResumeCountDown();
+
+
+            }).show();
+
         });
 
         // music controls
@@ -685,15 +670,14 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             Log.v(TAG, (String) song_name.getText());
 
             mp = MediaPlayer.create(getApplicationContext(),u);
+
+
             btPlay.setVisibility(View.GONE);
             btPause.setVisibility(View.VISIBLE);
             final int playlist_size = playlist.size();
-            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    playMusic(playlist_size);
-                }
-            });
+
+
+            mp.setOnCompletionListener(mediaPlayer -> playMusic(playlist_size));
 
         } else if (spotify_playlist != null && Token != null){
             Log.v(TAG,"musica spotify");
@@ -738,10 +722,11 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     
     private void showRestModal(int rest_time){
+        //Log.v(TAG,"Descanso: Empezo");
+
         nxtLayout.setEnabled(false);
         prvLayout.setEnabled(false);
 
-        Log.v(TAG,"Descanso: Empezo");
         main_timer.cancel();
         rest = true;
 
@@ -754,7 +739,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     
     private void startRestTimer(int actualrest){
-        Log.d(TAG, "Timer descanso: activado: "+actualrest);
+        //Log.d(TAG, "Timer descanso: activado: "+actualrest);
         RestCounter_text.setText(String.valueOf(actualRest));
 
         int totalsecs = (actualrest + 5) * 1000;
@@ -777,7 +762,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     private void startMainCountDown(int seconds,int interval, int time_aux){
         if (!BUTTON_PAUSE && !rest){
-            Log.d(TAG,"Main CountDown: activado");
+            //Log.d(TAG,"Main CountDown: activado");
 
             int totalsecs= seconds * 1000;
             int sec_interval= interval * 1000 ;
@@ -893,8 +878,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void PauseCountDown(){
-        Log.v(TAG,"PauseCountDown: activado");
-        Log.v(TAG,"rest flag: "+rest);
+        //Log.v(TAG,"PauseCountDown: activado");
+        //Log.v(TAG,"rest flag: "+rest);
         pause = true;
 
         if (MAIN_TIMER && main_timer!=null){
@@ -905,7 +890,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
             }else {
 
-                Log.v(TAG,"Pausar rest: activado");
+                //Log.v(TAG,"Pausar rest: activado");
                 ActualTimeRest = Format_Time_Rest;
                 restTimer.cancel();
             }
@@ -1109,7 +1094,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private void ScreenOff(){getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);}
 
     private void configPlayerSpotify(String token){
-
         if (mPlayer == null) {
             Config playerConfig = new Config(getApplicationContext(), token, CLIENT_ID);
 

@@ -13,11 +13,11 @@ import com.spotify.sdk.android.player.PlayerEvent;
 
 public class WorkingOutPresenter extends BasePresenter implements Player.NotificationCallback, ConnectionStateCallback {
 
-
-
     private static final String TAG = WorkingOutPresenter.class.getSimpleName();
 
+    public WorkingOutPresenter(){
 
+    }
 
     @Override
     public void onStart() {

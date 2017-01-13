@@ -38,7 +38,7 @@ public class ProgressionActivity extends AppCompatActivity implements Progressio
     @BindView(R.id.webview) WebView mMusclesWebView;
     @BindView(R.id.content) LinearLayout progression_content_layout;
     @BindView(R.id.date) CustomDateView customDateView;
-    @BindView(R.id.toolbar_) Toolbar mToolbar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.appbar) AppBarLayout appBarLayout;
 
     @BindView(R.id.main_content) NestedScrollView nestedScrollView;
@@ -53,30 +53,33 @@ public class ProgressionActivity extends AppCompatActivity implements Progressio
         setContentView(R.layout.activity_progression);
 
 
-        setSupportActionBar(mToolbar);
+        setupToolbar();
 
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getResources().getString(R.string.progression_));
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {finish();}
-            });
 
 
         appBarLayout.setExpanded(false, true);
-
-
 
         customDateView.setNameDay("Sun");
         customDateView.setNumberDay("2");
 
 
         //getProgressionAPI();
-
-
+        
     }
 
+    private void setupToolbar(){
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.progression_));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {finish();}
+        });
+    }
+    
+    
+    
     @Override
     public void getMusclesProgresions(List<MuscleProgression> progressions) {
 
@@ -98,6 +101,16 @@ public class ProgressionActivity extends AppCompatActivity implements Progressio
         }
 
         getMusclePorcentaje(progressions);
+    }
+
+    @Override
+    public void displayNetworkError() {
+
+    }
+
+    @Override
+    public void displayServerError() {
+
     }
 
     private void getMusclePorcentaje(List<MuscleProgression> muscles){
@@ -180,13 +193,5 @@ public class ProgressionActivity extends AppCompatActivity implements Progressio
 
 
 
-    @Override
-    public void displayNetworkError() {
 
-    }
-
-    @Override
-    public void displayServerError() {
-
-    }
 }

@@ -10,5 +10,5 @@ import java.util.List;
 
 public interface MainWorkoutsView extends BaseView {
 
-    void getWorkouts(List<Workout> workouts);
+    void displayWorkouts(List<Workout> workouts);
 }

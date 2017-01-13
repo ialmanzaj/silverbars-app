@@ -29,7 +29,7 @@ public interface MainService {
     @Authenticated({R.string.authentication_ACCOUNT,
             R.string.authentication_TOKEN})
     @GET("v1/exercises/")
-    Call<Exercise[]> getAllExercises();
+    Call<List<Exercise>> getExercises();
 
     @Authenticated({R.string.authentication_ACCOUNT,
             R.string.authentication_TOKEN})

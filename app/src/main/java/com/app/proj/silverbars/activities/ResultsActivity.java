@@ -31,9 +31,7 @@ public class ResultsActivity extends AppCompatActivity {
 
     private static final String TAG = ResultsActivity.class.getSimpleName();
 
-
-
-    @BindView(R.id.toolbar) Toolbar myToolbar;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     @BindView(R.id.save) Button mSaveResultsButton;
     @BindView(R.id.webview) WebView webView;
@@ -63,25 +61,8 @@ public class ResultsActivity extends AppCompatActivity {
         mExercises = b.getParcelableArrayList("exercises");
 
 
-        setSupportActionBar(myToolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getResources().getString(R.string.results));
-
-
-
-        TabHost Tab_layout = (TabHost) findViewById(R.id.tabHost2);
-        Tab_layout.setup();
-
-        TabHost.TabSpec skills = Tab_layout.newTabSpec(getResources().getString(R.string.skills));
-        TabHost.TabSpec muscles = Tab_layout.newTabSpec(getResources().getString(R.string.tab_muscles));
-
-        muscles.setIndicator(getResources().getString(R.string.tab_muscles));
-        muscles.setContent(R.id.muscles);
-
-        skills.setIndicator(getResources().getString(R.string.skills));
-        skills.setContent(R.id.skills);
-
-        Tab_layout.addTab(muscles);
-        Tab_layout.addTab(skills);
 
 
 
@@ -136,6 +117,25 @@ public class ResultsActivity extends AppCompatActivity {
             setTypes(mTypeExercises);
         }
     }
+    
+    
+    private void setupTabs(){
+        TabHost Tab_layout = (TabHost) findViewById(R.id.tabHost2);
+        Tab_layout.setup();
+
+        TabHost.TabSpec skills = Tab_layout.newTabSpec(getResources().getString(R.string.skills));
+        TabHost.TabSpec muscles = Tab_layout.newTabSpec(getResources().getString(R.string.tab_muscles));
+
+        muscles.setIndicator(getResources().getString(R.string.tab_muscles));
+        muscles.setContent(R.id.muscles);
+
+        skills.setIndicator(getResources().getString(R.string.skills));
+        skills.setContent(R.id.skills);
+
+        Tab_layout.addTab(muscles);
+        Tab_layout.addTab(skills);
+    }
+    
 
     private void getCountTimes(List<String> muscles){
 

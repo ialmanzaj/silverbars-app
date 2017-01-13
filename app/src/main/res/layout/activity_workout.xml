@@ -384,7 +384,7 @@
             android:layout_height="wrap_content" />
 
         <Button
-            android:id="@+id/error_reload_workout"
+            android:id="@+id/reload"
             android:layout_marginTop="10dp"
             android:paddingStart="25dp"
             android:paddingEnd="25dp"
@@ -400,7 +400,7 @@
         android:background="@color/white"
         android:gravity="center_horizontal|center_vertical"
         android:visibility="gone"
-        android:id="@+id/progress_bar_"
+        android:id="@+id/loading"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

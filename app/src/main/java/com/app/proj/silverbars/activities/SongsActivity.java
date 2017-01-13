@@ -46,7 +46,7 @@ public class SongsActivity extends AppCompatActivity {
         utilities = new Utilities();
 
 
-        ListMusic = (ListView)findViewById(R.id.lvPlaylist);
+        ListMusic = (ListView)findViewById(R.id.music_selection);
 
         ArrayList<File> mySongs = findSongs(Environment.getExternalStorageDirectory());
 

@@ -69,7 +69,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
     @BindView(R.id.error_layout) LinearLayout mErrorView;
     @BindView(R.id.content_info) LinearLayout contentView;
 
-    @BindView(R.id.error_reload_workout) Button button_error_reload;
+    @BindView(R.id.reload) Button button_error_reload;
     @BindView(R.id.toolbar) Toolbar toolbar;
 
     @BindView(R.id.Next) Button nextButton;
@@ -101,28 +101,11 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
         setContentView(R.layout.activity_create_workout);
 
 
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getResources().getString(R.string.text_create_workout));
-
-
-
-        toolbar.setNavigationIcon(R.drawable.ic_clear_white_24px);
-
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    finish();
-                }
-        });
-
+        setupToolbar();
 
         ScrollView scrollView = (ScrollView) findViewById(R.id.muscles_);
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {scrollView.setFillViewport(true);}
-
 
 
         button_error_reload.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +120,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
 
             }
         });
-
 
 
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -166,8 +148,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
         });
 
 
-
-
         addExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,15 +168,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
         });
 
 
-        list.setLayoutManager(new LinearLayoutManager(this));
-
-        adapter = new ExercisesSelectedAdapter(this,this);
-        list.setAdapter(adapter);
-
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
-        mItemTouchHelper  = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(list);
-
+        setupAdapter();
 
         setupTabs();
 
@@ -205,6 +177,33 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
 
     }//  close create workout
 
+
+
+    private void setupAdapter(){
+        list.setLayoutManager(new LinearLayoutManager(this));
+
+        adapter = new ExercisesSelectedAdapter(this,this);
+        list.setAdapter(adapter);
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        mItemTouchHelper  = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(list);
+    }
+
+    private void setupToolbar(){
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.text_create_workout));
+
+        toolbar.setNavigationIcon(R.drawable.ic_clear_white_24px);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+    }
 
     private void setupTabs(){
 
@@ -222,12 +221,8 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
 
         tabHost2.addTab(rutina);
         tabHost2.addTab(muscles);
-
     }
 
-    private void setExercisesSelected(final List<String> new_exercises){
-
-    }
 
     private List<ExerciseRep> findExerciseByName(List<String> exercises_names){
         //Log.v(TAG,"exercise names:"+exercises_names);
@@ -330,18 +325,20 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 ) {
+
+
+        if (requestCode == 1) {
+
             if (resultCode == RESULT_OK && data != null){
                     if (data.hasExtra("exercises")) {
                         exercises_id = data.getStringArrayListExtra("exercises");
 
                         if (exercises_id.size() > 0){
                             setExercisesSelected(exercises_id);
-
                         }
                     }
-
             }
+
 
         }
 
@@ -487,22 +484,20 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
         list.setVisibility(View.VISIBLE);
     }
 
-
     private void onErrorViewOn(){
         mErrorView.setVisibility(View.VISIBLE);
-        ProgressView.setVisibility(View.GONE);
     }
+
     private void onErrorViewOff(){
         mErrorView.setVisibility(View.GONE);
 
     }
+
     private void onProgressOn(){
-        mErrorView.setVisibility(View.GONE);
         ProgressView.setVisibility(View.VISIBLE);
     }
 
     private void onProgressOff(){
-        mErrorView.setVisibility(View.GONE);
         ProgressView.setVisibility(View.GONE);
     }
 

@@ -31,7 +31,6 @@ public class ExercisesAdapter extends RecyclerView.Adapter<ExercisesAdapter.AllE
 
     private Context mContext;
 
-
     private List<Exercise> mExercises = new ArrayList<>();
 
     public static SparseBooleanArray selectedItems = new SparseBooleanArray();
@@ -48,8 +47,6 @@ public class ExercisesAdapter extends RecyclerView.Adapter<ExercisesAdapter.AllE
         @BindView(R.id.unchecked) ImageView unchecked;
         @BindView(R.id.checked) ImageView checked;
         @BindView(R.id.imagen) SimpleDraweeView imagen;
-
-
 
         public AllExercisesViewHolder(View itemView) {
             super(itemView);

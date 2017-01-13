@@ -7,9 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.app.proj.silverbars.MainService;
 import com.app.proj.silverbars.R;
-import com.app.proj.silverbars.ServiceGenerator;
 import com.app.proj.silverbars.adapters.WorkoutsAdapter;
 import com.app.proj.silverbars.models.Workout;
 import com.app.proj.silverbars.presenters.BasePresenter;
@@ -30,12 +28,7 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
     private static final String TAG = MainWorkoutsFragment.class.getSimpleName();
 
-    private MainService service = ServiceGenerator.createService(MainService.class);
-
-
     MainWorkoutsPresenter mMainWorkoutsPresenter;
-
-
 
 
     @BindView(R.id.list) TwoWayView list;
@@ -43,14 +36,9 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
     @BindView(R.id.progress_bar) ProgressBar progressBar;
 
 
-
-
-    List<Workout> mWorkouts  = new ArrayList<>();
     private WorkoutsAdapter adapter;
 
-    public String muscleData = "ALL";
-    private boolean opened;
-
+    public String mMuscleSelected = "ALL";
 
 
     @Override
@@ -64,14 +52,24 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
     }
 
 
+    @Override
+    public void injectDependencies() {
+        super.injectDependencies();
+        
+        
+        
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
 
-        muscleData = getArguments().getString("Muscle");
-        getWorkoutsData(muscleData);
+        mMuscleSelected = getArguments().getString("Muscle");
+
+
+        //get my workouts from api
+        mMainWorkoutsPresenter.getMyWorkout();
 
     }
 
@@ -81,82 +79,43 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        if (this.isAdded()){
+            adapter = new WorkoutsAdapter(getActivity());
+            list.setAdapter(adapter);
+        }
+
+
 
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-    }
 
 
 
-    private void getWorkoutsData(String muscle){
-        muscleData = muscle;
-
-        if (!swipeContainer.isRefreshing()){
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-
-    }
-
-
-    private void putItemsInAdapter(List<Workout> workouts){
-        adapter = new WorkoutsAdapter(getActivity(),workouts);
-        list.setAdapter(adapter);
-    }
-
-
-    public void filterWorkouts(String muscle){
-        list.swapAdapter(adapter,false);
-
-
-        if(Objects.equals(muscle, "ALL")) {
-
-            adapter.setWorkouts(mWorkouts);
-
-        } else {
-
-            List<Workout> mWorkoutFiltered = new ArrayList<>();
-
-            for (Workout workout: mWorkouts){
-                String main_muscle = workout.getMainMuscle();
-                if(Objects.equals(muscle, main_muscle)){
-                    mWorkoutFiltered.add(workout);
-                }
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                fetchTimelineAsync();
             }
+        });
 
-            adapter.setWorkouts(mWorkoutFiltered);
-        }
+    }
 
-
-        adapter.notifyDataSetChanged();
-
+    private void fetchTimelineAsync() {
+        //get my workouts from api
+        mMainWorkoutsPresenter.getMyWorkout();
     }
 
 
     @Override
-    public void getWorkouts(List<Workout> workouts) {
-        mWorkouts = workouts;
-
-        if (adapter != null){
-
-            if (adapter.getItemCount() != mWorkouts.size()){
-
-
-            }
-
-        }else {
-
-            putItemsInAdapter(mWorkouts);
-        }
-
-        swipeContainer.setRefreshing(false);
+    public void displayWorkouts(List<Workout> workouts) {
+        setWorkoutsInAdapter(workouts);
     }
-
-
-
 
     @Override
     public void displayNetworkError() {
@@ -167,4 +126,39 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
     public void displayServerError() {
 
     }
+
+
+    private void setWorkoutsInAdapter(List<Workout> workouts){
+        adapter.setWorkouts(filterWorkouts(mMuscleSelected,workouts));
+    }
+
+
+
+    public List<Workout> filterWorkouts(String muscle,List<Workout> workouts){
+        adapter.clear();
+        
+        if(Objects.equals(muscle, "ALL")) {
+
+            return workouts;
+
+        } else {
+
+            List<Workout> mWorkoutFiltered = new ArrayList<>();
+
+            for (Workout workout: workouts){
+                String main_muscle = workout.getMainMuscle();
+                if(Objects.equals(muscle, main_muscle)){
+                    mWorkoutFiltered.add(workout);
+                }
+            }
+
+            return mWorkoutFiltered;
+
+        }
+
+
+    }
+
+
+
 }

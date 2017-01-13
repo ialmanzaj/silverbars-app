@@ -2,15 +2,11 @@ package com.app.proj.silverbars.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.net.Uri;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -19,11 +15,16 @@ import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.activities.WorkoutActivity;
 import com.app.proj.silverbars.models.ExerciseRep;
 import com.app.proj.silverbars.models.Workout;
+import com.app.proj.silverbars.utils.Utilities;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
@@ -39,27 +40,29 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
     private Context context;
     private List<Workout> workouts;
 
-    public WorkoutsAdapter(Context context, List<Workout> workouts) {
+    private Utilities utilities;
+
+    public WorkoutsAdapter(Context context) {
         this.context = context;
-        this.workouts = workouts;
+        this.workouts = new ArrayList<>();
+        utilities = new Utilities();
     }
 
 
     public class WorkoutHolder extends RecyclerView.ViewHolder {
 
-        FrameLayout layout;
-        TextView text;
-        Button btn;
-        SimpleDraweeView img;
+        @BindView(R.id.layout) FrameLayout layout;
+        @BindView(R.id.text) TextView text;
+        @BindView(R.id.btn)Button btn;
+        @BindView(R.id.img)SimpleDraweeView img;
 
         public WorkoutHolder(View itemview) {
             super(itemview);
 
-            img = (SimpleDraweeView) itemview.findViewById(R.id.img);
-            layout = (CardView) itemview.findViewById(R.id.layout);
-            text = (TextView)  itemview.findViewById(R.id.text);
-            btn  = (Button)    itemview.findViewById(R.id.btn);
+            //binding views
+            ButterKnife.bind(this,itemView);
         }
+
 
         public void setButtonListener(){
             btn.setOnClickListener(view -> {
@@ -96,7 +99,9 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
     @Override
     public void onBindViewHolder(WorkoutHolder viewHolder, int position) {
 
-        int height = containerDimensions(context);
+        int height = utilities.containerDimensionsHeight(context);
+
+
         viewHolder.layout.getLayoutParams().height = height / 3;
 
 
@@ -125,21 +130,22 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
     }
 
 
-    public static int containerDimensions(Context context) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int height = size.y;
-        return height;
-    }
-
-
     public void setWorkouts(List<Workout> workouts){
-        this.workouts = workouts;
+        this.workouts.addAll(workouts);
+        notifyDataSetChanged();
     }
+
 
     public List<Workout> getWorkouts() {
         return workouts;
     }
+
+
+    public void clear(){
+        workouts.clear();
+        notifyDataSetChanged();
+    }
+
+
+
 }
