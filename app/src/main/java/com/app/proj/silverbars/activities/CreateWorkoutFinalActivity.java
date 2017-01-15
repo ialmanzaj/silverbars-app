@@ -1,6 +1,5 @@
 package com.app.proj.silverbars.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -20,9 +19,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.app.proj.silverbars.MainService;
 import com.app.proj.silverbars.R;
-import com.app.proj.silverbars.ServiceGenerator;
 import com.app.proj.silverbars.adapters.CreateFinalWorkoutExercisesAdapter;
 import com.app.proj.silverbars.utils.Utilities;
 import com.app.proj.silverbars.models.Exercise;
@@ -34,14 +31,10 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class CreateWorkoutFinalActivity extends AppCompatActivity implements CreateWorkoutFinalView{
 
@@ -49,14 +42,14 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Cre
     private static final String TAG = CreateWorkoutFinalActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar)Toolbar toolbar;
-    @BindView(R.id.imgProfile)ImageView imgProfile;
+    @BindView(R.id.img_profile)ImageView imgProfile;
 
-    @BindView(R.id.workoutName)AutoCompleteTextView workoutName;
+    @BindView(R.id.workout_name)AutoCompleteTextView workoutName;
 
-    @BindView(R.id.Save)Button mSaveButton;
+    @BindView(R.id.save)Button mSaveButton;
     @BindView(R.id.list)RecyclerView list;
 
-    @BindView(R.id.Sets) TextView mTotalSets;
+    @BindView(R.id.sets) TextView mTotalSets;
 
 
     private static String MAIN_MUSCLE,LEVEL;

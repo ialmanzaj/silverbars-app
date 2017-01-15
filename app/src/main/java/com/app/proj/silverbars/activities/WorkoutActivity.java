@@ -176,7 +176,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
         Progress = (LinearLayout) findViewById(R.id.loading);
 
-        error_layout = (LinearLayout) findViewById(R.id.error_layout);
+        error_layout = (LinearLayout) findViewById(R.id.error_view);
 
          button_error_reload = (Button) findViewById(R.id.reload);
 
@@ -221,14 +221,14 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
         
-        list = (RecyclerView) findViewById(R.id.reciclador);
+        list = (RecyclerView) findViewById(R.id.list);
 
         final RelativeLayout selectMusic = (RelativeLayout) findViewById(R.id.SelectMusic);
 
         //TEXTVIEW OF REPS,SETS AND REST
 
         // cantidad de sets
-        Sets = (TextView) findViewById(R.id.Sets);
+        Sets = (TextView) findViewById(R.id.sets);
 
         //descanso entre ejercicio
         RestbyExercise = (TextView) findViewById(R.id.RestbyExercise);

@@ -41,7 +41,7 @@ public class SpotifyActivity extends AppCompatActivity  {
 
     @BindView(R.id.playlists) LinearLayout playlists_layout;
 
-    @BindView(R.id.error_layout)LinearLayout mErrorView;
+    @BindView(R.id.error_view)LinearLayout mErrorView;
     @BindView(R.id.loading)LinearLayout mLoadingView;
     @BindView(R.id.reload) Button mReloadButton;
 

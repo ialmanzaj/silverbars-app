@@ -23,7 +23,7 @@
 
             <Button
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:id="@+id/Next"
+                android:id="@+id/next"
                 android:text="@string/next"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
@@ -72,7 +72,7 @@
                         <WebView
                             android:layout_weight="1"
                             android:background="@color/white"
-                            android:id="@+id/WebView_create"
+                            android:id="@+id/webview"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
                         </WebView>
@@ -161,7 +161,7 @@
                         <Button
                             android:visibility="gone"
                             android:theme="@style/ButtonRed"
-                            android:id="@+id/reAdd"
+                            android:id="@+id/readd"
                             android:text="@string/add_more"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -188,7 +188,7 @@
         android:background="@color/white"
         android:gravity="center_vertical"
         android:visibility="gone"
-        android:id="@+id/error_layout"
+        android:id="@+id/error_view"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

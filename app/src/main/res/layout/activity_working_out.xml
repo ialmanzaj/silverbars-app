@@ -26,7 +26,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/reciclador"
+                    android:id="@+id/list"
                     android:orientation="horizontal" />
 
             </RelativeLayout>
@@ -51,7 +51,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/zero"
-                                android:id="@+id/Rep_timer_text"
+                                android:id="@+id/repetition_timer"
                                 android:textColor="@color/black"
                                 android:textSize="95sp"
                                 android:textStyle="bold"
@@ -175,7 +175,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/zero"
-                                android:id="@+id/CurrentExercise"
+                                android:id="@+id/current_exercise"
                                 android:gravity="center"
                                 android:textColor="@color/secondColor"
                                 android:textSize="32sp"
@@ -194,7 +194,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/zero"
-                                android:id="@+id/TotalExercise"
+                                android:id="@+id/total_exercises"
                                 android:gravity="center"
                                 android:textColor="@color/secondColor"
                                 android:textSize="32sp"
@@ -240,7 +240,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:text="@string/zero"
-                                android:id="@+id/CurrentSet"
+                                android:id="@+id/current_set"
                                 android:gravity="center"
                                 android:textColor="@color/colorSecondary"
                                 android:textSize="32sp" />
@@ -306,7 +306,7 @@
                             android:layout_centerVertical="true"
                             android:layout_alignParentStart="true"
 
-                            android:id="@+id/Endbutton"
+                            android:id="@+id/finish_workout"
                             android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -318,7 +318,7 @@
                             android:layout_centerVertical="true"
                             android:layout_alignParentEnd="true"
 
-                            android:id="@+id/PlayButton"
+                            android:id="@+id/play_workout"
                             android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -330,7 +330,7 @@
                             android:layout_centerVertical="true"
                             android:layout_centerHorizontal="true"
 
-                            android:id="@+id/PauseButton"
+                            android:id="@+id/pause_workout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_pause_circle_filled_black_36px"
@@ -450,7 +450,7 @@
                             <ImageButton
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/btnPlay"
+                                android:id="@+id/play_music"
                                 android:src="@drawable/ic_play_circle_outline_white_36px"
                                 android:background="#00ffffff"
                                 android:contentDescription="@string/resume_workout_text" />
@@ -458,7 +458,7 @@
                             <ImageButton
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:id="@+id/btnPause"
+                                android:id="@+id/pause_music"
                                 android:src="@drawable/ic_pause_circle_outline_white_36px"
                                 android:background="#00ffffff"
                                 android:visibility="gone"
@@ -475,7 +475,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#c81f1f1f"
-            android:id="@+id/ModalLayout">
+            android:id="@+id/modal_overlay">
 
             <TextView
                 android:layout_marginTop="-60dp"

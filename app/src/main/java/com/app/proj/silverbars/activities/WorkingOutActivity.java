@@ -3,11 +3,8 @@ package com.app.proj.silverbars.activities;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -33,181 +30,188 @@ import com.app.proj.silverbars.utils.RecyclerViewTouch;
 import com.app.proj.silverbars.utils.Utilities;
 import com.app.proj.silverbars.adapters.ExerciseWorkingOutAdapter;
 import com.app.proj.silverbars.models.ExerciseRep;
-import com.spotify.sdk.android.player.Config;
-import com.spotify.sdk.android.player.ConnectionStateCallback;
-import com.spotify.sdk.android.player.Connectivity;
-import com.spotify.sdk.android.player.Error;
+import com.app.proj.silverbars.viewsets.WorkingOutView;
 import com.spotify.sdk.android.player.Metadata;
 import com.spotify.sdk.android.player.PlaybackState;
-import com.spotify.sdk.android.player.Player;
-import com.spotify.sdk.android.player.PlayerEvent;
-import com.spotify.sdk.android.player.Spotify;
 import com.spotify.sdk.android.player.SpotifyPlayer;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import static com.app.proj.silverbars.Constants.CLIENT_ID;
+import butterknife.BindView;
 
 
-public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener{
+public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener,WorkingOutView{
 
     private static final String TAG = WorkingOutActivity.class.getSimpleName();
 
 
-    private ImageButton btPlay;
-    private ImageButton btPause;
+    @BindView(R.id.PlayerLayout) LinearLayout mPlayerLayout;
 
-    private TextView Rep_timer_text;
-    private TextView song_name, artist_name;
-    private TextView CurrentSet;
-    private TextView CurrentExercise;
-    private TextView RestCounter_text;
-    private TextView headerText;
+    @BindView(R.id.play_music) ImageButton mPlaybutton;
+    @BindView(R.id.pause_music) ImageButton mPausebutton;
 
-    private LinearLayout ModalLayout;
+    @BindView(R.id.repetition_timer) TextView Rep_timer_text;
+    
+    @BindView(R.id.song_name) TextView mSongName;
+    @BindView(R.id.artist_name) TextView mArtistName;
+    
+    @BindView(R.id.current_set) TextView CurrentSet;
+    @BindView(R.id.current_exercise) TextView CurrentExercise;
+    
+    @BindView(R.id.RestCounter_text) TextView RestCounter_text;
+    @BindView(R.id.headerText) TextView headerText;
 
-    ImageButton pause_workout_button;
-    ImageButton finish_workout_button;
-    ImageButton play_workout_button;
+    @BindView(R.id.modal_overlay) LinearLayout mModalOverlayView;
 
-    TextView positive,negative,isometric;
+    @BindView(R.id.pause_workout) ImageButton mPauseWorkoutButton;
+    @BindView(R.id.finish_workout) ImageButton mFinishWorkoutButton;
+    @BindView(R.id.play_workout) ImageButton mPlayWorkoutButton;
 
-    ImageButton prvLayout,nxtLayout;
+    @BindView(R.id.positive) TextView mPositiveText;
+    @BindView(R.id.negative) TextView mNegativeText;
+    @BindView(R.id.isometric) TextView mIsometricText;
 
-    LinearLayout playerLayout;
+    @BindView(R.id.prvExercise) ImageButton prvLayout;
+    @BindView(R.id.nxtExercise) ImageButton nxtLayout;
 
-    private static MediaPlayer mp;
-
+    @BindView(R.id.list) RecyclerView list;
+    
+    @BindView(R.id.total_exercises) TextView mTotalExercises;
+    
 
     ArrayList<File> mySongsList;
     ArrayList<File> playlist;
-
-
-    private Uri u;
-    private int x = 0, y=0, elements = 0, ActualTimeMain=0, tempo = 0, actualReps, Format_Time,Format_Time_Rest,ActualTimeRest=0;
+    
+    private Uri url_music;
+    private int position = 0, y=0, elements = 0, ActualTimeMain=0, tempo = 0, actualReps, Format_Time,Format_Time_Rest,ActualTimeRest=0;
     private int totalTime;
-
 
     private CountDownTimer main_timer, restTimer, startTimer;
 
-
-
     private boolean Songs_from_Phone = false, finish = false, INITIAL_TIMER = false,main = false,MAIN_TIMER = false;
-    private RecyclerView recycler;
+    
     private int TotalSets = 0, ActualSets = 0, Time_aux = 0,actualRest = 0,actual_start_time = 0;
-
-    private MediaPlayer media;
-
+    
     private boolean VibrationPerSet = false,VibrationPerRep = false, pause=false,rest = false;
 
     private int exercises_size = 0;
+    
     private int RestByExercise = 0,RestBySet = 0;
-
-
+    
     String spotify_playlist;
 
-
-    private SpotifyPlayer mPlayer;
-    private PlaybackState mCurrentPlaybackState;
-    private BroadcastReceiver mNetworkStateReceiver;
-    private Metadata mMetadata;
-    private String Token;
+    private String mSpotifyToken;
 
     Boolean Music_Spotify = false,play_exercise_audio = false,BUTTON_PAUSE = false,onPause = false;
 
-    ArrayList<ExerciseRep> exercisesforRecycler = new ArrayList<>();
+    ArrayList<ExerciseRep> exercises = new ArrayList<>();
     
-
     private Utilities utilities;
 
+    ExerciseWorkingOutAdapter adapter;
 
+
+    private void getExtras(Bundle extras){
+        exercises = extras.getParcelableArrayList("exercises");
+        RestByExercise =  extras.getInt("RestByExercise");
+        RestBySet = extras.getInt("RestBySet");
+        VibrationPerRep = extras.getBoolean("VibrationPerRep");
+        VibrationPerSet =  extras.getBoolean("VibrationPerSet");
+        play_exercise_audio = extras.getBoolean("play_exercise_audio");
+        TotalSets = extras.getInt("Sets");
+        mySongsList = (ArrayList) extras.getParcelableArrayList("songlist");
+        spotify_playlist = extras.getString("playlist_spotify");
+        mSpotifyToken = extras.getString("token");
+        String[] song_names = extras.getStringArray("songs");
+    }
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_working_out);
 
-        Intent i = getIntent();
-        Bundle b = i.getExtras();
 
-        exercisesforRecycler = b.getParcelableArrayList("exercises");
-        RestByExercise =  b.getInt("RestByExercise");
-        RestBySet = b.getInt("RestBySet");
-        VibrationPerRep = b.getBoolean("VibrationPerRep");
-        VibrationPerSet =  b.getBoolean("VibrationPerSet");
-        play_exercise_audio = b.getBoolean("play_exercise_audio");
-        TotalSets = b.getInt("Sets");
-        mySongsList = (ArrayList) b.getParcelableArrayList("songlist");
-        spotify_playlist = b.getString("playlist_spotify");
-        Token = b.getString("token");
+        Bundle extras = getIntent().getExtras();
+
+
+        getExtras(extras);
+
+
+
 
 
         // inicialize tempo
-        tempo = exercisesforRecycler.get(y).getTempo_positive() + exercisesforRecycler.get(y).getTempo_isometric() + exercisesforRecycler.get(y).getTempo_negative();
+        tempo = exercises.get(y).getTempo_positive() 
+                + exercises.get(y).getTempo_isometric() 
+                + exercises.get(y).getTempo_negative();
 
+        
+        
+        
         // spotify inicialization
-        if (spotify_playlist != null && Token != null){
-            configPlayerSpotify(Token);
+        if (spotify_playlist != null && mSpotifyToken != null){
+            configPlayerSpotify(mSpotifyToken);
         }
 
 
+        elements = adapter.getItemCount();
+        CurrentExercise.setText("1");
+
+        mTotalExercises.setText(String.valueOf(elements));
+        totalSet.setText(String.valueOf(TotalSets));
+
+        totalSet.setText(String.valueOf(TotalSets));
+        CurrentSet.setText("0");
+
+        
+        list.addOnItemTouchListener(new RecyclerViewTouch()); // disables scolling
+
+        // list en linear
+        RecyclerView.LayoutManager lManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        list.setLayoutManager(lManager);
+
+
+        // Crear un nuevo adaptador
+        adapter = new ExerciseWorkingOutAdapter(this,exercises);
+        list.setAdapter(adapter);
+
+        
+        
         // Inicialize variables
-        String[] song_names = b.getStringArray("songs");
-        exercises_size = exercisesforRecycler.size();
+        
+        
+        exercises_size = exercises.size();
         playlist = new ArrayList<>();
 
         // contadores de descanso y repeticiones actuales
-        actualReps = exercisesforRecycler.get(0).getRepetition();
+        actualReps = exercises.get(0).getRepetition();
         actualRest = RestByExercise;
+        
+
+        //positivie,mNegativeText and mIsometricText
+        mPositiveText.setText(String.valueOf(exercises.get(0).getTempo_positive()));
+        mIsometricText.setText(String.valueOf(exercises.get(0).getTempo_isometric()));
+        mNegativeText.setText(String.valueOf(exercises.get(0).getTempo_negative()));
 
 
-        artist_name = (TextView) findViewById(R.id.artist_name);
-        CurrentSet = (TextView) findViewById(R.id.CurrentSet);
-        TextView totalSet = (TextView) findViewById(R.id.TotalSet);
-        CurrentExercise = (TextView) findViewById(R.id.CurrentExercise);
-
-        //tempo text
-        positive = (TextView) findViewById(R.id.positive);
-        isometric = (TextView) findViewById(R.id.isometric);
-        negative = (TextView) findViewById(R.id.negative);
-
-        //positivie,negative and isometric
-        positive.setText(String.valueOf(exercisesforRecycler.get(0).getTempo_positive()));
-        isometric.setText(String.valueOf(exercisesforRecycler.get(0).getTempo_isometric()));
-        negative.setText(String.valueOf(exercisesforRecycler.get(0).getTempo_negative()));
-
-        // controls UI
-        prvLayout = (ImageButton) findViewById(R.id.prvExercise);
-        nxtLayout = (ImageButton) findViewById(R.id.nxtExercise);
+        
         nxtLayout.setVisibility(View.VISIBLE);
 
-        // buttons pause and finish workout
-        pause_workout_button = (ImageButton) findViewById(R.id.PauseButton);
-        finish_workout_button = (ImageButton) findViewById(R.id.Endbutton);
-        play_workout_button = (ImageButton) findViewById(R.id.PlayButton);
 
-
-        playerLayout = (LinearLayout) findViewById(R.id.PlayerLayout);
-
-        // Rest modal
-        ModalLayout = (LinearLayout) findViewById(R.id.ModalLayout);
-
-
-        headerText = (TextView) findViewById(R.id.headerText);
-        RestCounter_text = (TextView) findViewById(R.id.RestCounter_text);
-
-        final TextView totalExercise = (TextView) findViewById(R.id.TotalExercise);
-
-        song_name = (TextView) findViewById(R.id.song_name);
-        song_name.setSelected(true);
+        
+        mPlaybutton.setOnClickListener(this);
+        mPausebutton.setOnClickListener(this);
+        
+        mSongName.setSelected(true);
 
         //repetiton text
-        Rep_timer_text = (TextView) findViewById(R.id.Rep_timer_text);
+     
 
         //inicializar rep text
-        Rep_timer_text.setText(String.valueOf(exercisesforRecycler.get(0).getRepetition()));
+        Rep_timer_text.setText(String.valueOf(exercises.get(0).getRepetition()));
 
         Rep_timer_text.addTextChangedListener(new TextWatcher() {
             @Override
@@ -232,7 +236,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             }
                         }
 
-                        recycler.smoothScrollToPosition(y);
+                        list.smoothScrollToPosition(y);
                         CurrentExercise.setText(String.valueOf(y+1));
 
 
@@ -247,7 +251,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                             CurrentSet.setText(String.valueOf(ActualSets));
                             CurrentExercise.setText(String.valueOf("1"));
                             y = 0;
-                            recycler.smoothScrollToPosition(y);
+                            list.smoothScrollToPosition(y);
                             finish = true;
 
                             showRestModal(RestBySet);//descanso por set
@@ -274,7 +278,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             public void afterTextChanged(Editable editable) {}
         });
 
-
         RestCounter_text.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -283,9 +286,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
 
                 if (actual_start_time == 0 && INITIAL_TIMER){
+                    
                     INITIAL_TIMER = false;
                     startTimer.cancel();
-                    Log.v(TAG,"Main timer");
 
                     nxtLayout.setEnabled(true);
                     prvLayout.setEnabled(true);
@@ -296,17 +299,17 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
                     startMainCountDown(totalTime,1,totalTime);
 
-                    if (Songs_from_Phone && MAIN_TIMER){StartMusic();}
+                    if (Songs_from_Phone && MAIN_TIMER){startLocalMusic();}
 
-                    if (spotify_playlist != null && Token != null){
+                    if (spotify_playlist != null && mSpotifyToken != null){
                         startPlaySpotify(spotify_playlist);
-                        PlayerPlay();
+                        onPlayMusicPlayerUI();
                     }
 
-                    ModalLayout.setVisibility(View.GONE);
+                    mModalOverlayView.setVisibility(View.GONE);
 
                 }else if (actualRest == 0 && MAIN_TIMER){
-                    Log.v(TAG,"Descanso: Terminado");
+                    //Log.v(TAG,"Descanso: Terminado");
 
                     nxtLayout.setEnabled(true);
                     prvLayout.setEnabled(true);
@@ -314,18 +317,22 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                     restTimer.cancel();
                     rest = false;
 
-                    playExerciseAudio(exercisesforRecycler.get(y).getExercise().getExercise_audio());
+                    if (play_exercise_audio){
+                        playExerciseAudio(exercises.get(y).getExercise().getExercise_audio());
+                    }
+
+                    
                     asignTotalTime(y);
                     startMainCountDown(totalTime,1,totalTime);
-                    Rep_timer_text.setText(String.valueOf(exercisesforRecycler.get(y).getRepetition()));
+                    Rep_timer_text.setText(String.valueOf(exercises.get(y).getRepetition()));
 
 
-                    positive.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_positive()));
-                    isometric.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_isometric()));
-                    negative.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_negative()));
+                    mPositiveText.setText(String.valueOf(exercises.get(y).getTempo_positive()));
+                    mIsometricText.setText(String.valueOf(exercises.get(y).getTempo_isometric()));
+                    mNegativeText.setText(String.valueOf(exercises.get(y).getTempo_negative()));
 
 
-                    ModalLayout.setVisibility(View.GONE);
+                    mModalOverlayView.setVisibility(View.GONE);
                 }
             }
 
@@ -333,371 +340,279 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             public void afterTextChanged(Editable s) {}
         });
 
-        playerLayout.setOnTouchListener(new OnSwipeTouchListener(this){
+        
+        
+        mPlayerLayout.setOnTouchListener(new OnSwipeTouchListener(this){
+            @Override
             public void onSwipeRight() {
 
-                if (Music_Spotify){
-
-                    if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
-                        mPlayer.skipToPrevious(mOperationCallback);
-
-                    }else {
-
-                        startPlaySpotify(spotify_playlist);
-                        PlayerPlay();
-                    }
-
-
-                } else if (Songs_from_Phone){
-                    
-                    int playlist_size = playlist.size();
-                    if (playlist_size > 1 && (x-1) >= 0 ){
-                        btPlay.setVisibility(View.GONE);
-                        btPause.setVisibility(View.VISIBLE);
-                        mp.stop();
-                        
-                        CancelMusic();
-                        
-                        x = (x-1)%playlist.size();
-                        u = Uri.parse(playlist.get(x).toString());
-
-                        String songName = utilities.getSongName(WorkingOutActivity.this,playlist.get(x));
-                        song_name.setText(utilities.removeLastMp3(songName));
-                        String artist = utilities.SongArtist(WorkingOutActivity.this,playlist.get(x));
-
-                        artist_name.setText(artist);
-                        mp = MediaPlayer.create(getApplicationContext(),u);
-                        
-                        StartMusic();
-                    } else {
-                        btPlay.setVisibility(View.GONE);
-                        btPause.setVisibility(View.VISIBLE);
-                        mp.stop();
-                        CancelMusic();
-                        u = Uri.parse(playlist.get(x).toString());
-                        mp = MediaPlayer.create(getApplicationContext(),u);
-                        StartMusic();
-                    }
-                }
+                onMusicNext();
             }
-
+            @Override
             public void onSwipeLeft() {
-                if (Music_Spotify){
 
-                    if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
-                        mPlayer.skipToNext(mOperationCallback);
-
-                    }else {
-
-                        startPlaySpotify(spotify_playlist);
-                        PlayerPlay();
-                    }
-
-                } else if (Songs_from_Phone) {
-                    int playlist_size = playlist.size();
-                    if (playlist_size > 1 && x + 1 < playlist_size) {
-                        btPlay.setVisibility(View.GONE);
-                        btPause.setVisibility(View.VISIBLE);
-                        mp.stop();
-                        mp.release();
-                        x = (x + 1) % playlist.size();
-                        u = Uri.parse(playlist.get(x).toString());
-
-                        String songName = utilities.getSongName(WorkingOutActivity.this,playlist.get(x));
-
-                        song_name.setText(songName);
-
-                        String artist = utilities.SongArtist(WorkingOutActivity.this,playlist.get(x));
-
-                        artist_name.setText(artist);
-
-                        mp = MediaPlayer.create(getApplicationContext(), u);
-                        mp.start();
-                    } else {
-                        btPlay.setVisibility(View.GONE);
-                        btPause.setVisibility(View.VISIBLE);
-                        mp.stop();
-                        mp.release();
-                        u = Uri.parse(playlist.get(x).toString());
-                        mp = MediaPlayer.create(getApplicationContext(), u);
-                        mp.start();
-                    }
-                }
-            }
-        });
-
-        pause_workout_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (!pause){
-                    
-                    BUTTON_PAUSE = true;
-                    PauseCountDown();
-
-                    pause_workout_button.setVisibility(View.GONE);
-                    play_workout_button.setVisibility(View.VISIBLE);
-                    finish_workout_button.setVisibility(View.VISIBLE);
-
-
-                    PauseMusic();
-                    ScreenOff();
-                }
-
-                Log.v(TAG,"BUTTON PAUSE: "+BUTTON_PAUSE);
-            }
-        });
-
-        play_workout_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (pause){
-                    BUTTON_PAUSE = false;
-
-                    pause_workout_button.setVisibility(View.VISIBLE);
-                    play_workout_button.setVisibility(View.GONE);
-                    finish_workout_button.setVisibility(View.GONE);
-
-                    ScreenOn();
-                    ResumeCountDown();
-                    StartMusic();
-
-                }
+                onMusicPreview();
 
             }
         });
+        
+        
+        mPauseWorkoutButton.setOnClickListener(view -> {
+            Log.v(TAG,"BUTTON PAUSE: "+BUTTON_PAUSE);
 
-        finish_workout_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFinalize();
-            }
+            onPauseWorkout();
+
         });
 
+        mPlayWorkoutButton.setOnClickListener(view -> onPlayWorkout());
+        
+        
+        mFinishWorkoutButton.setOnClickListener(v -> DialogFinalize());
 
-        // Obtener el Recycler
-        recycler = (RecyclerView) findViewById(R.id.reciclador);
-        RecyclerView.OnItemTouchListener disable = new RecyclerViewTouch();
-        recycler.addOnItemTouchListener(disable); // disables scolling
-
-        // recycler en linear
-        RecyclerView.LayoutManager lManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        recycler.setLayoutManager(lManager);
-
-
-        // Crear un nuevo adaptador
-        ExerciseWorkingOutAdapter adapter = new ExerciseWorkingOutAdapter(this,exercisesforRecycler);
-        recycler.setAdapter(adapter);
-
+        
         if (adapter.getItemCount() <= 1){
             prvLayout.setVisibility(View.GONE);
             nxtLayout.setVisibility(View.GONE);
         }
-
-        elements = adapter.getItemCount();
-        CurrentExercise.setText("1");
-
-        totalExercise.setText(String.valueOf(elements));
-        totalSet.setText(String.valueOf(TotalSets));
-
-        totalSet.setText(String.valueOf(TotalSets));
-        CurrentSet.setText("0");
-
+        
         prvLayout.setOnClickListener(view -> {
 
-            PauseCountDown();
-
-            new MaterialDialog.Builder(WorkingOutActivity.this)
-                    .title("Desea regresar al ejercicio anterior?")
-                    .content("Esta seguro que quiere regresar al ejercicio anterior?")
-                    .titleColor(getResources().getColor(R.color.colorPrimaryText))
-                    .contentColor(getResources().getColor(R.color.colorPrimaryText))
-                    .positiveColor(getResources().getColor(R.color.colorPrimaryText))
-                    .negativeColor(getResources().getColor(R.color.colorPrimaryText))
-                    .backgroundColor(Color.WHITE)
-                    .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
-                @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
-                        ResumeCountDown();
-
-
-                        if (MAIN_TIMER){
-
-                            recycler.smoothScrollToPosition(y-1);
-                            y--;
-                            CurrentExercise.setText(String.valueOf(y+1));
-                            main_timer.cancel();
-                            Rep_timer_text.setText(String.valueOf(exercisesforRecycler.get(y).getRepetition()));
-
-                            positive.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_positive()));
-                            isometric.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_isometric()));
-                            negative.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_negative()));
-
-                            asignTotalTime(y);
-                            startMainCountDown(totalTime,1,totalTime);
-
-                            if (y == 0){
-
-                                prvLayout.setVisibility(View.GONE);
-
-                            }
-                            else{
-                                if(y < elements-1 && exercises_size > 1){
-
-                                   nxtLayout.setVisibility(View.VISIBLE);
-
-                                }
-                            }
-                            if (pause){
-                                PauseCountDown();
-                                PauseMusic();
-
-                            }
-
-                        }
-                }
-            }).negativeText(getResources().getString(R.string.negative_dialog)).onNegative(new MaterialDialog.SingleButtonCallback() {
-                @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    dialog.dismiss();
-
-                    ResumeCountDown();
-
-                }
-            }).show();
+            dialogPreviewExercise();
 
         });
 
         nxtLayout.setOnClickListener(view -> {
 
-            PauseCountDown();
-
-            new MaterialDialog.Builder(WorkingOutActivity.this)
-                    .title("Desea pasar al siguiente ejercicio?")
-                    .content("Esta seguro que quiere pasar al siguiente ejercicio?")
-                    .titleColor(getResources().getColor(R.color.colorPrimaryText))
-                    .contentColor(getResources().getColor(R.color.colorPrimaryText))
-                    .positiveColor(getResources().getColor(R.color.colorPrimaryText))
-                    .negativeColor(getResources().getColor(R.color.colorPrimaryText))
-                    .backgroundColor(Color.WHITE)
-                    .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
-                @Override
-                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        dialog.dismiss();
-
-
-                    if (!BUTTON_PAUSE){
-                        ResumeCountDown();
-                    }
-
-
-                    if (MAIN_TIMER){
-
-                        recycler.smoothScrollToPosition(y+1);
-                        y++;
-                        CurrentExercise.setText(String.valueOf(y+1));
-                        main_timer.cancel();
-
-                        Rep_timer_text.setText(String.valueOf(exercisesforRecycler.get(y).getRepetition()));
-
-                        positive.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_positive()));
-                        isometric.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_isometric()));
-                        negative.setText(String.valueOf(exercisesforRecycler.get(y).getTempo_negative()));
-
-
-                        asignTotalTime(y);
-                        startMainCountDown(totalTime,1,totalTime);
-
-                        if (y == elements-1){
-                            nxtLayout.setVisibility(View.GONE);
-                        } else{
-                            if (y > 0 && exercises_size > 1){
-                                prvLayout.setVisibility(View.VISIBLE);
-                            }
-                        }
-
-                        if (pause){
-                            PauseCountDown();
-                            PauseMusic();
-                        }
-
-
-                    }
-                }
-            }).negativeText(getResources().getString(R.string.negative_dialog)).onNegative((dialog, which) -> {
-
-                    dialog.dismiss();
-                    ResumeCountDown();
-
-
-            }).show();
+            dialogNextExercise();
 
         });
 
-        // music controls
-        btPlay = (ImageButton)findViewById(R.id.btnPlay);
-        btPause = (ImageButton)findViewById(R.id.btnPause);
-        btPlay.setOnClickListener(this);
-        btPause.setOnClickListener(this);
 
         if (mySongsList != null && mySongsList.size() > 0 && song_names != null){
 
             Songs_from_Phone = true;
-            for(int j = 0; j < mySongsList.size(); j++){
-                for(int z = 0; z < song_names.length; z++)
-                    if (Objects.equals(song_names[z], utilities.getSongName(this,mySongsList.get(j)))){
-                        z++;
-                        playlist.add(mySongsList.get(j));
-                    }
-            }
+
+            
+            playlist = getPlaylist(song_names,mySongsList);
+            
+
+            String songName = utilities.getSongName(this,playlist.get(position));
+            mSongName.setText(utilities.removeLastMp3(songName));
+
+            String artist = utilities.SongArtist(this,playlist.get(position));
+
+            mArtistName.setText(artist);
+
+            Log.v(TAG, (String) mSongName.getText());
 
 
-            u = Uri.parse(playlist.get(x).toString());
-
-            String songName = utilities.getSongName(this,playlist.get(x));
-            song_name.setText(utilities.removeLastMp3(songName));
-
-            String artist = utilities.SongArtist(WorkingOutActivity.this,playlist.get(x));
-            artist_name.setText(artist);
-
-            Log.v(TAG, (String) song_name.getText());
-
-            mp = MediaPlayer.create(getApplicationContext(),u);
+            mPlaybutton.setVisibility(View.GONE);
+            mPausebutton.setVisibility(View.VISIBLE);
 
 
-            btPlay.setVisibility(View.GONE);
-            btPause.setVisibility(View.VISIBLE);
-            final int playlist_size = playlist.size();
+            url_music = Uri.parse(playlist.get(position).toString());
 
+            mLocalMusicPlayer = MediaPlayer.create(getApplicationContext(),url_music);
+            mLocalMusicPlayer.setOnCompletionListener(mediaPlayer -> setupMusicPlayer(playlist.size()));
 
-            mp.setOnCompletionListener(mediaPlayer -> playMusic(playlist_size));
-
-        } else if (spotify_playlist != null && Token != null){
-            Log.v(TAG,"musica spotify");
-            Music_Spotify = true;
+            
+            
+        
 
         } else {
 
-            playerLayout.setVisibility(View.GONE);
-            song_name.setText(getResources().getString(R.string.no_song));
-            btPlay.setEnabled(false);
-            btPlay.setClickable(false);
-            btPause.setEnabled(false);
-            btPause.setClickable(false);
+            mPlayerLayout.setVisibility(View.GONE);
+            mSongName.setText(getResources().getString(R.string.no_song));
+            mPlaybutton.setEnabled(false);
+            mPlaybutton.setClickable(false);
+            mPausebutton.setEnabled(false);
+            mPausebutton.setClickable(false);
         }
 
         actual_start_time = 5+1;
         startInicialTimer(actual_start_time);
     }
-
-
     
+    
+    private void onPlayWorkout(){
+        if (pause){
+            BUTTON_PAUSE = false;
+
+            mPauseWorkoutButton.setVisibility(View.VISIBLE);
+            mPlayWorkoutButton.setVisibility(View.GONE);
+            mFinishWorkoutButton.setVisibility(View.GONE);
+
+            ScreenOn();
+            ResumeCountDown();
+            startLocalMusic();
+
+        }
+    }
+
+
+    private void onPauseWorkout(){
+
+        if (!pause){
+
+            BUTTON_PAUSE = true;
+            PauseCountDown();
+
+            mPauseWorkoutButton.setVisibility(View.GONE);
+            mPlayWorkoutButton.setVisibility(View.VISIBLE);
+            mFinishWorkoutButton.setVisibility(View.VISIBLE);
+
+
+            pauseLocalMusic();
+            ScreenOff();
+        }
+
+    }
+
+
+
+   
+
+
+    private void dialogNextExercise(){
+
+        PauseCountDown();
+
+        new MaterialDialog.Builder(WorkingOutActivity.this)
+                .title("Desea pasar al siguiente ejercicio?")
+                .content("Esta seguro que quiere pasar al siguiente ejercicio?")
+                .titleColor(getResources().getColor(R.color.colorPrimaryText))
+                .contentColor(getResources().getColor(R.color.colorPrimaryText))
+                .positiveColor(getResources().getColor(R.color.colorPrimaryText))
+                .negativeColor(getResources().getColor(R.color.colorPrimaryText))
+                .backgroundColor(Color.WHITE)
+                .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
+
+
+                if (!BUTTON_PAUSE){
+                    ResumeCountDown();
+                }
+
+
+                if (MAIN_TIMER){
+
+                    list.smoothScrollToPosition(y+1);
+                    y++;
+                    CurrentExercise.setText(String.valueOf(y+1));
+                    main_timer.cancel();
+
+                    Rep_timer_text.setText(String.valueOf(exercises.get(y).getRepetition()));
+
+                    mPositiveText.setText(String.valueOf(exercises.get(y).getTempo_positive()));
+                    mIsometricText.setText(String.valueOf(exercises.get(y).getTempo_isometric()));
+                    mNegativeText.setText(String.valueOf(exercises.get(y).getTempo_negative()));
+
+
+                    asignTotalTime(y);
+                    startMainCountDown(totalTime,1,totalTime);
+
+                    if (y == elements-1){
+                        nxtLayout.setVisibility(View.GONE);
+                    } else{
+                        if (y > 0 && exercises_size > 1){
+                            prvLayout.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    if (pause){
+                        PauseCountDown();
+                        pauseLocalMusic();
+                    }
+
+
+                }
+            }
+        }).negativeText(getResources().getString(R.string.negative_dialog)).onNegative((dialog, which) -> {
+
+            dialog.dismiss();
+            ResumeCountDown();
+
+
+        }).show();
+    }
+
+    private void dialogPreviewExercise(){
+
+        PauseCountDown();
+
+        new MaterialDialog.Builder(WorkingOutActivity.this)
+                .title("Desea regresar al ejercicio anterior?")
+                .content("Esta seguro que quiere regresar al ejercicio anterior?")
+                .titleColor(getResources().getColor(R.color.colorPrimaryText))
+                .contentColor(getResources().getColor(R.color.colorPrimaryText))
+                .positiveColor(getResources().getColor(R.color.colorPrimaryText))
+                .negativeColor(getResources().getColor(R.color.colorPrimaryText))
+                .backgroundColor(Color.WHITE)
+                .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                ResumeCountDown();
+
+
+                if (MAIN_TIMER){
+
+                    list.smoothScrollToPosition(y-1);
+
+
+                    y--;
+                    CurrentExercise.setText(String.valueOf(y+1));
+                    main_timer.cancel();
+                    Rep_timer_text.setText(String.valueOf(exercises.get(y).getRepetition()));
+
+                    mPositiveText.setText(String.valueOf(exercises.get(y).getTempo_positive()));
+                    mIsometricText.setText(String.valueOf(exercises.get(y).getTempo_isometric()));
+                    mNegativeText.setText(String.valueOf(exercises.get(y).getTempo_negative()));
+
+                    asignTotalTime(y);
+                    startMainCountDown(totalTime,1,totalTime);
+
+                    if (y == 0){
+
+                        prvLayout.setVisibility(View.GONE);
+
+                    }
+                    else{
+                        if(y < elements-1 && exercises_size > 1){
+
+                            nxtLayout.setVisibility(View.VISIBLE);
+
+                        }
+                    }
+                    if (pause){
+                        PauseCountDown();
+                        pauseLocalMusic();
+
+                    }
+
+                }
+            }
+        }).negativeText(getResources().getString(R.string.negative_dialog)).onNegative(new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                dialog.dismiss();
+
+                ResumeCountDown();
+
+            }
+        }).show();
+
+
+    }
+
 
     private void startInicialTimer(int seconds){
         nxtLayout.setEnabled(false);
         prvLayout.setEnabled(false);
+
+
 
         long  sec = (seconds+5) * 1000;
         int sec_interval = 1000;
@@ -715,7 +630,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         INITIAL_TIMER = true;
     }
 
-    
+
     private void showRestModal(int rest_time){
         //Log.v(TAG,"Descanso: Empezo");
 
@@ -726,150 +641,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         rest = true;
 
         actualRest = rest_time;
-        ModalLayout.setVisibility(View.VISIBLE);
+        mModalOverlayView.setVisibility(View.VISIBLE);
         headerText.setText(getResources().getString(R.string.rest_text));
 
         startRestTimer(rest_time);
-    }
-
-    
-    private void startRestTimer(int actualrest){
-        //Log.d(TAG, "Timer descanso: activado: "+actualrest);
-        RestCounter_text.setText(String.valueOf(actualRest));
-
-        int totalsecs = (actualrest + 5) * 1000;
-        int sec_interval = 1000;
-        Format_Time_Rest = 0;
-
-        restTimer = new CountDownTimer(totalsecs, sec_interval) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                Format_Time_Rest =  Math.round(millisUntilFinished * 0.001f);
-
-                actualRest--;
-                RestCounter_text.setText(String.valueOf(actualRest));
-            }
-            public void onFinish() {}
-        }.start();
-
-
-    }
-
-    private void startMainCountDown(int seconds,int interval, int time_aux){
-        if (!BUTTON_PAUSE && !rest){
-            //Log.d(TAG,"Main CountDown: activado");
-
-            int totalsecs= seconds * 1000;
-            int sec_interval= interval * 1000 ;
-            Time_aux = time_aux;
-            Format_Time = 0;
-
-            main_timer = new CountDownTimer(totalsecs, sec_interval) {
-                public void onTick(long millisUntilFinished) {
-                    performTick(millisUntilFinished);
-                }
-                public void onFinish() {}
-            }.start();
-
-        }
-    }
-
-
-    // CONTADOR DE REPETICIONES
-    public void performTick(long millisUntilFinished) {
-        Format_Time = Math.round(millisUntilFinished * 0.001f);
-
-        if (Time_aux-tempo == Format_Time){
-            Time_aux = Time_aux - tempo;
-            actualReps--;// restar repeticiones
-
-            Rep_timer_text.setText(String.valueOf(actualReps));//restar reps de texto mostrado
-            ActivateVibrationPerRep();//activar vibracion por reps
-        }
-
-    }
-
-    private void ActivateVibrationPerRep(){
-        if (VibrationPerRep) {
-            Vibrator vb = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            if (!pause){
-                vb.vibrate(250);
-            }else {
-                vb.cancel();
-            }
-        }
-    }
-
-    private void ActivateVibrationPerSet(){
-
-        if (VibrationPerSet){
-            Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
-            if (!pause){
-                vb.vibrate(1000);
-            }else {
-                vb.cancel();
-            }
-        }
-    }
-
-    private void PlayerPause(){
-        btPlay.setVisibility(View.VISIBLE);
-        btPause.setVisibility(View.GONE);
-
-    }
-    private void PlayerPlay(){
-        btPlay.setVisibility(View.GONE);
-        btPause.setVisibility(View.VISIBLE);
-
-
-    }
-
-    private void PauseMusic(){if (Songs_from_Phone) {mp.pause();}}
-
-    private void CancelMusic(){if (Songs_from_Phone) {mp.release();}}
-
-    private void StartMusic(){if (Songs_from_Phone) {mp.start();}}
-
-    
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-        switch (id){
-            case R.id.btnPlay:
-                if (Music_Spotify){
-
-                    if (mCurrentPlaybackState != null && mCurrentPlaybackState.isActiveDevice){
-                        mPlayer.resume(mOperationCallback);
-                        PlayerPlay();
-
-                    }else {
-
-                        startPlaySpotify(spotify_playlist);
-                        PlayerPlay();
-                    }
-
-
-                }else {
-                    StartMusic();
-                    PlayerPlay();
-                }
-                break;
-            case R.id.btnPause:
-
-                if (Music_Spotify){
-
-                    if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
-                        mPlayer.pause(mOperationCallback);
-                        PlayerPause();
-
-                    }
-
-                }else {
-                    PauseMusic();
-                    PlayerPause();
-                }
-                break;
-        }
     }
 
     private void PauseCountDown(){
@@ -899,17 +674,16 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
     private void ResumeCountDown(){
-        Log.v(TAG,"ResumeCountDown: activado");
-        Log.v(TAG,"rest flag: "+rest);
+        //Log.v(TAG,"ResumeCountDown: activado");
+        //Log.v(TAG,"rest flag: "+rest);
 
         pause = false;
-      
-        
+
+
         if (rest){
-            
             Log.v(TAG,"ActualTimeRest: "+ActualTimeRest);
             startRestTimer(ActualTimeRest);
-            
+
         }else {
 
             if (MAIN_TIMER){
@@ -918,114 +692,20 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             if (INITIAL_TIMER){
                 startInicialTimer(actual_start_time);
             }
-
         }
-
     }
-    
-    
+
+
     //asign time for each repetition
     private void asignTotalTime(int position){
-        totalTime = (exercisesforRecycler.get(position).getRepetition() * tempo) + 5;
-    }
-    
-
-    private void playMusic(final int playlist_size){
-        if (playlist_size>1){
-            x = (x+1)%playlist.size();
-            u = Uri.parse(playlist.get(x).toString());
-            String songName = utilities.getSongName(this,playlist.get(x));
-            song_name.setText(utilities.removeLastMp3(songName));
-            String artist = utilities.SongArtist(this,playlist.get(x));
-            artist_name.setText(artist);
-
-            mp = MediaPlayer.create(getApplicationContext(),u);
-            mp.start();
-
-        }else{
-            u = Uri.parse(playlist.get(x).toString());
-            mp = MediaPlayer.create(getApplicationContext(),u);
-            mp.start();
-        }
-        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                playMusic(playlist_size);
-            }
-        });
-    }
-
-
-    private void playExerciseAudio(String exercise_audio_file){
-        if (play_exercise_audio){
-            Log.v(TAG,"playExerciseAudio: "+exercise_audio_file);
-
-            media = new MediaPlayer();
-            final int maxVolume = 100;
-            final float volumeFull = (float)(Math.log(maxVolume)/Math.log(maxVolume));;
-            final float volumeHalf = (float)(Math.log(maxVolume-90)/Math.log(maxVolume));
-
-            if (media.isPlaying()) {
-                media.stop();
-                media.release();
-                media = new MediaPlayer();
-            }
-
-
-            try {
-
-                String[] audioDir = exercisesforRecycler.get(y).getExercise().getExercise_audio().split("exercises");
-
-                if (audioDir.length == 2){
-
-                    media = MediaPlayer.create(this,Uri.parse(getFilesDir()+"/SilverbarsMp3/"+utilities.getExerciseAudioName(exercisesforRecycler.get(y).getExercise().getExercise_audio())));
-
-                }else {
-
-                    String[] mp3dir = exercise_audio_file.split("/SilverbarsMp3/");
-                    media = MediaPlayer.create(this, Uri.parse(getFilesDir()+"/SilverbarsMp3/"+mp3dir[1]));
-                }
-
-            } catch (Exception e) {
-                Log.e(TAG,"Exception",e);
-            }
-
-            media.setOnPreparedListener(new MediaPlayer.OnPreparedListener(){
-                public void onPrepared(MediaPlayer arg0) {
-                    Log.e("ready!","ready!");
-                    if (mp!=null){
-                        if (mp.isPlaying())
-                            mp.setVolume(0.04f,0.04f);
-                    }
-                    if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
-                        mPlayer.pause(mOperationCallback);
-                    }
-                    media.start();
-                }} );
-
-            media.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    if (mp!=null && mp.isPlaying()) {
-                        mp.setVolume(volumeFull, volumeFull);
-                        mediaPlayer.release();
-                    }
-                    if (mCurrentPlaybackState != null && mCurrentPlaybackState.isActiveDevice){
-                        mediaPlayer.release();
-                        mPlayer.resume(mOperationCallback);
-                    }
-                }
-            });
-
-        }
-
+        totalTime = (exercises.get(position).getRepetition() * tempo) + 5;
     }
 
 
     private void DialogFinalize(){
 
         PauseCountDown();
-        PauseMusic();
+        pauseLocalMusic();
 
 
         new MaterialDialog.Builder(this)
@@ -1039,36 +719,37 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                    Log.v(TAG,"dialog finish workout: SI");
+                Log.v(TAG,"dialog finish workout: SI");
 
-                    dialog.dismiss();
-                    ScreenOff();
+                dialog.dismiss();
+                ScreenOff();
 
-                    startTimer.cancel();
-                    if (main_timer != null){
-                        main_timer.cancel();
-                    }
+                startTimer.cancel();
 
-                    CancelMusic();
+                if (main_timer != null){
+                    main_timer.cancel();
+                }
 
-                    if (media!=null){
-                        media.release();
-                    }
+                cancelLocalMusic();
 
-                    launchResultsActivity();
+                if (media!=null){
+                    media.release();
+                }
+
+                launchResultsActivity();
 
             }
         }).negativeText(getResources().getString(R.string.negative_dialog)).onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 Log.v(TAG,"dialog finish workout: NO");
-                    dialog.dismiss();
+                dialog.dismiss();
 
-                    if (!BUTTON_PAUSE){
+                if (!BUTTON_PAUSE){
 
-                        ResumeCountDown();
-                        StartMusic();
-                    }
+                    ResumeCountDown();
+                    startLocalMusic();
+                }
 
             }
         }).show();
@@ -1079,7 +760,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     private void launchResultsActivity(){
         Intent intent = new Intent(this, ResultsActivity.class);
-        intent.putParcelableArrayListExtra("exercises", exercisesforRecycler);
+        intent.putParcelableArrayListExtra("exercises", exercises);
         startActivity(intent);
         finish();
     }
@@ -1089,7 +770,96 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     private void ScreenOff(){getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);}
 
 
+    private void startRestTimer(int actualrest){
+        //Log.d(TAG, "Timer descanso: activado: "+actualrest);
+        RestCounter_text.setText(String.valueOf(actualRest));
 
+        int totalsecs = (actualrest + 5) * 1000;
+        int sec_interval = 1000;
+        Format_Time_Rest = 0;
+
+        restTimer = new CountDownTimer(totalsecs, sec_interval) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                Format_Time_Rest =  Math.round(millisUntilFinished * 0.001f);
+
+                actualRest--;
+                RestCounter_text.setText(String.valueOf(actualRest));
+            }
+            public void onFinish() {}
+        }.start();
+    }
+
+
+    private void startMainCountDown(int seconds,int interval, int time_aux){
+        if (!BUTTON_PAUSE && !rest){
+            //Log.d(TAG,"Main CountDown: activado");
+
+            int totalsecs= seconds * 1000;
+            int sec_interval= interval * 1000 ;
+            Time_aux = time_aux;
+            Format_Time = 0;
+
+            main_timer = new CountDownTimer(totalsecs, sec_interval) {
+                public void onTick(long millisUntilFinished) {
+                    performTick(millisUntilFinished);
+                }
+                public void onFinish() {}
+            }.start();
+
+        }
+    }
+
+    // CONTADOR DE REPETICIONES
+    public void performTick(long millisUntilFinished) {
+        Format_Time = Math.round(millisUntilFinished * 0.001f);
+
+        if (Time_aux-tempo == Format_Time){
+            Time_aux = Time_aux - tempo;
+            actualReps--;// restar repeticiones
+
+            Rep_timer_text.setText(String.valueOf(actualReps));//restar reps de texto mostrado
+            ActivateVibrationPerRep();//activar vibracion por reps
+        }
+    }
+
+    private void ActivateVibrationPerRep(){
+        if (VibrationPerRep) {
+            Vibrator vb = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            if (!pause){
+                vb.vibrate(250);
+            }else {
+                vb.cancel();
+            }
+        }
+    }
+
+    private void ActivateVibrationPerSet(){
+        if (VibrationPerSet){
+            Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
+            if (!pause){
+                vb.vibrate(1000);
+            }else {
+                vb.cancel();
+            }
+        }
+    }
+
+
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id){
+            case R.id.play_music:
+              
+                break;
+            case R.id.pause_music:
+                break;
+        }
+    }
+
+  
     @Override
     protected void onStart() {
         super.onStart();
@@ -1117,25 +887,38 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
 
-    private Connectivity getNetworkConnectivity(Context context) {
-        ConnectivityManager connectivityManager;
-        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if (activeNetwork != null && activeNetwork.isConnected()) {
-            return Connectivity.fromNetworkType(activeNetwork.getType());
-        } else {
-            return Connectivity.OFFLINE;
-        }
+
+    private void onPauseMusicPlayerUI(){
+        mPlaybutton.setVisibility(View.VISIBLE);
+        mPausebutton.setVisibility(View.GONE);
     }
 
-    private boolean isLoggedIn() {
-        return mPlayer != null && mPlayer.isLoggedIn();
+    private void onPlayMusicPlayerUI(){
+        mPlaybutton.setVisibility(View.GONE);
+        mPausebutton.setVisibility(View.VISIBLE);
     }
 
-    private void logSpotityStatus(String status) {
-        Log.i("SpotifySdkDemo", status);
+
+
+    @Override
+    public void updateSongName(String song_name) {
+        
     }
 
+    @Override
+    public void updateArtistName(String artist_name) {
+
+    }
+
+    @Override
+    public void onPauseMusic() {
+
+    }
+
+    @Override
+    public void onPlayMusic() {
+
+    }
 
 
 }

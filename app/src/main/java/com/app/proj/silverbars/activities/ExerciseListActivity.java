@@ -41,7 +41,7 @@ public class ExerciseListActivity extends AppCompatActivity {
     @BindView(R.id.list)RecyclerView list;
     @BindView(R.id.add)Button mAddExercisesbt;
 
-    @BindView(R.id.error_layout) LinearLayout error_layout;
+    @BindView(R.id.error_view) LinearLayout error_layout;
     @BindView(R.id.loading) LinearLayout mLoadingView;
     @BindView(R.id.reload)Button mReload;
 

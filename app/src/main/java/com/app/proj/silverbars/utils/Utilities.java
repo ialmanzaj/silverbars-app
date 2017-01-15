@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.media.MediaMetadataRetriever;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -31,6 +33,7 @@ import com.app.proj.silverbars.MainService;
 import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.models.Muscle;
 import com.google.gson.Gson;
+import com.spotify.sdk.android.player.Connectivity;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,6 +62,17 @@ public class Utilities {
     private   String strSeparator = "__,__";
 
     public Utilities (){}
+
+    public Connectivity getNetworkConnectivity(Context context) {
+        ConnectivityManager connectivityManager;
+        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        if (activeNetwork != null && activeNetwork.isConnected()) {
+            return Connectivity.fromNetworkType(activeNetwork.getType());
+        } else {
+            return Connectivity.OFFLINE;
+        }
+    }
 
 
     public ArrayList<File> findSongs(Context context,File root){

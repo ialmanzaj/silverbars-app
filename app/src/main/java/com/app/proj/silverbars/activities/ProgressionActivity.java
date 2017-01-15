@@ -34,13 +34,13 @@ public class ProgressionActivity extends AppCompatActivity implements Progressio
 
     private static final String TAG = ProgressionActivity.class.getSimpleName();
 
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.appbar) AppBarLayout appBarLayout;
 
     @BindView(R.id.webview) WebView mMusclesWebView;
     @BindView(R.id.content) LinearLayout progression_content_layout;
     @BindView(R.id.date) CustomDateView customDateView;
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.appbar) AppBarLayout appBarLayout;
-
+    
     @BindView(R.id.main_content) NestedScrollView nestedScrollView;
 
     private Utilities mUtilities;

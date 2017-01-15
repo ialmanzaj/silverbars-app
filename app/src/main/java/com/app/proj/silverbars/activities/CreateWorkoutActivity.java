@@ -24,9 +24,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.app.proj.silverbars.MainService;
 import com.app.proj.silverbars.R;
-import com.app.proj.silverbars.ServiceGenerator;
 import com.app.proj.silverbars.adapters.ExercisesSelectedAdapter;
 import com.app.proj.silverbars.models.Exercise;
 import com.app.proj.silverbars.models.ExerciseRep;
@@ -53,22 +51,25 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
 
     @BindView(R.id.content_empty) LinearLayout empty_content;
 
-    @BindView(R.id.WebView_create) WebView webView;
+    @BindView(R.id.webview) WebView webView;
 
-    @BindView(R.id.reAdd) Button mButtonReAdd;
+    @BindView(R.id.readd) Button mButtonReAdd;
 
     @BindView(R.id.recycler_exercises_selected) RecyclerView list;
 
     @BindView(R.id.column1) LinearLayout primary_ColumnMuscle;
     @BindView(R.id.column2) LinearLayout secundary_ColumnMuscle;
+
     @BindView(R.id.progress) LinearLayout ProgressView;
-    @BindView(R.id.error_layout) LinearLayout mErrorView;
+    @BindView(R.id.error_view) LinearLayout mErrorView;
+    @BindView(R.id.reload) Button button_error_reload;
+
     @BindView(R.id.content_info) LinearLayout contentView;
 
-    @BindView(R.id.reload) Button button_error_reload;
+
     @BindView(R.id.toolbar) Toolbar toolbar;
 
-    @BindView(R.id.Next) Button nextButton;
+    @BindView(R.id.next) Button nextButton;
     @BindView(R.id.add_exercises) Button addExercise;
 
 

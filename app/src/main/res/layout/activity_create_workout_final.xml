@@ -20,7 +20,7 @@
             android:background="@color/colorPrimary">
 
             <Button
-                android:id="@+id/Save"
+                android:id="@+id/save"
                 android:text="Save"
                 android:theme="@style/ButtonRed"
                 android:textColor="@color/white"
@@ -66,7 +66,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_camera_alt_black_24px"
-                        android:id="@+id/imgProfile" />
+                        android:id="@+id/img_profile" />
                     <ImageView
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentEnd="true"
@@ -91,7 +91,7 @@
                             android:textColor="@color/colorPrimaryDark"
                             android:ems="10"
                             android:maxLength="20"
-                            android:id="@+id/workoutName"
+                            android:id="@+id/workout_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/workout_name"
@@ -140,7 +140,7 @@
                             android:minWidth="45dp"
                             android:textColor="@color/black"
                             android:gravity="center_vertical|center_horizontal"
-                            android:id="@+id/Sets"
+                            android:id="@+id/sets"
                             android:textAlignment="center" />
 
                     </LinearLayout>

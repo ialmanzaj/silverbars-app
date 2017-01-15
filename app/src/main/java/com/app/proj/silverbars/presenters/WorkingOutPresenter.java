@@ -1,88 +1,294 @@
 package com.app.proj.silverbars.presenters;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.util.Log;
+import android.view.View;
 
 import com.app.proj.silverbars.activities.WorkingOutActivity;
-import com.spotify.sdk.android.player.Config;
-import com.spotify.sdk.android.player.ConnectionStateCallback;
-import com.spotify.sdk.android.player.Connectivity;
-import com.spotify.sdk.android.player.Error;
-import com.spotify.sdk.android.player.Player;
-import com.spotify.sdk.android.player.PlayerEvent;
-import com.spotify.sdk.android.player.Spotify;
-import com.spotify.sdk.android.player.SpotifyPlayer;
+import com.app.proj.silverbars.viewsets.WorkingOutView;
 
-import static com.app.proj.silverbars.Constants.CLIENT_ID;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Created by isaacalmanza on 01/11/17.
  */
 
-public class WorkingOutPresenter extends BasePresenter implements Player.NotificationCallback, ConnectionStateCallback {
+public class WorkingOutPresenter extends BasePresenter  {
 
     private static final String TAG = WorkingOutPresenter.class.getSimpleName();
 
-    public WorkingOutPresenter(){
 
+    private WorkingOutView view;
+
+
+    //
+    private final float VOLUME_FULL = (float)(Math.log(100)/Math.log(100));;
+    private final float VOLUME_HALF = (float)(Math.log(100-90)/Math.log(100));
+
+
+    private  MediaPlayer mLocalMusicPlayer;
+    private MediaPlayer mExerciseAudioPlayer;
+
+
+
+    public WorkingOutPresenter(WorkingOutView view){
+        this.view = view;
     }
 
-    private void configPlayerSpotify(String token){
-        if (mPlayer == null) {
-            Config playerConfig = new Config(getApplicationContext(), token, CLIENT_ID);
 
-            mPlayer = Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver() {
-                @Override
-                public void onInitialized(SpotifyPlayer player) {
-                    Log.d(TAG,"-- Player initialized --");
-                    mPlayer.setConnectivityStatus(mOperationCallback,getNetworkConnectivity(WorkingOutActivity.this));
-                    mPlayer.addConnectionStateCallback(WorkingOutActivity.this);
-                    mPlayer.addNotificationCallback(WorkingOutActivity.this);
+    private ArrayList<File> getPlaylist(String[] song_names,ArrayList<File> songs_files){
+
+        ArrayList<File> playlist = new ArrayList<>();
+
+        for(int position = 0; position < songs_files.size(); position++){
+            for(int z = 0; z < song_names.length; z++){
+
+                if (Objects.equals(song_names[z], utilities.getSongName(this,songs_files.get(position)))){
+                    z++;
+
+                    playlist.add(songs_files.get(position));
                 }
-                @Override
-                public void onError(Throwable error) {
-                    Log.e(TAG,"Error in initialization: " + error.getMessage());
-                }
-            });
-        } else {
-            mPlayer.login(Token);
+
+            }
+        }
+
+        return playlist;
+    }
+
+
+
+    private void setupMusicPlayer(Context context,ArrayList<File> playlist){
+
+        int x = 0;
+        Uri url_player;
+
+        int playlist_size = playlist.size();
+
+        if (playlist_size > 1){
+
+            x = (x+1) % playlist.size();
+
+            url_player = Uri.parse(playlist.get(x).toString());
+
+
+            String songName = utilities.getSongName(context,playlist.get(x));
+            String artist = utilities.SongArtist(context,playlist.get(x));
+
+
+            //update UI
+            view.updateSongName(songName);
+            view.updateArtistName(artist);
+            
+
+            //music player starting
+            mLocalMusicPlayer = MediaPlayer.create(context.getApplicationContext(),url_player);
+            mLocalMusicPlayer.start();
+
+
+        }else{
+
+            url_player = Uri.parse(playlist.get(x).toString());
+
+
+            mLocalMusicPlayer = MediaPlayer.create(context.getApplicationContext(),url_player);
+            mLocalMusicPlayer.start();
+        }
+
+
+        mLocalMusicPlayer.setOnCompletionListener(mediaPlayer -> setupMusicPlayer(context,playlist));
+
+    }
+
+    private void setupExercisePlayer(Context context,String exercise_audio_file){
+        mExerciseAudioPlayer = new MediaPlayer();
+        
+
+        if (mExerciseAudioPlayer.isPlaying()) {
+            mExerciseAudioPlayer.stop();
+            mExerciseAudioPlayer.release();
+            mExerciseAudioPlayer = new MediaPlayer();
+        }
+
+
+        try {
+
+
+            String[] mp3dir = exercise_audio_file.split("/SilverbarsMp3/");
+            mExerciseAudioPlayer = MediaPlayer.create(context, Uri.parse(context.getFilesDir()+"/SilverbarsMp3/"+mp3dir[1]));
+
+
+        } catch (Exception e) {
+            Log.e(TAG,"Exception",e);
         }
     }
 
-    private final Player.OperationCallback mOperationCallback = new Player.OperationCallback() {
-        @Override
-        public void onSuccess() {
-            logSpotityStatus("OK!");
-        }
 
-        @Override
-        public void onError(Error error) {
-            logSpotityStatus("ERROR:" + error);
-        }
-    };
+    private void playExerciseAudio(Context context,String exercise_audio_file){
+        Log.v(TAG,"playExerciseAudio: "+exercise_audio_file);
+
+        setupExercisePlayer(context,exercise_audio_file);
 
 
-    public void startPlaySpotify(String uri_song) {
-        logSpotityStatus("Starting playback for " + uri_song);
-        mPlayer.playUri(mOperationCallback,uri_song,0,0);
+        mExerciseAudioPlayer.setOnPreparedListener(player -> {
+            Log.e("mExerciseAudioPlayer","ready!");
+
+          
+            if (mLocalMusicPlayer.isPlaying())
+                mLocalMusicPlayer.setVolume(0.04f,0.04f);
+            
+
+
+           onPauseSpotify();
+
+            mExerciseAudioPlayer.start();
+
+        });
+
+        mExerciseAudioPlayer.setOnCompletionListener(mediaPlayer -> {
+
+            if (mLocalMusicPlayer !=null && mLocalMusicPlayer.isPlaying()) {
+                mLocalMusicPlayer.setVolume(VOLUME_FULL, VOLUME_FULL);
+                mediaPlayer.release();
+            }
+
+            if (mCurrentPlaybackState.isActiveDevice){
+                mediaPlayer.release();
+                mSpotifyPlayer.resume(mOperationCallback);
+            }
+
+        });
+        
     }
 
-    private void updateView() {
-        Log.d(TAG,"mCurrentPlaybackState: "+mCurrentPlaybackState);
-        Log.d(TAG,"isLoggedIn: "+isLoggedIn());
 
-        if (mMetadata != null && mMetadata.currentTrack != null) {
-            song_name.setText(mMetadata.currentTrack.name);
-            artist_name.setText(mMetadata.currentTrack.artistName);
-            //final String durationStr = String.format(" (%dms)", mMetadata.currentTrack.durationMs);
-        }
+    private void pauseLocalMusic(){
+        mLocalMusicPlayer.pause();
     }
 
-    @Override
+
+    private void cancelLocalMusic(){
+        mLocalMusicPlayer.release();
+    }
+
+    private void startLocalMusic(){
+        mLocalMusicPlayer.start();
+    }
+
+    private void onMusicPreview(){
+
+        if (Music_Spotify){
+
+            if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
+                mSpotifyPlayer.skipToNext(mOperationCallback);
+
+            }else {
+
+                startPlaySpotify(spotify_playlist);
+                onPlayMusicPlayerUI();
+            }
+
+        } else if (Songs_from_Phone) {
+
+
+            int playlist_size = playlist.size();
+
+
+
+            if (playlist_size > 1 && x + 1 < playlist_size) {
+                mPlaybutton.setVisibility(View.GONE);
+                mPausebutton.setVisibility(View.VISIBLE);
+                mLocalMusicPlayer.stop();
+                mLocalMusicPlayer.release();
+                x = (x + 1) % playlist.size();
+                u = Uri.parse(playlist.get(x).toString());
+
+                String songName = utilities.getSongName(WorkingOutActivity.this,playlist.get(x));
+
+                mSongName.setText(songName);
+
+                String artist = utilities.SongArtist(WorkingOutActivity.this,playlist.get(x));
+
+                mArtistName.setText(artist);
+
+                mLocalMusicPlayer = MediaPlayer.create(getApplicationContext(), u);
+                mLocalMusicPlayer.start();
+            } else {
+
+
+
+                mPlaybutton.setVisibility(View.GONE);
+                mPausebutton.setVisibility(View.VISIBLE);
+
+
+
+                mLocalMusicPlayer.stop();
+                mLocalMusicPlayer.release();
+                u = Uri.parse(playlist.get(x).toString());
+                mLocalMusicPlayer = MediaPlayer.create(getApplicationContext(), u);
+                mLocalMusicPlayer.start();
+
+
+            }
+        }
+
+
+
+    }
+
+    private void onMusicNext(){
+
+        if (Music_Spotify){
+
+            if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
+                mSpotifyPlayer.skipToPrevious(mOperationCallback);
+
+            }else {
+
+                startPlaySpotify(spotify_playlist);
+                onPlayMusicPlayerUI();
+            }
+
+
+        } else if (Songs_from_Phone){
+
+            int playlist_size = playlist.size();
+            if (playlist_size > 1 && (x-1) >= 0 ){
+                mPlaybutton.setVisibility(View.GONE);
+                mPausebutton.setVisibility(View.VISIBLE);
+                mLocalMusicPlayer.stop();
+
+                cancelLocalMusic();
+
+                x = (x-1)%playlist.size();
+                u = Uri.parse(playlist.get(x).toString());
+
+                String songName = utilities.getSongName(WorkingOutActivity.this,playlist.get(x));
+                mSongName.setText(utilities.removeLastMp3(songName));
+                String artist = utilities.SongArtist(WorkingOutActivity.this,playlist.get(x));
+
+                mArtistName.setText(artist);
+                mLocalMusicPlayer = MediaPlayer.create(getApplicationContext(),u);
+
+                startLocalMusic();
+            } else {
+                mPlaybutton.setVisibility(View.GONE);
+                mPausebutton.setVisibility(View.VISIBLE);
+                mLocalMusicPlayer.stop();
+                cancelLocalMusic();
+                u = Uri.parse(playlist.get(x).toString());
+                mLocalMusicPlayer = MediaPlayer.create(getApplicationContext(),u);
+                startLocalMusic();
+            }
+        }
+
+
+    }
+
+
     public void onStart() {
         Log.d(TAG,"onStart");
 
@@ -103,24 +309,8 @@ public class WorkingOutPresenter extends BasePresenter implements Player.Notific
     public void onResume() {
         Log.d(TAG,"onResume");
 
-        mNetworkStateReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (mPlayer != null) {
-                    Connectivity connectivity = getNetworkConnectivity(getBaseContext());
-                    Log.d(TAG,"Network state changed: " + connectivity.toString());
-                    mPlayer.setConnectivityStatus(mOperationCallback,connectivity);
-                }
-            }
-        };
 
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(mNetworkStateReceiver, filter);
 
-        if (mPlayer != null) {
-            mPlayer.addNotificationCallback(this);
-            mPlayer.addConnectionStateCallback(this);
-        }
 
         if (onPause){
             ResumeCountDown();
@@ -135,72 +325,17 @@ public class WorkingOutPresenter extends BasePresenter implements Player.Notific
         PauseCountDown();
         onPause = true;
 
-        unregisterReceiver(mNetworkStateReceiver);
-        if (mPlayer != null) {
-            mPlayer.removeNotificationCallback(this);
-            mPlayer.removeConnectionStateCallback(this);
-        }
+
     }
 
     @Override
     public void onDestroy() {
         ScreenOff();
 
-        if (mCurrentPlaybackState != null && mCurrentPlaybackState.isActiveDevice){
-            Spotify.destroyPlayer(this);}
 
         if (MAIN_TIMER && main_timer != null){main_timer.cancel();}
 
-        if (media!=null){media.release();}
+        if (mExerciseAudioPlayer!=null){mExerciseAudioPlayer.release();}
 
-    }
-
-
-    @Override
-    public void onLoggedIn() {
-        Log.d(TAG, "User logged in");
-    }
-
-
-    @Override
-    public void onLoggedOut() {
-        Log.d(TAG, "User logged out");
-    }
-
-    @Override
-    public void onLoginFailed(int i) {
-        Log.d(TAG, "Login failed");
-    }
-
-    @Override
-    public void onTemporaryError() {
-        Log.d(TAG, "Temporary error occurred");
-    }
-
-    @Override
-    public void onConnectionMessage(String message) {
-        Log.d(TAG, "Received connection message: " + message);
-    }
-
-    @Override
-    public void onPlaybackEvent(PlayerEvent playerEvent) {
-
-        logSpotityStatus("Player event: " + event);
-        mCurrentPlaybackState = mPlayer.getPlaybackState();
-        mMetadata = mPlayer.getMetadata();
-        logSpotityStatus("Player state: " + mCurrentPlaybackState);
-        logSpotityStatus("Metadata: " + mMetadata);
-
-        updateView();
-
-    }
-
-    @Override
-    public void onPlaybackError(Error error) {
-        logSpotityStatus("Player error: " + error);
-    }
-
-    private void logSpotityStatus(String status) {
-        Log.i("SpotifySdkDemo", status);
     }
 }
