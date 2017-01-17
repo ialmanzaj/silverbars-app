@@ -39,6 +39,21 @@ public class MainWorkoutsPresenter extends BasePresenter implements MainWorkouts
 
     }
 
+    @Override
+    public void onResume() {
+
+    }
+
+    @Override
+    public void onPause() {
+
+    }
+
+    @Override
+    public void onDestroy() {
+
+    }
+
 
     @Override
     public void onWorkoutsFound(List<Workout> workouts) {

@@ -53,6 +53,21 @@ public class SpotifyPresenter extends BasePresenter implements ConnectionStateCa
     }
 
     @Override
+    public void onResume() {
+
+    }
+
+    @Override
+    public void onPause() {
+
+    }
+
+    @Override
+    public void onDestroy() {
+
+    }
+
+    @Override
     public void onLoggedIn() {
         Log.d(TAG, "User logged in");
     }

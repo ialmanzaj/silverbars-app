@@ -17,7 +17,20 @@ public class PlaylistPickerPresenter extends BasePresenter {
 
     }
 
+    @Override
+    public void onResume() {
 
+    }
+
+    @Override
+    public void onPause() {
+
+    }
+
+    @Override
+    public void onDestroy() {
+
+    }
 
 
 }

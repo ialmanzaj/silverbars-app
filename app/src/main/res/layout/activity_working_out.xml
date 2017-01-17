@@ -289,7 +289,7 @@
                                 android:visibility="gone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/prvExercise"
+                                android:id="@+id/prev_exercise"
                                 android:src="@drawable/ic_fast_rewind_black_24px"
                                 android:background="#fff"
                                 android:layout_gravity="center"
@@ -352,7 +352,7 @@
                                 android:visibility="gone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/nxtExercise"
+                                android:id="@+id/next_exercise"
                                 android:src="@drawable/ic_fast_forward_black_24px"
                                 android:layout_gravity="center"
                                 android:background="@color/white"
@@ -489,7 +489,7 @@
 
             <TextView
                 android:layout_marginTop="20dp"
-                android:id="@+id/RestCounter_text"
+                android:id="@+id/rest_counter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/number_five"

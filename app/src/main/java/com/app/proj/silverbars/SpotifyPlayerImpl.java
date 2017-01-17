@@ -1,4 +1,4 @@
-package com.app.proj.silverbars.activities;
+package com.app.proj.silverbars;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -25,10 +25,10 @@ import static com.app.proj.silverbars.Constants.CLIENT_ID;
  * Created by isaacalmanza on 01/15/17.
  */
 
-public class CustomSpotifyPlayer implements Player.NotificationCallback, ConnectionStateCallback {
+public class SpotifyPlayerImpl implements Player.NotificationCallback, ConnectionStateCallback {
 
 
-    private static final String TAG = CustomSpotifyPlayer.class.getSimpleName();
+    private static final String TAG = SpotifyPlayerImpl.class.getSimpleName();
 
     //spotify vars
     private SpotifyPlayer mSpotifyPlayer;
@@ -43,54 +43,21 @@ public class CustomSpotifyPlayer implements Player.NotificationCallback, Connect
 
     private Utilities utilities = new Utilities();
 
+    private MusicCallback callback;
 
-    public void CustomSpotifyPlayer(Context context,String spotify_token,String spotify_playlist){
+
+    public SpotifyPlayerImpl(Context context, String spotify_token, String spotify_playlist, MusicCallback callback){
         this.context = context;
         this.spotify_token = spotify_token;
         this.spotify_playlist = spotify_playlist;
-
+        this.callback = callback;
     }
 
-    public void setupSpotifyPlayer(){
-        configPlayerSpotify(spotify_token);
+    public void setup(){
+        configPlayer(spotify_token);
     }
 
-    public void onPauseSpotifyPlayer(){
-        if (mCurrentPlaybackState.isPlaying){
-            mSpotifyPlayer.pause(mOperationCallback);
-        }
-    }
-
-    private void startSpotifyPlayer(String uri_song) {
-        logSpotityStatus("Starting playback for " + uri_song);
-        mSpotifyPlayer.playUri(mOperationCallback,uri_song,0,0);
-    }
-
-
-    public void onPlaySpotifyPlayer(){
-        if (mCurrentPlaybackState.isActiveDevice){
-
-            resumeSpotifyPlayer();
-
-        }else {
-
-            //restarting
-            startSpotifyPlayer(spotify_playlist);
-
-            //update music ui
-            view.onPlayMusic();
-        }
-    }
-
-    private void resumeSpotifyPlayer(){
-        mSpotifyPlayer.resume(mOperationCallback);
-
-        //update music ui
-        view.onPlayMusic();
-    }
-
-
-    private void configPlayerSpotify(String spotify_token){
+    private void configPlayer(String spotify_token){
         if (mSpotifyPlayer == null) {
             Config playerConfig = new Config(context.getApplicationContext(), spotify_token, CLIENT_ID);
 
@@ -111,8 +78,6 @@ public class CustomSpotifyPlayer implements Player.NotificationCallback, Connect
         }
     }
 
-
-
     private void initPlayer(){
         Log.d(TAG,"-- Player initialized --");
         mSpotifyPlayer.setConnectivityStatus(mOperationCallback,utilities.getNetworkConnectivity(context));
@@ -121,6 +86,46 @@ public class CustomSpotifyPlayer implements Player.NotificationCallback, Connect
 
     }
 
+
+    public void onPauseSpotifyPlayer(){
+        if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
+            mSpotifyPlayer.pause(mOperationCallback);
+        }
+    }
+
+    private void startPlayer(String uri_song) {
+        logSpotityStatus("Starting playback for " + uri_song);
+        mSpotifyPlayer.playUri(mOperationCallback,uri_song,0,0);
+    }
+
+
+    public void onPlayPlayer(){
+        if (mCurrentPlaybackState != null && mCurrentPlaybackState.isActiveDevice){
+
+            resumePlayer();
+
+        }else {
+
+            //restarting
+            startPlayer(spotify_playlist);
+        }
+    }
+
+    private void resumePlayer(){
+        mSpotifyPlayer.resume(mOperationCallback);
+    }
+
+    public void skipToNext(){
+        if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
+            mSpotifyPlayer.skipToNext(mOperationCallback);
+        }
+    }
+
+    public void skipToPrevious(){
+        if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
+            mSpotifyPlayer.skipToPrevious(mOperationCallback);
+        }
+    }
 
     private final Player.OperationCallback mOperationCallback = new Player.OperationCallback() {
         @Override
@@ -132,7 +137,6 @@ public class CustomSpotifyPlayer implements Player.NotificationCallback, Connect
             logSpotityStatus("ERROR:" + error);
         }
     };
-
 
     @Override
     public void onPlaybackError(Error error) {
@@ -191,8 +195,8 @@ public class CustomSpotifyPlayer implements Player.NotificationCallback, Connect
 
 
             //UPDATE UI
-            view.updateSongName(mMetadata.currentTrack.name);
-            view.updateSongName(mMetadata.currentTrack.artistName);
+            callback.onSongName(mMetadata.currentTrack.name);
+            callback.onArtistName(mMetadata.currentTrack.artistName);
             //final String durationStr = String.format(" (%dms)", mMetadata.currentTrack.durationMs);
         }
     }
