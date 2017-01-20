@@ -84,6 +84,11 @@ public class MusicPlayer {
         mLocalMusicPlayer.start();
     }
 
+
+    public void resumePlayer(){
+        mLocalMusicPlayer.start();
+    }
+
     public void stopPlayer(){
         mLocalMusicPlayer.stop();
     }

@@ -59,16 +59,36 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getPresenter().onResume();
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getPresenter().onPause();
+    }
+
+
+    @Override
     public void onStop() {
         super.onStop();
         getPresenter().onStop();
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbindViews();
+    }
 
+    @Override
+    public void onDestroy() {
+        getPresenter().onDestroy();
+        super.onDestroy();
     }
 
     protected abstract int getFragmentLayout();

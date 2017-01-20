@@ -12,23 +12,26 @@ public interface WorkingOutView {
     void onPauseMusic();
     void onPlayMusic();
 
-
-    void displayModalRest();
-
     void onRestCounterStarted(String second);
-
     void onMainCounterStarted(String second);
-
     void onRepetitionCountdown(String second);
 
-    void onNextExercise();
+    void onNextExerciseUI();
+    void onPreviewExerciseUI();
 
-    void onPreviewExercise();
+
+    void onChangeToExercise(int exercise_position);
 
     void onRepsFinished(int exercise_position);
-
-
     void onSetFinished(int set);
 
+    void onShowRestOverlay();
+    void onRestFinished();
+
+    void onWorkoutRestart(int rep,int tempo_positive,int tempo_isometric,int tempo_negative);
+
+
+    void onWorkoutResume();
+    void onWorkoutPaused();
     void onWorkoutFinished();
 }

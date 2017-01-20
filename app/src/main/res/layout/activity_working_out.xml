@@ -407,7 +407,7 @@
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:background="@color/black"
-                    android:id="@+id/PlayerLayout">
+                    android:id="@+id/player_layout">
 
                         <RelativeLayout
                             android:layout_weight="1"

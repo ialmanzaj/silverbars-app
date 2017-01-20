@@ -192,7 +192,7 @@ public class LoginActivity extends AuthenticationActivity implements LoginView{
         finalizeAuthentication(account);
 
 
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
         finish();
 
     }
