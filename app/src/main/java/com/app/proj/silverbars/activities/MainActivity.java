@@ -133,12 +133,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         mButtonCreateWorkout = (FloatingActionButton) findViewById(R.id.fab);
-        mButtonCreateWorkout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this,CreateWorkoutActivity.class);
-                startActivityForResult(i,1);
-            }
+
+
+        mButtonCreateWorkout.setOnClickListener(v -> {
+            Intent i = new Intent(MainActivity.this,CreateWorkoutActivity.class);
+            startActivityForResult(i,1);
         });
 
         Button_filter = (LinearLayout) toolbar.findViewById(R.id.Sort);
@@ -148,12 +147,11 @@ public class MainActivity extends AppCompatActivity {
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         settings = (LinearLayout) findViewById(R.id.settings);
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
-            }
+
+
+        settings.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
         });
 
 
@@ -162,36 +160,32 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Button_filter.setClickable(true);
-        Button_filter.setOnClickListener(new View.OnClickListener(){
+        Button_filter.setOnClickListener(v ->
 
-            @Override
-            public void onClick(View v) {
                 new MaterialDialog.Builder(MainActivity.this)
-                        .title(R.string.filtertitle)
-                        .items(R.array.filter_items_text)
-                        .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
-                            @Override
-                            public boolean onSelection(MaterialDialog dialog, View view, int indice, CharSequence text) {
-                                FragmentManager fragmentManager = getSupportFragmentManager();
+                .title(R.string.filtertitle)
+                .items(R.array.filter_items_text)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int indice, CharSequence text) {
+                        FragmentManager fragmentManager = getSupportFragmentManager();
 
-                                if (indice != -1) {
-                                    Log.v(TAG, String.valueOf(indice));
-                                    String[] Muscles = getResources().getStringArray(R.array.filter_items);
+                        if (indice != -1) {
+                            Log.v(TAG, String.valueOf(indice));
+                            String[] Muscles = getResources().getStringArray(R.array.filter_items);
 
-                                    Log.v(TAG, Muscles[indice]);
-                                    Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
-                                    if (currentFragment instanceof MainWorkoutsFragment) {
-                                        ((MainWorkoutsFragment) currentFragment).filterWorkouts(Muscles[indice]);
-                                    }
-                                }
-                                return true;
+                            Log.v(TAG, Muscles[indice]);
+                            Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
+                            if (currentFragment instanceof MainWorkoutsFragment) {
+                                ((MainWorkoutsFragment) currentFragment).filterWorkouts(Muscles[indice]);
                             }
-                        })
-                        .positiveText(R.string.choose)
-                        .positiveColor(getResources().getColor(R.color.white))
-                        .show();
-            }
-        });
+                        }
+                        return true;
+                    }
+                })
+                .positiveText(R.string.choose)
+                .positiveColor(getResources().getColor(R.color.white))
+                .show());
 
 
 

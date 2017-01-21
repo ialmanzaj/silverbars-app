@@ -1,15 +1,12 @@
-package com.app.proj.silverbars.presenters;
+package com.app.proj.silverbars.activities;
 
-import com.app.proj.silverbars.callbacks.WorkoutCallback;
+import com.app.proj.silverbars.presenters.BasePresenter;
 
 /**
- * Created by isaacalmanza on 01/11/17.
+ * Created by isaacalmanza on 01/21/17.
  */
 
-public class WorkoutPresenter extends BasePresenter implements WorkoutCallback {
-
-    public WorkoutPresenter(){}
-
+public class ExerciseListPresenter extends BasePresenter{
 
 
     @Override
@@ -36,7 +33,4 @@ public class WorkoutPresenter extends BasePresenter implements WorkoutCallback {
     public void onDestroy() {
 
     }
-
-
-
 }

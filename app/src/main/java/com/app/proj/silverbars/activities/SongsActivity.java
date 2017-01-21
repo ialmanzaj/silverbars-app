@@ -6,7 +6,6 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseBooleanArray;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -28,7 +27,6 @@ public class SongsActivity extends AppCompatActivity {
 
 
     private ListView ListMusic;
-
 
     private long[] selected;
     private Button clean;
@@ -54,7 +52,7 @@ public class SongsActivity extends AppCompatActivity {
 
         if (mySongs.size() > 0) {
 
-            canciones_url = DeleteNoteVoice(mySongs);
+            canciones_url = deleteVoiceNote(mySongs);
 
             if (canciones_url.size() > 0){
 
@@ -72,42 +70,41 @@ public class SongsActivity extends AppCompatActivity {
 
 
                 Button done = (Button) findViewById(R.id.done);
-                done.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        final int choice = ListMusic.getCount();
-                        selected = new long[choice];
-                        final SparseBooleanArray spa = ListMusic.getCheckedItemPositions();
-                        if (spa.size() != 0) {
-                            playlist = new String[ListMusic.getCheckedItemCount()];
-                            int x = 0;
-                            for (int i = 0; i < choice; i++) {
-                                selected[i] = -1;
-                            }
-                            for (int i = 0; i < choice; i++) {
-                                if (spa.get(i)) {
-                                    selected[i] = ListMusic.getItemIdAtPosition(i);
-                                }
-                            }
-                            for(int j = 0; j < canciones_url.size(); j++){
-                                if (j == selected[j]){
-                                    playlist[x] = utilities.getSongName(SongsActivity.this,canciones_url.get(j));
-                                    x++;
-                                }
-                            }
-
-                            Log.v("playlist", Arrays.toString(playlist));
-                            Log.v("songs", String.valueOf(canciones_url));
-
-                            Intent returnIntent = new Intent();
-                            returnIntent.putExtra("positions",playlist);
-                            returnIntent.putExtra("songs",canciones_url);
-                            setResult(RESULT_OK, returnIntent);
-                            finish();
+                
+                done.setOnClickListener(view -> {
+                    
+                    final int choice = ListMusic.getCount();
+                    selected = new long[choice];
+                    final SparseBooleanArray spa = ListMusic.getCheckedItemPositions();
+                    if (spa.size() != 0) {
+                        playlist = new String[ListMusic.getCheckedItemCount()];
+                        int x = 0;
+                        for (int i = 0; i < choice; i++) {
+                            selected[i] = -1;
                         }
-                        else
-                            canciones_url = null;
+                        for (int i = 0; i < choice; i++) {
+                            if (spa.get(i)) {
+                                selected[i] = ListMusic.getItemIdAtPosition(i);
+                            }
+                        }
+                        for(int j = 0; j < canciones_url.size(); j++){
+                            if (j == selected[j]){
+                                playlist[x] = utilities.getSongName(SongsActivity.this,canciones_url.get(j));
+                                x++;
+                            }
+                        }
+
+                        Log.v("playlist", Arrays.toString(playlist));
+                        Log.v("songs", String.valueOf(canciones_url));
+
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("positions",playlist);
+                        returnIntent.putExtra("songs",canciones_url);
+                        setResult(RESULT_OK, returnIntent);
+                        finish();
                     }
+                    else
+                        canciones_url = null;
                 });
 
             }
@@ -116,8 +113,6 @@ public class SongsActivity extends AppCompatActivity {
         }
         else {
             finish();
-
-
             utilities.toast(this,"No hay canciones");
         }
     }
@@ -149,7 +144,7 @@ public class SongsActivity extends AppCompatActivity {
         finish();
     }
 
-    private ArrayList<File> DeleteNoteVoice(ArrayList<File> songs){
+    private ArrayList<File> deleteVoiceNote(ArrayList<File> songs){
 
         ArrayList<String> canciones = new ArrayList<>();
         ArrayList<File>   songs_urls = new ArrayList<>();
@@ -159,16 +154,10 @@ public class SongsActivity extends AppCompatActivity {
             canciones.get(b).split("/storage/emulated/0/");
 
             if (!canciones.get(b).contains("WhatsApp/Media/WhatsApp Audio/AUD-")){
-
-
                 Log.d(TAG,"otras canciones: "+songs.get(b));
 
-
                 try {
-
-
                     songs_urls.add(songs.get(b));
-
 
                 }catch (NullPointerException e){
                     Log.e(TAG,"NullPointerException",e);

@@ -3,7 +3,9 @@ package com.app.proj.silverbars.presenters;
 import android.app.Activity;
 import android.util.Log;
 
+import com.app.proj.silverbars.callbacks.SpotifyCallback;
 import com.app.proj.silverbars.interactors.SpotifyInteractor;
+import com.app.proj.silverbars.viewsets.SpotifyView;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -17,16 +19,20 @@ import static com.app.proj.silverbars.Constants.REQUEST_CODE;
  * Created by isaacalmanza on 01/11/17.
  */
 
-public class SpotifyPresenter extends BasePresenter implements ConnectionStateCallback {
+public class SpotifyPresenter extends BasePresenter implements ConnectionStateCallback,SpotifyCallback {
 
 
     private static final String TAG = SpotifyPresenter.class.getSimpleName();
 
     private SpotifyInteractor interactor;
+    private SpotifyView view;
 
-    public SpotifyPresenter(SpotifyInteractor interactor){
+
+    public SpotifyPresenter(SpotifyView view,SpotifyInteractor interactor){
+        this.view = view;
         this.interactor = interactor;
     }
+
 
     public void openLoginWindow(Activity activity) {
         final AuthenticationRequest request = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)

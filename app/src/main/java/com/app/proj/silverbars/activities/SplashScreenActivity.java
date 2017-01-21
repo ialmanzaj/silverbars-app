@@ -21,13 +21,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-
-
         FacebookSdk.sdkInitialize(getApplicationContext());
-
-        //SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
-        //Boolean signIn = sharedPref.getBoolean(getString(R.string.sign_in), false);
-
 
         AuthAccountManager authAccountManager = new AuthAccountManager();
         Account activeAccount = authAccountManager.getActiveAccount(getString(R.string.authentication_ACCOUNT));

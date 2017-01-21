@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.app.proj.silverbars.R;
@@ -32,40 +31,19 @@ public class SelectionMusicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_selection_music);
 
 
+        setupToolbar();
+
         RelativeLayout songsButton = (RelativeLayout) findViewById(R.id.songs);
         RelativeLayout playlistButton = (RelativeLayout) findViewById(R.id.playlist);
         RelativeLayout spotifyButton = (RelativeLayout) findViewById(R.id.spotify);
         RelativeLayout soundcloudButton = (RelativeLayout) findViewById(R.id.soundcloud);
 
 
-        songsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        songsButton.setOnClickListener(v -> startActivityForResult(new Intent(SelectionMusicActivity.this, SongsActivity.class), 1));
 
-                startActivityForResult(new Intent(SelectionMusicActivity.this, SongsActivity.class), 1);
-
-            }
-        });
-
-        playlistButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(new Intent(SelectionMusicActivity.this, PlaylistPickerActivity.class), 1);
-
-            }
-        });
-        spotifyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(new Intent(SelectionMusicActivity.this, SpotifyActivity.class), 1);
-
-            }
-        });
-        soundcloudButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
+        playlistButton.setOnClickListener(v -> startActivityForResult(new Intent(SelectionMusicActivity.this, PlaylistPickerActivity.class), 1));
+        spotifyButton.setOnClickListener(v -> startActivityForResult(new Intent(SelectionMusicActivity.this, SpotifyActivity.class), 1));
+        soundcloudButton.setOnClickListener(v -> {
         });
     }
 
@@ -73,12 +51,6 @@ public class SelectionMusicActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.music_selection));
-        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
 

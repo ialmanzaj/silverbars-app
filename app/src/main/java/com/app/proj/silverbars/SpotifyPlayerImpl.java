@@ -37,7 +37,7 @@ public class SpotifyPlayerImpl implements Player.NotificationCallback, Connectio
     private Metadata mMetadata;
 
     //spotify vars
-    private String spotify_playlist;
+    private String mSpotifyPlaylist;
     private Context context;
     private String spotify_token;
 
@@ -46,10 +46,10 @@ public class SpotifyPlayerImpl implements Player.NotificationCallback, Connectio
     private MusicCallback callback;
 
 
-    public SpotifyPlayerImpl(Context context, String spotify_token, String spotify_playlist, MusicCallback callback){
+    public SpotifyPlayerImpl(Context context, String spotify_token, String playlist, MusicCallback callback){
         this.context = context;
         this.spotify_token = spotify_token;
-        this.spotify_playlist = spotify_playlist;
+        this.mSpotifyPlaylist = playlist;
         this.callback = callback;
     }
 
@@ -87,31 +87,32 @@ public class SpotifyPlayerImpl implements Player.NotificationCallback, Connectio
     }
 
 
-    public void onPauseSpotifyPlayer(){
+    public void pause(){
         if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
             mSpotifyPlayer.pause(mOperationCallback);
         }
     }
 
-    private void startPlayer(String uri_song) {
+    private void start(String uri_song) {
         logSpotityStatus("Starting playback for " + uri_song);
         mSpotifyPlayer.playUri(mOperationCallback,uri_song,0,0);
     }
 
 
-    public void onPlayPlayer(){
+    public void play(){
         if (mCurrentPlaybackState != null && mCurrentPlaybackState.isActiveDevice){
 
-            resumePlayer();
+            resume();
+
 
         }else {
 
             //restarting
-            startPlayer(spotify_playlist);
+            start(mSpotifyPlaylist);
         }
     }
 
-    private void resumePlayer(){
+    private void resume(){
         mSpotifyPlayer.resume(mOperationCallback);
     }
 
@@ -176,7 +177,6 @@ public class SpotifyPlayerImpl implements Player.NotificationCallback, Connectio
 
     @Override
     public void onPlaybackEvent(PlayerEvent event) {
-
         logSpotityStatus("Player event: " + event);
         mCurrentPlaybackState = mSpotifyPlayer.getPlaybackState();
         mMetadata = mSpotifyPlayer.getMetadata();
@@ -201,12 +201,10 @@ public class SpotifyPlayerImpl implements Player.NotificationCallback, Connectio
         }
     }
 
-
     private boolean isLoggedIn() {
         return mSpotifyPlayer != null && mSpotifyPlayer.isLoggedIn();
     }
-
-
+    
     public void onResume(){
         mNetworkStateReceiver = new BroadcastReceiver() {
             @Override
@@ -229,6 +227,7 @@ public class SpotifyPlayerImpl implements Player.NotificationCallback, Connectio
 
     }
 
+    
     public void onPause(){
         context.unregisterReceiver(mNetworkStateReceiver);
         if (mSpotifyPlayer != null) {
@@ -236,8 +235,6 @@ public class SpotifyPlayerImpl implements Player.NotificationCallback, Connectio
             mSpotifyPlayer.removeConnectionStateCallback(this);
         }
     }
-
-
 
     public void onDestroy(){
         if (mCurrentPlaybackState.isActiveDevice){

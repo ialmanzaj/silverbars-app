@@ -31,7 +31,6 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.close_session) RelativeLayout close_session;
     @BindView(R.id.toolbar) Toolbar toolbar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,53 +46,44 @@ public class SettingsActivity extends AppCompatActivity {
 
 
         toolbar.setNavigationIcon(R.drawable.ic_clear_white_24px);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    finish();
-                }
-        });
 
 
-        close_session.setOnClickListener(new View.OnClickListener() {
-            @Override
-                public void onClick(View view) {
+        close_session.setOnClickListener(view -> {
 
-                View v = new MaterialDialog.Builder(view.getContext())
-                        .title(getResources().getString(R.string.session_title))
-                        .content(getResources().getString(R.string.session_content))
+            View v = new MaterialDialog.Builder(view.getContext())
+                    .title(getResources().getString(R.string.session_title))
+                    .content(getResources().getString(R.string.session_content))
 
-                        .contentColor(getResources().getColor(R.color.white))
-                        .positiveColor(getResources().getColor(R.color.white))
-                        .negativeColor(getResources().getColor(R.color.white))
-                        .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                dialog.dismiss();
-
-                                //facebook logout
-                                LoginManager.getInstance().logOut();
-
-
-                                AuthAccountManager authAccountManager = new AuthAccountManager();
-                                authAccountManager.removeActiveAccount(getString(R.string.authentication_ACCOUNT));
-
-
-                                Intent intent = new Intent(SettingsActivity.this,LoginActivity.class);
-                                intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, getString(R.string.authentication_ACCOUNT));
-                                startActivity(intent);
-                                finish();
-                            }
-                        })
-                        .negativeText(getResources().getString(R.string.negative_dialog)).onNegative(new MaterialDialog.SingleButtonCallback() {
-                            @Override
+                    .contentColor(getResources().getColor(R.color.white))
+                    .positiveColor(getResources().getColor(R.color.white))
+                    .negativeColor(getResources().getColor(R.color.white))
+                    .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .show().getContentView();
+                            dialog.dismiss();
 
-                }
+                            //facebook logout
+                            LoginManager.getInstance().logOut();
+
+
+                            AuthAccountManager authAccountManager = new AuthAccountManager();
+                            authAccountManager.removeActiveAccount(getString(R.string.authentication_ACCOUNT));
+
+
+                            Intent intent = new Intent(SettingsActivity.this,LoginActivity.class);
+                            intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, getString(R.string.authentication_ACCOUNT));
+                            startActivity(intent);
+                            finish();
+                        }
+                    })
+                    .negativeText(getResources().getString(R.string.negative_dialog)).onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show().getContentView();
+
             });
 
     }

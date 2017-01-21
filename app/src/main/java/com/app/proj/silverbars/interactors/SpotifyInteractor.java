@@ -21,22 +21,21 @@ public class SpotifyInteractor {
     private static final String TAG = SpotifyInteractor.class.getSimpleName();
 
     private SpotifyApi spotifyApi;
-    private static SpotifyService spotify;
+    private  SpotifyService service;
 
 
     public SpotifyInteractor(SpotifyApi spotifyApi){
         this.spotifyApi = spotifyApi;
     }
 
-    public  void initService(String Token){
-        if (spotifyApi != null){
-            spotifyApi.setAccessToken(Token);
-            spotify = spotifyApi.getService();
-        }
+    public  void initService(String token){
+        spotifyApi.setAccessToken(token);
+        service = spotifyApi.getService();
     }
 
-    public void getMyProfile(){
-        spotify.getMe(new SpotifyCallback<UserPrivate>() {
+
+    public void getMyProfile(SpotifyCallback callback){
+        service.getMe(new SpotifyCallback<UserPrivate>() {
             @Override
             public void failure(SpotifyError spotifyError) {
 
@@ -48,8 +47,8 @@ public class SpotifyInteractor {
         });
     }
 
-    public void getMyPlaylists(){
-        spotify.getMyPlaylists(new SpotifyCallback<Pager<PlaylistSimple>>() {
+    public void getMyPlaylists(SpotifyCallback callback){
+        service.getMyPlaylists(new SpotifyCallback<Pager<PlaylistSimple>>() {
 
             @Override
             public void success(Pager<PlaylistSimple> playlistSimplePager, Response response) {
@@ -74,8 +73,8 @@ public class SpotifyInteractor {
         });
     }
 
-    public void getMyTracks(String Token){
-        spotify.getMySavedTracks(new SpotifyCallback<Pager<SavedTrack>>() {
+    public void getMyTracks(SpotifyCallback callback,String Token){
+        service.getMySavedTracks(new SpotifyCallback<Pager<SavedTrack>>() {
             @Override
             public void success(Pager<SavedTrack> savedTrackPager, retrofit.client.Response response) {
                 //Log.v("Response size", String.valueOf(response.getHeaders().size()));
@@ -88,6 +87,8 @@ public class SpotifyInteractor {
                     //songs.add(savedTrackPager.items.get(a).track.uri);
                     Log.d(TAG, "SAVED: " + savedTrackPager.items.get(a).track.name);
                 }
+
+
             }
             @Override
             public void failure(SpotifyError error) {

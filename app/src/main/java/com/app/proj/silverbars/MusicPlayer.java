@@ -76,26 +76,24 @@ public class MusicPlayer {
 
     public void setVolume(float leftVolume,float rightVolume){mLocalMusicPlayer.setVolume(leftVolume,rightVolume);}
 
-    public void pausePlayer(){
+    public void pause(){
         mLocalMusicPlayer.pause();
     }
 
-    public void startPlayer(){
+    public void play(){
         mLocalMusicPlayer.start();
     }
 
-
-    public void resumePlayer(){
+    public void resume(){
         mLocalMusicPlayer.start();
     }
 
-    public void stopPlayer(){
+    public void stop(){
         mLocalMusicPlayer.stop();
     }
 
-    public void cancelPlayer(){mLocalMusicPlayer.release();}
-    
-    
+    public void cancel(){mLocalMusicPlayer.release();}
+
     public boolean isPlaying(){
         return mLocalMusicPlayer.isPlaying();
     }

@@ -33,6 +33,7 @@ import com.app.proj.silverbars.adapters.ExerciseAdapter;
 import com.app.proj.silverbars.models.ExerciseRep;
 import com.app.proj.silverbars.models.Muscle;
 import com.app.proj.silverbars.utils.Utilities;
+import com.app.proj.silverbars.viewsets.WorkoutView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ import butterknife.BindView;
  * Created by isaacalmanza on 10/04/16.
  */
 
-public class WorkoutActivity extends AppCompatActivity {
+public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
 
     private static final String TAG = WorkoutActivity.class.getSimpleName();
     
@@ -59,49 +60,50 @@ public class WorkoutActivity extends AppCompatActivity {
     private Button minusRestSets;
 
 
-
-    @BindView()TabHost Tab_layout;
-
-    @BindView() LinearLayout primary_ColumnMuscle;
-    @BindView() LinearLayout secundary_ColumnMuscle;
-    @BindView() LinearLayout Progress;
-
-
-    @BindView()LinearLayout contentInfo;
+    @BindView(R.id.toolbar) Toolbar myToolbar;
+    @BindView(R.id.tabHost2)TabHost Tab_layout;
     
-    @BindView() LinearLayout error_layout;
-    Button button_error_reload;
+
+    @BindView(R.id.column1) LinearLayout primary_ColumnMuscle;
+    @BindView(R.id.column2) LinearLayout secundary_ColumnMuscle;
+    
+    
+    @BindView(R.id.loading) LinearLayout mLoadingView;
 
 
-
+    @BindView(R.id.content_info)LinearLayout contentInfo;
+    
+    @BindView(R.id.error_view) LinearLayout error_layout;
+    @BindView(R.id.reload) Button button_error_reload;
 
     @BindView() TextView Positive;
 
-    private TextView Negative,
-            Isometric,
-            Reps,
-            Workout_name,
-            Sets,
-            RestbySet,
-            RestbyExercise,
-            RestSets_dialog,
-            Sets_dialog;
+    @BindView() RelativeLayout selectMusic;
+    @BindView() TextView Negative;
+    @BindView() TextView Isometric;
+    @BindView() TextView Reps;
+    @BindView() TextView Workout_name;
+    @BindView(R.id.sets) TextView Sets;
+    @BindView(R.id.RestbySet) TextView RestbySet;
+    @BindView(R.id.RestbyExercise) TextView RestbyExercise;
+    @BindView() TextView RestSets_dialog;
+    @BindView() TextView Sets_dialog;
 
-    @BindView() RecyclerView list;
+    @BindView(R.id.list) RecyclerView list;
 
-    @BindView() WebView webview;
+    @BindView(R.id.muscles) ScrollView scrollView;
 
-    @BindView() TextView Rest_by_exercise_dialog;
+    @BindView(R.id.webview) WebView webview;
 
-    @BindView() Toolbar myToolbar;
+    @BindView(R.id.SelectMusic) RelativeLayout selectMusic;
 
-    @BindView()SwitchCompat enableLocal;
-    @BindView()SwitchCompat vibration_per_rep;
-    @BindView()SwitchCompat vibration_per_set;
-    @BindView()SwitchCompat vibration_per_set;
+    @BindView(R.id.enableLocal) SwitchCompat enableLocal;
+    @BindView(R.id.vibration_per_rep) SwitchCompat vibration_per_rep;
+    @BindView(R.id.vibration_per_set) SwitchCompat vibration_per_set;
 
-    @BindView()SwitchCompat voice_per_exercise;
+    @BindView(R.id.voice_per_exercise)SwitchCompat voice_per_exercise;
 
+    @BindView(R.id.start_button) Button startButton;
 
 
     private ExerciseAdapter adapter;
@@ -113,9 +115,9 @@ public class WorkoutActivity extends AppCompatActivity {
     private int ExerciseReps = 1;
     private ArrayList<File> Songs_files;
 
-    RelativeLayout togle_no_internet;
+    @BindView(R.id.togle_no_internet) RelativeLayout togle_no_internet;
     private Boolean respuesta_recibida = false;
-    Button startButton;
+
 
     private boolean isTouched = false;
     private boolean loadLocal = false;
@@ -163,103 +165,34 @@ public class WorkoutActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-        startButton = (Button) findViewById(R.id.start_button);
-
-        // MUSCLES TEXT VIEW
-        contentInfo = (LinearLayout)findViewById(R.id.content_info);
-        primary_ColumnMuscle = (LinearLayout) findViewById(R.id.column1);
-        secundary_ColumnMuscle = (LinearLayout) findViewById(R.id.column2);
-
-        Progress = (LinearLayout) findViewById(R.id.loading);
-
-        error_layout = (LinearLayout) findViewById(R.id.error_view);
-
-         button_error_reload = (Button) findViewById(R.id.reload);
-
-        enableLocal = (SwitchCompat) findViewById(R.id.enableLocal);
-        vibration_per_rep = (SwitchCompat) findViewById(R.id.vibration_per_rep);
-        vibration_per_set = (SwitchCompat) findViewById(R.id.vibration_per_set);
-
-
-
-
-        button_error_reload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                error_layout.setVisibility(View.GONE);
-                Progress.setVisibility(View.VISIBLE);
-                putExercisesInAdapter(mExercises);
-            }
+        button_error_reload.setOnClickListener(v -> {
+            error_layout.setVisibility(View.GONE);
+            mLoadingView.setVisibility(View.VISIBLE);
+            putExercisesInAdapter(mExercises);
         });
 
 
 
 
+        voice_per_exercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            DownloadAudioExercise = isChecked;
 
-
-        voice_per_exercise = (SwitchCompat) findViewById(R.id.voice_per_exercise);
-        voice_per_exercise.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                DownloadAudioExercise = isChecked;
-
-                if (DownloadAudioExercise){
-                    if (mExercises.size() > 0){
-                        for (int a = 0;a<mExercises.size();a++){
-                            utilities.createExerciseAudio(WorkoutActivity.this, DownloadAudioExercise, mExercises.get(a).getExercise().getExercise_audio());
-                        }
-
+            if (DownloadAudioExercise){
+                if (mExercises.size() > 0){
+                    for (int a = 0;a<mExercises.size();a++){
+                        utilities.createExerciseAudio(WorkoutActivity.this, DownloadAudioExercise, mExercises.get(a).getExercise().getExercise_audio());
                     }
 
                 }
+
             }
         });
-
-
-        
-        list = (RecyclerView) findViewById(R.id.list);
-
-        final RelativeLayout selectMusic = (RelativeLayout) findViewById(R.id.SelectMusic);
-
-        //TEXTVIEW OF REPS,SETS AND REST
-
-        // cantidad de sets
-        Sets = (TextView) findViewById(R.id.sets);
-
-        //descanso entre ejercicio
-        RestbyExercise = (TextView) findViewById(R.id.RestbyExercise);
-
-        // descanso entre sets
-        RestbySet = (TextView) findViewById(R.id.RestbySet);
-
-        // Web view
-        webview = (WebView) findViewById(R.id.webview);
-
-
-        // layout to put local workouts
-        togle_no_internet = (RelativeLayout) findViewById(R.id.togle_no_internet);
-
-
-        //  TOOL BAR - BACK BUTTON  ADDED
-        myToolbar = (Toolbar) findViewById(R.id.toolbar);
 
 
         setSupportActionBar(myToolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(workoutName);
 
-
-        myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
 
         if (list != null){
@@ -268,10 +201,9 @@ public class WorkoutActivity extends AppCompatActivity {
         }
 
 
-        RecyclerView.LayoutManager lManager = new LinearLayoutManager(this);
-        list.setLayoutManager(lManager);
 
-        ScrollView scrollView = (ScrollView) findViewById(R.id.muscles);
+        list.setLayoutManager(new LinearLayoutManager(this));
+
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
             scrollView.setFillViewport(true);
@@ -284,227 +216,183 @@ public class WorkoutActivity extends AppCompatActivity {
         //SWITCH save local workout BUTTON CONFIGURACIONES
         enableLocal.setEnabled(true);
 
-        enableLocal.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                isTouched = true;
-                return false;
-            }
+        enableLocal.setOnTouchListener((view, motionEvent) -> {
+            isTouched = true;
+            return false;
         });
 
 
-        enableLocal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isTouched) {
-                    isTouched = false;
+        enableLocal.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (isTouched) {
+                isTouched = false;
 
-                    if (isChecked && !loadLocal){
+                if (isChecked && !loadLocal){
 
-                    }else{
-                        logMessage("Switch off");
-                    }
+                }else{
+                    logMessage("Switch off");
                 }
             }
         });
 
 
         Sets.setText(String.valueOf(workoutSets));
-        Sets.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                View v = new MaterialDialog.Builder(view.getContext())
-                        .title(R.string.set_edit)
-                        .customView(R.layout.edit_set_setup, true)
-                        .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                dialog.dismiss();
-                                //On Dialog "Done" ClickListener
-                                Sets.setText(Sets_dialog.getText());
 
-                            }
-                        })
-                        .show()
-                        .getCustomView();
-                if (v != null) {
-                    Sets_dialog = (TextView) v.findViewById(R.id.Sets_dialog);
-                    Sets_dialog.setText(String.valueOf(Sets.getText()));
 
-                    plusSets = (Button) v.findViewById(R.id.plusSets);
-                    plusSets.setOnClickListener(new View.OnClickListener() {
+        Sets.setOnClickListener(view -> {
+            View v = new MaterialDialog.Builder(view.getContext())
+                    .title(R.string.set_edit)
+                    .customView(R.layout.edit_set_setup, true)
+                    .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
                         @Override
-                        public void onClick(View view) {
-
-                            plusTempo(Sets_dialog,plusSets,minusSets);
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            dialog.dismiss();
+                            //On Dialog "Done" ClickListener
+                            Sets.setText(Sets_dialog.getText());
 
                         }
-                    });
-                    minusSets = (Button) v.findViewById(R.id.minusSets);
-                    minusSets.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            minusTempo(Sets_dialog,minusSets,plusSets);
-                        }
-                    });
-                }
-                int setsValue = Integer.parseInt(Sets.getText().toString());
-                if (setsValue <= 1){
-                    plusSets.setEnabled(true);
-                    plusSets.setClickable(true);
-                    minusSets.setEnabled(false);
-                    minusSets.setClickable(false);
-                }else if(setsValue >=10){
-                    plusSets.setEnabled(false);
-                    plusSets.setClickable(false);
-                    minusSets.setEnabled(true);
-                    minusSets.setClickable(true);
-                }
+                    })
+                    .show()
+                    .getCustomView();
 
+            if (v != null) {
+                Sets_dialog = (TextView) v.findViewById(R.id.Sets_dialog);
+                Sets_dialog.setText(String.valueOf(Sets.getText()));
+
+                plusSets = (Button) v.findViewById(R.id.plusSets);
+                plusSets.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        plusTempo(Sets_dialog,plusSets,minusSets);
+
+                    }
+                });
+                minusSets = (Button) v.findViewById(R.id.minusSets);
+                minusSets.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        minusTempo(Sets_dialog,minusSets,plusSets);
+                    }
+                });
+            }
+            int setsValue = Integer.parseInt(Sets.getText().toString());
+            if (setsValue <= 1){
+                plusSets.setEnabled(true);
+                plusSets.setClickable(true);
+                minusSets.setEnabled(false);
+                minusSets.setClickable(false);
+            }else if(setsValue >=10){
+                plusSets.setEnabled(false);
+                plusSets.setClickable(false);
+                minusSets.setEnabled(true);
+                minusSets.setClickable(true);
+            }
+
+        });
+
+
+        RestbyExercise.setOnClickListener(view -> {
+
+            TextView Rest_by_exercise_dialog;
+            
+            
+            View v = new MaterialDialog.Builder(view.getContext())
+                    .title(R.string.rest_exercise_text)
+                    .customView(R.layout.edit_rest_exercise_setup, true)
+                    .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            dialog.dismiss();
+                            //On Dialog "Done" ClickListener
+                            RestbyExercise.setText(Rest_by_exercise_dialog.getText());
+                        }
+                    })
+                    .show()
+                    .getCustomView();
+
+            if (v != null) {
+
+                Rest_by_exercise_dialog = (TextView) v.findViewById(R.id.Rest_exercise);
+                Rest_by_exercise_dialog.setText(String.valueOf(RestbyExercise.getText()));
+
+
+                plusRest = (Button) v.findViewById(R.id.plusRest);
+                plusRest.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        plusTempo(Rest_by_exercise_dialog,plusRest,minusRest);
+                    }
+                });
+                minusRest = (Button) v.findViewById(R.id.minusRest);
+                minusRest.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        minusTempo(Rest_by_exercise_dialog,minusRest,plusRest);
+                    }
+                });
             }
         });
 
 
-        RestbyExercise.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                View v = new MaterialDialog.Builder(view.getContext())
-                        .title(R.string.rest_exercise_text)
-                        .customView(R.layout.edit_rest_exercise_setup, true)
-                        .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                dialog.dismiss();
-                                //On Dialog "Done" ClickListener
-                                RestbyExercise.setText(Rest_by_exercise_dialog.getText());
-                            }
-                        })
-                        .show()
-                        .getCustomView();
-                if (v != null) {
-                    Rest_by_exercise_dialog = (TextView) v.findViewById(R.id.Rest_exercise);
-                    Rest_by_exercise_dialog.setText(String.valueOf(RestbyExercise.getText()));
+
+        RestbySet.setOnClickListener(view -> {
+
+            View v = new MaterialDialog.Builder(view.getContext())
+                    .title(R.string.rest_sets_text)
+                    .customView(R.layout.edit_rest_sets_setup, true)
+                    .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            dialog.dismiss();
+                            //On Dialog "Done" ClickListener
+                            RestbySet.setText(RestSets_dialog.getText());
+                        }
+                    })
+                    .show()
+                    .getCustomView();
+
+            if (v != null) {
+
+                RestSets_dialog = (TextView) v.findViewById(R.id.RestSets_dialog);
+                RestSets_dialog.setText(String.valueOf(RestbySet.getText()));
+
+                plusRestSets = (Button) v.findViewById(R.id.plusRestSets);
+                plusRestSets.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        plusTempo(RestSets_dialog,plusRestSets,minusRestSets);
 
 
-                    plusRest = (Button) v.findViewById(R.id.plusRest);
-                    plusRest.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            plusTempo(Rest_by_exercise_dialog,plusRest,minusRest);
-                        }
-                    });
-                    minusRest = (Button) v.findViewById(R.id.minusRest);
-                    minusRest.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            minusTempo(Rest_by_exercise_dialog,minusRest,plusRest);
-                        }
-                    });
-                }
+
+                    }
+                });
+                minusRestSets = (Button) v.findViewById(R.id.minusRestSets);
+                minusRestSets.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        minusTempo(RestSets_dialog,minusRestSets,plusRestSets);
+
+                    }
+                });
             }
         });
 
 
-
-        RestbySet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                View v = new MaterialDialog.Builder(view.getContext())
-                        .title(R.string.rest_sets_text)
-                        .customView(R.layout.edit_rest_sets_setup, true)
-                        .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                dialog.dismiss();
-                                //On Dialog "Done" ClickListener
-                                RestbySet.setText(RestSets_dialog.getText());
-                            }
-                        })
-                        .show()
-                        .getCustomView();
-
-                if (v != null) {
-
-                    RestSets_dialog = (TextView) v.findViewById(R.id.RestSets_dialog);
-                    RestSets_dialog.setText(String.valueOf(RestbySet.getText()));
-
-                    plusRestSets = (Button) v.findViewById(R.id.plusRestSets);
-                    plusRestSets.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            plusTempo(RestSets_dialog,plusRestSets,minusRestSets);
-
-
-
-                        }
-                    });
-                    minusRestSets = (Button) v.findViewById(R.id.minusRestSets);
-                    minusRestSets.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            minusTempo(RestSets_dialog,minusRestSets,plusRestSets);
-
-                        }
-                    });
-                }
-            }
-        });
-
-        selectMusic.setClickable(true);
-        selectMusic.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            selectMusic.setBackgroundColor(getResources().getColor(R.color.onTouch,null));
-                        }else {
-                            selectMusic.setBackgroundColor(getResources().getColor(R.color.onTouch));
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            selectMusic.setBackgroundColor(getResources().getColor(R.color.white,null));
-                        }else {
-                            selectMusic.setBackgroundColor(getResources().getColor(R.color.white));
-                        }
-                        startActivityForResult(new Intent(WorkoutActivity.this, SelectionMusicActivity.class),1);
-                        break;
-                    default:
-                        break;
-                }
-
-                return false;
-            }
-        });
-
-        //START WORKOUT BUTTON
 
         // vibracion por repeticion y por set colocado cada switch
-        vibration_per_rep.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                VibrationIsActivePerRep = isChecked;
-                Log.v(TAG,"VibrationIsActivePerRep: "+VibrationIsActivePerRep);
-            }
+        vibration_per_rep.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            VibrationIsActivePerRep = isChecked;
+            Log.v(TAG,"VibrationIsActivePerRep: "+VibrationIsActivePerRep);
         });
 
 
-        vibration_per_set.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                VibrationIsActivePerSet = isChecked;
-                Log.v(TAG,"VibrationIsActivePerSet: "+VibrationIsActivePerSet);
-            }
+        vibration_per_set.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            VibrationIsActivePerSet = isChecked;
+            Log.v(TAG,"VibrationIsActivePerSet: "+VibrationIsActivePerSet);
         });
 
 
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LaunchWorkingOutActivity();
-            }
-        });
+        startButton.setOnClickListener(view -> LaunchWorkingOutActivity());
 
     }// on create close
 
@@ -512,7 +400,6 @@ public class WorkoutActivity extends AppCompatActivity {
     private void setupTabs(){
 
         //Defining Tabs
-        Tab_layout = (TabHost) findViewById(R.id.tabHost2);
         Tab_layout.setup();
 
         TabHost.TabSpec overview = Tab_layout.newTabSpec(getResources().getString(R.string.tab_overview));
@@ -570,23 +457,25 @@ public class WorkoutActivity extends AppCompatActivity {
         intent.putParcelableArrayListExtra("exercises", adapter.getExercises());
 
 
-        intent.putExtra("songs",Songs_names);
-        intent.putExtra("songlist",Songs_files);
+        intent.putExtra("play_exercise_audio",DownloadAudioExercise);
         intent.putExtra("Sets",sets);
         intent.putExtra("RestByExercise",restbyexercise);
         intent.putExtra("RestBySet",restbyset);
         intent.putExtra("VibrationPerSet",VibrationIsActivePerSet);
         intent.putExtra("VibrationPerRep",VibrationIsActivePerRep);
+
+
+        intent.putExtra("songs",Songs_names);
+        intent.putExtra("songlist",Songs_files);
         intent.putExtra("playlist_spotify",PlaylistSpotify);
         intent.putExtra("token",Token);
-        intent.putExtra("play_exercise_audio",DownloadAudioExercise);
+
         startActivity(intent);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null){
             if (data.hasExtra("playlist_spotify") && data.hasExtra("token")){
 
@@ -602,7 +491,6 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         }
     }
-
 
 
     private void plusTempo(TextView view, Button button, Button button2){
@@ -721,6 +609,8 @@ public class WorkoutActivity extends AppCompatActivity {
             }
         }
     }
+
+
 
     private void setMusclesToView(List<String> musculos){
         if (musculos.size() > 0){

@@ -19,7 +19,7 @@ import com.app.proj.silverbars.adapters.ExerciseWorkingOutAdapter;
 import com.app.proj.silverbars.models.ExerciseRep;
 import com.app.proj.silverbars.presenters.WorkingOutPresenter;
 import com.app.proj.silverbars.utils.OnSwipeTouchListener;
-import com.app.proj.silverbars.utils.RecyclerViewTouch;
+import com.app.proj.silverbars.utils.DisableTouchRecyclerListener;
 import com.app.proj.silverbars.utils.Utilities;
 import com.app.proj.silverbars.viewsets.WorkingOutView;
 
@@ -75,14 +75,13 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
     private boolean mVibrationPerSet = false,mVibrationPerRep = false;
+
     private int mRestByExercise = 0,RestBySet = 0;
+
     ArrayList<ExerciseRep> mExercises = new ArrayList<>();
 
 
-
     private Utilities utilities;
-
-    ExerciseWorkingOutAdapter adapter;
 
 
     @Override
@@ -95,87 +94,43 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
         setExtras(extras);
 
-        list.addOnItemTouchListener(new RecyclerViewTouch()); // disables scolling
+        // disables scolling
+        list.addOnItemTouchListener(new DisableTouchRecyclerListener());
+
         // list en linear
-        RecyclerView.LayoutManager lManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        list.setLayoutManager(lManager);
-
-        // Crear un nuevo adaptador
-        adapter = new ExerciseWorkingOutAdapter(this,mExercises);
-        list.setAdapter(adapter);
-        
-        
-        
-        
-       /* // spotify inicialization
-        if (spotify_playlist != null && mSpotifyToken != null){
-            configPlayerSpotify(mSpotifyToken);
-        }
-*/
-
-        
-        mCurrentExercisePositionText.setText("1");
-
-        mTotalExercises.setText(String.valueOf(mExercises.size()));
-
-        mCurrentSetText.setText("0");
-        
+        list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
 
-        //positivie,mNegativeText and mIsometricText
-        mPositiveText.setText(String.valueOf(mExercises.get(0).getTempo_positive()));
-        mIsometricText.setText(String.valueOf(mExercises.get(0).getTempo_isometric()));
-        mNegativeText.setText(String.valueOf(mExercises.get(0).getTempo_negative()));
+        // Crear  nuevo adaptador
+        list.setAdapter(new ExerciseWorkingOutAdapter(this,mExercises));
 
 
-
-
-
-        mNextExercisebutton.setVisibility(View.VISIBLE);
-
-
-
-        mPlayMusicbutton.setOnClickListener(this);
-        mPauseMusicbutton.setOnClickListener(this);
-
-
-
-
-        
-        mSongName.setSelected(true);
-        
-
-        
-
-        //inicializar rep text
-        mRepetitionTimerText.setText(String.valueOf(mExercises.get(0).getRepetition()));
-        
-        
 
         mPlayerLayout.setOnTouchListener(new OnSwipeTouchListener(this){
             @Override
             public void onSwipeRight() {
 
-                //onMusicNext();
+                mWorkingOutPresenter.onSwipeMusicNext();
             }
             @Override
             public void onSwipeLeft() {
 
-                //onMusicPreview();
-
+                mWorkingOutPresenter.onSwipeMusicPreview();
             }
         });
         
-
-
 
 
         mWorkingOutPresenter.startInicialTimer(5);
     }
 
 
+
     private void setExtras(Bundle extras){
-        mExercises = extras.getParcelableArrayList("mExercises");
+        mExercises = extras.getParcelableArrayList("exercises");
+
+
+        int sets = extras.getInt("Sets");
 
         mRestByExercise =  extras.getInt("mRestByExercise");
         RestBySet = extras.getInt("RestBySet");
@@ -185,26 +140,61 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
         boolean play_exercise_audio = extras.getBoolean("play_exercise_audio");
-        
-        int sets = extras.getInt("Sets");
 
-        ArrayList<File> mySongsList = (ArrayList) extras.getParcelableArrayList("songlist");
 
+        //local music
+        ArrayList<File> local_playlist = (ArrayList) extras.getParcelableArrayList("songlist");
+        String[] local_song_names = extras.getStringArray("songs");
+
+
+        //spotify music
         String spotify_playlist = extras.getString("playlist_spotify");
-        
-        String mSpotifyToken = extras.getString("token");
-        String[] song_names = extras.getStringArray("songs");
-
+        String spotify_token = extras.getString("token");
 
 
         //init presenter vars
         mWorkingOutPresenter.setInitialSetup(mExercises);
 
 
+        //creating local player
+        if (local_playlist != null && local_song_names != null){
+            mWorkingOutPresenter.createLocalMusicPlayer(local_song_names,local_playlist);
+        }
 
 
+        //creating spotify player
+        if (spotify_playlist != null && spotify_token != null){
+            mWorkingOutPresenter.createSpotifyPlayer(spotify_token,spotify_playlist);
+        }
+
+
+
+        initUI();
     }
 
+
+    private void initUI(){
+
+        mNextExercisebutton.setVisibility(View.VISIBLE);
+
+
+        //inicializar rep text
+        mRepetitionTimerText.setText(String.valueOf(mExercises.get(0).getRepetition()));
+
+
+        mCurrentExercisePositionText.setText("1");
+
+        mTotalExercises.setText(String.valueOf(mExercises.size()));
+
+        mCurrentSetText.setText("0");
+
+
+        //positivie,mNegativeText and mIsometricText
+        mPositiveText.setText(String.valueOf(mExercises.get(0).getTempo_positive()));
+        mIsometricText.setText(String.valueOf(mExercises.get(0).getTempo_isometric()));
+        mNegativeText.setText(String.valueOf(mExercises.get(0).getTempo_negative()));
+
+    }
 
 
     @OnTextChanged(R.id.rest_counter)
@@ -225,8 +215,10 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         int id = view.getId();
         switch (id){
             case R.id.play_music:
+                mWorkingOutPresenter.playMusic();
                 break;
             case R.id.pause_music:
+                mWorkingOutPresenter.pauseMusic();
                 break;
             case R.id.play_workout:
                 mWorkingOutPresenter.playWorkout();
@@ -245,6 +237,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
                 break;
         }
     }
+
 
     private void zeroMusic(){
         mPlayerLayout.setVisibility(View.GONE);
@@ -271,6 +264,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         mPlayMusicbutton.setVisibility(View.GONE);
         mPauseMusicbutton.setVisibility(View.VISIBLE);
     }
+
 
     @Override
     public void updateSongName(String song_name) {
@@ -327,8 +321,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onRepetitionCountdown(String second) {
         mRepetitionTimerText.setText(second);
-
-
         ActivateVibrationPerRep();
     }
 
@@ -438,30 +430,20 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     private void onScreenOff(){getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);}
 
-
     private void ActivateVibrationPerRep(){
         if (mVibrationPerRep) {
-
             Vibrator vb = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
             if (!mWorkingOutPresenter.isWorkoutPaused()){
-
                 vb.vibrate(250);
-
-
             }else {
                 vb.cancel();
             }
-
-
         }
     }
 
     private void ActivateVibrationPerSet(){
         if (mVibrationPerSet){
-
             Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
-
             if (!mWorkingOutPresenter.isWorkoutPaused()){
 
                 vb.vibrate(1000);
@@ -470,9 +452,16 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
             }else {
                 vb.cancel();
             }
-
         }
     }
+
+
+    @Override
+    public void onBackPressed(){
+        Log.d(TAG,"onBackPressed");
+        mWorkingOutPresenter.finishWorkout();
+    }
+
 
     @Override
     protected void onStart() {
@@ -489,19 +478,9 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    public void onBackPressed(){
-        Log.d(TAG,"onBackPressed");
-        mWorkingOutPresenter.finishWorkout();
-    }
-
-
-    @Override
     protected void onDestroy() {
 
         onScreenOff();
-
-
-
         super.onDestroy();
     }
 

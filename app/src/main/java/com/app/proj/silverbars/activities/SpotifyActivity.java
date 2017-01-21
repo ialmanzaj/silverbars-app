@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.presenters.SpotifyPresenter;
+import com.app.proj.silverbars.viewsets.SpotifyView;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
@@ -28,7 +29,7 @@ import static com.app.proj.silverbars.Constants.REQUEST_CODE;
  * Created by isaacalmanza on 10/04/16.
  */
 
-public class SpotifyActivity extends AppCompatActivity  {
+public class SpotifyActivity extends AppCompatActivity implements SpotifyView{
 
     private static final String TAG = SpotifyActivity.class.getSimpleName();
 
@@ -71,7 +72,7 @@ public class SpotifyActivity extends AppCompatActivity  {
         mReloadButton.setOnClickListener(view -> {
 
 
-            mLoadingView.setVisibility(View.VISIBLE);
+            /*mLoadingView.setVisibility(View.VISIBLE);
             mErrorView.setVisibility(View.GONE);
 
             if (auth_error){
@@ -89,49 +90,46 @@ public class SpotifyActivity extends AppCompatActivity  {
                     getPlaylist(SpotifyToken);
                 }
 
-            }
+            }*/
         });
 
 
-        mDoneButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        mDoneButton.setOnClickListener(view -> {
 
-                final int choice = mListMusicSelection.getCount();
-                long[] selected = new long[choice];
-                final SparseBooleanArray spa = mListMusicSelection.getCheckedItemPositions();
-                if (spa.size() != 0) {
+            final int choice = mListMusicSelection.getCount();
+            long[] selected = new long[choice];
+            final SparseBooleanArray spa = mListMusicSelection.getCheckedItemPositions();
+            if (spa.size() != 0) {
 
-                    String currentPlaylist = null;
-                    int x = 0;
-                    for (int i = 0; i < choice; i++) {
-                        selected[i] = -1;
-                    }
-                    for (int i = 0; i < choice; i++) {
-                        if (spa.get(i)) {
-                            selected[i] = mListMusicSelection.getItemIdAtPosition(i);
-                        }
-                    }
-                    for (int j = 0; j < playlists.size(); j++) {
-                        if (j == selected[j]) {
-                            Log.v(TAG, "playlist: " + playlists.get(j));
-                            currentPlaylist = playlists.get(j);
-                            x++;
-                        }
-                    }
-
-
-                    Log.v("playlist elegido", currentPlaylist);
-                    Log.v("playlists", String.valueOf(playlists));
-
-
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("playlist_spotify", currentPlaylist);
-                    returnIntent.putExtra("token", SpotifyToken);
-                    setResult(RESULT_OK, returnIntent);
-                    finish();
-
+                String currentPlaylist = null;
+                int x = 0;
+                for (int i = 0; i < choice; i++) {
+                    selected[i] = -1;
                 }
+                for (int i = 0; i < choice; i++) {
+                    if (spa.get(i)) {
+                        selected[i] = mListMusicSelection.getItemIdAtPosition(i);
+                    }
+                }
+                for (int j = 0; j < playlists.size(); j++) {
+                    if (j == selected[j]) {
+                        Log.v(TAG, "playlist: " + playlists.get(j));
+                        currentPlaylist = playlists.get(j);
+                        x++;
+                    }
+                }
+
+
+                Log.v("playlist elegido", currentPlaylist);
+                Log.v("playlists", String.valueOf(playlists));
+
+
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("playlist_spotify", currentPlaylist);
+                returnIntent.putExtra("token", SpotifyToken);
+                setResult(RESULT_OK, returnIntent);
+                finish();
+
             }
         });
 
@@ -166,19 +164,12 @@ public class SpotifyActivity extends AppCompatActivity  {
         }
     }
 
+
+
     private void setupToolbar(){
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Spotify");
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
     }
 
 
@@ -197,6 +188,7 @@ public class SpotifyActivity extends AppCompatActivity  {
 
 
     private void putElementsinList(String[] items){
+
         mLoadingView.setVisibility(View.GONE);
         playlists_layout.setVisibility(View.VISIBLE);
         mDoneButton.setVisibility(View.VISIBLE);

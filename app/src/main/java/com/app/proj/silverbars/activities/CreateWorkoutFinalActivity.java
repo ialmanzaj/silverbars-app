@@ -38,8 +38,9 @@ import butterknife.BindView;
 
 public class CreateWorkoutFinalActivity extends AppCompatActivity implements CreateWorkoutFinalView{
 
-    
     private static final String TAG = CreateWorkoutFinalActivity.class.getSimpleName();
+
+
 
     @BindView(R.id.toolbar)Toolbar toolbar;
     @BindView(R.id.img_profile)ImageView imgProfile;
@@ -86,11 +87,8 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Cre
         setupToolbar();
 
 
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               
-            }
+        mSaveButton.setOnClickListener(view -> {
+
         });
 
        
@@ -102,49 +100,36 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Cre
         RelativeLayout changeImg = (RelativeLayout) findViewById(R.id.chageImg);
 
 
-        changeImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View dialog) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
-            }
-
+        changeImg.setOnClickListener(dialog -> {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
         });
 
         //addImg = (ImageView) findViewById(R.id.addImg);
         //addText = (TextView) findViewById(R.id.addText);
 
 
-        putExercisesinRecycler();
+        //putExercisesinRecycler();
         actual_set = 1;
         
         
-        mTotalSets.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                dialogImplementation(view);
-
-
-            }
-        });
-
-
-
+        mTotalSets.setOnClickListener(view -> dialogImplementation(view));
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 ) {
+
+        if (requestCode == 1) {
             if (resultCode == RESULT_OK && data != null){
 
                 if (data.getData() != null) {
 
-                        Log.d("Select", "Image Picker");
+                        //Log.d("Select", "Image Picker");
+
                         CropImage.activity(data.getData())
                                 .setGuidelines(CropImageView.Guidelines.ON)
                                 .setActivityTitle("Crop Image")
@@ -156,18 +141,18 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Cre
                     }
                 }
 
-            }
+        }
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+                Log.d(TAG,"Crop Result");
 
 
-            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                if (resultCode == RESULT_OK) {
+                    Uri resultUri = result.getUri();
+                    workoutImage = resultUri.getPath();
 
-            Log.d(TAG,"Crop Result");
-            if (resultCode == RESULT_OK) {
-                Uri resultUri = result.getUri();
-                workoutImage = resultUri.getPath();
-
-                Log.d(TAG,workoutImage);
+                    Log.d(TAG,workoutImage);
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUri);
                     imgProfile.setImageBitmap(bitmap);
@@ -187,18 +172,16 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Cre
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.save_workout));
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View dialog) {
+        toolbar.setNavigationOnClickListener(dialog -> {
 
-                Intent return_Intent = new Intent();
-                return_Intent.putExtra("exercises",mExercisesIdsSelected);
-                setResult(RESULT_OK, return_Intent);
-                finish();
-            }
-
-
+            Intent return_Intent = new Intent();
+            return_Intent.putExtra("exercises",mExercisesIdsSelected);
+            setResult(RESULT_OK, return_Intent);
+            finish();
         });
+
+
+
     }
 
     private void dialogImplementation(View view){
@@ -241,19 +224,13 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Cre
             Sets_dialog.setText(String.valueOf(mTotalSets.getText()));
 
             plusSets = (Button) dialog.findViewById(R.id.plusSets);
-            plusSets.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            plusSets.setOnClickListener(view12 -> {
 
 
-                }
             });
             minusSets = (Button) dialog.findViewById(R.id.minusSets);
-            minusSets.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            minusSets.setOnClickListener(view1 -> {
 
-                }
             });
 
         }
@@ -374,9 +351,7 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Cre
 
 
 
-
-        RecyclerView.Adapter adapter = new CreateFinalWorkoutExercisesAdapter(this, SelectedExercises);
-        list.setAdapter(adapter);
+        list.setAdapter(new CreateFinalWorkoutExercisesAdapter(this, SelectedExercises));
 
     }
 }

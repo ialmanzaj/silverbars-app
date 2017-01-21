@@ -19,7 +19,6 @@ import com.app.proj.silverbars.adapters.ExercisesAdapter;
 import com.app.proj.silverbars.models.Exercise;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,7 +33,6 @@ import retrofit2.Response;
 public class ExerciseListActivity extends AppCompatActivity {
 
     private static final String TAG = ExerciseListActivity.class.getSimpleName();
-
 
 
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -55,6 +53,8 @@ public class ExerciseListActivity extends AppCompatActivity {
     List<Exercise> ExercisesNoSelected = new ArrayList<>();
     ArrayList<String> ExercisesSelected = new ArrayList<>();
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,37 +65,29 @@ public class ExerciseListActivity extends AppCompatActivity {
         setupToolbar();
 
 
-        mReload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getExercisesFromAPI();
-
-            }
-        });
+        mReload.setOnClickListener(v -> getExercisesFromAPI());
 
         
         list.setLayoutManager(new LinearLayoutManager(this));
 
 
 
-        mAddExercisesbt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (int i = 0; i < OriginalExerciseListAll.size(); i++){
-                    if (ExercisesAdapter.selectedItems.get(i)){
-                        exercises_id.add(OriginalExerciseListAll.get(i).getExercise_name());
-                    }
+        mAddExercisesbt.setOnClickListener(v -> {
+            
+            for (int i = 0; i < OriginalExerciseListAll.size(); i++){
+                if (ExercisesAdapter.selectedItems.get(i)){
+                    exercises_id.add(OriginalExerciseListAll.get(i).getExercise_name());
                 }
-
-                // enviar items a la actividad anterior
-                Intent return_Intent = new Intent();
-                return_Intent.putExtra("exercises",exercises_id);
-                setResult(RESULT_OK, return_Intent);
-                finish();
-
-                //deselecionar todos los elementos elegidos
-                ExercisesAdapter.selectedItems.clear();
             }
+
+            // enviar items a la actividad anterior
+            Intent return_Intent = new Intent();
+            return_Intent.putExtra("exercises",exercises_id);
+            setResult(RESULT_OK, return_Intent);
+            finish();
+
+            //deselecionar todos los elementos elegidos
+            ExercisesAdapter.selectedItems.clear();
         });
 
         getExercisesFromAPI();
@@ -105,25 +97,22 @@ public class ExerciseListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.add_exercises_title));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
     }
 
     private void getExercisesFromAPI() {
 
 
         MainService service = ServiceGenerator.createService(MainService.class);
-        service.getExercises().enqueue(new Callback<Exercise[]>() {
+        service.getExercises().enqueue(new Callback<List<Exercise>>() {
             @Override
-            public void onResponse(Call<Exercise[]> call, Response<Exercise[]> response) {
+            public void onResponse(Call<List<Exercise>> call, Response<List<Exercise>> response) {
                 if (response.isSuccessful()){
+
+
                     onErrorOff();
 
-                    Collections.addAll(OriginalExerciseListAll,response.body());
+                    OriginalExerciseListAll = response.body();
+
 
                     try {
                         Intent i = getIntent();
@@ -169,7 +158,7 @@ public class ExerciseListActivity extends AppCompatActivity {
 
             }
             @Override
-            public void onFailure(Call<Exercise[]> call, Throwable t) {
+            public void onFailure(Call<List<Exercise>> call, Throwable t) {
                 Log.e(TAG,"onFailure ",t);
                 onErrorOn();
             }

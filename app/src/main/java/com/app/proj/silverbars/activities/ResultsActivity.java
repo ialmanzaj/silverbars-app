@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -66,14 +65,10 @@ public class ResultsActivity extends AppCompatActivity {
 
 
 
-        mSaveResultsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        mSaveResultsButton.setOnClickListener(view -> {
 
 
-                //mainService.saveMyProgression()
-
-            }
+            //mainService.saveMyProgression()
 
         });
 
@@ -138,7 +133,6 @@ public class ResultsActivity extends AppCompatActivity {
     
 
     private void getCountTimes(List<String> muscles){
-
 
     }
 
