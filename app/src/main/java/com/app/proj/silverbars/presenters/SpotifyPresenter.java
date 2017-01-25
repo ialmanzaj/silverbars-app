@@ -3,13 +3,15 @@ package com.app.proj.silverbars.presenters;
 import android.app.Activity;
 import android.util.Log;
 
-import com.app.proj.silverbars.callbacks.SpotifyCallback;
+import com.app.proj.silverbars.callbacks.CustomSpotifyCallback;
 import com.app.proj.silverbars.interactors.SpotifyInteractor;
 import com.app.proj.silverbars.viewsets.SpotifyView;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
+
+import kaaes.spotify.webapi.android.models.UserPrivate;
 
 import static com.app.proj.silverbars.Constants.CLIENT_ID;
 import static com.app.proj.silverbars.Constants.REDIRECT_URI;
@@ -19,7 +21,7 @@ import static com.app.proj.silverbars.Constants.REQUEST_CODE;
  * Created by isaacalmanza on 01/11/17.
  */
 
-public class SpotifyPresenter extends BasePresenter implements ConnectionStateCallback,SpotifyCallback {
+public class SpotifyPresenter extends BasePresenter implements ConnectionStateCallback,CustomSpotifyCallback {
 
 
     private static final String TAG = SpotifyPresenter.class.getSimpleName();
@@ -28,7 +30,7 @@ public class SpotifyPresenter extends BasePresenter implements ConnectionStateCa
     private SpotifyView view;
 
 
-    public SpotifyPresenter(SpotifyView view,SpotifyInteractor interactor){
+    public SpotifyPresenter(SpotifyView view, SpotifyInteractor interactor){
         this.view = view;
         this.interactor = interactor;
     }
@@ -42,8 +44,23 @@ public class SpotifyPresenter extends BasePresenter implements ConnectionStateCa
     }
 
 
-    public void initService(String token){
+    public void onAuthenticationComplete(AuthenticationResponse authResponse) {
+        Log.v(TAG,"Got authentication token");
+
+        String token  = authResponse.getAccessToken();
+
+
         interactor.initService(token);
+        interactor.getMyProfile(this);
+    }
+
+
+    public void getMyPlaylist(){
+        interactor.getMyPlaylists(this);
+    }
+
+    public void getmyTracks(){
+        interactor.getMyTracks(this);
     }
 
 
@@ -100,4 +117,18 @@ public class SpotifyPresenter extends BasePresenter implements ConnectionStateCa
     }
 
 
+    @Override
+    public void onMyProfile(UserPrivate userPrivate) {
+        view.onMyProfile(userPrivate);
+    }
+
+    @Override
+    public void onMyPlaylist(String[] playlist) {
+        view.getMyPlaylist(playlist);
+    }
+
+    @Override
+    public void onMyTracks(String[] tracks) {
+        view.displayMyTracks(tracks);
+    }
 }

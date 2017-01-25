@@ -2,6 +2,8 @@ package com.app.proj.silverbars.interactors;
 
 import android.util.Log;
 
+import com.app.proj.silverbars.callbacks.CustomSpotifyCallback;
+
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyCallback;
 import kaaes.spotify.webapi.android.SpotifyError;
@@ -34,7 +36,7 @@ public class SpotifyInteractor {
     }
 
 
-    public void getMyProfile(SpotifyCallback callback){
+    public void getMyProfile(CustomSpotifyCallback callback){
         service.getMe(new SpotifyCallback<UserPrivate>() {
             @Override
             public void failure(SpotifyError spotifyError) {
@@ -42,52 +44,56 @@ public class SpotifyInteractor {
             }
             @Override
             public void success(UserPrivate userPrivate, Response response) {
-
+                callback.onMyProfile(userPrivate);
             }
         });
     }
 
-    public void getMyPlaylists(SpotifyCallback callback){
+    public void getMyPlaylists(CustomSpotifyCallback callback){
         service.getMyPlaylists(new SpotifyCallback<Pager<PlaylistSimple>>() {
 
             @Override
             public void success(Pager<PlaylistSimple> playlistSimplePager, Response response) {
 
-                String[] items = new String[playlistSimplePager.items.size()];
-                for (int a = 0; a < playlistSimplePager.items.size(); a++) {
+                String[] playlist = new String[playlistSimplePager.items.size()];
 
+                for (int a = 0; a < playlistSimplePager.items.size(); a++) {
                     Log.d(TAG, "playlistSimplePager:" + playlistSimplePager.items.get(a).uri);
 
-                    items[a] = playlistSimplePager.items.get(a).name;
+                    playlist[a] = playlistSimplePager.items.get(a).uri;
+
                     //playlists.add(playlistSimplePager.items.get(a).uri);
                 }
 
+                callback.onMyPlaylist(playlist);
+
                 //putElementsinList(items);
             }
-
             @Override
             public void failure(SpotifyError spotifyError) {
                 Log.e(TAG, "SpotifyError: " + spotifyError);
-
             }
         });
     }
 
-    public void getMyTracks(SpotifyCallback callback,String Token){
+    public void getMyTracks(CustomSpotifyCallback callback){
         service.getMySavedTracks(new SpotifyCallback<Pager<SavedTrack>>() {
             @Override
             public void success(Pager<SavedTrack> savedTrackPager, retrofit.client.Response response) {
                 //Log.v("Response size", String.valueOf(response.getHeaders().size()));
                 //Log.v("Pager size", String.valueOf(savedTrackPager.items.size()));
 
-                String[] items = new String[savedTrackPager.items.size()];
+                String[] tracks = new String[savedTrackPager.items.size()];
 
                 for (int a = 0; a < savedTrackPager.items.size(); a++) {
-                    items[a] = savedTrackPager.items.get(a).track.name;
+                    tracks[a] = savedTrackPager.items.get(a).track.uri;
                     //songs.add(savedTrackPager.items.get(a).track.uri);
                     Log.d(TAG, "SAVED: " + savedTrackPager.items.get(a).track.name);
                 }
 
+
+                //return tracks
+                callback.onMyTracks(tracks);
 
             }
             @Override

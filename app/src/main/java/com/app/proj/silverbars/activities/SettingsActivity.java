@@ -5,14 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.andretietz.retroauth.AuthAccountManager;
 import com.app.proj.silverbars.R;
@@ -57,31 +55,23 @@ public class SettingsActivity extends AppCompatActivity {
                     .contentColor(getResources().getColor(R.color.white))
                     .positiveColor(getResources().getColor(R.color.white))
                     .negativeColor(getResources().getColor(R.color.white))
-                    .positiveText(getResources().getString(R.string.positive_dialog)).onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            dialog.dismiss();
+                    .positiveText(getResources().getString(R.string.positive_dialog)).onPositive((dialog, which) -> {
+                        dialog.dismiss();
 
-                            //facebook logout
-                            LoginManager.getInstance().logOut();
+                        //facebook logout
+                        LoginManager.getInstance().logOut();
 
 
-                            AuthAccountManager authAccountManager = new AuthAccountManager();
-                            authAccountManager.removeActiveAccount(getString(R.string.authentication_ACCOUNT));
+                        AuthAccountManager authAccountManager = new AuthAccountManager();
+                        authAccountManager.removeActiveAccount(getString(R.string.authentication_ACCOUNT));
 
 
-                            Intent intent = new Intent(SettingsActivity.this,LoginActivity.class);
-                            intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, getString(R.string.authentication_ACCOUNT));
-                            startActivity(intent);
-                            finish();
-                        }
+                        Intent intent = new Intent(SettingsActivity.this,LoginActivity.class);
+                        intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, getString(R.string.authentication_ACCOUNT));
+                        startActivity(intent);
+                        finish();
                     })
-                    .negativeText(getResources().getString(R.string.negative_dialog)).onNegative(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            dialog.dismiss();
-                        }
-                    })
+                    .negativeText(getResources().getString(R.string.negative_dialog)).onNegative((dialog, which) -> dialog.dismiss())
                     .show().getContentView();
 
             });

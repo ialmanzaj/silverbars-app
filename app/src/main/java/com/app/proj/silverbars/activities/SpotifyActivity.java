@@ -2,10 +2,8 @@ package com.app.proj.silverbars.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -13,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.app.proj.silverbars.R;
+import com.app.proj.silverbars.presenters.BasePresenter;
 import com.app.proj.silverbars.presenters.SpotifyPresenter;
 import com.app.proj.silverbars.viewsets.SpotifyView;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import kaaes.spotify.webapi.android.models.UserPrivate;
 
 import static com.app.proj.silverbars.Constants.REQUEST_CODE;
 
@@ -29,9 +29,11 @@ import static com.app.proj.silverbars.Constants.REQUEST_CODE;
  * Created by isaacalmanza on 10/04/16.
  */
 
-public class SpotifyActivity extends AppCompatActivity implements SpotifyView{
+public class SpotifyActivity extends BaseActivity implements SpotifyView{
 
     private static final String TAG = SpotifyActivity.class.getSimpleName();
+
+    SpotifyPresenter mSpotifyPresenter;
 
 
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -49,7 +51,6 @@ public class SpotifyActivity extends AppCompatActivity implements SpotifyView{
     @BindView(R.id.music_selection) ListView mListMusicSelection;
 
 
-    SpotifyPresenter mSpotifyPresenter;
 
     String SpotifyToken;
 
@@ -59,13 +60,25 @@ public class SpotifyActivity extends AppCompatActivity implements SpotifyView{
     Boolean USERPREMIUM = false;
     Boolean auth_error = false,json_playlist_error = false,json_user_error = false;
 
+
+
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_spotify_music;
+    }
+
+    @Override
+    protected BasePresenter getPresenter() {
+        return mSpotifyPresenter;
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_spotify_music);
-
 
         setupToolbar();
+
 
 
 
@@ -95,6 +108,7 @@ public class SpotifyActivity extends AppCompatActivity implements SpotifyView{
 
 
         mDoneButton.setOnClickListener(view -> {
+/*
 
             final int choice = mListMusicSelection.getCount();
             long[] selected = new long[choice];
@@ -122,15 +136,16 @@ public class SpotifyActivity extends AppCompatActivity implements SpotifyView{
 
                 Log.v("playlist elegido", currentPlaylist);
                 Log.v("playlists", String.valueOf(playlists));
+*/
 
 
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("playlist_spotify", currentPlaylist);
-                returnIntent.putExtra("token", SpotifyToken);
+                //returnIntent.putExtra("playlist_spotify", currentPlaylist);
+                //returnIntent.putExtra("token", SpotifyToken);
                 setResult(RESULT_OK, returnIntent);
                 finish();
 
-            }
+
         });
 
 
@@ -141,7 +156,6 @@ public class SpotifyActivity extends AppCompatActivity implements SpotifyView{
 
 
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -149,41 +163,22 @@ public class SpotifyActivity extends AppCompatActivity implements SpotifyView{
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, data);
             switch (response.getType()) {
                 case TOKEN:
-                    onAuthenticationComplete(response);
+                    mSpotifyPresenter.onAuthenticationComplete(response);
                     break;
                 case ERROR:
                     logStatus("TokenProvider error: " + response.getError());
-                    mErrorView.setVisibility(View.VISIBLE);
-                    auth_error = true;
+                    onErrorViewOn();
                     break;
                 default:
                     logStatus("TokenProvider result: " + response.getType());
-                    mErrorView.setVisibility(View.VISIBLE);
-                    auth_error = true;
             }
         }
     }
 
 
-
-    private void setupToolbar(){
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Spotify");
-    }
-
-
-    private void onAuthenticationComplete(AuthenticationResponse authResponse) {
-
-        mLoadingView.setVisibility(View.GONE);
-        Log.v(TAG,"Got authentication token");
-
-        SpotifyToken = authResponse.getAccessToken();
-
-        getUserAuth(SpotifyToken);
-
-        Log.v(TAG,"getAccessToken: "+authResponse.getAccessToken());
-        Log.v(TAG,"getExpiresIn: "+authResponse.getExpiresIn());
+    private void onErrorViewOn(){
+        mErrorView.setVisibility(View.VISIBLE);
+        auth_error = true;
     }
 
 
@@ -199,10 +194,23 @@ public class SpotifyActivity extends AppCompatActivity implements SpotifyView{
     }
 
 
-
     private void logStatus(String status) {
         Log.i("SpotifySdkDemo", status);
     }
 
 
+    @Override
+    public void onMyProfile(UserPrivate userPrivate) {
+        mLoadingView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void getMyPlaylist(String[] playlist) {
+
+    }
+
+    @Override
+    public void displayMyTracks(String[] tracks) {
+
+    }
 }

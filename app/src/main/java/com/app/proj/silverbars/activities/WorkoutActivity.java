@@ -50,7 +50,6 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
 
     private static final String TAG = WorkoutActivity.class.getSimpleName();
     
-
     // UI FIELDS
     private Button plusSets;
     private Button minusSets;
@@ -133,7 +132,7 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
 
     private String partes = "";
 
-    String PlaylistSpotify,Token;
+    String mPlaylistSpotify,mSpotifyToken;
 
     private  List<String> MusclesArray = new ArrayList<>();
     private  List<String> TypeExercises = new ArrayList<>();
@@ -144,6 +143,7 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
 
     Boolean user_workout;
 
+    
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,13 +166,13 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
 
 
         button_error_reload.setOnClickListener(v -> {
+            
             error_layout.setVisibility(View.GONE);
             mLoadingView.setVisibility(View.VISIBLE);
             putExercisesInAdapter(mExercises);
         });
 
-
-
+        
 
         voice_per_exercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             DownloadAudioExercise = isChecked;
@@ -242,40 +242,31 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
             View v = new MaterialDialog.Builder(view.getContext())
                     .title(R.string.set_edit)
                     .customView(R.layout.edit_set_setup, true)
-                    .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            dialog.dismiss();
-                            //On Dialog "Done" ClickListener
-                            Sets.setText(Sets_dialog.getText());
+                    .positiveText(R.string.done_text).onPositive((dialog, which) -> {
+                        dialog.dismiss();
+                        //On Dialog "Done" ClickListener
+                        Sets.setText(Sets_dialog.getText());
 
-                        }
                     })
                     .show()
                     .getCustomView();
 
             if (v != null) {
+                
                 Sets_dialog = (TextView) v.findViewById(R.id.Sets_dialog);
                 Sets_dialog.setText(String.valueOf(Sets.getText()));
 
                 plusSets = (Button) v.findViewById(R.id.plusSets);
-                plusSets.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        plusTempo(Sets_dialog,plusSets,minusSets);
-
-                    }
-                });
+                plusSets.setOnClickListener(view16 -> plusTempo(Sets_dialog,plusSets,minusSets));
                 minusSets = (Button) v.findViewById(R.id.minusSets);
-                minusSets.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        minusTempo(Sets_dialog,minusSets,plusSets);
-                    }
-                });
+                minusSets.setOnClickListener(view15 -> minusTempo(Sets_dialog,minusSets,plusSets));
             }
+            
+            
             int setsValue = Integer.parseInt(Sets.getText().toString());
+            
+            
+            
             if (setsValue <= 1){
                 plusSets.setEnabled(true);
                 plusSets.setClickable(true);
@@ -287,6 +278,10 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
                 minusSets.setEnabled(true);
                 minusSets.setClickable(true);
             }
+            
+            
+            
+            
 
         });
 
@@ -299,13 +294,10 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
             View v = new MaterialDialog.Builder(view.getContext())
                     .title(R.string.rest_exercise_text)
                     .customView(R.layout.edit_rest_exercise_setup, true)
-                    .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            dialog.dismiss();
-                            //On Dialog "Done" ClickListener
-                            RestbyExercise.setText(Rest_by_exercise_dialog.getText());
-                        }
+                    .positiveText(R.string.done_text).onPositive((dialog, which) -> {
+                        dialog.dismiss();
+                        //On Dialog "Done" ClickListener
+                        RestbyExercise.setText(Rest_by_exercise_dialog.getText());
                     })
                     .show()
                     .getCustomView();
@@ -317,19 +309,9 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
 
 
                 plusRest = (Button) v.findViewById(R.id.plusRest);
-                plusRest.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        plusTempo(Rest_by_exercise_dialog,plusRest,minusRest);
-                    }
-                });
+                plusRest.setOnClickListener(view14 -> plusTempo(Rest_by_exercise_dialog,plusRest,minusRest));
                 minusRest = (Button) v.findViewById(R.id.minusRest);
-                minusRest.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        minusTempo(Rest_by_exercise_dialog,minusRest,plusRest);
-                    }
-                });
+                minusRest.setOnClickListener(view13 -> minusTempo(Rest_by_exercise_dialog,minusRest,plusRest));
             }
         });
 
@@ -340,13 +322,10 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
             View v = new MaterialDialog.Builder(view.getContext())
                     .title(R.string.rest_sets_text)
                     .customView(R.layout.edit_rest_sets_setup, true)
-                    .positiveText(R.string.done_text).onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            dialog.dismiss();
-                            //On Dialog "Done" ClickListener
-                            RestbySet.setText(RestSets_dialog.getText());
-                        }
+                    .positiveText(R.string.done_text).onPositive((dialog, which) -> {
+                        dialog.dismiss();
+                        //On Dialog "Done" ClickListener
+                        RestbySet.setText(RestSets_dialog.getText());
                     })
                     .show()
                     .getCustomView();
@@ -357,23 +336,9 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
                 RestSets_dialog.setText(String.valueOf(RestbySet.getText()));
 
                 plusRestSets = (Button) v.findViewById(R.id.plusRestSets);
-                plusRestSets.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        plusTempo(RestSets_dialog,plusRestSets,minusRestSets);
-
-
-
-                    }
-                });
+                plusRestSets.setOnClickListener(view12 -> plusTempo(RestSets_dialog,plusRestSets,minusRestSets));
                 minusRestSets = (Button) v.findViewById(R.id.minusRestSets);
-                minusRestSets.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        minusTempo(RestSets_dialog,minusRestSets,plusRestSets);
-
-                    }
-                });
+                minusRestSets.setOnClickListener(view1 -> minusTempo(RestSets_dialog,minusRestSets,plusRestSets));
             }
         });
 
@@ -467,8 +432,10 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
 
         intent.putExtra("songs",Songs_names);
         intent.putExtra("songlist",Songs_files);
-        intent.putExtra("playlist_spotify",PlaylistSpotify);
-        intent.putExtra("token",Token);
+        intent.putExtra("playlist_spotify",mPlaylistSpotify);
+        intent.putExtra("token",mSpotifyToken);
+        
+        
 
         startActivity(intent);
     }
@@ -477,10 +444,10 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null){
-            if (data.hasExtra("playlist_spotify") && data.hasExtra("token")){
 
-                PlaylistSpotify = data.getStringExtra("playlist_spotify");
-                Token =  data.getStringExtra("token");
+            if (data.hasExtra("playlist_spotify") && data.hasExtra("token")){
+                mPlaylistSpotify = data.getStringExtra("playlist_spotify");
+                mSpotifyToken =  data.getStringExtra("token");
 
             }else if (data.hasExtra("songs") && data.hasExtra("positions")){
 
@@ -620,7 +587,7 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
 
             for (int a = 0;a<musculos_oficial.size();a++) {
 
-                final TextView MuscleTextView = new TextView(this);
+                TextView MuscleTextView = new TextView(this);
                 partes += "#"+ musculos_oficial.get(a) + ",";
                 MuscleTextView.setText(musculos_oficial.get(a));
                 MuscleTextView.setGravity(Gravity.CENTER);
