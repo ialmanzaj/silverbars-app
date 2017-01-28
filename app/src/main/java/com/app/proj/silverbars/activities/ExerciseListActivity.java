@@ -17,6 +17,7 @@ import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.ServiceGenerator;
 import com.app.proj.silverbars.adapters.ExercisesAdapter;
 import com.app.proj.silverbars.models.Exercise;
+import com.app.proj.silverbars.viewsets.ExerciseListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ import retrofit2.Response;
 /**
  * Created by isaacalmanza on 10/04/16.
  */
-public class ExerciseListActivity extends AppCompatActivity {
+public class ExerciseListActivity extends AppCompatActivity implements ExerciseListView {
 
     private static final String TAG = ExerciseListActivity.class.getSimpleName();
 
@@ -103,6 +104,9 @@ public class ExerciseListActivity extends AppCompatActivity {
 
 
         MainService service = ServiceGenerator.createService(MainService.class);
+
+
+
         service.getExercises().enqueue(new Callback<List<Exercise>>() {
             @Override
             public void onResponse(Call<List<Exercise>> call, Response<List<Exercise>> response) {

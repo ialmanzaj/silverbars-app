@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,20 +13,15 @@ import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.adapters.ExerciseAdapter;
 import com.app.proj.silverbars.models.ExerciseRep;
@@ -60,33 +54,23 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
 
 
     @BindView(R.id.toolbar) Toolbar myToolbar;
-    @BindView(R.id.tabHost2)TabHost Tab_layout;
-    
-
-    @BindView(R.id.column1) LinearLayout primary_ColumnMuscle;
-    @BindView(R.id.column2) LinearLayout secundary_ColumnMuscle;
+    @BindView(R.id.tabHost2) TabHost mTabLayout;
     
     
     @BindView(R.id.loading) LinearLayout mLoadingView;
-
+    @BindView(R.id.error_view) LinearLayout error_layout;
+    @BindView(R.id.reload) Button button_error_reload;
+    
+    @BindView(R.id.column1) LinearLayout primary_ColumnMuscle;
+    @BindView(R.id.column2) LinearLayout secundary_ColumnMuscle;
+    
 
     @BindView(R.id.content_info)LinearLayout contentInfo;
     
-    @BindView(R.id.error_view) LinearLayout error_layout;
-    @BindView(R.id.reload) Button button_error_reload;
-
-    @BindView() TextView Positive;
-
-    @BindView() RelativeLayout selectMusic;
-    @BindView() TextView Negative;
-    @BindView() TextView Isometric;
-    @BindView() TextView Reps;
-    @BindView() TextView Workout_name;
     @BindView(R.id.sets) TextView Sets;
     @BindView(R.id.RestbySet) TextView RestbySet;
     @BindView(R.id.RestbyExercise) TextView RestbyExercise;
-    @BindView() TextView RestSets_dialog;
-    @BindView() TextView Sets_dialog;
+   
 
     @BindView(R.id.list) RecyclerView list;
 
@@ -96,10 +80,12 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
 
     @BindView(R.id.SelectMusic) RelativeLayout selectMusic;
 
+    
     @BindView(R.id.enableLocal) SwitchCompat enableLocal;
     @BindView(R.id.vibration_per_rep) SwitchCompat vibration_per_rep;
     @BindView(R.id.vibration_per_set) SwitchCompat vibration_per_set;
 
+    
     @BindView(R.id.voice_per_exercise)SwitchCompat voice_per_exercise;
 
     @BindView(R.id.start_button) Button startButton;
@@ -107,15 +93,11 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
 
     private ExerciseAdapter adapter;
 
-    //VARIABLES
+
+
+
     private String[] Songs_names;
-    private int value = 0;
-
-    private int ExerciseReps = 1;
     private ArrayList<File> Songs_files;
-
-    @BindView(R.id.togle_no_internet) RelativeLayout togle_no_internet;
-    private Boolean respuesta_recibida = false;
 
 
     private boolean isTouched = false;
@@ -126,9 +108,10 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
 
     private  int ISOMETRIC = 0,CARDIO = 0,PYLOMETRICS = 0,STRENGTH = 0;
 
-    private  boolean VibrationIsActivePerRep=false;
-    private  boolean VibrationIsActivePerSet=false;
-    private boolean DownloadAudioExercise = false;
+    boolean isVibrationPerRepActive = false;
+    boolean isVibrationPerSetActive = false;
+    
+    boolean isDownloadAudioExerciseActive = false;
 
     private String partes = "";
 
@@ -149,62 +132,51 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
+        
+        Bundle extras = getIntent().getExtras();
+        setExtras(extras);
 
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
 
-        workoutId = bundle.getInt("workout_id",0);
-        workoutName = bundle.getString("name");
-        workoutImgUrl = bundle.getString("image");
-        workoutSets = bundle.getInt("sets", 1);
-        workoutLevel = bundle.getString("level");
-        mainMuscle = bundle.getString("main_muscle");
-        user_workout = bundle.getBoolean("user_workout", false);
-        mExercises =  intent.getParcelableArrayListExtra("exercises");
-
-
+        setupToolbar();
+        setupTabs();
+        
 
         button_error_reload.setOnClickListener(v -> {
             
-            error_layout.setVisibility(View.GONE);
+          /*  error_layout.setVisibility(View.GONE);
             mLoadingView.setVisibility(View.VISIBLE);
-            putExercisesInAdapter(mExercises);
+            putExercisesInAdapter(mExercises);*/
+            
+            
         });
 
         
 
         voice_per_exercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            DownloadAudioExercise = isChecked;
+         /*   
+            isDownloadAudioExerciseActive = isChecked;
 
-            if (DownloadAudioExercise){
+            if (isDownloadAudioExerciseActive){
                 if (mExercises.size() > 0){
                     for (int a = 0;a<mExercises.size();a++){
-                        utilities.createExerciseAudio(WorkoutActivity.this, DownloadAudioExercise, mExercises.get(a).getExercise().getExercise_audio());
+                        utilities.createExerciseAudio(WorkoutActivity.this, isDownloadAudioExerciseActive, mExercises.get(a).getExercise().getExercise_audio());
                     }
 
                 }
 
-            }
+            }*/
+            
         });
 
 
-        setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(workoutName);
 
-
-
-        if (list != null){
-            list.setNestedScrollingEnabled(false);
-            list.setHasFixedSize(false);
-        }
-
-
-
+        
         list.setLayoutManager(new LinearLayoutManager(this));
-
-
+        list.setNestedScrollingEnabled(false);
+        list.setHasFixedSize(false);
+       
+        
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
             scrollView.setFillViewport(true);
         }
@@ -239,6 +211,7 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
 
 
         Sets.setOnClickListener(view -> {
+           /* 
             View v = new MaterialDialog.Builder(view.getContext())
                     .title(R.string.set_edit)
                     .customView(R.layout.edit_set_setup, true)
@@ -280,14 +253,14 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
             }
             
             
-            
+            */
             
 
         });
 
 
         RestbyExercise.setOnClickListener(view -> {
-
+/*
             TextView Rest_by_exercise_dialog;
             
             
@@ -313,13 +286,19 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
                 minusRest = (Button) v.findViewById(R.id.minusRest);
                 minusRest.setOnClickListener(view13 -> minusTempo(Rest_by_exercise_dialog,minusRest,plusRest));
             }
+            */
+            
         });
 
 
 
         RestbySet.setOnClickListener(view -> {
 
-            View v = new MaterialDialog.Builder(view.getContext())
+            TextView RestSets_dialog;
+            TextView Sets_dialog;
+            
+            
+           /* View v = new MaterialDialog.Builder(view.getContext())
                     .title(R.string.rest_sets_text)
                     .customView(R.layout.edit_rest_sets_setup, true)
                     .positiveText(R.string.done_text).onPositive((dialog, which) -> {
@@ -339,37 +318,54 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
                 plusRestSets.setOnClickListener(view12 -> plusTempo(RestSets_dialog,plusRestSets,minusRestSets));
                 minusRestSets = (Button) v.findViewById(R.id.minusRestSets);
                 minusRestSets.setOnClickListener(view1 -> minusTempo(RestSets_dialog,minusRestSets,plusRestSets));
-            }
+            }*/
+            
+            
+            
         });
 
 
 
         // vibracion por repeticion y por set colocado cada switch
         vibration_per_rep.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            VibrationIsActivePerRep = isChecked;
-            Log.v(TAG,"VibrationIsActivePerRep: "+VibrationIsActivePerRep);
+            isVibrationPerRepActive = isChecked;
         });
 
 
         vibration_per_set.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            VibrationIsActivePerSet = isChecked;
-            Log.v(TAG,"VibrationIsActivePerSet: "+VibrationIsActivePerSet);
+            isVibrationPerSetActive = isChecked;
         });
 
 
-        startButton.setOnClickListener(view -> LaunchWorkingOutActivity());
+        startButton.setOnClickListener(view -> LaunchWorkingOutActivity() );
+    }
 
-    }// on create close
+    private void setExtras(Bundle extras){
+        workoutId = extras.getInt("workout_id",0);
+        workoutName = extras.getString("name");
+        workoutImgUrl = extras.getString("image");
+        workoutSets = extras.getInt("sets", 1);
+        workoutLevel = extras.getString("level");
+        mainMuscle = extras.getString("main_muscle");
+        user_workout = extras.getBoolean("user_workout", false);
+        mExercises =  getIntent().getParcelableArrayListExtra("exercises");
+    }
+    
+    private void setupToolbar(){
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(workoutName);
+    }
 
 
     private void setupTabs(){
 
         //Defining Tabs
-        Tab_layout.setup();
+        mTabLayout.setup();
 
-        TabHost.TabSpec overview = Tab_layout.newTabSpec(getResources().getString(R.string.tab_overview));
-        TabHost.TabSpec muscles = Tab_layout.newTabSpec(getResources().getString(R.string.tab_muscles));
-        TabHost.TabSpec exercises = Tab_layout.newTabSpec(getResources().getString(R.string.tab_exercises));
+        TabHost.TabSpec overview = mTabLayout.newTabSpec(getResources().getString(R.string.tab_overview));
+        TabHost.TabSpec muscles = mTabLayout.newTabSpec(getResources().getString(R.string.tab_muscles));
+        TabHost.TabSpec exercises = mTabLayout.newTabSpec(getResources().getString(R.string.tab_exercises));
 
         overview.setIndicator(getResources().getString(R.string.tab_overview));
         overview.setContent(R.id.overview);
@@ -380,9 +376,9 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
         exercises.setIndicator(getResources().getString(R.string.tab_exercises));
         exercises.setContent(R.id.exercises);
 
-        Tab_layout.addTab(overview);
-        Tab_layout.addTab(exercises);
-        Tab_layout.addTab(muscles);
+        mTabLayout.addTab(overview);
+        mTabLayout.addTab(exercises);
+        mTabLayout.addTab(muscles);
     }
 
 
@@ -407,7 +403,24 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
         setMusclesToView(MusclesArray);
         putTypesInWorkout(TypeExercises);
     }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null){
 
+            if (data.hasExtra("playlist_spotify") && data.hasExtra("token")){
+
+                mPlaylistSpotify = data.getStringExtra("playlist_spotify");
+                mSpotifyToken =  data.getStringExtra("token");
+
+            }else if (data.hasExtra("songs") && data.hasExtra("positions")){
+
+                Songs_names = data.getStringArrayExtra("positions");
+                Songs_files = (ArrayList<File>) data.getSerializableExtra("songs");
+            }
+        }
+    }
 
     private void LaunchWorkingOutActivity() {
 
@@ -419,164 +432,31 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
 
 
         Intent intent = new Intent(this, WorkingOutActivity.class);
+
         intent.putParcelableArrayListExtra("exercises", adapter.getExercises());
-
-
-        intent.putExtra("play_exercise_audio",DownloadAudioExercise);
         intent.putExtra("Sets",sets);
+
+        //rests
         intent.putExtra("RestByExercise",restbyexercise);
         intent.putExtra("RestBySet",restbyset);
-        intent.putExtra("VibrationPerSet",VibrationIsActivePerSet);
-        intent.putExtra("VibrationPerRep",VibrationIsActivePerRep);
 
+        //vibrations option
+        intent.putExtra("VibrationPerSet",isVibrationPerSetActive);
+        intent.putExtra("VibrationPerRep",isVibrationPerRepActive);
 
+        //exercise audio option
+        intent.putExtra("play_exercise_audio",isDownloadAudioExerciseActive);
+
+        //songs of the phone
         intent.putExtra("songs",Songs_names);
         intent.putExtra("songlist",Songs_files);
+
+        //songs of spotify
         intent.putExtra("playlist_spotify",mPlaylistSpotify);
         intent.putExtra("token",mSpotifyToken);
-        
-        
 
         startActivity(intent);
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null){
-
-            if (data.hasExtra("playlist_spotify") && data.hasExtra("token")){
-                mPlaylistSpotify = data.getStringExtra("playlist_spotify");
-                mSpotifyToken =  data.getStringExtra("token");
-
-            }else if (data.hasExtra("songs") && data.hasExtra("positions")){
-
-                Songs_names = data.getStringArrayExtra("positions");
-                Songs_files = (ArrayList<File>) data.getSerializableExtra("songs");
-
-
-            }
-        }
-    }
-
-
-    private void plusTempo(TextView view, Button button, Button button2){
-        if (view == Reps){
-            value = Integer.parseInt(view.getText().toString());
-            view.setText(String.valueOf(value+1));
-            value++;
-            if (value == 20){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value > 1){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else if(view == Rest_by_exercise_dialog){
-            String[] elements = view.getText().toString().split("s");
-            value = Integer.parseInt(elements[0]);
-            value = value + 5;
-            view.setText(String.valueOf(value+"s"));
-            if (value == 60){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value > 0){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else if(view == RestSets_dialog){
-            String[] elements = view.getText().toString().split("s");
-            value = Integer.parseInt(elements[0]);
-            value = value + 10;
-            view.setText(String.valueOf(value+"s"));
-            if (value == 180){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value > 0){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else{
-            value = Integer.parseInt(view.getText().toString());
-            view.setText(String.valueOf(value+1));
-            value++;
-            if (value == 10){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value > 1){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }
-
-    }
-
-    private void minusTempo(TextView view, Button button, Button button2){
-        if (view == Reps){
-            value = Integer.parseInt(view.getText().toString());
-            view.setText(String.valueOf(value-1));
-            value--;
-            if ((value)==1){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value < 20){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else if(view == Rest_by_exercise_dialog){
-            String[] elements = view.getText().toString().split("s");
-            value = Integer.parseInt(elements[0]);
-            value = value - 5;
-            view.setText(String.valueOf(value+"s"));
-            if (value == 0){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value < 60){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else if(view == RestSets_dialog){
-            String[] elements = view.getText().toString().split("s");
-            value = Integer.parseInt(elements[0]);
-            value = value - 10;
-            view.setText(String.valueOf(value+"s"));
-            if (value == 0){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value < 180){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }else{
-            value = Integer.parseInt(view.getText().toString());
-            view.setText(String.valueOf(value-1));
-            value--;
-            if ((value)==1){
-                button.setEnabled(false);
-                button.setClickable(false);
-            }else{
-                if(value < 10){
-                    button2.setEnabled(true);
-                    button2.setClickable(true);
-                }
-            }
-        }
-    }
-
 
 
     private void setMusclesToView(List<String> musculos){
@@ -611,20 +491,16 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
             }
         }
 
-        runOnUiThread(new Runnable() {
+       
+        webview.setWebViewClient(new WebViewClient() {
             @Override
-            public void run() {
-                webview.setWebViewClient(new WebViewClient(){
-                    @Override
-                    public void onPageFinished(WebView view, String url) {
-                        utilities.injectJS(partes,webview);
-                        super.onPageFinished(view, url);
-                    }
-
-                });
+            public void onPageFinished(WebView view, String url) {
+                utilities.injectJS(partes, webview);
+                super.onPageFinished(view, url);
             }
         });
 
+        
         webview.getSettings().setJavaScriptEnabled(true);
 
         // ACCEDER A LA URL DEL HTML GUARDADO EN EL PHONE
@@ -639,8 +515,7 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
             webview.loadUrl(fileurl);
         }
     }
-
-
+    
     private void getCountTimes(List<String> list){
         for (int a = 0; a<list.size();a++) {
             if (list.get(a).equals("ISOMETRIC")) {

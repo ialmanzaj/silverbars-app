@@ -3,6 +3,7 @@ package com.app.proj.silverbars.interactors;
 import android.util.Log;
 
 import com.app.proj.silverbars.LoginService;
+import com.app.proj.silverbars.callbacks.LoginCallback;
 import com.app.proj.silverbars.models.AccessToken;
 
 import retrofit2.Call;
@@ -26,19 +27,17 @@ public class LoginInteractor {
         this.loginService = loginService;
     }
 
-
-
-    public void getAccessToken(String facebook_token){
+    public void getAccessToken(LoginCallback callback, String facebook_token){
         loginService.getAccessToken("convert_token",CONSUMER_KEY,CONSUMER_SECRET,"facebook",facebook_token).enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
                 if (response.isSuccessful()) {
 
+                    callback.onToken(response.body());
 
-
-                } else {
+                } else
                     Log.e(TAG, "statusCode:" + response.code());
-                }
+
             }
             @Override
             public void onFailure(Call<AccessToken> call, Throwable t) {

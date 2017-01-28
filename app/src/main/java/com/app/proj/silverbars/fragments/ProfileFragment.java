@@ -2,7 +2,6 @@ package com.app.proj.silverbars.fragments;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 
 import com.app.proj.silverbars.MainService;
 import com.app.proj.silverbars.R;
-import com.app.proj.silverbars.activities.ProgressionActivity;
 import com.app.proj.silverbars.utils.Utilities;
 
 import butterknife.BindView;
@@ -28,8 +26,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static com.facebook.Profile.getCurrentProfile;
-
 
 public class ProfileFragment extends Fragment {
 
@@ -38,17 +34,16 @@ public class ProfileFragment extends Fragment {
     private RecyclerView list;
     
     private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager lManager;
 
 
-    @BindView()RelativeLayout myTeam;
-    @BindView()RelativeLayout Progression;
-    @BindView()RelativeLayout skillsProgression;
-    @BindView()RelativeLayout sharedWorkouts;
-    @BindView()RelativeLayout history;
+    @BindView(R.id.myTeam)RelativeLayout myTeam;
+    @BindView(R.id.Progression)RelativeLayout Progression;
+    @BindView(R.id.skillsProgression)RelativeLayout skillsProgression;
+    @BindView(R.id.sharedWorkouts)RelativeLayout sharedWorkouts;
+    @BindView(R.id.history)RelativeLayout history;
 
-    @BindView() TextView mProfileName;
-    @BindView() ImageView profile_image;
+    @BindView(R.id.Profile_name) TextView mProfileName;
+    @BindView(R.id.profile_image) ImageView profile_image;
 
     private Utilities utilities;
 
@@ -65,51 +60,6 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        //profiles settings
-        mProfileName = (TextView) view.findViewById(R.id.Profile_name);
-        profile_image = (ImageView) view.findViewById(R.id.profile_image);
-        myTeam = (RelativeLayout) view.findViewById(R.id.myTeam);
-        Progression = (RelativeLayout) view.findViewById(R.id.Progression);
-        skillsProgression = (RelativeLayout) view.findViewById(R.id.skillsProgression);
-        sharedWorkouts = (RelativeLayout) view.findViewById(R.id.sharedWorkouts);
-        history = (RelativeLayout) view.findViewById(R.id.history);
-        
-
-        String name = getCurrentProfile().getFirstName()+" "+ getCurrentProfile().getLastName();
-
-        mProfileName.setText(name);
-
-
-        Bitmap bmp = utilities.loadProfileImageFromCache(getActivity(),getCurrentProfile().getId());
-
-        if (bmp != null){
-            profile_image.setImageBitmap(bmp);
-        }else {
-            DownloadProfileImage(getActivity(),getCurrentProfile().getId(),getCurrentProfile().getId());
-        }
-
-
-        // buttons of options
-        float scale = getResources().getDisplayMetrics().density;
-        final int dpAsPixels = (int) (7*scale + 0.5f);
-
-        myTeam.setClickable(true);
-
-
-
-        Progression.setClickable(true);
-        Progression.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(),ProgressionActivity.class));
-            }
-        });
-
-
-
-        skillsProgression.setClickable(true);
-        sharedWorkouts.setClickable(true);
-        history.setClickable(true);
     }
 
 
@@ -127,16 +77,23 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
+
                     Bitmap bitmap = null;
+
                     if (response.isSuccessful()) {
+
                         boolean writtenToDisk = utilities.saveWorkoutImgInDevice(context,response.body(),imgName);
                         if(writtenToDisk){bitmap = utilities.loadWorkoutImageFromDevice(context,imgName);}
                         profile_image.setImageBitmap(bitmap);
+
 
                     }
                     else {
                         Log.v(TAG, "Download server contact failed");
                     }
+
+
+
                 } else {
                     Log.v(TAG,"State server contact failed");
                 }

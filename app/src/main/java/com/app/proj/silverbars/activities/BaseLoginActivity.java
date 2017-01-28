@@ -2,37 +2,19 @@ package com.app.proj.silverbars.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.andretietz.retroauth.AuthenticationActivity;
 import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.presenters.BasePresenter;
 
 import butterknife.ButterKnife;
 
 /**
- * Created by isaacalmanza on 01/21/17.
+ * Created by isaacalmanza on 01/28/17.
  */
 
-/**
- * Created by Pedro Antonio Hernández on 12/06/2015.
- *
- * <p>
- * The activity only will execute operations that affect the UI. These operations are defined
- * by a view model and are triggered by its presenter.
- * </p>
- *
- * <p>
- * Perhaps the activity only will work as a fragment container, if that is the case only
- * return null on {@link BaseActivity#getPresenter()}
- * </p>
- * <p>
- * I made some modifications to the BaseActivity presented in the next project.
- * I implement Dagger 2 instead Dagger 1 and i attach the presenter directly
- * <a href="https://github.com/pedrovgs/EffectiveAndroidUI">EffectiveAndroidUI</a>
- * </p>
- */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseLoginActivity extends AuthenticationActivity {
 
     private Toolbar mToolbar;
 
@@ -99,8 +81,5 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void injectViews() {
         ButterKnife.bind(this);
     }
-
-
-    //public abstract void setUpComponent(SpotifyStreamerComponent appComponent);
 
 }

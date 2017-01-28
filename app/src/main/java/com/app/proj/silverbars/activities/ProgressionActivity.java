@@ -6,7 +6,6 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
@@ -72,10 +71,7 @@ public class ProgressionActivity extends AppCompatActivity implements Progressio
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.progression_));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {finish();}
-        });
+        toolbar.setNavigationOnClickListener(v -> finish());
     }
     
     
@@ -172,9 +168,7 @@ public class ProgressionActivity extends AppCompatActivity implements Progressio
         }
 
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
+
                 mMusclesWebView.setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageFinished(WebView view, String url) {
@@ -183,8 +177,7 @@ public class ProgressionActivity extends AppCompatActivity implements Progressio
                     }
 
                 });
-            }
-        });
+
 
         mMusclesWebView.getSettings().setJavaScriptEnabled(true);
 

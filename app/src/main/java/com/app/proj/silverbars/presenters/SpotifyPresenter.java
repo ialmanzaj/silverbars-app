@@ -59,7 +59,7 @@ public class SpotifyPresenter extends BasePresenter implements ConnectionStateCa
         interactor.getMyPlaylists(this);
     }
 
-    public void getmyTracks(){
+    public void getMyTracks(){
         interactor.getMyTracks(this);
     }
 

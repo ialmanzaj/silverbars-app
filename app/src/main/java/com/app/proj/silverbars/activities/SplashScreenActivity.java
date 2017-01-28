@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.andretietz.retroauth.AuthAccountManager;
 import com.app.proj.silverbars.R;
-import com.facebook.FacebookSdk;
 
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -21,19 +20,19 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
-
         AuthAccountManager authAccountManager = new AuthAccountManager();
         Account activeAccount = authAccountManager.getActiveAccount(getString(R.string.authentication_ACCOUNT));
 
+
+        startMainActivity();
+       /*
         if (activeAccount != null){
 
-            startMainActivity();
+
             
         } else {
-
             startLogin();
-        }
+        }*/
     }
 
 
@@ -73,11 +72,10 @@ public class SplashScreenActivity extends AppCompatActivity {
         Log.v(TAG,"onPause");
     }
 
-
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         Log.v(TAG,"splash screen destruida");
+        super.onDestroy();
     }
 
 

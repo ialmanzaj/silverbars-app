@@ -1,6 +1,5 @@
 package com.app.proj.silverbars.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -54,14 +53,13 @@ public class ResultsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
 
-
-        Intent i = getIntent();
-        Bundle b = i.getExtras();
-        mExercises = b.getParcelableArrayList("exercises");
+        Bundle extras =  getIntent().getExtras();
+        mExercises = extras.getParcelableArrayList("exercises");
 
 
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getResources().getString(R.string.results));
+
+        setupToolbar();
+        setupTabs();
 
 
 
@@ -112,6 +110,11 @@ public class ResultsActivity extends AppCompatActivity {
             setTypes(mTypeExercises);
         }
     }
+
+    private void setupToolbar(){
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getResources().getString(R.string.results));
+    }
     
     
     private void setupTabs(){
@@ -140,7 +143,6 @@ public class ResultsActivity extends AppCompatActivity {
         List<String> types_oficial = mUtilities.deleteCopiesofList(types);
 
         for (int a = 0; a<types_oficial.size();a++){
-
             RelativeLayout relativeLayout = mUtilities.createViewProgression(this,types_oficial.get(a),100);
             mSkillsLayout.addView(relativeLayout);
         }

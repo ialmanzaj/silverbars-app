@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,9 +14,8 @@ import com.app.proj.silverbars.utils.Utilities;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-
+import butterknife.BindView;
 
 
 public class SongsActivity extends AppCompatActivity {
@@ -26,7 +24,7 @@ public class SongsActivity extends AppCompatActivity {
     private static final String TAG = SongsActivity.class.getSimpleName();
 
 
-    private ListView ListMusic;
+    @BindView(R.id.music_selection) ListView ListMusic;
 
     private long[] selected;
     private Button clean;
@@ -34,25 +32,19 @@ public class SongsActivity extends AppCompatActivity {
 
     ArrayList<File> canciones_url;
 
-    private Utilities utilities;
+    private Utilities  utilities = new Utilities();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_songs);
 
-        utilities = new Utilities();
+        ArrayList<File> mySongs = utilities.findSongs(this,Environment.getExternalStorageDirectory());
 
-
-        ListMusic = (ListView)findViewById(R.id.music_selection);
-
-        ArrayList<File> mySongs = findSongs(Environment.getExternalStorageDirectory());
-
-        Log.v(TAG,"mySongs list: "+ mySongs);
 
         if (mySongs.size() > 0) {
 
-            canciones_url = deleteVoiceNote(mySongs);
+            canciones_url = utilities.deleteVoiceNote(mySongs);
 
             if (canciones_url.size() > 0){
 
@@ -94,17 +86,19 @@ public class SongsActivity extends AppCompatActivity {
                             }
                         }
 
-                        Log.v("playlist", Arrays.toString(playlist));
-                        Log.v("songs", String.valueOf(canciones_url));
+                        //Log.v("playlist", Arrays.toString(playlist));
+                        //Log.v("songs", String.valueOf(canciones_url));
 
                         Intent returnIntent = new Intent();
                         returnIntent.putExtra("positions",playlist);
                         returnIntent.putExtra("songs",canciones_url);
                         setResult(RESULT_OK, returnIntent);
                         finish();
-                    }
-                    else
+                    } else
                         canciones_url = null;
+
+
+
                 });
 
             }
@@ -117,57 +111,5 @@ public class SongsActivity extends AppCompatActivity {
         }
     }
 
-
-
-    public ArrayList<File> findSongs(File root){
-
-        ArrayList<File> songs = new ArrayList<>();
-        if (root.listFiles() != null){
-            File[] files = root.listFiles();
-            for(File singleFile : files){
-                if (singleFile.isDirectory() && !singleFile.isHidden()){
-                    songs.addAll(findSongs(singleFile));
-                }
-                else{
-                    if (singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".wav")){
-                        if (utilities.getSongDuration(this,singleFile)!=null && Long.valueOf(utilities.getSongDuration(this,singleFile))>150000)
-                            songs.add(singleFile);
-                    }
-                }
-            }
-        }
-        return songs;
-    }
-
-    @Override
-    public void onBackPressed(){
-        finish();
-    }
-
-    private ArrayList<File> deleteVoiceNote(ArrayList<File> songs){
-
-        ArrayList<String> canciones = new ArrayList<>();
-        ArrayList<File>   songs_urls = new ArrayList<>();
-        for (int a = 0;a<songs.size();a++){canciones.add(songs.get(a).getPath());}
-
-        for (int b = 0;b<canciones.size();b++){
-            canciones.get(b).split("/storage/emulated/0/");
-
-            if (!canciones.get(b).contains("WhatsApp/Media/WhatsApp Audio/AUD-")){
-                Log.d(TAG,"otras canciones: "+songs.get(b));
-
-                try {
-                    songs_urls.add(songs.get(b));
-
-                }catch (NullPointerException e){
-                    Log.e(TAG,"NullPointerException",e);
-                }
-
-
-            }
-
-        }
-        return songs_urls;
-    }
 
 }

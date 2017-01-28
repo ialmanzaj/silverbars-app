@@ -10,6 +10,9 @@ public class Constants {
 
     public static final String API_URL = "https://api.silverbarsapp.com";
 
+    public static final String MUSCLE_BODY_TEMPLATE = "silverbarsmedias3/html/index.html";
+
+
     public static final String AMAZON_S3_URL = "https://s3-ap-northeast-1.amazonaws.com/";
 
     public static final String BODY_URL = "https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/html/index.html";

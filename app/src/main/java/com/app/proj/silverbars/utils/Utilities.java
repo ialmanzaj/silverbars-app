@@ -95,6 +95,34 @@ public class Utilities {
     }
 
 
+
+    public ArrayList<File> deleteVoiceNote(ArrayList<File> songs){
+
+        ArrayList<String> canciones = new ArrayList<>();
+        ArrayList<File>   songs_urls = new ArrayList<>();
+        for (int a = 0;a<songs.size();a++){canciones.add(songs.get(a).getPath());}
+
+        for (int b = 0;b<canciones.size();b++){
+            canciones.get(b).split("/storage/emulated/0/");
+
+            if (!canciones.get(b).contains("WhatsApp/Media/WhatsApp Audio/AUD-")){
+                //Log.d(TAG,"otras canciones: "+songs.get(b));
+
+                try {
+                    songs_urls.add(songs.get(b));
+
+                }catch (NullPointerException e){
+                    Log.e(TAG,"NullPointerException",e);
+                }
+
+
+            }
+
+        }
+        return songs_urls;
+    }
+
+
     public String SongName(Context context,File file){
         String title = null;
         try{

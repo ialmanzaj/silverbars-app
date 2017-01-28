@@ -9,27 +9,28 @@ import android.content.pm.Signature;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.andretietz.retroauth.AuthenticationActivity;
 import com.app.proj.silverbars.R;
+import com.app.proj.silverbars.SilverbarsApp;
+import com.app.proj.silverbars.components.DaggerLoginComponent;
 import com.app.proj.silverbars.models.AccessToken;
+import com.app.proj.silverbars.modules.LoginModule;
+import com.app.proj.silverbars.presenters.BasePresenter;
+import com.app.proj.silverbars.presenters.LoginPresenter;
 import com.app.proj.silverbars.viewsets.LoginView;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
@@ -37,58 +38,66 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
+import javax.inject.Inject;
+
+import butterknife.BindView;
+
 import static com.app.proj.silverbars.Constants.PACKAGE;
 
 
-public class LoginActivity extends AuthenticationActivity implements LoginView{
+public class LoginActivity extends BaseLoginActivity implements LoginView {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
 
-    private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
+    @Inject
+    LoginPresenter mLoginPresenter;
 
-    private View mProgressView;
-    private View mLoginFormView;
 
-    private Button mLoginButton;
+
+    @BindView(R.id.login_progress) View mProgressView;
+    @BindView(R.id.login_button) Button mLoginButton;
+
+    @BindView(R.id.logo)ImageView mLogo;
+
+    @BindView(R.id.container)RelativeLayout container;
+    @BindView(R.id.slogan_login)TextView slogan_login;
+
+
     CallbackManager callbackManager;
 
-    ProfileTracker profileTracker;
-    String basicMail, basicPass, email, name;
 
-    ImageButton RefreshButton;
-    View login_button;
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_login;
+    }
 
-
-    boolean checkUser = false;
-    ImageView mLogo;
-    TextView slogan;
-
-    RelativeLayout container;
-    TextView slogan_login;
+    @Nullable
+    @Override
+    protected BasePresenter getPresenter() {
+        return mLoginPresenter;
+    }
 
 
+    @Override
+    public void injectDependencies() {
+        super.injectDependencies();
+
+
+        DaggerLoginComponent
+                .builder()
+                .silverbarsComponent(SilverbarsApp.getApp(this).getComponent())
+                .loginModule(new LoginModule(this))
+                .build().inject(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
-        Log.v(TAG,"LoginActivity creada");
 
         FacebookSdk.sdkInitialize(getApplicationContext());
 
-
-
-        mProgressView = findViewById(R.id.login_progress);
-        mLoginButton = (Button) findViewById(R.id.login_button);
-
-        mLogo = (ImageView) findViewById(R.id.logo);
-        slogan = (TextView) findViewById(R.id.slogan);
-
-        slogan_login = (TextView) findViewById(R.id.slogan_login);
-        container = (RelativeLayout) findViewById(R.id.container);
 
 
         callbackManager = CallbackManager.Factory.create();
@@ -107,75 +116,53 @@ public class LoginActivity extends AuthenticationActivity implements LoginView{
 
 
 
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.v(TAG,"onclick");
+
+        mLoginButton.setOnClickListener(view -> {
+            //Log.v(TAG,"onclick");
 
 
-                    if (isNetworkConnected()){
+            if (isNetworkConnected()){
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                container.setBackgroundColor(getResources().getColor(R.color.black,getTheme()));
-                            }else {
-                                container.setBackgroundColor(getResources().getColor(R.color.black));
-                            }
-
-
-                        slogan_login.setVisibility(View.VISIBLE);
-                        mLoginButton.setVisibility(View.GONE);
-
-                        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                            @Override
-                            public void onSuccess(LoginResult loginResult) {
-
-                                Log.v(TAG, "loginButton: onSuccess");
-
-                                FacebookLogin(loginResult.getAccessToken().getToken());
-
-                            }
-                            @Override
-                            public void onCancel() {
-                                Log.e(TAG, "facebook: onCancel");
-                            }
-                            @Override
-                            public void onError(FacebookException exception) {
-                                Log.e(TAG, "facebook Error", exception);
-                            }
-                        });
-
-                        LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile", "email", "user_friends"));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        container.setBackgroundColor(getResources().getColor(R.color.black,getTheme()));
+                    }else {
+                        container.setBackgroundColor(getResources().getColor(R.color.black));
+                    }
 
 
+                slogan_login.setVisibility(View.VISIBLE);
+                mLoginButton.setVisibility(View.GONE);
 
-                    }else
-                        Toast.makeText(LoginActivity.this, "Please, Connect to internet", Toast.LENGTH_LONG).show();
-                }
-            });
+                LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
 
-    }
+                        //Log.v(TAG, "loginButton: onSuccess");
 
-    private void FacebookLogin(String facebook_token) {
-        mLogo.setVisibility(View.GONE);
-        mProgressView.setVisibility(View.VISIBLE);
+                        getAccessToken(loginResult.getAccessToken().getToken());
+
+                    }
+                    @Override
+                    public void onCancel() {
+                        Log.e(TAG, "facebook: onCancel");
+                    }
+                    @Override
+                    public void onError(FacebookException exception) {
+                        Log.e(TAG, "facebook Error", exception);
+                    }
+                });
+
+                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this,
+                        Arrays.asList("public_profile", "email", "user_friends"));
 
 
+
+            }else
+                Toast.makeText(this, "Please, Connect to internet", Toast.LENGTH_LONG).show();
+        });
 
     }
-
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm.getActiveNetworkInfo() != null;
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-
+    
 
     @Override
     public void displayToken(AccessToken accessToken) {
@@ -194,7 +181,6 @@ public class LoginActivity extends AuthenticationActivity implements LoginView{
 
         startActivity(new Intent(this, MainActivity.class));
         finish();
-
     }
 
 
@@ -208,11 +194,32 @@ public class LoginActivity extends AuthenticationActivity implements LoginView{
     public void displayServerError() {
 
     }
+    
+
+    private void getAccessToken(String facebook_token) {
+        mLogo.setVisibility(View.GONE);
+        mProgressView.setVisibility(View.VISIBLE);
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+
+        //get the access token
+        mLoginPresenter.getAccessToken(facebook_token);
     }
+
+
+
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+
 }
 

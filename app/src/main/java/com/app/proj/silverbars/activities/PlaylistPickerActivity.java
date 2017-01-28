@@ -2,24 +2,18 @@ package com.app.proj.silverbars.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.utils.Utilities;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import butterknife.BindView;
 
@@ -80,28 +74,25 @@ public class PlaylistPickerActivity extends AppCompatActivity {
         }
 */
 
-        mDoneBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final int selected = ListPlaylist.getCheckedItemPosition();
-                Log.v(TAG,"selected: "+selected);
+        mDoneBt.setOnClickListener(view -> {
+            final int selected1 = ListPlaylist.getCheckedItemPosition();
+            Log.v(TAG,"selected: "+ selected1);
 
-               /* if(selected != -1){
-                    MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
-                    int pos = ListPlaylist.getCheckedItemPosition();
-                    String[] result = database.getPlaylist(pos+1);
-                    String[] positions = convertStringToArray(result[2]);
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("positions",positions);
-                    returnIntent.putExtra("songs",mySongs);
-                    setResult(RESULT_OK, returnIntent);
-                    finish();
-                }
-                else{
-                    mySongs = null;
-                    finish();
-                }*/
+           /* if(selected != -1){
+                MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
+                int pos = ListPlaylist.getCheckedItemPosition();
+                String[] result = database.getPlaylist(pos+1);
+                String[] positions = convertStringToArray(result[2]);
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("positions",positions);
+                returnIntent.putExtra("songs",mySongs);
+                setResult(RESULT_OK, returnIntent);
+                finish();
             }
+            else{
+                mySongs = null;
+                finish();
+            }*/
         });
 
     }
@@ -160,33 +151,24 @@ public class PlaylistPickerActivity extends AppCompatActivity {
     }*/
 
     private void dialog(){
-
+/*
         new MaterialDialog.Builder(this)
                 .title(getResources().getString(R.string.create_playlist))
                 .content(getResources().getString(R.string.title_playlist))
                 .negativeText(getResources().getString(R.string.cancel))
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {dialog.dismiss();}
-                })
+                .onNegative((dialog, which) -> dialog.dismiss())
                 .inputType(InputType.TYPE_CLASS_TEXT)
-                .input(getResources().getString(R.string.playlist_name),null, new MaterialDialog.InputCallback() {
-                    @Override
-                    public void onInput(MaterialDialog dialog, CharSequence input) {
-                        Playlist_name = input.toString(); // Do something
-                        if (Objects.equals(Playlist_name, "")){
-                            Playlist_name = "Playlist 1";
-                        }
-                        Intent i = new Intent(PlaylistPickerActivity.this, SongsActivity.class);
-                        startActivityForResult(i,1);
+                .input(getResources().getString(R.string.playlist_name),null, (dialog, input) -> {
+                    Playlist_name = input.toString(); // Do something
+                    if (Objects.equals(Playlist_name, "")){
+                        Playlist_name = "Playlist 1";
                     }
+                    Intent i = new Intent(PlaylistPickerActivity.this, SongsActivity.class);
+                    startActivityForResult(i,1);
                 }).show();
+        */
+
     }
 
-
-    @Override
-    public void onBackPressed(){
-        finish();
-    }
 
 }

@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,10 +25,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.proj.silverbars.R;
+import com.app.proj.silverbars.SilverbarsApp;
 import com.app.proj.silverbars.adapters.ExercisesSelectedAdapter;
+import com.app.proj.silverbars.components.DaggerCreateWorkoutComponent;
 import com.app.proj.silverbars.models.Exercise;
 import com.app.proj.silverbars.models.ExerciseRep;
 import com.app.proj.silverbars.models.Muscle;
+import com.app.proj.silverbars.modules.CreateWorkoutModule;
+import com.app.proj.silverbars.presenters.BasePresenter;
+import com.app.proj.silverbars.presenters.CreateWorkoutPresenter;
 import com.app.proj.silverbars.utils.OnStartDragListener;
 import com.app.proj.silverbars.utils.SimpleItemTouchHelperCallback;
 import com.app.proj.silverbars.utils.Utilities;
@@ -38,12 +43,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 
 
-public class CreateWorkoutActivity extends AppCompatActivity implements CreateWorkoutView,OnStartDragListener {
+public class CreateWorkoutActivity extends BaseActivity implements CreateWorkoutView,OnStartDragListener {
 
     private static final String TAG = CreateWorkoutActivity.class.getSimpleName();
+
+
+    @Inject
+    CreateWorkoutPresenter mCreateWorkoutPresenter;
 
 
     private Utilities utilities = new Utilities();
@@ -93,81 +104,98 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
 
 
     @Override
+    protected int getLayout() {
+        return R.layout.activity_create_workout;
+    }
+
+
+    @Nullable
+    @Override
+    protected BasePresenter getPresenter() {
+        return mCreateWorkoutPresenter;
+    }
+
+
+    @Override
+    public void injectDependencies() {
+        super.injectDependencies();
+
+        DaggerCreateWorkoutComponent
+                .builder()
+                .silverbarsComponent(SilverbarsApp.getApp(this).getComponent())
+                .createWorkoutModule(new CreateWorkoutModule(this))
+                .build().inject(this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_workout);
 
 
         setupToolbar();
+
+        setupTabs();
+
+        setupAdapter();
+
+
 
         ScrollView scrollView = (ScrollView) findViewById(R.id.muscles_);
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {scrollView.setFillViewport(true);}
 
 
-        button_error_reload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        button_error_reload.setOnClickListener(v -> {
 
-                if (exercises_id.size() > 0){
-                    onErrorViewOff();
-                    onProgressOn();
-                    setExercisesSelected(exercises_id);
-                }
-
+           /* if (exercises_id.size() > 0){
+                onErrorViewOff();
+                onProgressOn();
+                setExercisesSelected(exercises_id);
             }
+
+*/
+
         });
 
 
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (adapter != null){
+        nextButton.setOnClickListener(view -> {
+            if (adapter != null){
 
-                    if (adapter.getItemCount() > 0){
+                if (adapter.getItemCount() > 0){
 
-                        ArrayList<ExerciseRep> exerciseReps = new ArrayList<>();
-                        for (ExerciseRep exerciseRep: adapter.getSelectedExercises()){exerciseReps.add(exerciseRep);}
+                    ArrayList<ExerciseRep> exerciseReps = new ArrayList<>();
+                    for (ExerciseRep exerciseRep: adapter.getSelectedExercises()){exerciseReps.add(exerciseRep);}
 
-                        Intent intent = new Intent(CreateWorkoutActivity.this, CreateWorkoutFinalActivity.class);
-                        intent.putParcelableArrayListExtra("exercises",exerciseReps);
-                        startActivityForResult(intent,3);
+                    Intent intent = new Intent(CreateWorkoutActivity.this, CreateWorkoutFinalActivity.class);
+                    intent.putParcelableArrayListExtra("exercises",exerciseReps);
+                    startActivityForResult(intent,3);
 
-                    }else {
-                        Toast.makeText(CreateWorkoutActivity.this, getResources().getString(R.string.exercises_no_selected),
-                                Toast.LENGTH_SHORT).show();
-                    }
                 }else {
                     Toast.makeText(CreateWorkoutActivity.this, getResources().getString(R.string.exercises_no_selected),
                             Toast.LENGTH_SHORT).show();
                 }
+            }else {
+                Toast.makeText(CreateWorkoutActivity.this, getResources().getString(R.string.exercises_no_selected),
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
 
-        addExercise.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CreateWorkoutActivity.this,ExerciseListActivity.class);
-                startActivityForResult(intent,1);
-            }
+        addExercise.setOnClickListener(v -> {
+            Intent intent = new Intent(CreateWorkoutActivity.this,ExerciseListActivity.class);
+            startActivityForResult(intent,1);
         });
 
 
-        mButtonReAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mButtonReAdd.setOnClickListener(v -> {
 
-                Intent intent = new Intent(CreateWorkoutActivity.this,ExerciseListActivity.class);
-                intent.putExtra("exercises",adapter.getSelectedExercisesName());
-                startActivityForResult(intent,1);
-            }
+            Intent intent = new Intent(CreateWorkoutActivity.this,ExerciseListActivity.class);
+            intent.putExtra("exercises",adapter.getSelectedExercisesName());
+            startActivityForResult(intent,1);
         });
 
 
-        setupAdapter();
 
-        setupTabs();
 
 
         utilities.getBodyView(this,webView);
@@ -179,28 +207,27 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
     private void setupAdapter(){
         list.setLayoutManager(new LinearLayoutManager(this));
 
+
         adapter = new ExercisesSelectedAdapter(this,this);
         list.setAdapter(adapter);
 
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
-        mItemTouchHelper  = new ItemTouchHelper(callback);
+
+        //touch listener
+        mItemTouchHelper  = new ItemTouchHelper(new SimpleItemTouchHelperCallback(adapter));
         mItemTouchHelper.attachToRecyclerView(list);
     }
 
-    private void setupToolbar(){
+
+    public void setupToolbar(){
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.text_create_workout));
 
         toolbar.setNavigationIcon(R.drawable.ic_clear_white_24px);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
+        toolbar.setNavigationOnClickListener(v -> finish());
     }
+
+
 
     private void setupTabs(){
 
@@ -240,106 +267,57 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
         return exerciseList;
     }
 
-
-    private void addNewExercisesToAdapter(List<String> exercises){
-        for (ExerciseRep exercise: findExerciseByName(exercises) ){
-            mExercisesAdapter.add(exercise);
-            adapter.notifyItemInserted(mExercisesAdapter.size());
-        }
-
-        setMuscles(adapter.getSelectedExercises());
-    }
-
-    private void setMuscles(List<ExerciseRep> exercises){
-        mMuscles.clear();
-
-        for (ExerciseRep exerciseRep: exercises){
-            //Log.v(TAG,"exercise: "+exerciseRep.getExercise().getExercise_name());
-            for (Muscle muscle: exerciseRep.getExercise().getMuscles()){
-
-                mMuscles.add(muscle.getMuscleName());
-                //Log.v(TAG,"muscle: "+muscle.getMuscleName());
-            }
-        }
-
-        setMusclesToView(mMuscles);
-    }
-
-
-    private void setMusclesToView(List<String> musculos){
-        //Log.v(TAG,"setMusclesToView: "+musculos);
-
-        partes = "";
-
-        if (musculos.size() > 0){
-
-
-            List<String> mMusclesFinal = utilities.deleteCopiesofList(musculos);
-
-
-            for (int a = 0;a<mMusclesFinal.size();a++) {
-                TextView mMusclesTextView = new TextView(this);
-
-                partes += "#"+ mMusclesFinal.get(a) + ",";
-
-                //Log.v(TAG,"partes:" +partes);
-
-                mMusclesTextView.setText(mMusclesFinal.get(a));
-                mMusclesTextView.setGravity(Gravity.CENTER);
-
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {mMusclesTextView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));}else {mMusclesTextView.setTextColor(getResources().getColor(R.color.gray_active_icon));}
-
-                if (a%2 == 0){
-                    //secundary_ColumnMuscle.addView(mMusclesTextView);
-                }else {
-                    //primary_ColumnMuscle.addView(mMusclesTextView);
-                }
-
-
-            }
-        }
-
-        webView.setWebViewClient(new WebViewClient(){
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                utilities.injectJS(partes,webView);
-                super.onPageFinished(view, url);
-            }
-        });
-
-        //webView.getSettings().setUseWideViewPort(true);
-
-        webView.getSettings().setJavaScriptEnabled(true);
-
-
-        utilities.getBodyView(this,webView);
-    }
-
-
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         if (requestCode == 1) {
-
             if (resultCode == RESULT_OK && data != null){
+
                     if (data.hasExtra("exercises")) {
+
+
                         exercises_id = data.getStringArrayListExtra("exercises");
 
-                        if (exercises_id.size() > 0){
+                      /*  if (exercises_id.size() > 0){
                             setExercisesSelected(exercises_id);
-                        }
+                        }*/
                     }
             }
-
-
         }
 
     }
+
+
+
+    @Override
+    public void displayExercises(List<Exercise> exercises) {
+        setEmptyContentOff();
+
+/*
+        AllExercisesList = exercises;
+
+
+        //putTypesInWorkout(TypeExercises);
+        setMuscles(mExercisesAdapter);
+        mExercisesAdapter = findExerciseByName(new_exercises);
+
+
+        adapter.setOnDataChangeListener(new ExercisesSelectedAdapter.OnDataChangeListener() {
+            @Override
+            public void onDataChanged(int size) {
+                setMuscles(adapter.getSelectedExercises());
+            }
+        });*/
+    }
+
+
+
+    @Override
+    public void displayServerError() {}
+
+    @Override
+    public void displayNetworkError() {}
 
 
     private void getCountTimes(List<String> list){
@@ -434,45 +412,79 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
     }
 
 
-    @Override
-    public void displayExercises(List<Exercise> exercises) {
-        setEmptyContentOff();
+    private void addNewExercisesToAdapter(List<String> exercises){
+        for (ExerciseRep exercise: findExerciseByName(exercises) ){
+            mExercisesAdapter.add(exercise);
+            adapter.notifyItemInserted(mExercisesAdapter.size());
+        }
 
-/*
-        AllExercisesList = exercises;
+        setMuscles(adapter.getSelectedExercises());
+    }
 
+    private void setMuscles(List<ExerciseRep> exercises){
+        mMuscles.clear();
 
-        //putTypesInWorkout(TypeExercises);
-        setMuscles(mExercisesAdapter);
-        mExercisesAdapter = findExerciseByName(new_exercises);
+        for (ExerciseRep exerciseRep: exercises){
+            //Log.v(TAG,"exercise: "+exerciseRep.getExercise().getExercise_name());
+            for (Muscle muscle: exerciseRep.getExercise().getMuscles()){
 
-
-        adapter.setOnDataChangeListener(new ExercisesSelectedAdapter.OnDataChangeListener() {
-            @Override
-            public void onDataChanged(int size) {
-                setMuscles(adapter.getSelectedExercises());
+                mMuscles.add(muscle.getMuscleName());
+                //Log.v(TAG,"muscle: "+muscle.getMuscleName());
             }
-        });*/
+        }
+
+        setMusclesToView(mMuscles);
     }
 
+    private void setMusclesToView(List<String> musculos){
+        //Log.v(TAG,"setMusclesToView: "+musculos);
 
-    @Override
-    public void displayServerError() {}
+        partes = "";
 
-    @Override
-    public void displayNetworkError() {}
+        if (musculos.size() > 0){
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+            List<String> mMusclesFinal = utilities.deleteCopiesofList(musculos);
+
+
+            for (int a = 0;a<mMusclesFinal.size();a++) {
+                TextView mMusclesTextView = new TextView(this);
+
+                partes += "#"+ mMusclesFinal.get(a) + ",";
+
+                //Log.v(TAG,"partes:" +partes);
+
+                mMusclesTextView.setText(mMusclesFinal.get(a));
+                mMusclesTextView.setGravity(Gravity.CENTER);
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {mMusclesTextView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));}else {mMusclesTextView.setTextColor(getResources().getColor(R.color.gray_active_icon));}
+
+                if (a%2 == 0){
+                    //secundary_ColumnMuscle.addView(mMusclesTextView);
+                }else {
+                    //primary_ColumnMuscle.addView(mMusclesTextView);
+                }
+
+
+            }
+        }
+
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                utilities.injectJS(partes,webView);
+                super.onPageFinished(view, url);
+            }
+        });
+
+        //webView.getSettings().setUseWideViewPort(true);
+
+        webView.getSettings().setJavaScriptEnabled(true);
+
+
+        utilities.getBodyView(this,webView);
     }
-
-    @Override
-    protected void onStop() {super.onStop();}
-
-    @Override
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {mItemTouchHelper.startDrag(viewHolder);}
 
 
     private void setEmptyContentOff(){
@@ -487,7 +499,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
 
     private void onErrorViewOff(){
         mErrorView.setVisibility(View.GONE);
-
     }
 
     private void onProgressOn(){
@@ -497,5 +508,11 @@ public class CreateWorkoutActivity extends AppCompatActivity implements CreateWo
     private void onProgressOff(){
         ProgressView.setVisibility(View.GONE);
     }
+
+
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {mItemTouchHelper.startDrag(viewHolder);}
+
+
 
 }

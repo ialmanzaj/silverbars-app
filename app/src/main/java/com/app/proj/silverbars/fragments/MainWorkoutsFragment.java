@@ -8,8 +8,11 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.app.proj.silverbars.R;
+import com.app.proj.silverbars.SilverbarsApp;
 import com.app.proj.silverbars.adapters.WorkoutsAdapter;
+import com.app.proj.silverbars.components.DaggerMainWorkoutsComponent;
 import com.app.proj.silverbars.models.Workout;
+import com.app.proj.silverbars.modules.MainWorkoutsModule;
 import com.app.proj.silverbars.presenters.BasePresenter;
 import com.app.proj.silverbars.presenters.MainWorkoutsPresenter;
 import com.app.proj.silverbars.viewsets.MainWorkoutsView;
@@ -20,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 /**
  * Created by isaacalmanza on 10/04/16.
@@ -28,6 +33,7 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
     private static final String TAG = MainWorkoutsFragment.class.getSimpleName();
 
+    @Inject
     MainWorkoutsPresenter mMainWorkoutsPresenter;
 
 
@@ -55,9 +61,12 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
     @Override
     public void injectDependencies() {
         super.injectDependencies();
-        
-        
-        
+
+        DaggerMainWorkoutsComponent
+                .builder()
+                .silverbarsComponent(SilverbarsApp.getApp(CONTEXT).getComponent())
+                .mainWorkoutsModule(new MainWorkoutsModule(this))
+                .build().inject(this);
     }
 
     @Override
@@ -69,10 +78,8 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
 
         //get my workouts from api
-        mMainWorkoutsPresenter.getMyWorkout();
-
+       mMainWorkoutsPresenter.getMyWorkout();
     }
-
 
 
     @Override
@@ -85,7 +92,6 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
         }
 
 
-
         // Configure the refreshing colors
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -94,22 +100,10 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
 
 
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                fetchTimelineAsync();
-            }
-        });
+        swipeContainer.setOnRefreshListener(() -> mMainWorkoutsPresenter.fetchTimelineAsync());
 
     }
 
-    private void fetchTimelineAsync() {
-        //get my workouts from api
-        mMainWorkoutsPresenter.getMyWorkout();
-    }
 
 
     @Override
@@ -124,14 +118,11 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
     @Override
     public void displayServerError() {
-
     }
-
 
     private void setWorkoutsInAdapter(List<Workout> workouts){
         adapter.setWorkouts(filterWorkouts(mMuscleSelected,workouts));
     }
-
 
 
     public List<Workout> filterWorkouts(String muscle,List<Workout> workouts){

@@ -17,8 +17,7 @@ import com.app.proj.silverbars.viewsets.SpotifyView;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import kaaes.spotify.webapi.android.models.UserPrivate;
@@ -33,34 +32,31 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
 
     private static final String TAG = SpotifyActivity.class.getSimpleName();
 
+
     SpotifyPresenter mSpotifyPresenter;
+
+
 
 
     @BindView(R.id.toolbar) Toolbar toolbar;
 
+    @BindView(R.id.music_selection) ListView mListMusicSelection;
     @BindView(R.id.only_premium) LinearLayout mPremiumView;
-
     @BindView(R.id.done) Button mDoneButton;
-
     @BindView(R.id.playlists) LinearLayout playlists_layout;
 
+
     @BindView(R.id.error_view)LinearLayout mErrorView;
-    @BindView(R.id.loading)LinearLayout mLoadingView;
     @BindView(R.id.reload) Button mReloadButton;
-
-    @BindView(R.id.music_selection) ListView mListMusicSelection;
-
+    @BindView(R.id.loading)LinearLayout mLoadingView;
 
 
     String SpotifyToken;
 
-    List<String> songs = new ArrayList<>();
-    List<String> playlists = new ArrayList<>();
 
-    Boolean USERPREMIUM = false;
-    Boolean auth_error = false,json_playlist_error = false,json_user_error = false;
+    boolean isPremium = false;
 
-
+    ArrayAdapter<String> adapter;
 
     @Override
     protected int getLayout() {
@@ -72,13 +68,11 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
         return mSpotifyPresenter;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setupToolbar();
-
 
 
 
@@ -152,8 +146,11 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
         //open login screen
         mSpotifyPresenter.openLoginWindow(this);
 
-    }
 
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice, android.R.id.text1);
+        mListMusicSelection.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        mListMusicSelection.setAdapter(adapter);
+    }
 
 
     @Override
@@ -175,42 +172,66 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
         }
     }
 
+    @Override
+    public void onMyProfile(UserPrivate userPrivate) {
+
+        //loading off
+        onLoadingOff();
+
+        if (Objects.equals(userPrivate.product, "premium")) {
+            onPremiumOn();
+            return;
+        }
+
+        // flag set
+        isPremium = true;
+
+
+        //get my playlist and my tracks
+        mSpotifyPresenter.getMyPlaylist();
+        mSpotifyPresenter.getMyTracks();
+    }
+
+
+    @Override
+    public void getMyPlaylist(String[] playlist) {
+        onLoadingOff();
+
+        adapter.addAll(playlist);
+
+        onMusicViewOn();
+    }
+
+    @Override
+    public void displayMyTracks(String[] tracks) {
+        onLoadingOff();
+
+        adapter.addAll(tracks);
+
+        onMusicViewOn();
+    }
+
+    private void onLoadingOff(){
+        mLoadingView.setVisibility(View.GONE);
+    }
+
 
     private void onErrorViewOn(){
         mErrorView.setVisibility(View.VISIBLE);
-        auth_error = true;
     }
 
-
-    private void putElementsinList(String[] items){
-
-        mLoadingView.setVisibility(View.GONE);
-        playlists_layout.setVisibility(View.VISIBLE);
-        mDoneButton.setVisibility(View.VISIBLE);
-
-        ArrayAdapter<String> adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, android.R.id.text1, items);
-        mListMusicSelection.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        mListMusicSelection.setAdapter(adp);
+    private void onPremiumOn(){
+        mPremiumView.setVisibility(View.VISIBLE);
     }
-
 
     private void logStatus(String status) {
         Log.i("SpotifySdkDemo", status);
     }
 
 
-    @Override
-    public void onMyProfile(UserPrivate userPrivate) {
-        mLoadingView.setVisibility(View.GONE);
+    private void onMusicViewOn(){
+        playlists_layout.setVisibility(View.VISIBLE);
+        mDoneButton.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void getMyPlaylist(String[] playlist) {
-
-    }
-
-    @Override
-    public void displayMyTracks(String[] tracks) {
-
-    }
 }

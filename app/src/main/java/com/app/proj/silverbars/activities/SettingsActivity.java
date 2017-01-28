@@ -1,21 +1,14 @@
 package com.app.proj.silverbars.activities;
 
-import android.accounts.AccountManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.andretietz.retroauth.AuthAccountManager;
 import com.app.proj.silverbars.R;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
 
 import butterknife.BindView;
 
@@ -35,19 +28,14 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
-
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Opciones");
+        setupToolbar();
 
 
         toolbar.setNavigationIcon(R.drawable.ic_clear_white_24px);
 
 
         close_session.setOnClickListener(view -> {
-
+/*
             View v = new MaterialDialog.Builder(view.getContext())
                     .title(getResources().getString(R.string.session_title))
                     .content(getResources().getString(R.string.session_content))
@@ -72,9 +60,16 @@ public class SettingsActivity extends AppCompatActivity {
                         finish();
                     })
                     .negativeText(getResources().getString(R.string.negative_dialog)).onNegative((dialog, which) -> dialog.dismiss())
-                    .show().getContentView();
+                    .show().getContentView();*/
 
             });
+
+    }
+
+    private void setupToolbar(){
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Opciones");
 
     }
 

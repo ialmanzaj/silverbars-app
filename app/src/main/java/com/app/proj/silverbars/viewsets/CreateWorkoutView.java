@@ -8,11 +8,7 @@ import java.util.List;
  * Created by isaacalmanza on 01/07/17.
  */
 
-public interface CreateWorkoutView {
+public interface CreateWorkoutView extends BaseView{
 
     void displayExercises(List<Exercise> exercises);
-
-    void displayServerError();
-
-    void displayNetworkError();
 }

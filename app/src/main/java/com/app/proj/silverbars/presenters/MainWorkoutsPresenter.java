@@ -25,6 +25,11 @@ public class MainWorkoutsPresenter extends BasePresenter implements MainWorkouts
         this.interactor = interactor;
     }
 
+    public void fetchTimelineAsync() {
+        interactor.getWorkouts(this);
+    }
+
+
     public void getMyWorkout(){
         interactor.getWorkouts(this);
     }

@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
-apply plugin: 'org.greenrobot.greendao'
 
 
 repositories {
@@ -67,10 +67,16 @@ configurations.all {
     }
 }
 
+greendao {
+    schemaVersion 1
+}
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+
+
 
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:support-v4:25.1.0'
@@ -85,8 +91,6 @@ dependencies {
     compile 'org.lucasr.twowayview:core:1.0.0-SNAPSHOT@aar'
     compile 'org.lucasr.twowayview:layouts:1.0.0-SNAPSHOT@aar'
 
-    compile 'com.github.jd-alexander:LikeButton:0.2.0'
-    compile 'com.pnikosis:materialish-progress:1.7'
 
     compile 'com.anjlab.android.iab.v3:library:1.0.32'
 
@@ -94,33 +98,26 @@ dependencies {
 
     compile 'com.google.guava:guava:18.0'
     compile 'com.github.inaka:tinytask:v1'
+
     compile 'com.squareup.picasso:picasso:2.5.2'
+
     compile 'com.github.jfeinstein10:SlidingMenu:4254feca3e'
     compile 'com.heinrichreimersoftware:material-drawer:2.3.2'
     compile 'com.yqritc:recyclerview-flexibledivider:1.2.6'
     compile 'com.theartofdev.edmodo:android-image-cropper:2.2.5'
     compile 'com.artemzin.rxjava:proguard-rules:1.1.8.0'
-    compile 'com.facebook.fresco:fresco:0.13.0'
-    compile 'com.android.support:multidex:1.0.1'
 
-    compile 'com.fasterxml.jackson.core:jackson-core:2.5.3'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.5.3'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.5.3'
+
+    compile 'com.facebook.fresco:fresco:0.13.0'
+
+    compile 'com.android.support:multidex:1.0.1'
 
     compile('com.crashlytics.sdk.android:crashlytics:2.6.4@aar') {
         transitive = true;
     }
 
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
-    androidTestCompile 'com.android.support.test.espresso:espresso-web:2.2.2'
-
     compile 'com.spotify.sdk:spotify-auth-beta23-noconnect-2.20b@aar'
     compile 'com.spotify.sdk:spotify-player-beta23-noconnect-2.20b@aar'
-
-
-    compile 'io.reactivex:rxjava:1.1.8'
-    compile 'io.reactivex:rxandroid:0.23.0'
-
 
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
@@ -129,13 +126,25 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
     compile 'com.andretietz.retroauth:retroauth-android:2.1.4'
 
+    compile 'io.reactivex:rxjava:1.1.8'
+    compile 'io.reactivex:rxandroid:0.23.0'
+
 
     compile 'org.greenrobot:greendao:3.2.0'
+    // This is only needed if you want to use encrypted databases
+    compile 'net.zetetic:android-database-sqlcipher:3.5.4'
 
 
     compile 'com.jakewharton:butterknife:8.4.0'
     compile 'com.jakewharton:butterknife-compiler:8.4.0'
 
+    compile 'com.google.dagger:dagger:2.4'
+    annotationProcessor "com.google.dagger:dagger-compiler:2.4"
+
+    // Testing-only dependencies
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    compile 'com.android.support.test.espresso:espresso-core:2.2.2'
 }
 
 retrolambda {

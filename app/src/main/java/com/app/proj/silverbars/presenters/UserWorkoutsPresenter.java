@@ -16,4 +16,19 @@ public class UserWorkoutsPresenter extends BasePresenter {
     public void onStop() {
 
     }
+
+    @Override
+    public void onResume() {
+
+    }
+
+    @Override
+    public void onPause() {
+
+    }
+
+    @Override
+    public void onDestroy() {
+
+    }
 }

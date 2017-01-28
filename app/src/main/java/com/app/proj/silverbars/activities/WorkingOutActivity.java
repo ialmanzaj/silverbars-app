@@ -7,7 +7,6 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -18,8 +17,8 @@ import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.adapters.ExerciseWorkingOutAdapter;
 import com.app.proj.silverbars.models.ExerciseRep;
 import com.app.proj.silverbars.presenters.WorkingOutPresenter;
-import com.app.proj.silverbars.utils.OnSwipeTouchListener;
 import com.app.proj.silverbars.utils.DisableTouchRecyclerListener;
+import com.app.proj.silverbars.utils.OnSwipeTouchListener;
 import com.app.proj.silverbars.utils.Utilities;
 import com.app.proj.silverbars.viewsets.WorkingOutView;
 
@@ -183,7 +182,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
         mCurrentExercisePositionText.setText("1");
-
         mTotalExercises.setText(String.valueOf(mExercises.size()));
 
         mCurrentSetText.setText("0");
@@ -458,7 +456,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onBackPressed(){
-        Log.d(TAG,"onBackPressed");
         mWorkingOutPresenter.finishWorkout();
     }
 
