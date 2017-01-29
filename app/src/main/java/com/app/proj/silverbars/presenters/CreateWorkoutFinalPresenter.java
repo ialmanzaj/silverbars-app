@@ -1,10 +1,22 @@
 package com.app.proj.silverbars.presenters;
 
+import com.app.proj.silverbars.callbacks.CreateWorkoutFinalCallback;
+import com.app.proj.silverbars.models.Exercise;
+
+import java.util.List;
+
 /**
  * Created by isaacalmanza on 01/12/17.
  */
 
-public class CreateWorkoutFinalPresenter extends BasePresenter {
+public class CreateWorkoutFinalPresenter extends BasePresenter implements CreateWorkoutFinalCallback {
+
+
+    public CreateWorkoutFinalPresenter(){}
+
+
+
+
 
     @Override
     public void onStart() {
@@ -28,6 +40,21 @@ public class CreateWorkoutFinalPresenter extends BasePresenter {
 
     @Override
     public void onDestroy() {
+
+    }
+
+    @Override
+    public void onExercises(List<Exercise> exercises) {
+
+    }
+
+    @Override
+    public void onServerError() {
+
+    }
+
+    @Override
+    public void onNetworkError() {
 
     }
 }

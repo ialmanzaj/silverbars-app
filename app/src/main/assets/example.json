@@ -1,0 +1,20 @@
+{
+  "id":1,
+  "workout_name":"Lazar Novovic",
+  "workout_image":"/",
+  "sets":5,
+  "level":2,
+  "main_muscle":"CHEST",
+  "exercises":[
+      {
+        "id": 1,
+        "exercise_name":"push up",
+        "level":"",
+        "type_exercise":{},
+        "exercise_audio":"",
+        "exercise_image":"",
+        "muscles":{}
+      }
+    ]
+}
+

@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
  * Created by isaacalmanza on 01/28/17.
  */
 
-public abstract class BaseLoginActivity extends AuthenticationActivity {
+public abstract class BaseAuthenticationActivity extends AuthenticationActivity {
 
     private Toolbar mToolbar;
 

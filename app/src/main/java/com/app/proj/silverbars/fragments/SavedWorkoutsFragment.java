@@ -4,7 +4,6 @@ package com.app.proj.silverbars.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.app.proj.silverbars.R;
@@ -19,7 +18,6 @@ public class SavedWorkoutsFragment extends BaseFragment {
     private TwoWayView mLocalWorkouts;
     private  LinearLayout mEmpyStateSavedWorkout;
 
-    Button explore;
 
 
     @Override
@@ -32,22 +30,14 @@ public class SavedWorkoutsFragment extends BaseFragment {
         return null;
     }
 
-
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        explore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-
-
-
 
 
     }

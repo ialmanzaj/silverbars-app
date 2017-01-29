@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -26,6 +26,8 @@ import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.adapters.ExerciseAdapter;
 import com.app.proj.silverbars.models.ExerciseRep;
 import com.app.proj.silverbars.models.Muscle;
+import com.app.proj.silverbars.presenters.BasePresenter;
+import com.app.proj.silverbars.presenters.WorkoutPresenter;
 import com.app.proj.silverbars.utils.Utilities;
 import com.app.proj.silverbars.viewsets.WorkoutView;
 
@@ -35,12 +37,13 @@ import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by isaacalmanza on 10/04/16.
  */
 
-public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
+public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
     private static final String TAG = WorkoutActivity.class.getSimpleName();
     
@@ -51,6 +54,9 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
     private Button minusRest;
     private Button plusRestSets;
     private Button minusRestSets;
+
+
+    WorkoutPresenter mWorkoutPresenter;
 
 
     @BindView(R.id.toolbar) Toolbar myToolbar;
@@ -94,8 +100,6 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
     private ExerciseAdapter adapter;
 
 
-
-
     private String[] Songs_names;
     private ArrayList<File> Songs_files;
 
@@ -124,18 +128,27 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
 
     private Utilities utilities = new Utilities();
 
-    Boolean user_workout;
+
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_workout;
+    }
+
+    @Nullable
+    @Override
+    protected BasePresenter getPresenter() {
+        return null;
+    }
 
     
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_workout);
-        
+
+
         Bundle extras = getIntent().getExtras();
         setExtras(extras);
-
 
 
         setupToolbar();
@@ -160,7 +173,7 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
             if (isDownloadAudioExerciseActive){
                 if (mExercises.size() > 0){
                     for (int a = 0;a<mExercises.size();a++){
-                        utilities.createExerciseAudio(WorkoutActivity.this, isDownloadAudioExerciseActive, mExercises.get(a).getExercise().getExercise_audio());
+                        utilities.createExerciseAudio(this, isDownloadAudioExerciseActive, mExercises.get(a).getExercise().getExercise_audio());
                     }
 
                 }
@@ -192,6 +205,8 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
             isTouched = true;
             return false;
         });
+
+
 
 
         enableLocal.setOnCheckedChangeListener((compoundButton, isChecked) -> {
@@ -340,6 +355,7 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
         startButton.setOnClickListener(view -> LaunchWorkingOutActivity() );
     }
 
+
     private void setExtras(Bundle extras){
         workoutId = extras.getInt("workout_id",0);
         workoutName = extras.getString("name");
@@ -347,15 +363,28 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
         workoutSets = extras.getInt("sets", 1);
         workoutLevel = extras.getString("level");
         mainMuscle = extras.getString("main_muscle");
-        user_workout = extras.getBoolean("user_workout", false);
+        boolean user_workout = extras.getBoolean("user_workout", false);
         mExercises =  getIntent().getParcelableArrayListExtra("exercises");
+
+
+
+        //setExercisesInAdapter(mExercises);
     }
-    
-    private void setupToolbar(){
+
+
+
+    @OnClick(R.id.SelectMusic)
+    public void selectMusic(){
+        startActivity(new Intent(this,SelectionMusicActivity.class));
+    }
+
+
+    public void setupToolbar(){
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(workoutName);
     }
+
 
 
     private void setupTabs(){
@@ -383,7 +412,7 @@ public class WorkoutActivity extends AppCompatActivity implements WorkoutView{
 
 
 
-    private void putExercisesInAdapter(ArrayList<ExerciseRep> exercises){
+    private void setExercisesInAdapter(ArrayList<ExerciseRep> exercises){
 
         for (ExerciseRep exerciseRep: exercises){
 

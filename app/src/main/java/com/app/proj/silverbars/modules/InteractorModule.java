@@ -10,6 +10,7 @@ import com.app.proj.silverbars.MainService;
 import com.app.proj.silverbars.interactors.CreateWorkoutInteractor;
 import com.app.proj.silverbars.interactors.LoginInteractor;
 import com.app.proj.silverbars.interactors.MainWorkoutsInteractor;
+import com.app.proj.silverbars.interactors.SpotifyInteractor;
 
 import dagger.Module;
 import dagger.Provides;
@@ -43,6 +44,10 @@ public class InteractorModule {
         return new LoginInteractor(loginService);
     }
 
+    @Provides
+    public SpotifyInteractor provideSpotifyInteractor(){
+        return new SpotifyInteractor();
+    }
 
 
 }

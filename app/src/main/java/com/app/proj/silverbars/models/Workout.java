@@ -3,30 +3,41 @@ package com.app.proj.silverbars.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
 
 public class Workout implements Parcelable {
-    
 
+
+    @SerializedName("id")
     private int id;
+
+    @SerializedName("workout_name")
     private String workout_name;
+
+    @SerializedName("workout_image")
     private String workout_image;
+
+    @SerializedName("sets")
     private int sets;
+
+    @SerializedName("level")
     private String level;
+
+    @SerializedName("main_muscle")
     private String main_muscle;
+
+    @SerializedName("exercises")
     private ExerciseRep[] exercises;
 
-    public Workout(int id, String workout_name, String workout_image, int sets, String level, String main_muscle,ExerciseRep[] exercises) {
-        this.id = id;
-        this.workout_name = workout_name;
-        this.workout_image = workout_image;
-        this.sets = sets;
-        this.level = level;
-        this.main_muscle = main_muscle;
-        this.exercises = exercises;
-    }
+
+
+    public Workout(){}
+
+
 
     protected Workout(Parcel in) {
         id = in.readInt();

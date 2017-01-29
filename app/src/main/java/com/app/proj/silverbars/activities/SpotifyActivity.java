@@ -11,6 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.app.proj.silverbars.R;
+import com.app.proj.silverbars.SilverbarsApp;
+import com.app.proj.silverbars.components.DaggerSpotifyComponent;
+import com.app.proj.silverbars.modules.SpotifyModule;
 import com.app.proj.silverbars.presenters.BasePresenter;
 import com.app.proj.silverbars.presenters.SpotifyPresenter;
 import com.app.proj.silverbars.viewsets.SpotifyView;
@@ -18,6 +21,8 @@ import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 import java.util.Objects;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import kaaes.spotify.webapi.android.models.UserPrivate;
@@ -33,15 +38,13 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
     private static final String TAG = SpotifyActivity.class.getSimpleName();
 
 
+    @Inject
     SpotifyPresenter mSpotifyPresenter;
-
-
-
 
     @BindView(R.id.toolbar) Toolbar toolbar;
 
+
     @BindView(R.id.music_selection) ListView mListMusicSelection;
-    @BindView(R.id.only_premium) LinearLayout mPremiumView;
     @BindView(R.id.done) Button mDoneButton;
     @BindView(R.id.playlists) LinearLayout playlists_layout;
 
@@ -50,8 +53,7 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
     @BindView(R.id.reload) Button mReloadButton;
     @BindView(R.id.loading)LinearLayout mLoadingView;
 
-
-    String SpotifyToken;
+    @BindView(R.id.only_premium) LinearLayout mPremiumView;
 
 
     boolean isPremium = false;
@@ -66,6 +68,18 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
     @Override
     protected BasePresenter getPresenter() {
         return mSpotifyPresenter;
+    }
+
+    @Override
+    public void injectDependencies() {
+        super.injectDependencies();
+
+
+        DaggerSpotifyComponent
+                .builder()
+                .silverbarsComponent(SilverbarsApp.getApp(this).getComponent())
+                .spotifyModule(new SpotifyModule(this))
+                .build().inject(this);
     }
 
     @Override
@@ -210,6 +224,18 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
 
         onMusicViewOn();
     }
+
+    @Override
+    public void displayNetworkError() {
+
+    }
+
+    @Override
+    public void displayServerError() {
+
+    }
+
+
 
     private void onLoadingOff(){
         mLoadingView.setVisibility(View.GONE);

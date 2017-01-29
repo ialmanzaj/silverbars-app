@@ -37,8 +37,10 @@ public class SpotifyPresenter extends BasePresenter implements ConnectionStateCa
 
 
     public void openLoginWindow(Activity activity) {
-        final AuthenticationRequest request = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
-                .setScopes(new String[]{"user-read-private", "playlist-read", "playlist-read-private", "streaming","user-library-read"})
+        final AuthenticationRequest request =
+                new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
+                .setScopes(
+                        new String[]{"user-read-private", "playlist-read", "playlist-read-private", "streaming","user-library-read"})
                 .build();
         AuthenticationClient.openLoginActivity(activity, REQUEST_CODE, request);
     }
@@ -47,10 +49,7 @@ public class SpotifyPresenter extends BasePresenter implements ConnectionStateCa
     public void onAuthenticationComplete(AuthenticationResponse authResponse) {
         Log.v(TAG,"Got authentication token");
 
-        String token  = authResponse.getAccessToken();
-
-
-        interactor.initService(token);
+        interactor.initService(authResponse.getAccessToken());
         interactor.getMyProfile(this);
     }
 
@@ -65,6 +64,34 @@ public class SpotifyPresenter extends BasePresenter implements ConnectionStateCa
 
 
     @Override
+    public void onMyProfile(UserPrivate userPrivate) {
+        view.onMyProfile(userPrivate);
+    }
+
+    @Override
+    public void onMyPlaylist(String[] playlist) {
+        view.getMyPlaylist(playlist);
+    }
+
+    @Override
+    public void onMyTracks(String[] tracks) {
+        view.displayMyTracks(tracks);
+    }
+
+
+    @Override
+    public void onServerError() {
+
+    }
+
+    @Override
+    public void onNetworkError() {
+
+    }
+
+
+
+    @Override
     public void onStart() {
 
 
@@ -72,22 +99,18 @@ public class SpotifyPresenter extends BasePresenter implements ConnectionStateCa
 
     @Override
     public void onStop() {
-
     }
 
     @Override
     public void onResume() {
-
     }
 
     @Override
     public void onPause() {
-
     }
 
     @Override
     public void onDestroy() {
-
     }
 
     @Override
@@ -117,18 +140,4 @@ public class SpotifyPresenter extends BasePresenter implements ConnectionStateCa
     }
 
 
-    @Override
-    public void onMyProfile(UserPrivate userPrivate) {
-        view.onMyProfile(userPrivate);
-    }
-
-    @Override
-    public void onMyPlaylist(String[] playlist) {
-        view.getMyPlaylist(playlist);
-    }
-
-    @Override
-    public void onMyTracks(String[] tracks) {
-        view.displayMyTracks(tracks);
-    }
 }

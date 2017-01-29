@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by isaacalmanza on 10/04/16.
@@ -22,37 +23,40 @@ public class SelectionMusicActivity extends AppCompatActivity {
 
     private static final String TAG = SelectionMusicActivity.class.getSimpleName();
 
-    @BindView(R.id.toolbar) Toolbar myToolbar;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+
+    @BindView(R.id.songs) RelativeLayout songsButton;
+    @BindView(R.id.playlist) RelativeLayout playlistButton;
+    @BindView(R.id.spotify) RelativeLayout spotifyButton;
+    @BindView(R.id.soundcloud) RelativeLayout soundcloudButton;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selection_music);
-
+        ButterKnife.bind(this);
 
         setupToolbar();
 
-        RelativeLayout songsButton = (RelativeLayout) findViewById(R.id.songs);
-        RelativeLayout playlistButton = (RelativeLayout) findViewById(R.id.playlist);
-        RelativeLayout spotifyButton = (RelativeLayout) findViewById(R.id.spotify);
-        RelativeLayout soundcloudButton = (RelativeLayout) findViewById(R.id.soundcloud);
 
-
-        songsButton.setOnClickListener(v -> startActivityForResult(new Intent(SelectionMusicActivity.this, SongsActivity.class), 1));
-
-        playlistButton.setOnClickListener(v -> startActivityForResult(new Intent(SelectionMusicActivity.this, PlaylistPickerActivity.class), 1));
-        spotifyButton.setOnClickListener(v -> startActivityForResult(new Intent(SelectionMusicActivity.this, SpotifyActivity.class), 1));
-        soundcloudButton.setOnClickListener(v -> {
-        });
+        songsButton.setOnClickListener(v ->
+                startActivityForResult(new Intent(SelectionMusicActivity.this, SongsActivity.class), 1));
+        playlistButton.setOnClickListener(v ->
+                startActivityForResult(new Intent(SelectionMusicActivity.this, PlaylistPickerActivity.class), 1));
+        spotifyButton.setOnClickListener(v ->
+                startActivityForResult(new Intent(SelectionMusicActivity.this, SpotifyActivity.class), 1));
     }
+
+
 
     private void setupToolbar(){
-        setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getResources().getString(R.string.music_selection));
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
-
 
 
     @Override

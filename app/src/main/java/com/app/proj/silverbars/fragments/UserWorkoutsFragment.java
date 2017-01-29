@@ -36,11 +36,11 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
         return R.layout.fragment_user_workouts;
     }
 
+
     @Override
     protected BasePresenter getPresenter() {
-        return mUserWorkoutsPresenter;
+        return null;
     }
-
 
 
     @Override

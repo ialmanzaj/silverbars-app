@@ -16,6 +16,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class SongsActivity extends AppCompatActivity {
@@ -23,92 +25,103 @@ public class SongsActivity extends AppCompatActivity {
 
     private static final String TAG = SongsActivity.class.getSimpleName();
 
-
-    @BindView(R.id.music_selection) ListView ListMusic;
-
-    private long[] selected;
-    private Button clean;
-    private String[] playlist;
-
-    ArrayList<File> canciones_url;
-
-    private Utilities  utilities = new Utilities();;
+    @BindView(R.id.music_selection) ListView mListSongsView;
+    @BindView(R.id.done) Button done;
+    
+    
+    ArrayList<File> songs = new ArrayList<>();
+    
+    
+    private Utilities  utilities = new Utilities();
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_songs);
+        ButterKnife.bind(this);
+        
 
-        ArrayList<File> mySongs = utilities.findSongs(this,Environment.getExternalStorageDirectory());
+        ArrayList<File> local_songs = utilities.findSongs(this,Environment.getExternalStorageDirectory());
+
+        
+        if (local_songs.size() < 0) {
+            utilities.toast(this,"No hay canciones");
+            finish();
+            return;
+        }
 
 
-        if (mySongs.size() > 0) {
+        songs = utilities.deleteVoiceNote(local_songs);
 
-            canciones_url = utilities.deleteVoiceNote(mySongs);
 
-            if (canciones_url.size() > 0){
+        if (songs.size() < 0){
+            utilities.toast(this,"No hay canciones");
+            return;
+        }
 
-                String[] items = new String[canciones_url.size()];
 
-                for (int i = 0; i < canciones_url.size(); i++) {
-                    items[i] = utilities.removeLastMp3(utilities.getSongName(this,canciones_url.get(i)));
+        String[] songs_names = new String[songs.size()];
+
+        for (int i = 0; i < songs.size(); i++) {
+            songs_names[i] = utilities.removeLastMp3(utilities.getSongName(this,songs.get(i)));
+        }
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_multiple_choice,
+                android.R.id.text1, songs_names);
+
+
+        mListSongsView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        mListSongsView.setAdapter(adapter);
+    }
+    
+    @OnClick(R.id.done)
+    public void done(){
+        
+        if (songs.size() < 0){
+           return;
+        }
+
+        int choice = mListSongsView.getCount();
+
+        long[] selected = new long[choice];
+
+        final SparseBooleanArray spa = mListSongsView.getCheckedItemPositions();
+
+        if (spa.size() != 0) {
+            String[] playlist = new String[mListSongsView.getCheckedItemCount()];
+            int x = 0;
+            for (int i = 0; i < choice; i++) {
+                selected[i] = -1;
+            }
+            for (int i = 0; i < choice; i++) {
+                if (spa.get(i)) {
+                    selected[i] = mListSongsView.getItemIdAtPosition(i);
                 }
-
-                //Log.v(TAG,"items: "+ Arrays.toString(items));
-
-                ArrayAdapter<String> adp = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, items);
-                ListMusic.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-                ListMusic.setAdapter(adp);
-
-
-                Button done = (Button) findViewById(R.id.done);
-                
-                done.setOnClickListener(view -> {
-                    
-                    final int choice = ListMusic.getCount();
-                    selected = new long[choice];
-                    final SparseBooleanArray spa = ListMusic.getCheckedItemPositions();
-                    if (spa.size() != 0) {
-                        playlist = new String[ListMusic.getCheckedItemCount()];
-                        int x = 0;
-                        for (int i = 0; i < choice; i++) {
-                            selected[i] = -1;
-                        }
-                        for (int i = 0; i < choice; i++) {
-                            if (spa.get(i)) {
-                                selected[i] = ListMusic.getItemIdAtPosition(i);
-                            }
-                        }
-                        for(int j = 0; j < canciones_url.size(); j++){
-                            if (j == selected[j]){
-                                playlist[x] = utilities.getSongName(SongsActivity.this,canciones_url.get(j));
-                                x++;
-                            }
-                        }
-
-                        //Log.v("playlist", Arrays.toString(playlist));
-                        //Log.v("songs", String.valueOf(canciones_url));
-
-                        Intent returnIntent = new Intent();
-                        returnIntent.putExtra("positions",playlist);
-                        returnIntent.putExtra("songs",canciones_url);
-                        setResult(RESULT_OK, returnIntent);
-                        finish();
-                    } else
-                        canciones_url = null;
-
-
-
-                });
-
+            }
+            for(int j = 0; j < songs.size(); j++){
+                if (j == selected[j]){
+                    playlist[x] = utilities.getSongName(SongsActivity.this,songs.get(j));
+                    x++;
+                }
             }
 
+            //Log.v("playlist", Arrays.toString(playlist));
+            //Log.v("songs", String.valueOf(songs));
 
-        }
-        else {
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("positions", playlist);
+            returnIntent.putExtra("songs",songs);
+            setResult(RESULT_OK, returnIntent);
             finish();
-            utilities.toast(this,"No hay canciones");
-        }
+
+
+
+        } else
+            songs = null;
+           
     }
 
 

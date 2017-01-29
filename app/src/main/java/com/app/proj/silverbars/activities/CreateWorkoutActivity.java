@@ -60,10 +60,15 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
     private Utilities utilities = new Utilities();
 
 
+
+    @BindView(R.id.toolbar) Toolbar toolbar;
+
+
     @BindView(R.id.content_empty) LinearLayout empty_content;
 
     @BindView(R.id.webview) WebView webView;
 
+    @BindView(R.id.content_info) LinearLayout contentView;
     @BindView(R.id.readd) Button mButtonReAdd;
 
     @BindView(R.id.recycler_exercises_selected) RecyclerView list;
@@ -75,10 +80,6 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
     @BindView(R.id.error_view) LinearLayout mErrorView;
     @BindView(R.id.reload) Button button_error_reload;
 
-    @BindView(R.id.content_info) LinearLayout contentView;
-
-
-    @BindView(R.id.toolbar) Toolbar toolbar;
 
     @BindView(R.id.next) Button nextButton;
     @BindView(R.id.add_exercises) Button addExercise;
@@ -314,10 +315,14 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
 
 
     @Override
-    public void displayServerError() {}
+    public void displayServerError() {
+
+    }
 
     @Override
-    public void displayNetworkError() {}
+    public void displayNetworkError() {
+
+    }
 
 
     private void getCountTimes(List<String> list){
@@ -411,7 +416,6 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
         }
     }
 
-
     private void addNewExercisesToAdapter(List<String> exercises){
         for (ExerciseRep exercise: findExerciseByName(exercises) ){
             mExercisesAdapter.add(exercise);
@@ -487,11 +491,13 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
     }
 
 
+
     private void setEmptyContentOff(){
         empty_content.setVisibility(View.GONE);
         mButtonReAdd.setVisibility(View.VISIBLE);
         list.setVisibility(View.VISIBLE);
     }
+
 
     private void onErrorViewOn(){
         mErrorView.setVisibility(View.VISIBLE);

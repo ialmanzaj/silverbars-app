@@ -26,8 +26,8 @@ public class SpotifyInteractor {
     private  SpotifyService service;
 
 
-    public SpotifyInteractor(SpotifyApi spotifyApi){
-        this.spotifyApi = spotifyApi;
+    public SpotifyInteractor(){
+        this.spotifyApi = new SpotifyApi();
     }
 
     public  void initService(String token){
@@ -58,7 +58,7 @@ public class SpotifyInteractor {
                 String[] playlist = new String[playlistSimplePager.items.size()];
 
                 for (int a = 0; a < playlistSimplePager.items.size(); a++) {
-                    Log.d(TAG, "playlistSimplePager:" + playlistSimplePager.items.get(a).uri);
+                    //Log.d(TAG, "playlistSimplePager:" + playlistSimplePager.items.get(a).uri);
 
                     playlist[a] = playlistSimplePager.items.get(a).uri;
 
@@ -72,9 +72,12 @@ public class SpotifyInteractor {
             @Override
             public void failure(SpotifyError spotifyError) {
                 Log.e(TAG, "SpotifyError: " + spotifyError);
+
+                callback.onServerError();
             }
         });
     }
+
 
     public void getMyTracks(CustomSpotifyCallback callback){
         service.getMySavedTracks(new SpotifyCallback<Pager<SavedTrack>>() {
@@ -100,6 +103,7 @@ public class SpotifyInteractor {
             public void failure(SpotifyError error) {
                 Log.e(TAG, "SpotifyError: " + error);
 
+                callback.onServerError();
             }
         });
     }

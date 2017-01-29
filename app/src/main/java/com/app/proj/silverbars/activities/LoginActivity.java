@@ -45,14 +45,12 @@ import butterknife.BindView;
 import static com.app.proj.silverbars.Constants.PACKAGE;
 
 
-public class LoginActivity extends BaseLoginActivity implements LoginView {
+public class LoginActivity extends BaseAuthenticationActivity implements LoginView {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
-
     @Inject
     LoginPresenter mLoginPresenter;
-
 
 
     @BindView(R.id.login_progress) View mProgressView;
@@ -200,19 +198,15 @@ public class LoginActivity extends BaseLoginActivity implements LoginView {
         mLogo.setVisibility(View.GONE);
         mProgressView.setVisibility(View.VISIBLE);
 
-
-
         //get the access token
         mLoginPresenter.getAccessToken(facebook_token);
     }
-
-
-
 
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;
     }
+
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

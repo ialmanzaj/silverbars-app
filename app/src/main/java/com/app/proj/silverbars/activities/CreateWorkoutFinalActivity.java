@@ -41,7 +41,6 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Cre
 
 
     @BindView(R.id.img_profile) ImageView imgProfile;
-
     @BindView(R.id.workout_name) AutoCompleteTextView workoutName;
 
     @BindView(R.id.save) Button mSaveButton;
@@ -57,10 +56,9 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Cre
 
     int actual_set = 1;
     
-    int[] reps;
-    
+
     String workoutImage = "/";
-    
+
     String[] exercises_ids;
     
     List<ExerciseRep> SelectedExercises = new ArrayList<>();
@@ -71,6 +69,8 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Cre
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_workout_final);
+
+
 
         Bundle extras = getIntent().getExtras();
 
@@ -286,11 +286,6 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Cre
             LEVEL = "EASY";
         }
 
-        Log.d(TAG,"LEVEL: "+LEVEL);
-        Log.d(TAG,"CHALLENGING: "+CHALLENGING);
-        Log.d(TAG,"HARD:"+HARD);
-        Log.d(TAG,"EASY:"+EASY);
-        Log.d(TAG,"NORMAL:"+NORMAL);
 
 
         if (LOWER_BODY && UPPER_BODY && ABS){

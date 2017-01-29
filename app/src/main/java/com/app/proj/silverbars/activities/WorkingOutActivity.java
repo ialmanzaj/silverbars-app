@@ -26,7 +26,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import butterknife.OnTextChanged;
 
 
 public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener,WorkingOutView{
@@ -151,14 +150,19 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         String spotify_token = extras.getString("token");
 
 
-        //init presenter vars
-        mWorkingOutPresenter.setInitialSetup(mExercises);
+
+
+        //init presenter
+        mWorkingOutPresenter.setInitialSetup(mExercises,play_exercise_audio);
+
+
 
 
         //creating local player
         if (local_playlist != null && local_song_names != null){
             mWorkingOutPresenter.createLocalMusicPlayer(local_song_names,local_playlist);
         }
+
 
 
         //creating spotify player
@@ -195,16 +199,6 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
 
-    @OnTextChanged(R.id.rest_counter)
-    public void restListener(CharSequence charSequence){
-        mWorkingOutPresenter.restOperationLogic();
-    }
-
-
-    @OnTextChanged(R.id.repetition_timer)
-    public void repTimer(CharSequence charSequence){
-        mWorkingOutPresenter.repetitionOperationLogic(charSequence);
-    }
 
 
 
@@ -295,7 +289,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    public void onShowRestOverlay() {
+    public void onOverlayViewOn() {
 
         //disable workout next and previews
         mNextExercisebutton.setEnabled(false);
@@ -368,11 +362,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
         list.smoothScrollToPosition(0);
 
 
-
-
         mWorkingOutPresenter.showRestOverlayView(RestBySet);//descanso por set
-
-
 
         if (mExercises.size() > 1){
             mNextExercisebutton.setVisibility(View.VISIBLE);
@@ -386,7 +376,7 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
 
     @Override
-    public void onRestFinished() {
+    public void onOverlayViewOff() {
 
         mNextExercisebutton.setEnabled(true);
         mPreviewExerciseButton.setEnabled(true);

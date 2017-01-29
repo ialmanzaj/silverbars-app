@@ -4,8 +4,8 @@ package com.app.proj.silverbars.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.SilverbarsApp;
@@ -16,9 +16,12 @@ import com.app.proj.silverbars.modules.MainWorkoutsModule;
 import com.app.proj.silverbars.presenters.BasePresenter;
 import com.app.proj.silverbars.presenters.MainWorkoutsPresenter;
 import com.app.proj.silverbars.viewsets.MainWorkoutsView;
+import com.google.gson.Gson;
 
 import org.lucasr.twowayview.widget.TwoWayView;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,7 +42,7 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
     @BindView(R.id.list) TwoWayView list;
     @BindView(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
-    @BindView(R.id.progress_bar) ProgressBar progressBar;
+
 
 
     private WorkoutsAdapter adapter;
@@ -49,7 +52,7 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
     @Override
     protected int getFragmentLayout() {
-        return R.layout.fragment_fmain;
+        return R.layout.fragment_main_workouts;
     }
 
     @Override
@@ -61,6 +64,8 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
     @Override
     public void injectDependencies() {
         super.injectDependencies();
+
+
 
         DaggerMainWorkoutsComponent
                 .builder()
@@ -77,8 +82,28 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
         mMuscleSelected = getArguments().getString("Muscle");
 
 
+
         //get my workouts from api
-       mMainWorkoutsPresenter.getMyWorkout();
+       //mMainWorkoutsPresenter.getMyWorkout();
+    }
+
+
+
+
+    private String getJson(){
+        String json = null;
+        try {
+            InputStream is = getActivity().getAssets().open("example.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return json;
     }
 
 
@@ -89,6 +114,18 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
         if (this.isAdded()){
             adapter = new WorkoutsAdapter(getActivity());
             list.setAdapter(adapter);
+
+
+            Gson gson = new Gson();
+            Workout workout = gson.fromJson(getJson(),Workout.class);
+            Log.i(TAG,"workout"+workout.getWorkout_name());
+
+
+
+            List<Workout> workouts = new ArrayList<>();
+            workouts.add(workout);
+
+            setWorkoutsInAdapter(workouts);
         }
 
 
@@ -101,7 +138,6 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
 
         swipeContainer.setOnRefreshListener(() -> mMainWorkoutsPresenter.fetchTimelineAsync());
-
     }
 
 

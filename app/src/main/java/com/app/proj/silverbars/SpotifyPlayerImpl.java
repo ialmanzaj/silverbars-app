@@ -45,7 +45,6 @@ public class SpotifyPlayerImpl implements Player.NotificationCallback, Connectio
 
     private MusicCallback callback;
 
-
     public SpotifyPlayerImpl(Context context, String spotify_token, String playlist, MusicCallback callback){
         this.context = context;
         this.spotify_token = spotify_token;
@@ -78,6 +77,13 @@ public class SpotifyPlayerImpl implements Player.NotificationCallback, Connectio
         }
     }
 
+
+    /**
+     *    player init with his callbacks
+     *<p>
+     *
+     *
+     */
     private void initPlayer(){
         Log.d(TAG,"-- Player initialized --");
         mSpotifyPlayer.setConnectivityStatus(mOperationCallback,utilities.getNetworkConnectivity(context));
@@ -86,10 +92,20 @@ public class SpotifyPlayerImpl implements Player.NotificationCallback, Connectio
 
     }
 
+    /**
+     *    Player events
+     *<p>
+     *
+     *
+     */
 
-    public void pause(){
-        if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
-            mSpotifyPlayer.pause(mOperationCallback);
+    public void play(){
+        if (mCurrentPlaybackState != null && mCurrentPlaybackState.isActiveDevice){
+            resume();
+        }else {
+
+            //restarting
+            start(mSpotifyPlaylist);
         }
     }
 
@@ -98,17 +114,9 @@ public class SpotifyPlayerImpl implements Player.NotificationCallback, Connectio
         mSpotifyPlayer.playUri(mOperationCallback,uri_song,0,0);
     }
 
-
-    public void play(){
-        if (mCurrentPlaybackState != null && mCurrentPlaybackState.isActiveDevice){
-
-            resume();
-
-
-        }else {
-
-            //restarting
-            start(mSpotifyPlaylist);
+    public void pause(){
+        if (mCurrentPlaybackState != null && mCurrentPlaybackState.isPlaying){
+            mSpotifyPlayer.pause(mOperationCallback);
         }
     }
 
@@ -128,6 +136,8 @@ public class SpotifyPlayerImpl implements Player.NotificationCallback, Connectio
         }
     }
 
+
+
     private final Player.OperationCallback mOperationCallback = new Player.OperationCallback() {
         @Override
         public void onSuccess() {
@@ -138,6 +148,8 @@ public class SpotifyPlayerImpl implements Player.NotificationCallback, Connectio
             logSpotityStatus("ERROR:" + error);
         }
     };
+
+
 
     @Override
     public void onPlaybackError(Error error) {
@@ -178,13 +190,15 @@ public class SpotifyPlayerImpl implements Player.NotificationCallback, Connectio
     @Override
     public void onPlaybackEvent(PlayerEvent event) {
         logSpotityStatus("Player event: " + event);
+
         mCurrentPlaybackState = mSpotifyPlayer.getPlaybackState();
         mMetadata = mSpotifyPlayer.getMetadata();
+
+
         logSpotityStatus("Player state: " + mCurrentPlaybackState);
         logSpotityStatus("Metadata: " + mMetadata);
 
         updateView();
-
     }
 
     private void updateView() {
@@ -192,7 +206,6 @@ public class SpotifyPlayerImpl implements Player.NotificationCallback, Connectio
         Log.d(TAG,"isLoggedIn: "+isLoggedIn());
 
         if (mMetadata != null && mMetadata.currentTrack != null) {
-
 
             //UPDATE UI
             callback.onSongName(mMetadata.currentTrack.name);
@@ -226,6 +239,7 @@ public class SpotifyPlayerImpl implements Player.NotificationCallback, Connectio
         }
 
     }
+
 
     
     public void onPause(){

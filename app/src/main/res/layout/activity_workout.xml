@@ -11,7 +11,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:elevation="2dp">
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -27,7 +26,6 @@
                     android:paddingEnd="15dp"
                     android:layout_marginEnd="5dp"
                     android:id="@+id/start_button" />
-
             </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
@@ -57,248 +55,243 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <LinearLayout
-                        android:orientation="vertical"
+                    <RelativeLayout
+                        android:id="@+id/togle_no_internet"
+                        android:minHeight="55dp"
+                        android:background="@color/colorSecondary"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:layout_marginBottom="20dp"
+                        android:gravity="center_vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="wrap_content">
 
-                        <RelativeLayout
-                                android:id="@+id/togle_no_internet"
-                                android:minHeight="55dp"
-                                android:background="@color/colorSecondary"
-                                android:paddingStart="15dp"
-                                android:paddingEnd="15dp"
-                                android:layout_marginBottom="20dp"
-                                android:gravity="center_vertical"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                                <android.support.v7.widget.SwitchCompat
-                                    android:textSize="18sp"
-                                    android:textColor="@color/white"
-                                    android:text="Disponible sin internet"
-                                    android:theme="@style/MySwitch"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginEnd="20dp"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_width="match_parent"
-                                    android:checked="false"
-                                    android:id="@+id/enableLocal" />
-
-                            </RelativeLayout>
-                        <RelativeLayout
-                            android:id="@+id/SelectMusic"
-                            android:minHeight="45dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:paddingStart="15dp"
-                            android:paddingEnd="15dp"
-                            android:gravity="center_vertical"
+                        <android.support.v7.widget.SwitchCompat
+                            android:textSize="18sp"
+                            android:textColor="@color/white"
+                            android:text="Disponible sin internet"
+                            android:theme="@style/MySwitch"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="20dp"
+                            android:layout_alignParentEnd="true"
                             android:layout_width="match_parent"
+                            android:checked="false"
+                            android:id="@+id/enableLocal" />
+
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:id="@+id/SelectMusic"
+                        android:minHeight="45dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_centerVertical="true"
+                            android:orientation="horizontal"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
-                            <LinearLayout
-                                android:layout_centerVertical="true"
-                                android:orientation="horizontal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/music_selection"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-                                <ImageView
-                                    android:layout_marginStart="3dp"
-                                    android:id="@+id/music_img"
-                                    android:layout_width="20dp"
-                                    android:src="@drawable/musica_img"
-                                    android:layout_height="20dp"
-                                    android:text="@string/select_music_text"
-                                    android:textColor="@color/white"
-                                    android:contentDescription=""/>
-
-                            </LinearLayout>
-
-                            <ImageView
-                                android:layout_centerVertical="true"
-                                android:layout_alignParentEnd="true"
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_keyboard_arrow_right_black_36dp" />
+                                android:text="@string/music_selection"
+                                android:textColor="@color/black"
+                                android:textSize="18sp" />
+                            <ImageView
+                                android:layout_marginStart="3dp"
+                                android:id="@+id/music_img"
+                                android:layout_width="20dp"
+                                android:src="@drawable/musica_img"
+                                android:layout_height="20dp"
+                                android:text="@string/select_music_text"
+                                android:textColor="@color/white"
+                                android:contentDescription=""/>
 
+                        </LinearLayout>
 
-                        </RelativeLayout>
-                        <RelativeLayout
-                                android:paddingStart="15dp"
-                                android:paddingEnd="15dp"
-                                android:gravity="center_vertical"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                                <TextView
-                                    android:layout_centerVertical="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/number_sets_text"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-                                <LinearLayout
-                                    android:minHeight="45dp"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content">
-                                    <TextView
-                                        android:layout_marginEnd="10dp"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
-                                        android:textSize="22sp"
-                                        android:text="@string/number_sets"
-                                        android:minWidth="45dp"
-                                        android:textColor="@color/black"
-                                        android:gravity="center_vertical|center_horizontal"
-                                        android:id="@+id/sets"
-                                        android:textAlignment="center" />
-
-                                </LinearLayout>
-
-                            </RelativeLayout>
-                        <RelativeLayout
-                                android:paddingStart="15dp"
-                                android:paddingEnd="15dp"
-                                android:gravity="center_vertical"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                                <TextView
-                                    android:layout_centerVertical="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/rest_exercise_text"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-                                <LinearLayout
-                                    android:minHeight="45dp"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content">
-
-                                    <TextView
-                                        android:layout_marginEnd="10dp"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
-                                        android:textSize="22sp"
-                                        android:text="@string/rest_exercise"
-                                        android:minWidth="45dp"
-                                        android:textColor="@color/black"
-                                        android:gravity="center_vertical|center_horizontal"
-                                        android:textAppearance="?android:attr/textAppearanceMedium"
-                                        android:textAlignment="center"
-                                        android:hint="@string/zero"
-                                        android:id="@+id/RestbyExercise" />
-
-
-
-                                </LinearLayout>
-
-                            </RelativeLayout>
-                        <RelativeLayout
-                                android:paddingStart="15dp"
-                                android:paddingEnd="15dp"
-
-
-                                android:gravity="center_vertical"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-                                <TextView
-                                    android:layout_centerVertical="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/rest_sets_text"
-                                    android:textColor="@color/black"
-                                    android:textSize="18sp" />
-
-
-                                <LinearLayout
-                                    android:minHeight="45dp"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content">
-
-                                    <TextView
-                                        android:layout_marginEnd="10dp"
-                                        android:textSize="22sp"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"
-                                        android:minWidth="45dp"
-                                        android:text="@string/rest_sets"
-                                        android:textAppearance="?android:attr/textAppearanceMedium"
-                                        android:textColor="@color/black"
-                                        android:gravity="center_vertical|center_horizontal"
-                                        android:textAlignment="center"
-                                        android:id="@+id/RestbySet" />
-
-                                </LinearLayout>
-                            </RelativeLayout>
-
-
-                        <android.support.v7.widget.SwitchCompat
-                            android:minHeight="45dp"
-                            android:textSize="18sp"
-                            android:paddingTop="7dp"
-                            android:paddingBottom="7dp"
-                            android:paddingStart="15dp"
-                            android:paddingEnd="15dp"
-                            android:id="@+id/vibration_per_rep"
-                            android:theme="@style/MySwitch2"
-                            android:layout_width="match_parent"
+                        <ImageView
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/vibration_rep_text"
-                            android:textColor="@color/black" />
+                            android:src="@drawable/ic_keyboard_arrow_right_black_36dp" />
 
-                        <android.support.v7.widget.SwitchCompat
-                            android:id="@+id/vibration_per_set"
-                            android:minHeight="45dp"
-                            android:theme="@style/MySwitch2"
-                            android:paddingTop="7dp"
-                            android:paddingBottom="7dp"
-                            android:paddingStart="15dp"
-                            android:paddingEnd="15dp"
-                            android:layout_width="match_parent"
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_centerVertical="true"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/vibration_set_text"
+                            android:text="@string/number_sets_text"
+                            android:textColor="@color/black"
+                            android:textSize="18sp" />
+                        <LinearLayout
+                            android:minHeight="45dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_marginEnd="10dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:textSize="22sp"
+                                android:text="@string/number_sets"
+                                android:minWidth="45dp"
+                                android:textColor="@color/black"
+                                android:gravity="center_vertical|center_horizontal"
+                                android:id="@+id/sets"
+                                android:textAlignment="center" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_centerVertical="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/rest_exercise_text"
+                            android:textColor="@color/black"
+                            android:textSize="18sp" />
+                        <LinearLayout
+                            android:minHeight="45dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_marginEnd="10dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:textSize="22sp"
+                                android:text="@string/rest_exercise"
+                                android:minWidth="45dp"
+                                android:textColor="@color/black"
+                                android:gravity="center_vertical|center_horizontal"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textAlignment="center"
+                                android:hint="@string/zero"
+                                android:id="@+id/RestbyExercise" />
+
+
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+
+
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_centerVertical="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/rest_sets_text"
                             android:textColor="@color/black"
                             android:textSize="18sp" />
 
-                        <android.support.v7.widget.SwitchCompat
-                            android:id="@+id/voice_per_exercise"
+
+                        <LinearLayout
                             android:minHeight="45dp"
-                            android:theme="@style/MySwitch2"
-                            android:paddingTop="7dp"
-                            android:paddingBottom="7dp"
-                            android:paddingStart="15dp"
-                            android:paddingEnd="15dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/audio_exercise"
-                            android:textColor="@color/black"
-                            android:textSize="18sp" />
-                    </LinearLayout>
+                            android:layout_alignParentEnd="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_marginEnd="10dp"
+                                android:textSize="22sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:minWidth="45dp"
+                                android:text="@string/rest_sets"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:textColor="@color/black"
+                                android:gravity="center_vertical|center_horizontal"
+                                android:textAlignment="center"
+                                android:id="@+id/RestbySet" />
+
+                        </LinearLayout>
+                    </RelativeLayout>
+
+
+                    <android.support.v7.widget.SwitchCompat
+                        android:minHeight="45dp"
+                        android:textSize="18sp"
+                        android:paddingTop="7dp"
+                        android:paddingBottom="7dp"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:id="@+id/vibration_per_rep"
+                        android:theme="@style/MySwitch2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/vibration_rep_text"
+                        android:textColor="@color/black" />
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/vibration_per_set"
+                        android:minHeight="45dp"
+                        android:theme="@style/MySwitch2"
+                        android:paddingTop="7dp"
+                        android:paddingBottom="7dp"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/vibration_set_text"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/voice_per_exercise"
+                        android:minHeight="45dp"
+                        android:theme="@style/MySwitch2"
+                        android:paddingTop="7dp"
+                        android:paddingBottom="7dp"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/audio_exercise"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+
                 </LinearLayout>
-
                 <LinearLayout
                     android:orientation="vertical"
                     android:id="@+id/exercises"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
                     <android.support.v7.widget.RecyclerView
                         android:layout_height="match_parent"
                         android:layout_width="match_parent"
                         android:id="@+id/list"
                         android:layout_gravity="center_horizontal" />
                 </LinearLayout>
+
                 <ScrollView
                     android:orientation="vertical"
                     android:gravity="center_horizontal"
@@ -358,6 +351,7 @@
             </FrameLayout>
         </LinearLayout>
     </TabHost>
+
     <LinearLayout
         android:background="@color/white"
         android:gravity="center_vertical"
@@ -395,7 +389,6 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
-
     <LinearLayout
         android:background="@color/white"
         android:gravity="center_horizontal|center_vertical"
@@ -408,7 +401,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -416,8 +408,8 @@
             android:layout_alignParentStart="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
     </RelativeLayout>
+
 
 </LinearLayout>
 

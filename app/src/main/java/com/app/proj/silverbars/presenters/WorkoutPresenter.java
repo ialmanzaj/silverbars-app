@@ -1,6 +1,8 @@
 package com.app.proj.silverbars.presenters;
 
 import com.app.proj.silverbars.callbacks.WorkoutCallback;
+import com.app.proj.silverbars.interactors.WorkoutInteractor;
+import com.app.proj.silverbars.viewsets.WorkoutView;
 
 /**
  * Created by isaacalmanza on 01/11/17.
@@ -8,7 +10,16 @@ import com.app.proj.silverbars.callbacks.WorkoutCallback;
 
 public class WorkoutPresenter extends BasePresenter implements WorkoutCallback {
 
-    public WorkoutPresenter(){}
+    private WorkoutInteractor interactor;
+    private WorkoutView view;
+
+
+
+    public WorkoutPresenter(WorkoutView view, WorkoutInteractor interactor){
+        this.view = view;
+        this.interactor = interactor;
+    }
+
 
 
 

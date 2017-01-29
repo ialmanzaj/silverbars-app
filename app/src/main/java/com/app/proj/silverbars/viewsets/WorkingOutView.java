@@ -25,8 +25,8 @@ public interface WorkingOutView {
     void onRepsFinished(int exercise_position);
     void onSetFinished(int set);
 
-    void onShowRestOverlay();
-    void onRestFinished();
+    void onOverlayViewOn();
+    void onOverlayViewOff();
 
     void onWorkoutRestart(int rep,int tempo_positive,int tempo_isometric,int tempo_negative);
 

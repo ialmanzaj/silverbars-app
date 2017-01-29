@@ -5,4 +5,10 @@ package com.app.proj.silverbars.interactors;
  */
 
 public class WorkoutInteractor {
+
+
+    public WorkoutInteractor(){}
+
+
+
 }

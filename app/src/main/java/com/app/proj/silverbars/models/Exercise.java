@@ -30,15 +30,10 @@ public class Exercise implements Parcelable {
     @SerializedName("muscles")
     private Muscle[] muscles;
 
-    public Exercise(int id, String exercise_name, String level, String[] type_exercise, Muscle[] muscles, String exercise_audio, String exercise_image) {
-        this.id = id;
-        this.exercise_name = exercise_name;
-        this.level = level;
-        this.type_exercise = type_exercise;
-        this.muscles = muscles;
-        this.exercise_audio = exercise_audio;
-        this.exercise_image = exercise_image;
-    }
+
+    public Exercise(){}
+
+
 
     protected Exercise(Parcel in) {
         id = in.readInt();
@@ -73,6 +68,7 @@ public class Exercise implements Parcelable {
         }
     };
 
+
     public int getExerciseId() {
         return id;
     }
@@ -98,6 +94,8 @@ public class Exercise implements Parcelable {
     public String getExercise_image() {
         return exercise_image;
     }
+
+
 
     @Override
     public int describeContents() {
