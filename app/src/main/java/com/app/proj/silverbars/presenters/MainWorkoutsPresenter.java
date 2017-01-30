@@ -34,6 +34,8 @@ public class MainWorkoutsPresenter extends BasePresenter implements MainWorkouts
         interactor.getWorkouts(this);
     }
 
+
+
     @Override
     public void onStart() {
 
@@ -58,7 +60,6 @@ public class MainWorkoutsPresenter extends BasePresenter implements MainWorkouts
     public void onDestroy() {
 
     }
-
 
     @Override
     public void onWorkoutsFound(List<Workout> workouts) {

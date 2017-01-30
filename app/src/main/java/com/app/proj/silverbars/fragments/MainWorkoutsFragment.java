@@ -36,14 +36,14 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
     private static final String TAG = MainWorkoutsFragment.class.getSimpleName();
 
+
+
     @Inject
     MainWorkoutsPresenter mMainWorkoutsPresenter;
 
 
     @BindView(R.id.list) TwoWayView list;
     @BindView(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
-
-
 
     private WorkoutsAdapter adapter;
 
@@ -59,6 +59,7 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
     protected BasePresenter getPresenter() {
         return mMainWorkoutsPresenter;
     }
+
 
 
     @Override
