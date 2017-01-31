@@ -240,9 +240,9 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Cre
 
         for (int a = 0;a<SelectedExercises.size();a++){
 
-            for (int b = 0; b<SelectedExercises.get(a).getExercise().getMuscles().length; b++){
+            for (int b = 0; b<SelectedExercises.get(a).getExercise().getMuscles().size(); b++){
 
-                Muscle muscle = SelectedExercises.get(a).getExercise().getMuscles()[b];
+                Muscle muscle = SelectedExercises.get(a).getExercise().getMuscles().get(b);
 
                 if (Objects.equals(muscle.getMuscleName(), "CALVES")){LOWER_BODY = true;}
                 if (Objects.equals(muscle.getMuscleName(), "HAMSTRINGS")){LOWER_BODY = true;}

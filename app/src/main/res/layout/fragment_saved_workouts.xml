@@ -13,7 +13,6 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:id="@+id/empty_state_saved_workouts"
-            android:visibility="gone"
             android:background="@color/white">
 
                 <TextView

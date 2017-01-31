@@ -55,27 +55,35 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        getPresenter().onStart();
+
+        if (getPresenter() != null)
+            getPresenter().onStart();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getPresenter().onResume();
+
+        if (getPresenter() != null)
+            getPresenter().onResume();
     }
 
 
     @Override
     public void onPause() {
         super.onPause();
-        getPresenter().onPause();
+
+        if (getPresenter() != null)
+            getPresenter().onPause();
     }
 
 
     @Override
     public void onStop() {
         super.onStop();
-        getPresenter().onStop();
+
+        if (getPresenter() != null)
+            getPresenter().onStop();
     }
 
 
@@ -87,7 +95,11 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        getPresenter().onDestroy();
+
+        if (getPresenter() != null)
+            getPresenter().onDestroy();
+
+
         super.onDestroy();
     }
 
@@ -102,7 +114,6 @@ public abstract class BaseFragment extends Fragment {
      * Override this method in case you need to inject dependencies
      */
     public void injectDependencies() {
-
     }
 
     /**

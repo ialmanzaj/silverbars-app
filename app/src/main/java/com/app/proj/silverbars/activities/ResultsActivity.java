@@ -77,7 +77,7 @@ public class ResultsActivity extends AppCompatActivity {
 
             for(int a = 0; a < mExercises.size(); a++){
 
-                Collections.addAll(mTypeExercises, mExercises.get(a).getExercise().getTypes_exercise());
+                //Collections.addAll(mTypeExercises, new List<String>[]{mExercises.get(a).getExercise().getType_exercise()});
 
 
                 if (Objects.equals(mExercises.get(a).getExercise().getLevel(),"NORMAL")){
@@ -107,7 +107,7 @@ public class ResultsActivity extends AppCompatActivity {
             }
 
             //setMusclesToView(mMuscles);
-            setTypes(mTypeExercises);
+           // setTypes(mTypeExercises);
         }
     }
 

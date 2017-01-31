@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
@@ -30,13 +32,13 @@ public class Workout implements Parcelable {
     @SerializedName("main_muscle")
     private String main_muscle;
 
-    @SerializedName("exercises")
-    private ExerciseRep[] exercises;
 
+
+    @SerializedName("exercises")
+    private List<ExerciseRep> exercises;
 
 
     public Workout(){}
-
 
 
     protected Workout(Parcel in) {
@@ -46,7 +48,18 @@ public class Workout implements Parcelable {
         sets = in.readInt();
         level = in.readString();
         main_muscle = in.readString();
-        exercises = in.createTypedArray(ExerciseRep.CREATOR);
+        exercises = in.createTypedArrayList(ExerciseRep.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(workout_name);
+        dest.writeString(workout_image);
+        dest.writeInt(sets);
+        dest.writeString(level);
+        dest.writeString(main_muscle);
+        dest.writeTypedList(exercises);
     }
 
     public static final Creator<Workout> CREATOR = new Creator<Workout>() {
@@ -87,8 +100,12 @@ public class Workout implements Parcelable {
         return main_muscle;
     }
 
-    public ExerciseRep[] getExercises() {
+    public List<ExerciseRep> getExercises() {
         return exercises;
+    }
+
+    public String getMain_muscle() {
+        return main_muscle;
     }
 
     @Override
@@ -96,14 +113,4 @@ public class Workout implements Parcelable {
         return 0;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(id);
-        parcel.writeString(workout_name);
-        parcel.writeString(workout_image);
-        parcel.writeInt(sets);
-        parcel.writeString(level);
-        parcel.writeString(main_muscle);
-        parcel.writeTypedArray(exercises, i);
-    }
 }

@@ -43,8 +43,6 @@ public class WorkingOutActivity extends BaseActivity implements View.OnClickList
     WorkingOutPresenter mWorkingOutPresenter;
 
 
-
-
     @BindView(R.id.player_layout) LinearLayout mPlayerLayout;
 
     @BindView(R.id.play_music) ImageButton mPlayMusicbutton;
@@ -398,8 +396,6 @@ public class WorkingOutActivity extends BaseActivity implements View.OnClickList
             mPreviewExerciseButton.setVisibility(View.GONE);
         }
 
-
-
     }
 
 
@@ -427,12 +423,10 @@ public class WorkingOutActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onWorkoutResume() {
-
     }
 
     @Override
     public void onWorkoutPaused() {
-
     }
 
     @Override

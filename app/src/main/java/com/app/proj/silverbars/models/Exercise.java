@@ -4,9 +4,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
+
 public class Exercise implements Parcelable {
 
     @SerializedName("id")
@@ -18,8 +22,10 @@ public class Exercise implements Parcelable {
     @SerializedName("level")
     private String level;
 
+
+
     @SerializedName("type_exercise")
-    private String[] type_exercise;
+    private List<String> type_exercise;
 
     @SerializedName("exercise_audio")
     private String exercise_audio;
@@ -28,32 +34,31 @@ public class Exercise implements Parcelable {
     private String exercise_image;
 
     @SerializedName("muscles")
-    private Muscle[] muscles;
+    private List<Muscle> muscles;
 
 
     public Exercise(){}
-
 
 
     protected Exercise(Parcel in) {
         id = in.readInt();
         exercise_name = in.readString();
         level = in.readString();
-        type_exercise = in.createStringArray();
-        muscles = in.createTypedArray(Muscle.CREATOR);
+        type_exercise = in.createStringArrayList();
         exercise_audio = in.readString();
         exercise_image = in.readString();
+        muscles = in.createTypedArrayList(Muscle.CREATOR);
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeInt(id);
-        parcel.writeString(exercise_name);
-        parcel.writeString(level);
-        parcel.writeStringArray(type_exercise);
-        parcel.writeTypedArray(muscles,flags);
-        parcel.writeString(exercise_audio);
-        parcel.writeString(exercise_image);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(exercise_name);
+        dest.writeString(level);
+        dest.writeStringList(type_exercise);
+        dest.writeString(exercise_audio);
+        dest.writeString(exercise_image);
+        dest.writeTypedList(muscles);
     }
 
     public static final Creator<Exercise> CREATOR = new Creator<Exercise>() {
@@ -68,7 +73,6 @@ public class Exercise implements Parcelable {
         }
     };
 
-
     public int getExerciseId() {
         return id;
     }
@@ -81,12 +85,6 @@ public class Exercise implements Parcelable {
         return level;
     }
 
-    public String[] getTypes_exercise() {
-        return type_exercise;
-    }
-
-    public Muscle[] getMuscles() {return muscles;}
-
     public String getExercise_audio() {
         return exercise_audio;
     }
@@ -95,7 +93,17 @@ public class Exercise implements Parcelable {
         return exercise_image;
     }
 
+    public List<Muscle> getMuscles() {
+        return muscles;
+    }
 
+    public List<String> getType_exercise() {
+        return type_exercise;
+    }
+
+    public int getId() {
+        return id;
+    }
 
     @Override
     public int describeContents() {

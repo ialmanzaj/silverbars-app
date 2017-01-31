@@ -6,15 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 
 import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.viewsets.UserWorkoutsView;
-
-import org.lucasr.twowayview.widget.TwoWayView;
-
-import butterknife.BindView;
 
 /**
  * Created by isaacalmanza on 10/04/16.
@@ -24,9 +18,9 @@ public class UserWorkoutsFragment extends Fragment implements UserWorkoutsView{
 
     private static final String TAG = UserWorkoutsFragment.class.getSimpleName();
 
-    @BindView(R.id.list_my_workouts) TwoWayView mMyWorkoutView;
-    @BindView(R.id.empty_view) LinearLayout EmpyStateMyWorkouts;
-    @BindView(R.id.create) Button mCreateWorkoutButton;
+    //@BindView(R.id.list_my_workouts) TwoWayView mMyWorkoutView;
+    //@BindView(R.id.empty_view) LinearLayout EmpyStateMyWorkouts;
+    //@BindView(R.id.create) Button mCreateWorkoutButton;
 
 
     //UserWorkoutsPresenter mUserWorkoutsPresenter;

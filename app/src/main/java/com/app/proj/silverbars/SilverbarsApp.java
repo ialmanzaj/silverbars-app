@@ -34,12 +34,6 @@ public class SilverbarsApp extends MultiDexApplication {
 
         setupGraph();
 
-      /*  // do this once, for example in your Application class
-
-        DevOpenHelper helper = new DevOpenHelper(this, ENCRYPTED ? "notes-db-encrypted" : "notes-db");
-        Database db = ENCRYPTED ? helper.getEncryptedWritableDb("super-secret") : helper.getWritableDb();
-        daoSession = new DaoMaster(db).newSession();*/
-
 
 
         if (!Fresco.hasBeenInitialized()){
@@ -56,7 +50,6 @@ public class SilverbarsApp extends MultiDexApplication {
     }
 
 
-
     /**
      * The object graph contains all the instances of the objects
      * that resolve a dependency
@@ -67,18 +60,15 @@ public class SilverbarsApp extends MultiDexApplication {
                     .build();
     }
 
-
-
-
     public SilverbarsComponent getComponent() {
         return component;
     }
 
+
+
     public static SilverbarsApp getApp(Context context) {
         return (SilverbarsApp) context.getApplicationContext();
     }
-
-
 
 
 }

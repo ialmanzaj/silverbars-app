@@ -1,7 +1,6 @@
 package com.app.proj.silverbars.adapters;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,13 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.proj.silverbars.R;
-import com.app.proj.silverbars.activities.WorkoutActivity;
-import com.app.proj.silverbars.models.ExerciseRep;
 import com.app.proj.silverbars.models.Workout;
 import com.app.proj.silverbars.utils.Utilities;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -67,29 +62,26 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
 
         public void setOnClicklistener(){
 
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            btn.setOnClickListener(view -> {
 
-                    int position = (int) view.getTag();
+                int position = (int) view.getTag();
 
 
-                    ArrayList<ExerciseRep> exercises = new ArrayList<>();
-                    Collections.addAll(exercises,workouts.get(position).getExercises());
+               /* ArrayList<ExerciseRep> exercises = new ArrayList<>();
+                Collections.addAll(exercises, new List<ExerciseRep>[]{workouts.get(position).getExercises()});
 
-                    Intent i = new Intent(activity, WorkoutActivity.class);
-                    i.putExtra("id", workouts.get(position).getWorkoutId());
-                    i.putExtra("name", workouts.get(position).getWorkout_name());
-                    i.putExtra("image",workouts.get(position).getWorkout_image());
-                    i.putExtra("sets", workouts.get(position).getSets());
-                    i.putExtra("level", workouts.get(position).getLevel());
-                    i.putExtra("main_muscle", workouts.get(position).getMainMuscle());
-                    i.putParcelableArrayListExtra("exercises", exercises);
-                    i.putExtra("user_workout",user_workout);
-                    activity.startActivity(i);
+                Intent i = new Intent(activity, WorkoutActivity.class);
+                i.putExtra("id", workouts.get(position).getWorkoutId());
+                i.putExtra("name", workouts.get(position).getWorkout_name());
+                i.putExtra("image",workouts.get(position).getWorkout_image());
+                i.putExtra("sets", workouts.get(position).getSets());
+                i.putExtra("level", workouts.get(position).getLevel());
+                i.putExtra("main_muscle", workouts.get(position).getMainMuscle());
+                i.putParcelableArrayListExtra("exercises", exercises);
+                i.putExtra("user_workout",user_workout);
+                activity.startActivity(i);*/
 
 
-                }
             });
 
         }

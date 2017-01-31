@@ -4,7 +4,6 @@ package com.app.proj.silverbars.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.View;
 
 import com.app.proj.silverbars.R;
@@ -17,6 +16,7 @@ import com.app.proj.silverbars.presenters.BasePresenter;
 import com.app.proj.silverbars.presenters.MainWorkoutsPresenter;
 import com.app.proj.silverbars.viewsets.MainWorkoutsView;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.lucasr.twowayview.widget.TwoWayView;
 
@@ -35,8 +35,6 @@ import butterknife.BindView;
 public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsView{
 
     private static final String TAG = MainWorkoutsFragment.class.getSimpleName();
-
-
 
     @Inject
     MainWorkoutsPresenter mMainWorkoutsPresenter;
@@ -117,14 +115,8 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
             list.setAdapter(adapter);
 
 
-            Gson gson = new Gson();
-            Workout workout = gson.fromJson(getJson(),Workout.class);
-            Log.i(TAG,"workout"+workout.getWorkout_name());
+            List<Workout> workouts = new Gson().fromJson(getJson(),new TypeToken<ArrayList<Workout>>(){}.getType());
 
-
-
-            List<Workout> workouts = new ArrayList<>();
-            workouts.add(workout);
 
             setWorkoutsInAdapter(workouts);
         }

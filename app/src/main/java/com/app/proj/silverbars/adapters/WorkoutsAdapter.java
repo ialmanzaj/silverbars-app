@@ -19,7 +19,6 @@ import com.app.proj.silverbars.utils.Utilities;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -69,8 +68,10 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
                 Workout workout = (Workout) view.getTag();
 
+
+                List<ExerciseRep> exercises = workout.getExercises();
                 ArrayList<ExerciseRep> exerciseRepList = new ArrayList<>();
-                Collections.addAll(exerciseRepList,workout.getExercises());
+                exerciseRepList = (ArrayList<ExerciseRep>) exercises;
 
                 Intent i = new Intent(context, WorkoutActivity.class);
                 i.putExtra("workout_id", workout.getWorkoutId());

@@ -11,6 +11,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -406,7 +407,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
             exerciseRep.setTempo_isometric(1);
             exerciseRep.setTempo_negative(1);
 
-            Collections.addAll(TypeExercises, exerciseRep.getExercise().getTypes_exercise());
+            //Collections.addAll(TypeExercises, new List<String>[]{exerciseRep.getExercise().getType_exercise()});
 
             for (Muscle muscle:  exerciseRep.getExercise().getMuscles()){
                 Collections.addAll(MusclesArray,muscle.getMuscleName());
@@ -416,7 +417,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         adapter = new ExerciseAdapter(this,exercises);
         list.setAdapter(adapter);
         setMusclesToView(MusclesArray);
-        putTypesInWorkout(TypeExercises);
+        //putTypesInWorkout(TypeExercises);
     }
     
     @Override
@@ -594,6 +595,21 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
     private void logMessage(String msg) {
         Log.v(TAG, msg);
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            Log.d(TAG, "action bar clicked");
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 

@@ -52,31 +52,5 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.v(TAG," onStart");
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.v(TAG,"onResume");
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.v(TAG,"onPause");
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.v(TAG,"splash screen destruida");
-        super.onDestroy();
-    }
-
 
 }

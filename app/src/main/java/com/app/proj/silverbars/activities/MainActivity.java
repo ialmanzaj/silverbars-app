@@ -8,62 +8,39 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.Spinner;
+import android.view.View;
 
 import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.fragments.MainWorkoutsFragment;
 import com.app.proj.silverbars.fragments.MyWorkoutsFragment;
 import com.app.proj.silverbars.fragments.ProfileFragment;
-import com.app.proj.silverbars.utils.Utilities;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
-
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    //public LinearLayout Button_filter;
+    @BindView(R.id.fab) FloatingActionButton mButtonCreateWorkout;
 
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
+    @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
-    public LinearLayout Button_filter;
 
-    private CharSequence itemTitle;
-
-    private String[] mMenuTitles =  new String[3];;
-    private Toolbar toolbar;
     private String muscle = "ALL";
-    public Spinner spinner;
-
-    private FloatingActionButton mButtonCreateWorkout;
-    private LinearLayout settings;
-
-    private Utilities  utilities = new Utilities();
-
-    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
+        ButterKnife.bind(this);
 
-
-         bottomNavigationView = (BottomNavigationView)
-                findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
-
-
 
 
 
@@ -99,11 +76,13 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 */
 
 
-        //saveBodyTemplate();
 
         if (savedInstanceState == null){
             selectItem(0);
         }
+
+
+
     }
 
     private void selectItem(int position){
@@ -119,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-
         // Reemplazar el contenido del layout principal por un fragmento
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment currentFragment = null;
@@ -131,12 +109,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 currentFragment = new MainWorkoutsFragment();
                 extras.putString("Muscle",muscle);
                 currentFragment.setArguments(extras);
+                fabCreateWorkoutbuttonOn();
                 break;
             case R.id.workout:
                 currentFragment = new MyWorkoutsFragment();
+                fabCreateWorkoutbuttonff();
                 break;
             case R.id.profile:
                 currentFragment = new ProfileFragment();
+                fabCreateWorkoutbuttonff();
                 break;
         }
 
@@ -146,6 +127,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
         return true;
+    }
+
+
+
+    private void fabCreateWorkoutbuttonOn(){
+        mButtonCreateWorkout.setVisibility(View.VISIBLE);
+    }
+
+    private void fabCreateWorkoutbuttonff(){
+        mButtonCreateWorkout.setVisibility(View.GONE);
     }
 
 
