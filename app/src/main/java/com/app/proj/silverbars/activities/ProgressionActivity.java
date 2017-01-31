@@ -181,7 +181,7 @@ public class ProgressionActivity extends AppCompatActivity implements Progressio
 
         mMusclesWebView.getSettings().setJavaScriptEnabled(true);
 
-        mUtilities.getBodyView(this,mMusclesWebView);
+        mUtilities.setBodyInWebwView(this,mMusclesWebView);
     }
 
 

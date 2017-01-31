@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private Utilities  utilities = new Utilities();
 
+    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_main_screen);
 
 
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+         bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -99,8 +100,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 
         //saveBodyTemplate();
+
+        if (savedInstanceState == null){
+            selectItem(0);
+        }
     }
 
+    private void selectItem(int position){
+        MenuItem menuItem = bottomNavigationView.getMenu().getItem(position);
+        onNavigationItemSelected(menuItem);
+    }
 
     public String getMuscle() {
         return muscle;

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,8 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.proj.silverbars.R;
+import com.app.proj.silverbars.SilverbarsApp;
 import com.app.proj.silverbars.adapters.ExerciseWorkingOutAdapter;
+import com.app.proj.silverbars.components.DaggerWorkingOutComponent;
 import com.app.proj.silverbars.models.ExerciseRep;
+import com.app.proj.silverbars.modules.WorkingOutModule;
+import com.app.proj.silverbars.presenters.BasePresenter;
 import com.app.proj.silverbars.presenters.WorkingOutPresenter;
 import com.app.proj.silverbars.utils.DisableTouchRecyclerListener;
 import com.app.proj.silverbars.utils.OnSwipeTouchListener;
@@ -25,15 +29,19 @@ import com.app.proj.silverbars.viewsets.WorkingOutView;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 
 
-public class WorkingOutActivity extends AppCompatActivity implements View.OnClickListener,WorkingOutView{
+public class WorkingOutActivity extends BaseActivity implements View.OnClickListener,WorkingOutView{
 
     private static final String TAG = WorkingOutActivity.class.getSimpleName();
 
 
+    @Inject
     WorkingOutPresenter mWorkingOutPresenter;
+
 
 
 
@@ -78,14 +86,35 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
 
     ArrayList<ExerciseRep> mExercises = new ArrayList<>();
 
-
     private Utilities utilities;
 
+
+
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_working_out;
+    }
+
+    @Nullable
+    @Override
+    protected BasePresenter getPresenter() {
+        return mWorkingOutPresenter;
+    }
+
+    @Override
+    public void injectDependencies() {
+        super.injectDependencies();
+
+        DaggerWorkingOutComponent.builder()
+                .silverbarsComponent(SilverbarsApp.getApp(this).getComponent())
+                .workingOutModule(new WorkingOutModule(this))
+                .build().inject(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_working_out);
+
 
 
         Bundle extras = getIntent().getExtras();
@@ -454,6 +483,8 @@ public class WorkingOutActivity extends AppCompatActivity implements View.OnClic
     protected void onStart() {
         super.onStart();
     }
+
+
 
     @Override
     protected void onResume() {

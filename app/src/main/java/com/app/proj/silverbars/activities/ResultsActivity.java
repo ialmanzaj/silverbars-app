@@ -235,7 +235,7 @@ public class ResultsActivity extends AppCompatActivity {
 
 
         webView.getSettings().setJavaScriptEnabled(true);
-        getBodyView();
+        setBodyInWebwView();
     }*/
 
 

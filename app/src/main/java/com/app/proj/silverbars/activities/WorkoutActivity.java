@@ -1,9 +1,7 @@
 package com.app.proj.silverbars.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,7 +25,6 @@ import com.app.proj.silverbars.adapters.ExerciseAdapter;
 import com.app.proj.silverbars.models.ExerciseRep;
 import com.app.proj.silverbars.models.Muscle;
 import com.app.proj.silverbars.presenters.BasePresenter;
-import com.app.proj.silverbars.presenters.WorkoutPresenter;
 import com.app.proj.silverbars.utils.Utilities;
 import com.app.proj.silverbars.viewsets.WorkoutView;
 
@@ -56,7 +53,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     private Button minusRestSets;
 
 
-    WorkoutPresenter mWorkoutPresenter;
+    //WorkoutPresenter mWorkoutPresenter;
 
 
     @BindView(R.id.toolbar) Toolbar myToolbar;
@@ -182,8 +179,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
             
         });
 
-
-
         
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setNestedScrollingEnabled(false);
@@ -205,9 +200,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
             isTouched = true;
             return false;
         });
-
-
-
 
         enableLocal.setOnCheckedChangeListener((compoundButton, isChecked) -> {
             if (isTouched) {
@@ -352,7 +344,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         });
 
 
-        startButton.setOnClickListener(view -> LaunchWorkingOutActivity() );
+        //startButton.setOnClickListener(view -> LaunchWorkingOutActivity() );
     }
 
 
@@ -363,15 +355,11 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         workoutSets = extras.getInt("sets", 1);
         workoutLevel = extras.getString("level");
         mainMuscle = extras.getString("main_muscle");
-        boolean user_workout = extras.getBoolean("user_workout", false);
         mExercises =  getIntent().getParcelableArrayListExtra("exercises");
-
-
+        boolean user_workout = extras.getBoolean("user_workout", false);
 
         //setExercisesInAdapter(mExercises);
     }
-
-
 
     @OnClick(R.id.SelectMusic)
     public void selectMusic(){
@@ -384,8 +372,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(workoutName);
     }
-
-
 
     private void setupTabs(){
 
@@ -529,21 +515,13 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
             }
         });
 
-        
+
         webview.getSettings().setJavaScriptEnabled(true);
-
-        // ACCEDER A LA URL DEL HTML GUARDADO EN EL PHONE
-        SharedPreferences sharedPref = this.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
-        String default_url = getResources().getString(R.string.muscle_path);
-        String muscle_url = sharedPref.getString(getString(R.string.muscle_path),default_url);
-
-        if (muscle_url.equals("/")){
-            webview.loadUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/html/index.html");
-        }else {
-            String fileurl = "file://"+muscle_url;
-            webview.loadUrl(fileurl);
-        }
+        utilities.setBodyInWebwView(this,webview);
     }
+
+
+
     
     private void getCountTimes(List<String> list){
         for (int a = 0; a<list.size();a++) {

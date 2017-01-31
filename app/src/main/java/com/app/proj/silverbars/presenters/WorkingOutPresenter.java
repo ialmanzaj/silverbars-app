@@ -70,7 +70,6 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
 
     private boolean isButtonPauseClicked;
 
-
     private boolean isAudioExerciseActive;
 
 
@@ -79,11 +78,10 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
         this.view = view;
     }
 
-    public void setInitialSetup(ArrayList<ExerciseRep> exercises,boolean isAudioExerciseActive){
+    public void setInitialSetup(ArrayList<ExerciseRep> exercises,boolean exerciseActive){
         this.exercises = exercises;
-        this.isAudioExerciseActive = isAudioExerciseActive;
+        this.isAudioExerciseActive = exerciseActive;
     }
-
 
 
     /**

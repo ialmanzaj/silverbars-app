@@ -3,20 +3,19 @@ package com.app.proj.silverbars.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.app.proj.silverbars.MainService;
 import com.app.proj.silverbars.R;
-import com.app.proj.silverbars.ServiceGenerator;
 import com.app.proj.silverbars.adapters.ExercisesAdapter;
 import com.app.proj.silverbars.models.Exercise;
+import com.app.proj.silverbars.presenters.BasePresenter;
+import com.app.proj.silverbars.presenters.ExerciseListPresenter;
 import com.app.proj.silverbars.viewsets.ExerciseListView;
 
 import java.util.ArrayList;
@@ -24,17 +23,16 @@ import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by isaacalmanza on 10/04/16.
  */
-public class ExerciseListActivity extends AppCompatActivity implements ExerciseListView {
+public class ExerciseListActivity extends BaseActivity implements ExerciseListView {
 
     private static final String TAG = ExerciseListActivity.class.getSimpleName();
 
+
+    ExerciseListPresenter mExerciseListPresenter;
 
     @BindView(R.id.toolbar) Toolbar toolbar;
 
@@ -47,28 +45,38 @@ public class ExerciseListActivity extends AppCompatActivity implements ExerciseL
     @BindView(R.id.loading) LinearLayout mLoadingView;
     @BindView(R.id.reload)Button mReload;
 
+
     private RecyclerView.Adapter adapter;
 
     private ArrayList<String> exercises_id = new ArrayList<>();
     
     
-    List<Exercise> OriginalExerciseListAll = new ArrayList<>();
-    List<Exercise> ExercisesNoSelected = new ArrayList<>();
-    ArrayList<String> ExercisesSelected = new ArrayList<>();
+    List<Exercise> mExercises = new ArrayList<>();
+    List<Exercise> mExercisesNoSelected;
+    ArrayList<String> mExercisesSelected;
 
+
+
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_exercise_list;
+    }
+
+    @Nullable
+    @Override
+    protected BasePresenter getPresenter() {
+        return null;
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_exercise_list);
-
-
         setupToolbar();
 
 
-        mReload.setOnClickListener(v -> getExercisesFromAPI());
+        //mReload.setOnClickListener(v -> getExercisesFromAPI());
 
         
         list.setLayoutManager(new LinearLayoutManager(this));
@@ -77,9 +85,9 @@ public class ExerciseListActivity extends AppCompatActivity implements ExerciseL
 
         mAddExercisesbt.setOnClickListener(v -> {
             
-            for (int i = 0; i < OriginalExerciseListAll.size(); i++){
+            for (int i = 0; i < mExercises.size(); i++){
                 if (ExercisesAdapter.selectedItems.get(i)){
-                    exercises_id.add(OriginalExerciseListAll.get(i).getExercise_name());
+                    exercises_id.add(mExercises.get(i).getExercise_name());
                 }
             }
 
@@ -93,101 +101,90 @@ public class ExerciseListActivity extends AppCompatActivity implements ExerciseL
             ExercisesAdapter.selectedItems.clear();
         });
 
-        getExercisesFromAPI();
+        //getExercisesFromAPI();
+
+
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+        setExtras(extras);
     }
 
-    private void setupToolbar(){
+    private void setExtras(Bundle extras){
+
+        if (extras.isEmpty()){
+            Log.i(TAG, "no se ha seleccionado ningun ejercicio todavia");
+            return;
+        }
+
+
+        mExercisesSelected = extras.getStringArrayList("exercises");
+
+
+        for (int c = 0;c < mExercisesSelected.size();c++){
+            for (int a = 0; a < mExercises.size(); a++){
+
+                //ejercicio seleccionado lo elimina en la siguiente seleccion
+                if (Objects.equals(mExercises.get(a).getExercise_name(), mExercisesSelected.get(c))){
+                    mExercisesNoSelected.remove(a);
+                }
+            }
+        }
+
+        setAdapter();
+    }
+
+
+
+    public void setupToolbar(){
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.add_exercises_title));
     }
 
-    private void getExercisesFromAPI() {
 
+    @Override
+    public void displayExercises(List<Exercise> exercises) {
+        onErrorOff();
 
-        MainService service = ServiceGenerator.createService(MainService.class);
+        mExercises = exercises;
+        mExercisesNoSelected = exercises;
 
-
-
-        service.getExercises().enqueue(new Callback<List<Exercise>>() {
-            @Override
-            public void onResponse(Call<List<Exercise>> call, Response<List<Exercise>> response) {
-                if (response.isSuccessful()){
-
-
-                    onErrorOff();
-
-                    OriginalExerciseListAll = response.body();
-
-
-                    try {
-                        Intent i = getIntent();
-                        Bundle bundle = i.getExtras();
-
-
-                        ExercisesSelected = bundle.getStringArrayList("exercises");
-                        Log.v(TAG,"exercise recibido: "+ExercisesSelected);
-
-                        ExercisesNoSelected = OriginalExerciseListAll;
-
-                        for (int c = 0;c < ExercisesSelected.size();c++){
-                            for (int a = 0; a < OriginalExerciseListAll.size(); a++){
-
-                                //ejercicio seleccionado lo elimina en la siguiente seleccion
-                                if (Objects.equals(OriginalExerciseListAll.get(a).getExercise_name(), ExercisesSelected.get(c))){
-                                    ExercisesNoSelected.remove(a);
-                                }
-                            }
-                        }
-                    }catch (NullPointerException e){
-                        Log.i(TAG, "no se ha seleccionado ningun ejercicio todavia");
-                    }
-
-                    if (ExercisesNoSelected.isEmpty()){
-
-                        adapter = new ExercisesAdapter(ExerciseListActivity.this,OriginalExerciseListAll);
-
-                    }else {
-
-                        adapter = new ExercisesAdapter(ExerciseListActivity.this,ExercisesNoSelected);
-                    }
-
-                    list.setAdapter(adapter);
-
-
-                }else {
-
-                    Log.e(TAG,"response "+response.code());
-                    onErrorOn();
-                }
-
-
-            }
-            @Override
-            public void onFailure(Call<List<Exercise>> call, Throwable t) {
-                Log.e(TAG,"onFailure ",t);
-                onErrorOn();
-            }
-        });
-
-
-
+        setAdapter();
     }
-    
+
+    private void setAdapter(){
+        if (mExercisesNoSelected.isEmpty()){
+
+            adapter = new ExercisesAdapter(this,mExercises);
+
+        }else {
+
+            adapter = new ExercisesAdapter(this,mExercisesNoSelected);
+        }
+
+        list.setAdapter(adapter);
+    }
+
+
+
+
+    @Override
+    public void displayNetworkError() {
+        onErrorOn();
+    }
+
+    @Override
+    public void displayServerError() {
+        onErrorOn();
+    }
+
+
     private void onErrorOn(){
-        error_layout.setVisibility(View.VISIBLE);
-        list.setVisibility(View.GONE);
-        mAddExercisesbt.setVisibility(View.GONE);
     }
-    
-    
+
+
     private void onErrorOff(){
-        mLoadingView.setVisibility(View.GONE);
-        error_layout.setVisibility(View.GONE);
-        list.setVisibility(View.VISIBLE);
-        mAddExercisesbt.setVisibility(View.VISIBLE);
     }
-
-
 
 }

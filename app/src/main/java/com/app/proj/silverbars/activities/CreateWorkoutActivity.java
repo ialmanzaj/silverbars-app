@@ -199,7 +199,7 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
 
 
 
-        utilities.getBodyView(this,webView);
+        utilities.setBodyInWebwView(this,webView);
 
     }//  close create workout
 
@@ -487,7 +487,7 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
         webView.getSettings().setJavaScriptEnabled(true);
 
 
-        utilities.getBodyView(this,webView);
+        utilities.setBodyInWebwView(this,webView);
     }
 
 
