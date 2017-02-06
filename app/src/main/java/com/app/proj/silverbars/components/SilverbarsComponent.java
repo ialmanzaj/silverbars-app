@@ -10,6 +10,7 @@ import com.app.proj.silverbars.interactors.CreateWorkoutInteractor;
 import com.app.proj.silverbars.interactors.LoginInteractor;
 import com.app.proj.silverbars.interactors.MainWorkoutsInteractor;
 import com.app.proj.silverbars.interactors.SpotifyInteractor;
+import com.app.proj.silverbars.interactors.WorkoutInteractor;
 import com.app.proj.silverbars.modules.InteractorModule;
 import com.app.proj.silverbars.modules.SilverbarsModule;
 
@@ -46,5 +47,7 @@ public interface SilverbarsComponent {
     LoginInteractor getLoginInteractor();
 
     SpotifyInteractor getSpotifyInteractor();
+
+    WorkoutInteractor getWorkoutInteractor();
 
 }

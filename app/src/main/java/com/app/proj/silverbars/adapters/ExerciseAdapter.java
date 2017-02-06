@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -205,26 +206,32 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
         String[] imageDir = exercises.get(position).getExercise().getExercise_image().split("exercises");
 
-        if (imageDir.length == 2){
-            //Log.d(TAG,"img from json");
+        try {
+
+            if (imageDir.length == 2){
+                //Log.d(TAG,"img from json");
 
 
-            viewHolder.imagen_cache.setVisibility(View.VISIBLE);
-            Uri uri = Uri.parse(exercises.get(position).getExercise().getExercise_image());
-            viewHolder.imagen_cache.setImageURI(uri);
+                viewHolder.imagen_cache.setVisibility(View.VISIBLE);
+                Uri uri = Uri.parse(exercises.get(position).getExercise().getExercise_image());
+                viewHolder.imagen_cache.setImageURI(uri);
 
-        }else {
-            //Log.d(TAG,"img from local");
-            Bitmap bmp;
-            viewHolder.imageView_local.setVisibility(View.VISIBLE);
-            //Log.d(TAG,"image: " +exercises.get(a).getExercise().getExercise_image());
+            }else {
+                //Log.d(TAG,"img from local");
+                Bitmap bmp;
+                viewHolder.imageView_local.setVisibility(View.VISIBLE);
+                //Log.d(TAG,"image: " +exercises.get(a).getExercise().getExercise_image());
 
 
-            bmp = utilities.loadExerciseImageFromDevice(context,exercises.get(position).getExercise().getExercise_image());
-            viewHolder.imageView_local.setImageBitmap(bmp);
+                bmp = utilities.loadExerciseImageFromDevice(context,exercises.get(position).getExercise().getExercise_image());
+                viewHolder.imageView_local.setImageBitmap(bmp);
+            }
+
+
+
+        }catch (NullPointerException e){
+            Log.e(TAG,""+e);
         }
-
-
 
     }
 

@@ -4,6 +4,7 @@ package com.app.proj.silverbars.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
 
 import com.app.proj.silverbars.R;
@@ -33,6 +34,7 @@ import butterknife.BindView;
  * Created by isaacalmanza on 10/04/16.
  */
 public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsView{
+
 
     private static final String TAG = MainWorkoutsFragment.class.getSimpleName();
 
@@ -111,11 +113,15 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
         super.onActivityCreated(savedInstanceState);
 
         if (this.isAdded()){
+
             adapter = new WorkoutsAdapter(getActivity());
             list.setAdapter(adapter);
 
 
-            List<Workout> workouts = new Gson().fromJson(getJson(),new TypeToken<ArrayList<Workout>>(){}.getType());
+            Log.i(TAG,"workout"+getJson());
+
+
+           List<Workout> workouts = new Gson().fromJson(getJson(),new TypeToken<ArrayList<Workout>>(){}.getType());
 
 
             setWorkoutsInAdapter(workouts);
@@ -127,8 +133,6 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
-
 
         swipeContainer.setOnRefreshListener(() -> mMainWorkoutsPresenter.fetchTimelineAsync());
     }
@@ -147,6 +151,7 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
     @Override
     public void displayServerError() {
+
     }
 
     private void setWorkoutsInAdapter(List<Workout> workouts){

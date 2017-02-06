@@ -22,17 +22,22 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.app.proj.silverbars.R;
+import com.app.proj.silverbars.SilverbarsApp;
 import com.app.proj.silverbars.adapters.ExerciseAdapter;
+import com.app.proj.silverbars.components.DaggerWorkoutComponent;
 import com.app.proj.silverbars.models.ExerciseRep;
-import com.app.proj.silverbars.models.Muscle;
+import com.app.proj.silverbars.models.Workout;
+import com.app.proj.silverbars.modules.WorkoutModule;
 import com.app.proj.silverbars.presenters.BasePresenter;
+import com.app.proj.silverbars.presenters.WorkoutPresenter;
 import com.app.proj.silverbars.utils.Utilities;
 import com.app.proj.silverbars.viewsets.WorkoutView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -44,7 +49,8 @@ import butterknife.OnClick;
 public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
     private static final String TAG = WorkoutActivity.class.getSimpleName();
-    
+
+
     // UI FIELDS
     private Button plusSets;
     private Button minusSets;
@@ -54,7 +60,8 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     private Button minusRestSets;
 
 
-    //WorkoutPresenter mWorkoutPresenter;
+    @Inject
+    WorkoutPresenter mWorkoutPresenter;
 
 
     @BindView(R.id.toolbar) Toolbar myToolbar;
@@ -77,26 +84,22 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
    
 
     @BindView(R.id.list) RecyclerView list;
-
     @BindView(R.id.muscles) ScrollView scrollView;
-
     @BindView(R.id.webview) WebView webview;
 
     @BindView(R.id.SelectMusic) RelativeLayout selectMusic;
 
-    
     @BindView(R.id.enableLocal) SwitchCompat enableLocal;
     @BindView(R.id.vibration_per_rep) SwitchCompat vibration_per_rep;
     @BindView(R.id.vibration_per_set) SwitchCompat vibration_per_set;
 
-    
     @BindView(R.id.voice_per_exercise)SwitchCompat voice_per_exercise;
 
     @BindView(R.id.start_button) Button startButton;
 
 
-    private ExerciseAdapter adapter;
 
+    private ExerciseAdapter adapter;
 
     private String[] Songs_names;
     private ArrayList<File> Songs_files;
@@ -117,15 +120,15 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
     private String partes = "";
 
-    String mPlaylistSpotify,mSpotifyToken;
+    private String mPlaylistSpotify,mSpotifyToken;
 
     private  List<String> MusclesArray = new ArrayList<>();
     private  List<String> TypeExercises = new ArrayList<>();
+
     private ArrayList<ExerciseRep> mExercises;
 
 
     private Utilities utilities = new Utilities();
-
 
     @Override
     protected int getLayout() {
@@ -135,11 +138,20 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     @Nullable
     @Override
     protected BasePresenter getPresenter() {
-        return null;
+        return mWorkoutPresenter;
     }
 
-    
-    
+    @Override
+    public void injectDependencies() {
+        super.injectDependencies();
+
+
+        DaggerWorkoutComponent.builder()
+                .silverbarsComponent(SilverbarsApp.getApp(this).getComponent())
+                .workoutModule(new WorkoutModule(this))
+                .build().inject(this);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -345,7 +357,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         });
 
 
-        //startButton.setOnClickListener(view -> LaunchWorkingOutActivity() );
+        startButton.setOnClickListener(view -> LaunchWorkingOutActivity() );
     }
 
 
@@ -357,10 +369,13 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         workoutLevel = extras.getString("level");
         mainMuscle = extras.getString("main_muscle");
         mExercises =  getIntent().getParcelableArrayListExtra("exercises");
+        Log.i(TAG,"exercises"+mExercises);
         boolean user_workout = extras.getBoolean("user_workout", false);
 
-        //setExercisesInAdapter(mExercises);
+        setExercisesInAdapter(mExercises);
     }
+
+
 
     @OnClick(R.id.SelectMusic)
     public void selectMusic(){
@@ -373,6 +388,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(workoutName);
     }
+
 
     private void setupTabs(){
 
@@ -399,6 +415,12 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
 
 
+    @Override
+    public void displayWorkoutfromDatabase(Workout workout) {
+
+
+    }
+
     private void setExercisesInAdapter(ArrayList<ExerciseRep> exercises){
 
         for (ExerciseRep exerciseRep: exercises){
@@ -407,16 +429,23 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
             exerciseRep.setTempo_isometric(1);
             exerciseRep.setTempo_negative(1);
 
+
             //Collections.addAll(TypeExercises, new List<String>[]{exerciseRep.getExercise().getType_exercise()});
 
-            for (Muscle muscle:  exerciseRep.getExercise().getMuscles()){
+
+
+          /*  for (Muscle muscle:  exerciseRep.getExercise().getMuscles()){
                 Collections.addAll(MusclesArray,muscle.getMuscleName());
-            }
+            }*/
+
+
+
         }
+
 
         adapter = new ExerciseAdapter(this,exercises);
         list.setAdapter(adapter);
-        setMusclesToView(MusclesArray);
+        //setMusclesToView(MusclesArray);
         //putTypesInWorkout(TypeExercises);
     }
     
@@ -522,8 +551,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     }
 
 
-
-    
     private void getCountTimes(List<String> list){
         for (int a = 0; a<list.size();a++) {
             if (list.get(a).equals("ISOMETRIC")) {
@@ -537,7 +564,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
             }
         }
     }
-
 
     private void putTypesInWorkout(List<String> types){
         
@@ -592,11 +618,9 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         }
     }
 
-
     private void logMessage(String msg) {
         Log.v(TAG, msg);
     }
-
 
 
     @Override

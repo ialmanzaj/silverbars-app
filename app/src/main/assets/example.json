@@ -1,79 +1,5 @@
-[{
-  "id":1,
-  "workout_name":"UPPER CHEST by Lazar Novovic",
-  "workout_image":"/",
-  "sets":5,
-  "level":2,
-  "main_muscle":"CHEST",
-  "exercises":[
-      {
-        "id": 1,
-        "exercise_name":"push up",
-        "level":"",
-        "type_exercise":{},
-        "exercise_audio":"",
-        "exercise_image":"",
-        "muscles":{}
-      }
-    ]
-},
+[
   {
-    "id":1,
-    "workout_name":"UPPER CHEST by Lazar Novovic",
-    "workout_image":"/",
-    "sets":5,
-    "level":2,
-    "main_muscle":"CHEST",
-    "exercises":[
-      {
-        "id": 1,
-        "exercise_name":"push up",
-        "level":"",
-        "type_exercise":{},
-        "exercise_audio":"",
-        "exercise_image":"",
-        "muscles":{}
-      }
-    ]
-  },
-  {
-    "id":1,
-    "workout_name":"UPPER CHEST by Lazar Novovic",
-    "workout_image":"/",
-    "sets":5,
-    "level":2,
-    "main_muscle":"CHEST",
-    "exercises":[
-      {
-        "id": 1,
-        "exercise_name":"push up",
-        "level":"",
-        "type_exercise":{},
-        "exercise_audio":"",
-        "exercise_image":"",
-        "muscles":{}
-      }
-    ]
-  },
-  {
-    "id":1,
-    "workout_name":"UPPER CHEST by Lazar Novovic",
-    "workout_image":"/",
-    "sets":5,
-    "level":2,
-    "main_muscle":"CHEST",
-    "exercises":[
-      {
-        "id": 1,
-        "exercise_name":"push up",
-        "level":"",
-        "type_exercise":{},
-        "exercise_audio":"",
-        "exercise_image":"",
-        "muscles":{}
-      }
-    ]
-  }, {
   "id":1,
   "workout_name":"UPPER CHEST by Lazar Novovic",
   "workout_image":"/",
@@ -83,56 +9,54 @@
   "exercises":[
     {
       "id": 1,
-      "exercise_name":"push up",
-      "level":"",
-      "type_exercise":{},
-      "exercise_audio":"",
-      "exercise_image":"",
-      "muscles":{}
-    }
-  ]
-}, {
-  "id":1,
-  "workout_name":"UPPER CHEST by Lazar Novovic",
-  "workout_image":"/",
-  "sets":5,
-  "level":2,
-  "main_muscle":"CHEST",
-  "exercises":[
+      "exercise":{
+        "exercise_name":"push up",
+        "level":"",
+        "type_exercise":[
+         "",
+          "",
+          ""
+        ],
+        "exercise_audio":"",
+        "exercise_image":"",
+        "muscles":[]
+      },"repetition":12,
+      "seconds":0
+    },
     {
-      "id": 1,
-      "exercise_name":"push up",
-      "level":"",
-      "type_exercise":{},
-      "exercise_audio":"",
-      "exercise_image":"",
-      "muscles":{}
-    }
-  ]
-}, {
-  "id":1,
-  "workout_name":"LOWER CHEST by Lazar Novovic",
-  "workout_image":"/",
-  "sets":5,
-  "level":2,
-  "main_muscle":"CHEST",
-  "exercises":[
+      "id": 2,
+      "exercise":{
+        "exercise_name":"sits up",
+        "level":"",
+        "type_exercise":[
+          "",
+          "",
+          ""
+        ],
+        "exercise_audio":"",
+        "exercise_image":"",
+        "muscles":[]
+      },"repetition":10,
+      "seconds":0
+    },
     {
-      "id": 1,
-      "exercise_name":"push up",
-      "level":"",
-      "type_exercise":{},
-      "exercise_audio":"",
-      "exercise_image":"",
-      "muscles":{}
+      "id": 3,
+      "exercise":{
+        "exercise_name":"back lever",
+        "level":"",
+        "type_exercise":[
+          "",
+          "",
+          ""
+        ],
+        "exercise_audio":"",
+        "exercise_image":"",
+        "muscles":[]
+      },"repetition":15,
+      "seconds":0
     }
-  ]
+    ]
 }
-
-
-
-
-
 
 ]
 

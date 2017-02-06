@@ -1,74 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activities.PlaylistPickerActivity">
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="?android:attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:background="@color/primary_dark_material_dark"
-        android:fitsSystemWindows="true"
-        android:layout_alignParentTop="true">
-
-        <ImageButton
-            android:id="@+id/create_playlist"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_add_white_24px"
-            android:background="@color/transparent"
-            android:layout_gravity="right"
-            android:layout_marginEnd="10dp"/>
-    </android.support.v7.widget.Toolbar>
 
     <LinearLayout
-        android:id="@+id/tab2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:visibility="gone"
         android:orientation="vertical"
-        android:layout_above="@+id/Buttons"
-        android:layout_below="@+id/toolbar">
-        <ListView
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/playlist"
-            android:choiceMode="singleChoice" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:id="@+id/empty_state"
+        android:background="@color/white">
+        <TextView
+            android:textColor="@color/black"
+            android:textSize="26sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="There's no songs:("
+            android:layout_gravity="center"
+            android:gravity="center" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@id/Buttons"
-        android:orientation="horizontal"
+
+    <android.support.design.widget.AppBarLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="50dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_alignParentBottom="true">
-        <Button
-            android:visibility="gone"
-           android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:id="@+id/clean"
-            android:background="@color/colorInactive" />
+        app:elevation="2dp">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/create_playlist"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_add_white_24px"
+                android:background="@color/transparent"
+                android:layout_gravity="right"
+                android:layout_marginEnd="10dp"/>
 
-        <Button
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/choose"
-            android:id="@+id/done"
-            android:background="@color/colorSecondary" />
-    </LinearLayout>
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
 
-    <!--<Button-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="Seleccionar Lista de reproduccion"-->
-        <!--android:id="@+id/boton"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_centerHorizontal="true" />-->
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_below="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_above="@+id/Buttons">
+            <ListView
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/playlist"
+                android:choiceMode="singleChoice" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@id/Buttons"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_alignParentBottom="true">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/choose"
+                android:id="@+id/done"
+                android:background="@color/colorSecondary" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

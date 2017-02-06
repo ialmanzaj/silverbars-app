@@ -57,8 +57,6 @@ public class ResultsActivity extends AppCompatActivity {
         mExercises = extras.getParcelableArrayList("exercises");
 
 
-
-        setupToolbar();
         setupTabs();
 
 
@@ -111,11 +109,7 @@ public class ResultsActivity extends AppCompatActivity {
         }
     }
 
-    private void setupToolbar(){
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getResources().getString(R.string.results));
-    }
-    
+
     
     private void setupTabs(){
         TabHost Tab_layout = (TabHost) findViewById(R.id.tabHost2);

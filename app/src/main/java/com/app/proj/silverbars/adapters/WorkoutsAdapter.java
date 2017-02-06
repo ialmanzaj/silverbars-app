@@ -39,12 +39,13 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
     private Context context;
     private List<Workout> workouts;
 
-    private Utilities utilities;
+    private Utilities  utilities = new Utilities();
+
 
     public WorkoutsAdapter(Context context) {
         this.context = context;
         this.workouts = new ArrayList<>();
-        utilities = new Utilities();
+
     }
 
 
@@ -69,19 +70,21 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
                 Workout workout = (Workout) view.getTag();
 
 
-                List<ExerciseRep> exercises = workout.getExercises();
                 ArrayList<ExerciseRep> exerciseRepList = new ArrayList<>();
-                exerciseRepList = (ArrayList<ExerciseRep>) exercises;
+                exerciseRepList.addAll( workout.getExercises() );
 
-                Intent i = new Intent(context, WorkoutActivity.class);
-                i.putExtra("workout_id", workout.getWorkoutId());
-                i.putExtra("name", workout.getWorkout_name());
-                i.putExtra("image", workout.getWorkout_image());
-                i.putExtra("sets", workout.getSets());
-                i.putExtra("level", workout.getLevel());
-                i.putExtra("main_muscle", workout.getMainMuscle());
-                i.putParcelableArrayListExtra("exercises",  exerciseRepList);
-                context.startActivity(i);
+
+                Intent intent = new Intent(context, WorkoutActivity.class);
+                intent.putExtra("workout_id", workout.getWorkoutId());
+                intent.putExtra("name", workout.getWorkout_name());
+                intent.putExtra("image", workout.getWorkout_image());
+                intent.putExtra("sets", workout.getSets());
+                intent.putExtra("level", workout.getLevel());
+                intent.putExtra("main_muscle", workout.getMainMuscle());
+                intent.putParcelableArrayListExtra("exercises",  exerciseRepList);
+
+
+                context.startActivity(intent);
             });
         }
     }
@@ -136,17 +139,14 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         notifyDataSetChanged();
     }
 
-
     public List<Workout> getWorkouts() {
         return workouts;
     }
-
 
     public void clear(){
         workouts.clear();
         notifyDataSetChanged();
     }
-
 
 
 }

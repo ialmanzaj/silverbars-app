@@ -1,51 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.app.proj.silverbars.activities.SongsActivity">
+    <android.support.design.widget.AppBarLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/appbarlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="2dp">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:visibility="gone"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/Buttons">
+        android:gravity="center_vertical"
+        android:id="@+id/empty_state"
+        android:background="@color/white">
+        <TextView
+            android:textColor="@color/black"
+            android:textSize="26sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="There's no songs:("
+            android:layout_gravity="center"
+            android:gravity="center" />
+    </LinearLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <ListView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/music_selection"
-            android:choiceMode="multipleChoice"/>
+            android:orientation="vertical"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/Buttons">
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/music_selection"
+                android:choiceMode="multipleChoice"/>
+        </LinearLayout>
 
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@id/Buttons"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_alignParentBottom="true">
-
-        <Button
-            android:visibility="gone"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <LinearLayout
+            android:id="@id/Buttons"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=""
-            android:id="@+id/clean"
-            android:background="@color/colorInactive" />
+            android:layout_gravity="center_horizontal"
+            android:layout_alignParentBottom="true">
 
-        <Button
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Elegir"
-            android:id="@+id/done"
-            android:background="@color/colorSecondary" />
-    </LinearLayout>
-</RelativeLayout>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Elegir"
+                android:id="@+id/done"
+                android:background="@color/colorSecondary" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

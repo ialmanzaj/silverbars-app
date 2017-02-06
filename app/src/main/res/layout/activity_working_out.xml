@@ -45,9 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:baselineAligned="false">
-
-
-                            <TextView
+                    <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/zero"
@@ -56,8 +54,7 @@
                                 android:textSize="95sp"
                                 android:textStyle="bold"
                                 android:gravity="bottom" />
-
-                            <TextView
+                    <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="-18dp"
@@ -65,10 +62,6 @@
                                 android:textSize="20sp"
                                 android:layout_gravity="center_horizontal"
                                 android:textColor="@color/dark_gray" />
-
-
-
-
                 </LinearLayout>
                 <LinearLayout
                     android:gravity="center_horizontal"
@@ -86,7 +79,7 @@
                         android:id="@+id/positive"
                         android:textSize="22sp"
                         android:textColor="@color/black"
-                        android:text="2"
+                        android:text="1"
                         android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
@@ -106,7 +99,7 @@
                         android:id="@+id/isometric"
                         android:textSize="22sp"
                         android:textColor="@color/black"
-                        android:text="2"
+                        android:text="1"
                         android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
@@ -126,7 +119,7 @@
                         android:id="@+id/negative"
                         android:textSize="22sp"
                         android:textColor="@color/black"
-                        android:text="2"
+                        android:text="1"
                         android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
@@ -157,7 +150,6 @@
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:text="@string/exercise_text"
-                            android:id="@+id/textView21"
                             android:textColor="@color/secondColor"
                             android:textSize="16sp"
                             android:layout_marginTop="-5dp"
@@ -189,7 +181,6 @@
                                 android:textColor="@color/secondColor"
                                 android:textSize="32sp"
                                 android:layout_gravity="center_horizontal|top" />
-
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -200,17 +191,8 @@
                                 android:textSize="32sp"
                                 android:layout_gravity="center_horizontal|top" />
                         </LinearLayout>
-
-
                     </RelativeLayout>
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical">
 
-
-                    </RelativeLayout>
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -250,7 +232,6 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:text="/"
-                                android:id="@+id/textView18"
                                 android:gravity="center"
                                 android:textColor="@color/colorSecondary"
                                 android:textSize="32sp" />
@@ -260,7 +241,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:text="@string/zero"
-                                android:id="@+id/TotalSet"
+                                android:id="@+id/total_sets"
                                 android:textSize="32sp"
                                 android:textColor="@color/colorSecondary" />
                         </LinearLayout>
@@ -468,7 +449,6 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-
         <LinearLayout
             android:orientation="vertical"
             android:gravity="center_vertical|center_horizontal"
@@ -507,4 +487,7 @@
 
         </LinearLayout>
     </FrameLayout>
+
+
+
 </LinearLayout>

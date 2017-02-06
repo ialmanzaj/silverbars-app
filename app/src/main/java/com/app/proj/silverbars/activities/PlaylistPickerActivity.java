@@ -2,11 +2,13 @@ package com.app.proj.silverbars.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.app.proj.silverbars.R;
@@ -16,6 +18,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
@@ -25,60 +28,67 @@ public class PlaylistPickerActivity extends AppCompatActivity {
 
     private static final String TAG = PlaylistPickerActivity.class.getSimpleName();
 
-    private ListView ListMusic;
+     ListView ListMusic;
+
     @BindView(R.id.playlist) ListView ListPlaylist;
     
     @BindView(R.id.toolbar) Toolbar toolbar;
+
     @BindView(R.id.done) Button mDoneBt;
     @BindView(R.id.create_playlist)ImageView mCreatePlaylistBt;
+
+
+    @BindView(R.id.empty_state) LinearLayout mEmptyStateView;
 
 
     private String[] save_playlist;
     
     private long[] selected;
     
-    private ArrayList<File> mySongs;
-    
+
     String[] position;
-    
-    private int Reps = 0, Tempo = 0;
-    
+
     private String Playlist_name;
     private String[] playlist;
-    
-
-    private static String strSeparator = "__,__";
-    private String[] songs;
 
 
-    private Utilities utilities;
+    private ArrayList<File> local_audio;
+    private ArrayList<File> songs;
+
+
+    private Utilities utilities = new Utilities();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist__picker);
+        ButterKnife.bind(this);
+
+
+        //mCreatePlaylistBt.setOnClickListener(v -> dialog());
+
+        local_audio = utilities.findSongs(this,Environment.getExternalStorageDirectory());
+
+        songValidation();
 
 
 
-        mCreatePlaylistBt.setOnClickListener(v -> dialog());
-
-
-
-      /*  mySongs = findSongs(Environment.getExternalStorageDirectory());
-        if (mySongs.size() > 0) {
-            String[] items = new String[mySongs.size()];
-            for (int i = 0; i < mySongs.size(); i++) {
-                items[i] = SongName(mySongs.get(i));
-            }
-            getUsersPlaylist(1);
+      /*  String[] items = new String[mySongs.size()];
+        for (int i = 0; i < mySongs.size(); i++) {
+            items[i] = SongName(mySongs.get(i));
         }
-*/
+        getUsersPlaylist(1);
+        */
 
-        mDoneBt.setOnClickListener(view -> {
+
+
+
+       /* mDoneBt.setOnClickListener(view -> {
             final int selected1 = ListPlaylist.getCheckedItemPosition();
             Log.v(TAG,"selected: "+ selected1);
 
-           /* if(selected != -1){
+           *//* if(selected != -1){
                 MySQLiteHelper database = new MySQLiteHelper(PlaylistPickerActivity.this);
                 int pos = ListPlaylist.getCheckedItemPosition();
                 String[] result = database.getPlaylist(pos+1);
@@ -92,9 +102,33 @@ public class PlaylistPickerActivity extends AppCompatActivity {
             else{
                 mySongs = null;
                 finish();
-            }*/
-        });
+            }*//*
+        });*/
 
+    }
+
+    private void songValidation(){
+
+        if (local_audio.size() < 1) {
+            onEmptyStateOn();
+            return;
+        }
+
+        songs = utilities.deleteVoiceNote(local_audio);
+
+        if (songs.size() < 1){
+            onEmptyStateOn();
+            return;
+        }
+
+    }
+
+    private void onEmptyStateOn(){
+        mEmptyStateView.setVisibility(View.VISIBLE);
+    }
+
+    private void onEmptyStateOff(){
+        mEmptyStateView.setVisibility(View.GONE);
     }
 
     @Override
@@ -112,11 +146,7 @@ public class PlaylistPickerActivity extends AppCompatActivity {
             */
 
         } else if (requestCode == 1 && resultCode == RESULT_CANCELED) {
-            mySongs = null;
-            position = null;
 
-
-            utilities.toast(this,"No result");
         }
     }
 

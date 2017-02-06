@@ -16,7 +16,4 @@ public class CreateWorkoutFinalInteractor {
         this.mainService = mainService;
     }
 
-
-
-
 }

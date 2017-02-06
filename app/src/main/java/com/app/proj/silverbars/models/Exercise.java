@@ -22,8 +22,6 @@ public class Exercise implements Parcelable {
     @SerializedName("level")
     private String level;
 
-
-
     @SerializedName("type_exercise")
     private List<String> type_exercise;
 

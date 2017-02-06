@@ -11,6 +11,8 @@ import com.app.proj.silverbars.interactors.CreateWorkoutInteractor;
 import com.app.proj.silverbars.interactors.LoginInteractor;
 import com.app.proj.silverbars.interactors.MainWorkoutsInteractor;
 import com.app.proj.silverbars.interactors.SpotifyInteractor;
+import com.app.proj.silverbars.interactors.WorkoutInteractor;
+import com.app.proj.silverbars.utils.DatabaseHelper;
 
 import dagger.Module;
 import dagger.Provides;
@@ -32,12 +34,10 @@ public class InteractorModule {
         return new MainWorkoutsInteractor(mainService);
     }
 
-
     @Provides
     public CreateWorkoutInteractor provideCreateWorkoutInteractor(MainService mainService){
         return new CreateWorkoutInteractor(mainService);
     }
-
 
     @Provides
     public LoginInteractor provideLoginInteractor(LoginService loginService){
@@ -47,6 +47,12 @@ public class InteractorModule {
     @Provides
     public SpotifyInteractor provideSpotifyInteractor(){
         return new SpotifyInteractor();
+    }
+
+
+    @Provides
+    public WorkoutInteractor provideWorkoutInteractor(DatabaseHelper helper){
+        return new WorkoutInteractor(helper);
     }
 
 

@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.OnTextChanged;
 
 
 public class WorkingOutActivity extends BaseActivity implements View.OnClickListener,WorkingOutView{
@@ -41,6 +42,8 @@ public class WorkingOutActivity extends BaseActivity implements View.OnClickList
 
     @Inject
     WorkingOutPresenter mWorkingOutPresenter;
+
+
 
 
     @BindView(R.id.player_layout) LinearLayout mPlayerLayout;
@@ -54,6 +57,7 @@ public class WorkingOutActivity extends BaseActivity implements View.OnClickList
     @BindView(R.id.artist_name) TextView mArtistName;
     
     @BindView(R.id.current_set) TextView mCurrentSetText;
+    @BindView(R.id.total_sets) TextView mTotalSetsText;
     @BindView(R.id.current_exercise) TextView mCurrentExercisePositionText;
     
     @BindView(R.id.rest_counter) TextView mRestCounter;
@@ -75,18 +79,14 @@ public class WorkingOutActivity extends BaseActivity implements View.OnClickList
     @BindView(R.id.list) RecyclerView list;
     
     @BindView(R.id.total_exercises) TextView mTotalExercises;
-    
-
 
     private boolean mVibrationPerSet = false,mVibrationPerRep = false;
 
-    private int mRestByExercise = 0,RestBySet = 0;
+    private int mRestByExercise = 30,RestBySet = 60;
 
     ArrayList<ExerciseRep> mExercises = new ArrayList<>();
 
-    private Utilities utilities;
-
-
+    private Utilities utilities = new Utilities();
 
     @Override
     protected int getLayout() {
@@ -121,13 +121,11 @@ public class WorkingOutActivity extends BaseActivity implements View.OnClickList
 
         // disables scolling
         list.addOnItemTouchListener(new DisableTouchRecyclerListener());
-
         // list en linear
         list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-
         // Crear  nuevo adaptador
         list.setAdapter(new ExerciseWorkingOutAdapter(this,mExercises));
+
 
 
 
@@ -155,17 +153,15 @@ public class WorkingOutActivity extends BaseActivity implements View.OnClickList
         mExercises = extras.getParcelableArrayList("exercises");
 
 
-        int sets = extras.getInt("Sets");
+        //int sets = extras.getInt("Sets");
 
-        mRestByExercise =  extras.getInt("mRestByExercise");
-        RestBySet = extras.getInt("RestBySet");
+        //mRestByExercise =  extras.getInt("mRestByExercise");
+        //RestBySet = extras.getInt("RestBySet");
 
         mVibrationPerRep = extras.getBoolean("VibrationPerRep");
         mVibrationPerSet =  extras.getBoolean("VibrationPerSet");
 
-
         boolean play_exercise_audio = extras.getBoolean("play_exercise_audio");
-
 
         //local music
         ArrayList<File> local_playlist = (ArrayList) extras.getParcelableArrayList("songlist");
@@ -177,24 +173,23 @@ public class WorkingOutActivity extends BaseActivity implements View.OnClickList
         String spotify_token = extras.getString("token");
 
 
-
-
         //init presenter
         mWorkingOutPresenter.setInitialSetup(mExercises,play_exercise_audio);
 
 
-
-
-        //creating local player
         if (local_playlist != null && local_song_names != null){
+
+            //creating local player
             mWorkingOutPresenter.createLocalMusicPlayer(local_song_names,local_playlist);
-        }
 
+        }else if (spotify_playlist != null && spotify_token != null){
 
-
-        //creating spotify player
-        if (spotify_playlist != null && spotify_token != null){
+            //creating spotify playe
             mWorkingOutPresenter.createSpotifyPlayer(spotify_token,spotify_playlist);
+        }else {
+
+            //No music UI
+            zeroMusic();
         }
 
 
@@ -213,20 +208,31 @@ public class WorkingOutActivity extends BaseActivity implements View.OnClickList
 
 
         mCurrentExercisePositionText.setText("1");
+
         mTotalExercises.setText(String.valueOf(mExercises.size()));
 
-        mCurrentSetText.setText("0");
+        //set current set
+        mCurrentSetText.setText("1");
+        //mTotalSetsText.setText(sets);
 
 
-        //positivie,mNegativeText and mIsometricText
+
+        //init values tempo
         mPositiveText.setText(String.valueOf(mExercises.get(0).getTempo_positive()));
         mIsometricText.setText(String.valueOf(mExercises.get(0).getTempo_isometric()));
         mNegativeText.setText(String.valueOf(mExercises.get(0).getTempo_negative()));
+    }
 
+    @OnTextChanged(R.id.rest_counter)
+    public void restListener(CharSequence rest){
+        mWorkingOutPresenter.restlistener(rest);
     }
 
 
-
+    @OnTextChanged(R.id.repetition_timer)
+    public void repTimer(CharSequence repetition){
+        mWorkingOutPresenter.repetitionListener(repetition);
+    }
 
 
     @Override
@@ -261,10 +267,6 @@ public class WorkingOutActivity extends BaseActivity implements View.OnClickList
     private void zeroMusic(){
         mPlayerLayout.setVisibility(View.GONE);
         mSongName.setText(getResources().getString(R.string.no_song));
-        mPlayMusicbutton.setEnabled(false);
-        mPlayMusicbutton.setClickable(false);
-        mPauseMusicbutton.setEnabled(false);
-        mPauseMusicbutton.setClickable(false);
     }
 
     private void launchResultsActivity(){
@@ -363,18 +365,14 @@ public class WorkingOutActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onRepsFinished(int exercise_position) {
-        mPreviewExerciseButton.setVisibility(View.VISIBLE);
+
+        // descanso por ejercicio
+        mWorkingOutPresenter.showRestOverlayView(mRestByExercise);
+
 
         //move the list recycler to this position
         list.smoothScrollToPosition(exercise_position);
         mCurrentExercisePositionText.setText(String.valueOf(exercise_position+1));
-        
-        
-        ActivateVibrationPerSet();
-
-
-        // descanso por ejercicio
-        mWorkingOutPresenter.showRestOverlayView(mRestByExercise);
     }
 
 
@@ -432,7 +430,6 @@ public class WorkingOutActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onWorkoutFinished() {
         onScreenOff();
-
 
         launchResultsActivity();
     }
