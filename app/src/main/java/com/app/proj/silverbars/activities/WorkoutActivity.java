@@ -344,8 +344,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
             
         });
 
-
-
         // vibracion por repeticion y por set colocado cada switch
         vibration_per_rep.setOnCheckedChangeListener((buttonView, isChecked) -> {
             isVibrationPerRepActive = isChecked;
@@ -355,7 +353,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         vibration_per_set.setOnCheckedChangeListener((buttonView, isChecked) -> {
             isVibrationPerSetActive = isChecked;
         });
-
 
         startButton.setOnClickListener(view -> LaunchWorkingOutActivity() );
     }

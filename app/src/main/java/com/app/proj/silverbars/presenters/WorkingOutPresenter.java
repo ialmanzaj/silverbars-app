@@ -4,10 +4,10 @@ import android.content.Context;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.util.Log;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.app.proj.silverbars.CountDownTimerWithPause;
 import com.app.proj.silverbars.MusicCallback;
 import com.app.proj.silverbars.MusicPlayer;
 import com.app.proj.silverbars.R;
@@ -50,18 +50,19 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
     
     
     //the main countdowns to use 
-    private CountDownTimerWithPause sMainCountDownTimer, mRestTimer, mStartedInitialTimer;
+    private CountDownTimer sMainCountDownTimer, mRestTimer, mStartedInitialTimer;
 
 
-
-    private int TotalSets = 0, mCurrentSet = 0,mCurrentRest = 0,mCurrentStartTime = 0,mTempobyExercise = 0;
+    private int mCurrentSet = 0;
+    private int mCurrentRest = 0;
+    private int mCurrentStartTime = 0;
 
     private int actualReps;
     private int exercise_position = 0;
 
-    int currentMainTime = 0, currentRestTime=0;
-
-    private int totalTime;
+    //this var for the countdown;
+    private int mCurrentTempo;
+    private int mCurrentSecondsMainTimer,mCurrentSecondsRestTimer,mCurrentSecondInitialTimer;
 
 
     //FLAGS
@@ -69,7 +70,6 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
     private boolean isInitialCountDownActive = false,main = false,isMainCountDownActive = false;
 
     private boolean isButtonPauseClicked;
-
     private boolean isAudioExerciseActive;
 
 
@@ -178,7 +178,7 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
             }
     }
 
-    public void playExerciseAudio(String exercise_audio_file){
+    private void playExerciseAudio(String exercise_audio_file){
         Log.v(TAG,"playExerciseAudio: "+exercise_audio_file);
 
         setupExercisePlayer(exercise_audio_file);
@@ -215,6 +215,10 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
         
     }
 
+    private boolean isExerciseAudioPlayerAvailable(){
+        return mExerciseAudioPlayer != null;
+    }
+
 
     public void onSwipeMusicPreview(){
 
@@ -237,81 +241,149 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
 
 
 
+
     /**
-     *    CountDownTimers logic
+     *    methods of the InicialTimer
      *<p>
      *
      *
      */
     public void startInicialTimer(int seconds){
+        //the initial flag on
+        isInitialCountDownActive = true;
+
+        //set the current seconds
         mCurrentStartTime = seconds;
 
+        long total_sec = (seconds +4) * 1000;
 
-        long total_sec = seconds * 1000;
-
-        mStartedInitialTimer = new CountDownTimerWithPause(total_sec, 1000) {
+        mStartedInitialTimer = new CountDownTimer(total_sec, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
                 mCurrentStartTime--;
 
-                view.onMainCounterStarted(String.valueOf(mCurrentStartTime));
+                view.onInitialCounterStarted(String.valueOf(mCurrentStartTime));
             }
-            public void onFinish() {
-                onInitialTimerFinished();
-            }
+            public void onFinish() {}
         }.start();
     }
 
+    private boolean isInicialTimerAvailable(){
+        return mStartedInitialTimer != null;
+    }
+
+    private void pauseInicialTimer(){
+        mStartedInitialTimer.cancel();
+    }
+
+
+    private void resumeInicialTimer(){
+        mStartedInitialTimer.start();
+    }
+
+
+    /**
+     *    methods of the MainCountDown
+     *<p>
+     *
+     *
+     */
     private void startMainCountDown(){
         Log.i(TAG,"startMainCountDown");
-
 
         if (!isButtonPauseClicked && !isWorkoutRest){
 
             actualReps = getTotalRepetitionTime(exercise_position);
             //Log.i(TAG,"actualReps: "+actualReps);
 
+            mCurrentTempo = getTempo(exercise_position);
 
-            int tempo = getTempo(exercise_position);
-            long interval =  tempo * 1000;
-
-            Log.i(TAG,"interval: "+interval);
-
-
-            int total_seconds = (actualReps * tempo +5) * 1000;
+            int total_seconds = (actualReps * mCurrentTempo +3);
             Log.i(TAG,"total_seconds: "+total_seconds);
 
 
-            sMainCountDownTimer = new CountDownTimerWithPause(total_seconds, interval) {
-                public void onTick(long millisUntilFinished) {
-
-                    Log.i(TAG,""+millisUntilFinished);
-
-
-                    //restar reps de texto mostrado
-                    view.onRepetitionCountdown(String.valueOf(actualReps--));
-                }
-                public void onFinish() {}
-            }.start();
+            mCurrentSecondsMainTimer = 0;
+            createMainCountDownTimer(total_seconds);
         }
     }
 
 
 
+    private void createMainCountDownTimer(int seconds){
+        //Log.i(TAG,"createMainCountDownTimer"+seconds_total);
+        //Log.i(TAG,"mCurrentSecondsMainTimer "+mCurrentSecondsMainTimer);
+
+        long seconds_total = seconds * 1000;
+        //Log.i(TAG,"total_seconds "+seconds_total);
+        long interval =  mCurrentTempo * 1000;
+        //Log.i(TAG,"interval "+interval);
+
+
+        sMainCountDownTimer = new CountDownTimer(seconds_total, interval) {
+            public void onTick(long millisUntilFinished) {
+                
+                //save current second to resume-pause
+                mCurrentSecondsMainTimer  = Math.round(millisUntilFinished * 0.001f);
+                //Log.i(TAG,"mCurrentSecondsMainTimer "+mCurrentSecondsMainTimer);
+
+                //restar reps de texto mostrado
+                actualReps--;
+                view.onRepetitionCountdown(String.valueOf(actualReps));
+            }
+            public void onFinish() {}
+        }.start();
+    }
+
+    private boolean isMainCountDownTimerAvailable(){
+        return sMainCountDownTimer != null;
+    }
+
+    private void pauseMainCountDown(){
+        sMainCountDownTimer.cancel();
+    }
+
+
+    private void resumeMainCountDown(){
+        createMainCountDownTimer(mCurrentSecondsMainTimer);
+    }
+
+    /**
+     *    methods of the RestCountDownTimer
+     *<p>
+     *
+     *
+     */
     private void startRestCountDownTimer(int rest){
         //set the actual rest var
         mCurrentRest = rest;
         
-        int total_secs = (rest +1) * 1000;
+        int total_secs = (rest +1);
 
-        Log.i(TAG,"mCurrentRest"+mCurrentRest);
-        Log.i(TAG,"total_secs"+total_secs);
+        //Log.i(TAG,"mCurrentRest"+mCurrentRest);
+        //Log.i(TAG,"total_secs"+total_secs);
 
-        mRestTimer = new CountDownTimerWithPause(total_secs, 1000) {
+        //init mCurrentSecondsRestTimer
+        mCurrentSecondsRestTimer = 0;
+
+        //create timer
+        createRestTimer(total_secs);
+    }
+
+    
+    private void createRestTimer(int seconds){
+        //Log.i(TAG,"createRestTimer: "+seconds);
+
+        long seconds_total = seconds * 1000;
+
+        mRestTimer = new CountDownTimer(seconds_total, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                
+                //Log.i(TAG,"mRestTimer "+millisUntilFinished);
+
+                mCurrentSecondsRestTimer  = Math.round(millisUntilFinished * 0.001f);
+                //Log.i(TAG,"mCurrentSecondsRestTimer "+mCurrentSecondsRestTimer);
+
                 //restar 
                 mCurrentRest--;
 
@@ -321,7 +393,19 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
             public void onFinish() {}
         }.start();
     }
+    
 
+    private boolean isRestCountDownTimerAvailable(){
+        return mRestTimer != null;
+    }
+
+    private void pauseRestCountDownTimer(){
+        mRestTimer.cancel();
+    }
+
+    private void resumeRestCountDownTimer(){
+        createRestTimer(mCurrentSecondsRestTimer);
+    }
 
     /**
      *    methods with tempo and repetition logic
@@ -333,7 +417,8 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
     private int getTotalRepetitionTime(int exercise_position){
         return exercises.get(exercise_position).getRepetition();
     }
-    
+
+
     private int getTempo(int exercise_position){
         return exercises.get(exercise_position).getTempo_positive()
                 + exercises.get(exercise_position).getTempo_isometric()
@@ -348,12 +433,33 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
      *
      */
 
-    private void onInitialTimerFinished(){
-        //SET false inital countdown
-        isInitialCountDownActive = false;
 
+    public void onOverlayTextListener(CharSequence s){
+        //Log.i(TAG,"onOverlayTextListener"+s);
+
+        int second = Integer.parseInt(s.toString());
+
+        //AFTER INITIAL TIMER FINISHED
+        if ( second == 0 && isMainCountDownActive ){
+
+            onRestFinished();
+
+        } else if( second == 0 && isInitialCountDownActive ) {
+
+            onInitialTimerFinished();
+            
+        }
+
+    }
+
+    private void onInitialTimerFinished(){
+        destroyInicialTimer();
+
+        //SET  inital countdown off
+        isInitialCountDownActive = false;
         //set the main flag active
         isMainCountDownActive = true;
+
 
         startMainCountDown();
 
@@ -361,12 +467,50 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
     }
 
 
+    private void onRestFinished(){
+        //Log.i(TAG,"onRestFinished");
+
+        destroyRestCountDownTimer();
+
+        //flag rest off
+        isWorkoutRest = false;
+
+
+        view.onOverlayViewOff();
+
+        //restarting the view of the workout
+        view.onWorkoutRestart(
+                exercises.get(exercise_position).getRepetition(),
+                exercises.get(exercise_position).getTempo_positive(),
+                exercises.get(exercise_position).getTempo_isometric(),
+                exercises.get(exercise_position).getTempo_negative());
+
+        // overlay VIEW off 
+        view.onOverlayViewOff();
+
+        //play exercise audio
+        if (isAudioExerciseActive){
+            //playing Exercise Audio
+            playExerciseAudio(exercises.get(exercise_position).getExercise().getExercise_audio());
+        }
+
+
+        //Log.i("restlistener","startMainCountDown");
+        startMainCountDown();
+    }
+
 
     public void repetitionListener(CharSequence repetition){
-        Log.i(TAG,"repetitionListener"+repetition.toString());
+        //Log.i(TAG,"repetitionListener"+repetition.toString());
 
         if (Integer.parseInt(repetition.toString()) == 0 && isMainCountDownActive){
 
+            //destroy MainCount Down
+            destroyMainCountDownTimer();
+
+
+
+            //exercise and set logic
             if (exercise_position + 1 < exercises.size()){
                 exercise_position++;
 
@@ -386,11 +530,11 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
                 view.onRepsFinished(exercise_position);
 
                 
-                
             } else {
 
                 // contar sets
-                if (mCurrentSet + 1 <= TotalSets){
+                int totalSets = 0;
+                if (mCurrentSet + 1 <= totalSets){
 
                     //plus one more set
                     mCurrentSet++;
@@ -398,14 +542,10 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
                     //set the exercise in the first position
                     exercise_position = 0;
 
+                    
                     view.onSetFinished(mCurrentSet);
 
-
-                    //finish = true;
-
                 } else {
-
-
                     view.onWorkoutFinished();
                 }
             }
@@ -413,34 +553,7 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
 
     }
 
-    public void restlistener(CharSequence rest){
 
-        //AFTER INITIAL TIMER FINISHED
-        if (Integer.parseInt(rest.toString()) == 0 && isMainCountDownActive){
-
-            isWorkoutRest = false;
-
-            //restarting the view of the workout
-            view.onWorkoutRestart(
-                    exercises.get(exercise_position).getRepetition(),
-                    exercises.get(exercise_position).getTempo_positive(),
-                    exercises.get(exercise_position).getTempo_isometric(),
-                    exercises.get(exercise_position).getTempo_negative());
-
-            
-            view.onOverlayViewOff();
-
-            
-            if (isAudioExerciseActive){
-                //playing Exercise Audio
-                playExerciseAudio(exercises.get(exercise_position).getExercise().getExercise_audio());
-            }
-
-
-            startMainCountDown();
-        }
-    }
-    
 
     /**
      *    Events with the UI 
@@ -448,84 +561,67 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
      *
      *
      */
-
     public void showRestOverlayView(int rest_time){
-        
         //set rest flag active
         isWorkoutRest = true;
-
-        
 
        //starting rest CountDownTimer
         startRestCountDownTimer(rest_time);
 
-
         //CHANGES UI
         view.onOverlayViewOn();
     }
+
+    /**
+     *    Events of the CountDown 
+     *<p>
+     *
+     *
+     */
     
     private void pauseCountDown(){
-
         //set pause flag on
         isWorkoutPaused = true;
 
+        //resume initial countdown
+        if (isInicialTimerAvailable()){
+            pauseInicialTimer();
+        }
 
+        //pause main COUNTDOWN
+        if (isMainCountDownTimerAvailable()){
+            pauseMainCountDown();
+        }
 
-       /* if (isMainCountDownActive && main_timer!=null){
-
-            if (!isWorkoutRest){
-
-                currentMainTime = Format_Time;
-                main_timer.cancel();
-
-
-
-            }else {
-
-                //Log.v(TAG,"Pausar mRestActive: activado");
-                currentRestTime = Format_Time_Rest;
-                restTimer.cancel();
-
-
-
-            }
-        }else if (isInitialCountDownActive) {
-
-            startTimer.cancel();
-
-        }*/
-
+        //pause rest countdown
+        if (isRestCountDownTimerAvailable()){
+            pauseRestCountDownTimer();
+        }
 
     }
     
     private void resumeCountDown(){
+        //set pause flag off
         isWorkoutPaused = false;
 
+        //resume initial countdown
+        if (isInicialTimerAvailable()){
+            resumeInicialTimer();
+        }
 
-       /* if (!isWorkoutRest){
+        //resume main countdown
+        if (isMainCountDownTimerAvailable()){
+            resumeMainCountDown();
+        }
 
-
-            if (isMainCountDownActive){
-                startMainCountDown(currentMainTime,Time_aux);
-            }
-
-            if (isInitialCountDownActive){
-                startInicialTimer(mCurrentStartTime);
-            }
-
-
-
-
-        }else {
-            Log.v(TAG,"currentRestTime: "+currentRestTime);
-            startRestCountDownTimer(currentRestTime);
-
-        }*/
+        //Resume rest countdown
+        if (isRestCountDownTimerAvailable()){
+            Log.i("resumeCountDown","resumeRestCountDownTimer");
+            resumeRestCountDownTimer();
+        }
 
 
     }
-    
-    
     
 
     /**
@@ -537,40 +633,42 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
     
     public void playWorkout(){
         if (isWorkoutPaused){
+
+            //flag button pause clicked off
             isButtonPauseClicked = false;
-
-
 
             resumeCountDown();
             playMusic();
+
+            view.onWorkoutResume();
         }
-
-
-        view.onWorkoutResume();
     }
-    
+
+
     public void pauseWorkout(){
         if (!isWorkoutPaused){
 
+            //flag button pause clicked on
             isButtonPauseClicked = true;
-
-
 
             pauseCountDown();
             pauseMusic();
+
+            view.onWorkoutPaused();
         }
-
-
-
-        view.onWorkoutPaused();
     }
 
-    public void finishWorkout(){
-        Log.i(TAG,"finishWorkout");
 
-      /*  //workout paused
-        pauseWorkout();
-*/
+    public void finishWorkout(){
+        //Log.i(TAG,"finishWorkout");
+
+       //workout paused
+        //pauseWorkout();
+
+
+        view.onWorkoutFinished();
+
+
 
 
     /*    new MaterialDialog.Builder(context)
@@ -609,7 +707,6 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
 
                 }).show();*/
     }
-    
 
     
     public void dialogNextExercise(){
@@ -785,8 +882,7 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
 
 
     public void onStart() {
-        Log.d(TAG,"onStart");
-
+        Log.i(TAG,"onStart");
 
        /* if (onPause){
             resumeCountDown();
@@ -794,11 +890,9 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
 
     }
 
-
-    
     @Override
     public void onResume() {
-        Log.d(TAG,"onResume");
+        Log.i(TAG,"onResume");
 
        /* if (mSpotifyPlayer != null){
             mSpotifyPlayer.onResume();
@@ -813,7 +907,7 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
 
     @Override
     public void onPause() {
-        Log.d(TAG,"onPause");
+        Log.i(TAG,"onPause");
 /*
         if (mSpotifyPlayer != null){
             mSpotifyPlayer.onPause();
@@ -824,30 +918,51 @@ public class WorkingOutPresenter extends BasePresenter  implements MusicCallback
         onPause = true;*/
     }
 
-
     @Override
     public void onStop() {
         Log.d(TAG,"onStop");
-        
-
     }
 
 
     @Override
     public void onDestroy() {
+        cancelEverything();
+    }
 
-      /*  if (mSpotifyPlayer != null){
-            mSpotifyPlayer.onDestroy();
-        }
+    private void cancelEverything(){
 
-
-        if (isMainCountDownActive && sMainCountDownTimer != null){sMainCountDownTimer.cancel();}
-
-        if (mExerciseAudioPlayer!=null){mExerciseAudioPlayer.release();}
-*/
+        destroySpotifyPlayer();
+        destroyInicialTimer();
+        destroyMainCountDownTimer();
+        destroyRestCountDownTimer();
+        destroyExerciseAudioPlayer();
     }
 
 
-   
+    private void destroySpotifyPlayer(){
+        Log.i(TAG,"destroySpotifyPlayer");
+        if (isSpotifyPlayerAvailable()){mSpotifyPlayer.onDestroy();}
+    }
+
+    private void destroyInicialTimer(){
+        Log.i(TAG,"destroyInicialTimer");
+        if (isInicialTimerAvailable()){mStartedInitialTimer.cancel();mStartedInitialTimer = null;}
+    }
+
+    private void destroyMainCountDownTimer(){
+        Log.i(TAG,"destroyMainCountDownTimer");
+        if (isMainCountDownTimerAvailable()){sMainCountDownTimer.cancel();sMainCountDownTimer = null;}
+    }
+    private void destroyRestCountDownTimer(){
+        Log.i(TAG,"destroyRestCountDownTimer");
+        if (isRestCountDownTimerAvailable()){mRestTimer.cancel();mRestTimer = null;}
+    }
+
+    private void destroyExerciseAudioPlayer(){
+        Log.i(TAG,"destroyExerciseAudioPlayer");
+        if (isExerciseAudioPlayerAvailable()){mExerciseAudioPlayer.release();}
+    }
+
+
 
 }

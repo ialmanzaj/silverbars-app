@@ -241,7 +241,7 @@
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:text="@string/zero"
-                                android:id="@+id/total_sets"
+                                android:id="@+id/sets_total"
                                 android:textSize="32sp"
                                 android:textColor="@color/colorSecondary" />
                         </LinearLayout>
@@ -285,7 +285,7 @@
 
                         <ImageButton
                             android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
+                            android:layout_centerHorizontal="true"
 
                             android:id="@+id/finish_workout"
                             android:visibility="gone"
@@ -297,13 +297,12 @@
 
                         <ImageButton
                             android:layout_centerVertical="true"
-                            android:layout_alignParentEnd="true"
-
+                            android:layout_centerHorizontal="true"
                             android:id="@+id/play_workout"
-                            android:visibility="gone"
+                            android:src="@drawable/ic_play_circle_filled_black_36px"
+
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_play_circle_filled_black_36px"
                             android:background="#fff"
                             android:contentDescription="@null" />
 
@@ -311,10 +310,11 @@
                             android:layout_centerVertical="true"
                             android:layout_centerHorizontal="true"
 
+                            android:src="@drawable/ic_pause_circle_filled_black_36px"
+
                             android:id="@+id/pause_workout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_pause_circle_filled_black_36px"
                             android:background="#fff"
                             android:contentDescription="@null" />
 

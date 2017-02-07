@@ -57,11 +57,44 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (getPresenter() != null)
+            getPresenter().onResume();
+    }
+
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (getPresenter() != null)
+            getPresenter().onPause();
+    }
+
+
+    @Override
     protected void onStop() {
         super.onStop();
 
         if (getPresenter() != null)
             getPresenter().onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        if (getPresenter() != null)
+            getPresenter().onDestroy();
+
+        super.onDestroy();
     }
 
     /**

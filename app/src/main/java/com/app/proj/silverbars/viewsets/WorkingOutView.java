@@ -13,7 +13,7 @@ public interface WorkingOutView {
     void onPlayMusic();
 
     void onRestCounterStarted(String second);
-    void onMainCounterStarted(String second);
+    void onInitialCounterStarted(String second);
     void onRepetitionCountdown(String second);
 
     void onNextExerciseUI();

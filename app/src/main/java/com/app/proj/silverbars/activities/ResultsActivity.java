@@ -15,9 +15,7 @@ import com.app.proj.silverbars.models.Muscle;
 import com.app.proj.silverbars.utils.Utilities;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 
@@ -36,7 +34,6 @@ public class ResultsActivity extends AppCompatActivity {
 
     @BindView(R.id.content)LinearLayout mContentLayout;
     @BindView(R.id.skills)LinearLayout mSkillsLayout;
-
 
     private  List<Muscle> mMuscles = new ArrayList<>();
     private  List<String> mTypeExercises = new ArrayList<>();
@@ -61,15 +58,15 @@ public class ResultsActivity extends AppCompatActivity {
 
 
 
-        mSaveResultsButton.setOnClickListener(view -> {
+       /* mSaveResultsButton.setOnClickListener(view -> {
 
 
             //mainService.saveMyProgression()
 
-        });
+        });*/
 
 
-        if (mExercises != null) {
+      /*  if (mExercises != null) {
 
             int porcentaje[] = new int[mExercises.size()];
 
@@ -107,6 +104,10 @@ public class ResultsActivity extends AppCompatActivity {
             //setMusclesToView(mMuscles);
            // setTypes(mTypeExercises);
         }
+
+        */
+
+
     }
 
 
