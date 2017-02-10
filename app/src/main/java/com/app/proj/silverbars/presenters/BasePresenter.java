@@ -21,9 +21,10 @@ public abstract class BasePresenter {
 
     public abstract void onResume();
     public abstract void onPause();
+
+    public abstract void  onRestart();
+
     public abstract void onDestroy();
-
-
 
 }
 

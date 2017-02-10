@@ -67,6 +67,11 @@ public class LoginPresenter extends BasePresenter  implements LoginCallback{
     }
 
     @Override
+    public void onRestart() {
+
+    }
+
+    @Override
     public void onDestroy() {
 
     }

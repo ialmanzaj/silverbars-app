@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'org.greenrobot.greendao'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
 
@@ -57,15 +56,9 @@ android {
 
 
 
-greendao {
-    schemaVersion 1
-}
-
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-
 
 
     compile 'com.android.support:appcompat-v7:25.1.0'
@@ -74,7 +67,6 @@ dependencies {
     compile 'com.android.support:design:25.1.0'
 
     compile 'com.android.support:multidex:1.0.1'
-
 
 
     compile 'com.github.arimorty:floatingsearchview:1.1.2'
@@ -124,7 +116,6 @@ dependencies {
     compile 'io.reactivex:rxandroid:0.23.0'
 
 
-    compile 'org.greenrobot:greendao:3.2.0'
     // This is only needed if you want to use encrypted databases
     compile 'net.zetetic:android-database-sqlcipher:3.5.4'
 
@@ -142,8 +133,8 @@ dependencies {
 
     compile 'com.android.support.test.espresso:espresso-core:2.2.2'
 
-
-
+    compile 'com.j256.ormlite:ormlite-core:4.48'
+    compile 'com.j256.ormlite:ormlite-android:4.48'
 }
 
 retrolambda {

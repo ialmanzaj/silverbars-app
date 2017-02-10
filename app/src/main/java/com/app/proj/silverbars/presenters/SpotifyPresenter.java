@@ -110,6 +110,11 @@ public class SpotifyPresenter extends BasePresenter implements ConnectionStateCa
     }
 
     @Override
+    public void onRestart() {
+
+    }
+
+    @Override
     public void onDestroy() {
     }
 

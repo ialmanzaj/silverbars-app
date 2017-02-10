@@ -9,6 +9,7 @@ import android.content.Context;
 import com.app.proj.silverbars.interactors.CreateWorkoutInteractor;
 import com.app.proj.silverbars.interactors.LoginInteractor;
 import com.app.proj.silverbars.interactors.MainWorkoutsInteractor;
+import com.app.proj.silverbars.interactors.SavedWorkoutsInteractor;
 import com.app.proj.silverbars.interactors.SpotifyInteractor;
 import com.app.proj.silverbars.interactors.WorkoutInteractor;
 import com.app.proj.silverbars.modules.InteractorModule;
@@ -49,5 +50,7 @@ public interface SilverbarsComponent {
     SpotifyInteractor getSpotifyInteractor();
 
     WorkoutInteractor getWorkoutInteractor();
+
+    SavedWorkoutsInteractor getSavedWorkoutsInteractor();
 
 }

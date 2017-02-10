@@ -10,6 +10,7 @@ import com.app.proj.silverbars.MainService;
 import com.app.proj.silverbars.interactors.CreateWorkoutInteractor;
 import com.app.proj.silverbars.interactors.LoginInteractor;
 import com.app.proj.silverbars.interactors.MainWorkoutsInteractor;
+import com.app.proj.silverbars.interactors.SavedWorkoutsInteractor;
 import com.app.proj.silverbars.interactors.SpotifyInteractor;
 import com.app.proj.silverbars.interactors.WorkoutInteractor;
 import com.app.proj.silverbars.utils.DatabaseHelper;
@@ -54,6 +55,12 @@ public class InteractorModule {
     public WorkoutInteractor provideWorkoutInteractor(DatabaseHelper helper){
         return new WorkoutInteractor(helper);
     }
+
+    @Provides
+    public SavedWorkoutsInteractor provideSavedWorkoutsInteractor(DatabaseHelper helper){
+        return new SavedWorkoutsInteractor(helper);
+    }
+
 
 
 }

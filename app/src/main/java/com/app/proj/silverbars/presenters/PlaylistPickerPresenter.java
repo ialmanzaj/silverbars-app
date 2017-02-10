@@ -28,6 +28,11 @@ public class PlaylistPickerPresenter extends BasePresenter {
     }
 
     @Override
+    public void onRestart() {
+
+    }
+
+    @Override
     public void onDestroy() {
 
     }

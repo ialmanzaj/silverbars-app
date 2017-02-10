@@ -258,7 +258,11 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
                 for (int a = 0; a < AllExercisesList.size(); a++){
 
                     if (Objects.equals(exercise, AllExercisesList.get(a).getExercise_name())){
-                        exerciseList.add(new ExerciseRep(AllExercisesList.get(a)));
+
+                        ExerciseRep exerciserep = new ExerciseRep();
+                        exerciserep.setExercise(AllExercisesList.get(a));
+                        exerciseList.add(exerciserep);
+
                     }
 
                 }
@@ -274,16 +278,13 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
 
         if (requestCode == 1) {
             if (resultCode == RESULT_OK && data != null){
+                if (data.hasExtra("exercises")) {
 
-                    if (data.hasExtra("exercises")) {
-
-
-                        exercises_id = data.getStringArrayListExtra("exercises");
-
+                    exercises_id = data.getStringArrayListExtra("exercises");
                       /*  if (exercises_id.size() > 0){
                             setExercisesSelected(exercises_id);
                         }*/
-                    }
+                }
             }
         }
 

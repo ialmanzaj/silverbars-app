@@ -32,5 +32,9 @@ public class Constants {
     @SuppressWarnings("SpellCheckingInspection")
     public static final String REDIRECT_URI = "testschema://callback";
 
+    public static final String DATABASE_NAME = "SILVERBARS";
+    public static final int DATABASE_VERSION = 1;
+
+
 
 }

@@ -5,12 +5,13 @@ import com.app.proj.silverbars.interactors.WorkoutInteractor;
 import com.app.proj.silverbars.models.Workout;
 import com.app.proj.silverbars.viewsets.WorkoutView;
 
+import java.sql.SQLException;
+
 /**
  * Created by isaacalmanza on 01/11/17.
  */
 
 public class WorkoutPresenter extends BasePresenter implements WorkoutCallback {
-
 
     private WorkoutInteractor interactor;
     private WorkoutView view;
@@ -21,6 +22,20 @@ public class WorkoutPresenter extends BasePresenter implements WorkoutCallback {
         this.interactor = interactor;
     }
 
+
+
+    public boolean isWorkoutExist(int workout_id) throws SQLException {
+        return interactor.isWorkoutExist(workout_id);
+    }
+
+    public void saveWorkout(Workout workout) throws SQLException {
+        interactor.saveWorkout(workout,this);
+    }
+
+    @Override
+    public void onWorkout(boolean created) {
+        view.onWorkout(created);
+    }
 
     @Override
     public void onStart() {
@@ -43,13 +58,15 @@ public class WorkoutPresenter extends BasePresenter implements WorkoutCallback {
     }
 
     @Override
-    public void onDestroy() {
+    public void onRestart() {
 
     }
 
 
     @Override
-    public void onWorkoutfromDatabase(Workout workout) {
-
+    public void onDestroy() {
+        interactor.onDestroy();
     }
+
+
 }

@@ -72,6 +72,11 @@ public class CreateWorkoutPresenter extends BasePresenter implements CreateWorko
     }
 
     @Override
+    public void onRestart() {
+
+    }
+
+    @Override
     public void onDestroy() {
 
     }

@@ -39,6 +39,11 @@ public class CreateWorkoutFinalPresenter extends BasePresenter implements Create
     }
 
     @Override
+    public void onRestart() {
+
+    }
+
+    @Override
     public void onDestroy() {
 
     }

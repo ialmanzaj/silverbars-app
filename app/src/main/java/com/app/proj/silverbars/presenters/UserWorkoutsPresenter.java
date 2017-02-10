@@ -28,6 +28,11 @@ public class UserWorkoutsPresenter extends BasePresenter {
     }
 
     @Override
+    public void onRestart() {
+
+    }
+
+    @Override
     public void onDestroy() {
 
     }

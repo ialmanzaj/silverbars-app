@@ -68,6 +68,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+
+        if (getPresenter() != null)
+            getPresenter().onRestart();
+
     }
 
 

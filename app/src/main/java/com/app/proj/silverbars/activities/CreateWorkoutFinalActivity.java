@@ -224,14 +224,16 @@ public class CreateWorkoutFinalActivity extends AppCompatActivity implements Cre
             for (int a = 0; a < exercises.size();a++){
 
                 if (Objects.equals(exercises.get(a).getExercise_name(), mExercisesIdsSelected.get(c))){
-                    SelectedExercises.add(new ExerciseRep(exercises.get(a)));
+                    ExerciseRep exerciserep = new ExerciseRep();
+                    exerciserep.setExercise(exercises.get(a));
+                    SelectedExercises.add(exerciserep);
                 }
             }
         }
 
 
         for (int a = 0; a<SelectedExercises.size();a++){
-            exercises_ids[a] = String.valueOf(SelectedExercises.get(a).getExercise().getExerciseId());
+            exercises_ids[a] = String.valueOf(SelectedExercises.get(a).getExercise().getId());
         }
 
 

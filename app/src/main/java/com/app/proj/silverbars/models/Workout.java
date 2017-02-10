@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +13,6 @@ import java.util.List;
  */
 
 public class Workout implements Parcelable {
-
 
     @SerializedName("id")
     private int id;
@@ -32,13 +32,30 @@ public class Workout implements Parcelable {
     @SerializedName("main_muscle")
     private String main_muscle;
 
-
-
     @SerializedName("exercises")
-    private List<ExerciseRep> exercises;
+    private ArrayList<ExerciseRep> exercises;
 
 
     public Workout(){}
+
+
+    public Workout(int id,String workout_name,String workout_image,int sets,String level,String main_muscle){
+        this.id = id;
+        this.workout_name = workout_name;
+        this.workout_image = workout_image;
+        this.sets = sets;
+        this.level = level;
+        this.main_muscle = main_muscle;
+    }
+    public Workout(int id,String workout_name,String workout_image,int sets,String level,String main_muscle,ArrayList<ExerciseRep> exercises){
+        this.id = id;
+        this.workout_name = workout_name;
+        this.workout_image = workout_image;
+        this.sets = sets;
+        this.level = level;
+        this.main_muscle = main_muscle;
+        this.exercises = exercises;
+    }
 
 
     protected Workout(Parcel in) {
@@ -74,7 +91,8 @@ public class Workout implements Parcelable {
         }
     };
 
-    public int getWorkoutId() {
+
+    public int getId() {
         return id;
     }
 
@@ -104,8 +122,28 @@ public class Workout implements Parcelable {
         return exercises;
     }
 
-    public String getMain_muscle() {
-        return main_muscle;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setExercises(ArrayList<ExerciseRep> exercises) {
+        this.exercises = exercises;
+    }
+
+    public void setMain_muscle(String main_muscle) {
+        this.main_muscle = main_muscle;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public void setWorkout_image(String workout_image) {
+        this.workout_image = workout_image;
+    }
+
+    public void setWorkout_name(String workout_name) {
+        this.workout_name = workout_name;
     }
 
     @Override

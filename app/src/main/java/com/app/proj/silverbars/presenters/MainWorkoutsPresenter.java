@@ -57,6 +57,11 @@ public class MainWorkoutsPresenter extends BasePresenter implements MainWorkouts
     }
 
     @Override
+    public void onRestart() {
+
+    }
+
+    @Override
     public void onDestroy() {
 
     }

@@ -38,6 +38,21 @@ public class Exercise implements Parcelable {
     public Exercise(){}
 
 
+
+    public Exercise(int id,String exercise_name, String level,
+                    List<String> type_exercise,String exercise_audio,String exercise_image,List<Muscle> muscles){
+        this.id = id;
+        this.exercise_name = exercise_name;
+        this.level = level;
+        this.type_exercise = type_exercise;
+        this.exercise_audio = exercise_audio;
+        this.exercise_image = exercise_image;
+        this.muscles = muscles;
+    }
+
+
+
+
     protected Exercise(Parcel in) {
         id = in.readInt();
         exercise_name = in.readString();
@@ -71,36 +86,61 @@ public class Exercise implements Parcelable {
         }
     };
 
-    public int getExerciseId() {
+    public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getExercise_name() {
         return exercise_name;
     }
 
+    public void setExercise_name(String exercise_name) {
+        this.exercise_name = exercise_name;
+    }
+
     public String getLevel() {
         return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
     }
 
     public String getExercise_audio() {
         return exercise_audio;
     }
 
+    public void setExercise_audio(String exercise_audio) {
+        this.exercise_audio = exercise_audio;
+    }
+
     public String getExercise_image() {
         return exercise_image;
+    }
+
+    public void setExercise_image(String exercise_image) {
+        this.exercise_image = exercise_image;
     }
 
     public List<Muscle> getMuscles() {
         return muscles;
     }
 
+
+    public void setMuscles(List<Muscle> muscles) {
+        this.muscles = muscles;
+    }
+
     public List<String> getType_exercise() {
         return type_exercise;
     }
 
-    public int getId() {
-        return id;
+    public void setType_exercise(List<String> type_exercise) {
+        this.type_exercise = type_exercise;
     }
 
     @Override

@@ -16,9 +16,11 @@ public interface WorkingOutView {
     void onInitialCounterStarted(String second);
     void onRepetitionCountdown(String second);
 
-    void onNextExerciseUI();
-    void onPreviewExerciseUI();
+    void onNextExerciseUi();
+    void onPreviewExerciseUi();
 
+    void onNextExercise();
+    void onPreviewExercise();
 
     void onChangeToExercise(int exercise_position);
 

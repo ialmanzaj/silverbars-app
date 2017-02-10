@@ -34,6 +34,7 @@ import com.app.proj.silverbars.utils.Utilities;
 import com.app.proj.silverbars.viewsets.WorkoutView;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,6 +131,8 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
     private Utilities utilities = new Utilities();
 
+    boolean saved_workout = false;
+
     @Override
     protected int getLayout() {
         return R.layout.activity_workout;
@@ -163,18 +166,13 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
         setupToolbar();
         setupTabs();
-        
 
-        button_error_reload.setOnClickListener(v -> {
-            
-          /*  error_layout.setVisibility(View.GONE);
-            mLoadingView.setVisibility(View.VISIBLE);
-            putExercisesInAdapter(mExercises);*/
-            
-            
-        });
 
-        
+        list.setLayoutManager(new LinearLayoutManager(this));
+        list.setNestedScrollingEnabled(false);
+        list.setHasFixedSize(false);
+
+
 
         voice_per_exercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {
          /*   
@@ -193,43 +191,44 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         });
 
         
-        list.setLayoutManager(new LinearLayoutManager(this));
-        list.setNestedScrollingEnabled(false);
-        list.setHasFixedSize(false);
+
        
         
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
             scrollView.setFillViewport(true);
         }
 
-        // CREAR BASE DE DATOS
-
-
 
         //SWITCH save local workout BUTTON CONFIGURACIONES
         enableLocal.setEnabled(true);
 
-        enableLocal.setOnTouchListener((view, motionEvent) -> {
-            isTouched = true;
-            return false;
-        });
 
+        try {
+
+            saved_workout = mWorkoutPresenter.isWorkoutExist(workoutId);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        enableLocal.setChecked(saved_workout);
         enableLocal.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            if (isTouched) {
-                isTouched = false;
+            Log.d(TAG,"isChecked"+isChecked);
+            Log.i(TAG,"saved_workout :"+saved_workout);
 
-                if (isChecked && !loadLocal){
+            if (isChecked && !saved_workout){
 
-                }else{
-                    logMessage("Switch off");
-                }
+                saveWorkout();
+
+            }else{
+                logMessage("Switch off");
             }
         });
 
 
         Sets.setText(String.valueOf(workoutSets));
-
-
         Sets.setOnClickListener(view -> {
            /* 
             View v = new MaterialDialog.Builder(view.getContext())
@@ -344,11 +343,10 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
             
         });
 
-        // vibracion por repeticion y por set colocado cada switch
+
         vibration_per_rep.setOnCheckedChangeListener((buttonView, isChecked) -> {
             isVibrationPerRepActive = isChecked;
         });
-
 
         vibration_per_set.setOnCheckedChangeListener((buttonView, isChecked) -> {
             isVibrationPerSetActive = isChecked;
@@ -368,10 +366,10 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         mExercises =  getIntent().getParcelableArrayListExtra("exercises");
         Log.i(TAG,"exercises"+mExercises);
         boolean user_workout = extras.getBoolean("user_workout", false);
+        Log.i(TAG,"user_workout: "+user_workout);
 
         setExercisesInAdapter(mExercises);
     }
-
 
 
     @OnClick(R.id.SelectMusic)
@@ -410,13 +408,11 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         mTabLayout.addTab(muscles);
     }
 
-
-
     @Override
-    public void displayWorkoutfromDatabase(Workout workout) {
-
-
+    public void onWorkout(boolean created) {
+        Log.d(TAG,"created: "+created);
     }
+
 
     private void setExercisesInAdapter(ArrayList<ExerciseRep> exercises){
 
@@ -426,16 +422,11 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
             exerciseRep.setTempo_isometric(1);
             exerciseRep.setTempo_negative(1);
 
-
             //Collections.addAll(TypeExercises, new List<String>[]{exerciseRep.getExercise().getType_exercise()});
-
-
 
           /*  for (Muscle muscle:  exerciseRep.getExercise().getMuscles()){
                 Collections.addAll(MusclesArray,muscle.getMuscleName());
             }*/
-
-
 
         }
 
@@ -465,18 +456,23 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     }
 
     private void LaunchWorkingOutActivity() {
-
         int sets,restbyexercise,restbyset;
 
         sets = Integer.parseInt(Sets.getText().toString());
+        Log.i(TAG,"sets: "+sets);
+
+        
         restbyexercise = Integer.parseInt(utilities.removeLastChar(RestbyExercise.getText().toString()));
         restbyset = Integer.parseInt(utilities.removeLastChar(RestbySet.getText().toString()));
+
+        Log.v(TAG,"restbyexercise "+restbyexercise);
+        Log.v(TAG,"restbyset "+restbyset);
 
 
         Intent intent = new Intent(this, WorkingOutActivity.class);
 
         intent.putParcelableArrayListExtra("exercises", adapter.getExercises());
-        intent.putExtra("Sets",sets);
+        intent.putExtra("sets",sets);
 
         //rests
         intent.putExtra("RestByExercise",restbyexercise);
@@ -499,7 +495,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
         startActivity(intent);
     }
-
 
     private void setMusclesToView(List<String> musculos){
         if (musculos.size() > 0){
@@ -546,7 +541,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         webview.getSettings().setJavaScriptEnabled(true);
         utilities.setBodyInWebwView(this,webview);
     }
-
 
     private void getCountTimes(List<String> list){
         for (int a = 0; a<list.size();a++) {
@@ -619,7 +613,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         Log.v(TAG, msg);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -631,6 +624,21 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private void saveWorkout() {
+        Log.i(TAG,"save workout");
+        try {
+            mWorkoutPresenter.saveWorkout(getCurrentWorkout());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private Workout getCurrentWorkout(){
+        return new Workout(workoutId,workoutName,workoutImgUrl,workoutSets,workoutLevel,mainMuscle,mExercises);
     }
 
 

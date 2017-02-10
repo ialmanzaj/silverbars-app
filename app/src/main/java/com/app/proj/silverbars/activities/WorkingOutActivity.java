@@ -2,6 +2,7 @@ package com.app.proj.silverbars.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.SilverbarsApp;
 import com.app.proj.silverbars.adapters.ExerciseWorkingOutAdapter;
@@ -151,7 +153,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     private void setExtras(Bundle extras){
         mExercises = extras.getParcelableArrayList("exercises");
 
-        mSetsTotal = extras.getInt("Sets");
+        mSetsTotal = extras.getInt("sets");
         //mRestByExercise =  extras.getInt("mRestByExercise");
         //RestBySet = extras.getInt("RestBySet");
 
@@ -172,10 +174,8 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         String spotify_playlist = extras.getString("playlist_spotify");
         String spotify_token = extras.getString("token");
 
-
         //init presenter
-        mWorkingOutPresenter.setInitialSetup(mExercises,play_exercise_audio);
-
+        mWorkingOutPresenter.setInitialSetup(mExercises,play_exercise_audio,mSetsTotal);
 
 
         if (local_playlist != null && local_song_names != null){
@@ -206,7 +206,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         mCurrentExercisePositionText.setText("1");
         mTotalExercises.setText(String.valueOf(mExercises.size()));
 
-
         //set current set
         mCurrentSetText.setText("1");
         mTotalSetsText.setText(String.valueOf(mSetsTotal));
@@ -219,13 +218,13 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     @OnTextChanged(R.id.rest_counter)
     public void restListener(CharSequence second){
-        mWorkingOutPresenter.onOverlayTextListener(second);
+        mWorkingOutPresenter.onOverlayTextListener(Integer.parseInt(second.toString()));
     }
 
 
     @OnTextChanged(R.id.repetition_timer)
     public void repTimer(CharSequence repetition){
-        mWorkingOutPresenter.repetitionListener(repetition);
+        mWorkingOutPresenter.repetitionListener(Integer.parseInt(repetition.toString()));
     }
 
 
@@ -258,11 +257,11 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
                 break;
             case R.id.prev_exercise:
                 Log.i(TAG,"prev_exercise");
-                mWorkingOutPresenter.dialogPreviewExercise();
+                mWorkingOutPresenter.previewExercise();
                 break;
             case R.id.next_exercise:
                 Log.i(TAG,"next_exercise");
-                mWorkingOutPresenter.dialogNextExercise();
+                mWorkingOutPresenter.nextExercise();
                 break;
         }
     }
@@ -308,31 +307,96 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         mOverlayTextCounter.setText(second);
     }
 
-
     @Override
     public void onInitialCounterStarted(String second) {
         mOverlayTextCounter.setText(second);
     }
 
-
     @Override
     public void onRepetitionCountdown(String repetition) {
         //Log.i(TAG,"repetition: "+repetition);
         mRepetitionTimerText.setText(repetition);
-        ActivateVibrationPerRep();
+        activateVibrationPerRep();
     }
 
 
     @Override
-    public void onNextExerciseUI() {
+    public void onNextExerciseUi() {
         mNextExercisebutton.setVisibility(View.GONE);
     }
 
     @Override
-    public void onPreviewExerciseUI() {
+    public void onPreviewExerciseUi() {
         mPreviewExerciseButton.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void onNextExercise() {
+        String title = "Desea pasar al siguiente ejercicio?";
+        String content = "Esta seguro que quiere pasar al siguiente ejercicio?";
+
+        new MaterialDialog.Builder(this)
+                .title(title)
+                .content(content)
+                .titleColor(getResources().getColor(R.color.colorPrimaryText))
+                .contentColor(getResources().getColor(R.color.colorPrimaryText))
+                .positiveColor(getResources().getColor(R.color.colorPrimaryText))
+                .negativeColor(getResources().getColor(R.color.colorPrimaryText))
+                .backgroundColor(Color.WHITE)
+                .positiveText(getResources().getString(R.string.positive_dialog))
+                .onPositive((dialog, which) -> {
+
+
+                    dialog.dismiss();
+
+                    mWorkingOutPresenter.onNextExercisePositive();
+
+                })
+                .negativeText(getResources().getString(R.string.negative_dialog))
+                .onNegative((dialog, which) -> {
+
+                    dialog.dismiss();
+
+                    mWorkingOutPresenter.onNextExerciseNegative();
+
+                }).show();
+
+    }
+
+    @Override
+    public void onPreviewExercise() {
+
+        String title = "Desea regresar al ejercicio anterior?";
+        String content = "Esta seguro que quiere regresar al ejercicio anterior?";
+
+        new MaterialDialog.Builder(this)
+                .title(title)
+                .content(content)
+                .titleColor(getResources().getColor(R.color.colorPrimaryText))
+                .contentColor(getResources().getColor(R.color.colorPrimaryText))
+                .positiveColor(getResources().getColor(R.color.colorPrimaryText))
+                .negativeColor(getResources().getColor(R.color.colorPrimaryText))
+                .backgroundColor(Color.WHITE)
+                .positiveText(getResources().getString(R.string.positive_dialog))
+
+                .onPositive((dialog, which) -> {
+
+                    dialog.dismiss();
+
+                    mWorkingOutPresenter.onPreviewExercisePositive();
+
+
+                })
+                .negativeText(getResources().getString(R.string.negative_dialog))
+                .onNegative((dialog, which) -> {
+                    dialog.dismiss();
+
+                    dialog.dismiss();
+
+                    mWorkingOutPresenter.onPreviewExerciseNegative();
+
+                }).show();
+    }
 
     @Override
     public void onChangeToExercise(int exercise_position) {
@@ -353,19 +417,20 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         mCurrentExercisePositionText.setText(String.valueOf(exercise_position+1));
     }
 
-
     @Override
     public void onSetFinished(int set) {
 
+        activateVibrationPerSet();
+
         mCurrentSetText.setText(String.valueOf(set));
         mCurrentExercisePositionText.setText(String.valueOf("1"));
-
 
         //restarting list to first position
         list.smoothScrollToPosition(0);
 
 
         mWorkingOutPresenter.showRestOverlayView(RestBySet);//descanso por set
+
 
         if (mExercises.size() > 1){
             mNextExercisebutton.setVisibility(View.VISIBLE);
@@ -374,14 +439,11 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     }
 
-
-
     @Override
     public void onOverlayViewOff() {
 
         mNextExercisebutton.setEnabled(true);
         mPreviewExerciseButton.setEnabled(true);
-
 
         mModalOverlayView.setVisibility(View.GONE);
 
@@ -414,12 +476,10 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         onScreenOff();
         launchResultsActivity();
     }
-
     @Override
     public void onBackPressed(){
         mWorkingOutPresenter.finishWorkout();
     }
-
 
     @Override
     protected void onDestroy() {
@@ -432,10 +492,9 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         mSongName.setText(getResources().getString(R.string.no_song));
     }
 
-
     private void launchResultsActivity(){
         Intent intent = new Intent(this, ResultsActivity.class);
-        intent.putParcelableArrayListExtra("mExercises", mExercises);
+        intent.putParcelableArrayListExtra("exercises", mExercises);
         startActivity(intent);
         finish();
     }
@@ -460,12 +519,11 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         mPauseMusicbutton.setVisibility(View.VISIBLE);
     }
 
-
     private void onScreenOn(){getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);}
 
     private void onScreenOff(){getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);}
 
-    private void ActivateVibrationPerRep(){
+    private void activateVibrationPerRep(){
         if (mVibrationPerRep) {
             Vibrator vb = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             if (!mWorkingOutPresenter.isWorkoutPaused()){
@@ -476,9 +534,9 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         }
     }
 
-    private void ActivateVibrationPerSet(){
+    private void activateVibrationPerSet(){
         if (mVibrationPerSet){
-            Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
+            Vibrator vb = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             if (!mWorkingOutPresenter.isWorkoutPaused()){
 
                 vb.vibrate(1000);

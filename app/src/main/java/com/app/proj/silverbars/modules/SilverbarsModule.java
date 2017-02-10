@@ -64,8 +64,8 @@ public class SilverbarsModule {
 
     @Provides
     @Singleton
-    public DatabaseHelper provideDatabaseHelper(Application application){
-        return new DatabaseHelper(application);
+    public DatabaseHelper provideDatabaseHelper(Context context){
+        return new DatabaseHelper(context);
     }
 
 

@@ -62,6 +62,11 @@ public class ExerciseListPresenter extends BasePresenter implements ExerciseList
     }
 
     @Override
+    public void onRestart() {
+
+    }
+
+    @Override
     public void onDestroy() {
 
     }

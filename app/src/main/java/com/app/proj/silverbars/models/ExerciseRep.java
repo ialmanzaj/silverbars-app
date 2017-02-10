@@ -8,8 +8,11 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by isaacalmanza on 10/08/16.
  */
-
 public class ExerciseRep implements Parcelable{
+
+
+    @SerializedName("id")
+    private int id;
 
     @SerializedName("exercise")
     private Exercise exercise;
@@ -20,22 +23,16 @@ public class ExerciseRep implements Parcelable{
     @SerializedName("seconds")
     private int seconds;
 
-
     private int tempo_positive;
     private int tempo_negative;
     private int tempo_isometric;
 
 
-    public ExerciseRep(Exercise exercise) {
-        this.exercise = exercise;
-        this.repetition = 0;
-        this.seconds = 0;
-        this.tempo_positive = 0;
-        this.tempo_negative = 0;
-        this.tempo_isometric = 0;
-    }
+    public ExerciseRep() {}
 
-    public ExerciseRep(Exercise exercise, int repetition, int seconds) {
+
+    public ExerciseRep(int id,Exercise exercise,int repetition,int seconds) {
+        this.id = id;
         this.exercise = exercise;
         this.repetition = repetition;
         this.seconds = seconds;
@@ -45,7 +42,20 @@ public class ExerciseRep implements Parcelable{
     }
 
 
+    public ExerciseRep(int id,Exercise exercise,int repetition,int seconds,int tempo_positive,int tempo_isometric,int tempo_negative) {
+        this.id = id;
+        this.exercise = exercise;
+        this.repetition = repetition;
+        this.seconds = seconds;
+        this.tempo_positive = tempo_positive;
+        this.tempo_isometric = tempo_isometric;
+        this.tempo_negative = tempo_negative;
+    }
+
+
+
     protected ExerciseRep(Parcel in) {
+        id = in.readInt();
         exercise = in.readParcelable(Exercise.class.getClassLoader());
         repetition = in.readInt();
         seconds = in.readInt();
@@ -56,6 +66,7 @@ public class ExerciseRep implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeParcelable(exercise, flags);
         dest.writeInt(repetition);
         dest.writeInt(seconds);
@@ -75,7 +86,6 @@ public class ExerciseRep implements Parcelable{
             return new ExerciseRep[size];
         }
     };
-
 
     public Exercise getExercise() {
         return exercise;

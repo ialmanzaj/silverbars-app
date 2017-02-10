@@ -4,7 +4,6 @@ package com.app.proj.silverbars.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.View;
 
 import com.app.proj.silverbars.R;
@@ -35,12 +34,10 @@ import butterknife.BindView;
  */
 public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsView{
 
-
     private static final String TAG = MainWorkoutsFragment.class.getSimpleName();
 
     @Inject
     MainWorkoutsPresenter mMainWorkoutsPresenter;
-
 
     @BindView(R.id.list) TwoWayView list;
     @BindView(R.id.swipeContainer) SwipeRefreshLayout swipeContainer;
@@ -48,7 +45,6 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
     private WorkoutsAdapter adapter;
 
     public String mMuscleSelected = "ALL";
-
 
     @Override
     protected int getFragmentLayout() {
@@ -60,13 +56,9 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
         return mMainWorkoutsPresenter;
     }
 
-
-
     @Override
     public void injectDependencies() {
         super.injectDependencies();
-
-
 
         DaggerMainWorkoutsComponent
                 .builder()
@@ -74,6 +66,8 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
                 .mainWorkoutsModule(new MainWorkoutsModule(this))
                 .build().inject(this);
     }
+
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -118,8 +112,7 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
             list.setAdapter(adapter);
 
 
-            Log.i(TAG,"workout"+getJson());
-
+            //Log.i(TAG,"workout"+getJson());
 
            List<Workout> workouts = new Gson().fromJson(getJson(),new TypeToken<ArrayList<Workout>>(){}.getType());
 
@@ -136,7 +129,6 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
         swipeContainer.setOnRefreshListener(() -> mMainWorkoutsPresenter.fetchTimelineAsync());
     }
-
 
 
     @Override
@@ -163,9 +155,7 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
         adapter.clear();
         
         if(Objects.equals(muscle, "ALL")) {
-
             return workouts;
-
         } else {
 
             List<Workout> mWorkoutFiltered = new ArrayList<>();
@@ -180,8 +170,6 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
             return mWorkoutFiltered;
 
         }
-
-
     }
 
 

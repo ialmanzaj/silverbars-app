@@ -56,6 +56,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         @BindView(R.id.btn)Button btn;
         @BindView(R.id.img)SimpleDraweeView img;
 
+
         public WorkoutHolder(View view) {
             super(view);
 
@@ -75,7 +76,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
 
                 Intent intent = new Intent(context, WorkoutActivity.class);
-                intent.putExtra("workout_id", workout.getWorkoutId());
+                intent.putExtra("workout_id", workout.getId());
                 intent.putExtra("name", workout.getWorkout_name());
                 intent.putExtra("image", workout.getWorkout_image());
                 intent.putExtra("sets", workout.getSets());
