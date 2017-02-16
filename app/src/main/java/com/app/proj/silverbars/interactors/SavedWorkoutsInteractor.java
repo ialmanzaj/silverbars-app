@@ -1,15 +1,13 @@
 package com.app.proj.silverbars.interactors;
 
-import android.util.Log;
-
 import com.app.proj.silverbars.callbacks.SavedWorkoutsCallback;
 import com.app.proj.silverbars.database_models.Exercise;
 import com.app.proj.silverbars.database_models.ExerciseRep;
 import com.app.proj.silverbars.database_models.Muscle;
+import com.app.proj.silverbars.database_models.MySavedWorkout;
 import com.app.proj.silverbars.database_models.TypeExercise;
-import com.app.proj.silverbars.database_models.Workout;
+import com.app.proj.silverbars.models.Workout;
 import com.app.proj.silverbars.utils.DatabaseHelper;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,7 +29,7 @@ public class SavedWorkoutsInteractor {
 
 
     public void getWorkout(SavedWorkoutsCallback callback) throws SQLException {
-        if (helper.getWorkoutDao().queryForAll() == null || helper.getWorkoutDao().queryForAll().isEmpty()){
+        if (helper.getSavedWorkoutDao().queryForAll() == null || helper.getSavedWorkoutDao().queryForAll().isEmpty()){
             callback.onEmptyWorkouts();
         }else
             workoutsReady(callback);
@@ -40,81 +38,72 @@ public class SavedWorkoutsInteractor {
 
     private void workoutsReady(SavedWorkoutsCallback callback) throws SQLException {
 
+        List<Workout> workouts = new ArrayList<>();
+        
 
-        List<com.app.proj.silverbars.models.Workout> workoutList = new ArrayList<>();
+        for (MySavedWorkout my_saved_workout:  helper.getSavedWorkoutDao().queryForAll()){
 
-
-        for (Workout workout:  helper.getWorkoutDao().queryForAll()){
-            Log.d(TAG,"workouts in for size: "+workoutList.size());
+            //Log.d(TAG,"workouts in for size: "+workouts.size());
 
             ArrayList<com.app.proj.silverbars.models.ExerciseRep> exerciseReps = new ArrayList<>();
 
-            for (ExerciseRep exerciseRep: workout.getExercises()){
+            for (ExerciseRep exerciseRep_database: my_saved_workout.getExercises()){
 
-                Exercise exercise = helper.getExerciseDao().queryForId(exerciseRep.getExercise().getId());
+                Exercise exercise_database = helper.getExerciseDao().queryForId(exerciseRep_database.getExercise().getId());
 
                 //types and muscles list
                 List<String> types_exercise = new ArrayList<>();
                 List<com.app.proj.silverbars.models.Muscle> muscles = new ArrayList<>();
 
-                for (TypeExercise types:  exercise.getType_exercise()){types_exercise.add(types.getType());}
+                //get the type exercise_database from table to new object in json
+                for (TypeExercise types:  exercise_database.getType_exercise()){types_exercise.add(types.getType());}
 
-                for (Muscle muscle: exercise.getMuscles()){
-                    muscles.add(
-                            new com.app.proj.silverbars.models.Muscle(
-                                    muscle.getMuscle(),muscle.getMuscle_activation(),
-                                    muscle.getClassification(),
-                                    muscle.getProgression_level()));
+                //get the muscles
+                for (Muscle muscle: exercise_database.getMuscles()){
+                    muscles.add(new com.app.proj.silverbars.models.Muscle(muscle.getMuscle(), muscle.getMuscle_activation(), muscle.getClassification(), muscle.getProgression_level()));
                 }
-
-                com.app.proj.silverbars.models.Exercise exercise1 =
+                
+                //re-create exercise object from database
+                com.app.proj.silverbars.models.Exercise exercise =
                         new com.app.proj.silverbars.models.Exercise(
-                                exercise.getId(),exercise.getExercise_name(),
-                                exercise.getLevel(),
+                                exercise_database.getId(),
+                                exercise_database.getExercise_name(),
+                                exercise_database.getLevel(),
                                 types_exercise,
-                                exercise.getExercise_audio(),
-                                exercise.getExercise_image(),
+                                exercise_database.getExercise_audio(),
+                                exercise_database.getExercise_image(),
                                 muscles
                                 );
 
+                //
                 exerciseReps.add(
                         new com.app.proj.silverbars.models.ExerciseRep(
-                                exerciseRep.getId(),
-                                exercise1,
-                                exerciseRep.getRepetition(),
-                                exerciseRep.getSeconds(),
-                                exerciseRep.getTempo_positive(),
-                                exerciseRep.getTempo_isometric(),
-                                exerciseRep.getTempo_negative()
+                                exerciseRep_database.getId(),
+                                exercise,
+                                exerciseRep_database.getRepetition(),
+                                exerciseRep_database.getSeconds(),
+                                exerciseRep_database.getTempo_positive(),
+                                exerciseRep_database.getTempo_isometric(),
+                                exerciseRep_database.getTempo_negative()
                         ));
             }
 
 
-
-            //add workout completed to list
-            workoutList.add(new com.app.proj.silverbars.models.Workout(
-                workout.getId(),
-                    workout.getWorkout_name(),
-                    workout.getWorkout_image(),
-                    workout.getSets(),
-                    workout.getLevel(),
-                    workout.getMain_muscle(),
+            //add my_saved_workout completed to list
+            workouts.add(new com.app.proj.silverbars.models.Workout(
+                my_saved_workout.getId(),
+                    my_saved_workout.getWorkout_name(),
+                    my_saved_workout.getWorkout_image(),
+                    my_saved_workout.getSets(),
+                    my_saved_workout.getLevel(),
+                    my_saved_workout.getMain_muscle(),
                     exerciseReps
             ));
         }
 
 
         //return workouts_database list saved
-        callback.onWorkouts(workoutList);
-    }
-
-
-
-    public void onDestroy(){
-        if (helper != null) {
-            OpenHelperManager.releaseHelper();
-            helper = null;
-        }
+        callback.onWorkouts(workouts);
     }
 
 }

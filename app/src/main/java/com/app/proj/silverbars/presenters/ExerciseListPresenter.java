@@ -21,6 +21,7 @@ public class ExerciseListPresenter extends BasePresenter implements ExerciseList
         this.view = view;
         this.interactor = interactor;
     }
+
     public void getExercises(){
         interactor.getExercises(this);
     }
@@ -39,6 +40,8 @@ public class ExerciseListPresenter extends BasePresenter implements ExerciseList
     public void onNetworkError() {
         view.displayNetworkError();
     }
+
+
 
 
     @Override

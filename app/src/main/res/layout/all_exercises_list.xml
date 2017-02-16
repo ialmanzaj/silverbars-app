@@ -58,50 +58,22 @@
                     android:text="@string/exercise_name"
                     android:textColor="#000" />
             </LinearLayout>
-            <FrameLayout
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical"
-
                 android:gravity="center"
                 android:id="@+id/repsLayout">
 
-                <ImageView
+                <CheckBox
+                    android:background="@color/colorSecondary"
+                    android:id="@+id/checkbox"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/unchecked"
-                    android:src="@drawable/unchecked"
-                    android:layout_gravity="center"
-                    android:visibility="visible" />
+                    android:layout_height="wrap_content" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/checked"
-                    android:layout_gravity="center"
-                    android:src="@drawable/checked"
-                    android:visibility="gone" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/order"
-                    android:layout_gravity="right|top"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="30dp"
-                    android:textStyle="bold" />
-            </FrameLayout>
-
-            <!--<ImageView-->
-            <!--android:id="@+id/handle"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center_vertical|right"-->
-            <!--android:scaleType="center"-->
-            <!--android:src="@drawable/ic_reorder_grey" />-->
+            </LinearLayout>
 
         </LinearLayout>
 

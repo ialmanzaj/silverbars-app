@@ -7,11 +7,12 @@
     tools:context="com.app.proj.silverbars.fragments.UserWorkoutsFragment">
 
     <LinearLayout
-            android:gravity="center_vertical"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:id="@+id/empty_state"
+        android:gravity="center_vertical"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
             <TextView
                 android:textColor="@color/black"
@@ -33,11 +34,11 @@
                 android:id="@+id/create"
                 android:layout_gravity="center"
                 android:gravity="center" />
-        </LinearLayout>
+    </LinearLayout>
+
 
     <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/list_my_workouts"
-            android:visibility="invisible"
             android:paddingTop="5dp"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
@@ -46,6 +47,5 @@
             app:twowayview_layoutManager="GridLayoutManager"
             app:twowayview_numColumns="2"
             android:orientation="vertical" />
-
 
 </LinearLayout>

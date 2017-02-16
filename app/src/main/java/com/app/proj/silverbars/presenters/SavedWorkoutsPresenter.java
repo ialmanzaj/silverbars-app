@@ -63,7 +63,7 @@ public class SavedWorkoutsPresenter  extends BasePresenter implements SavedWorko
 
     @Override
     public void onDestroy() {
-        interactor.onDestroy();
+        //interactor.onDestroy();
     }
 
 

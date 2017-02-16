@@ -4,10 +4,9 @@ import com.app.proj.silverbars.callbacks.WorkoutCallback;
 import com.app.proj.silverbars.database_models.Exercise;
 import com.app.proj.silverbars.database_models.ExerciseRep;
 import com.app.proj.silverbars.database_models.Muscle;
+import com.app.proj.silverbars.database_models.MySavedWorkout;
 import com.app.proj.silverbars.database_models.TypeExercise;
-import com.app.proj.silverbars.database_models.Workout;
 import com.app.proj.silverbars.utils.DatabaseHelper;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import java.sql.SQLException;
 
@@ -29,13 +28,13 @@ public class WorkoutInteractor {
 
 
     public boolean isWorkoutExist(int workout_id) throws SQLException {
-        return helper.getWorkoutDao().queryForId(workout_id) != null;
+        return helper.getSavedWorkoutDao().queryForId(workout_id) != null;
     }
 
 
     public void saveWorkout(com.app.proj.silverbars.models.Workout workout, WorkoutCallback callback) throws SQLException {
 
-        Workout workout_database = new Workout(
+        MySavedWorkout my_saved_workout = new MySavedWorkout(
                 workout.getId(),
                 workout.getWorkout_name(),
                 workout.getWorkout_image(),
@@ -44,12 +43,11 @@ public class WorkoutInteractor {
                 workout.getMainMuscle()
         );
 
-        helper.getWorkoutDao().create(workout_database);
-        //Log.d(TAG,"workouts size: "+helper.getWorkoutDao().queryForAll().size());
+        helper.getSavedWorkoutDao().create(my_saved_workout);
+        //Log.d(TAG,"workouts size: "+helper.getSavedWorkoutDao().queryForAll().size());
 
 
         for (com.app.proj.silverbars.models.ExerciseRep exerciseRep: workout.getExercises()){
-
 
             Exercise exercise = new Exercise(
                     exerciseRep.getExercise().getId(),
@@ -86,7 +84,7 @@ public class WorkoutInteractor {
             }
 
             //re create exercise rep model
-            helper.getExerciseRepDao().create(new ExerciseRep(exercise, exerciseRep.getRepetition(),workout_database));
+            helper.getExerciseRepDao().create(new ExerciseRep(exercise, exerciseRep.getRepetition(),my_saved_workout));
         }
         
         
@@ -94,12 +92,12 @@ public class WorkoutInteractor {
     }
 
 
-    public void onDestroy(){
+   /* public void onDestroy(){
         if (helper != null) {
             OpenHelperManager.releaseHelper();
             helper = null;
         }
-    }
+    }*/
 
 
 }

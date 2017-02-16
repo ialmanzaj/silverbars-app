@@ -1,9 +1,9 @@
 package com.app.proj.silverbars.presenters;
 
 import com.app.proj.silverbars.callbacks.CreateWorkoutFinalCallback;
-import com.app.proj.silverbars.models.Exercise;
-
-import java.util.List;
+import com.app.proj.silverbars.interactors.CreateWorkoutFinalInteractor;
+import com.app.proj.silverbars.models.Workout;
+import com.app.proj.silverbars.viewsets.CreateWorkoutFinalView;
 
 /**
  * Created by isaacalmanza on 01/12/17.
@@ -12,54 +12,49 @@ import java.util.List;
 public class CreateWorkoutFinalPresenter extends BasePresenter implements CreateWorkoutFinalCallback {
 
 
-    public CreateWorkoutFinalPresenter(){}
+    private CreateWorkoutFinalView view;
+    private CreateWorkoutFinalInteractor interactor;
 
 
+    public CreateWorkoutFinalPresenter(CreateWorkoutFinalView view,CreateWorkoutFinalInteractor interactor){
+        this.view = view;
+        this.interactor = interactor;
+    }
 
-
-
-    @Override
-    public void onStart() {
-
+    public void saveWorkout(Workout workout){
+        interactor.insertWorkout(workout,this);
     }
 
     @Override
-    public void onStop() {
-
+    public void onWorkoutCreated(boolean created) {
+        view.onWorkoutCreated(created);
     }
+
 
     @Override
-    public void onResume() {
-
+    public void onWorkoutError() {
+        view.onWorkoutError();
     }
+
 
     @Override
-    public void onPause() {
-
-    }
+    public void onStart() {}
 
     @Override
-    public void onRestart() {
-
-    }
+    public void onStop() {}
 
     @Override
-    public void onDestroy() {
-
-    }
+    public void onResume() {}
 
     @Override
-    public void onExercises(List<Exercise> exercises) {
-
-    }
+    public void onPause() {}
 
     @Override
-    public void onServerError() {
-
-    }
+    public void onRestart() {}
 
     @Override
-    public void onNetworkError() {
+    public void onDestroy() {}
 
-    }
+
+
 }

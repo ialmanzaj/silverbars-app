@@ -6,11 +6,14 @@ package com.app.proj.silverbars.components;
 
 import android.content.Context;
 
+import com.app.proj.silverbars.interactors.CreateWorkoutFinalInteractor;
 import com.app.proj.silverbars.interactors.CreateWorkoutInteractor;
+import com.app.proj.silverbars.interactors.ExerciseListInteractor;
 import com.app.proj.silverbars.interactors.LoginInteractor;
 import com.app.proj.silverbars.interactors.MainWorkoutsInteractor;
 import com.app.proj.silverbars.interactors.SavedWorkoutsInteractor;
 import com.app.proj.silverbars.interactors.SpotifyInteractor;
+import com.app.proj.silverbars.interactors.UserWorkoutsInteractor;
 import com.app.proj.silverbars.interactors.WorkoutInteractor;
 import com.app.proj.silverbars.modules.InteractorModule;
 import com.app.proj.silverbars.modules.SilverbarsModule;
@@ -52,5 +55,11 @@ public interface SilverbarsComponent {
     WorkoutInteractor getWorkoutInteractor();
 
     SavedWorkoutsInteractor getSavedWorkoutsInteractor();
+
+    ExerciseListInteractor getExerciseListInteractor();
+
+    CreateWorkoutFinalInteractor getCreateWorkoutFinalInteractor();
+
+    UserWorkoutsInteractor getUserWorkoutsInteractor();
 
 }

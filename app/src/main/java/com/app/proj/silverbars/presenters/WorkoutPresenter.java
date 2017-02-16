@@ -65,7 +65,7 @@ public class WorkoutPresenter extends BasePresenter implements WorkoutCallback {
 
     @Override
     public void onDestroy() {
-        interactor.onDestroy();
+        //interactor.onDestroy();
     }
 
 

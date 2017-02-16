@@ -5,16 +5,11 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import java.io.Serializable;
-
 /**
  * Created by isaacalmanza on 10/04/16.
  */
 @DatabaseTable
-public class Workout implements Serializable{
-
-    @DatabaseField(id = true, columnName = "ID", canBeNull = false)
-    private int id;
+public class Workout {
 
     @DatabaseField
     private String workout_name;
@@ -35,11 +30,7 @@ public class Workout implements Serializable{
     private ForeignCollection<ExerciseRep> exercises;
 
 
-    public Workout(){}
-
-
-    public Workout(int id,String workout_name,String workout_image,int sets,String level,String main_muscle){
-        this.id = id;
+    public Workout(String workout_name,String workout_image,int sets,String level,String main_muscle){
         this.workout_name = workout_name;
         this.workout_image = workout_image;
         this.sets = sets;
@@ -47,13 +38,9 @@ public class Workout implements Serializable{
         this.main_muscle = main_muscle;
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    protected Workout() {}
+
 
     public String getWorkout_name() {
         return workout_name;
@@ -100,4 +87,5 @@ public class Workout implements Serializable{
     public void setExercises(ForeignCollection<ExerciseRep> exercises) {
         this.exercises = exercises;
     }
+
 }

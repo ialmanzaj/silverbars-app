@@ -1,4 +1,4 @@
-package com.app.proj.silverbars.viewsets;
+package com.app.proj.silverbars.callbacks;
 
 
 import com.app.proj.silverbars.models.Workout;
@@ -6,11 +6,10 @@ import com.app.proj.silverbars.models.Workout;
 import java.util.List;
 
 /**
- * Created by isaacalmanza on 01/12/17.
+ * Created by isaacalmanza on 02/16/17.
  */
 
-public interface UserWorkoutsView {
+public interface UserWorkoutsCallback {
     void onWorkouts(List<Workout> user_workouts);
     void onEmptyWorkouts();
 }
-

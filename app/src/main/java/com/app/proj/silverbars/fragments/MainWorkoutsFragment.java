@@ -77,7 +77,6 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
         mMuscleSelected = getArguments().getString("Muscle");
 
 
-
         //get my workouts from api
        //mMainWorkoutsPresenter.getMyWorkout();
     }

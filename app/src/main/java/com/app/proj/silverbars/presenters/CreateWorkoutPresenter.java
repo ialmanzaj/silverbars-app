@@ -22,18 +22,14 @@ public class CreateWorkoutPresenter extends BasePresenter implements CreateWorko
         this.interactor = interactor;
     }
 
-
     public void getExercises(){
         interactor.getExercises(this);
     }
-
 
     @Override
     public void onExercises(List<Exercise> exercises) {
         view.displayExercises(exercises);
     }
-
-
 
 
     @Override
@@ -45,10 +41,6 @@ public class CreateWorkoutPresenter extends BasePresenter implements CreateWorko
     public void onNetworkError() {
         view.displayNetworkError();
     }
-
-
-
-
 
 
     @Override

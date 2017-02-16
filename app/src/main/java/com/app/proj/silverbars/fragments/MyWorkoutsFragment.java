@@ -22,7 +22,6 @@ public class MyWorkoutsFragment extends Fragment {
 
     private static final String TAG = MyWorkoutsFragment.class.getSimpleName();
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return  inflater.inflate(R.layout.activity_my_workouts, container, false);
@@ -41,22 +40,19 @@ public class MyWorkoutsFragment extends Fragment {
     }
 
 
-
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new SavedWorkoutsFragment(), "Saved Workouts");
         adapter.addFragment(new UserWorkoutsFragment(), "My Workouts");
+        adapter.addFragment(new SavedWorkoutsFragment(), "Saved Workouts");
         viewPager.setAdapter(adapter);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
-
         public ViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
-
         @Override
         public Fragment getItem(int position) {
             return mFragmentList.get(position);
@@ -77,7 +73,5 @@ public class MyWorkoutsFragment extends Fragment {
             return mFragmentTitleList.get(position);
         }
     }
-
-
 
 }

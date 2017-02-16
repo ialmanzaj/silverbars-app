@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -46,62 +47,61 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 
 public class CreateWorkoutActivity extends BaseActivity implements CreateWorkoutView,OnStartDragListener {
 
     private static final String TAG = CreateWorkoutActivity.class.getSimpleName();
 
-
     @Inject
     CreateWorkoutPresenter mCreateWorkoutPresenter;
 
-
+    
     private Utilities utilities = new Utilities();
 
 
 
     @BindView(R.id.toolbar) Toolbar toolbar;
 
-
-    @BindView(R.id.content_empty) LinearLayout empty_content;
+    @BindView(R.id.content_empty) LinearLayout mEmptyView;
 
     @BindView(R.id.webview) WebView webView;
 
+    @BindView(R.id.error_view) LinearLayout mErrorView;
+    @BindView(R.id.reload) Button mReloadbutton;
+
+    @BindView(R.id.progress_view) LinearLayout ProgressView;
+    
     @BindView(R.id.content_info) LinearLayout contentView;
     @BindView(R.id.readd) Button mButtonReAdd;
+    
+    @BindView(R.id.column1) LinearLayout PrimMuscleColumn;
+    @BindView(R.id.column2) LinearLayout SecMuscleColumn;
+    
+    @BindView(R.id.exercises_selected) RecyclerView mExercisesSelectedList;
+    
+    @BindView(R.id.next) Button mNextbutton;
+    @BindView(R.id.add_exercises) Button mAddExercise;
 
-    @BindView(R.id.recycler_exercises_selected) RecyclerView list;
-
-    @BindView(R.id.column1) LinearLayout primary_ColumnMuscle;
-    @BindView(R.id.column2) LinearLayout secundary_ColumnMuscle;
-
-    @BindView(R.id.progress) LinearLayout ProgressView;
-    @BindView(R.id.error_view) LinearLayout mErrorView;
-    @BindView(R.id.reload) Button button_error_reload;
+    @BindView(R.id.muscles_) ScrollView scrollView;
 
 
-    @BindView(R.id.next) Button nextButton;
-    @BindView(R.id.add_exercises) Button addExercise;
+    private ExercisesSelectedAdapter adapter;
+    private ItemTouchHelper mItemTouchHelper;
+
+
+
+    private  List<String> mMuscles = new ArrayList<>();
+
+    private String mMusclesWebview = "";
+
+    private ArrayList<Exercise> mExercisesAllList;
+    private ArrayList<String> mExercisesNames;
 
 
 
     private  int ISOMETRIC = 0,CARDIO = 0,PYLOMETRICS = 0,STRENGTH = 0;
-
-    private ItemTouchHelper mItemTouchHelper;
-
-
-    private  List<String> mMuscles = new ArrayList<>();
-    private List<Exercise> AllExercisesList = new ArrayList<>();
-
-    private String partes = "";
-
-    private ExercisesSelectedAdapter adapter;
-    
-    private List<ExerciseRep> mExercisesAdapter = new ArrayList<>();
-
-    private ArrayList<String> exercises_id;
-
 
 
     @Override
@@ -115,7 +115,6 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
     protected BasePresenter getPresenter() {
         return mCreateWorkoutPresenter;
     }
-
 
     @Override
     public void injectDependencies() {
@@ -134,110 +133,43 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
 
 
         setupToolbar();
-
         setupTabs();
-
         setupAdapter();
 
 
-
-        ScrollView scrollView = (ScrollView) findViewById(R.id.muscles_);
-
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {scrollView.setFillViewport(true);}
-
-
-        button_error_reload.setOnClickListener(v -> {
-
-           /* if (exercises_id.size() > 0){
-                onErrorViewOff();
-                onProgressOn();
-                setExercisesSelected(exercises_id);
-            }
-
-*/
-
-        });
-
-
-        nextButton.setOnClickListener(view -> {
-            if (adapter != null){
-
-                if (adapter.getItemCount() > 0){
-
-                    ArrayList<ExerciseRep> exerciseReps = new ArrayList<>();
-                    for (ExerciseRep exerciseRep: adapter.getSelectedExercises()){exerciseReps.add(exerciseRep);}
-
-                    Intent intent = new Intent(CreateWorkoutActivity.this, CreateWorkoutFinalActivity.class);
-                    intent.putParcelableArrayListExtra("exercises",exerciseReps);
-                    startActivityForResult(intent,3);
-
-                }else {
-                    Toast.makeText(CreateWorkoutActivity.this, getResources().getString(R.string.exercises_no_selected),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }else {
-                Toast.makeText(CreateWorkoutActivity.this, getResources().getString(R.string.exercises_no_selected),
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-        addExercise.setOnClickListener(v -> {
-            Intent intent = new Intent(CreateWorkoutActivity.this,ExerciseListActivity.class);
-            startActivityForResult(intent,1);
-        });
-
-
-        mButtonReAdd.setOnClickListener(v -> {
-
-            Intent intent = new Intent(CreateWorkoutActivity.this,ExerciseListActivity.class);
-            intent.putExtra("exercises",adapter.getSelectedExercisesName());
-            startActivityForResult(intent,1);
-        });
-
-
-
-
 
         utilities.setBodyInWebwView(this,webView);
 
     }//  close create workout
 
 
-
     private void setupAdapter(){
-        list.setLayoutManager(new LinearLayoutManager(this));
 
-
+        mExercisesSelectedList.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ExercisesSelectedAdapter(this,this);
-        list.setAdapter(adapter);
 
-
+        mExercisesSelectedList.setAdapter(adapter);
         //touch listener
         mItemTouchHelper  = new ItemTouchHelper(new SimpleItemTouchHelperCallback(adapter));
-        mItemTouchHelper.attachToRecyclerView(list);
+        mItemTouchHelper.attachToRecyclerView(mExercisesSelectedList);
     }
-
 
     public void setupToolbar(){
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.text_create_workout));
-
         toolbar.setNavigationIcon(R.drawable.ic_clear_white_24px);
-        toolbar.setNavigationOnClickListener(v -> finish());
     }
 
-
-
     private void setupTabs(){
-
         //Defining Tabs
         TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost3);
         tabHost2.setup();
 
         TabHost.TabSpec rutina = tabHost2.newTabSpec(getResources().getString(R.string.tab_overview));
         TabHost.TabSpec muscles = tabHost2.newTabSpec(getResources().getString(R.string.tab_muscles));
+
         rutina.setIndicator(getResources().getString(R.string.tab_overview));
         rutina.setContent(R.id.rutina_);
 
@@ -247,99 +179,96 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
         tabHost2.addTab(rutina);
         tabHost2.addTab(muscles);
     }
+    
+
+    @OnClick(R.id.next)
+    public void next(){
 
 
-    private List<ExerciseRep> findExerciseByName(List<String> exercises_names){
-        //Log.v(TAG,"exercise names:"+exercises_names);
+        if (adapter.getItemCount() < 1) {
+            Toast.makeText(this, getResources().getString(R.string.exercises_no_selected), Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        List<ExerciseRep> exerciseList = new ArrayList<>();
-
-            for (String exercise: exercises_names){
-                for (int a = 0; a < AllExercisesList.size(); a++){
-
-                    if (Objects.equals(exercise, AllExercisesList.get(a).getExercise_name())){
-
-                        ExerciseRep exerciserep = new ExerciseRep();
-                        exerciserep.setExercise(AllExercisesList.get(a));
-                        exerciseList.add(exerciserep);
-
-                    }
-
-                }
-            }
-
-
-        return exerciseList;
+        Intent intent = new Intent(this, CreateWorkoutFinalActivity.class);
+        intent.putParcelableArrayListExtra("exercises", mExercisesAllList);
+        intent.putParcelableArrayListExtra("exercises_selected", adapter.getSelectedExercises());
+        startActivityForResult(intent,3);
     }
+
+
+    @OnClick(R.id.reload)
+    public void reload(){
+          /* if (mExercisesNames.size() > 0){
+                onErrorViewOff();
+                onProgressOn();
+                setExercisesAdapter(mExercisesNames);
+            }
+            */
+    }
+
+    @OnClick(R.id.add_exercises)
+    public void addExercise(){
+        Intent intent = new Intent(this,ExerciseListActivity.class);
+        startActivityForResult(intent,1);
+    }
+
+    @OnClick(R.id.readd)
+    public void readExercise(){
+        Intent intent = new Intent(this,ExerciseListActivity.class);
+        intent.putExtra("exercises",adapter.getSelectedExercisesName());
+        startActivityForResult(intent,1);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == 1) {
             if (resultCode == RESULT_OK && data != null){
-                if (data.hasExtra("exercises")) {
 
-                    exercises_id = data.getStringArrayListExtra("exercises");
-                      /*  if (exercises_id.size() > 0){
-                            setExercisesSelected(exercises_id);
-                        }*/
+                if ( data.hasExtra("exercises") && data.hasExtra("exercises_selected")) {
+
+
+                    mExercisesAllList =  data.getParcelableArrayListExtra("exercises");
+                    mExercisesNames = data.getStringArrayListExtra("exercises_selected");
+
+
+                    setExercisesAdapter();
                 }
             }
         }
-
     }
-
-
 
     @Override
     public void displayExercises(List<Exercise> exercises) {
-        setEmptyContentOff();
-
-/*
-        AllExercisesList = exercises;
-
-
-        //putTypesInWorkout(TypeExercises);
-        setMuscles(mExercisesAdapter);
-        mExercisesAdapter = findExerciseByName(new_exercises);
-
-
-        adapter.setOnDataChangeListener(new ExercisesSelectedAdapter.OnDataChangeListener() {
-            @Override
-            public void onDataChanged(int size) {
-                setMuscles(adapter.getSelectedExercises());
-            }
-        });*/
+        mExercisesAllList.addAll(exercises);
     }
-
-
 
     @Override
     public void displayServerError() {
-
+        onErrorViewOn();
     }
 
     @Override
     public void displayNetworkError() {
-
+        onErrorViewOn();
     }
+    
 
+    private void setExercisesAdapter(){
+        onEmptyViewOff();
 
-    private void getCountTimes(List<String> list){
-        for (int a = 0; a<list.size();a++) {
-            if (list.get(a).equals("ISOMETRIC")) {
-                ISOMETRIC = ISOMETRIC+1;
-            }if (list.get(a).equals("CARDIO")){
-                CARDIO=CARDIO+1;
-            }if(list.get(a).equals("PYLOMETRICS")){
-                PYLOMETRICS = PYLOMETRICS+1;
-            }if (list.get(a).equals("STRENGTH")){
-                STRENGTH = STRENGTH+1;
-            }
+        for (Exercise exercise: getExercisesRepsbyExerciseName(mExercisesAllList,mExercisesNames) ){
+            //mExercises.add(exercise);
+            adapter.add(exercise);
         }
-    }
 
+
+        //putTypesInWorkout(TypeExercises);
+        //setMuscles(mExercises);
+        //adapter.setOnDataChangeListener(size -> setMuscles(adapter.getSelectedExercises()));
+    }
 
     private void putTypesInWorkout(List<String> types){
         List<String> typesExercise;
@@ -417,14 +346,6 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
         }
     }
 
-    private void addNewExercisesToAdapter(List<String> exercises){
-        for (ExerciseRep exercise: findExerciseByName(exercises) ){
-            mExercisesAdapter.add(exercise);
-            adapter.notifyItemInserted(mExercisesAdapter.size());
-        }
-
-        setMuscles(adapter.getSelectedExercises());
-    }
 
     private void setMuscles(List<ExerciseRep> exercises){
         mMuscles.clear();
@@ -440,11 +361,56 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
 
         setMusclesToView(mMuscles);
     }
+    
 
+    private void getCountTimes(List<String> list){
+        for (int a = 0; a<list.size();a++) {
+            if (list.get(a).equals("ISOMETRIC")) {
+                ISOMETRIC = ISOMETRIC+1;
+            }if (list.get(a).equals("CARDIO")){
+                CARDIO=CARDIO+1;
+            }if(list.get(a).equals("PYLOMETRICS")){
+                PYLOMETRICS = PYLOMETRICS+1;
+            }if (list.get(a).equals("STRENGTH")){
+                STRENGTH = STRENGTH+1;
+            }
+        }
+    }
+    
+    private List<Exercise> getExercisesRepsbyExerciseName(List<Exercise> all_exercises_list,List<String> exercises_names){
+        Log.v(TAG,"exercise names: "+exercises_names.size());
+
+        List<Exercise> exerciseList = new ArrayList<>();
+        List<String> exercises_list_names =  new ArrayList<>();
+
+        for (String exercise_name: exercises_names){
+            for (Exercise exercise : all_exercises_list){
+
+                if (Objects.equals(exercise_name, exercise.getExercise_name())){
+
+                    if (!exercises_list_names.contains(exercise_name)){
+                        exercises_list_names.add(exercise_name);
+                        exerciseList.add(exercise);
+                    }
+                }
+
+
+            }
+        }
+
+        //Log.v(TAG,"exercises_list_names :"+exercises_list_names.size());
+        //Log.v(TAG,"exerciseList :"+exerciseList.size());
+
+        return exerciseList;
+    }
+
+
+
+    
     private void setMusclesToView(List<String> musculos){
         //Log.v(TAG,"setMusclesToView: "+musculos);
 
-        partes = "";
+        mMusclesWebview = "";
 
         if (musculos.size() > 0){
 
@@ -455,20 +421,22 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
             for (int a = 0;a<mMusclesFinal.size();a++) {
                 TextView mMusclesTextView = new TextView(this);
 
-                partes += "#"+ mMusclesFinal.get(a) + ",";
+                mMusclesWebview += "#"+ mMusclesFinal.get(a) + ",";
 
-                //Log.v(TAG,"partes:" +partes);
+                //Log.v(TAG,"mMusclesWebview:" +mMusclesWebview);
 
                 mMusclesTextView.setText(mMusclesFinal.get(a));
                 mMusclesTextView.setGravity(Gravity.CENTER);
 
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {mMusclesTextView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));}else {mMusclesTextView.setTextColor(getResources().getColor(R.color.gray_active_icon));}
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    mMusclesTextView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));
+                }else {mMusclesTextView.setTextColor(getResources().getColor(R.color.gray_active_icon));}
 
                 if (a%2 == 0){
-                    //secundary_ColumnMuscle.addView(mMusclesTextView);
+                    //SecMuscleColumn.addView(mMusclesTextView);
                 }else {
-                    //primary_ColumnMuscle.addView(mMusclesTextView);
+                    //PrimMuscleColumn.addView(mMusclesTextView);
                 }
 
 
@@ -478,7 +446,7 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
         webView.setWebViewClient(new WebViewClient(){
             @Override
             public void onPageFinished(WebView view, String url) {
-                utilities.injectJS(partes,webView);
+                utilities.injectJS(mMusclesWebview,webView);
                 super.onPageFinished(view, url);
             }
         });
@@ -493,11 +461,13 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
 
 
 
-    private void setEmptyContentOff(){
-        empty_content.setVisibility(View.GONE);
+
+    private void onEmptyViewOff(){
+        mEmptyView.setVisibility(View.GONE);
         mButtonReAdd.setVisibility(View.VISIBLE);
-        list.setVisibility(View.VISIBLE);
+        mExercisesSelectedList.setVisibility(View.VISIBLE);
     }
+
 
 
     private void onErrorViewOn(){
@@ -520,6 +490,19 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {mItemTouchHelper.startDrag(viewHolder);}
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            Log.d(TAG, "action bar clicked");
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
 }

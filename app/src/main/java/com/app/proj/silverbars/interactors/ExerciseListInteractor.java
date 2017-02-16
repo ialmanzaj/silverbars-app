@@ -20,13 +20,11 @@ public class ExerciseListInteractor {
 
     private static final String TAG = ExerciseListInteractor.class.getSimpleName();
 
-
     private MainService service;
 
     public ExerciseListInteractor(MainService service){
         this.service = service;
     }
-
 
     public void getExercises(ExerciseListCallback callback){
         service.getExercises().enqueue(new Callback<List<Exercise>>() {

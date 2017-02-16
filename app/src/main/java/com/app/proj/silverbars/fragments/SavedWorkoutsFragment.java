@@ -29,11 +29,10 @@ import butterknife.BindView;
 
 public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkoutsView {
 
-    private static final String TAG = "SavedWorkoutsFragment";
+    private static final String TAG = SavedWorkoutsFragment.class.getSimpleName();
 
     @BindView(R.id.list_saved) TwoWayView mLocalWorkoutsList;
     @BindView(R.id.empty_state)  LinearLayout mEmpyStateSavedWorkout;
-
 
     @Inject
     SavedWorkoutsPresenter mSavedWorkoutsPresenter;
@@ -50,7 +49,6 @@ public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkouts
     protected BasePresenter getPresenter() {
         return mSavedWorkoutsPresenter;
     }
-
 
     @Override
     public void injectDependencies() {
@@ -72,13 +70,11 @@ public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkouts
         }
 
 
-
         try {
             mSavedWorkoutsPresenter.getWorkouts();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
 
     }
 
@@ -94,12 +90,8 @@ public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkouts
         Log.i(TAG,"empty");
     }
 
-
-
-
     private void onEmptyOff(){
         mEmpyStateSavedWorkout.setVisibility(View.GONE);
     }
-
 
 }

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".activities.CreateWorkoutFinalActivity">
 
@@ -11,14 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:elevation="2dp">
-
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:elevation="2dp"
             android:background="@color/colorPrimary">
-
             <Button
                 android:id="@+id/save"
                 android:text="Save"
@@ -28,64 +27,56 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
                 android:layout_marginEnd="5dp"/>
-
-
         </android.support.v7.widget.Toolbar>
-
     </android.support.design.widget.AppBarLayout>
 
-
-    <android.support.v4.widget.NestedScrollView
+    <LinearLayout
+        android:background="@color/onTouch"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/createLayout"
-        android:background="#fff">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="110dp"
+            android:baselineAligned="false">
 
-            <LinearLayout
-                android:minHeight="110dp"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:layout_weight="1"
+                android:id="@+id/chageImg"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                tools:ignore="DisableBaselineAlignment">
-
-                <RelativeLayout
-                    android:layout_weight="1"
-                    android:id="@+id/chageImg"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent">
-
-                    <ImageView
+                android:minHeight="40dp">
+                <ImageView
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_camera_alt_black_24px"
-                        android:id="@+id/img_profile" />
-                    <ImageView
+                        android:id="@+id/img_profile"
+                        android:contentDescription="@null" />
+                <ImageView
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentEnd="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@android:drawable/ic_menu_edit"
-                        android:background="#00ffffff" />
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_weight="2"
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:paddingStart="5dp">
+                        android:background="#00ffffff"
+                        android:contentDescription="@null" />
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_weight="2"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp">
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <AutoCompleteTextView
                             android:imeOptions="actionDone"
                             android:textColor="@color/colorPrimaryDark"
@@ -97,20 +88,18 @@
                             android:hint="@string/workout_name"
                             android:textColorHint="@color/black"
                             android:inputType="textPersonName"
-                            android:maxLines="1"
-                            android:singleLine="true" />
-
+                            android:maxLines="1" />
                     </android.support.design.widget.TextInputLayout>
-
                 </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
 
                 <RelativeLayout
+                    android:minHeight="45dp"
                     android:paddingStart="15dp"
                     android:paddingEnd="15dp"
                     android:gravity="center_vertical"
@@ -118,50 +107,41 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:layout_centerVertical="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/number_sets_text"
                         android:textColor="@color/black"
                         android:textSize="20sp" />
 
-                    <LinearLayout
-                        android:minHeight="45dp"
+
+                    <TextView
                         android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="10dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:textSize="22sp"
+                        android:text="1"
+                        android:textColor="@color/black"
+                        android:id="@+id/sets" />
 
-                        <TextView
-                            android:layout_marginEnd="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:textSize="22sp"
-                            android:text="@string/number_sets"
-                            android:minWidth="45dp"
-                            android:textColor="@color/black"
-                            android:gravity="center_vertical|center_horizontal"
-                            android:id="@+id/sets"
-                            android:textAlignment="center" />
-
-                    </LinearLayout>
                 </RelativeLayout>
 
                 <TextView
                     android:textSize="16sp"
-                    android:paddingStart="15dp"
+                    android:layout_marginStart="15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/exercises_text"
                     android:textColor="@color/dark_gray" />
 
                 <android.support.v7.widget.RecyclerView
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:scrollbars="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:id="@+id/list" />
 
             </LinearLayout>
 
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
-
+    </LinearLayout>
 </LinearLayout>

@@ -8,8 +8,9 @@ import com.app.proj.silverbars.R;
 import com.app.proj.silverbars.database_models.Exercise;
 import com.app.proj.silverbars.database_models.ExerciseRep;
 import com.app.proj.silverbars.database_models.Muscle;
+import com.app.proj.silverbars.database_models.MySavedWorkout;
 import com.app.proj.silverbars.database_models.TypeExercise;
-import com.app.proj.silverbars.database_models.Workout;
+import com.app.proj.silverbars.database_models.UserWorkout;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
@@ -25,11 +26,13 @@ import static com.app.proj.silverbars.Constants.DATABASE_VERSION;
 public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
 
 
-    private Dao<Workout, Integer> workoutDao;
+    private Dao<MySavedWorkout, Integer> workoutDao;
+    private Dao<UserWorkout, Integer> userworkoutDao;
     private Dao<ExerciseRep, Integer> exerciserepDao;
     private Dao<Exercise, Integer> exerciseDao;
     private Dao<Muscle, Integer> muscleDao;
     private Dao<TypeExercise, Integer> typeDao;
+
 
 
     public DatabaseHelper(Context context) {
@@ -52,7 +55,8 @@ public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, TypeExercise.class);
             TableUtils.createTable(connectionSource, Exercise.class);
             TableUtils.createTable(connectionSource, ExerciseRep.class);
-            TableUtils.createTable(connectionSource, Workout.class);
+            TableUtils.createTable(connectionSource, MySavedWorkout.class);
+            TableUtils.createTable(connectionSource, UserWorkout.class);
 
         }  catch (java.sql.SQLException e) {
             e.printStackTrace();
@@ -70,7 +74,8 @@ public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, TypeExercise.class,false);
             TableUtils.dropTable(connectionSource, Exercise.class,false);
             TableUtils.dropTable(connectionSource, ExerciseRep.class,false);
-            TableUtils.dropTable(connectionSource, Workout.class, false);
+            TableUtils.dropTable(connectionSource, MySavedWorkout.class, false);
+            TableUtils.dropTable(connectionSource, UserWorkout.class,false);
 
             onCreate(database, connectionSource);
 
@@ -117,11 +122,18 @@ public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
     }
 
 
-    public Dao<Workout, Integer> getWorkoutDao() throws java.sql.SQLException {
+    public Dao<MySavedWorkout, Integer> getSavedWorkoutDao() throws java.sql.SQLException {
         if(workoutDao == null) {
-            workoutDao = getDao(Workout.class);
+            workoutDao = getDao(MySavedWorkout.class);
         }
         return workoutDao;
+    }
+
+    public Dao<UserWorkout, Integer> getUserWorkoutDao() throws java.sql.SQLException {
+        if(userworkoutDao == null) {
+            userworkoutDao = getDao(UserWorkout.class);
+        }
+        return userworkoutDao;
     }
 
 }

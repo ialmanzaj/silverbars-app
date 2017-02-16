@@ -1,0 +1,120 @@
+[
+  {
+    "id":1,
+    "exercise_name":"push up",
+    "level":"",
+    "type_exercise":[
+      "",
+      "",
+      ""
+    ],
+    "exercise_audio":"",
+    "exercise_image":"",
+    "muscles":[]
+  },
+  {
+    "id":2,
+    "exercise_name":"Leg raises",
+    "level":"NORMAL",
+    "type_exercise":[
+      "",
+      "",
+      ""
+    ],
+    "exercise_audio":"",
+    "exercise_image":"",
+    "muscles":[]
+  },
+  {
+    "id":3,
+    "exercise_name":"Muscle up",
+    "level":"",
+    "type_exercise":[
+      "",
+      "",
+      ""
+    ],
+    "exercise_audio":"",
+    "exercise_image":"",
+    "muscles":[]
+  },
+  {
+    "id":4,
+    "exercise_name":"Front level",
+    "level":"",
+    "type_exercise":[
+      "",
+      "",
+      ""
+    ],
+    "exercise_audio":"",
+    "exercise_image":"",
+    "muscles":[]
+  },
+  {
+    "id":5,
+    "exercise_name":"diamont push up",
+    "level":"",
+    "type_exercise":[
+      "",
+      "",
+      ""
+    ],
+    "exercise_audio":"",
+    "exercise_image":"",
+    "muscles":[]
+  },
+  {
+    "id":6,
+    "exercise_name":"sit ups",
+    "level":"",
+    "type_exercise":[
+      "",
+      "",
+      ""
+    ],
+    "exercise_audio":"",
+    "exercise_image":"",
+    "muscles":[]
+  },
+  {
+    "id":7,
+    "exercise_name":"plank",
+    "level":"",
+    "type_exercise":[
+      "",
+      "",
+      ""
+    ],
+    "exercise_audio":"",
+    "exercise_image":"",
+    "muscles":[]
+  },
+  {
+    "id":8,
+    "exercise_name":"SPIDERMAN PLANK CRUNCH",
+    "level":"",
+    "type_exercise":[
+      "",
+      "",
+      ""
+    ],
+    "exercise_audio":"",
+    "exercise_image":"",
+    "muscles":[]
+  },
+  {
+    "id":9,
+    "exercise_name":"CABLE ROTATION",
+    "level":"",
+    "type_exercise":[
+      "",
+      "",
+      ""
+    ],
+    "exercise_audio":"",
+    "exercise_image":"",
+    "muscles":[]
+  }
+]
+

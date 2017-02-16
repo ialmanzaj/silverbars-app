@@ -148,7 +148,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     public void injectDependencies() {
         super.injectDependencies();
 
-
         DaggerWorkoutComponent.builder()
                 .silverbarsComponent(SilverbarsApp.getApp(this).getComponent())
                 .workoutModule(new WorkoutModule(this))
@@ -194,9 +193,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
        
         
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-            scrollView.setFillViewport(true);
-        }
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {scrollView.setFillViewport(true);}
 
 
         //SWITCH save local workout BUTTON CONFIGURACIONES
@@ -413,7 +410,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         Log.d(TAG,"created: "+created);
     }
 
-
     private void setExercisesInAdapter(ArrayList<ExerciseRep> exercises){
 
         for (ExerciseRep exerciseRep: exercises){
@@ -455,6 +451,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         }
     }
 
+
     private void LaunchWorkingOutActivity() {
         int sets,restbyexercise,restbyset;
 
@@ -495,6 +492,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
         startActivity(intent);
     }
+
 
     private void setMusclesToView(List<String> musculos){
         if (musculos.size() > 0){

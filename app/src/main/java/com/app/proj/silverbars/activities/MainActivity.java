@@ -1,6 +1,7 @@
 package com.app.proj.silverbars.activities;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -19,19 +20,18 @@ import com.app.proj.silverbars.fragments.ProfileFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    //public LinearLayout Button_filter;
     @BindView(R.id.fab) FloatingActionButton mButtonCreateWorkout;
-
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
-
     private String muscle = "ALL";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,12 +76,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 */
 
 
-
         if (savedInstanceState == null){
             selectItem(0);
         }
-
-
 
     }
 
@@ -98,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        // Reemplazar el contenido del layout principal por un fragmento
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment currentFragment = null;
 
@@ -125,10 +121,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         transaction.replace(R.id.fragment_container, currentFragment);
         transaction.commit();
 
-
         return true;
     }
 
+
+    @OnClick(R.id.fab)
+    public void create(){
+        startActivity(new Intent(this,CreateWorkoutActivity.class));
+    }
 
 
     private void fabCreateWorkoutbuttonOn(){
@@ -138,6 +138,5 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     private void fabCreateWorkoutbuttonff(){
         mButtonCreateWorkout.setVisibility(View.GONE);
     }
-
 
 }
