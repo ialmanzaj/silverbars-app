@@ -30,7 +30,7 @@ public class SongsActivity extends AppCompatActivity {
 
     private static final String TAG = SongsActivity.class.getSimpleName();
 
-    @BindView(R.id.toolbar) Toolbar myToolbar;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.music_selection) ListView mListSongsView;
     @BindView(R.id.done) Button done;
 
@@ -52,20 +52,17 @@ public class SongsActivity extends AppCompatActivity {
 
         local_audio = utilities.findSongs(this, Environment.getExternalStorageDirectory());
 
-
+        setupToolbar();
         songValidation();
 
 
         String[] songs_names = new String[songs.size()];
-
         for (int i = 0; i < songs.size(); i++) {
             songs_names[i] = utilities.removeLastMp3(utilities.getSongName(this,songs.get(i)));
         }
 
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_multiple_choice,
-                android.R.id.text1, songs_names);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, songs_names);
 
 
         mListSongsView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -90,21 +87,22 @@ public class SongsActivity extends AppCompatActivity {
 
 
     }
-    
+
+
+
     @OnClick(R.id.done)
     public void done(){
 
         songValidation();
 
-
         int choice = mListSongsView.getCount();
-
         long[] selected = new long[choice];
-
         final SparseBooleanArray spa = mListSongsView.getCheckedItemPositions();
 
 
         if (spa.size() != 0) {
+
+
             String[] playlist = new String[mListSongsView.getCheckedItemCount()];
             int x = 0;
             for (int i = 0; i < choice; i++) {
@@ -135,11 +133,12 @@ public class SongsActivity extends AppCompatActivity {
             songs = null;
     }
 
-
-    public void setupToolbar(){
-        setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("My songs");
+    private void setupToolbar(){
+        if ( mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Song selection");
+        }
     }
 
     private void onEmptyStateOn(){

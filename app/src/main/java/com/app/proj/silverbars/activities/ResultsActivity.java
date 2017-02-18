@@ -3,6 +3,8 @@ package com.app.proj.silverbars.activities;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -18,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -27,9 +31,9 @@ public class ResultsActivity extends AppCompatActivity {
 
     private static final String TAG = ResultsActivity.class.getSimpleName();
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
 
-    @BindView(R.id.save) Button mSaveResultsButton;
+    @BindView(R.id.save) Button mSave;
     @BindView(R.id.webview) WebView webView;
 
     @BindView(R.id.content)LinearLayout mContentLayout;
@@ -41,7 +45,7 @@ public class ResultsActivity extends AppCompatActivity {
 
     private Utilities mUtilities = new Utilities();
 
-    private String partes = "";
+    private String musculos = "";
 
 
 
@@ -49,11 +53,14 @@ public class ResultsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
+        ButterKnife.bind(this);
+
 
         Bundle extras =  getIntent().getExtras();
         mExercises = extras.getParcelableArrayList("exercises");
 
 
+        setupToolbar();
         setupTabs();
 
 
@@ -128,7 +135,21 @@ public class ResultsActivity extends AppCompatActivity {
         Tab_layout.addTab(muscles);
         Tab_layout.addTab(skills);
     }
-    
+
+
+    private void setupToolbar(){
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setTitle("Results");
+        }
+    }
+
+
+    @OnClick(R.id.save)
+    public void save(){
+        finish();
+    }
+
 
     private void getCountTimes(List<String> muscles){
 
@@ -232,6 +253,20 @@ public class ResultsActivity extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         setBodyInWebwView();
     }*/
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            Log.d(TAG, "action bar clicked");
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 
 

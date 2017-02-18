@@ -4,17 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.app.proj.silverbars.activities.SongsActivity">
+    tools:context=".activities.PlaylistPickerActivity">
     <android.support.design.widget.AppBarLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:elevation="2dp">
         <android.support.v7.widget.Toolbar
-            android:titleTextColor="@color/white"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:id="@+id/create"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_add_white_24px"
+                android:background="@color/transparent"
+                android:layout_gravity="end"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="@null" />
+
+        </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
@@ -43,18 +53,17 @@
             android:layout_above="@+id/done"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/music_selection"
-            android:choiceMode="multipleChoice"/>
+            android:id="@+id/playlist"
+            android:choiceMode="singleChoice" />
 
         <Button
+            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Elegir"
+            android:text="@string/choose"
             android:id="@+id/done"
-            android:background="@color/colorSecondary"
-            android:layout_alignParentBottom="true"/>
+            android:background="@color/colorSecondary" />
 
     </RelativeLayout>
-
 
 </LinearLayout>

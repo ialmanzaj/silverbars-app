@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,16 +31,14 @@ public class PlaylistPickerActivity extends AppCompatActivity {
     private static final String TAG = PlaylistPickerActivity.class.getSimpleName();
 
 
+    @BindView(R.id.toolbar) Toolbar mToolbar;
+
+
     @BindView(R.id.playlist) ListView ListPlaylist;
-    
-    @BindView(R.id.toolbar) Toolbar toolbar;
-
     @BindView(R.id.done) Button mDoneBt;
-    @BindView(R.id.create_playlist)ImageView mCreatePlaylistBt;
-
+    @BindView(R.id.create)ImageView mCreatePlaylistBt;
 
     @BindView(R.id.empty_state) LinearLayout mEmptyStateView;
-
 
     private String[] save_playlist;
     
@@ -61,8 +61,10 @@ public class PlaylistPickerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_playlist__picker);
+        setContentView(R.layout.activity_playlist);
         ButterKnife.bind(this);
+
+        setupToolbar();
 
 
         //mCreatePlaylistBt.setOnClickListener(v -> dialog());
@@ -106,6 +108,14 @@ public class PlaylistPickerActivity extends AppCompatActivity {
 
     }
 
+    private void setupToolbar(){
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Playlist");
+        }
+    }
+
     private void songValidation(){
 
         if (local_audio.size() < 1) {
@@ -119,6 +129,8 @@ public class PlaylistPickerActivity extends AppCompatActivity {
             onEmptyStateOn();
             return;
         }
+
+
 
     }
 
@@ -197,6 +209,20 @@ public class PlaylistPickerActivity extends AppCompatActivity {
                 }).show();
         */
 
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            Log.d(TAG, "action bar clicked");
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
