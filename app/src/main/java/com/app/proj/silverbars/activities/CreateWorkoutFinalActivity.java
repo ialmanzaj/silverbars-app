@@ -33,6 +33,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -45,6 +46,7 @@ import butterknife.OnClick;
 public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWorkoutFinalView{
 
     private static final String TAG = CreateWorkoutFinalActivity.class.getSimpleName();
+
 
     @Inject
     CreateWorkoutFinalPresenter mCreateWorkoutFinalPresenter;
@@ -60,15 +62,12 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     @BindView(R.id.list) RecyclerView mExercisesList;
     @BindView(R.id.chageImg) RelativeLayout changeImg;
 
-
-    private String MAIN_MUSCLE,LEVEL;
-
     private int mCurrentSet = 1;
 
     String workoutImage = "/";
 
-    ArrayList<Exercise> mAllExercisesList;
-    ArrayList<ExerciseRep> mExercisesSelected;
+    private ArrayList<Exercise> mAllExercisesList;
+    private ArrayList<ExerciseRep> mExercisesSelected;
     
     
     @Override
@@ -102,7 +101,6 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         mAllExercisesList = extras.getParcelableArrayList("exercises");
         ArrayList<Exercise> exercises_selected = extras.getParcelableArrayList("exercises_selected");
 
-
         mExercisesSelected = getExerciseRep(exercises_selected);
 
         Log.i(TAG,"mAllExercisesList:"+mAllExercisesList);
@@ -116,6 +114,9 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
         mSets.setText(String.valueOf(mCurrentSet));
     }
+
+
+
     
     private ArrayList<ExerciseRep> getExerciseRep(List<Exercise> exercises){
         ArrayList<ExerciseRep> exerciseReps = new ArrayList<>();
@@ -151,7 +152,13 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         }
 
 
-       mCreateWorkoutFinalPresenter.saveWorkout(getWorkoutready());
+        try {
+            mCreateWorkoutFinalPresenter.saveWorkout(getWorkoutready());
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @OnClick(R.id.chageImg)
@@ -283,8 +290,11 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     @Override
     public void onWorkoutCreated(boolean created) {
         Log.i(TAG,"onWorkoutCreated "+created);
+        Intent return_intent = new Intent();
+        setResult(RESULT_OK, return_intent);
         finish();
     }
+
 
 
     @Override

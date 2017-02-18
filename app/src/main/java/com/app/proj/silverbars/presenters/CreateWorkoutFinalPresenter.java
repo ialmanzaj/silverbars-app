@@ -5,6 +5,8 @@ import com.app.proj.silverbars.interactors.CreateWorkoutFinalInteractor;
 import com.app.proj.silverbars.models.Workout;
 import com.app.proj.silverbars.viewsets.CreateWorkoutFinalView;
 
+import java.sql.SQLException;
+
 /**
  * Created by isaacalmanza on 01/12/17.
  */
@@ -21,7 +23,7 @@ public class CreateWorkoutFinalPresenter extends BasePresenter implements Create
         this.interactor = interactor;
     }
 
-    public void saveWorkout(Workout workout){
+    public void saveWorkout(Workout workout) throws SQLException {
         interactor.insertWorkout(workout,this);
     }
 
@@ -35,7 +37,6 @@ public class CreateWorkoutFinalPresenter extends BasePresenter implements Create
     public void onWorkoutError() {
         view.onWorkoutError();
     }
-
 
     @Override
     public void onStart() {}

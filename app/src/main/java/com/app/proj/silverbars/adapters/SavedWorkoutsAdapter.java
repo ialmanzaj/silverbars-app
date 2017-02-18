@@ -23,6 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdapter.ViewHolder> {
@@ -30,15 +31,9 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
     private static final String TAG = SavedWorkoutsAdapter.class.getSimpleName();
 
 
-    private static final int TYPE_WORKOUT = 0;
-    private static final int TYPE_VIEW_MORE = 1;
-
     private List<Workout> workouts;
     private Context context;
-    private Boolean user_workout  = false;
-
     private Utilities utilities = new Utilities();
-
 
 
     public SavedWorkoutsAdapter(Context context) {
@@ -57,33 +52,26 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
 
         public ViewHolder(View view) {
             super(view);
-
             //binding views
             ButterKnife.bind(this,view);
         }
 
+        @OnClick(R.id.btn)
+        public void start(View view){
+            Workout workout = (Workout) view.getTag();
 
-        public void setOnClicklistener(){
-            btn.setOnClickListener(view -> {
+            ArrayList<ExerciseRep> exerciseRepList = new ArrayList<>();
+            exerciseRepList.addAll( workout.getExercises() );
 
-                Workout workout = (Workout) view.getTag();
-
-                ArrayList<ExerciseRep> exerciseRepList = new ArrayList<>();
-                exerciseRepList.addAll( workout.getExercises() );
-
-                Intent intent = new Intent(context, WorkoutActivity.class);
-                intent.putExtra("workout_id", workout.getId());
-                intent.putExtra("name", workout.getWorkout_name());
-                intent.putExtra("image", workout.getWorkout_image());
-                intent.putExtra("sets", workout.getSets());
-                intent.putExtra("level", workout.getLevel());
-                intent.putExtra("main_muscle", workout.getMainMuscle());
-                intent.putParcelableArrayListExtra("exercises",  exerciseRepList);
-                intent.putExtra("user_workout",true);
-
-                context.startActivity(intent);
-            });
-
+            Intent intent = new Intent(context, WorkoutActivity.class);
+            intent.putExtra("workout_id", workout.getId());
+            intent.putExtra("name", workout.getWorkout_name());
+            intent.putExtra("image", workout.getWorkout_image());
+            intent.putExtra("sets", workout.getSets());
+            intent.putExtra("level", workout.getLevel());
+            intent.putExtra("main_muscle", workout.getMainMuscle());
+            intent.putParcelableArrayListExtra("exercises",  exerciseRepList);
+            context.startActivity(intent);
         }
     }
 
@@ -110,12 +98,9 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
             viewholder.img.setImageBitmap(imgBitmap);
         }
 
-
         viewholder.text.setText(workouts.get(position).getWorkout_name());
         viewholder.btn.setTag(workouts.get(position));
-        viewholder.setOnClicklistener();
     }
-
 
     @Override
     public int getItemCount() {
@@ -127,6 +112,12 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
         this.workouts.addAll(workouts);
         notifyDataSetChanged();
     }
+
+    public void add(Workout workout){
+        workouts.add(0,workout);
+       notifyItemInserted(0);
+    }
+
 
 
 

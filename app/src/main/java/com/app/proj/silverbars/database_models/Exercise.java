@@ -13,8 +13,8 @@ import java.io.Serializable;
 @DatabaseTable
 public class Exercise implements Serializable{
 
-    @DatabaseField(id = true, columnName = "ID", canBeNull = false)
-    protected int id;
+    @DatabaseField(generatedId = true,canBeNull = false, columnName = "id")
+    private int id;
 
     @DatabaseField
     private String exercise_name;
@@ -36,21 +36,15 @@ public class Exercise implements Serializable{
     private ForeignCollection<Muscle> muscles;
 
 
-
-
     public Exercise(){}
 
 
-
-
-    public Exercise(int id,String exercise_name,String level,String exercise_audio,String exercise_image){
-        this.id = id;
+    public Exercise(String exercise_name,String level,String exercise_audio,String exercise_image){
         this.exercise_name = exercise_name;
         this.level = level;
         this.exercise_audio = exercise_audio;
         this.exercise_image = exercise_image;
     }
-
 
 
 

@@ -39,11 +39,8 @@ public class SavedWorkoutsInteractor {
     private void workoutsReady(SavedWorkoutsCallback callback) throws SQLException {
 
         List<Workout> workouts = new ArrayList<>();
-        
 
         for (MySavedWorkout my_saved_workout:  helper.getSavedWorkoutDao().queryForAll()){
-
-            //Log.d(TAG,"workouts in for size: "+workouts.size());
 
             ArrayList<com.app.proj.silverbars.models.ExerciseRep> exerciseReps = new ArrayList<>();
 
@@ -90,20 +87,25 @@ public class SavedWorkoutsInteractor {
 
 
             //add my_saved_workout completed to list
-            workouts.add(new com.app.proj.silverbars.models.Workout(
-                my_saved_workout.getId(),
-                    my_saved_workout.getWorkout_name(),
-                    my_saved_workout.getWorkout_image(),
-                    my_saved_workout.getSets(),
-                    my_saved_workout.getLevel(),
-                    my_saved_workout.getMain_muscle(),
-                    exerciseReps
-            ));
+            if (my_saved_workout.getSaved()){
+                workouts.add(new com.app.proj.silverbars.models.Workout(
+                        my_saved_workout.getId(),
+                        my_saved_workout.getWorkout_name(),
+                        my_saved_workout.getWorkout_image(),
+                        my_saved_workout.getSets(),
+                        my_saved_workout.getLevel(),
+                        my_saved_workout.getMain_muscle(),
+                        exerciseReps
+                ));
+            }
         }
 
-
         //return workouts_database list saved
-        callback.onWorkouts(workouts);
+        if (!workouts.isEmpty())
+            callback.onWorkouts(workouts);
+        else
+            callback.onEmptyWorkouts();
+
     }
 
 }

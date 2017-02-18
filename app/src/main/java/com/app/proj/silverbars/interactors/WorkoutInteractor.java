@@ -18,19 +18,28 @@ public class WorkoutInteractor {
 
     private static final String TAG = WorkoutInteractor.class.getSimpleName();
 
-
     private DatabaseHelper helper;
-
 
     public WorkoutInteractor(DatabaseHelper helper){
         this.helper = helper;
     }
 
-
     public boolean isWorkoutExist(int workout_id) throws SQLException {
         return helper.getSavedWorkoutDao().queryForId(workout_id) != null;
     }
 
+    public boolean isWorkoutSaved(int workout_id) throws SQLException {
+        return helper.getSavedWorkoutDao().queryForId(workout_id).getSaved();
+    }
+
+
+    public void setWorkoutOff(int workout_id) throws SQLException {
+        helper.updateSavedWorkout(workout_id,false);
+    }
+
+    public void setWorkoutOn(int workout_id) throws SQLException {
+        helper.updateSavedWorkout(workout_id,true);
+    }
 
     public void saveWorkout(com.app.proj.silverbars.models.Workout workout, WorkoutCallback callback) throws SQLException {
 
@@ -40,8 +49,10 @@ public class WorkoutInteractor {
                 workout.getWorkout_image(),
                 workout.getSets(),
                 workout.getLevel(),
-                workout.getMainMuscle()
+                workout.getMainMuscle(),
+                true
         );
+
 
         helper.getSavedWorkoutDao().create(my_saved_workout);
         //Log.d(TAG,"workouts size: "+helper.getSavedWorkoutDao().queryForAll().size());
@@ -49,39 +60,10 @@ public class WorkoutInteractor {
 
         for (com.app.proj.silverbars.models.ExerciseRep exerciseRep: workout.getExercises()){
 
-            Exercise exercise = new Exercise(
-                    exerciseRep.getExercise().getId(),
-                    exerciseRep.getExercise().getExercise_name(),
-                    exerciseRep.getExercise().getLevel(),
-                    exerciseRep.getExercise().getExercise_audio(),
-                    exerciseRep.getExercise().getExercise_image()
-            );
+            Exercise exercise = insertExercise(exerciseRep);
 
-            //exercise created
-            helper.getExerciseDao().create(exercise);
-
-
-            //set types exercises to database
-            for (String type: exerciseRep.getExercise().getType_exercise()){
-                helper.getTypeDao().create(
-                        new TypeExercise(
-                                type,
-                                exercise
-                        ));
-            }
-
-
-            //set musles to database
-            for (com.app.proj.silverbars.models.Muscle muscle: exerciseRep.getExercise().getMuscles()){
-                helper.getMuscleDao().create(
-                        new Muscle(
-                                muscle.getMuscle(),
-                        muscle.getMuscle_activation(),
-                                muscle.getClassification(),
-                                muscle.getProgression_level(),
-                        exercise
-                        ));
-            }
+            insertMuscles(exerciseRep,exercise);
+            insertTypes(exerciseRep,exercise);
 
             //re create exercise rep model
             helper.getExerciseRepDao().create(new ExerciseRep(exercise, exerciseRep.getRepetition(),my_saved_workout));
@@ -90,6 +72,45 @@ public class WorkoutInteractor {
         
         callback.onWorkout(true);
     }
+
+
+    private Exercise insertExercise(com.app.proj.silverbars.models.ExerciseRep exerciseRep) throws SQLException {
+
+        Exercise exercise = new Exercise(
+                exerciseRep.getExercise().getExercise_name(),
+                exerciseRep.getExercise().getLevel(),
+                exerciseRep.getExercise().getExercise_audio(),
+                exerciseRep.getExercise().getExercise_image()
+        );
+
+        //exercise created in database
+        helper.getExerciseDao().create(exercise);
+
+
+
+        return exercise;
+    }
+
+
+
+
+    private void insertMuscles(com.app.proj.silverbars.models.ExerciseRep exerciseRep,Exercise exercise) throws SQLException {
+        //set musles to database
+        for (com.app.proj.silverbars.models.Muscle muscle: exerciseRep.getExercise().getMuscles()){
+            helper.getMuscleDao().create(new Muscle(muscle.getMuscle(), muscle.getMuscle_activation(), muscle.getClassification(), muscle.getProgression_level(), exercise));
+        }
+    }
+
+
+
+    private void insertTypes(com.app.proj.silverbars.models.ExerciseRep exerciseRep,Exercise exercise) throws SQLException {
+        //set types exercises to database
+        for (String type: exerciseRep.getExercise().getType_exercise()){
+            helper.getTypeDao().create(new TypeExercise(type, exercise));
+        }
+    }
+
+
 
 
    /* public void onDestroy(){

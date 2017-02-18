@@ -39,8 +39,7 @@ public class Exercise implements Parcelable {
 
 
 
-    public Exercise(int id,String exercise_name, String level,
-                    List<String> type_exercise,String exercise_audio,String exercise_image,List<Muscle> muscles){
+    public Exercise(int id,String exercise_name, String level, List<String> type_exercise,String exercise_audio,String exercise_image,List<Muscle> muscles){
         this.id = id;
         this.exercise_name = exercise_name;
         this.level = level;

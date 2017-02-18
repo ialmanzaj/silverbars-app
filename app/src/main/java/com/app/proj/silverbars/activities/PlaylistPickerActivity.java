@@ -28,7 +28,6 @@ public class PlaylistPickerActivity extends AppCompatActivity {
 
     private static final String TAG = PlaylistPickerActivity.class.getSimpleName();
 
-     ListView ListMusic;
 
     @BindView(R.id.playlist) ListView ListPlaylist;
     

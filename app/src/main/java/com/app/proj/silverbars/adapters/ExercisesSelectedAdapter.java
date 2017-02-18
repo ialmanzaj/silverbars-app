@@ -36,7 +36,7 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
 
     private Context mContext;
     private ArrayList<Exercise> mSelectedExercises;
-    private OnDataChangeListener mOnDataChangeListener;
+    private OnExerciseListener listener;
 
 
     public ExercisesSelectedAdapter(Context context, OnStartDragListener dragStartListener) {
@@ -44,6 +44,8 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
         mDragStartListener = dragStartListener;
         mSelectedExercises = new ArrayList<>();
     }
+
+
 
     public void setExercises(List<Exercise> exerciseReps){
         mSelectedExercises.addAll(exerciseReps);
@@ -58,7 +60,6 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
         @BindView(R.id.handle) ImageView img_handle;
         @BindView(R.id.workout_layout) LinearLayout workout_layout;
         @BindView(R.id.imagen) SimpleDraweeView imagen;
-
 
         public SelectedExercisesHolder(View view) {
             super(view);
@@ -108,7 +109,9 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
         mSelectedExercises.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, getItemCount());
-        notifyActivity();
+
+        //notify exercise deleted exercise and update muscle view
+        notifyListener();
     }
 
     @Override
@@ -121,23 +124,30 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
     @Override
     public void onBindViewHolder(SelectedExercisesHolder viewHolder, int position) {
 
-        viewHolder.nombre.setText(mSelectedExercises.get(position).getExercise_name());
+        try {
 
-        Uri uri = Uri.parse(mSelectedExercises.get(position).getExercise_image());
-        viewHolder.imagen.setImageURI(uri);
+            viewHolder.nombre.setText(mSelectedExercises.get(position).getExercise_name());
 
-        // Start a drag whenever the handle view it touched
-        viewHolder.setTouchListener(viewHolder);
+            Uri uri = Uri.parse(mSelectedExercises.get(position).getExercise_image());
+            viewHolder.imagen.setImageURI(uri);
+
+            viewHolder.setTouchListener(viewHolder);
+
+
+        }catch (NullPointerException e){}
     }
+
+
 
     public ArrayList<Exercise> getSelectedExercises(){
         return mSelectedExercises;
     }
-    
+
+
 
     public ArrayList<String> getSelectedExercisesName(){
-
         ArrayList<String> exercises = new ArrayList<>();
+
         for (int a = 0;a<mSelectedExercises.size();a++){
             exercises.add(mSelectedExercises.get(a).getExercise_name());
         }
@@ -149,13 +159,16 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
         notifyItemInserted(0);
     }
 
-    private void notifyActivity(){
-        mOnDataChangeListener.onDataChanged(mSelectedExercises.size());
+
+    private void notifyListener(){
+        listener.onDataChanged(mSelectedExercises.size());
     }
 
-    public void setOnDataChangeListener(OnDataChangeListener onDataChangeListener){mOnDataChangeListener = onDataChangeListener;}
+    public void setOnDataChangeListener(OnExerciseListener onDataChangeListener){listener = onDataChangeListener;}
 
-    public interface OnDataChangeListener{
+
+
+    public interface OnExerciseListener {
         void onDataChanged(int size);
     }
 

@@ -22,14 +22,25 @@ public class WorkoutPresenter extends BasePresenter implements WorkoutCallback {
         this.interactor = interactor;
     }
 
-
-
     public boolean isWorkoutExist(int workout_id) throws SQLException {
         return interactor.isWorkoutExist(workout_id);
     }
 
     public void saveWorkout(Workout workout) throws SQLException {
-        interactor.saveWorkout(workout,this);
+            interactor.saveWorkout(workout,this);
+    }
+
+    public boolean isWorkoutOn(int workout_id) throws SQLException {
+        return interactor.isWorkoutSaved(workout_id);
+    }
+
+
+    public void setWorkoutOn(int workout_id) throws SQLException {
+        interactor.setWorkoutOn(workout_id);
+    }
+
+    public void setWorkoutOff(int workout_id) throws SQLException {
+        interactor.setWorkoutOff(workout_id);
     }
 
     @Override

@@ -76,6 +76,7 @@ public class SelectionMusicActivity extends AppCompatActivity {
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("playlist_spotify",playlist_spotify);
                 returnIntent.putExtra("token",token);
+
                 setResult(RESULT_OK,returnIntent);
                 finish();
 
@@ -95,7 +96,6 @@ public class SelectionMusicActivity extends AppCompatActivity {
 
         }
     }
-
 
 
     @Override

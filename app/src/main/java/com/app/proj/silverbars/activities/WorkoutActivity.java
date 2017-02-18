@@ -105,10 +105,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     private String[] Songs_names;
     private ArrayList<File> Songs_files;
 
-
-    private boolean isTouched = false;
-    private boolean loadLocal = false;
-
     private int workoutId = 0, workoutSets = 0;
     private String workoutName, workoutLevel, mainMuscle, workoutImgUrl;
 
@@ -123,15 +119,11 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
     private String mPlaylistSpotify,mSpotifyToken;
 
-    private  List<String> MusclesArray = new ArrayList<>();
-    private  List<String> TypeExercises = new ArrayList<>();
-
     private ArrayList<ExerciseRep> mExercises;
 
 
     private Utilities utilities = new Utilities();
 
-    boolean saved_workout = false;
 
     @Override
     protected int getLayout() {
@@ -157,72 +149,30 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        
         Bundle extras = getIntent().getExtras();
         setExtras(extras);
-
-
+        
         setupToolbar();
         setupTabs();
-
-
+        
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setNestedScrollingEnabled(false);
         list.setHasFixedSize(false);
 
 
-
-        voice_per_exercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-         /*   
-            isDownloadAudioExerciseActive = isChecked;
-
-            if (isDownloadAudioExerciseActive){
-                if (mExercises.size() > 0){
-                    for (int a = 0;a<mExercises.size();a++){
-                        utilities.createExerciseAudio(this, isDownloadAudioExerciseActive, mExercises.get(a).getExercise().getExercise_audio());
-                    }
-
-                }
-
-            }*/
-            
-        });
-
-        
-
-       
-        
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {scrollView.setFillViewport(true);}
-
-
-        //SWITCH save local workout BUTTON CONFIGURACIONES
-        enableLocal.setEnabled(true);
-
-
-        try {
-
-            saved_workout = mWorkoutPresenter.isWorkoutExist(workoutId);
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        enableLocal.setChecked(saved_workout);
+        enableLocal.setChecked(isWorkoutAvailable());
         enableLocal.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            Log.d(TAG,"isChecked"+isChecked);
-            Log.i(TAG,"saved_workout :"+saved_workout);
-
-            if (isChecked && !saved_workout){
-
+            if (isChecked){
                 saveWorkout();
-
-            }else{
+            } else{
                 logMessage("Switch off");
+                setWorkoutOff();
             }
         });
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {scrollView.setFillViewport(true);}
+
 
 
         Sets.setText(String.valueOf(workoutSets));
@@ -349,6 +299,22 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
             isVibrationPerSetActive = isChecked;
         });
 
+        voice_per_exercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+         /*   
+            isDownloadAudioExerciseActive = isChecked;
+
+            if (isDownloadAudioExerciseActive){
+                if (mExercises.size() > 0){
+                    for (int a = 0;a<mExercises.size();a++){
+                        utilities.createExerciseAudio(this, isDownloadAudioExerciseActive, mExercises.get(a).getExercise().getExercise_audio());
+                    }
+
+                }
+
+            }*/
+
+        });
+
         startButton.setOnClickListener(view -> LaunchWorkingOutActivity() );
     }
 
@@ -361,9 +327,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         workoutLevel = extras.getString("level");
         mainMuscle = extras.getString("main_muscle");
         mExercises =  getIntent().getParcelableArrayListExtra("exercises");
-        Log.i(TAG,"exercises"+mExercises);
-        boolean user_workout = extras.getBoolean("user_workout", false);
-        Log.i(TAG,"user_workout: "+user_workout);
 
         setExercisesInAdapter(mExercises);
     }
@@ -380,7 +343,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(workoutName);
     }
-
 
     private void setupTabs(){
 
@@ -432,7 +394,8 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         //setMusclesToView(MusclesArray);
         //putTypesInWorkout(TypeExercises);
     }
-    
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -625,15 +588,67 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     }
 
 
-    private void saveWorkout() {
-        Log.i(TAG,"save workout");
+    private boolean isWorkoutExist(){
         try {
-            mWorkoutPresenter.saveWorkout(getCurrentWorkout());
+
+            return mWorkoutPresenter.isWorkoutExist(workoutId);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+    
+    
+    private boolean isWorkoutOn(){
+        try {
+
+            return mWorkoutPresenter.isWorkoutOn(workoutId);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private void setWorkoutOff(){
+        try {
+
+            if (isWorkoutExist())
+                mWorkoutPresenter.setWorkoutOff(workoutId);
+
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    private boolean isWorkoutAvailable(){
+        if (isWorkoutExist()){
+            return isWorkoutOn();
+        }
+
+        return false;
+    }
+
+    private void saveWorkout() {
+        Log.i(TAG,"save workout");
+        try {
+
+            if (!isWorkoutExist()){
+                Log.i(TAG,"saving workout");
+                mWorkoutPresenter.saveWorkout(getCurrentWorkout());
+            } else
+                Log.i(TAG,"workout on");
+                mWorkoutPresenter.setWorkoutOn(workoutId);
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     private Workout getCurrentWorkout(){
         return new Workout(workoutId,workoutName,workoutImgUrl,workoutSets,workoutLevel,mainMuscle,mExercises);

@@ -43,6 +43,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
     private static final String TAG = ExerciseListActivity.class.getSimpleName();
 
+
     @Inject
     ExerciseListPresenter mExerciseListPresenter;
 
@@ -51,10 +52,8 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     @BindView(R.id.exercises_list)RecyclerView list;
     @BindView(R.id.add_exercises)Button mAddExercises;
 
-
     @BindView(R.id.error_view) LinearLayout mErrorView;
     @BindView(R.id.reload)Button mReload;
-
 
     @BindView(R.id.loading) LinearLayout mLoadingView;
 
@@ -82,8 +81,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     @Override
     public void injectDependencies() {
         super.injectDependencies();
-        
-        
+
         DaggerExerciseListComponent.builder()
                 .silverbarsComponent(SilverbarsApp.getApp(this).getComponent())
                 .exerciseListModule(new ExerciseListModule(this))
@@ -93,7 +91,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
