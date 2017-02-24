@@ -7,9 +7,16 @@
     <string name="agree">De acuerdo</string>
     <string name="disagree">Desacuerdo</string>
 
+
     <string name="hello_blank_fragment">Hola fragmento en blanco</string>
     <string name="title_activity_login">Ingresar</string>
     <string name="search_hint">Buscar artista</string>
+
+    <string name="menu_home">Inicio</string>
+    <string name="menu_myworkouts">Mis rutinas</string>
+    <string name="menu_profile">Perfil</string>
+
+
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -200,7 +207,6 @@
     <string name="playlist_name">Nombre de lista</string>
 
     <string name="add_exercises_button">AÑADIR EJERCICIOS</string>
-
 
     <string name="level">Nivel</string>
 

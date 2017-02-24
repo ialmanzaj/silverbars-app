@@ -12,6 +12,7 @@
     card_view:cardElevation="1dp">
 
     <FrameLayout
+
         android:id="@+id/LinearLayout"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
@@ -67,11 +68,10 @@
                 android:id="@+id/repsLayout">
 
                 <CheckBox
-                    android:background="@color/colorSecondary"
+                    android:theme="@style/MyCheckBox"
                     android:id="@+id/checkbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-
 
             </LinearLayout>
 

@@ -10,19 +10,47 @@
       android:layout_marginTop="10dp"
       android:layout_width="100dp"
       android:layout_height="100dp"
-      android:background="@color/white"
+      android:background="@color/grey100"
       android:id="@+id/profile_image"
       android:layout_gravity="center"
       android:contentDescription="@null" />
+
   <TextView
       android:layout_marginBottom="5dp"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:textAppearance="?android:attr/textAppearanceLarge"
-      android:text=""
+      android:text="Lazar novovic"
       android:id="@+id/Profile_name"
       android:layout_gravity="center"
       android:textColor="@color/colorPrimaryText" />
+
+  <LinearLayout
+      android:background="?selectableItemBackgroundBorderless"
+      android:id="@+id/my_progression"
+      android:minHeight="45dp"
+      android:paddingTop="5dp"
+      android:paddingBottom="5dp"
+      android:paddingStart="15dp"
+      android:paddingEnd="15dp"
+      android:gravity="center_vertical"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="My Progression"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_keyboard_arrow_right_black_36dp" />
+
+  </LinearLayout>
 
 
 </LinearLayout>

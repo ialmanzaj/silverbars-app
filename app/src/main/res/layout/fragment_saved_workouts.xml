@@ -36,6 +36,7 @@
                     android:layout_gravity="center"
                     android:gravity="center" />
 
+
         </LinearLayout>
 
         <org.lucasr.twowayview.widget.TwoWayView xmlns:app="http://schemas.android.com/apk/res-auto"

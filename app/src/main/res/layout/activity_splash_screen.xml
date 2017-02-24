@@ -6,6 +6,6 @@
     android:gravity="center_vertical|center_horizontal"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context="com.app.proj.silverbars.activities.SplashScreenActivity">
+    tools:context="com.app.proj.silverbarsapp.activities.SplashScreenActivity">
 
 </LinearLayout>
