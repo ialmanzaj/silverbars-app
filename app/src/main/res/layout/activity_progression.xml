@@ -50,14 +50,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
-                        <com.app.proj.silverbarsapp.CustomDateView
+                        <com.app.app.silverbarsapp.CustomDateView
                             android:id="@+id/date"
                             android:background="@drawable/custom_border"
                             android:layout_margin="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
-                        <com.app.proj.silverbarsapp.CustomDateView
+                        <com.app.app.silverbarsapp.CustomDateView
 
                             android:layout_marginTop="5dp"
                             android:layout_marginStart="2.5dp"
@@ -67,7 +67,7 @@
                             android:layout_height="wrap_content"
                             android:background="@color/cardview_dark_background"/>
 
-                        <com.app.proj.silverbarsapp.CustomDateView
+                        <com.app.app.silverbarsapp.CustomDateView
 
                             android:layout_marginTop="5dp"
                             android:layout_marginStart="2.5dp"
@@ -76,7 +76,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@color/cardview_dark_background"/>
-                        <com.app.proj.silverbarsapp.CustomDateView
+                        <com.app.app.silverbarsapp.CustomDateView
 
                             android:layout_marginTop="5dp"
                             android:layout_marginStart="2.5dp"
@@ -86,7 +86,7 @@
                             android:layout_height="wrap_content"
                             android:background="@color/cardview_dark_background"/>
 
-                        <com.app.proj.silverbarsapp.CustomDateView
+                        <com.app.app.silverbarsapp.CustomDateView
 
                             android:layout_marginTop="5dp"
                             android:layout_marginStart="2.5dp"
@@ -95,7 +95,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@color/cardview_dark_background"/>
-                        <com.app.proj.silverbarsapp.CustomDateView
+                        <com.app.app.silverbarsapp.CustomDateView
 
                             android:layout_marginTop="5dp"
                             android:layout_marginStart="2.5dp"
@@ -104,7 +104,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@color/cardview_dark_background"/>
-                        <com.app.proj.silverbarsapp.CustomDateView
+                        <com.app.app.silverbarsapp.CustomDateView
 
                             android:layout_marginTop="5dp"
                             android:layout_marginStart="2.5dp"
@@ -113,7 +113,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@color/cardview_dark_background"/>
-                        <com.app.proj.silverbarsapp.CustomDateView
+                        <com.app.app.silverbarsapp.CustomDateView
 
                             android:layout_marginTop="5dp"
                             android:layout_marginStart="2.5dp"
@@ -122,7 +122,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@color/cardview_dark_background"/>
-                        <com.app.proj.silverbarsapp.CustomDateView
+                        <com.app.app.silverbarsapp.CustomDateView
 
                             android:layout_marginTop="5dp"
                             android:layout_marginStart="2.5dp"
@@ -131,7 +131,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@color/cardview_dark_background"/>
-                        <com.app.proj.silverbarsapp.CustomDateView
+                        <com.app.app.silverbarsapp.CustomDateView
                             android:layout_marginTop="5dp"
                             android:layout_marginStart="2.5dp"
                             android:layout_marginEnd="2.5dp"
@@ -139,7 +139,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@color/cardview_dark_background"/>
-                        <com.app.proj.silverbarsapp.CustomDateView
+                        <com.app.app.silverbarsapp.CustomDateView
                             android:layout_marginTop="5dp"
                             android:layout_marginStart="2.5dp"
                             android:layout_marginEnd="2.5dp"
@@ -147,7 +147,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@color/cardview_dark_background"/>
-                        <com.app.proj.silverbarsapp.CustomDateView
+                        <com.app.app.silverbarsapp.CustomDateView
 
                             android:layout_marginTop="5dp"
                             android:layout_marginStart="2.5dp"

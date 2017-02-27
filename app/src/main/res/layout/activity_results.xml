@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:layout_height="match_parent"
-    tools:context="com.app.proj.silverbarsapp.activities.ResultsActivity"
+    tools:context="com.app.app.silverbarsapp.activities.ResultsActivity"
     android:orientation="vertical">
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbarlayout"

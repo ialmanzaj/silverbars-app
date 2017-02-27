@@ -4,10 +4,6 @@
     <string name="rep_edit">Total of Repetitions</string>
     <string name="filtertitle">Workout filter</string>
 
-    <string name="content">Content</string>
-    <string name="agree">Agree</string>
-    <string name="disagree">Disagree</string>
-    <string name="choose">Choose</string>
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -20,6 +16,14 @@
     <string name="menu_profile">Profile</string>
 
 
+    <!-- Strings related to dialog -->
+    <string name="content">Content</string>
+    <string name="agree">Agree</string>
+    <string name="disagree">Disagree</string>
+    <string name="choose">Choose</string>
+
+
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
@@ -29,9 +33,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing emailcompletions."</string>
 
     <string name="facebook_app_id" translatable="false">183093092104411</string>
     <string name="fb_login_protocol_scheme" translatable="false">183093092104411</string>
@@ -43,10 +45,7 @@
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
     <string name="sign_in" translatable="false">False</string>
 
-    <!-- Strings related to activity_exercise_cards -->
-    <string name="exercise_name">Exercise Name</string>
-    <string name="reps_value">1</string>
-    <string name="reps_text">Reps</string>
+
 
     <!-- Strings related to activity_myworkouts -->
     <string name="blank_text_my_workouts">THERE\'S NO WORKOUT YET</string>
@@ -210,8 +209,13 @@
     <string name="cancel">Cancel</string>
     <string name="playlist_name">Playlist name</string>
     <string name="add_exercises_button">ADD EXERCISES</string>
-
     <string name="level">Level</string>
+
+    <!---    Strings of Exercise adapter    -->
+    <string name="exercise_name">Exercise Name</string>
+    <string name="reps_value">1</string>
+    <string name="exercise_adapter_option">Seconds</string>
+    <string name="reps_text">Reps</string>
 
 
     <!---           Strings for authentication       -->

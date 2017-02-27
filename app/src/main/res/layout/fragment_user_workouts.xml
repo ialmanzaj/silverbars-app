@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context="com.app.proj.silverbarsapp.fragments.UserWorkoutsFragment">
+    tools:context="com.app.app.silverbarsapp.fragments.UserWorkoutsFragment">
 
     <LinearLayout
         android:id="@+id/empty_state"
