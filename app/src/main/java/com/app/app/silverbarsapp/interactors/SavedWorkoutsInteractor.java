@@ -50,14 +50,17 @@ public class SavedWorkoutsInteractor {
 
                 //types and muscles list
                 List<String> types_exercise = new ArrayList<>();
-                List<com.app.app.silverbarsapp.models.Muscle> muscles = new ArrayList<>();
+                List<com.app.app.silverbarsapp.models.MuscleExercise> muscles = new ArrayList<>();
 
                 //get the type exercise_database from table to new object in json
                 for (TypeExercise types:  exercise_database.getType_exercise()){types_exercise.add(types.getType());}
 
                 //get the muscles
                 for (Muscle muscle: exercise_database.getMuscles()){
-                    muscles.add(new com.app.app.silverbarsapp.models.Muscle(muscle.getMuscle(), muscle.getMuscle_activation(), muscle.getClassification(), muscle.getProgression_level()));
+                    muscles.add(new com.app.app.silverbarsapp.models.MuscleExercise(
+                            muscle.getMuscle(),
+                            muscle.getMuscle_activation(), muscle.getClassification(),
+                            muscle.getProgression_level()));
                 }
                 
                 //re-create exercise object from database

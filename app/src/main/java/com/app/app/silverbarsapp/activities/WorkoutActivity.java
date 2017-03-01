@@ -26,7 +26,7 @@ import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.adapters.ExerciseAdapter;
 import com.app.app.silverbarsapp.components.DaggerWorkoutComponent;
 import com.app.app.silverbarsapp.models.ExerciseRep;
-import com.app.app.silverbarsapp.models.Muscle;
+import com.app.app.silverbarsapp.models.MuscleExercise;
 import com.app.app.silverbarsapp.models.Workout;
 import com.app.app.silverbarsapp.modules.WorkoutModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
@@ -384,7 +384,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
             exerciseRep.setTempo_negative(1);
 
             //Collections.addAll(TypeExercises, new List<String>[]{exerciseRep.getExercise().getType_exercise()});
-          for (Muscle muscle:  exerciseRep.getExercise().getMuscles()){muscles.add(muscle.getMuscleName());}
+          for (MuscleExercise muscle:  exerciseRep.getExercise().getMuscles()){muscles.add(muscle.getMuscle());}
         }
 
 
@@ -492,7 +492,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
 
         webview.getSettings().setJavaScriptEnabled(true);
-        utilities.setBodyInWebwView(this,webview);
+        utilities.setBodyInWebView(this,webview);
     }
 
 

@@ -30,7 +30,7 @@ import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.adapters.ExercisesSelectedAdapter;
 import com.app.app.silverbarsapp.components.DaggerCreateWorkoutComponent;
 import com.app.app.silverbarsapp.models.Exercise;
-import com.app.app.silverbarsapp.models.Muscle;
+import com.app.app.silverbarsapp.models.MuscleExercise;
 import com.app.app.silverbarsapp.modules.CreateWorkoutModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.CreateWorkoutPresenter;
@@ -132,7 +132,7 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {scrollView.setFillViewport(true);}
 
-        utilities.setBodyInWebwView(this,webView);
+        utilities.setBodyInWebView(this,webView);
 
     }//  close create workout
 
@@ -270,8 +270,8 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
             adapter.add(exercise);
 
             //add muscles array
-            for (Muscle muscle: exercise.getMuscles()){
-                muscles_names.add(muscle.getMuscleName());
+            for (MuscleExercise muscle: exercise.getMuscles()){
+                muscles_names.add(muscle.getMuscle());
             }
 
             //add types array
@@ -450,7 +450,7 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
         webView.getSettings().setJavaScriptEnabled(true);
 
 
-        utilities.setBodyInWebwView(this,webView);
+        utilities.setBodyInWebView(this,webView);
     }
 
 

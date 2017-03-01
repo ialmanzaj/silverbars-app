@@ -1,5 +1,7 @@
 package com.app.app.silverbarsapp.presenters;
 
+import android.util.Log;
+
 import com.app.app.silverbarsapp.callbacks.MainWorkoutsCallback;
 import com.app.app.silverbarsapp.interactors.MainWorkoutsInteractor;
 import com.app.app.silverbarsapp.models.Workout;
@@ -13,12 +15,10 @@ import java.util.List;
 
 public class MainWorkoutsPresenter extends BasePresenter implements MainWorkoutsCallback{
 
-
     private static final String TAG = MainWorkoutsPresenter.class.getSimpleName();
 
     private MainWorkoutsView view;
     private MainWorkoutsInteractor interactor;
-
 
     public MainWorkoutsPresenter(MainWorkoutsView view,MainWorkoutsInteractor interactor){
         this.view = view;
@@ -29,12 +29,9 @@ public class MainWorkoutsPresenter extends BasePresenter implements MainWorkouts
         interactor.getWorkouts(this);
     }
 
-
     public void getMyWorkout(){
         interactor.getWorkouts(this);
     }
-
-
 
     @Override
     public void onStart() {
@@ -68,6 +65,7 @@ public class MainWorkoutsPresenter extends BasePresenter implements MainWorkouts
 
     @Override
     public void onWorkoutsFound(List<Workout> workouts) {
+        Log.v(TAG,"onWorkoutsFound");
         view.displayWorkouts(workouts);
     }
 

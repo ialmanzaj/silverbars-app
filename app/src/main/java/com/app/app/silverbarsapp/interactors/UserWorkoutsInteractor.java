@@ -47,13 +47,11 @@ public class UserWorkoutsInteractor {
 
                 for (ExerciseRep exerciseRep: user_workout.getExercises()){
 
-
                     Exercise exercise_database = helper.getExerciseDao().queryForId(exerciseRep.getExercise().getId());
-
 
                     //types and muscles list
                     List<String> types_exercise = new ArrayList<>();
-                    List<com.app.app.silverbarsapp.models.Muscle> muscles = new ArrayList<>();
+                    List<com.app.app.silverbarsapp.models.MuscleExercise> muscles = new ArrayList<>();
 
                     //get the type exercise from table to new object in json
                     for (TypeExercise types:  exercise_database.getType_exercise()){types_exercise.add(types.getType());}
@@ -62,7 +60,7 @@ public class UserWorkoutsInteractor {
                     //get the muscles
                     for (Muscle muscle: exercise_database.getMuscles()){
                         muscles.add(
-                                new com.app.app.silverbarsapp.models.Muscle(
+                                new com.app.app.silverbarsapp.models.MuscleExercise(
                                         muscle.getMuscle(),
                                         muscle.getMuscle_activation(),
                                         muscle.getClassification(),

@@ -32,14 +32,13 @@ public class Exercise implements Parcelable {
     private String exercise_image;
 
     @SerializedName("muscles")
-    private List<Muscle> muscles;
+    private List<MuscleExercise> muscles;
 
 
     public Exercise(){}
 
 
-
-    public Exercise(int id,String exercise_name, String level, List<String> type_exercise,String exercise_audio,String exercise_image,List<Muscle> muscles){
+    public Exercise(int id,String exercise_name, String level, List<String> type_exercise,String exercise_audio,String exercise_image,List<MuscleExercise> muscles){
         this.id = id;
         this.exercise_name = exercise_name;
         this.level = level;
@@ -50,8 +49,6 @@ public class Exercise implements Parcelable {
     }
 
 
-
-
     protected Exercise(Parcel in) {
         id = in.readInt();
         exercise_name = in.readString();
@@ -59,18 +56,7 @@ public class Exercise implements Parcelable {
         type_exercise = in.createStringArrayList();
         exercise_audio = in.readString();
         exercise_image = in.readString();
-        muscles = in.createTypedArrayList(Muscle.CREATOR);
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(exercise_name);
-        dest.writeString(level);
-        dest.writeStringList(type_exercise);
-        dest.writeString(exercise_audio);
-        dest.writeString(exercise_image);
-        dest.writeTypedList(muscles);
+        muscles = in.createTypedArrayList(MuscleExercise.CREATOR);
     }
 
     public static final Creator<Exercise> CREATOR = new Creator<Exercise>() {
@@ -125,15 +111,6 @@ public class Exercise implements Parcelable {
         this.exercise_image = exercise_image;
     }
 
-    public List<Muscle> getMuscles() {
-        return muscles;
-    }
-
-
-    public void setMuscles(List<Muscle> muscles) {
-        this.muscles = muscles;
-    }
-
     public List<String> getType_exercise() {
         return type_exercise;
     }
@@ -142,9 +119,25 @@ public class Exercise implements Parcelable {
         this.type_exercise = type_exercise;
     }
 
+    public List<MuscleExercise> getMuscles() {
+        return muscles;
+    }
+
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeInt(id);
+        dest.writeString(exercise_name);
+        dest.writeString(level);
+        dest.writeStringList(type_exercise);
+        dest.writeString(exercise_audio);
+        dest.writeString(exercise_image);
+        dest.writeTypedList(muscles);
     }
 
 

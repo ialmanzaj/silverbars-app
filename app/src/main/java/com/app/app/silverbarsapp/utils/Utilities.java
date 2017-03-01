@@ -152,7 +152,7 @@ public class Utilities {
         Toast.makeText(context.getApplicationContext(),text,Toast.LENGTH_SHORT).show();
     }
 
-    public void setBodyInWebwView(Context context, WebView webView){
+    public void setBodyInWebView(Context context, WebView webView){
         SharedPreferences sharedPref = context.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         String default_url = context.getResources().getString(R.string.muscle_path);
         String muscle_url = sharedPref.getString(context.getString(R.string.muscle_path),default_url);

@@ -9,10 +9,13 @@ import com.google.gson.annotations.SerializedName;
 public class MuscleProgression {
 
     @SerializedName("muscle")
-    private String muscle;
+    private int muscle;
+
+
+    private Muscle mainmuscle;
 
     @SerializedName("person")
-    private String person;
+    private int person;
 
     @SerializedName("muscle_activation_progress")
     private int muscle_activation_progress;
@@ -24,29 +27,34 @@ public class MuscleProgression {
     private String date;
 
 
-    public MuscleProgression(String muscle, String person, int muscle_activation_progress, int level, String date){
-        this.muscle = muscle;
-        this.person = person;
-        this.muscle_activation_progress = muscle_activation_progress;
-        this.level = level;
-        this.date = date;
-    }
+    public MuscleProgression(){}
 
-    public String getMuscle(){
+
+
+    public int getMuscle_id(){
         return muscle;
     }
 
-    public String getPerson(){
+    public int getPerson_id() {
         return person;
+    }
+
+    public void setMuscle(Muscle mainmuscle) {
+        this.mainmuscle = mainmuscle;
+    }
+
+    public Muscle getMuscle() {
+        return mainmuscle;
+    }
+
+    public int getMuscle_activation_progress() {
+        return muscle_activation_progress;
     }
 
     public int getLevel(){
         return level;
     }
 
-    public int getMuscle_activation() {
-        return muscle_activation_progress;
-    }
 
     public void setLevel(int level) {
         this.level = level;
@@ -60,5 +68,7 @@ public class MuscleProgression {
         return date;
     }
 
-
+    public void setDate(String date) {
+        this.date = date;
+    }
 }

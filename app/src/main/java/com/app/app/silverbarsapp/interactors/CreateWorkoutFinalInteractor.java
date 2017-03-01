@@ -88,7 +88,7 @@ public class CreateWorkoutFinalInteractor {
 
     private void insertMuscles(com.app.app.silverbarsapp.models.ExerciseRep exerciseRep, Exercise exercise) throws SQLException {
         //set musles to database
-        for (com.app.app.silverbarsapp.models.Muscle muscle: exerciseRep.getExercise().getMuscles()){
+        for (com.app.app.silverbarsapp.models.MuscleExercise muscle: exerciseRep.getExercise().getMuscles()){
             helper.getMuscleDao().create(
                     new Muscle(muscle.getMuscle(), muscle.getMuscle_activation(), muscle.getClassification(), muscle.getProgression_level(), exercise));
         }

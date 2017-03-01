@@ -17,6 +17,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Url;
+import rx.Observable;
 
 
 public interface MainService {
@@ -37,15 +38,16 @@ public interface MainService {
     @GET("v1/exercises/{id}/")
     Call<Exercise> getExercise(@Path("id") String id);
 
-    @Authenticated({R.string.authentication_ACCOUNT,
+   /* @Authenticated({R.string.authentication_ACCOUNT,
             R.string.authentication_TOKEN})
     @GET("v1/muscles/{id}/")
-    Call<Muscle> getMuscle(@Path("id") int id);
+    Call<Muscle> getMuscle(@Path("id") int id);*/
 
     @Authenticated({R.string.authentication_ACCOUNT,
             R.string.authentication_TOKEN})
     @GET("v1/myprogression/")
     Call<List<MuscleProgression>> getProgression();
+
 
     @Authenticated({R.string.authentication_ACCOUNT,
             R.string.authentication_TOKEN})
@@ -57,7 +59,13 @@ public interface MainService {
                                               @Field("level") String level,
                                               @Field("date") String date);
 
-    @GET("v1/myprofile/")
+
+    @Authenticated({R.string.authentication_ACCOUNT,
+            R.string.authentication_TOKEN})
+    @GET("v1/muscles/{id}/")
+    Observable<Muscle> getMuscle(@Path("id") int id);
+
+    @GET("v1/me/")
     Call<Person> getMyProfile();
 
     @GET

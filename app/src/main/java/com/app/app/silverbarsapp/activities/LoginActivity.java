@@ -105,8 +105,7 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
 
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
-                    PACKAGE,
-                    0);
+                    PACKAGE, PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());

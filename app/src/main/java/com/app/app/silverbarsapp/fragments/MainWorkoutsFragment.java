@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.app.app.silverbarsapp.R;
@@ -29,6 +30,8 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
@@ -44,6 +47,7 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
     @BindView(R.id.loading) LinearLayout loadingView;
     @BindView(R.id.error_view) LinearLayout mErrorView;
+    @BindView(R.id.reload) Button mReload;
 
     private WorkoutsAdapter adapter;
     private String mMuscleSelected = "ALL";
@@ -80,8 +84,6 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
        mMainWorkoutsPresenter.getMyWorkout();
     }
 
-
-
     private String getJson(){
         String json = null;
         try {
@@ -102,12 +104,9 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         if (this.isAdded()){
-
             adapter = new WorkoutsAdapter(getActivity());
             list.setAdapter(adapter);
-
 
             //Log.i(TAG,"workout"+getJson());
            //List<Workout> workouts = new Gson().fromJson(getJson(),new TypeToken<ArrayList<Workout>>(){}.getType());
@@ -123,13 +122,16 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
         swipeContainer.setOnRefreshListener(() -> mMainWorkoutsPresenter.fetchTimelineAsync());
     }
 
+    @OnClick(R.id.reload)
+    public void reload(){
+        onErrorViewOff();
+        onLoadingViewOn();
+        mMainWorkoutsPresenter.getMyWorkout();
+    }
 
     @Override
     public void displayWorkouts(List<Workout> workouts) {
-        Log.i(TAG,"workouts size"+workouts.size());
-
         onLoadingViewOff();
-
         setWorkoutsInAdapter(workouts);
     }
 
@@ -140,6 +142,7 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
     @Override
     public void displayServerError() {
+        Log.e(TAG,"displayServerError");
         onErrorViewOn();
     }
 
@@ -164,7 +167,6 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
             }
 
             return mWorkoutFiltered;
-
         }
     }
 
