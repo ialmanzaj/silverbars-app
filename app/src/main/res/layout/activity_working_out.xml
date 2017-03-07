@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".activities.WorkingOutActivity"
     android:background="#fff">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
+    <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <RelativeLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="3"
@@ -39,105 +33,6 @@
                 android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/zero"
-                        android:id="@+id/repetition_timer"
-                        android:textColor="@color/black"
-                        android:textSize="95sp"
-                        android:textStyle="bold"
-                        android:gravity="bottom" />
-
-                    <TextView
-                        android:id="@+id/option"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="-18dp"
-                        android:text="@string/reps_text"
-                        android:textSize="20sp"
-                        android:layout_gravity="center_horizontal"
-                        android:textColor="@color/dark_gray" />
-
-
-                </LinearLayout>
-                <LinearLayout
-                    android:gravity="center_horizontal"
-                    android:layout_marginBottom="5dp"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:textSize="22sp"
-                        android:textColor="@color/black"
-                        android:text="Tempo: "
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:id="@+id/positive"
-                        android:textSize="22sp"
-                        android:textColor="@color/black"
-                        android:text="1"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:textSize="22sp"
-                        android:textColor="@color/black"
-                        android:text="s"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:textSize="22sp"
-                        android:textColor="@color/black"
-                        android:text=" - "
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:id="@+id/isometric"
-                        android:textSize="22sp"
-                        android:textColor="@color/black"
-                        android:text="1"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:textSize="22sp"
-                        android:textColor="@color/black"
-                        android:text="s"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:textSize="22sp"
-                        android:textColor="@color/black"
-                        android:text=" - "
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:id="@+id/negative"
-                        android:textSize="22sp"
-                        android:textColor="@color/black"
-                        android:text="1"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                    <TextView
-                        android:textSize="22sp"
-                        android:textColor="@color/black"
-                        android:text="s"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_gravity="bottom"
-                    android:minHeight="90dp"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -196,6 +91,33 @@
                                 android:layout_gravity="center_horizontal|top" />
                         </LinearLayout>
                     </RelativeLayout>
+                    <LinearLayout
+                        android:gravity="center_horizontal|center_vertical"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/zero"
+                            android:id="@+id/repetition_timer"
+                            android:textColor="@color/black"
+                            android:textSize="95sp"
+                            android:textStyle="bold"
+                            android:gravity="bottom" />
+
+                        <TextView
+                            android:id="@+id/option"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-18dp"
+                            android:text="@string/reps_text"
+                            android:textSize="20sp"
+                            android:layout_gravity="center_horizontal"
+                            android:textColor="@color/dark_gray" />
+
+                    </LinearLayout>
 
                     <RelativeLayout
                         android:layout_width="0dp"
@@ -248,142 +170,145 @@
                                 android:id="@+id/sets_total"
                                 android:textSize="32sp"
                                 android:textColor="@color/colorSecondary" />
+
                         </LinearLayout>
 
 
                     </RelativeLayout>
 
-                    <!---    Layout SETS -->
+
 
                 </LinearLayout>
 
                 <LinearLayout
-
+                    android:gravity="center_horizontal|center_vertical"
+                    android:layout_gravity="bottom"
+                    android:minHeight="90dp"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false">
 
-                    <LinearLayout
-                        android:orientation="vertical"
+                    <com.app.app.silverbarsapp.Chronometer
+                        android:id="@+id/chronometer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="0sp"
+                        android:textColor="@color/black"
+                        android:gravity="center" />
+
+                    <com.app.app.silverbarsapp.PausableChronometer
+                        android:id="@+id/chronometer2"
+                        android:textColor="@color/black"
+                        android:textSize="60sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:baselineAligned="false">
+
+                    <RelativeLayout
+                        android:visibility="invisible"
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_height="match_parent"
-                        android:gravity="center">
+                        android:layout_height="match_parent">
 
-                            <ImageButton
-                                android:visibility="gone"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/prev_exercise"
-                                android:src="@drawable/ic_fast_rewind_black_24px"
-                                android:background="#fff"
-                                android:layout_gravity="center"
-                                android:contentDescription="@null" />
+                        <ImageView
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/circle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@null" />
 
-                    </LinearLayout>
+                        <ImageView
+                            android:layout_centerInParent="true"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/prev_exercise"
+                            android:src="@drawable/ic_fast_rewind_black_24px"
+                            android:layout_gravity="center"
+                            android:contentDescription="@null" />
+
+                    </RelativeLayout>
                     <RelativeLayout
                         android:orientation="horizontal"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="match_parent">
 
-                        <ImageButton
-                            android:layout_centerVertical="true"
-                            android:layout_centerHorizontal="true"
-
-                            android:id="@+id/finish_workout"
-                            android:visibility="gone"
+                        <RelativeLayout
+                            android:visibility="invisible"
+                            android:id="@+id/pause_workout"
+                            android:layout_centerInParent="true"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_stop_black_36px"
-                            android:background="#fff"
-                            android:contentDescription="@null" />
+                            android:layout_height="wrap_content">
 
-                        <ImageButton
+                            <ImageView
+                                android:tint="@color/secondColor"
+                                android:src="@drawable/circle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@null" />
+
+                            <ImageView
+                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_stop_black_36px"
+                                android:contentDescription="@null" />
+
+                        </RelativeLayout>
+
+
+                        <ImageView
                             android:layout_centerVertical="true"
                             android:layout_centerHorizontal="true"
                             android:id="@+id/play_workout"
                             android:src="@drawable/ic_play_circle_filled_black_36px"
-
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="#fff"
-                            android:contentDescription="@null" />
-
-                        <ImageButton
-                            android:layout_centerVertical="true"
-                            android:layout_centerHorizontal="true"
-
-                            android:src="@drawable/ic_pause_circle_filled_black_36px"
-
-                            android:id="@+id/pause_workout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="#fff"
                             android:contentDescription="@null" />
 
 
                     </RelativeLayout>
 
-                    <LinearLayout
-                        android:gravity="center"
+                    <RelativeLayout
+
                         android:id="@+id/nxtLayout"
-                        android:orientation="vertical"
+
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="match_parent">
 
-                            <ImageButton
-                                android:visibility="gone"
+                        <ImageView
+                            android:layout_centerInParent="true"
+                            android:src="@drawable/circle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@null" />
+
+                            <ImageView
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerInParent="true"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/next_exercise"
                                 android:src="@drawable/ic_fast_forward_black_24px"
-                                android:layout_gravity="center"
-                                android:background="@color/white"
                                 android:contentDescription="@null" />
 
 
-                    </LinearLayout>
+                    </RelativeLayout>
                 </LinearLayout>
-
-
             </LinearLayout>
 
+
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:visibility="gone"
-                    android:layout_marginBottom="2dp"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="42dp"
-                    android:gravity="center">
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:text="@string/pause_button"
-
-                        android:textColor="@color/white"
-                        android:background="@color/gray_active_icon" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:text="@string/end_button"
-                        android:background="@color/secondColor"
-                        android:textColor="#ffffff"
-                        android:layout_marginStart="2dp" />
-
-                </LinearLayout>
-                <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="65dp"
@@ -392,7 +317,8 @@
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:background="@color/black"
-                    android:id="@+id/player_layout">
+                    android:id="@+id/player_layout"
+                    android:baselineAligned="false">
 
                         <RelativeLayout
                             android:layout_weight="1"
@@ -402,6 +328,7 @@
                             android:orientation="vertical"
                             android:layout_marginStart="15dp"
                             android:id="@+id/container_text_song">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -410,11 +337,11 @@
                                 android:textColor="#ffff"
                                 android:text="@string/song_name"
                                 android:textStyle="bold"
-                                android:singleLine="true"
+                                android:maxLines="1"
                                 android:ellipsize="end" />
 
                             <TextView
-                                android:singleLine="true"
+                               android:maxLines="1"
                                 android:ellipsize="end"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -432,28 +359,33 @@
                             android:layout_height="match_parent"
                             android:layout_marginEnd="10dp">
 
-                            <ImageButton
+                            <ImageView
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:id="@+id/play_music"
                                 android:src="@drawable/ic_play_circle_outline_white_36px"
-                                android:background="#00ffffff"
                                 android:contentDescription="@string/resume_workout_text" />
 
-                            <ImageButton
+                            <ImageView
+                                android:visibility="gone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:id="@+id/pause_music"
                                 android:src="@drawable/ic_pause_circle_outline_white_36px"
-                                android:background="#00ffffff"
-                                android:visibility="gone"
                                 android:contentDescription="@string/pause_button" />
+
                         </RelativeLayout>
 
                 </LinearLayout>
-            </LinearLayout>
+
+
+
         </LinearLayout>
-        <LinearLayout
+
+
+
+    <LinearLayout
+        android:visibility="invisible"
             android:orientation="vertical"
             android:gravity="center_vertical|center_horizontal"
             android:layout_width="match_parent"
@@ -489,9 +421,7 @@
                 android:textColor="#fff"
                 android:textSize="35sp" />
 
+
         </LinearLayout>
-    </FrameLayout>
 
-
-
-</LinearLayout>
+</FrameLayout>

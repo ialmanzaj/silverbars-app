@@ -85,19 +85,19 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(TAG,"onCreate");
 
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
+        if (getIntent().getExtras() != null) {
+            getExtras(getIntent().getExtras());
+        }
 
-        if (extras != null)
-            setExtras(extras);
+
 
         setupToolbar();
 
+
         list.setLayoutManager(new LinearLayoutManager(this));
-
         mExerciseListPresenter.getExercises();
-
 
         //onProgressViewOff();
         //mExercises = new Gson().fromJson(getJson(),new TypeToken<ArrayList<Exercise>>(){}.getType());
@@ -105,7 +105,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     }
 
 
-    private void setExtras(Bundle extras){
+    private void getExtras(Bundle extras){
         mExercisesSelected = extras.getStringArrayList("exercises");
         verifyExercises();
     }

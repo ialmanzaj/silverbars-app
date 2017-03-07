@@ -2,7 +2,6 @@ package com.app.app.silverbarsapp.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,14 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -64,33 +60,20 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     @Inject
     WorkoutPresenter mWorkoutPresenter;
 
-
     @BindView(R.id.toolbar) Toolbar myToolbar;
     @BindView(R.id.tabHost2) TabHost mTabLayout;
-    
-    
-    @BindView(R.id.loading) LinearLayout mLoadingView;
-    @BindView(R.id.error_view) LinearLayout error_layout;
-    @BindView(R.id.reload) Button button_error_reload;
-    
-    @BindView(R.id.column1) LinearLayout primary_ColumnMuscle;
-    @BindView(R.id.column2) LinearLayout secundary_ColumnMuscle;
-    
 
-    @BindView(R.id.content_info)LinearLayout contentInfo;
-    
     @BindView(R.id.sets) TextView Sets;
     @BindView(R.id.RestbySet) TextView RestbySet;
     @BindView(R.id.RestbyExercise) TextView RestbyExercise;
    
 
     @BindView(R.id.list) RecyclerView list;
-    @BindView(R.id.muscles) ScrollView scrollView;
+    @BindView(R.id.muscles) RelativeLayout mBodyMuscleWrapper;
     @BindView(R.id.webview) WebView webview;
 
     @BindView(R.id.enableLocal) SwitchCompat mSaveWorkoutSwitch;
 
-    @BindView(R.id.vibration_per_rep) SwitchCompat mVibrationperRepSwitch;
     @BindView(R.id.vibration_per_set) SwitchCompat mVibrationperSetSwitch;
 
     @BindView(R.id.voice_per_exercise)SwitchCompat voice_per_exercise;
@@ -107,9 +90,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     private int workoutId = 0, workoutSets = 0;
     private String workoutName, workoutLevel, mainMuscle, workoutImgUrl;
 
-
-
-    boolean isVibrationPerRepActive = false;
     boolean isVibrationPerSetActive = false;
     boolean isDownloadAudioExerciseActive = false;
 
@@ -152,10 +132,9 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         setExtras(getIntent().getExtras());
         setupToolbar();
         setupTabs();
-
+        setupWebview();
 
         mWorkoutPresenter.init(this);
-
 
 
         //list settings
@@ -292,9 +271,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         });
 
 
-        mVibrationperRepSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            isVibrationPerRepActive = isChecked;
-        });
+
 
         mVibrationperSetSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             isVibrationPerSetActive = isChecked;
@@ -360,7 +337,21 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         mTabLayout.addTab(exercises);
         mTabLayout.addTab(muscles);
     }
-    
+
+    private void setupWebview(){
+        webview.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                utilities.injectJS(mMuscleParts, webview);
+                super.onPageFinished(view, url);
+            }
+        });
+
+        webview.getSettings().setJavaScriptEnabled(true);
+        utilities.setBodyInWebView(this,webview);
+    }
+
+
 
     @OnClick(R.id.SelectMusic)
     public void selectMusic(){
@@ -378,11 +369,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         List<String> muscles = new ArrayList<>();
 
         for (ExerciseRep exerciseRep: exercises){
-
-            exerciseRep.setTempo_positive(1);
-            exerciseRep.setTempo_isometric(1);
-            exerciseRep.setTempo_negative(1);
-
             //Collections.addAll(TypeExercises, new List<String>[]{exerciseRep.getExercise().getType_exercise()});
           for (MuscleExercise muscle:  exerciseRep.getExercise().getMuscles()){muscles.add(muscle.getMuscle());}
         }
@@ -440,7 +426,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
         //vibrations option
         intent.putExtra("VibrationPerSet",isVibrationPerSetActive);
-        intent.putExtra("VibrationPerRep",isVibrationPerRepActive);
 
         //exercise audio option
         intent.putExtra("exercise_audio",isDownloadAudioExerciseActive);
@@ -459,45 +444,42 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
     private void setMusclesToView(List<String> musculos){
         if (musculos.size() > 0){
-
             List<String> muscles =  utilities.deleteCopiesofList(musculos);
-
             for (int a = 0;a<muscles.size();a++) {
-
                 mMuscleParts += "#"+ muscles.get(a) + ",";
-
-                TextView MuscleTextView = new TextView(this);
-                MuscleTextView.setText(muscles.get(a));
-                MuscleTextView.setGravity(Gravity.CENTER);
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {MuscleTextView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));}else {MuscleTextView.setTextColor(getResources().getColor(R.color.gray_active_icon));}
-
-                if (a%2 == 0){
-                    secundary_ColumnMuscle.addView(MuscleTextView);
-                }else {
-                    primary_ColumnMuscle.addView(MuscleTextView);
-                }
-
-
             }
         }
 
-        webview.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                utilities.injectJS(mMuscleParts, webview);
-                super.onPageFinished(view, url);
-            }
-        });
-
-
-        webview.getSettings().setJavaScriptEnabled(true);
-        utilities.setBodyInWebView(this,webview);
+        utilities.injectJS(mMuscleParts, webview);
     }
+
+
 
 
     private void logMessage(String msg) {
         Log.v(TAG, msg);
+    }
+
+
+
+
+    private Workout getCurrentWorkout(){
+        return new Workout(workoutId,workoutName,workoutImgUrl,workoutSets,workoutLevel,mainMuscle,mExercises);
+    }
+
+    private void saveWorkout() {
+        Log.i(TAG,"save workout");
+        try {
+
+            if (!mWorkoutPresenter.isWorkoutExist(workoutId)){
+                mWorkoutPresenter.saveWorkout(getCurrentWorkout());
+            } else {
+                mWorkoutPresenter.setWorkoutOn(workoutId);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -511,29 +493,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
             finish();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-
-    private Workout getCurrentWorkout(){
-        return new Workout(workoutId,workoutName,workoutImgUrl,workoutSets,workoutLevel,mainMuscle,mExercises);
-    }
-
-    private void saveWorkout() {
-        Log.i(TAG,"save workout");
-        try {
-
-            if (!mWorkoutPresenter.isWorkoutExist(workoutId)){
-                Log.i(TAG,"saving workout");
-                mWorkoutPresenter.saveWorkout(getCurrentWorkout());
-            } else {
-                Log.i(TAG, "workout on");
-                mWorkoutPresenter.setWorkoutOn(workoutId);
-            }
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
 }

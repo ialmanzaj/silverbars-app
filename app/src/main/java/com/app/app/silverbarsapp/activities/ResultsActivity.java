@@ -1,7 +1,7 @@
 package com.app.app.silverbarsapp.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -13,21 +13,20 @@ import android.widget.TabHost;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.models.ExerciseRep;
-import com.app.app.silverbarsapp.models.Muscle;
+import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
 /**
  * Created by isaacalmanza on 10/04/16.
  */
-public class ResultsActivity extends AppCompatActivity {
+public class ResultsActivity extends BaseActivity {
 
     private static final String TAG = ResultsActivity.class.getSimpleName();
 
@@ -37,24 +36,27 @@ public class ResultsActivity extends AppCompatActivity {
     @BindView(R.id.webview) WebView webView;
 
     @BindView(R.id.content)LinearLayout mContentLayout;
-    @BindView(R.id.skills)LinearLayout mSkillsLayout;
 
-    private  List<Muscle> mMuscles = new ArrayList<>();
-    private  List<String> mTypeExercises = new ArrayList<>();
     private ArrayList<ExerciseRep> mExercises = new ArrayList<>();
 
     private Utilities mUtilities = new Utilities();
 
-    private String musculos = "";
 
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_results;
+    }
+
+    @Nullable
+    @Override
+    protected BasePresenter getPresenter() {
+        return null;
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_results);
-        ButterKnife.bind(this);
-
 
         Bundle extras =  getIntent().getExtras();
         mExercises = extras.getParcelableArrayList("exercises");
@@ -117,31 +119,23 @@ public class ResultsActivity extends AppCompatActivity {
 
     }
 
+    public void setupToolbar(){
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setTitle("Results");
+        }
+    }
 
-    
     private void setupTabs(){
         TabHost Tab_layout = (TabHost) findViewById(R.id.tabHost2);
         Tab_layout.setup();
 
-        TabHost.TabSpec skills = Tab_layout.newTabSpec(getResources().getString(R.string.skills));
         TabHost.TabSpec muscles = Tab_layout.newTabSpec(getResources().getString(R.string.tab_muscles));
 
         muscles.setIndicator(getResources().getString(R.string.tab_muscles));
         muscles.setContent(R.id.muscles);
 
-        skills.setIndicator(getResources().getString(R.string.skills));
-        skills.setContent(R.id.skills);
-
         Tab_layout.addTab(muscles);
-        Tab_layout.addTab(skills);
-    }
-
-
-    private void setupToolbar(){
-        if (mToolbar != null) {
-            setSupportActionBar(mToolbar);
-            getSupportActionBar().setTitle("Results");
-        }
     }
 
 
@@ -160,7 +154,7 @@ public class ResultsActivity extends AppCompatActivity {
 
         for (int a = 0; a<types_oficial.size();a++){
             RelativeLayout relativeLayout = mUtilities.createViewProgression(this,types_oficial.get(a),100);
-            mSkillsLayout.addView(relativeLayout);
+            //mSkillsLayout.addView(relativeLayout);
         }
     }
     
@@ -266,9 +260,5 @@ public class ResultsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
-
 
 }

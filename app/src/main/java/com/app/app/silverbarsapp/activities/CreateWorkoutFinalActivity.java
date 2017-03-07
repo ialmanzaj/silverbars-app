@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -51,7 +52,6 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     @Inject
     CreateWorkoutFinalPresenter mCreateWorkoutFinalPresenter;
 
-
     @BindView(R.id.toolbar) Toolbar toolbar;
 
     @BindView(R.id.sets) TextView mSets;
@@ -62,9 +62,10 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     @BindView(R.id.list) RecyclerView mExercisesList;
     @BindView(R.id.chageImg) RelativeLayout changeImg;
 
-    private int mCurrentSet = 1;
 
-    String workoutImage = "/";
+    private int mCurrentSet = 1;
+    private String workoutImage = "/";
+
 
     private ArrayList<Exercise> mAllExercisesList;
     private ArrayList<ExerciseRep> mExercisesSelected;
@@ -95,6 +96,7 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(TAG,"onCreate");
 
         Bundle extras = getIntent().getExtras();
 
@@ -286,8 +288,8 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
     @Override
     public void onWorkoutCreated(boolean created) {
-        Intent return_intent = new Intent();
-        setResult(RESULT_OK, return_intent);
+        Log.v(TAG,"onWorkoutCreated: "+created);
+        setResult(RESULT_OK, new Intent());
         finish();
     }
 
@@ -295,6 +297,20 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     @Override
     public void onWorkoutError() {
         Log.e(TAG,"onWorkoutError");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            Log.d(TAG, "action bar clicked");
+            setResult(RESULT_CANCELED, new Intent());
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 

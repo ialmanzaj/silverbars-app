@@ -91,15 +91,11 @@
         <activity
             android:name="com.app.app.silverbarsapp.activities.CreateWorkoutActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name="com.app.app.silverbarsapp.activities.CreateWorkoutFinalActivity"
-            android:parentActivityName="com.app.app.silverbarsapp.activities.CreateWorkoutActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.app.app.silverbarsapp.activities.CreateWorkoutActivity" />
-        </activity>
+            android:windowSoftInputMode="stateHidden"></activity>
 
         <activity
             android:name="com.app.app.silverbarsapp.activities.ExerciseListActivity"

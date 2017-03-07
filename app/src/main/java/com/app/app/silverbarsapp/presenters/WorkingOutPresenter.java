@@ -26,6 +26,7 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
     private Context context;
     private ArrayList<ExerciseRep> exercises;
 
+
     //my view callback
     private WorkingOutView view;
     private SpotifyPlayerImpl mSpotifyPlayer;
@@ -55,8 +56,6 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
     //FLAGS for the events in workout
     private boolean isWorkoutPaused = false,isWorkoutRest = false;
 
-    //FLAGS for the coutdowns
-    private boolean isInitialCountDownActive = false,isMainCountDownActive = false;
 
     //flag to know button workout is paused
     private boolean isButtonPauseClicked;
@@ -112,13 +111,10 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
 
     public void playMusic(){
         if (isLocalPlayerAvailable()){
-
             mLocalPlayer.play();
             //event ui on music playing
             view.onPlayMusic();
-
         }else if (isSpotifyPlayerAvailable()){
-
             mSpotifyPlayer.play();
             //event ui on music playing
             view.onPlayMusic();
@@ -127,16 +123,11 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
 
     public void pauseMusic(){
         if (isLocalPlayerAvailable()){
-
             mLocalPlayer.pause();
-
             //event ui on music paused
             view.onPauseMusic();
-
         }else if (isSpotifyPlayerAvailable()){
-
             mSpotifyPlayer.pause();
-
             //event ui on music paused
             view.onPauseMusic();
         }
@@ -154,7 +145,6 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
             }
 
             try {
-
                 String[] mp3dir = exercise_audio_file.split("/SilverbarsMp3/");
                 mExerciseAudioPlayer = MediaPlayer.create(context, Uri.parse(context.getFilesDir()+"/SilverbarsMp3/"+mp3dir[1]));
 
@@ -216,45 +206,6 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
 
 
     /**
-     *    methods of the InicialTimer
-     *<p>
-     *
-     *
-     */
-    public void startInicialTimer(int seconds){
-        //the initial flag on
-        isInitialCountDownActive = true;
-
-        //save the current seconds
-        mCurrentStartTime = seconds;
-        mCountDownController.createInicialTimer(seconds);
-    }
-
-    /**
-     *    methods of the MainCountDown
-     *<p>
-     *
-     *
-     */
-    private void startMainCountDown(){
-        //Log.i(TAG,"startMainCountDown");
-
-        if (!isWorkoutPaused() && !isWorkoutRest){
-
-            mCurrentReps = getTotalRepetitionTime(mCurrentExercisePosition);
-
-            //get the current tempo of the current exercise
-            mCurrentTempo = getTempo(mCurrentExercisePosition);
-
-            int total_seconds = (mCurrentReps * mCurrentTempo +3);
-            //Log.i(TAG,"total_seconds: "+total_seconds);
-
-            mCountDownController.createMainCountDownTimer(total_seconds,mCurrentTempo);
-        }
-    }
-
-
-    /**
      *    methods of the RestCountDownTimer
      *<p>
      *
@@ -283,14 +234,7 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
             return exercises.get(mCurrentExercisePosition).getSeconds();
     }
 
-    private int getTempo(int mCurrentExercisePosition){
-        if (exercises.get(mCurrentExercisePosition).getRepetition() > 0)
-            return exercises.get(mCurrentExercisePosition).getTempo_positive()
-                    + exercises.get(mCurrentExercisePosition).getTempo_isometric()
-                    + exercises.get(mCurrentExercisePosition).getTempo_negative();
-        else
-            return 1;
-    }
+
 
 
     /**
@@ -301,31 +245,11 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
      */
     public void onOverlayTextListener(int  second){
         //Log.i(TAG,"onOverlayTextListener"+s);
-        if (second == 0 && isMainCountDownActive){
-
+        if (second == 0){
             onRestFinished();
-
-        } else if( second == 0 && isInitialCountDownActive) {
-
-            onInitialTimerFinished();
         }
     }
 
-    private void onInitialTimerFinished(){
-        mCountDownController.destroyInicialTimer();
-
-        //SET  inital countdown off
-        isInitialCountDownActive = false;
-
-        //set the main flag active
-        isMainCountDownActive = true;
-
-        //starting the countdown
-        startMainCountDown();
-
-        // overlay off
-        view.onOverlayViewOff();
-    }
 
     private void onRestFinished(){
         //Log.i(TAG,"onRestFinished");
@@ -346,14 +270,13 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
         }
 
         //Log.i("restlistener","startMainCountDown");
-        startMainCountDown();
     }
 
 
     public void repetitionListener(int repetition){
         //Log.i(TAG,"repetitionListener"+repetition.toString());
 
-        if (repetition == 0 && isMainCountDownActive){
+        if (repetition == 0 ){
 
             //destroy MainCount Down
             mCountDownController.destroyMainCountDownTimer();
@@ -376,7 +299,7 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
         mCurrentExercisePosition++;
 
         //when the repetitions of the exercise has finished.
-        view.onRepsFinished( mCurrentExercisePosition );
+        view.onChangeToExercise( mCurrentExercisePosition );
 
         //restarting the view of the workout
         restartExerciseValues();
@@ -399,7 +322,7 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
             restartExerciseValues();
 
         } else
-            view.onWorkoutFinished();
+            view.onFinishWorkout();
 
     }
 
@@ -488,7 +411,7 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
             playMusic();
 
             //update view on resume workout
-            view.onWorkoutResume();
+            view.onResumeWorkout();
         }
     }
 
@@ -504,12 +427,12 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
 
 
             //update view on pause workout
-            view.onWorkoutPaused();
+            view.onPauseWorkout();
         }
     }
 
     public void finishWorkout(){
-        view.onWorkoutFinished();
+        view.onFinishWorkout();
     }
 
     /**
@@ -520,27 +443,26 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
      */
     
     public void nextExercise(){
-        if (!isMainCountDownActive){
+       /* if (!isMainCountDownActive){
             return;
-        }
+        }*/
 
         pauseWorkout();
         view.onNextExercise();
     }
 
     public void onNextExercisePositive(){
-        Log.d(TAG,"onNextExercisePositive");
-
-        //set to the next exercise
-        mCurrentExercisePosition++;
+        //Log.d(TAG,"onNextExercisePositive");
 
         //changes the ui to the next exercise
-        view.onChangeToExercise(mCurrentExercisePosition);
+        view.onChangeToExercise(mCurrentExercisePosition++);
+
         restartExerciseValues();
 
 
-        //starting again the next exercise
-        playWorkout();
+        //set the UI workout ready to start
+        view.onWorkoutReady();
+
 
         //hiding or not the preview and next buttons
         //onHideUi();
@@ -548,22 +470,11 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
 
     private void restartExerciseValues(){
         if (exercises.get(mCurrentExercisePosition).getRepetition() > 0)
-            view.onChangeExerciseValues(exercises.get(mCurrentExercisePosition).getRepetition(),
-                    exercises.get(mCurrentExercisePosition).getTempo_positive(),
-                    exercises.get(mCurrentExercisePosition).getTempo_isometric(),
-                    exercises.get(mCurrentExercisePosition).getTempo_negative(),false);
+            view.updateToExercise(exercises.get(mCurrentExercisePosition).getRepetition(),false);
         else
-            view.onChangeExerciseValues(exercises.get(mCurrentExercisePosition).getSeconds(), 0, 0, 0,true);
+            view.updateToExercise(exercises.get(mCurrentExercisePosition).getSeconds(),true);
     }
 
-
-    private void onHideUi(){
-        if (mCurrentExercisePosition == 0){
-            view.hidePrevExercisebutton();
-        } else if (mCurrentExercisePosition == exercises.size() -1){
-            view.hideNextExercisebutton();
-        }
-    }
 
     public void onNextExerciseNegative(){
         playWorkout();
@@ -575,13 +486,10 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
      *
      */
     public void previewExercise(){
-        if (!isMainCountDownActive){
-            return;
-        }
-
         pauseWorkout();
         view.onPreviewExercise();
     }
+
 
     public void onPreviewExercisePositive(){
         Log.d(TAG,"onPreviewExercisePositive");
@@ -591,7 +499,6 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
         view.onChangeToExercise(mCurrentExercisePosition);
 
         restartExerciseValues();
-
 
         //starting again the next exercise
         playWorkout();
@@ -605,24 +512,17 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
     }
 
     @Override
-    public void onTickInitialCounter() {
-        mCurrentStartTime--;
-        //update UI
-        view.onInitialCounterStarted(String.valueOf( mCurrentStartTime ));
-    }
+    public void onTickInitialCounter() {}
 
     @Override
-    public void onTickMainCounter() {
-        mCurrentReps--;
-        //update UI
-        view.onRepetitionCountdown(String.valueOf( mCurrentReps ));
-    }
+    public void onTickMainCounter() {}
+
 
     @Override
     public void onTickRestCounter() {
         mCurrentRest--;
         //UI changes
-        view.onRestCounterStarted(String.valueOf( mCurrentRest ));
+        view.onRestCounterStarted(String.valueOf(mCurrentRest ));
     }
 
     @Override

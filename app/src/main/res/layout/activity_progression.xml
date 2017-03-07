@@ -40,123 +40,19 @@
                 android:layout_height="match_parent">
 
                 <HorizontalScrollView
-                        android:id="@+id/date_layout"
-                        android:scrollbars="none"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
+                    android:id="@+id/date_layout"
+                    android:background="@color/itemSelected"
+                    android:scrollbars="none"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
                         <LinearLayout
-                            android:background="@color/colorSecondary"
+                            android:padding="5dp"
+                            android:id="@+id/date_layout_wrapper"
                             android:orientation="horizontal"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <com.app.app.silverbarsapp.CustomDateView
-                                android:id="@+id/date"
-                                android:background="@drawable/custom_border"
-                                android:layout_margin="5dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-
-                            <com.app.app.silverbarsapp.CustomDateView
-                                android:layout_marginTop="5dp"
-                                android:layout_marginStart="2.5dp"
-                                android:layout_marginEnd="2.5dp"
-                                android:layout_marginBottom="5dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@color/cardview_dark_background"/>
-
-                            <com.app.app.silverbarsapp.CustomDateView
-
-                                android:layout_marginTop="5dp"
-                                android:layout_marginStart="2.5dp"
-                                android:layout_marginEnd="2.5dp"
-                                android:layout_marginBottom="5dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@color/cardview_dark_background"/>
-
-                            <com.app.app.silverbarsapp.CustomDateView
-                                android:layout_marginTop="5dp"
-                                android:layout_marginStart="2.5dp"
-                                android:layout_marginEnd="2.5dp"
-                                android:layout_marginBottom="5dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@color/cardview_dark_background"/>
-
-                            <com.app.app.silverbarsapp.CustomDateView
-                                android:layout_marginTop="5dp"
-                                android:layout_marginStart="2.5dp"
-                                android:layout_marginEnd="2.5dp"
-                                android:layout_marginBottom="5dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@color/cardview_dark_background"/>
-                            <com.app.app.silverbarsapp.CustomDateView
-                                android:layout_marginTop="5dp"
-                                android:layout_marginStart="2.5dp"
-                                android:layout_marginEnd="2.5dp"
-                                android:layout_marginBottom="5dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@color/cardview_dark_background"/>
-                            <com.app.app.silverbarsapp.CustomDateView
-
-                                android:layout_marginTop="5dp"
-                                android:layout_marginStart="2.5dp"
-                                android:layout_marginEnd="2.5dp"
-                                android:layout_marginBottom="5dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@color/cardview_dark_background"/>
-                            <com.app.app.silverbarsapp.CustomDateView
-
-                                android:layout_marginTop="5dp"
-                                android:layout_marginStart="2.5dp"
-                                android:layout_marginEnd="2.5dp"
-                                android:layout_marginBottom="5dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@color/cardview_dark_background"/>
-                            <com.app.app.silverbarsapp.CustomDateView
-
-                                android:layout_marginTop="5dp"
-                                android:layout_marginStart="2.5dp"
-                                android:layout_marginEnd="2.5dp"
-                                android:layout_marginBottom="5dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@color/cardview_dark_background"/>
-                            <com.app.app.silverbarsapp.CustomDateView
-                                android:layout_marginTop="5dp"
-                                android:layout_marginStart="2.5dp"
-                                android:layout_marginEnd="2.5dp"
-                                android:layout_marginBottom="5dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@color/cardview_dark_background"/>
-                            <com.app.app.silverbarsapp.CustomDateView
-                                android:layout_marginTop="5dp"
-                                android:layout_marginStart="2.5dp"
-                                android:layout_marginEnd="2.5dp"
-                                android:layout_marginBottom="5dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@color/cardview_dark_background"/>
-                            <com.app.app.silverbarsapp.CustomDateView
-                                android:layout_marginTop="5dp"
-                                android:layout_marginStart="2.5dp"
-                                android:layout_marginEnd="2.5dp"
-                                android:layout_marginBottom="5dp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@color/cardview_dark_background"/>
-
-
+                            android:layout_height="match_parent">
                         </LinearLayout>
-                    </HorizontalScrollView>
+                </HorizontalScrollView>
 
                 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:orientation="vertical"
@@ -200,9 +96,23 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textAlignment="center"
+                        android:text="This Weekly Progress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
                 <WebView
                     android:scrollbars="vertical"
-                    android:layout_marginTop="5dp"
+                    android:layout_margin="5dp"
                     android:id="@+id/webview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

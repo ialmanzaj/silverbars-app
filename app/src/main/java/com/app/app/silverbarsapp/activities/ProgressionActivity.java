@@ -3,7 +3,6 @@ package com.app.app.silverbarsapp.activities;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -11,6 +10,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -26,13 +26,14 @@ import com.app.app.silverbarsapp.presenters.ProgressionPresenter;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.ProgressionView;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -55,9 +56,9 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
 
     @BindView(R.id.webview) WebView mMusclesWebView;
     @BindView(R.id.content) LinearLayout mProgresionContent;
-    @BindView(R.id.date) CustomDateView customDateView;
-    
-    @BindView(R.id.main_content) NestedScrollView nestedScrollView;
+
+    @BindView(R.id.date_layout_wrapper) LinearLayout mDateLayoutWrapper;
+    @BindView(R.id.date_layout) HorizontalScrollView mDateLayout;
 
     @BindView(R.id.loading) LinearLayout mLoadingView;
 
@@ -98,10 +99,7 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
         setupToolbar();
         setupWebview();
 
-        appBarLayout.setExpanded(false, true);
-
-        customDateView.setNameDay("Sun");
-        customDateView.setNumberDay("2");
+        // appBarLayout.setExpanded(false, true);
 
        /* onLoadingViewOff();
         List<MuscleProgression> progressions = new Gson().fromJson(getJson(),new TypeToken<ArrayList<MuscleProgression>>(){}.getType());
@@ -127,51 +125,71 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
             }
         });
         mMusclesWebView.getSettings().setJavaScriptEnabled(true);
+        mUtilities.setBodyInWebView(this,mMusclesWebView);
     }
 
     @Override
     public void displayProgressions(List<MuscleProgression> progressions) {
         Collections.reverse(progressions);
         muscleProgressions = progressions;
-        Log.v(TAG,"progressions: "+progressions);
         onLoadingViewOff();
-
-        for (MuscleProgression progressionMuscle: progressions){
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
-            try {
-
-                Date date = dateFormat.parse(progressionMuscle.getDate());
-                System.out.println(date);
-                System.out.println(dateFormat.format(date));
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-
         getMuscles();
-        mUtilities.setBodyInWebView(this,mMusclesWebView);
+        getDate();
         //getMusclePorcentaje(progressions);
+    }
+
+
+    private void getDate(){
+        for (MuscleProgression progressionMuscle: muscleProgressions){
+
+            DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
+            DateTime dateTime = formatter.parseDateTime(progressionMuscle.getDate());
+
+           mDateLayoutWrapper.addView(createCustomView(dateTime.dayOfWeek().getAsShortText(),dateTime.dayOfMonth().getAsShortText()));
+        }
+    }
+
+    private CustomDateView createCustomView(String day_name,String day_number){
+        CustomDateView customDateView = new CustomDateView(this);
+        customDateView.setBackgroundResource(R.color.cardview_dark_background);
+
+        //margin settings
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        params.setMargins(5, 0, 5, 0);
+        customDateView.setLayoutParams(params);
+
+        //set date of this item
+        customDateView.setNameDay(day_name);
+        customDateView.setNumberDay(day_number);
+
+        customDateView.setTag(day_number);
+
+        customDateView.setOnClickListener(view -> {
+            view.setBackgroundResource(R.drawable.custom_border);
+        });
+
+        return customDateView;
     }
 
     @Override
     public void onMuscle(Muscle muscle) {
         sMuscles_names.add(muscle.getMuscle_name());
+
+        //add muscle names to the webview
         mMuscleParts += "#" + muscle.getMuscle_name() + ",";
-        insertMuscleContent(muscle);
+
+        insertMuscleContent(muscle.getMuscle_name());
+
         mUtilities.injectJS(mMuscleParts,mMusclesWebView);
     }
 
-    private void insertMuscleContent(Muscle muscle){
+    private void insertMuscleContent(String muscle_name){
         if (sMuscles_names.size() > 0){
             RelativeLayout relativeLayout = mUtilities.createProgressionView(
                     this,
-                    muscle.getMuscle_name(),
+                    muscle_name,
                     String.valueOf(muscleProgressions.get(sMuscles_names.size()-1).getLevel()),
                     muscleProgressions.get(sMuscles_names.size()-1).getMuscle_activation_progress());
-
             mProgresionContent.addView(relativeLayout);
         }
     }
@@ -243,14 +261,10 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
 
             for (int a = 0; a < musculos.size(); a++) {
 
-
             }
         }
 
-
     }
-
-
 
 
     private String getJson(){
@@ -283,6 +297,10 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
     private void onErrorViewOff(){
         mErrorView.setVisibility(View.GONE);
     }
+
+    private void onDateViewOn(){mDateLayout.setVisibility(View.VISIBLE);}
+
+    private void onDateViewOff(){mDateLayout.setVisibility(View.INVISIBLE);}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

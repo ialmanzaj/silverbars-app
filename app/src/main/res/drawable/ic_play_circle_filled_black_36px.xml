@@ -6,16 +6,15 @@
     android:viewportHeight="20">
 
     <group
-            android:name="ic_play_circle_filled_black_36px"
-            android:translateX="-2.000000"
-            android:translateY="-2.000000">
+        android:name="ic_play_circle_filled_black_36px"
+        android:translateX="-2.000000"
+        android:translateY="-2.000000">
+        
         <path
-            android:name="Shape"
             android:strokeWidth="1"
             android:pathData="M 0 0 L 24 0 L 24 24 L 0 24 Z" />
         <path
-            android:name="Shape"
-            android:fillColor="#602C8D"
+            android:fillColor="#2FCCAA"
             android:strokeWidth="1"
             android:pathData="M12,2 C6.48,2 2,6.48 2,12 C2,17.52 6.48,22 12,22 C17.52,22 22,17.52 22,12
 C22,6.48 17.52,2 12,2 L12,2 Z M10,16.5 L10,7.5 L16,12 L10,16.5 L10,16.5 Z" />

@@ -123,6 +123,7 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(TAG,"onCreate");
 
         setupToolbar();
         setupTabs();
@@ -234,11 +235,7 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
 
         } else if (requestCode == FINAL_CREATE_WORKOUT){
             if (resultCode == RESULT_OK ){
-
                 finish();
-
-
-
             }
         }
     }
@@ -479,6 +476,12 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {mItemTouchHelper.startDrag(viewHolder);}
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.v(TAG,"onDestroy");
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

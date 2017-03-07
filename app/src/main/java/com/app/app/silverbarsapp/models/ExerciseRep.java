@@ -22,9 +22,6 @@ public class ExerciseRep implements Parcelable{
     @SerializedName("seconds")
     private int seconds;
 
-    private int tempo_positive;
-    private int tempo_negative;
-    private int tempo_isometric;
 
 
     public ExerciseRep() {}
@@ -35,9 +32,6 @@ public class ExerciseRep implements Parcelable{
         this.exercise = exercise;
         this.repetition = repetition;
         this.seconds = seconds;
-        this.tempo_positive = 0;
-        this.tempo_negative = 0;
-        this.tempo_isometric = 0;
     }
 
 
@@ -46,11 +40,7 @@ public class ExerciseRep implements Parcelable{
         this.exercise = exercise;
         this.repetition = repetition;
         this.seconds = seconds;
-        this.tempo_positive = tempo_positive;
-        this.tempo_isometric = tempo_isometric;
-        this.tempo_negative = tempo_negative;
     }
-
 
 
     protected ExerciseRep(Parcel in) {
@@ -58,9 +48,6 @@ public class ExerciseRep implements Parcelable{
         exercise = in.readParcelable(Exercise.class.getClassLoader());
         repetition = in.readInt();
         seconds = in.readInt();
-        tempo_positive = in.readInt();
-        tempo_negative = in.readInt();
-        tempo_isometric = in.readInt();
     }
 
     @Override
@@ -69,9 +56,6 @@ public class ExerciseRep implements Parcelable{
         dest.writeParcelable(exercise, flags);
         dest.writeInt(repetition);
         dest.writeInt(seconds);
-        dest.writeInt(tempo_positive);
-        dest.writeInt(tempo_negative);
-        dest.writeInt(tempo_isometric);
     }
 
     public static final Creator<ExerciseRep> CREATOR = new Creator<ExerciseRep>() {
@@ -110,29 +94,6 @@ public class ExerciseRep implements Parcelable{
         return seconds;
     }
 
-    public void setTempo_isometric(int tempo_isometric) {
-        this.tempo_isometric = tempo_isometric;
-    }
-
-    public void setTempo_negative(int tempo_negative) {
-        this.tempo_negative = tempo_negative;
-    }
-
-    public void setTempo_positive(int tempo_positive) {
-        this.tempo_positive = tempo_positive;
-    }
-
-    public int getTempo_isometric() {
-        return tempo_isometric;
-    }
-
-    public int getTempo_negative() {
-        return tempo_negative;
-    }
-
-    public int getTempo_positive() {
-        return tempo_positive;
-    }
 
     @Override
     public int describeContents() {

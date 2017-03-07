@@ -30,23 +30,17 @@ public class CustomDateView extends LinearLayout {
         init(context);
     }
 
-
     private void init(Context context) {
-
         LayoutInflater inflater = LayoutInflater.from(context);
-
         inflater.inflate(R.layout.sample_custom_date_view, this);
-
         this.setOrientation(VERTICAL);
+
         /*this.setMinimumHeight(100);
         this.setMinimumWidth(50);*/
 
 
         NameDay = (TextView) findViewById(R.id.day);
         NumberDay = (TextView) findViewById(R.id.number);
-
-
-
     }
 
     public void setNameDay(String nameDay){
@@ -57,6 +51,11 @@ public class CustomDateView extends LinearLayout {
         NumberDay.setText(numberDay);
     }
 
+    public TextView getNameDay() {
+        return NameDay;
+    }
 
-
+    public TextView getNumberDay() {
+        return NumberDay;
+    }
 }

@@ -88,30 +88,33 @@
                             android:paddingEnd="25dp"
                             android:theme="@style/ButtonRed"
                             android:layout_gravity="center_horizontal"
-                            android:text="@string/add_exercises_button"
+                            android:text="Add exercises"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
                     </LinearLayout>
-                    <LinearLayout
+
+                    <RelativeLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
+                        <android.support.v7.widget.RecyclerView
+                            android:layout_above="@+id/readd"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/exercises_selected" />
+
                         <Button
+                            android:layout_alignParentBottom="true"
                             android:theme="@style/ButtonRed"
                             android:id="@+id/readd"
                             android:text="@string/add_more"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/white"/>
+                    </RelativeLayout>
 
-                    </LinearLayout>
-
-                    <android.support.v7.widget.RecyclerView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/exercises_selected" />
 
                 </LinearLayout>
 

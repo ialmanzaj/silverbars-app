@@ -15,8 +15,8 @@ import android.view.View;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.fragments.MainWorkoutsFragment;
+import com.app.app.silverbarsapp.fragments.MyProgressFragment;
 import com.app.app.silverbarsapp.fragments.MyWorkoutsFragment;
-import com.app.app.silverbarsapp.fragments.ProfileFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,12 +72,12 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 currentFragment.setArguments(extras);
                 fabCreateWorkoutbuttonOn();
                 break;
-            case R.id.workout:
-                currentFragment = new MyWorkoutsFragment();
+            case R.id.my_progression:
+                currentFragment = new MyProgressFragment();
                 fabCreateWorkoutbuttonff();
                 break;
-            case R.id.profile:
-                currentFragment = new ProfileFragment();
+            case R.id.my_workouts:
+                currentFragment = new MyWorkoutsFragment();
                 fabCreateWorkoutbuttonff();
                 break;
         }

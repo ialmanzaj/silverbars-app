@@ -6,37 +6,31 @@ package com.app.app.silverbarsapp.viewsets;
 
 public interface WorkingOutView {
 
-    void updateSongName(String song_name);
-    void updateArtistName(String artist_name);
+    void onWorkoutReady();
+    void onResumeWorkout();
+    void onPauseWorkout();
+    void onFinishWorkout();
 
     void onPauseMusic();
     void onPlayMusic();
 
+
+    //counter
     void onRestCounterStarted(String second);
-    void onInitialCounterStarted(String second);
-    void onRepetitionCountdown(String second);
 
-    void hideNextExercisebutton();
-    void showNextExercisebutton();
+    void updateSongName(String song_name);
+    void updateArtistName(String artist_name);
 
-    void showPrevExercisebutton();
-    void hidePrevExercisebutton();
+
+    void onChangeToExercise(int exercise_position);
+    void onSetFinished(int set);
+
+    void updateToExercise(int rep, boolean isRepOrSecond);
 
     void onNextExercise();
     void onPreviewExercise();
 
-    void onChangeToExercise(int exercise_position);
-
-    void onRepsFinished(int exercise_position);
-    void onSetFinished(int set);
-
     void onOverlayViewOn();
     void onOverlayViewOff();
 
-    void onChangeExerciseValues(int rep, int tempo_positive, int tempo_isometric, int tempo_negative,boolean isRepOrSecond);
-
-
-    void onWorkoutResume();
-    void onWorkoutPaused();
-    void onWorkoutFinished();
 }

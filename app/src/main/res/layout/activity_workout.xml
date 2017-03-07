@@ -7,10 +7,10 @@
     android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/appbarlayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:elevation="2dp">
+        android:id="@+id/appbarlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="2dp">
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -28,7 +28,6 @@
                     android:id="@+id/start_button" />
             </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-
     <TabHost
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -45,10 +44,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary" />
+
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <LinearLayout
                     android:orientation="vertical"
                     android:id="@+id/overview"
@@ -66,17 +67,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <android.support.v7.widget.SwitchCompat
-                            android:textSize="18sp"
-                            android:textColor="@color/white"
-                            android:text="Disponible sin internet"
-                            android:theme="@style/MySwitch"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="20dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_width="match_parent"
-                            android:checked="false"
-                            android:id="@+id/enableLocal" />
+                            <android.support.v7.widget.SwitchCompat
+                                android:textSize="18sp"
+                                android:textColor="@color/white"
+                                android:text="Descargar rutina"
+                                android:theme="@style/MySwitch"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="20dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_width="match_parent"
+                                android:checked="false"
+                                android:id="@+id/enableLocal" />
 
                     </RelativeLayout>
                     <RelativeLayout
@@ -111,7 +112,7 @@
                                 android:layout_height="20dp"
                                 android:text="@string/select_music_text"
                                 android:textColor="@color/white"
-                                android:contentDescription=""/>
+                                android:contentDescription="@null"/>
 
                         </LinearLayout>
 
@@ -171,6 +172,7 @@
                             android:text="@string/rest_exercise_text"
                             android:textColor="@color/black"
                             android:textSize="18sp" />
+
                         <LinearLayout
                             android:minHeight="45dp"
                             android:layout_alignParentEnd="true"
@@ -191,16 +193,11 @@
                                 android:hint="@string/zero"
                                 android:id="@+id/RestbyExercise" />
 
-
-
                         </LinearLayout>
-
                     </RelativeLayout>
                     <RelativeLayout
                         android:paddingStart="15dp"
                         android:paddingEnd="15dp"
-
-
                         android:gravity="center_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -220,6 +217,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
+
                             <TextView
                                 android:layout_marginEnd="10dp"
                                 android:textSize="22sp"
@@ -238,19 +236,6 @@
 
 
                     <android.support.v7.widget.SwitchCompat
-                        android:minHeight="45dp"
-                        android:textSize="18sp"
-                        android:paddingTop="7dp"
-                        android:paddingBottom="7dp"
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
-                        android:id="@+id/vibration_per_rep"
-                        android:theme="@style/MySwitch2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/vibration_rep_text"
-                        android:textColor="@color/black" />
-                    <android.support.v7.widget.SwitchCompat
                         android:id="@+id/vibration_per_set"
                         android:minHeight="45dp"
                         android:theme="@style/MySwitch2"
@@ -263,6 +248,7 @@
                         android:text="@string/vibration_set_text"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
+
                     <android.support.v7.widget.SwitchCompat
                         android:id="@+id/voice_per_exercise"
                         android:minHeight="45dp"
@@ -276,7 +262,6 @@
                         android:text="@string/audio_exercise"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
-
 
                 </LinearLayout>
                 <LinearLayout
@@ -292,125 +277,23 @@
                         android:layout_gravity="center_horizontal" />
                 </LinearLayout>
 
-                <ScrollView
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal"
+                <RelativeLayout
+                    android:scrollbars="vertical"
                     android:id="@+id/muscles"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-                            <WebView
-                                android:layout_weight="1"
-                                android:id="@+id/webview"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-                            </WebView>
-                            <LinearLayout
-                                android:id="@+id/content_info"
-                                android:orientation="vertical"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-                                <TextView
-                                    android:textSize="18sp"
-                                    android:textColor="@color/black"
-                                    android:text="@string/muscles_involved"
-                                    android:layout_gravity="center_horizontal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
-                                <LinearLayout
-                                    android:layout_marginTop="10dp"
-                                    android:layout_marginBottom="10dp"
-                                    android:orientation="horizontal"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:baselineAligned="false">
-                                    <LinearLayout
-                                        android:id="@+id/column1"
-                                        android:orientation="vertical"
-                                        android:gravity="center_horizontal"
-                                        android:layout_weight="1"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content">
-                                    </LinearLayout>
-                                    <LinearLayout
-                                        android:id="@+id/column2"
-                                        android:orientation="vertical"
-                                        android:gravity="center_horizontal"
-                                        android:layout_weight="1"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content">
-                                    </LinearLayout>
-                                </LinearLayout>
 
-                            </LinearLayout>
-                        </LinearLayout>
-                </ScrollView>
+                    <WebView
+                        android:layout_alignParentTop="true"
+                        android:id="@+id/webview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </RelativeLayout>
+
             </FrameLayout>
         </LinearLayout>
     </TabHost>
-
-    <LinearLayout
-        android:background="@color/white"
-        android:gravity="center_vertical"
-        android:visibility="gone"
-        android:id="@+id/error_view"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:textSize="22sp"
-            android:layout_gravity="center_horizontal"
-            android:textColor="@color/black"
-            android:text="@string/something_wrong"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:textSize="18sp"
-            android:layout_gravity="center_horizontal"
-            android:textColor="@color/dark_gray"
-            android:text="@string/error_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/reload"
-            android:layout_marginTop="10dp"
-            android:paddingStart="25dp"
-            android:paddingEnd="25dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/colorSecondary"
-            android:text="@string/reload"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-    <LinearLayout
-        android:background="@color/white"
-        android:gravity="center_horizontal|center_vertical"
-        android:visibility="gone"
-        android:id="@+id/loading"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:layout_alignParentStart="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
-
-
 </LinearLayout>
 
 
