@@ -46,17 +46,15 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
     @BindView(R.id.toolbar) Toolbar toolbar;
 
-    @BindView(R.id.exercises_list)RecyclerView list;
-    @BindView(R.id.add_exercises)Button mAddExercises;
-
+    @BindView(R.id.loading) LinearLayout mLoadingView;
     @BindView(R.id.error_view) LinearLayout mErrorView;
     @BindView(R.id.reload)Button mReload;
 
-    @BindView(R.id.loading) LinearLayout mLoadingView;
+
+    @BindView(R.id.exercises_list)RecyclerView list;
+    @BindView(R.id.add_exercises)Button mAddExercises;
 
     private ExercisesAdapter adapter;
-
-    private ArrayList<String> mExercisesNames = new ArrayList<>();
 
     private ArrayList<Exercise> mExercises = new ArrayList<>();
     private ArrayList<String> mExercisesSelected;
@@ -90,8 +88,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
         if (getIntent().getExtras() != null) {
             getExtras(getIntent().getExtras());
         }
-
-
 
         setupToolbar();
 
@@ -133,51 +129,47 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
         return json;
     }
 
+
     @OnClick(R.id.reload)
     public void reload(){
-        //mExerciseListPresenter.getExercises();
+        onErrorOff();
+        onProgressViewOn();
+        mExerciseListPresenter.getExercises();
     }
 
 
     @OnClick(R.id.add_exercises)
     public void addExercises(){
 
+        ArrayList<Integer> mListExercisesIds = new ArrayList<>();
 
         for(int i = 0; i < adapter.getExercisesSelected().size(); i++) {
-            int key = adapter.getExercisesSelected().keyAt(i);
-
             // get the object by the key.
-            Object obj = adapter.getExercisesSelected().get(key);
-            if ((Boolean)obj){
-                Log.i(TAG, String.valueOf(i));
-                mExercisesNames.add(mExercises.get(i).getExercise_name());
-                Log.i(TAG, String.valueOf(mExercisesNames));
+            Object exercise_is_selected = adapter.getExercisesSelected().valueAt(i);
+
+            if ((Boolean)exercise_is_selected){
+                int exercise_id = adapter.getExercisesSelected().keyAt(i);
+                mListExercisesIds.add(exercise_id);
             }
         }
 
 
-        if (mExercisesNames.size() > 0)
-            sentToCreateWorkout();
+        if (mListExercisesIds.size() > 0) {
+            // enviar items a la actividad anterior
+            Intent return_intent = new Intent();
+            return_intent.putExtra("exercises",mExercises);
+            return_intent.putExtra("exercises_selected",mListExercisesIds);
+            setResult(RESULT_OK, return_intent);
+            finish();
+        }
 
     }
-
-    private void sentToCreateWorkout(){
-        // enviar items a la actividad anterior
-        Intent return_intent = new Intent();
-        return_intent.putExtra("exercises",mExercises);
-        return_intent.putExtra("exercises_selected",mExercisesNames);
-        setResult(RESULT_OK, return_intent);
-        finish();
-    }
-
 
     @Override
     public void displayExercises(List<Exercise> exercises) {
-        onErrorOff();
         onProgressViewOff();
 
         mExercises.addAll(exercises);
-
         verifyExercises();
     }
 
@@ -192,7 +184,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     }
 
     private void verifyExercises(){
-
         if (mExercisesSelected == null){
             Log.i(TAG, "no se ha seleccionado ningun ejercicio todavia");
             setAdapter(mExercises);
@@ -202,7 +193,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
         }
 
     }
-
 
     private ArrayList<Exercise> getExercisesNoSelected(){
         ArrayList<Exercise> mExercisesNoSelected = mExercises;

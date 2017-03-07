@@ -37,12 +37,10 @@ public class ExercisesAdapter extends RecyclerView.Adapter<ExercisesAdapter.Exer
     private SparseBooleanArray mExercisesSelected = new SparseBooleanArray();
 
 
-
     public ExercisesAdapter(Context context, List<Exercise> exercises) {
         mContext = context;
         mExercises = exercises;
     }
-
 
     public class ExerciseViewHolder extends RecyclerView.ViewHolder {
 

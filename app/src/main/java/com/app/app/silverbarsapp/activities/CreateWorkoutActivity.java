@@ -1,9 +1,6 @@
 package com.app.app.silverbarsapp.activities;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,8 +16,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +36,6 @@ import com.app.app.silverbarsapp.viewsets.CreateWorkoutView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -53,6 +47,10 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
 
     private static final String TAG = CreateWorkoutActivity.class.getSimpleName();
 
+    private static final int FINAL_CREATE_WORKOUT = 2;
+    private static final int LIST_EXERCISES_SELECTION = 1;
+    
+
     @Inject
     CreateWorkoutPresenter mCreateWorkoutPresenter;
 
@@ -62,41 +60,38 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
 
     @BindView(R.id.toolbar) Toolbar toolbar;
 
-    @BindView(R.id.content_empty) LinearLayout mEmptyView;
-    @BindView(R.id.webview) WebView webView;
 
     @BindView(R.id.error_view) LinearLayout mErrorView;
     @BindView(R.id.reload) Button mReloadbutton;
-
     @BindView(R.id.progress_view) LinearLayout ProgressView;
-    @BindView(R.id.content_info) LinearLayout contentView;
-    @BindView(R.id.readd) Button mButtonReAdd;
     
+
+    @BindView(R.id.content_empty) LinearLayout mEmptyView;
+    @BindView(R.id.webview) WebView webView;
+    
+   
+    @BindView(R.id.readd) Button mButtonReAdd;
+    @BindView(R.id.next) Button mNextbutton;
+    @BindView(R.id.add_exercises) Button mAddExercise;
+
+
+    @BindView(R.id.content_info) LinearLayout contentView;
     @BindView(R.id.column1) LinearLayout PrimMuscleColumn;
     @BindView(R.id.column2) LinearLayout SecMuscleColumn;
     
     @BindView(R.id.exercises_selected) RecyclerView mExercisesSelectedList;
     
-    @BindView(R.id.next) Button mNextbutton;
-    @BindView(R.id.add_exercises) Button mAddExercise;
-
-    @BindView(R.id.muscles_) ScrollView scrollView;
-
+    
     private ExercisesSelectedAdapter adapter;
     private ItemTouchHelper mItemTouchHelper;
 
     private String muscles = "";
 
     private ArrayList<Exercise> mExercisesAllList;
-    private ArrayList<String> mExercisesNames;
+    private ArrayList<Integer> mListExercisesSelectedids;
 
 
-    private  int ISOMETRIC = 0,CARDIO = 0,PYLOMETRICS = 0,STRENGTH = 0;
-
-
-    private static final int FINAL_CREATE_WORKOUT = 2;
-    private static final int LIST_EXERCISES_SELECTION = 1;
-
+    //private  int ISOMETRIC = 0,CARDIO = 0,PYLOMETRICS = 0,STRENGTH = 0;
 
     @Override
     protected int getLayout() {
@@ -123,20 +118,32 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(TAG,"onCreate");
 
         setupToolbar();
         setupTabs();
         setupAdapter();
+        setupWebview();
 
-
-
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {scrollView.setFillViewport(true);}
 
         utilities.setBodyInWebView(this,webView);
+    }
 
-    }//  close create workout
+    private void setupWebview(){
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                utilities.injectJS(muscles,webView);
+                super.onPageFinished(view, url);
+            }
+        });
 
+        //webView.getSettings().setUseWideViewPort(true);
+
+        webView.getSettings().setJavaScriptEnabled(true);
+
+
+        utilities.setBodyInWebView(this,webView);
+    }
 
     private void setupAdapter(){
 
@@ -149,6 +156,7 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
         mItemTouchHelper  = new ItemTouchHelper(new SimpleItemTouchHelperCallback(adapter));
         mItemTouchHelper.attachToRecyclerView(mExercisesSelectedList);
     }
+
 
     public void setupToolbar(){
         setSupportActionBar(toolbar);
@@ -180,10 +188,10 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
 
     @OnClick(R.id.reload)
     public void reload(){
-          /* if (mExercisesNames.size() > 0){
+          /* if (mListExercisesSelectedids.size() > 0){
                 onErrorViewOff();
                 onProgressOn();
-                setExercisesAdapter(mExercisesNames);
+                setExercisesAdapter(mListExercisesSelectedids);
             }
             */
     }
@@ -227,9 +235,9 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
                 if (data.hasExtra("exercises") && data.hasExtra("exercises_selected")) {
 
                     mExercisesAllList =  data.getParcelableArrayListExtra("exercises");
-                    mExercisesNames = data.getStringArrayListExtra("exercises_selected");
+                    mListExercisesSelectedids = data.getIntegerArrayListExtra("exercises_selected");
 
-                    setExercisesAdapter(mExercisesAllList,mExercisesNames);
+                    setExercisesAdapter(mExercisesAllList,mListExercisesSelectedids);
                 }
             }
 
@@ -254,15 +262,15 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
     public void displayNetworkError() {
         onErrorViewOn();
     }
-    
 
-    private void setExercisesAdapter(List<Exercise> exercises,List<String> exercises_names){
+
+    private void setExercisesAdapter(List<Exercise> list_exercises,List<Integer> list_exercises_id){
         onEmptyViewOff();
 
         List<String> muscles_names = new ArrayList<>();
         List<String> types_of_exercise = new ArrayList<>();
 
-        for (Exercise exercise: getExercises(exercises,exercises_names) ){
+        for (Exercise exercise: getExercisesSelected(list_exercises,list_exercises_id) ){
 
             adapter.add(exercise);
 
@@ -279,11 +287,11 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
         }
 
         setMusclesToView(muscles_names);
-        setTypes(types_of_exercise);
+        //setTypes(types_of_exercise);
 
         //adapter.setOnDataChangeListener(size -> setMuscles(adapter.getSelectedExercises()));
     }
-
+/*
     private void setTypes(List<String> types){
         List<String> typesExercise  = utilities.deleteCopiesofList(types);
         getCountTimes(typesExercise);
@@ -371,83 +379,61 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
                 STRENGTH = STRENGTH+1;
             }
         }
-    }
-    
-    private List<Exercise> getExercises(List<Exercise> all_exercises_list, List<String> exercises_names){
-        //Log.v(TAG,"exercise names: "+exercises_names.size());
+    }*/
+
+    private List<Exercise> getExercisesSelected(List<Exercise> all_exercises_list, List<Integer> exercises_id){
         List<Exercise> exerciseList = new ArrayList<>();
-        List<String> exercises_list_names =  new ArrayList<>();
-
-        for (String exercise_name: exercises_names){
-            for (Exercise exercise : all_exercises_list){
-
-                if (Objects.equals(exercise_name, exercise.getExercise_name())){
-
-                    if (!exercises_list_names.contains(exercise_name)){
-                        exercises_list_names.add(exercise_name);
-                        exerciseList.add(exercise);
-                    }
-                }
-
-
-            }
+        for (Integer exercise_id: exercises_id){
+            exerciseList.add(getExerciseById(all_exercises_list,exercise_id));
         }
-
         return exerciseList;
     }
 
-
-    
-    private void setMusclesToView(List<String> musculos){
-        //Log.v(TAG,"setMusclesToView: "+musculos);
-
-        muscles = "";
-
-        if (musculos.size() > 0){
-
-
-            List<String> mMusclesFinal = utilities.deleteCopiesofList(musculos);
-
-
-            for (int a = 0;a<mMusclesFinal.size();a++) {
-                TextView mMusclesTextView = new TextView(this);
-
-                muscles += "#"+ mMusclesFinal.get(a) + ",";
-
-                //Log.v(TAG,"muscles:" +muscles);
-
-                mMusclesTextView.setText(mMusclesFinal.get(a));
-                mMusclesTextView.setGravity(Gravity.CENTER);
-
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    mMusclesTextView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));
-                }else {mMusclesTextView.setTextColor(getResources().getColor(R.color.gray_active_icon));}
-
-                if (a%2 == 0){
-                    //SecMuscleColumn.addView(mMusclesTextView);
-                }else {
-                    //PrimMuscleColumn.addView(mMusclesTextView);
-                }
-
-
+    private Exercise getExerciseById(List<Exercise> exercises,int exercise_id){
+        for (Exercise exercise: exercises){
+            if (exercise.getId() == exercise_id){
+                return exercise;
             }
         }
+        return null;
+    }
 
-        webView.setWebViewClient(new WebViewClient(){
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                utilities.injectJS(muscles,webView);
-                super.onPageFinished(view, url);
+    private void setMusclesToView(List<String> musculos){
+        //Log.v(TAG,"setMusclesToView: "+musculos);
+        if (musculos.size() < 0){
+            return;
+        }
+
+
+        muscles = "";
+        List<String> mMusclesFinal = utilities.deleteCopiesofList(musculos);
+
+
+        for (int a = 0;a<mMusclesFinal.size();a++) {
+            TextView mMusclesTextView = new TextView(this);
+
+            muscles += "#"+ mMusclesFinal.get(a) + ",";
+
+            //Log.v(TAG,"muscles:" +muscles);
+
+            mMusclesTextView.setText(mMusclesFinal.get(a));
+            mMusclesTextView.setGravity(Gravity.CENTER);
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    mMusclesTextView.setTextColor(getResources().getColor(R.color.gray_active_icon,null));
+            }else {mMusclesTextView.setTextColor(getResources().getColor(R.color.gray_active_icon));}
+
+            if (a%2 == 0){
+                //SecMuscleColumn.addView(mMusclesTextView);
+            }else {
+                //PrimMuscleColumn.addView(mMusclesTextView);
             }
-        });
 
-        //webView.getSettings().setUseWideViewPort(true);
-
-        webView.getSettings().setJavaScriptEnabled(true);
+        }
 
 
-        utilities.setBodyInWebView(this,webView);
+        utilities.injectJS(muscles,webView);
     }
 
 

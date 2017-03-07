@@ -52,9 +52,7 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
         notifyDataSetChanged();
     }
 
-
     public class SelectedExercisesHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
-
 
         @BindView(R.id.nombre) TextView nombre;
         @BindView(R.id.handle) ImageView img_handle;
@@ -85,7 +83,6 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
             itemView.setBackgroundColor(0);
         }
     }
-
 
     @Override
     public int getItemCount() {
