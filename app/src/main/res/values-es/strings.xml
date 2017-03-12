@@ -17,6 +17,9 @@
     <string name="menu_profile">Perfil</string>
 
 
+    <string name="action_websearch">Web search</string>
+    <string name="app_not_available">Lo siento, no explorador disponible</string>
+
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -31,18 +34,11 @@
     completions.</string>
 
 
-    <string name="navigation_drawer_open">Abrir navegacion </string>
-    <string name="navigation_drawer_close">Cerrar navegacion</string>
+
     <string name="action_settings">Configuraciones</string>
 
+
     <string name="rep_edit">Total de Repeticiones</string>
-
-
-    <string name="drawer_open">Open Drawer</string>
-    <string name="drawer_close">Close Drawer</string>
-    <string name="action_websearch">Web search</string>
-    <string name="app_not_available">Lo siento, no explorador disponible</string>
-
 
 
     <!-- Strings related to activity_exercise_cards -->
@@ -94,6 +90,8 @@
     <string name="start_button">EMPEZAR</string>
 
     <string name="no_song">No hay canción</string>
+
+
     <!-- Strings related to item workouts -->
     <string name="workout_name">NOMBRE DE RUTINA</string>
     <string name="done_text">Listo</string>
@@ -152,7 +150,6 @@
     <string name="reload">Recargar</string>
 
 
-
     <string name="title_dialog">Estas seguro de terminar la rutina?</string>
     <string name="content_dialog">Vas a perder el progreso de tu rutina.</string>
     <string name="positive_dialog">SI</string>
@@ -195,20 +192,22 @@
 
     <string name="premium">Solo Premium</string>
     <string name="only_premium">Solo disponible a usuarios Premium</string>
-
-    <string name="skills">Mis habilidades</string>
     <string name="empty_playlist">No hay ninguna lista de reproducción</string>
     <string name="results">Mis  Resultados</string>
 
     <string name="create_playlist">Crea una nueva lista de reproducción</string>
-
     <string name="title_playlist">Escribe el nombre de tu lista</string>
     <string name="cancel">Cancelar</string>
     <string name="playlist_name">Nombre de lista</string>
 
+    <string name="exercise_adapter_option">Segundos</string>
     <string name="add_exercises_button">Añadir ejercicio a rutina</string>
-
     <string name="level">Nivel</string>
+
+
+    <!---    Strings of LOGIN    -->
+    <string name="slogan_login">Iniciando sesion para empezar a entrenar</string>
+    <string name="slogan_silverbars">Be your own machine</string>
 
 
 </resources>

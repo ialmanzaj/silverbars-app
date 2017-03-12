@@ -25,6 +25,7 @@ public abstract class BaseAuthenticationActivity extends AuthenticationActivity 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setFacebookSettings();
         setContentView(getLayout());
         injectDependencies();
         injectViews();
@@ -74,6 +75,7 @@ public abstract class BaseAuthenticationActivity extends AuthenticationActivity 
     public void injectDependencies() {
         //setUpComponent(SpotifyStreamerApp.getApp(this).getComponent());
     }
+    protected abstract void setFacebookSettings();
 
     /**
      * Every object annotated with {@link } its gonna injected trough butterknife

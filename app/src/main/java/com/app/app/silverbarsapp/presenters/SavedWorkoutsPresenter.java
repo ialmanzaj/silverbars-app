@@ -22,9 +22,14 @@ public class SavedWorkoutsPresenter  extends BasePresenter implements SavedWorko
         this.interactor = interactor;
     }
 
-    public void getWorkouts() throws SQLException {
-        interactor.getWorkout(this);
+    public void getWorkouts() {
+        try {
+            interactor.getWorkout(this);
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    }
+
 
     @Override
     public void onWorkouts(List<Workout> workouts) {

@@ -14,6 +14,7 @@ import com.app.app.silverbarsapp.database_models.TypeExercise;
 import com.app.app.silverbarsapp.database_models.UserWorkout;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -27,18 +28,13 @@ import static com.app.app.silverbarsapp.Constants.DATABASE_VERSION;
 
 public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
 
-
-    private Dao<MySavedWorkout, Integer> workoutDao;
-    private Dao<UserWorkout, Integer> userworkoutDao;
-    private Dao<ExerciseRep, Integer> exerciserepDao;
-    private Dao<Exercise, Integer> exerciseDao;
-    private Dao<Muscle, Integer> muscleDao;
-    private Dao<TypeExercise, Integer> typeDao;
-    private Dao<ProfileFacebook, Integer> profileFacebook;
-
-    private UpdateBuilder<MySavedWorkout, Integer> updateSavedWorkoutBuilder;
-
-
+    private Dao<MySavedWorkout, Integer> mSavedWorkoutDao;
+    private Dao<UserWorkout, Integer> mUserWorkoutDao;
+    private Dao<ExerciseRep, Integer> mExerciseRepDao;
+    private Dao<Exercise, Integer> mExerciseDao;
+    private Dao<Muscle, Integer> sMuscleDao;
+    private Dao<TypeExercise, Integer> mTypeDao;
+    private Dao<ProfileFacebook, Integer> mProfileFacebook;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION,
@@ -100,63 +96,69 @@ public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
      */
 
     public Dao<TypeExercise, Integer> getTypeDao()throws java.sql.SQLException {
-        if(typeDao == null) {
-            typeDao = getDao(TypeExercise.class);
+        if(mTypeDao == null) {
+            mTypeDao = getDao(TypeExercise.class);
         }
-        return typeDao;
+        return mTypeDao;
     }
 
 
     public Dao<Muscle, Integer> getMuscleDao() throws java.sql.SQLException {
-        if(muscleDao == null) {
-            muscleDao = getDao(Muscle.class);
+        if(sMuscleDao == null) {
+            sMuscleDao = getDao(Muscle.class);
         }
-        return muscleDao;
+        return sMuscleDao;
     }
 
     public Dao<Exercise, Integer> getExerciseDao() throws java.sql.SQLException {
-        if(exerciseDao == null) {
-            exerciseDao = getDao(Exercise.class);
+        if(mExerciseDao == null) {
+            mExerciseDao = getDao(Exercise.class);
         }
-        return exerciseDao;
+        return mExerciseDao;
     }
 
     public Dao<ExerciseRep, Integer> getExerciseRepDao() throws java.sql.SQLException {
-        if(exerciserepDao == null) {
-            exerciserepDao = getDao(ExerciseRep.class);
+        if(mExerciseRepDao == null) {
+            mExerciseRepDao = getDao(ExerciseRep.class);
         }
-        return exerciserepDao;
+        return mExerciseRepDao;
     }
 
 
     public Dao<MySavedWorkout, Integer> getSavedWorkoutDao() throws java.sql.SQLException {
-        if(workoutDao == null) {
-            workoutDao = getDao(MySavedWorkout.class);
+        if(mSavedWorkoutDao == null) {
+            mSavedWorkoutDao = getDao(MySavedWorkout.class);
         }
-        return workoutDao;
+        return mSavedWorkoutDao;
     }
 
     public Dao<UserWorkout, Integer> getUserWorkoutDao() throws java.sql.SQLException {
-        if(userworkoutDao == null) {
-            userworkoutDao = getDao(UserWorkout.class);
+        if(mUserWorkoutDao == null) {
+            mUserWorkoutDao = getDao(UserWorkout.class);
         }
-        return userworkoutDao;
+        return mUserWorkoutDao;
     }
+
 
     public Dao<ProfileFacebook, Integer> getProfileFacebook() throws java.sql.SQLException {
-        if(profileFacebook == null) {
-            profileFacebook = getDao(ProfileFacebook.class);
+        if(mProfileFacebook == null) {
+            mProfileFacebook = getDao(ProfileFacebook.class);
         }
-        return profileFacebook;
+        return mProfileFacebook;
     }
 
-
     public void updateSavedWorkout(int workout_id,boolean saved) throws java.sql.SQLException {
-        updateSavedWorkoutBuilder = getSavedWorkoutDao().updateBuilder();
+        UpdateBuilder<MySavedWorkout, Integer> updateSavedWorkoutBuilder = getSavedWorkoutDao().updateBuilder();
         updateSavedWorkoutBuilder.where().idEq(workout_id);
         updateSavedWorkoutBuilder.updateColumnValue("saved",saved);
         updateSavedWorkoutBuilder.update();
     }
 
+
+    public void deleteUserWorkout(int workout_id) throws java.sql.SQLException {
+        DeleteBuilder<UserWorkout, Integer> deleteUserWorkoutBuilder = getUserWorkoutDao().deleteBuilder();
+        deleteUserWorkoutBuilder.where().idEq(workout_id);
+        deleteUserWorkoutBuilder.delete();
+    }
 
 }

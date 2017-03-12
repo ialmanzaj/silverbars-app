@@ -90,7 +90,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
             String[] imageDir = exercises.get(position).getExercise().getExercise_image().split("exercises");
 
-
             if (imageDir.length == 2){
                 //Log.d(TAG,"img from json");
 
@@ -106,10 +105,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             }
 
 
-        }catch (NullPointerException e){
-            Log.e(TAG,""+e);
-        }
-
+        }catch (NullPointerException e){Log.e(TAG,""+e);}
     }
 
 

@@ -214,12 +214,15 @@
     <string name="exercise_adapter_option">Seconds</string>
     <string name="reps_text">Reps</string>
 
+    <!---    Strings of LOGIN    -->
+    <string name="slogan_login">Logging in to start training</string>
+    <string name="slogan_silverbars">Be your own machine</string>
+
 
     <!---           Strings for authentication       -->
     <string name="com.andretietz.retroauth.authentication.ACTION" translatable="false">@string/authentication_ACTION</string>
-    <string name="authentication_ACTION" translatable="false">com.app.proj.silverbarsapp.ACTION</string>
-    <string name="authentication_ACCOUNT" translatable="false">com.app.proj.silverbarsapp.ACCOUNT</string>
-    <string name="authentication_TOKEN" translatable="false">com.app.proj.silverbarsapp.TOKEN</string>
-
+    <string name="authentication_ACTION" translatable="false">com.app.app.silverbarsapp.ACTION</string>
+    <string name="authentication_ACCOUNT" translatable="false">com.app.app.silverbarsapp.ACCOUNT</string>
+    <string name="authentication_TOKEN" translatable="false">com.app.app.silverbarsapp.TOKEN</string>
 </resources>
 

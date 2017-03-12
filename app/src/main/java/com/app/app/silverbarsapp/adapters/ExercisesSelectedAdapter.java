@@ -122,11 +122,8 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
 
         try {
 
-            viewHolder.nombre.setText(mSelectedExercises.get(position).getExercise_name());
-
-
             viewHolder.setTouchListener(viewHolder);
-
+            viewHolder.nombre.setText(mSelectedExercises.get(position).getExercise_name());
 
             //img
             Uri uri = Uri.parse(mSelectedExercises.get(position).getExercise_image());
@@ -137,26 +134,13 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
     }
 
 
-
     public void add(Exercise exercise){
         mSelectedExercises.add(0,exercise);
         notifyItemInserted(0);
     }
 
-
     public ArrayList<Exercise> getSelectedExercises(){
         return mSelectedExercises;
-    }
-
-
-    public ArrayList<String> getSelectedExercisesName(){
-        ArrayList<String> exercises_names = new ArrayList<>();
-
-        for (int a = 0;a<mSelectedExercises.size();a++){
-            exercises_names.add(mSelectedExercises.get(a).getExercise_name());
-        }
-
-        return exercises_names;
     }
 
     private void notifyListener(){
@@ -165,8 +149,7 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
 
     public void setOnDataChangeListener(OnExerciseListener onDataChangeListener){listener = onDataChangeListener;}
 
-
-    public interface OnExerciseListener {
+    private interface OnExerciseListener {
         void onSizeChanged(int size);
     }
 

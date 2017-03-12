@@ -22,9 +22,22 @@ public class UserWorkoutsPresenter extends BasePresenter implements UserWorkouts
         this.interactor = interactor;
     }
 
-    public void getMyWorkouts() throws SQLException {
-        interactor.getWorkout(this);
+    public void getMyWorkouts() {
+        try {
+            interactor.getWorkout(this);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
+    public void deleteWorkout(int workout_id) {
+        try {
+            interactor.deleteWorkout(workout_id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     @Override

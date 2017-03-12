@@ -42,12 +42,12 @@ public class CreateWorkoutFinalInteractor {
 
             for (com.app.app.silverbarsapp.models.ExerciseRep exerciseRep: workout.getExercises()){
 
-
                 Exercise exercise = insertExercise(exerciseRep);
                 insertTypesOfExercise(exerciseRep,exercise);
                 insertMuscles(exerciseRep,exercise);
 
                 //re create exercise rep model
+                Log.d(TAG,"exerciseRep rep:"+exerciseRep.getRepetition());
                 helper.getExerciseRepDao().create(new ExerciseRep(exercise, exerciseRep.getRepetition(),user_workout));
             }
 

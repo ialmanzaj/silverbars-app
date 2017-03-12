@@ -13,13 +13,13 @@
     <item android:id="@+id/my_workouts"
         android:title="@string/menu_myworkouts"
         android:enabled="true"
-        android:icon="@drawable/ic_apps_black_24dp"
+        android:icon="@drawable/ic_apps_black_24px"
         app:showAsAction="ifRoom"/>
 
     <item android:id="@+id/my_progression"
         android:title="My progression"
         android:enabled="true"
-        android:icon="@drawable/ic_camera_alt_black_24px"
+        android:icon="@drawable/ic_person_outline_black_24px"
         app:showAsAction="ifRoom"/>
 
 </menu>

@@ -13,16 +13,13 @@ import android.support.annotation.Nullable;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.components.DaggerLoginComponent;
-import com.app.app.silverbarsapp.database_models.ProfileFacebook;
 import com.app.app.silverbarsapp.models.AccessToken;
 import com.app.app.silverbarsapp.modules.LoginModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
@@ -32,10 +29,8 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -44,7 +39,6 @@ import java.util.Arrays;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 
 import static com.app.app.silverbarsapp.Constants.PACKAGE;
 
@@ -58,20 +52,16 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
 
 
     @BindView(R.id.login_progress) View mProgressView;
-    @BindView(R.id.login_button) Button mLoginButton;
 
     @BindView(R.id.logo)ImageView mLogo;
 
     @BindView(R.id.container)RelativeLayout container;
     @BindView(R.id.slogan_login)TextView slogan_login;
 
+    @BindView(R.id.login_button) LoginButton mLoginButton;
+
 
     CallbackManager callbackManager;
-
-    private ProfileTracker mProfileTracker;
-
-    ProfileFacebook profileFacebook;
-
 
     @Override
     protected int getLayout() {
@@ -87,8 +77,6 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
     @Override
     public void injectDependencies() {
         super.injectDependencies();
-
-
         DaggerLoginComponent
                 .builder()
                 .silverbarsComponent(SilverbarsApp.getApp(this).getComponent())
@@ -97,12 +85,8 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)  {
-        super.onCreate(savedInstanceState);
-
+    protected void setFacebookSettings() {
         FacebookSdk.sdkInitialize(getApplicationContext());
-        callbackManager = CallbackManager.Factory.create();
-
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
                     PACKAGE, PackageManager.GET_SIGNATURES);
@@ -113,46 +97,19 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
             }
         } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {Log.e(TAG,"Exception",e);}
 
+        callbackManager = CallbackManager.Factory.create();
     }
 
-    @OnClick(R.id.login_button)
-    public void login(){
+    @Override
+    protected void onCreate(Bundle savedInstanceState)  {
+        super.onCreate(savedInstanceState);
 
-        if (!isNetworkConnected()){
-            Toast.makeText(this, "Please, Connect to internet", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {container.setBackgroundColor(getResources().getColor(R.color.black,getTheme()));}else {container.setBackgroundColor(getResources().getColor(R.color.black));}
-
-        onLoadingOff();
-
-        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        mLoginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
+        mLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
-
                 onLoadingOn();
-                getAccessToken(loginResult.getAccessToken().getToken());
-
-                profileFacebook = new ProfileFacebook();
-
-                if (mProfileTracker == null){
-                    mProfileTracker = new ProfileTracker() {
-                        @Override
-                        protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                            // profile2 is the new profile
-
-                            Log.v("facebook - profile id", currentProfile.getId());
-                            Log.v("facebook - profile", currentProfile.getFirstName());
-                            Log.v("facebook - profile link", String.valueOf(currentProfile.getLinkUri()));
-
-                            profileFacebook.setId(Long.parseLong(currentProfile.getId()));
-                            profileFacebook.setFirst_name(currentProfile.getFirstName());
-                            profileFacebook.setLast_name(currentProfile.getLastName());
-                        }
-                    };
-                }
-
+                mLoginPresenter.onLoginSuccess(loginResult);
             }
             @Override
             public void onCancel() {
@@ -164,25 +121,17 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
             }
         });
 
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email", "user_friends"));
     }
 
     @Override
     public void displayToken(AccessToken accessToken) {
-
         String user = accessToken.getAccess_token();
-
         Account account = createOrGetAccount(user);
-
         storeToken(account, getString(R.string.authentication_TOKEN),  accessToken.getAccess_token(),  accessToken.getRefresh_token());
 
         // finishes the activity and set this account to the "current-active" one
         finalizeAuthentication(account);
-
-        //save in database
-        mLoginPresenter.saveProfile(profileFacebook);
     }
-
 
     @Override
     public void profileCreated(Boolean created) {
@@ -192,16 +141,10 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
         }
     }
 
-    private void getAccessToken(String facebook_token) {
-        //get the access token
-        mLoginPresenter.getAccessToken(facebook_token);
-    }
-
     @Override
     public void displayNetworkError() {
 
     }
-
     @Override
     public void displayServerError() {
 
@@ -218,17 +161,13 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
         return cm.getActiveNetworkInfo() != null;
     }
 
-    private void onLoadingOn(){
-        mLogo.setVisibility(View.GONE);
-        mProgressView.setVisibility(View.VISIBLE);
-    }
 
-    private void onLoadingOff(){
+    private void onLoadingOn(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {container.setBackgroundColor(getResources().getColor(R.color.black,getTheme()));}else {container.setBackgroundColor(getResources().getColor(R.color.black));}
+        mProgressView.setVisibility(View.VISIBLE);
         slogan_login.setVisibility(View.VISIBLE);
         mLoginButton.setVisibility(View.GONE);
     }
-
-
 
 }
 

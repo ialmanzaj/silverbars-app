@@ -24,15 +24,6 @@ public class ExerciseRep  implements Serializable {
     @DatabaseField
     private int seconds;
 
-    @DatabaseField
-    private int tempo_positive;
-
-    @DatabaseField
-    private int tempo_negative;
-
-    @DatabaseField
-    private int tempo_isometric;
-
     @DatabaseField(foreign = true)
     private UserWorkout userWorkout;
 
@@ -47,56 +38,29 @@ public class ExerciseRep  implements Serializable {
         this.exercise = exercise;
         this.repetition = repetition;
         this.seconds = 0;
-        this.tempo_positive  = 1;
-        this.tempo_negative = 1;
-        this.tempo_isometric = 1;
         this.userWorkout = userWorkout;
     }
-
 
 
     public ExerciseRep(Exercise exercise,int repetition,MySavedWorkout saved_workout) {
         this.exercise = exercise;
         this.repetition = repetition;
         this.seconds = 0;
-        this.tempo_positive  = 1;
-        this.tempo_negative = 1;
-        this.tempo_isometric = 1;
         this.saved_workout = saved_workout;
     }
-    
-    
-    
+
     public ExerciseRep(Exercise exercise,int repetition,int seconds,UserWorkout userWorkout) {
         this.exercise = exercise;
         this.repetition = repetition;
         this.seconds = seconds;
-        this.tempo_positive  = 1;
-        this.tempo_negative = 1;
-        this.tempo_isometric = 1;
-        this.userWorkout = userWorkout;
-    }
-    
-    
-    
-    public ExerciseRep(Exercise exercise,int repetition,int seconds,int tempo_positive,int tempo_isometric,int tempo_negative,UserWorkout userWorkout) {
-        this.exercise = exercise;
-        this.repetition = repetition;
-        this.seconds = seconds;
-        this.tempo_positive  = tempo_positive;
-        this.tempo_isometric = tempo_isometric;
-        this.tempo_negative = tempo_negative;
         this.userWorkout = userWorkout;
     }
 
 
-    public ExerciseRep(Exercise exercise,int repetition,int seconds,int tempo_positive,int tempo_isometric,int tempo_negative,MySavedWorkout saved_workout) {
+    public ExerciseRep(Exercise exercise,int repetition,int seconds,MySavedWorkout saved_workout) {
         this.exercise = exercise;
         this.repetition = repetition;
         this.seconds = seconds;
-        this.tempo_positive  = tempo_positive;
-        this.tempo_isometric = tempo_isometric;
-        this.tempo_negative = tempo_negative;
         this.saved_workout = saved_workout;
     }
     
@@ -131,30 +95,6 @@ public class ExerciseRep  implements Serializable {
 
     public int getSeconds() {
         return seconds;
-    }
-
-    public void setTempo_isometric(int tempo_isometric) {
-        this.tempo_isometric = tempo_isometric;
-    }
-
-    public void setTempo_negative(int tempo_negative) {
-        this.tempo_negative = tempo_negative;
-    }
-
-    public void setTempo_positive(int tempo_positive) {
-        this.tempo_positive = tempo_positive;
-    }
-
-    public int getTempo_isometric() {
-        return tempo_isometric;
-    }
-
-    public int getTempo_negative() {
-        return tempo_negative;
-    }
-
-    public int getTempo_positive() {
-        return tempo_positive;
     }
 
 

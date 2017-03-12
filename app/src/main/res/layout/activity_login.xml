@@ -3,9 +3,8 @@
     android:layout_width="match_parent"
     android:background="@color/white"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:id="@+id/container"
-    tools:context="com.app.app.silverbarsapp.activities.LoginActivity">
+    tools:context="activities.LoginActivity">
 
 
     <LinearLayout
@@ -16,28 +15,29 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:tint="@color/black"
+            android:src="@drawable/silverbars"
             android:id="@+id/logo"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:contentDescription="@null" />
 
         <TextView
             android:textSize="28sp"
             android:textColor="@color/black"
             android:id="@+id/slogan"
-            android:text="Be your own machine"
+            android:text="@string/slogan_silverbars"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+
     </LinearLayout>
-
-
 
     <TextView
         android:layout_marginBottom="30dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="Inica sesion para empezar a entrenar y ver tu progresion"
+        android:text="@string/slogan_login"
         android:textSize="22sp"
         android:textColor="@color/white"
         android:visibility="invisible"
@@ -55,16 +55,9 @@
         android:layout_height="40dp" />
 
 
-    <!--<com.facebook.login.widget.LoginButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/FacebookLoginButton" />-->
-
     <ProgressBar
-
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-
         android:visibility="invisible"
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyle"
@@ -78,25 +71,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
-
-        <Button
-            android:layout_centerHorizontal="true"
-            android:background="@color/thirdColor"
-            android:text="Login with facebook"
+        <com.facebook.login.widget.LoginButton
             android:id="@+id/login_button"
+            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/FacebookLoginButton"/>
+            style="@style/FacebookLoginButton" />
 
 
     </RelativeLayout>
-
-
-
-
-
-
 
 
 </RelativeLayout>

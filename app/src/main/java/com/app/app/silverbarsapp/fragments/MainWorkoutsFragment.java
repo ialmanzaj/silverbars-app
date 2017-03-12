@@ -107,10 +107,6 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
         if (this.isAdded()){
             adapter = new WorkoutsAdapter(getActivity());
             list.setAdapter(adapter);
-
-            //Log.i(TAG,"workout"+getJson());
-           //List<Workout> workouts = new Gson().fromJson(getJson(),new TypeToken<ArrayList<Workout>>(){}.getType());
-            //setWorkoutsInAdapter(workouts);
         }
 
         // Configure the refreshing colors

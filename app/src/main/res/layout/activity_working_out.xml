@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.WorkingOutActivity"
     android:background="#fff">
 
@@ -172,10 +173,7 @@
                                 android:textColor="@color/colorSecondary" />
 
                         </LinearLayout>
-
-
                     </RelativeLayout>
-
 
 
                 </LinearLayout>
@@ -189,18 +187,10 @@
                     android:layout_height="wrap_content"
                     android:baselineAligned="false">
 
-                    <com.app.app.silverbarsapp.Chronometer
-                        android:id="@+id/chronometer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="0sp"
-                        android:textColor="@color/black"
-                        android:gravity="center" />
-
                     <com.app.app.silverbarsapp.PausableChronometer
                         android:id="@+id/chronometer2"
                         android:textColor="@color/black"
-                        android:textSize="60sp"
+                        android:textSize="75sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
@@ -248,6 +238,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
+
+
                             <ImageView
                                 android:tint="@color/secondColor"
                                 android:src="@drawable/circle"
@@ -265,31 +257,38 @@
 
                         </RelativeLayout>
 
-
-                        <ImageView
+                        <Button
+                            android:id="@+id/play_workout"
                             android:layout_centerVertical="true"
                             android:layout_centerHorizontal="true"
-                            android:id="@+id/play_workout"
+                            android:theme="@style/ButtonGreen"
+                            android:text="Start"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <ImageView
+                            android:visibility="invisible"
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
                             android:src="@drawable/ic_play_circle_filled_black_36px"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:contentDescription="@null" />
 
 
+
                     </RelativeLayout>
-
                     <RelativeLayout
-
                         android:id="@+id/nxtLayout"
-
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="match_parent">
 
                         <ImageView
+                            android:id="@+id/circle"
                             android:layout_centerInParent="true"
                             android:src="@drawable/circle"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:contentDescription="@null" />
 
@@ -301,6 +300,15 @@
                                 android:id="@+id/next_exercise"
                                 android:src="@drawable/ic_fast_forward_black_24px"
                                 android:contentDescription="@null" />
+
+                        <TextView
+                            android:layout_below="@+id/circle"
+                            android:textColor="@color/black"
+                            android:layout_centerHorizontal="true"
+                            android:text="Next Exercise"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
 
 
                     </RelativeLayout>

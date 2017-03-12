@@ -48,21 +48,22 @@ public class TokenProvider implements Provider<Account, AndroidTokenType, Androi
 
                         Response<AccessToken> refreshResponse = loginService.refreshAccessToken("refresh_token",CONSUMER_KEY,CONSUMER_SECRET,androidToken.refreshToken).execute();
 
+
                         if (refreshResponse.isSuccessful()){
 
                             AccessToken accessToken = refreshResponse.body();
                             Log.d(TAG,"accessToken: "+accessToken.getAccess_token());
 
-
                             tokenStorage.storeToken(account, androidTokenType,
                                     new AndroidToken(accessToken.getAccess_token(), accessToken.getRefresh_token()));
 
+                            return true;
                         }
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-                return true;
             }
         }
         return false;

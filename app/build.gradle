@@ -30,7 +30,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0.0"
+        versionName "0.0.1"
         multiDexEnabled true
     }
     compileOptions {
@@ -106,6 +106,9 @@ dependencies {
     compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
     compile 'com.spotify.sdk:spotify-auth-beta23-noconnect-2.20b@aar'
     compile 'com.spotify.sdk:spotify-player-beta23-noconnect-2.20b@aar'
+
+    compile 'us.belka:androidtoggleswitch:1.2.2'
+
 
 
     testCompile 'junit:junit:4.12'

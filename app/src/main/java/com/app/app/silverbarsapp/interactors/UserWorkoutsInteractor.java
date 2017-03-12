@@ -26,22 +26,26 @@ public class UserWorkoutsInteractor {
         this.helper = helper;
     }
 
+    public void deleteWorkout(int workout_id) throws SQLException {
+        helper.deleteUserWorkout(workout_id);
+    }
+
     public void getWorkout(UserWorkoutsCallback callback) throws SQLException {
         if (helper.getUserWorkoutDao().queryForAll() == null || helper.getUserWorkoutDao().queryForAll().isEmpty()){
             callback.onEmptyWorkouts();
-        }else
-            workoutsReady(callback);
+        }else {
+            getUserWorkouts(callback);
+        }
     }
 
 
-    private void workoutsReady(UserWorkoutsCallback callback) throws SQLException {
+    private void getUserWorkouts(UserWorkoutsCallback callback) throws SQLException {
 
-            List<Workout> workouts = new ArrayList<>();
-
+            List<Workout> user_workouts = new ArrayList<>();
 
             for (UserWorkout user_workout:  helper.getUserWorkoutDao().queryForAll()){
 
-                //Log.d(TAG,"workouts in for size: "+workoutList.size());
+                //Log.d(TAG,"user_workouts in for size: "+workoutList.size());
 
                 ArrayList<com.app.app.silverbarsapp.models.ExerciseRep> exerciseReps = new ArrayList<>();
 
@@ -86,16 +90,13 @@ public class UserWorkoutsInteractor {
                                     exerciseRep.getId(),
                                     exercise,
                                     exerciseRep.getRepetition(),
-                                    exerciseRep.getSeconds(),
-                                    exerciseRep.getTempo_positive(),
-                                    exerciseRep.getTempo_isometric(),
-                                    exerciseRep.getTempo_negative()
+                                    exerciseRep.getSeconds()
                             ));
                 }
 
 
                 //add user_workout completed to list
-                workouts.add(new com.app.app.silverbarsapp.models.Workout(
+                user_workouts.add(new com.app.app.silverbarsapp.models.Workout(
                         user_workout.getId(),
                         user_workout.getWorkout_name(),
                         user_workout.getWorkout_image(),
@@ -106,9 +107,8 @@ public class UserWorkoutsInteractor {
                 ));
             }
 
-            //return workouts_database list saved
-        callback.onWorkouts(workouts);
-
+        //return user_workouts_database list saved
+        callback.onWorkouts(user_workouts);
     }
 
 

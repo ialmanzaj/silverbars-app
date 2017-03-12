@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.activities.CreateWorkoutActivity;
-import com.app.app.silverbarsapp.adapters.SavedWorkoutsAdapter;
+import com.app.app.silverbarsapp.adapters.UserWorkoutsAdapter;
 import com.app.app.silverbarsapp.components.DaggerUserWorkoutsComponent;
 import com.app.app.silverbarsapp.models.Workout;
 import com.app.app.silverbarsapp.modules.UserWorkoutsModule;
@@ -21,7 +21,6 @@ import com.app.app.silverbarsapp.viewsets.UserWorkoutsView;
 
 import org.lucasr.twowayview.widget.TwoWayView;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -33,7 +32,7 @@ import butterknife.OnClick;
  * Created by isaacalmanza on 10/04/16.
  */
 
-public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsView{
+public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsView,UserWorkoutsAdapter.OnWorkoutListener{
 
     private static final String TAG = UserWorkoutsFragment.class.getSimpleName();
 
@@ -45,7 +44,7 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
     @Inject
     UserWorkoutsPresenter mUserWorkoutsPresenter;
 
-    SavedWorkoutsAdapter adapter;
+    UserWorkoutsAdapter adapter;
 
 
     @Override
@@ -61,8 +60,6 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
     @Override
     public void injectDependencies() {
         super.injectDependencies();
-
-
         DaggerUserWorkoutsComponent.builder()
                 .silverbarsComponent(SilverbarsApp.getApp(CONTEXT).getComponent())
                 .userWorkoutsModule(new UserWorkoutsModule(this))
@@ -72,52 +69,42 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d(TAG,"UserWorkoutsFragment");
 
 
         if (this.isAdded()){
-            adapter = new SavedWorkoutsAdapter(getActivity());
+            adapter = new UserWorkoutsAdapter(getActivity());
+            adapter.setWorkoutListener(this);
+
             mMyWorkoutViewList.setAdapter(adapter);
         }
 
 
-        try {
-
-            mUserWorkoutsPresenter.getMyWorkouts();
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        mUserWorkoutsPresenter.getMyWorkouts();
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-
-        //mCreateWorkoutButton.setOnClickListener(view -> startActivity(new Intent(getActivity(),CreateWorkoutActivity.class)));
-    }
-
-
-    @Override
-    public void onWorkouts(List<Workout> user_workouts) {
-        onEmptyViewOff();
-        adapter.set(user_workouts);
-    }
-
 
     @OnClick(R.id.create)
-    public void create(){
+    public void createButton(){
         startActivity(new Intent(CONTEXT,CreateWorkoutActivity.class));
     }
 
 
     @Override
+    public void onWorkouts(List<Workout> user_workouts) {
+        Log.d(TAG,"workouts: "+user_workouts.get(0).getWorkout_name());
+        onEmptyViewOff();
+        adapter.set(user_workouts);
+    }
+
+    @Override
+    public void deleteWorkout(int workout_id) {
+        mUserWorkoutsPresenter.deleteWorkout(workout_id);
+    }
+
+    @Override
     public void onEmptyWorkouts() {
         Log.i(TAG,"onEmptyWorkouts");
     }
-
 
     private void onEmptyViewOn(){
         mEmpyStateMyWorkouts.setVisibility(View.VISIBLE);
@@ -126,7 +113,5 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
     private void onEmptyViewOff(){
         mEmpyStateMyWorkouts.setVisibility(View.GONE);
     }
-
-
 
 }

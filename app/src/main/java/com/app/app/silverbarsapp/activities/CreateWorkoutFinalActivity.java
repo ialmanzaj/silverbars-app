@@ -9,9 +9,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
-import com.app.app.silverbarsapp.adapters.CreateFinalWorkoutExercisesAdapter;
+import com.app.app.silverbarsapp.adapters.CreateFinalExercisesAdapter;
 import com.app.app.silverbarsapp.components.DaggerCreateWorkoutFinalComponent;
 import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.models.ExerciseRep;
@@ -29,6 +29,7 @@ import com.app.app.silverbarsapp.models.Workout;
 import com.app.app.silverbarsapp.modules.CreateWorkoutFinalModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.CreateWorkoutFinalPresenter;
+import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.CreateWorkoutFinalView;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -36,13 +37,13 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 
 public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWorkoutFinalView{
 
@@ -69,6 +70,9 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
     private ArrayList<Exercise> mAllExercisesList;
     private ArrayList<ExerciseRep> mExercisesSelected;
+
+    CreateFinalExercisesAdapter adapter;
+    Utilities utilities = new Utilities();
     
     
     @Override
@@ -101,43 +105,22 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         Bundle extras = getIntent().getExtras();
 
         mAllExercisesList = extras.getParcelableArrayList("exercises");
-        ArrayList<Exercise> exercises_selected = extras.getParcelableArrayList("exercises_selected");
+        mExercisesSelected = utilities.returnExercisesRep(extras.getParcelableArrayList("exercises_selected"));
 
-        mExercisesSelected = getExerciseRep(exercises_selected);
-
-        Log.i(TAG,"mAllExercisesList:"+mAllExercisesList);
-        Log.i(TAG,"mAllExercisesList selected "+mExercisesSelected);
+       // Log.i(TAG,"mAllExercisesList:"+mAllExercisesList);
+        //Log.i(TAG,"mAllExercisesList selected "+mExercisesSelected);
 
 
         setupToolbar();
 
         mExercisesList.setLayoutManager(new LinearLayoutManager(this));
-        mExercisesList.setAdapter(new CreateFinalWorkoutExercisesAdapter(this, mExercisesSelected));
+
+        adapter = new CreateFinalExercisesAdapter(this, mExercisesSelected);
+        mExercisesList.setAdapter(adapter);
 
         mSets.setText(String.valueOf(mCurrentSet));
     }
 
-
-    
-    private ArrayList<ExerciseRep> getExerciseRep(List<Exercise> exercises){
-        ArrayList<ExerciseRep> exerciseReps = new ArrayList<>();
-        
-        for (Exercise exercise: exercises){
-            ExerciseRep exerciseRep = new ExerciseRep();
-            exerciseRep.setExercise(exercise);
-            exerciseReps.add(exerciseRep);
-        }
-        
-        return exerciseReps;
-    }
-
-
-    
-    @OnClick(R.id.sets)
-    public void selectSets(View view){
-        Log.i(TAG,"sets");
-        dialogImplementation(view);
-    }
 
     @OnClick(R.id.save)
     public void save(){
@@ -147,18 +130,30 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
             return;
         }
         
-        if (mCurrentSet <= 0){
+        if (mCurrentSet < 1){
             Toast.makeText(this, "Select your sets", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        if (didYouSelectedReps()){
+            Toast.makeText(this, "Select your reps or seconds", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         try {
-            mCreateWorkoutFinalPresenter.saveWorkout(getWorkoutready());
+
+            mCreateWorkoutFinalPresenter.saveWorkout(getWorkoutReady());
 
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    @OnTextChanged(value = R.id.sets, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    public void setsButton(Editable editable) {
+        if (!Objects.equals(editable.toString(), "")) {
+            mCurrentSet = Integer.parseInt(editable.toString());
         }
     }
 
@@ -170,19 +165,10 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
     }
 
-
     public void setupToolbar(){
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.save_workout));
-
-      /*  toolbar.setNavigationOnClickListener(dialog -> {
-            Intent return_Intent = new Intent();
-            return_Intent.putExtra("mAllExercisesList",mExercisesIdsSelected);
-            setResult(RESULT_OK, return_Intent);
-            finish();
-        });*/
-
     }
 
     @Override
@@ -213,9 +199,11 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
                 if (resultCode == RESULT_OK) {
                     Uri resultUri = result.getUri();
                     workoutImage = resultUri.getPath();
-
                     Log.d(TAG,workoutImage);
+
+
                 try {
+
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), resultUri);
                     imgProfile.setImageBitmap(bitmap);
 
@@ -228,58 +216,14 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
             }
         }
     }
-
-    private void dialogImplementation(View view){
-        TextView mRestbyExerciseDialog;
-
-        TextView RestbySet;
-        TextView RestbyExercise;
-        TextView RestSets_dialog;
-
-        Button plusRest;
-        Button minusRest;
-        Button plusRestSets;
-        Button minusRestSets;
-
-        TextView Sets_dialog = null;
-        Button plusSets;
-        Button minusSets;
-
-       /* View dialog = new MaterialDialog.Builder(view.getContext())
-                .title(R.string.set_edit)
-                .customView(R.layout.edit_set_setup, true)
-                .positiveText(R.string.done_text).onPositive((dialog1, which) -> {
-                    dialog1.dismiss();
-
-                    if (mCurrentSet > 0){
-                        mSets.setText(mCurrentSet);
-                    }
-
-                })
-                .show()
-                .getCustomView();
-
-        if (dialog != null) {
-
-            Sets_dialog = (TextView) dialog.findViewById(R.id.Sets_dialog);
-            Sets_dialog.setText(String.valueOf(mSets.getText()));
-
-            plusSets = (Button) dialog.findViewById(R.id.plusSets);
-            plusSets.setOnClickListener(view12 -> {});
-            minusSets = (Button) dialog.findViewById(R.id.minusSets);
-            minusSets.setOnClickListener(view1 -> {});
-
-        }*/
-
-    }
     
-    private Workout getWorkoutready(){
+    private Workout getWorkoutReady(){
         Workout workout = new Workout();
 
         workout.setWorkout_name(workoutName.getText().toString());
         workout.setSets(mCurrentSet);
         workout.setWorkout_image(workoutImage);
-        workout.setExercises(mExercisesSelected);
+        workout.setExercises(adapter.getExercises());
         workout.setLevel("");
         workout.setMain_muscle("");
 
@@ -288,11 +232,22 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
     @Override
     public void onWorkoutCreated(boolean created) {
-        Log.v(TAG,"onWorkoutCreated: "+created);
-        setResult(RESULT_OK, new Intent());
-        finish();
+        //Log.v(TAG,"onWorkoutCreated: "+created);
+        if (created){
+            setResult(RESULT_OK, new Intent());
+            finish();
+        }
     }
 
+
+    private boolean didYouSelectedReps(){
+        for (ExerciseRep exerciseRep: adapter.getExercises()){
+            if (exerciseRep.getRepetition() > 0 ||  exerciseRep.getSeconds() > 0){
+                return false;
+            }
+        }
+        return true;
+    }
 
     @Override
     public void onWorkoutError() {
@@ -312,7 +267,6 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 }
 

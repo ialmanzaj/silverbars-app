@@ -27,18 +27,21 @@ public class SavedWorkoutsInteractor {
         this.helper = helper;
     }
 
-
     public void getWorkout(SavedWorkoutsCallback callback) throws SQLException {
         if (helper.getSavedWorkoutDao().queryForAll() == null || helper.getSavedWorkoutDao().queryForAll().isEmpty()){
             callback.onEmptyWorkouts();
-        }else
-            workoutsReady(callback);
+
+        }else {
+            if (checkIsAnySavedWorkout()){
+                getSavedWorkouts(callback);
+            }else
+                callback.onEmptyWorkouts();
+        }
     }
 
+    private void getSavedWorkouts(SavedWorkoutsCallback callback) throws SQLException {
 
-    private void workoutsReady(SavedWorkoutsCallback callback) throws SQLException {
-
-        List<Workout> workouts = new ArrayList<>();
+        List<Workout> saved_workouts = new ArrayList<>();
 
         for (MySavedWorkout my_saved_workout:  helper.getSavedWorkoutDao().queryForAll()){
 
@@ -46,14 +49,17 @@ public class SavedWorkoutsInteractor {
 
             for (ExerciseRep exerciseRep_database: my_saved_workout.getExercises()){
 
+
                 Exercise exercise_database = helper.getExerciseDao().queryForId(exerciseRep_database.getExercise().getId());
 
                 //types and muscles list
                 List<String> types_exercise = new ArrayList<>();
                 List<com.app.app.silverbarsapp.models.MuscleExercise> muscles = new ArrayList<>();
 
+
                 //get the type exercise_database from table to new object in json
                 for (TypeExercise types:  exercise_database.getType_exercise()){types_exercise.add(types.getType());}
+
 
                 //get the muscles
                 for (Muscle muscle: exercise_database.getMuscles()){
@@ -62,10 +68,9 @@ public class SavedWorkoutsInteractor {
                             muscle.getMuscle_activation(), muscle.getClassification(),
                             muscle.getProgression_level()));
                 }
-                
+
                 //re-create exercise object from database
-                com.app.app.silverbarsapp.models.Exercise exercise =
-                        new com.app.app.silverbarsapp.models.Exercise(
+                com.app.app.silverbarsapp.models.Exercise exercise = new com.app.app.silverbarsapp.models.Exercise(
                                 exercise_database.getId(),
                                 exercise_database.getExercise_name(),
                                 exercise_database.getLevel(),
@@ -75,23 +80,20 @@ public class SavedWorkoutsInteractor {
                                 muscles
                                 );
 
-                //
+                //exercise rep - seconds
                 exerciseReps.add(
                         new com.app.app.silverbarsapp.models.ExerciseRep(
                                 exerciseRep_database.getId(),
                                 exercise,
                                 exerciseRep_database.getRepetition(),
-                                exerciseRep_database.getSeconds(),
-                                exerciseRep_database.getTempo_positive(),
-                                exerciseRep_database.getTempo_isometric(),
-                                exerciseRep_database.getTempo_negative()
+                                exerciseRep_database.getSeconds()
                         ));
             }
 
 
             //add my_saved_workout completed to list
             if (my_saved_workout.getSaved()){
-                workouts.add(new com.app.app.silverbarsapp.models.Workout(
+                saved_workouts.add(new com.app.app.silverbarsapp.models.Workout(
                         my_saved_workout.getId(),
                         my_saved_workout.getWorkout_name(),
                         my_saved_workout.getWorkout_image(),
@@ -103,12 +105,17 @@ public class SavedWorkoutsInteractor {
             }
         }
 
-        //return workouts_database list saved
-        if (!workouts.isEmpty())
-            callback.onWorkouts(workouts);
-        else
-            callback.onEmptyWorkouts();
+        //return saved_workouts_database list saved
+        callback.onWorkouts(saved_workouts);
+    }
 
+    private boolean checkIsAnySavedWorkout() throws SQLException {
+        for (MySavedWorkout my_saved_workout: helper.getSavedWorkoutDao().queryForAll()){
+            if (my_saved_workout.getSaved()){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

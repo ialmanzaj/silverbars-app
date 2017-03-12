@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.activities.WorkoutActivity;
 import com.app.app.silverbarsapp.models.Workout;
@@ -25,33 +26,70 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * Created by isaacalmanza on 03/11/17.
+ */
 
-public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdapter.ViewHolder> {
 
-    private static final String TAG = SavedWorkoutsAdapter.class.getSimpleName();
+public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapter.ViewHolder> {
+
+    private static final String TAG = UserWorkoutsAdapter.class.getSimpleName();
 
     private List<Workout> workouts;
     private Context context;
     private Utilities utilities = new Utilities();
 
-    public SavedWorkoutsAdapter(Context context) {
+    private OnWorkoutListener listener;
+
+    public UserWorkoutsAdapter(Context context) {
         this.context = context;
         this.workouts = new ArrayList<>();
 
     }
 
+    public void setWorkoutListener(OnWorkoutListener listener){
+        this.listener = listener;
+    }
+
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.layout)FrameLayout layout;
-        @BindView(R.id.img_local)ImageView img;
-        @BindView(R.id.text)TextView text;
+        @BindView(R.id.img_local)ImageView workout_img;
+        @BindView(R.id.text)TextView workout_name;
         @BindView(R.id.start_button)Button start_button;
+        @BindView(R.id.delete) ImageView delete_button;
+
+        private int workout_id;
 
         public ViewHolder(View view) {
             super(view);
             //binding views
             ButterKnife.bind(this,view);
         }
+
+
+        @OnClick(R.id.delete)
+        public void deleteButton(View view){
+
+            workout_id = (int) view.getTag();
+            Log.d(TAG,"delete"+workout_id);
+
+            new MaterialDialog.Builder( context )
+                    .title("Delete workout").titleColor(context.getResources().getColor(R.color.black))
+                    .content("Desea eliminar este workout").contentColor(context.getResources().getColor(R.color.black))
+                    .positiveText("Yes")
+                    .onPositive((dialog, which) -> {
+
+                        onDelete(workout_id);
+
+                    })
+                    .negativeText("No")
+                    .onNegative((dialog, which) -> {
+                        dialog.dismiss();
+                    }).show();
+        }
+
 
         @OnClick(R.id.start_button)
         public void start(View view){
@@ -72,15 +110,17 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return  new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_saved_workout, parent, false));
+        return  new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_userworkout, parent, false));
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewholder,  int position) {
 
-        viewholder.text.setText(workouts.get(position).getWorkout_name());
-        viewholder.start_button.setTag(workouts.get(position));
         viewholder.layout.getLayoutParams().height = utilities.containerDimensionsHeight(context) / 3;
+
+        viewholder.workout_name.setText(workouts.get(position).getWorkout_name());
+        viewholder.start_button.setTag(workouts.get(position));
+        viewholder.delete_button.setTag(workouts.get(position).getId());
 
         try {
 
@@ -90,7 +130,7 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
                 String workoutImgName = workoutImgDir[1];
                 Bitmap imgBitmap;
                 imgBitmap = utilities.loadWorkoutImageFromDevice(context,workoutImgName);
-                viewholder.img.setImageBitmap(imgBitmap);
+                viewholder.workout_img.setImageBitmap(imgBitmap);
             }
 
 
@@ -98,7 +138,21 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
             Log.e(TAG,"NullPointerException");
         }
 
+    }
 
+
+    private void onDelete(int workout_id){
+        Log.d(TAG,"workout_id: "+workout_id);
+        try {
+
+            workouts.remove(utilities.getWorkoutById(workouts,workout_id));
+            notifyDataSetChanged();
+
+
+            listener.deleteWorkout(workout_id);
+
+
+        }catch (NullPointerException e){Log.e(TAG,"",e);}
     }
 
     @Override
@@ -115,6 +169,10 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
     public void add(Workout workout){
         workouts.add(0,workout);
         notifyItemInserted(0);
+    }
+
+    public interface OnWorkoutListener {
+        void deleteWorkout(int workout_id);
     }
 
 }

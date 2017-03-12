@@ -3,6 +3,8 @@ package com.app.app.silverbarsapp;
 import com.andretietz.retroauth.AndroidAuthenticationHandler;
 import com.andretietz.retroauth.Retroauth;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -28,12 +30,14 @@ public class ServiceGenerator {
 
 
     public static <S> S createService(Class<S> serviceClass) {
-
         //logging interceptor
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         httpClient.addInterceptor(logging);
+
+        //time outs
+        httpClient.connectTimeout(15, TimeUnit.SECONDS);
+        httpClient.readTimeout(25, TimeUnit.SECONDS);
 
         OkHttpClient client = httpClient.build();
         Retrofit retrofit = builder.client(client).build();

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
@@ -49,14 +50,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     private static final String TAG = WorkoutActivity.class.getSimpleName();
 
 
-    // UI FIELDS
-    private Button plusSets;
-    private Button minusSets;
-    private Button plusRest;
-    private Button minusRest;
-    private Button plusRestSets;
-    private Button minusRestSets;
-
     @Inject
     WorkoutPresenter mWorkoutPresenter;
 
@@ -65,7 +58,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
     @BindView(R.id.sets) TextView Sets;
     @BindView(R.id.RestbySet) TextView RestbySet;
-    @BindView(R.id.RestbyExercise) TextView RestbyExercise;
+    @BindView(R.id.RestbyExercise) AutoCompleteTextView RestbyExercise;
    
 
     @BindView(R.id.list) RecyclerView list;
@@ -129,13 +122,14 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setExtras(getIntent().getExtras());
+        getExtras(getIntent().getExtras());
+
         setupToolbar();
         setupTabs();
         setupWebview();
 
-        mWorkoutPresenter.init(this);
 
+        mWorkoutPresenter.init(this);
 
         //list settings
         list.setLayoutManager(new LinearLayoutManager(this));
@@ -153,151 +147,18 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
             }
         });
 
-
         Sets.setText(String.valueOf(workoutSets));
-        Sets.setOnClickListener(view -> {
-           /* 
-            View v = new MaterialDialog.Builder(view.getContext())
-                    .title(R.string.set_edit)
-                    .customView(R.layout.edit_set_setup, true)
-                    .positiveText(R.string.done_text).onPositive((dialog, which) -> {
-                        dialog.dismiss();
-                        //On Dialog "Done" ClickListener
-                        Sets.setText(Sets_dialog.getText());
-
-                    })
-                    .show()
-                    .getCustomView();
-
-            if (v != null) {
-                
-                Sets_dialog = (TextView) v.findViewById(R.id.Sets_dialog);
-                Sets_dialog.setText(String.valueOf(Sets.getText()));
-
-                plusSets = (Button) v.findViewById(R.id.plusSets);
-                plusSets.setOnClickListener(view16 -> plusTempo(Sets_dialog,plusSets,minusSets));
-                minusSets = (Button) v.findViewById(R.id.minusSets);
-                minusSets.setOnClickListener(view15 -> minusTempo(Sets_dialog,minusSets,plusSets));
-            }
-            
-            
-            int setsValue = Integer.parseInt(Sets.getText().toString());
-            
-            
-            
-            if (setsValue <= 1){
-                plusSets.setEnabled(true);
-                plusSets.setClickable(true);
-                minusSets.setEnabled(false);
-                minusSets.setClickable(false);
-            }else if(setsValue >=10){
-                plusSets.setEnabled(false);
-                plusSets.setClickable(false);
-                minusSets.setEnabled(true);
-                minusSets.setClickable(true);
-            }
-            
-            
-            */
-            
-
-        });
-
-
         RestbyExercise.setText("30");
-        RestbyExercise.setOnClickListener(view -> {
-/*
-            TextView Rest_by_exercise_dialog;
-            
-            
-            View v = new MaterialDialog.Builder(view.getContext())
-                    .title(R.string.rest_exercise_text)
-                    .customView(R.layout.edit_rest_exercise_setup, true)
-                    .positiveText(R.string.done_text).onPositive((dialog, which) -> {
-                        dialog.dismiss();
-                        //On Dialog "Done" ClickListener
-                        RestbyExercise.setText(Rest_by_exercise_dialog.getText());
-                    })
-                    .show()
-                    .getCustomView();
-
-            if (v != null) {
-
-                Rest_by_exercise_dialog = (TextView) v.findViewById(R.id.Rest_exercise);
-                Rest_by_exercise_dialog.setText(String.valueOf(RestbyExercise.getText()));
-
-
-                plusRest = (Button) v.findViewById(R.id.plusRest);
-                plusRest.setOnClickListener(view14 -> plusTempo(Rest_by_exercise_dialog,plusRest,minusRest));
-                minusRest = (Button) v.findViewById(R.id.minusRest);
-                minusRest.setOnClickListener(view13 -> minusTempo(Rest_by_exercise_dialog,minusRest,plusRest));
-            }
-            */
-            
-        });
-
-
         RestbySet.setText("60");
-        RestbySet.setOnClickListener(view -> {
-
-            TextView RestSets_dialog;
-            TextView Sets_dialog;
-            
-            
-           /* View v = new MaterialDialog.Builder(view.getContext())
-                    .title(R.string.rest_sets_text)
-                    .customView(R.layout.edit_rest_sets_setup, true)
-                    .positiveText(R.string.done_text).onPositive((dialog, which) -> {
-                        dialog.dismiss();
-                        //On Dialog "Done" ClickListener
-                        RestbySet.setText(RestSets_dialog.getText());
-                    })
-                    .show()
-                    .getCustomView();
-
-            if (v != null) {
-
-                RestSets_dialog = (TextView) v.findViewById(R.id.RestSets_dialog);
-                RestSets_dialog.setText(String.valueOf(RestbySet.getText()));
-
-                plusRestSets = (Button) v.findViewById(R.id.plusRestSets);
-                plusRestSets.setOnClickListener(view12 -> plusTempo(RestSets_dialog,plusRestSets,minusRestSets));
-                minusRestSets = (Button) v.findViewById(R.id.minusRestSets);
-                minusRestSets.setOnClickListener(view1 -> minusTempo(RestSets_dialog,minusRestSets,plusRestSets));
-            }*/
-            
-            
-            
-        });
 
 
-
-
-        mVibrationperSetSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            isVibrationPerSetActive = isChecked;
-        });
-
-        voice_per_exercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-         /*   
-            isDownloadAudioExerciseActive = isChecked;
-
-            if (isDownloadAudioExerciseActive){
-                if (mExercises.size() > 0){
-                    for (int a = 0;a<mExercises.size();a++){
-                        utilities.createExerciseAudio(this, isDownloadAudioExerciseActive, mExercises.get(a).getExercise().getExercise_audio());
-                    }
-
-                }
-
-            }*/
-
-        });
-
+        mVibrationperSetSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {isVibrationPerSetActive = isChecked;});
+        voice_per_exercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {});
         startButton.setOnClickListener(view -> LaunchWorkingOutActivity());
     }
 
 
-    private void setExtras(Bundle extras){
+    private void getExtras(Bundle extras){
         workoutId = extras.getInt("workout_id",0);
         workoutName = extras.getString("name");
         workoutImgUrl = extras.getString("image");
@@ -316,7 +177,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     }
 
     private void setupTabs(){
-
         //Defining Tabs
         mTabLayout.setup();
 
@@ -346,11 +206,9 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
                 super.onPageFinished(view, url);
             }
         });
-
         webview.getSettings().setJavaScriptEnabled(true);
         utilities.setBodyInWebView(this,webview);
     }
-
 
 
     @OnClick(R.id.SelectMusic)
@@ -449,19 +307,12 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
                 mMuscleParts += "#"+ muscles.get(a) + ",";
             }
         }
-
         utilities.injectJS(mMuscleParts, webview);
     }
-
-
-
 
     private void logMessage(String msg) {
         Log.v(TAG, msg);
     }
-
-
-
 
     private Workout getCurrentWorkout(){
         return new Workout(workoutId,workoutName,workoutImgUrl,workoutSets,workoutLevel,mainMuscle,mExercises);

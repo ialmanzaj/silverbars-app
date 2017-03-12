@@ -21,13 +21,13 @@ import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.modules.ExerciseListModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ExerciseListPresenter;
+import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.ExerciseListView;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -40,6 +40,9 @@ import butterknife.OnClick;
 public class ExerciseListActivity extends BaseActivity implements ExerciseListView {
 
     private static final String TAG = ExerciseListActivity.class.getSimpleName();
+
+    private Utilities utilities = new Utilities();
+
 
     @Inject
     ExerciseListPresenter mExerciseListPresenter;
@@ -57,7 +60,8 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     private ExercisesAdapter adapter;
 
     private ArrayList<Exercise> mExercises = new ArrayList<>();
-    private ArrayList<String> mExercisesSelected;
+    private ArrayList<Integer> mExercisesSelectedIds;
+
 
     @Override
     protected int getLayout() {
@@ -83,7 +87,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(TAG,"onCreate");
 
         if (getIntent().getExtras() != null) {
             getExtras(getIntent().getExtras());
@@ -91,18 +94,13 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
         setupToolbar();
 
-
         list.setLayoutManager(new LinearLayoutManager(this));
         mExerciseListPresenter.getExercises();
-
-        //onProgressViewOff();
-        //mExercises = new Gson().fromJson(getJson(),new TypeToken<ArrayList<Exercise>>(){}.getType());
-        //setAdapter();
     }
 
 
     private void getExtras(Bundle extras){
-        mExercisesSelected = extras.getStringArrayList("exercises");
+        mExercisesSelectedIds = extras.getIntegerArrayList("exercises");
         verifyExercises();
     }
 
@@ -184,30 +182,21 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     }
 
     private void verifyExercises(){
-        if (mExercisesSelected == null){
+        if (mExercisesSelectedIds == null){
             Log.i(TAG, "no se ha seleccionado ningun ejercicio todavia");
             setAdapter(mExercises);
         }else {
-            Log.v(TAG,"Exercises Selected"+mExercisesSelected);
-            setAdapter(getExercisesNoSelected());
+            setAdapter(getExercisesNoSelected(mExercisesSelectedIds,mExercises));
         }
-
     }
 
-    private ArrayList<Exercise> getExercisesNoSelected(){
-        ArrayList<Exercise> mExercisesNoSelected = mExercises;
-
-        for (int c = 0;c < mExercisesSelected.size();c++){
-            for (int a = 0; a < mExercises.size(); a++){
-                //ejercicio seleccionado lo elimina en la siguiente seleccion
-                if (Objects.equals(mExercises.get(a).getExercise_name(), mExercisesSelected.get(c))){
-                    mExercisesNoSelected.remove(a);
-                }
-            }
+    private ArrayList<Exercise> getExercisesNoSelected(ArrayList<Integer> exercises_ids,ArrayList<Exercise> exercises){
+        for (Integer exercise_id: exercises_ids){
+            exercises.remove(utilities.getExerciseById(exercises,exercise_id));
         }
-
-        return mExercisesNoSelected;
+        return exercises;
     }
+
 
     private void setAdapter(List<Exercise> exercises){
         adapter = new ExercisesAdapter(this,exercises);

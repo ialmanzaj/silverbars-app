@@ -31,7 +31,10 @@ import android.widget.Toast;
 
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.R;
+import com.app.app.silverbarsapp.models.Exercise;
+import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.models.Muscle;
+import com.app.app.silverbarsapp.models.Workout;
 import com.google.gson.Gson;
 import com.spotify.sdk.android.player.Connectivity;
 
@@ -62,6 +65,51 @@ public class Utilities {
     private   String strSeparator = "__,__";
 
     public Utilities (){}
+
+    public ArrayList<ExerciseRep> returnExercisesRep(List<Exercise> exercises){
+        ArrayList<ExerciseRep> exerciseReps = new ArrayList<>();
+
+        for (Exercise exercise: exercises){
+            ExerciseRep exerciseRep = new ExerciseRep();
+            exerciseRep.setExercise(exercise);
+            exerciseRep.setRepetition(0);
+            exerciseRep.setSeconds(0);
+            exerciseReps.add(exerciseRep);
+        }
+
+        return exerciseReps;
+    }
+
+
+    public Workout getWorkoutById(List<Workout> workouts, int workout_id){
+        for (Workout workout: workouts){
+            if (workout.getId() == workout_id){
+                return workout;
+            }
+        }
+        return null;
+    }
+
+
+    public Exercise getExerciseById(List<Exercise> exercises, int exercise_id){
+        for (Exercise exercise: exercises){
+            if (exercise.getId() == exercise_id){
+                return exercise;
+            }
+        }
+        return null;
+    }
+
+
+    public ExerciseRep getExerciseRepById(List<ExerciseRep> exercises, int exercise_id){
+        for (ExerciseRep exercise: exercises){
+            if (exercise.getExercise().getId() == exercise_id){
+                return exercise;
+            }
+        }
+        return null;
+    }
+
 
     public Connectivity getNetworkConnectivity(Context context) {
         ConnectivityManager connectivityManager;

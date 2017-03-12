@@ -45,9 +45,7 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
     private int mCurrentSet = 1;
 
     //this var for the countdown;
-    private int mCurrentTempo;
     private int mCurrentRest = 0;
-    private int mCurrentStartTime = 0;
 
 
     //sets in total
@@ -244,7 +242,6 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
      *
      */
     public void onOverlayTextListener(int  second){
-        //Log.i(TAG,"onOverlayTextListener"+s);
         if (second == 0){
             onRestFinished();
         }
@@ -254,33 +251,25 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
     private void onRestFinished(){
         //Log.i(TAG,"onRestFinished");
         mCountDownController.destroyRestCountDownTimer();
-
         //flag rest off
         isWorkoutRest = false;
 
-
         // overlay VIEW off 
         view.onOverlayViewOff();
-
 
         //play exercise audio
         if (isAudioExerciseActive){
             //playing Exercise Audio
             playExerciseAudio(exercises.get(mCurrentExercisePosition).getExercise().getExercise_audio());
         }
-
-        //Log.i("restlistener","startMainCountDown");
     }
 
 
     public void repetitionListener(int repetition){
-        //Log.i(TAG,"repetitionListener"+repetition.toString());
-
         if (repetition == 0 ){
 
             //destroy MainCount Down
             mCountDownController.destroyMainCountDownTimer();
-
 
             //on next exercise
             if ( (mCurrentExercisePosition+1) < exercises.size()){
@@ -296,10 +285,8 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
     private void onChangeToNextExercise(){
         Log.i(TAG,"next exercise");
 
-        mCurrentExercisePosition++;
-
         //when the repetitions of the exercise has finished.
-        view.onChangeToExercise( mCurrentExercisePosition );
+        view.onChangeToExercise(  mCurrentExercisePosition++ );
 
         //restarting the view of the workout
         restartExerciseValues();
@@ -354,15 +341,6 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
         //set pause flag on
         isWorkoutPaused = true;
 
-        //resume initial countdown
-        if (mCountDownController.isInicialTimerAvailable()){
-            mCountDownController.pauseInicialTimer();
-        }
-
-        //pause main COUNTDOWN
-        if (mCountDownController.isMainCountDownTimerAvailable()){
-            mCountDownController.pauseMainCountDown();
-        }
 
         //pause rest countdown
         if (mCountDownController.isRestCountDownTimerAvailable()){
@@ -374,16 +352,6 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
     private void resumeCountDown(){
         //set pause flag off
         isWorkoutPaused = false;
-
-        //resume initial countdown
-        if (mCountDownController.isInicialTimerAvailable()){
-            mCountDownController.resumeInicialTimer();
-        }
-
-        //resume main countdown
-        if (mCountDownController.isMainCountDownTimerAvailable()){
-            mCountDownController.resumeMainCountDown(mCurrentTempo);
-        }
 
         //Resume rest countdown
         if (mCountDownController.isRestCountDownTimerAvailable()){
@@ -443,10 +411,6 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
      */
     
     public void nextExercise(){
-       /* if (!isMainCountDownActive){
-            return;
-        }*/
-
         pauseWorkout();
         view.onNextExercise();
     }
@@ -455,14 +419,13 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
         //Log.d(TAG,"onNextExercisePositive");
 
         //changes the ui to the next exercise
-        view.onChangeToExercise(mCurrentExercisePosition++);
+        mCurrentExercisePosition++;
+        view.onChangeToExercise(mCurrentExercisePosition);
 
         restartExerciseValues();
 
-
         //set the UI workout ready to start
         view.onWorkoutReady();
-
 
         //hiding or not the preview and next buttons
         //onHideUi();
@@ -495,8 +458,7 @@ public class WorkingOutPresenter extends BasePresenter implements MusicCallback,
         Log.d(TAG,"onPreviewExercisePositive");
 
         //move to exercise before
-        mCurrentExercisePosition--;
-        view.onChangeToExercise(mCurrentExercisePosition);
+        view.onChangeToExercise( mCurrentExercisePosition--);
 
         restartExerciseValues();
 

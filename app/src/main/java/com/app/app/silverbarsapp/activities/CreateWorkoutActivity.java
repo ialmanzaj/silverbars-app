@@ -85,10 +85,10 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
     private ExercisesSelectedAdapter adapter;
     private ItemTouchHelper mItemTouchHelper;
 
-    private String muscles = "";
+    private String sMusclesBodyView = "";
 
     private ArrayList<Exercise> mExercisesAllList;
-    private ArrayList<Integer> mListExercisesSelectedids;
+    private ArrayList<Integer> mExercisesSelectedListIds;
 
 
     //private  int ISOMETRIC = 0,CARDIO = 0,PYLOMETRICS = 0,STRENGTH = 0;
@@ -124,37 +124,6 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
         setupAdapter();
         setupWebview();
 
-
-        utilities.setBodyInWebView(this,webView);
-    }
-
-    private void setupWebview(){
-        webView.setWebViewClient(new WebViewClient(){
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                utilities.injectJS(muscles,webView);
-                super.onPageFinished(view, url);
-            }
-        });
-
-        //webView.getSettings().setUseWideViewPort(true);
-
-        webView.getSettings().setJavaScriptEnabled(true);
-
-
-        utilities.setBodyInWebView(this,webView);
-    }
-
-    private void setupAdapter(){
-
-        mExercisesSelectedList.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ExercisesSelectedAdapter(this,this);
-
-        mExercisesSelectedList.setAdapter(adapter);
-
-        //touch listener
-        mItemTouchHelper  = new ItemTouchHelper(new SimpleItemTouchHelperCallback(adapter));
-        mItemTouchHelper.attachToRecyclerView(mExercisesSelectedList);
     }
 
 
@@ -185,16 +154,35 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
         tabHost2.addTab(muscles);
     }
 
+    private void setupWebview(){
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                utilities.injectJS(sMusclesBodyView,webView);
+                super.onPageFinished(view, url);
+            }
+        });
+
+        webView.getSettings().setJavaScriptEnabled(true);
+        utilities.setBodyInWebView(this,webView);
+    }
+
+    private void setupAdapter(){
+
+        mExercisesSelectedList.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new ExercisesSelectedAdapter(this,this);
+
+        mExercisesSelectedList.setAdapter(adapter);
+
+        //touch listener
+        mItemTouchHelper  = new ItemTouchHelper(new SimpleItemTouchHelperCallback(adapter));
+        mItemTouchHelper.attachToRecyclerView(mExercisesSelectedList);
+    }
+
 
     @OnClick(R.id.reload)
-    public void reload(){
-          /* if (mListExercisesSelectedids.size() > 0){
-                onErrorViewOff();
-                onProgressOn();
-                setExercisesAdapter(mListExercisesSelectedids);
-            }
-            */
-    }
+    public void reload(){}
+
 
     @OnClick(R.id.next)
     public void next(){
@@ -204,12 +192,13 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
             return;
         }
 
+
+
         Intent intent = new Intent(this, CreateWorkoutFinalActivity.class);
         intent.putParcelableArrayListExtra("exercises", mExercisesAllList);
         intent.putParcelableArrayListExtra("exercises_selected", adapter.getSelectedExercises());
         startActivityForResult(intent,FINAL_CREATE_WORKOUT);
     }
-
 
 
     @OnClick(R.id.add_exercises)
@@ -221,9 +210,17 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
     @OnClick(R.id.readd)
     public void readExercise(){
         Intent intent = new Intent(this,ExerciseListActivity.class);
-        Log.v(TAG,"exercises"+adapter.getSelectedExercisesName());
-        intent.putExtra("exercises",adapter.getSelectedExercisesName());
+        intent.putExtra("exercises",getExercisesIds(adapter.getSelectedExercises()));
         startActivityForResult(intent,LIST_EXERCISES_SELECTION);
+    }
+
+    private ArrayList<Integer> getExercisesIds(ArrayList<Exercise> exercises){
+        ArrayList<Integer> exercises_ids = new ArrayList<>();
+
+        for (int a = 0;a<exercises.size();a++){
+            exercises_ids.add(exercises.get(a).getId());
+        }
+        return exercises_ids;
     }
 
 
@@ -235,9 +232,9 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
                 if (data.hasExtra("exercises") && data.hasExtra("exercises_selected")) {
 
                     mExercisesAllList =  data.getParcelableArrayListExtra("exercises");
-                    mListExercisesSelectedids = data.getIntegerArrayListExtra("exercises_selected");
+                    mExercisesSelectedListIds = data.getIntegerArrayListExtra("exercises_selected");
 
-                    setExercisesAdapter(mExercisesAllList,mListExercisesSelectedids);
+                    setExercisesAdapter(mExercisesAllList, mExercisesSelectedListIds);
                 }
             }
 
@@ -384,18 +381,9 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
     private List<Exercise> getExercisesSelected(List<Exercise> all_exercises_list, List<Integer> exercises_id){
         List<Exercise> exerciseList = new ArrayList<>();
         for (Integer exercise_id: exercises_id){
-            exerciseList.add(getExerciseById(all_exercises_list,exercise_id));
+            exerciseList.add(utilities.getExerciseById(all_exercises_list,exercise_id));
         }
         return exerciseList;
-    }
-
-    private Exercise getExerciseById(List<Exercise> exercises,int exercise_id){
-        for (Exercise exercise: exercises){
-            if (exercise.getId() == exercise_id){
-                return exercise;
-            }
-        }
-        return null;
     }
 
     private void setMusclesToView(List<String> musculos){
@@ -404,19 +392,20 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
             return;
         }
 
-
-        muscles = "";
-        List<String> mMusclesFinal = utilities.deleteCopiesofList(musculos);
+        sMusclesBodyView = "";
 
 
-        for (int a = 0;a<mMusclesFinal.size();a++) {
+        List<String> muscles = utilities.deleteCopiesofList(musculos);
+
+
+        for (int a = 0;a<muscles.size();a++) {
             TextView mMusclesTextView = new TextView(this);
 
-            muscles += "#"+ mMusclesFinal.get(a) + ",";
+            sMusclesBodyView += "#"+ muscles.get(a) + ",";
 
             //Log.v(TAG,"muscles:" +muscles);
 
-            mMusclesTextView.setText(mMusclesFinal.get(a));
+            mMusclesTextView.setText(muscles.get(a));
             mMusclesTextView.setGravity(Gravity.CENTER);
 
 
@@ -433,7 +422,7 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
         }
 
 
-        utilities.injectJS(muscles,webView);
+        utilities.injectJS(sMusclesBodyView,webView);
     }
 
 
@@ -462,13 +451,6 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {mItemTouchHelper.startDrag(viewHolder);}
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.v(TAG,"onDestroy");
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -481,6 +463,5 @@ public class CreateWorkoutActivity extends BaseActivity implements CreateWorkout
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 }

@@ -19,7 +19,6 @@ import com.app.app.silverbarsapp.viewsets.SavedWorkoutsView;
 
 import org.lucasr.twowayview.widget.TwoWayView;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -63,24 +62,19 @@ public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkouts
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d(TAG,"SavedWorkoutsFragment");
 
         if (this.isAdded()){
             adapter = new SavedWorkoutsAdapter(getActivity());
             mLocalWorkoutsList.setAdapter(adapter);
         }
 
-
-        try {
-            mSavedWorkoutsPresenter.getWorkouts();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        mSavedWorkoutsPresenter.getWorkouts();
     }
 
     @Override
     public void onWorkouts(List<Workout> workouts) {
-        Log.i(TAG,"workouts"+workouts);
+        Log.d(TAG,"workouts: "+workouts.get(0).getWorkout_name());
         onEmptyOff();
         adapter.set(workouts);
     }
@@ -89,6 +83,7 @@ public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkouts
     public void onEmptyWorkouts() {
         Log.i(TAG,"empty");
     }
+
 
     private void onEmptyOff(){
         mEmpyStateSavedWorkout.setVisibility(View.GONE);

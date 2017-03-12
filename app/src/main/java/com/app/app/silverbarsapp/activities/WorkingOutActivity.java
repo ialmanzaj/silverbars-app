@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -64,7 +65,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     @BindView(R.id.rest_counter) TextView mOverlayTextCounter;
     @BindView(R.id.headerText) TextView mHeaderTextOverlay;
 
-    @BindView(R.id.play_workout) ImageView mPlayWorkoutButton;
+    @BindView(R.id.play_workout) Button mPlayWorkoutButton;
     @BindView(R.id.pause_workout) RelativeLayout mStopWorkoutButton;
 
     @BindView(R.id.prev_exercise) ImageView mPreviewExerciseButton;
@@ -76,13 +77,13 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     
     @BindView(R.id.total_exercises) TextView mTotalExercises;
 
-    //@BindView(R.id.chronometer) Chronometer mChronometer;
     @BindView(R.id.chronometer2) PausableChronometer mChronometer2;
 
     private Utilities utilities = new Utilities();
     ArrayList<ExerciseRep> mExercises = new ArrayList<>();
 
-    private boolean mVibrationPerSet = false,mVibrationPerRep = false;
+    private boolean mVibrationPerSet = false;
+
     private int mSetsTotal = 1;
     private int mRestByExercise = 30,RestBySet = 60;
 
@@ -198,8 +199,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     private void initUI(){
 
-        //mNextExercisebutton.setVisibility(View.VISIBLE);
-
         //inicializar rep text
         if (mExercises.get(0).getRepetition() > 0){
             mRepetitionTimerText.setText(String.valueOf(mExercises.get(0).getRepetition()));
@@ -220,7 +219,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     public void restListener(CharSequence second){
         mWorkingOutPresenter.onOverlayTextListener(Integer.parseInt(second.toString()));
     }
-
 
     @OnTextChanged(R.id.repetition_timer)
     public void repTimer(CharSequence repetition){
@@ -302,9 +300,27 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         mModalOverlayView.setVisibility(View.VISIBLE);
         mHeaderTextOverlay.setText(getResources().getString(R.string.rest_text));
 
+        //play button disable
+        mPlayWorkoutButton.setEnabled(false);
+
         //disable workout next and previews
         mNextExercisebutton.setEnabled(false);
         mPreviewExerciseButton.setEnabled(false);
+    }
+
+    @Override
+    public void onOverlayViewOff() {
+        //enable workout next and previews
+        mNextExercisebutton.setEnabled(true);
+        mPreviewExerciseButton.setEnabled(true);
+
+        //play button enable
+        mPlayWorkoutButton.setEnabled(true);
+
+        //overlay gone
+        mModalOverlayView.setVisibility(View.GONE);
+
+        onScreenOn();
     }
 
     @Override
@@ -319,19 +335,17 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         restart();
     }
 
-
     @Override
     public void onPreviewExercise() {
         mWorkingOutPresenter.onPreviewExercisePositive();
     }
 
-
     @Override
     public void onChangeToExercise(int exercise_position) {
+        Log.d(TAG,"onChangeToExercise");
 
         // descanso por ejercicio
         mWorkingOutPresenter.showRestOverlayView(mRestByExercise);
-
 
         list.smoothScrollToPosition(exercise_position);
         mCurrentExercisePositionText.setText(String.valueOf(exercise_position+1));
@@ -350,22 +364,11 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
         //descanso por set
         mWorkingOutPresenter.showRestOverlayView(RestBySet);
-
     }
 
-    @Override
-    public void onOverlayViewOff() {
-        mNextExercisebutton.setEnabled(true);
-        mPreviewExerciseButton.setEnabled(true);
-
-        mModalOverlayView.setVisibility(View.GONE);
-
-        onScreenOn();
-    }
 
     @Override
     public void updateToExercise(int repOrSecond, boolean isSecond) {
-
         //reps text
         mRepetitionTimerText.setText(String.valueOf(repOrSecond));
 
@@ -377,7 +380,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     }
 
 
-
     @Override
     public void onWorkoutReady() {
         mPlayWorkoutButton.setVisibility(View.VISIBLE);
@@ -387,14 +389,14 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     @Override
     public void onResumeWorkout() {
-        Log.d(TAG,"onResumeWorkout");
+       // Log.d(TAG,"onResumeWorkout");
         onPlayWorkoutUI();
         onPlayMusicPlayerUI();
     }
 
     @Override
     public void onPauseWorkout() {
-        Log.d(TAG,"onPauseWorkout");
+        //Log.d(TAG,"onPauseWorkout");
         onPauseWorkoutUI();
         onPauseMusicPlayerUI();
     }

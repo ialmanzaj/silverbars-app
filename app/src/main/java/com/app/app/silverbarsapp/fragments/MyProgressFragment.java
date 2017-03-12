@@ -19,16 +19,15 @@ import butterknife.ButterKnife;
 
 public class MyProgressFragment extends Fragment {
 
+    private static final String TAG = MyProgressFragment.class.getSimpleName();
+
     @BindView(R.id.webview) WebView webView;
 
     private Utilities mUtilities = new Utilities();
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_progress, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent,Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_my_progress, parent, false);
     }
 
 
@@ -37,14 +36,14 @@ public class MyProgressFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this,view);
 
+
         if (this.isAdded()){
             setupWebview();
-            mUtilities.setBodyInWebView(getActivity(),webView);
         }
-
-
-
     }
+
+
+    private void onChange(){}
 
 
     private void setupWebview(){
@@ -55,5 +54,8 @@ public class MyProgressFragment extends Fragment {
             }
         });
         webView.getSettings().setJavaScriptEnabled(true);
+        mUtilities.setBodyInWebView(getActivity(),webView);
     }
+
+
 }
