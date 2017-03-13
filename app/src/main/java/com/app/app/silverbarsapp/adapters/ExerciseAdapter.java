@@ -32,37 +32,34 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     private Utilities utilities = new Utilities();
     private ArrayList<ExerciseRep> exercises;
 
-
     public ExerciseAdapter(Context context,ArrayList<ExerciseRep> exercises) {
         this.context = context;
         this.exercises = exercises;
     }
 
+    public ArrayList<ExerciseRep> getExercises() {
+        return exercises;
+    }
+
 
     public class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.nombre) TextView nombre;
-        @BindView(R.id.repetitions) TextView repetitions;
+        @BindView(R.id.nombre) TextView exercise_name;
+        @BindView(R.id.repetitions) TextView exercise_rep;
         @BindView(R.id.option) TextView option;
-        @BindView(R.id.imagen) SimpleDraweeView imagen_cache;
-        @BindView(R.id.imagen_local) ImageView imageView_local;
+        @BindView(R.id.imagen) SimpleDraweeView exercise_img_cache;
+        @BindView(R.id.imagen_local) ImageView exercise_img_local;
 
         public ExerciseViewHolder(View view) {
             super(view);
             //binding views
             ButterKnife.bind(this,view);
         }
-
-
     }
 
     @Override
     public int getItemCount() {
         return exercises.size();
-    }
-
-    public ArrayList<ExerciseRep> getExercises() {
-        return exercises;
     }
 
     @Override
@@ -73,42 +70,40 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     @Override
     public void onBindViewHolder(ExerciseViewHolder viewHolder,int position) {
 
-        viewHolder.nombre.setText(exercises.get(position).getExercise().getExercise_name());
+        viewHolder.exercise_name.setText(exercises.get(position).getExercise().getExercise_name());
 
-        //repetitions  or seconds
-        if (exercises.get(position).getRepetition() > 0){
-            viewHolder.repetitions.setText(String.valueOf(exercises.get(position).getRepetition()));
+        if(utilities.checkIfRep(exercises.get(position))){
+
+            viewHolder.exercise_rep.setText(String.valueOf(exercises.get(position).getRepetition()));
+
         }else {
-            viewHolder.repetitions.setText(String.valueOf(exercises.get(position).getSeconds()));
+
+            viewHolder.exercise_rep.setText(String.valueOf(exercises.get(position).getSeconds()));
             viewHolder.option.setText(context.getString(R.string.exercise_adapter_option));
         }
 
-        //Log.d(TAG,"img "+exercises.get(a).getExercise().getExercise_image());
 
         try {
-
 
             String[] imageDir = exercises.get(position).getExercise().getExercise_image().split("exercises");
 
             if (imageDir.length == 2){
                 //Log.d(TAG,"img from json");
 
-                viewHolder.imagen_cache.setVisibility(View.VISIBLE);
-                viewHolder.imagen_cache.setImageURI(
+                viewHolder.exercise_img_cache.setVisibility(View.VISIBLE);
+                viewHolder.exercise_img_cache.setImageURI(
                         Uri.parse(exercises.get(position).getExercise().getExercise_image()));
 
             }else {
                 //Log.d(TAG,"img from local");
 
-                viewHolder.imageView_local.setVisibility(View.VISIBLE);
-                viewHolder.imageView_local.setImageBitmap(utilities.loadExerciseImageFromDevice(context,exercises.get(position).getExercise().getExercise_image()));
+                viewHolder.exercise_img_local.setVisibility(View.VISIBLE);
+                viewHolder.exercise_img_local.setImageBitmap(utilities.loadExerciseImageFromDevice(context,exercises.get(position).getExercise().getExercise_image()));
             }
 
 
         }catch (NullPointerException e){Log.e(TAG,""+e);}
     }
-
-
 
 
 

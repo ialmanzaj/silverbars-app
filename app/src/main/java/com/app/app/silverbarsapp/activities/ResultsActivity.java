@@ -245,7 +245,7 @@ public class ResultsActivity extends BaseActivity {
 
 
         webView.getSettings().setJavaScriptEnabled(true);
-        setBodyInWebView();
+        loadUrlOfMuscleBody();
     }*/
 
     @Override

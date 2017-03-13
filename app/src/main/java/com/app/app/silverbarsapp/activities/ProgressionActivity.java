@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -117,16 +116,12 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
         }
     }
 
+
     private void setupWebview(){
-        mMusclesWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-            }
-        });
         mMusclesWebView.getSettings().setJavaScriptEnabled(true);
-        mUtilities.setBodyInWebView(this,mMusclesWebView);
+        mUtilities.loadUrlOfMuscleBody(this,mMusclesWebView);
     }
+
 
     @Override
     public void displayProgressions(List<MuscleProgression> progressions) {
@@ -178,9 +173,8 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
         //add muscle names to the webview
         mMuscleParts += "#" + muscle.getMuscle_name() + ",";
 
+        mUtilities.onWebviewReady(mMusclesWebView,mMuscleParts);
         insertMuscleContent(muscle.getMuscle_name());
-
-        mUtilities.injectJS(mMuscleParts,mMusclesWebView);
     }
 
     private void insertMuscleContent(String muscle_name){

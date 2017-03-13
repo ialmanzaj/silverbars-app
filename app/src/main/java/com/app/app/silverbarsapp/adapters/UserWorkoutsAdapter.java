@@ -3,13 +3,13 @@ package com.app.app.silverbarsapp.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +21,7 @@ import com.app.app.silverbarsapp.utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,13 +53,29 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
     }
 
 
+    public void set(List<Workout> workouts){
+        this.workouts.addAll(workouts);
+        notifyDataSetChanged();
+    }
+
+    public void add(Workout workout){
+        workouts.add(0,workout);
+        notifyItemInserted(0);
+    }
+
+    public interface OnWorkoutListener {
+        void deleteWorkout(int workout_id);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.layout)FrameLayout layout;
+        @BindView(R.id.layout) CardView layout;
         @BindView(R.id.img_local)ImageView workout_img;
         @BindView(R.id.text)TextView workout_name;
         @BindView(R.id.start_button)Button start_button;
         @BindView(R.id.delete) ImageView delete_button;
+
+        @BindView(R.id.initial) TextView initial_workout_name;
 
         private int workout_id;
 
@@ -116,7 +133,7 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
     @Override
     public void onBindViewHolder(ViewHolder viewholder,  int position) {
 
-        viewholder.layout.getLayoutParams().height = utilities.containerDimensionsHeight(context) / 3;
+        viewholder.layout.getLayoutParams().height = utilities.calculateContainerHeight(context) / 3;
 
         viewholder.workout_name.setText(workouts.get(position).getWorkout_name());
         viewholder.start_button.setTag(workouts.get(position));
@@ -124,14 +141,22 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
 
         try {
 
-            String[] workoutImgDir = workouts.get(position).getWorkout_image().split(context.getFilesDir().getPath()+"/SilverbarsImg/");
 
-            if (workoutImgDir.length == 2){
-                String workoutImgName = workoutImgDir[1];
-                Bitmap imgBitmap;
-                imgBitmap = utilities.loadWorkoutImageFromDevice(context,workoutImgName);
-                viewholder.workout_img.setImageBitmap(imgBitmap);
+            if (Objects.equals(workouts.get(position).getWorkout_image(), "/")){
+
+                viewholder.layout.setBackgroundColor(context.getResources().getColor(R.color.secondColor));
+                viewholder.initial_workout_name.setText(workouts.get(position).getWorkout_name().substring(0,1));
+
+            }else {
+                String[] workoutImgDir = workouts.get(position).getWorkout_image().split(context.getFilesDir().getPath()+"/SilverbarsImg/");
+                if (workoutImgDir.length == 2){
+                    String workoutImgName = workoutImgDir[1];
+                    Bitmap imgBitmap;
+                    imgBitmap = utilities.loadWorkoutImageFromDevice(context,workoutImgName);
+                    viewholder.workout_img.setImageBitmap(imgBitmap);
+                }
             }
+
 
 
         }catch (NullPointerException e){
@@ -148,9 +173,7 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
             workouts.remove(utilities.getWorkoutById(workouts,workout_id));
             notifyDataSetChanged();
 
-
             listener.deleteWorkout(workout_id);
-
 
         }catch (NullPointerException e){Log.e(TAG,"",e);}
     }
@@ -158,21 +181,10 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
     @Override
     public int getItemCount() {
         return workouts.size();
+
     }
 
 
-    public void set(List<Workout> workouts){
-        this.workouts.addAll(workouts);
-        notifyDataSetChanged();
-    }
 
-    public void add(Workout workout){
-        workouts.add(0,workout);
-        notifyItemInserted(0);
-    }
-
-    public interface OnWorkoutListener {
-        void deleteWorkout(int workout_id);
-    }
 
 }

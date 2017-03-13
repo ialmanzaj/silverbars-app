@@ -1,7 +1,6 @@
 package com.app.app.silverbarsapp.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -40,17 +39,18 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
 
     public class WorkoutsViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.nombre) TextView nombre;
-        @BindView(R.id.Layout)RelativeLayout Layout;
-        @BindView(R.id.imagen_cache)SimpleDraweeView imagen_cache;
-        @BindView(R.id.imagen_local)ImageView imageView_local;
+        @BindView(R.id.Layout) RelativeLayout Layout;
+
+        @BindView(R.id.nombre) TextView exercise_name;
+        @BindView(R.id.imagen_cache)SimpleDraweeView exercise_img_cache;
+        @BindView(R.id.imagen_local)ImageView exercise_img_local;
 
         public WorkoutsViewHolder(View view) {
             super(view);
             //binding views
             ButterKnife.bind(this,view);
-
         }
+
     }
 
     @Override
@@ -68,22 +68,25 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
     @Override
     public void onBindViewHolder(WorkoutsViewHolder viewHolder, int position) {
 
-        viewHolder.nombre.setText(exercises.get(position).getExercise().getExercise_name());
-        viewHolder.Layout.getLayoutParams().width = utilities.containerDimensionsWidth(context);
+        viewHolder.Layout.getLayoutParams().width = utilities.calculateContainerWidth(context);
+
+        viewHolder.exercise_name.setText(exercises.get(position).getExercise().getExercise_name());
 
 
         try {
 
             String[] imageDir = exercises.get(position).getExercise().getExercise_image().split("exercises");
 
+
             if (imageDir.length == 2){
-                Uri uri = Uri.parse(exercises.get(position).getExercise().getExercise_image());
-                viewHolder.imagen_cache.setImageURI(uri);
+                viewHolder.exercise_img_cache.setImageURI(
+                        Uri.parse(exercises.get(position).getExercise().getExercise_image()));
 
             }else {
-                viewHolder.imageView_local.setVisibility(View.VISIBLE);
-                Bitmap bitmap = utilities.loadExerciseImageFromDevice(context,exercises.get(position).getExercise().getExercise_image());
-                viewHolder.imageView_local.setImageBitmap(bitmap);
+
+                viewHolder.exercise_img_local.setVisibility(View.VISIBLE);
+                viewHolder.exercise_img_local.setImageBitmap(
+                        utilities.loadExerciseImageFromDevice(context,exercises.get(position).getExercise().getExercise_image()));
             }
 
 

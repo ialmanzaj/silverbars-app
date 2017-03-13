@@ -51,9 +51,10 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
     public class WorkoutHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.layout) FrameLayout layout;
-        @BindView(R.id.text) TextView text;
+
+        @BindView(R.id.text) TextView workout_name;
         @BindView(R.id.btn)Button start_button;
-        @BindView(R.id.img)SimpleDraweeView img;
+        @BindView(R.id.img)SimpleDraweeView workout_img_cache;
 
         public WorkoutHolder(View view) {
             super(view);
@@ -87,19 +88,19 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
     @Override
     public void onBindViewHolder(WorkoutHolder viewHolder, int position) {
 
-        int height = utilities.containerDimensionsHeight(context);
-        viewHolder.layout.getLayoutParams().height = height / 3;
+        viewHolder.layout.getLayoutParams().height = utilities.calculateContainerHeight(context) / 3;
+
 
         try {
 
-            viewHolder.text.setText(workouts.get(position).getWorkout_name());
+            viewHolder.workout_name.setText(workouts.get(position).getWorkout_name());
             viewHolder.start_button.setTag(workouts.get(position));
 
-            viewHolder.img.setImageURI(Uri.parse(workouts.get(position).getWorkout_image()));
+            viewHolder.workout_img_cache.setImageURI(Uri.parse(workouts.get(position).getWorkout_image()));
 
-        }catch (NullPointerException e){
-            Log.e(TAG,"NullPointerException",e.getCause());
-        }
+
+
+        }catch (NullPointerException e){Log.e(TAG,"NullPointerException",e.getCause());}
 
     }
 

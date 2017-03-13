@@ -28,26 +28,31 @@ import butterknife.OnCheckedChanged;
  * Created by isaacalmanza on 10/04/16.
  */
 
-public class ExercisesAdapter extends RecyclerView.Adapter<ExercisesAdapter.ExerciseViewHolder> {
+public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapter.ExerciseViewHolder> {
 
-    private static final String TAG = ExercisesAdapter.class.getSimpleName();
+    private static final String TAG = AllExercisesAdapter.class.getSimpleName();
 
     private Context mContext;
     private List<Exercise> mExercises = new ArrayList<>();
+
     private SparseBooleanArray mExercisesSelected = new SparseBooleanArray();
 
-
-    public ExercisesAdapter(Context context, List<Exercise> exercises) {
+    public AllExercisesAdapter(Context context, List<Exercise> exercises) {
         mContext = context;
         mExercises = exercises;
     }
 
+    public SparseBooleanArray getExercisesSelected(){
+        return mExercisesSelected;
+    }
+
+
     public class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.itemSelected) LinearLayout item;
-        @BindView(R.id.nombre) TextView nombre;
-        @BindView(R.id.checkbox) CheckBox checkBox;
-        @BindView(R.id.imagen) SimpleDraweeView imagen;
+        @BindView(R.id.nombre) TextView exercise_name;
+        @BindView(R.id.imagen) SimpleDraweeView exercise_img;
+        @BindView(R.id.checkbox) CheckBox selection;
 
         public ExerciseViewHolder(View view) {
             super(view);
@@ -57,21 +62,12 @@ public class ExercisesAdapter extends RecyclerView.Adapter<ExercisesAdapter.Exer
 
         @OnCheckedChanged(R.id.checkbox)
         public void selectedItem(CompoundButton button){
-
             int exercise_id = (Integer) button.getTag();
-
             if (!mExercisesSelected.get(exercise_id)) {
-                Log.i(TAG,"checked");
                 mExercisesSelected.put(exercise_id, true);
-
-
-            } else {
-                Log.i(TAG,"unchecked");
+            } else
                 mExercisesSelected.put(exercise_id, false);
-            }
-
         }
-
     }
 
     @Override
@@ -85,15 +81,15 @@ public class ExercisesAdapter extends RecyclerView.Adapter<ExercisesAdapter.Exer
 
         try {
 
-            viewHolder.nombre.setText(mExercises.get(position).getExercise_name());
+            viewHolder.exercise_name.setText(mExercises.get(position).getExercise_name());
 
             //checkbox settings
-            viewHolder.checkBox.setTag(mExercises.get(position).getId());
+            viewHolder.selection.setTag(mExercises.get(position).getId());
             mExercisesSelected.put(mExercises.get(position).getId(),false);
 
             //img
-            Uri uri = Uri.parse(mExercises.get(position).getExercise_image());
-            viewHolder.imagen.setImageURI(uri);
+            viewHolder.exercise_img.setImageURI(Uri.parse(mExercises.get(position).getExercise_image()));
+
 
 
         }catch (NullPointerException e){Log.e(TAG,"NullPointerException");}
@@ -105,8 +101,5 @@ public class ExercisesAdapter extends RecyclerView.Adapter<ExercisesAdapter.Exer
     }
 
 
-    public SparseBooleanArray getExercisesSelected(){
-        return mExercisesSelected;
-    }
 
 }

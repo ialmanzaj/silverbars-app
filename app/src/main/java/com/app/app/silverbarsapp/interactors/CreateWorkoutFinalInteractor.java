@@ -28,32 +28,44 @@ public class CreateWorkoutFinalInteractor {
 
     public void insertWorkout(com.app.app.silverbarsapp.models.Workout workout, CreateWorkoutFinalCallback callback) throws SQLException {
 
-            UserWorkout user_workout = new UserWorkout(
-                    workout.getWorkout_name(),
-                    workout.getWorkout_image(),
-                    workout.getSets(),
-                    workout.getLevel(),
-                    workout.getMainMuscle()
-            );
+        UserWorkout user_workout = new UserWorkout(
+                workout.getWorkout_name(),
+                workout.getWorkout_image(),
+                workout.getSets(),
+                workout.getLevel(),
+                workout.getMainMuscle()
+        );
 
-            //create user workout
-            helper.getUserWorkoutDao().create(user_workout);
-            //Log.d(TAG,"workouts size: "+helper.getSavedWorkoutDao().queryForAll().size());
+        //create user workout
+        helper.getUserWorkoutDao().create(user_workout);
+        //Log.d(TAG,"workouts size: "+helper.getSavedWorkoutDao().queryForAll().size());
 
-            for (com.app.app.silverbarsapp.models.ExerciseRep exerciseRep: workout.getExercises()){
+        for (com.app.app.silverbarsapp.models.ExerciseRep exerciseRep: workout.getExercises()){
 
-                Exercise exercise = insertExercise(exerciseRep);
-                insertTypesOfExercise(exerciseRep,exercise);
-                insertMuscles(exerciseRep,exercise);
+            Exercise exercise = insertExercise(exerciseRep);
+            insertTypesOfExercise(exerciseRep,exercise);
+            insertMuscles(exerciseRep,exercise);
 
-                //re create exercise rep model
-                Log.d(TAG,"exerciseRep rep:"+exerciseRep.getRepetition());
-                helper.getExerciseRepDao().create(new ExerciseRep(exercise, exerciseRep.getRepetition(),user_workout));
+            //re create exercise rep model
+            Log.d(TAG,"state: "+exerciseRep.getExercise_state());
+
+            switch (exerciseRep.getExercise_state()){
+                case REP:
+                    Log.d(TAG,"rep:"+exerciseRep.getNumber());
+                    helper.getExerciseRepDao().create(new ExerciseRep(exercise, exerciseRep.getNumber(),0,user_workout));
+                    break;
+                case SECOND:
+                    Log.d(TAG,"second:"+exerciseRep.getNumber());
+                    helper.getExerciseRepDao().create(new ExerciseRep(exercise,0,exerciseRep.getNumber(),user_workout));
+                    break;
             }
+        }
 
-            //on workout created
-            callback.onWorkoutCreated(true);
+        //on workout created
+        callback.onWorkoutCreated(true);
     }
+
+
 
     private Exercise insertExercise(com.app.app.silverbarsapp.models.ExerciseRep exerciseRep) throws SQLException {
 
@@ -65,23 +77,23 @@ public class CreateWorkoutFinalInteractor {
         );
 
 
-        Log.i(TAG,"exercise :"+exerciseRep.getExercise().getId());
+     /*   Log.i(TAG,"exercise :"+exerciseRep.getExercise().getId());
         Log.i(TAG,"exercise :"+exerciseRep.getExercise().getExercise_name());
         Log.i(TAG,"exercise :"+exerciseRep.getExercise().getLevel());
         Log.i(TAG,"exercise :"+exerciseRep.getExercise().getExercise_audio());
         Log.i(TAG,"exercise :"+exerciseRep.getExercise().getExercise_image());
-
+*/
         //exercise created in database
         helper.getExerciseDao().create(exercise);
 
+        //ruturn exercise created
         return exercise;
     }
 
     private void insertTypesOfExercise(com.app.app.silverbarsapp.models.ExerciseRep exerciseRep, Exercise exercise) throws SQLException {
         //set types exercises to database
         for (String type: exerciseRep.getExercise().getType_exercise()){
-            helper.getTypeDao().create(
-                    new TypeExercise(type, exercise));
+            helper.getTypeDao().create(new TypeExercise(type, exercise));
         }
     }
 

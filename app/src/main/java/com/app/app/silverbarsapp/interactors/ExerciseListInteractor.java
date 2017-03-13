@@ -35,14 +35,12 @@ public class ExerciseListInteractor {
                     callback.onExercises(response.body());
 
                 }else {
-                    Log.e(TAG,"response "+response.code());
                     callback.onServerError();
                 }
             }
             @Override
             public void onFailure(Call<List<Exercise>> call, Throwable t) {
                 Log.e(TAG,"onFailure ",t);
-
                 callback.onNetworkError();
             }
         });

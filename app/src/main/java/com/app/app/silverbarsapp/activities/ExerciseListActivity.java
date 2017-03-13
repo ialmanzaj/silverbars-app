@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
-import com.app.app.silverbarsapp.adapters.ExercisesAdapter;
+import com.app.app.silverbarsapp.adapters.AllExercisesAdapter;
 import com.app.app.silverbarsapp.components.DaggerExerciseListComponent;
 import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.modules.ExerciseListModule;
@@ -57,7 +57,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     @BindView(R.id.exercises_list)RecyclerView list;
     @BindView(R.id.add_exercises)Button mAddExercises;
 
-    private ExercisesAdapter adapter;
+    private AllExercisesAdapter adapter;
 
     private ArrayList<Exercise> mExercises = new ArrayList<>();
     private ArrayList<Integer> mExercisesSelectedIds;
@@ -199,7 +199,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
 
     private void setAdapter(List<Exercise> exercises){
-        adapter = new ExercisesAdapter(this,exercises);
+        adapter = new AllExercisesAdapter(this,exercises);
         list.setAdapter(adapter);
     }
 

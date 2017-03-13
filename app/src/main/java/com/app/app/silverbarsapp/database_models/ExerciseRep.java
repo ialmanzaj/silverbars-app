@@ -41,19 +41,19 @@ public class ExerciseRep  implements Serializable {
         this.userWorkout = userWorkout;
     }
 
+    public ExerciseRep(Exercise exercise,int repetition,int seconds,UserWorkout userWorkout) {
+        this.exercise = exercise;
+        this.repetition = repetition;
+        this.seconds = seconds;
+        this.userWorkout = userWorkout;
+    }
+
 
     public ExerciseRep(Exercise exercise,int repetition,MySavedWorkout saved_workout) {
         this.exercise = exercise;
         this.repetition = repetition;
         this.seconds = 0;
         this.saved_workout = saved_workout;
-    }
-
-    public ExerciseRep(Exercise exercise,int repetition,int seconds,UserWorkout userWorkout) {
-        this.exercise = exercise;
-        this.repetition = repetition;
-        this.seconds = seconds;
-        this.userWorkout = userWorkout;
     }
 
 
@@ -63,7 +63,7 @@ public class ExerciseRep  implements Serializable {
         this.seconds = seconds;
         this.saved_workout = saved_workout;
     }
-    
+
     
     public int getId() {
         return id;
@@ -97,7 +97,6 @@ public class ExerciseRep  implements Serializable {
         return seconds;
     }
 
-
     public void setUserWorkout(UserWorkout userWorkout) {
         this.userWorkout = userWorkout;
     }
@@ -105,7 +104,6 @@ public class ExerciseRep  implements Serializable {
     public UserWorkout getUserWorkout() {
         return userWorkout;
     }
-
 
     public void setSaved_workout(MySavedWorkout saved_workout) {
         this.saved_workout = saved_workout;

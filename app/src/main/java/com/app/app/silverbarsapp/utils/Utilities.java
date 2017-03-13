@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -33,9 +34,8 @@ import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.models.ExerciseRep;
-import com.app.app.silverbarsapp.models.Muscle;
+import com.app.app.silverbarsapp.models.MuscleExercise;
 import com.app.app.silverbarsapp.models.Workout;
-import com.google.gson.Gson;
 import com.spotify.sdk.android.player.Connectivity;
 
 import java.io.File;
@@ -66,19 +66,55 @@ public class Utilities {
 
     public Utilities (){}
 
+
+    public boolean checkIfRep(ExerciseRep exercise){
+        //repetitions  or seconds
+        return exercise.getRepetition() > 0;
+    }
+
+
+    public List<Exercise> getExercisesById(List<Exercise> all_exercises_list, List<Integer> exercises_id){
+        List<Exercise> exerciseList = new ArrayList<>();
+        for (Integer exercise_id: exercises_id){
+            exerciseList.add(getExerciseById(all_exercises_list,exercise_id));
+        }
+        return exerciseList;
+    }
+
     public ArrayList<ExerciseRep> returnExercisesRep(List<Exercise> exercises){
         ArrayList<ExerciseRep> exerciseReps = new ArrayList<>();
 
         for (Exercise exercise: exercises){
             ExerciseRep exerciseRep = new ExerciseRep();
             exerciseRep.setExercise(exercise);
-            exerciseRep.setRepetition(0);
-            exerciseRep.setSeconds(0);
+            exerciseRep.setNumber(0);
             exerciseReps.add(exerciseRep);
         }
 
         return exerciseReps;
     }
+
+    public List<String> getMusclesFromExercises(List<Exercise> exercises){
+        List<String> muscles_names = new ArrayList<>();
+        for(Exercise exercise:exercises){
+            //add muscles array
+            for (MuscleExercise muscle: exercise.getMuscles()){
+                muscles_names.add(muscle.getMuscle());
+            }
+        }
+        return muscles_names;
+    }
+
+
+    public ArrayList<Integer> getExercisesIds(ArrayList<Exercise> exercises){
+        ArrayList<Integer> exercises_ids = new ArrayList<>();
+
+        for (int a = 0;a<exercises.size();a++){
+            exercises_ids.add(exercises.get(a).getId());
+        }
+        return exercises_ids;
+    }
+
 
 
     public Workout getWorkoutById(List<Workout> workouts, int workout_id){
@@ -133,7 +169,7 @@ public class Utilities {
                 }
                 else{
                     if (singleFile.getName().endsWith(".mp3") || singleFile.getName().endsWith(".wav")){
-                        if (SongDuration(context,singleFile)!=null && Long.valueOf(SongDuration(context,singleFile))>150000)
+                        if (getSongDuration(context,singleFile)!=null && Long.valueOf(getSongDuration(context,singleFile))>150000)
                             songs.add(singleFile);
                     }
                 }
@@ -170,37 +206,11 @@ public class Utilities {
         return songs_urls;
     }
 
-
-    public String SongName(Context context,File file){
-        String title = null;
-        try{
-            MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            Uri uri = Uri.fromFile(file);
-            mediaMetadataRetriever.setDataSource(context, uri);
-            title = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-        }catch(Exception e){
-            Log.v("Exception",e.toString());
-        }
-        return title;
-    }
-
-    public String SongDuration(Context context,File file){
-        String duration = null;
-        try{MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-            Uri uri = Uri.fromFile(file);
-            mediaMetadataRetriever.setDataSource(context, uri);
-            duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        }catch (Exception e){
-            Log.v("Exception",e.toString());
-        }
-        return duration;
-    }
-
     public void toast(Context context,String text){
         Toast.makeText(context.getApplicationContext(),text,Toast.LENGTH_SHORT).show();
     }
 
-    public void setBodyInWebView(Context context, WebView webView){
+    public void loadUrlOfMuscleBody(Context context, WebView webView){
         SharedPreferences sharedPref = context.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         String default_url = context.getResources().getString(R.string.muscle_path);
         String muscle_url = sharedPref.getString(context.getString(R.string.muscle_path),default_url);
@@ -212,36 +222,29 @@ public class Utilities {
         }
     }
 
-    public  int containerDimensionsWidth(Context context) {
+    public  int calculateContainerWidth(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        int width = size.x;
-        return width;
+        return size.x;
     }
 
 
-    public int containerDimensionsHeight(Context context) {
+    public int calculateContainerHeight(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        int height = size.y;
-        return height;
+        return size.y;
     }
-
 
 
     /* Checks if external storage is available for read and write */
     public  boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
-
 
     public  Bitmap loadExerciseImageFromDevice(Context context, String imageURI) {
         Bitmap bitmap = null;
@@ -311,23 +314,6 @@ public class Utilities {
         String workoutImgName = imagesName[2];
         Log.v(TAG,"Image Name: "+workoutImgName);
         return workoutImgName;
-    }
-
-
-    public String convertMusclesToString(Muscle[] muscles) {
-        Gson gson = new Gson();
-        String jsonInString = gson.toJson(muscles);
-        Log.v(TAG, jsonInString);
-
-        return jsonInString;
-    }
-
-
-
-    public Muscle[] convertMusclesToString(String jsonInString) {
-        Gson gson = new Gson();
-        Muscle[] muscles = gson.fromJson(jsonInString, Muscle[].class);
-        return muscles;
     }
 
 
@@ -757,19 +743,50 @@ public class Utilities {
     }
 
 
-    public void injectJS(String partes, WebView webView) {
+    public void injectJS(WebView webView,String muscles) {
+        Log.d(TAG,"muscles: "+muscles);
         try {
-            if (!Objects.equals(partes, "")){
-                partes = removeLastChar(partes);
-                webView.loadUrl("javascript: ("+ "window.onload = function () {"+
-                        "partes = Snap.selectAll('"+partes+"');"+
-                        "partes.forEach( function(elem,i) {"+
-                        "elem.attr({stroke:'#602C8D',fill:'#602C8D'});"+
-                        "});"+ "}"+  ")()");
-            }
+
+            webView.loadUrl(getJavascriptReady(muscles));
+
         } catch (Exception e) {
-            Log.e(TAG,"JAVASCRIPT Exception",e);
+            Log.e(TAG,"Exception",e);
         }
+    }
+
+
+    private String getJavascriptReady(String muscles){
+        if (!Objects.equals(muscles, "")) {
+            final String muscles_ready = removeLastChar(muscles);
+            Log.d(TAG,"muscles_ready: "+muscles_ready);
+
+            return "javascript: (" + "window.onload = function () {" +
+                    "partes = Snap.selectAll('" + muscles_ready + "');" +
+                    "partes.forEach( function(elem,i) {" +
+                    "elem.attr({stroke:'#602C8D',fill:'#602C8D'});" +
+                    "});" + "}" + ")()";
+        }
+        return "";
+    }
+
+
+    public String getMusclesReadyForWebview(List<String> musculos){
+        String muscles_body = "";
+        for (String muscle: musculos){
+            muscles_body += "#"+ muscle + ",";
+        }
+        return muscles_body;
+    }
+
+
+    public void onWebviewReady(WebView webView,String muscles){
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                injectJS(webView,muscles);
+            }
+        });
     }
 
 
@@ -790,7 +807,7 @@ public class Utilities {
         RelativeLayout.LayoutParams layoutParams_Progress = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         layoutParams_Progress.addRule(RelativeLayout.ALIGN_PARENT_END);
         progressBar.setLayoutParams(layoutParams_Progress);
-        progressBar.getLayoutParams().width = containerDimensionsWidth(context) / 2;
+        progressBar.getLayoutParams().width = calculateContainerWidth(context) / 2;
         progressBar.setMax(100);
 
 

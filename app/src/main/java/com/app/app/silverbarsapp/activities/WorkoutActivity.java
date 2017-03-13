@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -199,15 +198,8 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     }
 
     private void setupWebview(){
-        webview.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                utilities.injectJS(mMuscleParts, webview);
-                super.onPageFinished(view, url);
-            }
-        });
         webview.getSettings().setJavaScriptEnabled(true);
-        utilities.setBodyInWebView(this,webview);
+        utilities.loadUrlOfMuscleBody(this,webview);
     }
 
 
@@ -258,7 +250,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         }
     }
 
-
     private void LaunchWorkingOutActivity() {
         int sets,restbyexercise,restbyset;
 
@@ -302,12 +293,9 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
     private void setMusclesToView(List<String> musculos){
         if (musculos.size() > 0){
-            List<String> muscles =  utilities.deleteCopiesofList(musculos);
-            for (int a = 0;a<muscles.size();a++) {
-                mMuscleParts += "#"+ muscles.get(a) + ",";
-            }
+            mMuscleParts  = utilities.getMusclesReadyForWebview(utilities.deleteCopiesofList(musculos));
         }
-        utilities.injectJS(mMuscleParts, webview);
+        utilities.onWebviewReady(webview,mMuscleParts);
     }
 
     private void logMessage(String msg) {
@@ -324,6 +312,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
             if (!mWorkoutPresenter.isWorkoutExist(workoutId)){
                 mWorkoutPresenter.saveWorkout(getCurrentWorkout());
+
             } else {
                 mWorkoutPresenter.setWorkoutOn(workoutId);
             }

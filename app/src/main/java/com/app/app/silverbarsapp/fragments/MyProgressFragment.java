@@ -54,7 +54,7 @@ public class MyProgressFragment extends Fragment {
             }
         });
         webView.getSettings().setJavaScriptEnabled(true);
-        mUtilities.setBodyInWebView(getActivity(),webView);
+        mUtilities.loadUrlOfMuscleBody(getActivity(),webView);
     }
 
 

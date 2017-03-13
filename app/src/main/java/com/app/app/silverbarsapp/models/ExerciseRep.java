@@ -22,10 +22,11 @@ public class ExerciseRep implements Parcelable{
     @SerializedName("seconds")
     private int seconds;
 
+    private STATE exercise_state = STATE.REP;
 
+    private int number;
 
     public ExerciseRep() {}
-
 
     public ExerciseRep(int id,Exercise exercise,int repetition,int seconds) {
         this.id = id;
@@ -95,11 +96,34 @@ public class ExerciseRep implements Parcelable{
     }
 
 
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+
+    public void setExerciseState(int position){
+        exercise_state = STATE.values()[position];
+    }
+
+    public STATE getExercise_state() {
+        return exercise_state;
+    }
+
+
+
     @Override
     public int describeContents() {
         return 0;
     }
 
+
+    public enum STATE {
+        REP, SECOND,
+    }
 
 
 }

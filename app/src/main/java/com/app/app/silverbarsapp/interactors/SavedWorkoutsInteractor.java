@@ -109,6 +109,8 @@ public class SavedWorkoutsInteractor {
         callback.onWorkouts(saved_workouts);
     }
 
+
+
     private boolean checkIsAnySavedWorkout() throws SQLException {
         for (MySavedWorkout my_saved_workout: helper.getSavedWorkoutDao().queryForAll()){
             if (my_saved_workout.getSaved()){
@@ -117,5 +119,6 @@ public class SavedWorkoutsInteractor {
         }
         return false;
     }
+
 
 }

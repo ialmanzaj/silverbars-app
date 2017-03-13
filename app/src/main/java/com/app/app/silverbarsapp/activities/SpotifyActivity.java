@@ -235,8 +235,6 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
 
     }
 
-
-
     private void onLoadingOff(){
         mLoadingView.setVisibility(View.GONE);
     }

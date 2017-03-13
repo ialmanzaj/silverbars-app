@@ -8,13 +8,14 @@
         android:enabled="true"
         android:icon="@drawable/ic_home_black_24px"
         android:title="@string/menu_home"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
     <item android:id="@+id/my_workouts"
         android:title="@string/menu_myworkouts"
         android:enabled="true"
         android:icon="@drawable/ic_apps_black_24px"
         app:showAsAction="ifRoom"/>
+
 
     <item android:id="@+id/my_progression"
         android:title="My progression"

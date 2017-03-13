@@ -2,7 +2,6 @@ package com.app.app.silverbarsapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,14 +36,27 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
     public SavedWorkoutsAdapter(Context context) {
         this.context = context;
         this.workouts = new ArrayList<>();
-
     }
+
+
+    public void set(List<Workout> workouts){
+        this.workouts.addAll(workouts);
+        notifyDataSetChanged();
+    }
+
+    public void add(Workout workout){
+        workouts.add(0,workout);
+        notifyItemInserted(0);
+    }
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.layout)FrameLayout layout;
-        @BindView(R.id.img_local)ImageView img;
-        @BindView(R.id.text)TextView text;
+
+        @BindView(R.id.text)TextView exercise_name;
+        @BindView(R.id.img_local)ImageView exercise_img_local;
         @BindView(R.id.start_button)Button start_button;
 
         public ViewHolder(View view) {
@@ -78,27 +90,21 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
     @Override
     public void onBindViewHolder(ViewHolder viewholder,  int position) {
 
-        viewholder.text.setText(workouts.get(position).getWorkout_name());
+        viewholder.layout.getLayoutParams().height = utilities.calculateContainerHeight(context) / 3;
+
+        viewholder.exercise_name.setText(workouts.get(position).getWorkout_name());
         viewholder.start_button.setTag(workouts.get(position));
-        viewholder.layout.getLayoutParams().height = utilities.containerDimensionsHeight(context) / 3;
 
         try {
 
             String[] workoutImgDir = workouts.get(position).getWorkout_image().split(context.getFilesDir().getPath()+"/SilverbarsImg/");
 
             if (workoutImgDir.length == 2){
-                String workoutImgName = workoutImgDir[1];
-                Bitmap imgBitmap;
-                imgBitmap = utilities.loadWorkoutImageFromDevice(context,workoutImgName);
-                viewholder.img.setImageBitmap(imgBitmap);
+                viewholder.exercise_img_local.setImageBitmap( utilities.loadWorkoutImageFromDevice(context,workoutImgDir[1]));
             }
 
 
-        }catch (NullPointerException e){
-            Log.e(TAG,"NullPointerException");
-        }
-
-
+        }catch (NullPointerException e){Log.e(TAG,"NullPointerException");}
     }
 
     @Override
@@ -107,14 +113,5 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
     }
 
 
-    public void set(List<Workout> workouts){
-        this.workouts.addAll(workouts);
-        notifyDataSetChanged();
-    }
-
-    public void add(Workout workout){
-        workouts.add(0,workout);
-        notifyItemInserted(0);
-    }
 
 }

@@ -28,6 +28,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by isaacalmanza on 10/04/16.
  */
@@ -85,9 +87,20 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
 
     @OnClick(R.id.create)
     public void createButton(){
-        startActivity(new Intent(CONTEXT,CreateWorkoutActivity.class));
+        startActivityForResult(new Intent(CONTEXT,CreateWorkoutActivity.class),3);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 3) {
+            if (resultCode == RESULT_OK){
+
+                //created succesfully
+                mUserWorkoutsPresenter.getMyWorkouts();
+            }
+        }
+    }
 
     @Override
     public void onWorkouts(List<Workout> user_workouts) {
@@ -99,6 +112,10 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
     @Override
     public void deleteWorkout(int workout_id) {
         mUserWorkoutsPresenter.deleteWorkout(workout_id);
+
+        if (adapter.getItemCount() < 1){
+            onEmptyViewOn();
+        }
     }
 
     @Override

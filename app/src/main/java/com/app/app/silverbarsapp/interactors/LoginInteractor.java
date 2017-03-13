@@ -28,11 +28,11 @@ public class LoginInteractor {
     private DatabaseHelper helper;
     private LoginService loginService;
 
-
     public LoginInteractor(LoginService loginService,DatabaseHelper helper){
         this.loginService = loginService;
         this.helper = helper;
     }
+
 
     public void getAccessToken(LoginCallback callback, String facebook_token){
         loginService.getAccessToken("convert_token",CONSUMER_KEY,CONSUMER_SECRET,"facebook",facebook_token).enqueue(new Callback<AccessToken>() {
@@ -46,7 +46,6 @@ public class LoginInteractor {
                     Log.e(TAG, "statusCode:" + response.code());
                     callback.onServerError();
                 }
-
             }
             @Override
             public void onFailure(Call<AccessToken> call, Throwable t) {
@@ -62,6 +61,7 @@ public class LoginInteractor {
             helper.getProfileFacebook().create(profile);
 
             callback.onProfileCreated(true);
+
 
         } catch (SQLException e) {
             callback.onProfileCreated(false);
