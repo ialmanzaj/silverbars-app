@@ -172,8 +172,8 @@
     <string name="session_title">Desea cerrar sesión?</string>
 
     <string name="next">Siguiente</string>
-    <string name="empty_create">La Rutinas esta vacia :(</string>
-    <string name="add_exercises_title">Agregar Ejercicios</string>
+    <string name="empty_create">La Rutina esta vacia :(</string>
+    <string name="add_exercises_title">Agregar ejercicios</string>
     <string name="add_more">Agregar más ejercicios</string>
 
     <string name="songs">Mis Canciones</string>
@@ -208,6 +208,16 @@
     <!---    Strings of LOGIN    -->
     <string name="slogan_login">Iniciando sesion para empezar a entrenar</string>
     <string name="slogan_silverbars">Be your own machine</string>
+
+
+    <!---    Strings of workingout activity    -->
+    <string name="working_out_reps">Reps</string>
+    <string name="working_out_seconds">Segundos</string>
+
+
+    <!---    Strings of progress fragment   -->
+    <string name="progress_fragment_today_title">Progreso de hoy</string>
+    <string name="progress_fragment_total_title">Progreso total</string>
 
 
 </resources>

@@ -10,6 +10,7 @@ import java.util.List;
  */
 
 public interface ProgressionCallback extends ServerCallback{
+    void emptyProgress();
     void onProgression(List<MuscleProgression> progressions);
     void onMuscle(Muscle muscle);
 }

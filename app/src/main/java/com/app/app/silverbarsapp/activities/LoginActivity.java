@@ -50,7 +50,6 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
     @Inject
     LoginPresenter mLoginPresenter;
 
-
     @BindView(R.id.login_progress) View mProgressView;
 
     @BindView(R.id.logo)ImageView mLogo;
@@ -60,8 +59,7 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
 
     @BindView(R.id.login_button) LoginButton mLoginButton;
 
-
-    CallbackManager callbackManager;
+    private CallbackManager callbackManager;
 
     @Override
     protected int getLayout() {
@@ -145,6 +143,7 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
     public void displayNetworkError() {
 
     }
+
     @Override
     public void displayServerError() {
 
@@ -160,7 +159,6 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;
     }
-
 
     private void onLoadingOn(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {container.setBackgroundColor(getResources().getColor(R.color.black,getTheme()));}else {container.setBackgroundColor(getResources().getColor(R.color.black));}

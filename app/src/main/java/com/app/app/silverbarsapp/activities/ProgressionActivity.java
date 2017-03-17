@@ -15,11 +15,8 @@ import android.widget.RelativeLayout;
 
 import com.app.app.silverbarsapp.CustomDateView;
 import com.app.app.silverbarsapp.R;
-import com.app.app.silverbarsapp.SilverbarsApp;
-import com.app.app.silverbarsapp.components.DaggerProgressionComponent;
 import com.app.app.silverbarsapp.models.Muscle;
 import com.app.app.silverbarsapp.models.MuscleProgression;
-import com.app.app.silverbarsapp.modules.ProgressionModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ProgressionPresenter;
 import com.app.app.silverbarsapp.utils.Utilities;
@@ -60,8 +57,8 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
     @BindView(R.id.date_layout) HorizontalScrollView mDateLayout;
 
     @BindView(R.id.loading) LinearLayout mLoadingView;
-
     @BindView(R.id.reload) Button mReload;
+
     @BindView(R.id.error_view) LinearLayout mErrorView;
 
     private Utilities mUtilities = new Utilities();
@@ -84,11 +81,10 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
     @Override
     public void injectDependencies() {
         super.injectDependencies();
-
-        DaggerProgressionComponent.builder()
+       /* DaggerProgressionComponent.builder()
                 .silverbarsComponent(SilverbarsApp.getApp(this).getComponent())
                 .progressionModule(new ProgressionModule(this))
-                .build().inject(this);
+                .build().inject(this);*/
     }
 
     @Override
@@ -107,7 +103,6 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
         mProgressionPresenter.getProgression();
     }
 
-
     public void setupToolbar(){
         setSupportActionBar(toolbar);
         if (toolbar != null){
@@ -116,23 +111,23 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
         }
     }
 
-
     private void setupWebview(){
         mMusclesWebView.getSettings().setJavaScriptEnabled(true);
         mUtilities.loadUrlOfMuscleBody(this,mMusclesWebView);
     }
 
+    @Override
+    public void emptyProgress() {}
 
     @Override
     public void displayProgressions(List<MuscleProgression> progressions) {
         Collections.reverse(progressions);
         muscleProgressions = progressions;
         onLoadingViewOff();
-        getMuscles();
+        getMusclesFromProgression();
         getDate();
         //getMusclePorcentaje(progressions);
     }
-
 
     private void getDate(){
         for (MuscleProgression progressionMuscle: muscleProgressions){
@@ -167,7 +162,7 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
     }
 
     @Override
-    public void onMuscle(Muscle muscle) {
+    public void displayMuscle(Muscle muscle) {
         sMuscles_names.add(muscle.getMuscle_name());
 
         //add muscle names to the webview
@@ -188,7 +183,7 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
         }
     }
 
-    private void getMuscles(){
+    private void getMusclesFromProgression(){
         for (MuscleProgression muscleProgression: muscleProgressions){
             mProgressionPresenter.getMuscle(muscleProgression.getMuscle_id());
         }

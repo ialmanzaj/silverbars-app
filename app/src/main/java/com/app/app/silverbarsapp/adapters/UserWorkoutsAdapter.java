@@ -38,9 +38,9 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
 
     private List<Workout> workouts;
     private Context context;
-    private Utilities utilities = new Utilities();
-
     private OnWorkoutListener listener;
+
+    private Utilities utilities = new Utilities();
 
     public UserWorkoutsAdapter(Context context) {
         this.context = context;
@@ -52,7 +52,6 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
         this.listener = listener;
     }
 
-
     public void set(List<Workout> workouts){
         this.workouts.addAll(workouts);
         notifyDataSetChanged();
@@ -63,8 +62,13 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
         notifyItemInserted(0);
     }
 
-    public interface OnWorkoutListener {
-        void deleteWorkout(int workout_id);
+    private void delete(int workout_id){
+        //remove from the adapter
+        workouts.remove(utilities.getWorkoutById(workouts,workout_id));
+        notifyDataSetChanged();
+
+        //notify listener of the activity and delete from the database
+        listener.deleteWorkout(workout_id);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -85,12 +89,9 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
             ButterKnife.bind(this,view);
         }
 
-
         @OnClick(R.id.delete)
         public void deleteButton(View view){
-
             workout_id = (int) view.getTag();
-            Log.d(TAG,"delete"+workout_id);
 
             new MaterialDialog.Builder( context )
                     .title("Delete workout").titleColor(context.getResources().getColor(R.color.black))
@@ -98,7 +99,7 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
                     .positiveText("Yes")
                     .onPositive((dialog, which) -> {
 
-                        onDelete(workout_id);
+                        delete(workout_id);
 
                     })
                     .negativeText("No")
@@ -120,6 +121,7 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
             intent.putExtra("level", workout.getLevel());
             intent.putExtra("main_muscle", workout.getMainMuscle());
             intent.putParcelableArrayListExtra("exercises",  workout.getExercises());
+            intent.putExtra("user_workout",true);
 
             context.startActivity(intent);
         }
@@ -141,13 +143,12 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
 
         try {
 
-
             if (Objects.equals(workouts.get(position).getWorkout_image(), "/")){
-
                 viewholder.layout.setBackgroundColor(context.getResources().getColor(R.color.secondColor));
                 viewholder.initial_workout_name.setText(workouts.get(position).getWorkout_name().substring(0,1));
 
             }else {
+
                 String[] workoutImgDir = workouts.get(position).getWorkout_image().split(context.getFilesDir().getPath()+"/SilverbarsImg/");
                 if (workoutImgDir.length == 2){
                     String workoutImgName = workoutImgDir[1];
@@ -158,33 +159,18 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
             }
 
 
+        }catch (NullPointerException e){Log.e(TAG,"NullPointerException");}
 
-        }catch (NullPointerException e){
-            Log.e(TAG,"NullPointerException");
-        }
-
-    }
-
-
-    private void onDelete(int workout_id){
-        Log.d(TAG,"workout_id: "+workout_id);
-        try {
-
-            workouts.remove(utilities.getWorkoutById(workouts,workout_id));
-            notifyDataSetChanged();
-
-            listener.deleteWorkout(workout_id);
-
-        }catch (NullPointerException e){Log.e(TAG,"",e);}
     }
 
     @Override
     public int getItemCount() {
         return workouts.size();
-
     }
 
 
-
+    public interface OnWorkoutListener {
+        void deleteWorkout(int workout_id);
+    }
 
 }

@@ -11,11 +11,10 @@ import com.google.gson.annotations.SerializedName;
 public class Muscle implements Parcelable{
 
     @SerializedName("id")
-    private String id;
+    private int id;
 
     @SerializedName("muscle_name")
     private String muscle_name;
-
 
     public Muscle(){}
 
@@ -25,13 +24,13 @@ public class Muscle implements Parcelable{
 
 
     protected Muscle(Parcel in) {
-        id = in.readString();
+        id = in.readInt();
         muscle_name = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeInt(id);
         dest.writeString(muscle_name);
     }
 
@@ -48,20 +47,18 @@ public class Muscle implements Parcelable{
     };
 
 
-    public String getId() {
-        return id;
-    }
-
     public String getMuscle_name() {
         return muscle_name;
     }
 
 
+    public int getId() {
+        return id;
+    }
+
     public int describeContents() {
         return 0;
     }
-
-
 
 
 

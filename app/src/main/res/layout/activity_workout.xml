@@ -59,7 +59,8 @@
                     android:layout_height="match_parent">
 
                     <RelativeLayout
-                        android:id="@+id/togle_no_internet"
+                        android:visibility="gone"
+                        android:id="@+id/toggle_save_workout"
                         android:minHeight="55dp"
                         android:background="@color/colorSecondary"
                         android:paddingStart="15dp"
@@ -79,10 +80,11 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_width="match_parent"
                                 android:checked="false"
-                                android:id="@+id/enableLocal" />
+                                android:id="@+id/save_workout_local" />
 
                     </RelativeLayout>
                     <RelativeLayout
+                        android:visibility="gone"
                         android:background="?selectableItemBackgroundBorderless"
                         android:id="@+id/SelectMusic"
                         android:minHeight="45dp"
@@ -185,15 +187,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
-
                             <android.support.design.widget.TextInputLayout
                                 android:layout_marginEnd="10dp"
                                 android:theme="@style/TextLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
+
                                 <AutoCompleteTextView
                                     android:gravity="center_horizontal"
-                                    android:id="@+id/RestbyExercise"
+                                    android:id="@+id/rest_by_exercise"
                                     android:layout_width="50dp"
                                     android:layout_height="wrap_content"
                                     android:textSize="22sp"
@@ -236,9 +238,10 @@
                                 android:theme="@style/TextLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
+
                                 <AutoCompleteTextView
                                     android:gravity="center_horizontal"
-                                    android:id="@+id/RestbySet"
+                                    android:id="@+id/rest_by_set"
                                     android:layout_width="50dp"
                                     android:layout_height="wrap_content"
                                     android:textSize="22sp"
@@ -250,24 +253,11 @@
                                     android:textColorHint="@color/black"
                                     android:inputType="number"
                                     android:maxLines="1" />
+
                             </android.support.design.widget.TextInputLayout>
 
                         </LinearLayout>
                     </RelativeLayout>
-
-                    <android.support.v7.widget.SwitchCompat
-                        android:id="@+id/vibration_per_set"
-                        android:minHeight="45dp"
-                        android:theme="@style/MySwitch2"
-                        android:paddingTop="7dp"
-                        android:paddingBottom="7dp"
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/vibration_set_text"
-                        android:textColor="@color/black"
-                        android:textSize="18sp" />
 
                     <android.support.v7.widget.SwitchCompat
                         android:id="@+id/voice_per_exercise"

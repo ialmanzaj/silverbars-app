@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.app.app.silverbarsapp.OnItemSelectedListener;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.fragments.MainWorkoutsFragment;
 import com.app.app.silverbarsapp.fragments.MyProgressFragment;
@@ -22,8 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener,OnItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
     private String muscle = "ALL";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         if (savedInstanceState == null){
             selectItem(0);
         }
-
     }
 
     private void selectItem(int position){
@@ -56,10 +54,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return muscle;
     }
 
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment currentFragment = null;
 
@@ -70,15 +66,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 currentFragment = new MainWorkoutsFragment();
                 extras.putString("muscle",muscle);
                 currentFragment.setArguments(extras);
-                fabCreateWorkoutbuttonOn();
+                createWorkoutbuttonOn();
                 break;
             case R.id.my_progression:
                 currentFragment = new MyProgressFragment();
-                fabCreateWorkoutbuttonff();
+                createWorkoutbuttonff();
                 break;
             case R.id.my_workouts:
                 currentFragment = new MyWorkoutsFragment();
-                fabCreateWorkoutbuttonff();
+                createWorkoutbuttonff();
                 break;
         }
 
@@ -89,19 +85,25 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return true;
     }
 
-
     @OnClick(R.id.fab)
-    public void create(){
+    public void createButton(){
         startActivity(new Intent(this,CreateWorkoutActivity.class));
     }
 
-
-    private void fabCreateWorkoutbuttonOn(){
+    private void createWorkoutbuttonOn(){
         mButtonCreateWorkout.setVisibility(View.VISIBLE);
     }
 
-    private void fabCreateWorkoutbuttonff(){
+    private void createWorkoutbuttonff(){
         mButtonCreateWorkout.setVisibility(View.GONE);
     }
+
+    @Override
+    public void onChangeNavigation(int position) {
+        selectItem(position);
+    }
+
+
+
 
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -37,17 +38,14 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
 
     private static final String TAG = SpotifyActivity.class.getSimpleName();
 
-
     @Inject
     SpotifyPresenter mSpotifyPresenter;
 
     @BindView(R.id.toolbar) Toolbar toolbar;
 
-
     @BindView(R.id.music_selection) ListView mListMusicSelection;
     @BindView(R.id.done) Button mDoneButton;
     @BindView(R.id.playlists) LinearLayout playlists_layout;
-
 
     @BindView(R.id.error_view)LinearLayout mErrorView;
     @BindView(R.id.reload) Button mReloadButton;
@@ -55,10 +53,7 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
 
     @BindView(R.id.only_premium) LinearLayout mPremiumView;
 
-
-    boolean isPremium = false;
-
-    ArrayAdapter<String> adapter;
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected int getLayout() {
@@ -73,8 +68,6 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
     @Override
     public void injectDependencies() {
         super.injectDependencies();
-
-
         DaggerSpotifyComponent
                 .builder()
                 .silverbarsComponent(SilverbarsApp.getApp(this).getComponent())
@@ -86,86 +79,30 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setupToolbar();
-
-
-
-        mReloadButton.setOnClickListener(view -> {
-
-
-            /*mLoadingView.setVisibility(View.VISIBLE);
-            mErrorView.setVisibility(View.GONE);
-
-            if (auth_error){
-                mSpotifyPresenter.openLoginWindow(this);
-
-            }else if(json_user_error){
-
-                if (SpotifyToken != null){
-                    mSpotifyPresenter.initService(SpotifyToken);
-                }
-
-            }else if (json_playlist_error){
-
-                if (SpotifyToken != null){
-                    getPlaylist(SpotifyToken);
-                }
-
-            }*/
-        });
-
-
-        mDoneButton.setOnClickListener(view -> {
-/*
-
-            final int choice = mListMusicSelection.getCount();
-            long[] selected = new long[choice];
-            final SparseBooleanArray spa = mListMusicSelection.getCheckedItemPositions();
-            if (spa.size() != 0) {
-
-                String currentPlaylist = null;
-                int x = 0;
-                for (int i = 0; i < choice; i++) {
-                    selected[i] = -1;
-                }
-                for (int i = 0; i < choice; i++) {
-                    if (spa.get(i)) {
-                        selected[i] = mListMusicSelection.getItemIdAtPosition(i);
-                    }
-                }
-                for (int j = 0; j < playlists.size(); j++) {
-                    if (j == selected[j]) {
-                        Log.v(TAG, "playlist: " + playlists.get(j));
-                        currentPlaylist = playlists.get(j);
-                        x++;
-                    }
-                }
-
-
-                Log.v("playlist elegido", currentPlaylist);
-                Log.v("playlists", String.valueOf(playlists));
-*/
-
-
-                Intent returnIntent = new Intent();
-                //returnIntent.putExtra("playlist_spotify", currentPlaylist);
-                //returnIntent.putExtra("token", SpotifyToken);
-                setResult(RESULT_OK, returnIntent);
-                finish();
-
-
-        });
-
-
         //open login screen
         mSpotifyPresenter.openLoginWindow(this);
 
+        setupToolbar();
+        setupAdapter();
 
+
+        mReloadButton.setOnClickListener(view -> {});
+        mDoneButton.setOnClickListener(view -> {});
+    }
+
+    public void setupToolbar(){
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Spotify");
+        }
+    }
+
+    private void setupAdapter(){
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_single_choice, android.R.id.text1);
         mListMusicSelection.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListMusicSelection.setAdapter(adapter);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -198,8 +135,7 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
         }
 
         // flag set
-        isPremium = true;
-
+        boolean isPremium = true;
 
         //get my playlist and my tracks
         mSpotifyPresenter.getMyPlaylist();
@@ -219,26 +155,25 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
     @Override
     public void displayMyTracks(String[] tracks) {
         onLoadingOff();
-
         adapter.addAll(tracks);
-
         onMusicViewOn();
     }
 
     @Override
-    public void displayNetworkError() {
-
-    }
+    public void displayNetworkError() {}
 
     @Override
-    public void displayServerError() {
+    public void displayServerError() {}
 
+
+    private void onMusicViewOn(){
+        playlists_layout.setVisibility(View.VISIBLE);
+        mDoneButton.setVisibility(View.VISIBLE);
     }
 
     private void onLoadingOff(){
         mLoadingView.setVisibility(View.GONE);
     }
-
 
     private void onErrorViewOn(){
         mErrorView.setVisibility(View.VISIBLE);
@@ -252,10 +187,17 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
         Log.i("SpotifySdkDemo", status);
     }
 
-
-    private void onMusicViewOn(){
-        playlists_layout.setVisibility(View.VISIBLE);
-        mDoneButton.setVisibility(View.VISIBLE);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            Log.d(TAG, "action bar clicked");
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
-
 }
+

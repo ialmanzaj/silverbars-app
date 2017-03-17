@@ -30,30 +30,21 @@ public class PlaylistPickerActivity extends AppCompatActivity {
 
     private static final String TAG = PlaylistPickerActivity.class.getSimpleName();
 
-
     @BindView(R.id.toolbar) Toolbar mToolbar;
 
-
-    @BindView(R.id.playlist) ListView ListPlaylist;
-    @BindView(R.id.done) Button mDoneBt;
-    @BindView(R.id.create)ImageView mCreatePlaylistBt;
+    @BindView(R.id.playlist) ListView mListPlaylist;
+    @BindView(R.id.done) Button mDoneButton;
+    @BindView(R.id.create)ImageView mCreatePlaylistButton;
 
     @BindView(R.id.empty_state) LinearLayout mEmptyStateView;
 
     private String[] save_playlist;
-    
     private long[] selected;
-    
-
-    String[] position;
-
+    private String[] position;
     private String Playlist_name;
     private String[] playlist;
-
-
     private ArrayList<File> local_audio;
     private ArrayList<File> songs;
-
 
     private Utilities utilities = new Utilities();
 
@@ -66,13 +57,12 @@ public class PlaylistPickerActivity extends AppCompatActivity {
 
         setupToolbar();
 
-
-        //mCreatePlaylistBt.setOnClickListener(v -> dialog());
-
         local_audio = utilities.findSongs(this,Environment.getExternalStorageDirectory());
 
         songValidation();
 
+
+        //mCreatePlaylistBt.setOnClickListener(v -> dialog());
 
 
       /*  String[] items = new String[mySongs.size()];
@@ -117,7 +107,6 @@ public class PlaylistPickerActivity extends AppCompatActivity {
     }
 
     private void songValidation(){
-
         if (local_audio.size() < 1) {
             onEmptyStateOn();
             return;
@@ -129,9 +118,6 @@ public class PlaylistPickerActivity extends AppCompatActivity {
             onEmptyStateOn();
             return;
         }
-
-
-
     }
 
     private void onEmptyStateOn(){
@@ -210,7 +196,6 @@ public class PlaylistPickerActivity extends AppCompatActivity {
         */
 
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

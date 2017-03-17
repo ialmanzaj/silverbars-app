@@ -53,9 +53,8 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     @BindView(R.id.error_view) LinearLayout mErrorView;
     @BindView(R.id.reload)Button mReload;
 
-
-    @BindView(R.id.exercises_list)RecyclerView list;
-    @BindView(R.id.add_exercises)Button mAddExercises;
+    @BindView(R.id.exercises_list) RecyclerView list;
+    @BindView(R.id.add_exercises) Button mAddExercises;
 
     private AllExercisesAdapter adapter;
 
@@ -77,7 +76,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     @Override
     public void injectDependencies() {
         super.injectDependencies();
-
         DaggerExerciseListComponent.builder()
                 .silverbarsComponent(SilverbarsApp.getApp(this).getComponent())
                 .exerciseListModule(new ExerciseListModule(this))
@@ -98,7 +96,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
         mExerciseListPresenter.getExercises();
     }
 
-
     private void getExtras(Bundle extras){
         mExercisesSelectedIds = extras.getIntegerArrayList("exercises");
         verifyExercises();
@@ -109,7 +106,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.add_exercises_title));
     }
-
 
     private String getJson(){
         String json = null;
@@ -127,7 +123,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
         return json;
     }
 
-
     @OnClick(R.id.reload)
     public void reload(){
         onErrorOff();
@@ -135,14 +130,12 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
         mExerciseListPresenter.getExercises();
     }
 
-
     @OnClick(R.id.add_exercises)
     public void addExercises(){
 
         ArrayList<Integer> mListExercisesIds = new ArrayList<>();
 
         for(int i = 0; i < adapter.getExercisesSelected().size(); i++) {
-            // get the object by the key.
             Object exercise_is_selected = adapter.getExercisesSelected().valueAt(i);
 
             if ((Boolean)exercise_is_selected){
@@ -166,10 +159,10 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     @Override
     public void displayExercises(List<Exercise> exercises) {
         onProgressViewOff();
-
         mExercises.addAll(exercises);
         verifyExercises();
     }
+
 
     @Override
     public void displayNetworkError() {
@@ -180,6 +173,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     public void displayServerError() {
         onErrorOn();
     }
+
 
     private void verifyExercises(){
         if (mExercisesSelectedIds == null){
@@ -196,7 +190,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
         }
         return exercises;
     }
-
 
     private void setAdapter(List<Exercise> exercises){
         adapter = new AllExercisesAdapter(this,exercises);

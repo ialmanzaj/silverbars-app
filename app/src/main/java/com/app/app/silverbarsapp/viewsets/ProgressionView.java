@@ -10,6 +10,7 @@ import java.util.List;
  */
 
 public interface ProgressionView extends BaseView {
+    void emptyProgress();
     void displayProgressions(List<MuscleProgression> progressions);
-    void onMuscle(Muscle muscle);
+    void displayMuscle(Muscle muscle);
 }

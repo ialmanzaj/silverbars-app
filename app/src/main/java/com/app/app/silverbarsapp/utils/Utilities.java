@@ -45,6 +45,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import okhttp3.ResponseBody;
@@ -67,11 +68,17 @@ public class Utilities {
     public Utilities (){}
 
 
+    public String formatHMS(int totalSecs){
+        int hours = totalSecs / 3600;
+        int minutes = (totalSecs % 3600) / 60;
+        int seconds = totalSecs % 60;
+        return String.format(Locale.US,"%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
     public boolean checkIfRep(ExerciseRep exercise){
         //repetitions  or seconds
         return exercise.getRepetition() > 0;
     }
-
 
     public List<Exercise> getExercisesById(List<Exercise> all_exercises_list, List<Integer> exercises_id){
         List<Exercise> exerciseList = new ArrayList<>();
@@ -83,16 +90,15 @@ public class Utilities {
 
     public ArrayList<ExerciseRep> returnExercisesRep(List<Exercise> exercises){
         ArrayList<ExerciseRep> exerciseReps = new ArrayList<>();
-
         for (Exercise exercise: exercises){
             ExerciseRep exerciseRep = new ExerciseRep();
             exerciseRep.setExercise(exercise);
             exerciseRep.setNumber(0);
             exerciseReps.add(exerciseRep);
         }
-
         return exerciseReps;
     }
+
 
     public List<String> getMusclesFromExercises(List<Exercise> exercises){
         List<String> muscles_names = new ArrayList<>();
@@ -105,7 +111,6 @@ public class Utilities {
         return muscles_names;
     }
 
-
     public ArrayList<Integer> getExercisesIds(ArrayList<Exercise> exercises){
         ArrayList<Integer> exercises_ids = new ArrayList<>();
 
@@ -114,8 +119,6 @@ public class Utilities {
         }
         return exercises_ids;
     }
-
-
 
     public Workout getWorkoutById(List<Workout> workouts, int workout_id){
         for (Workout workout: workouts){
@@ -158,7 +161,6 @@ public class Utilities {
         }
     }
 
-
     public ArrayList<File> findSongs(Context context,File root){
         ArrayList<File> songs = new ArrayList<File>();
         if (root.listFiles() != null){
@@ -178,12 +180,10 @@ public class Utilities {
         return songs;
     }
 
-
-
     public ArrayList<File> deleteVoiceNote(ArrayList<File> songs){
-
         ArrayList<String> canciones = new ArrayList<>();
         ArrayList<File>   songs_urls = new ArrayList<>();
+
         for (int a = 0;a<songs.size();a++){canciones.add(songs.get(a).getPath());}
 
         for (int b = 0;b<canciones.size();b++){
@@ -193,15 +193,12 @@ public class Utilities {
                 //Log.d(TAG,"otras canciones: "+songs.get(b));
 
                 try {
+
                     songs_urls.add(songs.get(b));
 
-                }catch (NullPointerException e){
-                    Log.e(TAG,"NullPointerException",e);
-                }
-
+                }catch (NullPointerException e){Log.e(TAG,"NullPointerException",e);}
 
             }
-
         }
         return songs_urls;
     }
@@ -230,7 +227,6 @@ public class Utilities {
         return size.x;
     }
 
-
     public int calculateContainerHeight(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
@@ -239,12 +235,12 @@ public class Utilities {
         return size.y;
     }
 
-
     /* Checks if external storage is available for read and write */
     public  boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
     }
+
 
     public  Bitmap loadExerciseImageFromDevice(Context context, String imageURI) {
         Bitmap bitmap = null;
@@ -547,7 +543,7 @@ public class Utilities {
 
 
 
-    public  void DownloadImage(final Context context, String url, final String imgName){
+    public  void downloadImage(Context context, String url, String imgName){
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
@@ -569,8 +565,7 @@ public class Utilities {
 
     public  void downloadAudio(final Context context, String audio_url, final String getAudioName) {
 
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/")
-                .build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://s3-ap-northeast-1.amazonaws.com/silverbarsmedias3/").build();
 
         MainService downloadService = retrofit.create(MainService.class);
         downloadService.downloadFile(audio_url).enqueue(new Callback<ResponseBody>() {
@@ -598,8 +593,7 @@ public class Utilities {
 
     public  List<String> deleteCopiesofList(List<String> list){
         List<String> real_list = new ArrayList<>();
-
-        for (int a = 0; a<list.size();a++) {
+        for (int a = 0; a< list.size();a++) {
             if (!real_list.contains(list.get(a))) {
                 real_list.add(list.get(a));
             }

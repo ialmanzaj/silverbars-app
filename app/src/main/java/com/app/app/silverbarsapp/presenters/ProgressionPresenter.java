@@ -33,13 +33,18 @@ public class ProgressionPresenter extends BasePresenter implements ProgressionCa
     }
 
     @Override
+    public void emptyProgress() {
+        view.emptyProgress();
+    }
+
+    @Override
     public void onProgression(List<MuscleProgression> progressions) {
         view.displayProgressions(progressions);
     }
 
     @Override
     public void onMuscle(Muscle muscle) {
-        view.onMuscle(muscle);
+        view.displayMuscle(muscle);
     }
 
     @Override

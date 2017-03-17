@@ -27,19 +27,16 @@ import butterknife.OnClick;
 
 public class SongsActivity extends AppCompatActivity {
 
-
     private static final String TAG = SongsActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.music_selection) ListView mListSongsView;
-    @BindView(R.id.done) Button done;
+    @BindView(R.id.done) Button mDoneButton;
 
     @BindView(R.id.empty_state) LinearLayout mEmptyStateView;
 
-
     private ArrayList<File> local_audio;
     private ArrayList<File> songs = new ArrayList<>();
-
 
     private Utilities  utilities = new Utilities();
 
@@ -49,39 +46,36 @@ public class SongsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_songs);
         ButterKnife.bind(this);
 
-
         local_audio = utilities.findSongs(this, Environment.getExternalStorageDirectory());
 
         setupToolbar();
         songValidation();
+        setupAdapter();
+    }
 
-
+    private void setupAdapter(){
         String[] songs_names = new String[songs.size()];
         for (int i = 0; i < songs.size(); i++) {
             songs_names[i] = utilities.removeLastMp3(utilities.getSongName(this,songs.get(i)));
         }
 
-
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, songs_names);
-
 
         mListSongsView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         mListSongsView.setAdapter(adapter);
     }
 
-
     private void songValidation(){
 
         if (local_audio.size() < 1) {
-            onEmptyStateOn();
+            onEmptyViewOn();
             return;
         }
 
         songs = utilities.deleteVoiceNote(local_audio);
 
-
         if (songs.size() < 1){
-            onEmptyStateOn();
+            onEmptyViewOn();
             return;
         }
 
@@ -91,7 +85,7 @@ public class SongsActivity extends AppCompatActivity {
 
 
     @OnClick(R.id.done)
-    public void done(){
+    public void doneButton(){
 
         songValidation();
 
@@ -120,8 +114,6 @@ public class SongsActivity extends AppCompatActivity {
                 }
             }
 
-            //Log.v("playlist", Arrays.toString(playlist));
-            //Log.v("songs", String.valueOf(songs));
 
             Intent returnIntent = new Intent();
             returnIntent.putExtra("positions", playlist);
@@ -141,11 +133,11 @@ public class SongsActivity extends AppCompatActivity {
         }
     }
 
-    private void onEmptyStateOn(){
+    private void onEmptyViewOn(){
         mEmptyStateView.setVisibility(View.VISIBLE);
     }
 
-    private void onEmptyStateOff(){
+    private void onEmptyViewOff(){
         mEmptyStateView.setVisibility(View.GONE);
     }
 

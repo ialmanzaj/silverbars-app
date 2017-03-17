@@ -9,10 +9,9 @@ import com.google.gson.annotations.SerializedName;
 public class MuscleProgression {
 
     @SerializedName("muscle")
-    private int muscle;
+    private int muscle_id;
 
-
-    private Muscle mainmuscle;
+    private Muscle muscle_main;
 
     @SerializedName("person")
     private int person;
@@ -30,21 +29,20 @@ public class MuscleProgression {
     public MuscleProgression(){}
 
 
-
     public int getMuscle_id(){
-        return muscle;
+        return muscle_id;
     }
 
     public int getPerson_id() {
         return person;
     }
 
-    public void setMuscle(Muscle mainmuscle) {
-        this.mainmuscle = mainmuscle;
+    public void setMuscle(Muscle muscle_main) {
+        this.muscle_main = muscle_main;
     }
 
     public Muscle getMuscle() {
-        return mainmuscle;
+        return muscle_main;
     }
 
     public int getMuscle_activation_progress() {
@@ -54,7 +52,6 @@ public class MuscleProgression {
     public int getLevel(){
         return level;
     }
-
 
     public void setLevel(int level) {
         this.level = level;

@@ -21,14 +21,16 @@ import butterknife.ButterKnife;
  */
 public class SelectionMusicActivity extends AppCompatActivity {
 
-
     private static final String TAG = SelectionMusicActivity.class.getSimpleName();
+
+    private static final int LOCAL_MUSIC = 1;
+    private static final int SPOTIFY_MUSIC = 2;
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
 
-    @BindView(R.id.songs) RelativeLayout songsButton;
-    @BindView(R.id.playlist) RelativeLayout playlistButton;
-    @BindView(R.id.spotify) RelativeLayout spotifyButton;
+    @BindView(R.id.songs) RelativeLayout mLocalSongsSelectionButton;
+    @BindView(R.id.playlist) RelativeLayout mCreateLocalPlaylistButton;
+    @BindView(R.id.spotify) RelativeLayout mSpotifyMusicButton;
     @BindView(R.id.soundcloud) RelativeLayout soundcloudButton;
 
 
@@ -40,9 +42,9 @@ public class SelectionMusicActivity extends AppCompatActivity {
 
         setupToolbar();
 
-        songsButton.setOnClickListener(v -> startActivityForResult(new Intent(this, SongsActivity.class), 1));
-        playlistButton.setOnClickListener(v -> startActivityForResult(new Intent(this, PlaylistPickerActivity.class), 1));
-        spotifyButton.setOnClickListener(v -> startActivityForResult(new Intent(this, SpotifyActivity.class), 2));
+        mLocalSongsSelectionButton.setOnClickListener(v -> startActivityForResult(new Intent(this, SongsActivity.class), LOCAL_MUSIC));
+        mCreateLocalPlaylistButton.setOnClickListener(v -> startActivityForResult(new Intent(this, PlaylistPickerActivity.class), LOCAL_MUSIC));
+        mSpotifyMusicButton.setOnClickListener(v -> startActivityForResult(new Intent(this, SpotifyActivity.class), SPOTIFY_MUSIC));
     }
 
 
@@ -57,7 +59,7 @@ public class SelectionMusicActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1){
+        if (requestCode == LOCAL_MUSIC){
             if (resultCode == RESULT_OK){
 
                 if (data.hasExtra("songs") && data.hasExtra("positions")){
@@ -71,11 +73,9 @@ public class SelectionMusicActivity extends AppCompatActivity {
                     setResult(RESULT_OK, return_intent);
                     finish();
                 }
-
-
             }
 
-        }else if (requestCode == 2){
+        }else if (requestCode == SPOTIFY_MUSIC){
             if (resultCode == RESULT_OK){
 
                 if (data.hasExtra("playlist_spotify") && data.hasExtra("token")){

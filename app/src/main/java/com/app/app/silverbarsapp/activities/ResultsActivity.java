@@ -35,7 +35,7 @@ public class ResultsActivity extends BaseActivity {
     @BindView(R.id.save) Button mSave;
     @BindView(R.id.webview) WebView webView;
 
-    @BindView(R.id.content)LinearLayout mContentLayout;
+    @BindView(R.id.content) LinearLayout mContentLayout;
 
     private ArrayList<ExerciseRep> mExercises = new ArrayList<>();
 
@@ -138,16 +138,12 @@ public class ResultsActivity extends BaseActivity {
         Tab_layout.addTab(muscles);
     }
 
-
     @OnClick(R.id.save)
-    public void save(){
+    public void saveButton(){
         finish();
     }
 
-
-    private void getCountTimes(List<String> muscles){
-
-    }
+    private void getCountTimes(List<String> muscles){}
 
     private void setTypes(List<String> types){
         List<String> types_oficial = mUtilities.deleteCopiesofList(types);
@@ -247,6 +243,8 @@ public class ResultsActivity extends BaseActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         loadUrlOfMuscleBody();
     }*/
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -173,7 +173,7 @@
 
     <string name="next">Next</string>
     <string name="empty_create">The Workout is empty :(</string>
-    <string name="add_exercises_title">Add Exercises</string>
+    <string name="add_exercises_title">Add exercises</string>
     <string name="add_more">Add more exercises</string>
 
     <string name="songs">My Songs</string>
@@ -217,6 +217,15 @@
     <!---    Strings of LOGIN    -->
     <string name="slogan_login">Logging in to start training</string>
     <string name="slogan_silverbars">Be your own machine</string>
+
+
+    <!---    Strings of workingout activity    -->
+    <string name="working_out_reps">Reps</string>
+    <string name="working_out_seconds">Seconds</string>
+
+    <!---    Strings of progress fragment   -->
+    <string name="progress_fragment_today_title">Today Progress</string>
+    <string name="progress_fragment_total_title">Total Progress</string>
 
 
     <!---           Strings for authentication       -->

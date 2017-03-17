@@ -3,14 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.WorkingOutActivity"
     android:background="#fff">
 
     <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -66,7 +65,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/zero"
+                                android:text="1"
                                 android:id="@+id/current_exercise"
                                 android:gravity="center"
                                 android:textColor="@color/secondColor"
@@ -148,7 +147,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:text="@string/zero"
+                                android:text="1"
                                 android:id="@+id/current_set"
                                 android:gravity="center"
                                 android:textColor="@color/colorSecondary"
@@ -174,10 +173,7 @@
 
                         </LinearLayout>
                     </RelativeLayout>
-
-
                 </LinearLayout>
-
                 <LinearLayout
                     android:gravity="center_horizontal|center_vertical"
                     android:layout_gravity="bottom"
@@ -187,6 +183,14 @@
                     android:layout_height="wrap_content"
                     android:baselineAligned="false">
 
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/countdown"
+                        android:textSize="75sp"
+                        android:textColor="@color/black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
                     <com.app.app.silverbarsapp.PausableChronometer
                         android:id="@+id/chronometer2"
                         android:textColor="@color/black"
@@ -195,87 +199,72 @@
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>
-
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:baselineAligned="false">
 
-                    <RelativeLayout
+                    <TextView
                         android:visibility="invisible"
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent" />
 
-                        <ImageView
-                            android:layout_centerInParent="true"
-                            android:src="@drawable/circle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:contentDescription="@null" />
-
-                        <ImageView
-                            android:layout_centerInParent="true"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/prev_exercise"
-                            android:src="@drawable/ic_fast_rewind_black_24px"
-                            android:layout_gravity="center"
-                            android:contentDescription="@null" />
-
-                    </RelativeLayout>
                     <RelativeLayout
                         android:orientation="horizontal"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:layout_height="match_parent">
 
                         <RelativeLayout
                             android:visibility="invisible"
-                            android:id="@+id/pause_workout"
-                            android:layout_centerInParent="true"
+                            android:id="@+id/stop_workout"
+
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true"
+
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
-
-
 
                             <ImageView
                                 android:tint="@color/secondColor"
                                 android:src="@drawable/circle"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:contentDescription="@null" />
 
                             <ImageView
                                 android:layout_centerVertical="true"
                                 android:layout_centerHorizontal="true"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
                                 android:src="@drawable/ic_stop_black_36px"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:contentDescription="@null" />
 
                         </RelativeLayout>
 
-                        <Button
-                            android:id="@+id/play_workout"
-                            android:layout_centerVertical="true"
-                            android:layout_centerHorizontal="true"
-                            android:theme="@style/ButtonGreen"
-                            android:text="Start"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-
                         <ImageView
                             android:visibility="invisible"
+                            android:id="@+id/pause_workout"
+
                             android:layout_centerVertical="true"
-                            android:layout_centerHorizontal="true"
-                            android:src="@drawable/ic_play_circle_filled_black_36px"
-                            android:layout_width="match_parent"
+                            android:layout_alignParentEnd="true"
+                            android:src="@drawable/ic_pause_circle_filled_black_36px"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:contentDescription="@null" />
 
+                        <ImageView
 
+                            android:id="@+id/play_workout"
+
+                            android:layout_centerVertical="true"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/ic_play_circle_filled_black_36px"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@null" />
 
                     </RelativeLayout>
                     <RelativeLayout
@@ -285,31 +274,13 @@
                         android:layout_height="match_parent">
 
                         <ImageView
-                            android:id="@+id/circle"
+                            android:layout_centerHorizontal="true"
                             android:layout_centerInParent="true"
-                            android:src="@drawable/circle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:id="@+id/next_exercise"
+                            android:src="@drawable/next_button"
                             android:contentDescription="@null" />
-
-                            <ImageView
-                                android:layout_centerHorizontal="true"
-                                android:layout_centerInParent="true"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/next_exercise"
-                                android:src="@drawable/ic_fast_forward_black_24px"
-                                android:contentDescription="@null" />
-
-                        <TextView
-                            android:layout_below="@+id/circle"
-                            android:textColor="@color/black"
-                            android:layout_centerHorizontal="true"
-                            android:text="Next Exercise"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-
 
                     </RelativeLayout>
                 </LinearLayout>
@@ -381,16 +352,9 @@
                                 android:id="@+id/pause_music"
                                 android:src="@drawable/ic_pause_circle_outline_white_36px"
                                 android:contentDescription="@string/pause_button" />
-
                         </RelativeLayout>
-
                 </LinearLayout>
-
-
-
         </LinearLayout>
-
-
 
     <LinearLayout
         android:visibility="invisible"

@@ -28,7 +28,6 @@ public class Chronometer extends android.support.v7.widget.AppCompatTextView {
     private boolean mRunning;
     private OnChronometerTickListener mOnChronometerTickListener;
 
-
     private static final int TICK_WHAT = 2;
 
     private long timeElapsed;
@@ -46,6 +45,7 @@ public class Chronometer extends android.support.v7.widget.AppCompatTextView {
 
         init();
     }
+
 
     private void init() {
         mBase = SystemClock.elapsedRealtime();
@@ -101,7 +101,6 @@ public class Chronometer extends android.support.v7.widget.AppCompatTextView {
 
     private synchronized void updateText(long now) {
         timeElapsed = now - mBase;
-
         DecimalFormat df = new DecimalFormat("00");
 
         int hours = (int)(timeElapsed / (3600 * 1000));

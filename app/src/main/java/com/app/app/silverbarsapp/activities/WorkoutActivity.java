@@ -10,6 +10,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -38,7 +39,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * Created by isaacalmanza on 10/04/16.
@@ -56,49 +56,45 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     @BindView(R.id.tabHost2) TabHost mTabLayout;
 
     @BindView(R.id.sets) TextView Sets;
-    @BindView(R.id.RestbySet) TextView RestbySet;
-    @BindView(R.id.RestbyExercise) AutoCompleteTextView RestbyExercise;
-   
+    @BindView(R.id.rest_by_set) AutoCompleteTextView RestbySet;
+    @BindView(R.id.rest_by_exercise) AutoCompleteTextView RestbyExercise;
 
     @BindView(R.id.list) RecyclerView list;
     @BindView(R.id.muscles) RelativeLayout mBodyMuscleWrapper;
     @BindView(R.id.webview) WebView webview;
 
-    @BindView(R.id.enableLocal) SwitchCompat mSaveWorkoutSwitch;
+    @BindView(R.id.toggle_save_workout) RelativeLayout mSaveWorkoutLayout;
+    @BindView(R.id.save_workout_local) SwitchCompat mSaveWorkoutSwitch;
 
-    @BindView(R.id.vibration_per_set) SwitchCompat mVibrationperSetSwitch;
+    @BindView(R.id.voice_per_exercise)SwitchCompat mVoicePerExercise;
 
-    @BindView(R.id.voice_per_exercise)SwitchCompat voice_per_exercise;
-
-    @BindView(R.id.start_button) Button startButton;
-    @BindView(R.id.SelectMusic) RelativeLayout selectMusic;
-
+    @BindView(R.id.start_button) Button mStartButton;
+    @BindView(R.id.SelectMusic) RelativeLayout mSelectMusicButton;
 
     private ExerciseAdapter adapter;
-
-    private String[] mLocalSongsNames;
-    private ArrayList<File> mLocalSongsFiles;
 
     private int workoutId = 0, workoutSets = 0;
     private String workoutName, workoutLevel, mainMuscle, workoutImgUrl;
 
-    boolean isVibrationPerSetActive = false;
     boolean isDownloadAudioExerciseActive = false;
 
-    private String mMuscleParts = "";
+    private String mMuscleParts = " ";
 
+    //music vars
+    private String[] mLocalSongsNames;
+    private ArrayList<File> mLocalSongsFiles;
+
+    //spotify vars
     private String mPlaylistSpotify,mSpotifyToken;
 
     private ArrayList<ExerciseRep> mExercises;
 
     private Utilities utilities = new Utilities();
 
-
     @Override
     protected int getLayout() {
         return R.layout.activity_workout;
     }
-
 
     @Nullable
     @Override
@@ -106,11 +102,9 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         return mWorkoutPresenter;
     }
 
-
     @Override
     public void injectDependencies() {
         super.injectDependencies();
-
         DaggerWorkoutComponent.builder()
                 .silverbarsComponent(SilverbarsApp.getApp(this).getComponent())
                 .workoutModule(new WorkoutModule(this))
@@ -120,40 +114,12 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mWorkoutPresenter.init(this);
         getExtras(getIntent().getExtras());
-
         setupToolbar();
         setupTabs();
         setupWebview();
-
-
-        mWorkoutPresenter.init(this);
-
-        //list settings
-        list.setLayoutManager(new LinearLayoutManager(this));
-        list.setNestedScrollingEnabled(false);
-        list.setHasFixedSize(false);
-
-
-        mSaveWorkoutSwitch.setChecked(mWorkoutPresenter.isWorkoutAvailable(workoutId));
-        mSaveWorkoutSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            if (isChecked){
-                saveWorkout();
-            } else{
-                logMessage("Switch off");
-                mWorkoutPresenter.setWorkoutOff(workoutId);
-            }
-        });
-
-        Sets.setText(String.valueOf(workoutSets));
-        RestbyExercise.setText("30");
-        RestbySet.setText("60");
-
-
-        mVibrationperSetSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {isVibrationPerSetActive = isChecked;});
-        voice_per_exercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {});
-        startButton.setOnClickListener(view -> LaunchWorkingOutActivity());
+        setupAdapter();
     }
 
 
@@ -165,15 +131,48 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         workoutLevel = extras.getString("level");
         mainMuscle = extras.getString("main_muscle");
         mExercises =  getIntent().getParcelableArrayListExtra("exercises");
+        boolean isUserWorkout = extras.getBoolean("user_workout",false);
 
         setExercisesInAdapter(mExercises);
+
+        //init the ui
+        initUI(isUserWorkout);
     }
+
 
     public void setupToolbar(){
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(workoutName);
     }
+
+    private void initUI(boolean isUserWorkout){
+        Sets.setText(String.valueOf(workoutSets));
+        RestbyExercise.setText("30");
+        RestbySet.setText("60");
+
+        mVoicePerExercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {});
+
+
+        mStartButton.setOnClickListener(view -> LaunchWorkingOutActivity());
+        mSelectMusicButton.setOnClickListener(v -> { startActivity(new Intent(this,SelectionMusicActivity.class));});
+
+
+        if (!isUserWorkout){
+            mSaveWorkoutLayout.setVisibility(View.VISIBLE);
+        }
+
+        mSaveWorkoutSwitch.setChecked(mWorkoutPresenter.isWorkoutAvailable(workoutId));
+        mSaveWorkoutSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (isChecked){
+                saveWorkout();
+            } else{
+                logMessage("Switch off");
+                mWorkoutPresenter.setWorkoutOff(workoutId);
+            }
+        });
+    }
+
 
     private void setupTabs(){
         //Defining Tabs
@@ -202,16 +201,16 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         utilities.loadUrlOfMuscleBody(this,webview);
     }
 
-
-    @OnClick(R.id.SelectMusic)
-    public void selectMusic(){
-        startActivity(new Intent(this,SelectionMusicActivity.class));
+    private void setupAdapter(){
+        //list settings
+        list.setLayoutManager(new LinearLayoutManager(this));
+        list.setNestedScrollingEnabled(false);
+        list.setHasFixedSize(false);
     }
-
 
     @Override
     public void onWorkout(boolean created) {
-        Log.d(TAG,"created: "+created);
+        Log.d(TAG,"onWorkoutcreated: "+created);
     }
 
     private void setExercisesInAdapter(ArrayList<ExerciseRep> exercises){
@@ -250,31 +249,19 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         }
     }
 
+
     private void LaunchWorkingOutActivity() {
-        int sets,restbyexercise,restbyset;
-
-        sets = Integer.parseInt(Sets.getText().toString());
-        Log.i(TAG,"sets: "+sets);
-
-        
-        restbyexercise = Integer.parseInt(utilities.removeLastChar(RestbyExercise.getText().toString()));
-        restbyset = Integer.parseInt(utilities.removeLastChar(RestbySet.getText().toString()));
-
-        Log.v(TAG,"rest_exercise "+restbyexercise);
-        Log.v(TAG,"rest_set "+restbyset);
-
-
         Intent intent = new Intent(this, WorkingOutActivity.class);
 
         intent.putParcelableArrayListExtra("exercises", adapter.getExercises());
-        intent.putExtra("sets",sets);
+        intent.putExtra("sets",Integer.parseInt(Sets.getText().toString()));
 
         //rests
-        intent.putExtra("RestByExercise",restbyexercise);
-        intent.putExtra("RestBySet",restbyset);
+        intent.putExtra("rest_exercise",Integer.parseInt(RestbyExercise.getText().toString()));
+        intent.putExtra("rest_set",Integer.parseInt(RestbySet.getText().toString()));
 
         //vibrations option
-        intent.putExtra("VibrationPerSet",isVibrationPerSetActive);
+        intent.putExtra("vibration_per_set",true);
 
         //exercise audio option
         intent.putExtra("exercise_audio",isDownloadAudioExerciseActive);
@@ -289,7 +276,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
         startActivity(intent);
     }
-
 
     private void setMusclesToView(List<String> musculos){
         if (musculos.size() > 0){
@@ -307,7 +293,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     }
 
     private void saveWorkout() {
-        Log.i(TAG,"save workout");
+        Log.d(TAG,"save workout");
         try {
 
             if (!mWorkoutPresenter.isWorkoutExist(workoutId)){
@@ -334,5 +320,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 }

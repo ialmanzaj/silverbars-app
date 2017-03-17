@@ -2,6 +2,9 @@ package com.app.app.silverbarsapp.utils;
 
 import android.os.CountDownTimer;
 
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by isaacalmanza on 02/19/17.
  */
@@ -16,59 +19,27 @@ public class CountDownController {
     private CountDownEvents listener;
 
     //save the the seconds to finish the coutdown
-    private int mCurrentSecondsMainTimer,mCurrentSecondsRestTimer,mCurrentSecondInitialTimer;
-
+    private int mCurrentSecondsMainTimer,mCurrentSecondsRestTimer;
 
     public CountDownController(CountDownEvents listener){
         this.listener = listener;
     }
 
-
-    public void createInicialTimer(int seconds){
-        //current second default to 0
-        mCurrentSecondInitialTimer = 0;
-
-        long total_sec = (seconds +4) * 1000;
-
-        mStartedInitialTimer = new CountDownTimer(total_sec, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-                //save current second to resume-pause
-                mCurrentSecondInitialTimer  = Math.round(millisUntilFinished * 0.001f);
-                listener.onTickInitialCounter();
-            }
-            public void onFinish() {}
-        }.start();
-    }
-
-    public boolean isInicialTimerAvailable(){
-        return mStartedInitialTimer != null;
-    }
-
-    public void pauseInicialTimer(){
-        mStartedInitialTimer.cancel();
-    }
-
-    public void resumeInicialTimer(){
-        createInicialTimer(mCurrentSecondInitialTimer);
-    }
-
-    public void createMainCountDownTimer(int seconds,int tempo){
-
+    public void createMainCountDownTimer(int seconds){
         //set the timer to 0
         mCurrentSecondsMainTimer = 0;
 
-        long seconds_total = seconds * 1000;
-        long interval =  tempo * 1000;
+        int seconds_total =  (seconds+1) * 1000;
 
-        sMainCountDownTimer = new CountDownTimer(seconds_total, interval) {
-            public void onTick(long millisUntilFinished) {
+        sMainCountDownTimer = new CountDownTimer(seconds_total, 1000) {
+            public void onTick(long milisecond) {
 
+                long millis = milisecond - 1000;
                 //save current second to resume-pause
-                mCurrentSecondsMainTimer  = Math.round(millisUntilFinished * 0.001f);
+                mCurrentSecondsMainTimer  = Math.round(millis * 0.001f);
+                String text = String.format(Locale.US,"%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis), TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
 
-                listener.onTickMainCounter();
+                listener.onTickMainCounter(text);
             }
             public void onFinish() {}
         }.start();
@@ -78,14 +49,16 @@ public class CountDownController {
         return sMainCountDownTimer != null;
     }
 
+
     public void pauseMainCountDown(){
-        sMainCountDownTimer.cancel();
+        if (isMainCountDownTimerAvailable()){
+            sMainCountDownTimer.cancel();
+        }
     }
 
-    public void resumeMainCountDown(int tempo){
-        createMainCountDownTimer(mCurrentSecondsMainTimer,tempo);
+    public void resumeMainCountDown(){
+        createMainCountDownTimer(mCurrentSecondsMainTimer);
     }
-
 
     public void createRestTimer(int seconds){
         //init mCurrentSecondsRestTimer
@@ -104,12 +77,10 @@ public class CountDownController {
                 //Log.i(TAG,"mCurrentSecondsRestTimer "+mCurrentSecondsRestTimer);
 
                 listener.onTickRestCounter();
-
             }
             public void onFinish() {}
         }.start();
     }
-
 
     public boolean isRestCountDownTimerAvailable(){
         return mRestTimer != null;
@@ -123,25 +94,17 @@ public class CountDownController {
         createRestTimer(mCurrentSecondsRestTimer);
     }
 
-    public void destroyInicialTimer(){
-        ///Log.d(TAG,"destroyInicialTimer");
-        if (isInicialTimerAvailable()){mStartedInitialTimer.cancel();mStartedInitialTimer = null;}
-    }
-
     public void destroyMainCountDownTimer(){
-        //Log.d(TAG,"destroyMainCountDownTimer");
         if (isMainCountDownTimerAvailable()){sMainCountDownTimer.cancel();sMainCountDownTimer = null;}
     }
+
     public void destroyRestCountDownTimer(){
-        //Log.d(TAG,"destroyRestCountDownTimer");
         if (isRestCountDownTimerAvailable()){mRestTimer.cancel();mRestTimer = null;}
     }
 
     public interface CountDownEvents{
-        void onTickInitialCounter();
-        void onTickMainCounter();
+        void onTickMainCounter(String total);
         void onTickRestCounter();
     }
-
 
 }

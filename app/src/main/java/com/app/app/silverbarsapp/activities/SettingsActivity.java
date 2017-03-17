@@ -23,6 +23,7 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.close_session) RelativeLayout close_session;
     @BindView(R.id.toolbar) Toolbar toolbar;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +72,6 @@ public class SettingsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Opciones");
-
     }
 
     private void saveLogOut(){
@@ -81,8 +81,6 @@ public class SettingsActivity extends AppCompatActivity {
         editor.apply();
         Log.v(TAG,getString(R.string.sign_in));
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -96,4 +94,6 @@ public class SettingsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

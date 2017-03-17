@@ -40,8 +40,12 @@ public class ProgressionInteractor {
             public void onResponse(Call<List<MuscleProgression>> call, Response<List<MuscleProgression>> response) {
                 if (response.isSuccessful()){
                     callback.onProgression(response.body());
-                }else
-                    callback.onServerError();
+                }else {
+                    if (response.code() == 404){
+                        callback.emptyProgress();
+                    }else
+                        callback.onServerError();
+                }
             }
             @Override
             public void onFailure(Call<List<MuscleProgression>> call, Throwable t) {
@@ -49,7 +53,6 @@ public class ProgressionInteractor {
             }
         });
     }
-
 
     public void getMuscle(ProgressionCallback callback,int muscle_id){
         mainService.getMuscle(muscle_id)

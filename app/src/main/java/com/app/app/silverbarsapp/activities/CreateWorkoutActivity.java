@@ -54,10 +54,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     @BindView(R.id.next) Button mNextbutton;
     @BindView(R.id.add_exercises) Button mAddExerciseButton;
 
-    @BindView(R.id.content_info) LinearLayout contentView;
-    @BindView(R.id.column1) LinearLayout PrimMuscleColumn;
-    @BindView(R.id.column2) LinearLayout SecMuscleColumn;
-    
+
     @BindView(R.id.exercises_selected) RecyclerView mExercisesSelectedList;
 
 
@@ -110,6 +107,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         tabHost2.addTab(rutina);
         tabHost2.addTab(muscles);
     }
+
 
     private void setupWebview(){
         WebSettings webSettings = webView.getSettings();
