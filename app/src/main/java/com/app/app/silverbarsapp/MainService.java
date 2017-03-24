@@ -30,6 +30,11 @@ public interface MainService {
 
     @Authenticated({R.string.authentication_ACCOUNT,
             R.string.authentication_TOKEN})
+    @GET("v1/muscles/")
+    Call<List<Muscle>> getMuscles();
+
+    @Authenticated({R.string.authentication_ACCOUNT,
+            R.string.authentication_TOKEN})
     @GET("v1/exercises/")
     Call<List<Exercise>> getExercises();
 
@@ -64,6 +69,7 @@ public interface MainService {
             R.string.authentication_TOKEN})
     @GET("v1/muscles/{id}/")
     Observable<Muscle> getMuscle(@Path("id") int id);
+
 
     @GET("v1/me/")
     Call<Person> getMyProfile();

@@ -13,7 +13,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.app.app.silverbarsapp.MutableWatcher;
+import com.app.app.silverbarsapp.utils.MutableWatcher;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.utils.Utilities;

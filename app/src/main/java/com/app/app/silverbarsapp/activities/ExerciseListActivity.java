@@ -18,6 +18,7 @@ import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.adapters.AllExercisesAdapter;
 import com.app.app.silverbarsapp.components.DaggerExerciseListComponent;
 import com.app.app.silverbarsapp.models.Exercise;
+import com.app.app.silverbarsapp.models.MuscleExercise;
 import com.app.app.silverbarsapp.modules.ExerciseListModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ExerciseListPresenter;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -43,7 +45,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
     private Utilities utilities = new Utilities();
 
-
     @Inject
     ExerciseListPresenter mExerciseListPresenter;
 
@@ -56,9 +57,14 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     @BindView(R.id.exercises_list) RecyclerView list;
     @BindView(R.id.add_exercises) Button mAddExercises;
 
+    @BindView(R.id.empty_state) LinearLayout mEmptyView;
+
     private AllExercisesAdapter adapter;
 
     private ArrayList<Exercise> mExercises = new ArrayList<>();
+    private ArrayList<String> muscles_selected;
+
+
     private ArrayList<Integer> mExercisesSelectedIds;
 
 
@@ -86,19 +92,20 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getIntent().getExtras() != null) {
-            getExtras(getIntent().getExtras());
-        }
-
         setupToolbar();
+
+        getExtras(getIntent().getExtras());
 
         list.setLayoutManager(new LinearLayoutManager(this));
         mExerciseListPresenter.getExercises();
     }
 
     private void getExtras(Bundle extras){
-        mExercisesSelectedIds = extras.getIntegerArrayList("exercises");
-        verifyExercises();
+        muscles_selected = extras.getStringArrayList("muscles");
+
+        if (extras.getIntegerArrayList("exercises") != null){
+            mExercisesSelectedIds = extras.getIntegerArrayList("exercises");
+        }
     }
 
     public void setupToolbar(){
@@ -156,13 +163,19 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
     }
 
+
     @Override
     public void displayExercises(List<Exercise> exercises) {
         onProgressViewOff();
         mExercises.addAll(exercises);
-        verifyExercises();
-    }
 
+        if (mExercisesSelectedIds != null){
+            setExercisesView(filterExerciseByMuscle(muscles_selected, getExercisesNoSelected(mExercisesSelectedIds,mExercises)));
+        }else {
+            setExercisesView(filterExerciseByMuscle(muscles_selected,mExercises));
+        }
+
+    }
 
     @Override
     public void displayNetworkError() {
@@ -175,13 +188,23 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     }
 
 
-    private void verifyExercises(){
-        if (mExercisesSelectedIds == null){
-            Log.i(TAG, "no se ha seleccionado ningun ejercicio todavia");
-            setAdapter(mExercises);
-        }else {
-            setAdapter(getExercisesNoSelected(mExercisesSelectedIds,mExercises));
+    private ArrayList<Exercise> filterExerciseByMuscle(ArrayList<String> muscles_selected,ArrayList<Exercise> exercises){
+        Log.d(TAG,"muscles_selected: "+muscles_selected);
+        ArrayList<Exercise> exercises_filtered_muscles = new ArrayList<>();
+        for (Exercise exercise: exercises){
+                for (String muscle_name: muscles_selected){
+                    for (MuscleExercise muscle: exercise.getMuscles()){
+                        if (Objects.equals(muscle_name, muscle.getMuscle())){
+                            if (!exercises_filtered_muscles.contains(exercise)) {
+                                exercises_filtered_muscles.add(exercise);
+                            }
+                        }
+                    }
+                }
         }
+
+        Log.d(TAG,"exercises_filtered_muscles: "+exercises_filtered_muscles);
+        return exercises_filtered_muscles;
     }
 
     private ArrayList<Exercise> getExercisesNoSelected(ArrayList<Integer> exercises_ids,ArrayList<Exercise> exercises){
@@ -191,9 +214,13 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
         return exercises;
     }
 
-    private void setAdapter(List<Exercise> exercises){
-        adapter = new AllExercisesAdapter(this,exercises);
-        list.setAdapter(adapter);
+    private void setExercisesView(ArrayList<Exercise> exercises){
+        if (exercises.size() > 0) {
+            adapter = new AllExercisesAdapter(this, exercises);
+            list.setAdapter(adapter);
+        }else {
+            onEmptyViewOn();
+        }
     }
 
     private void onErrorOn(){
@@ -211,6 +238,10 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     private void onProgressViewOff(){
         mLoadingView.setVisibility(View.GONE);
     }
+
+    private void onEmptyViewOn(){mEmptyView.setVisibility(View.VISIBLE);}
+
+    private void onEmptyViewOff(){mEmptyView.setVisibility(View.GONE);}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -13,7 +13,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.app.app.silverbarsapp.CustomDateView;
+import com.app.app.silverbarsapp.utils.CustomDateView;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.models.Muscle;
 import com.app.app.silverbarsapp.models.MuscleProgression;
@@ -185,7 +185,7 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
 
     private void getMusclesFromProgression(){
         for (MuscleProgression muscleProgression: muscleProgressions){
-            mProgressionPresenter.getMuscle(muscleProgression.getMuscle_id());
+            //mProgressionPresenter.getMuscle(muscleProgression.getMuscle_id());
         }
     }
 

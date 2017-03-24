@@ -1,4 +1,4 @@
-package com.app.app.silverbarsapp;
+package com.app.app.silverbarsapp.utils;
 
 /**
  * Created by isaacalmanza on 03/17/17.

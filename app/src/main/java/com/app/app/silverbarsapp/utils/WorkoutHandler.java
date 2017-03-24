@@ -1,11 +1,9 @@
-package com.app.app.silverbarsapp;
+package com.app.app.silverbarsapp.utils;
 
 import android.util.Log;
 
 import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.models.ExerciseRep;
-import com.app.app.silverbarsapp.utils.CountDownController;
-import com.app.app.silverbarsapp.utils.Utilities;
 
 import java.util.ArrayList;
 

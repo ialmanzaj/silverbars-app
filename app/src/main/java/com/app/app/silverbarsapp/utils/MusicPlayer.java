@@ -1,4 +1,4 @@
-package com.app.app.silverbarsapp;
+package com.app.app.silverbarsapp.utils;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.app.app.silverbarsapp.callbacks.MusicCallback;
-import com.app.app.silverbarsapp.utils.Utilities;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,10 +1,13 @@
-package com.app.app.silverbarsapp;
+package com.app.app.silverbarsapp.utils;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.app.app.silverbarsapp.R;
+
 /**
  * Created by isaacalmanza on 09/23/16.
  */

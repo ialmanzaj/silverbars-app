@@ -7,110 +7,27 @@
     android:layout_height="match_parent"
     tools:context="com.app.app.silverbarsapp.activities.ResultsActivity"
     android:orientation="vertical">
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbarlayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="50dp"
-        app:elevation="2dp">
-
-        <android.support.v7.widget.Toolbar
-            android:background="@color/colorPrimary"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbarlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:minHeight="50dp"
-            app:elevation="2dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/save"
-                android:text="Save"
-                android:background="@color/secondColor"
-                android:textColor="@color/white"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="5dp"/>
-
-
-        </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
-    <TabHost
-        android:layout_below="@+id/appbarlayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/tabHost2">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <TabWidget
+            app:elevation="2dp">
+            <android.support.v7.widget.Toolbar
                 android:background="@color/colorPrimary"
-                android:id="@android:id/tabs"
+                android:minHeight="50dp"
+                app:elevation="2dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            </TabWidget>
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ScrollView
-                    android:layout_marginTop="5dp"
-                    android:id="@+id/muscles"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
 
 
-                        <LinearLayout
-                            android:layout_marginBottom="10dp"
-                           android:layout_gravity="center_horizontal"
-                            android:orientation="horizontal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-                            <TextView
-                                android:textColor="@color/black"
-                                android:textSize="25sp"
-                                android:text="General Progress: "
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-
-                            <TextView
-                                android:textSize="28sp"
-                                android:textColor="@color/colorSecondary"
-                                android:text="20%"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:orientation="vertical"
-                            android:id="@+id/content"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                        </LinearLayout>
 
 
-                        <WebView
-                            android:background="@color/white"
-                            android:id="@+id/webview"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-                        </WebView>
 
 
-                    </LinearLayout>
-                </ScrollView>
-
-
-            </FrameLayout>
-        </LinearLayout>
-    </TabHost>
 
 </RelativeLayout>

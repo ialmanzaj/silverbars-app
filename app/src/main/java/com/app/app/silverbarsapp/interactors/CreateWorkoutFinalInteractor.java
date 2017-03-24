@@ -2,6 +2,7 @@ package com.app.app.silverbarsapp.interactors;
 
 import android.util.Log;
 
+import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.callbacks.CreateWorkoutFinalCallback;
 import com.app.app.silverbarsapp.database_models.Exercise;
 import com.app.app.silverbarsapp.database_models.ExerciseRep;
@@ -21,9 +22,11 @@ public class CreateWorkoutFinalInteractor {
     private static final String TAG = CreateWorkoutFinalInteractor.class.getSimpleName();
 
     private DatabaseHelper helper;
+    private MainService mainService;
 
-    public CreateWorkoutFinalInteractor(DatabaseHelper helper){
+    public CreateWorkoutFinalInteractor(DatabaseHelper helper, MainService mainService){
         this.helper = helper;
+        this.mainService = mainService;
     }
 
     public void insertWorkout(com.app.app.silverbarsapp.models.Workout workout, CreateWorkoutFinalCallback callback) throws SQLException {
@@ -76,13 +79,6 @@ public class CreateWorkoutFinalInteractor {
                 exerciseRep.getExercise().getExercise_image()
         );
 
-
-     /*   Log.i(TAG,"exercise :"+exerciseRep.getExercise().getId());
-        Log.i(TAG,"exercise :"+exerciseRep.getExercise().getExercise_name());
-        Log.i(TAG,"exercise :"+exerciseRep.getExercise().getLevel());
-        Log.i(TAG,"exercise :"+exerciseRep.getExercise().getExercise_audio());
-        Log.i(TAG,"exercise :"+exerciseRep.getExercise().getExercise_image());
-*/
         //exercise created in database
         helper.getExerciseDao().create(exercise);
 

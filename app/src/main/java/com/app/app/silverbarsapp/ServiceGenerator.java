@@ -2,6 +2,7 @@ package com.app.app.silverbarsapp;
 
 import com.andretietz.retroauth.AndroidAuthenticationHandler;
 import com.andretietz.retroauth.Retroauth;
+import com.app.app.silverbarsapp.utils.TokenProvider;
 
 import java.util.concurrent.TimeUnit;
 
@@ -36,8 +37,8 @@ public class ServiceGenerator {
         httpClient.addInterceptor(logging);
 
         //time outs
-        httpClient.connectTimeout(15, TimeUnit.SECONDS);
-        httpClient.readTimeout(25, TimeUnit.SECONDS);
+        httpClient.connectTimeout(10, TimeUnit.SECONDS);
+        httpClient.readTimeout(20, TimeUnit.SECONDS);
 
         OkHttpClient client = httpClient.build();
         Retrofit retrofit = builder.client(client).build();

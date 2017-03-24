@@ -28,9 +28,11 @@ public class ProgressionPresenter extends BasePresenter implements ProgressionCa
         interactor.getProgression(this);
     }
 
-    public void getMuscle(int muscle_id){
-        interactor.getMuscle(this,muscle_id);
+
+    public void getMuscles(List<Integer> muscles_id){
+        interactor.getMuscle(this,muscles_id);
     }
+
 
     @Override
     public void emptyProgress() {
@@ -57,7 +59,6 @@ public class ProgressionPresenter extends BasePresenter implements ProgressionCa
         view.displayNetworkError();
     }
 
-
     @Override
     public void onStart() {}
 
@@ -74,6 +75,8 @@ public class ProgressionPresenter extends BasePresenter implements ProgressionCa
     public void onRestart() {}
 
     @Override
-    public void onDestroy() {}
+    public void onDestroy() {
+        interactor.unsuscribe();
+    }
 
 }

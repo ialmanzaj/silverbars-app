@@ -1,4 +1,4 @@
-package com.app.app.silverbarsapp;
+package com.app.app.silverbarsapp.utils;
 
 import android.accounts.Account;
 import android.util.Log;
@@ -7,6 +7,8 @@ import com.andretietz.retroauth.AndroidToken;
 import com.andretietz.retroauth.AndroidTokenType;
 import com.andretietz.retroauth.Provider;
 import com.andretietz.retroauth.TokenStorage;
+import com.app.app.silverbarsapp.LoginService;
+import com.app.app.silverbarsapp.ServiceGenerator;
 import com.app.app.silverbarsapp.models.AccessToken;
 
 import java.io.IOException;

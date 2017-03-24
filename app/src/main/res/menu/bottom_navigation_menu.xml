@@ -18,7 +18,7 @@
 
 
     <item android:id="@+id/my_progression"
-        android:title="My progression"
+        android:title="@string/menu_progression"
         android:enabled="true"
         android:icon="@drawable/ic_person_outline_black_24px"
         app:showAsAction="ifRoom"/>

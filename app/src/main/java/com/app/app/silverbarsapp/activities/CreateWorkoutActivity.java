@@ -72,9 +72,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_workout);
         ButterKnife.bind(this);
-
-
-
         setupToolbar();
         setupTabs();
         setupAdapter();
@@ -148,13 +145,16 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     @OnClick(R.id.add_exercises)
     public void addExerciseButton(){
-        Intent intent = new Intent(this,ExerciseListActivity.class);
+        Intent intent = new Intent(this,MuscleSelectionActivity.class);
         startActivityForResult(intent,LIST_EXERCISES_SELECTION);
     }
 
     @OnClick(R.id.readd)
-    public void readExerciseButton(){
-        Intent intent = new Intent(this,ExerciseListActivity.class);
+    public void readAddExerciseButton(){
+
+        Intent intent = new Intent(this,MuscleSelectionActivity.class);
+
+
         intent.putExtra("exercises",utilities.getExercisesIds(adapter.getSelectedExercises()));
         startActivityForResult(intent,LIST_EXERCISES_SELECTION);
     }
@@ -239,7 +239,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             sMusclesBodyView = utilities.getMusclesReadyForWebview(utilities.deleteCopiesofList(musculos));
         }
     }
-
 
 
     private void onEmptyViewOff(){

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="com.app.app.silverbarsapp.activities.MuscleSelectionActivity">
+
+        <android.support.design.widget.AppBarLayout
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/appbarlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="2dp">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:elevation="2dp"
+                android:background="@color/colorPrimary" />
+        </android.support.design.widget.AppBarLayout>
+
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:text="Selecciona el musculos que desees entrenar"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <WebView
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+
+        <LinearLayout
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <HorizontalScrollView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:id="@+id/scroll_text"
+                android:layout_height="match_parent">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_centerVertical="true"
+                            android:textColor="@color/black"
+                            android:id="@+id/muscles_selected"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </RelativeLayout>
+                </HorizontalScrollView>
+
+            <Button
+                android:theme="@style/ButtonRed"
+                android:id="@+id/look_exercises"
+                android:text="buscar ejercicios"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+</LinearLayout>

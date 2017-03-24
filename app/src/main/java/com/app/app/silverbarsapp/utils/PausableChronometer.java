@@ -1,8 +1,9 @@
-package com.app.app.silverbarsapp;
+package com.app.app.silverbarsapp.utils;
 
 import android.content.Context;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+
 /**
  * Created by isaacalmanza on 03/06/17.
  */

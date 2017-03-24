@@ -17,7 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.app.app.silverbarsapp.PausableChronometer;
+import com.app.app.silverbarsapp.utils.PausableChronometer;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.adapters.ExerciseWorkingOutAdapter;
@@ -206,6 +206,24 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         initChronometerOrCountDown(mExercises.get(exercise_position));
     }
 
+    private void initChronometerOrCountDown(ExerciseRep exercise){
+        if (!utilities.checkIfRep(exercise)) {
+            //hide mChronometer
+            mChronometer.setVisibility(View.GONE);
+            mCountDownTimer.setVisibility(View.VISIBLE);
+
+            //init mCountDownTimer
+            mCountDownTimer.setText(utilities.formatHMS(exercise.getSeconds()));
+        }else {
+            //hide mCountDownTimer
+            mCountDownTimer.setVisibility(View.GONE);
+            mChronometer.setVisibility(View.VISIBLE);
+
+            //changes in the chronometer
+            restartChronometer();
+        }
+    }
+
    @OnClick({ R.id.play_music,R.id.pause_music,R.id.play_workout, R.id.pause_workout,R.id.stop_workout, R.id.next_exercise})
     public void onClick(View view) {
         int id = view.getId();
@@ -253,9 +271,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     }
 
     @Override
-    public void onCountDownReady(int seconds) {
-
-    }
+    public void onCountDownReady(int seconds) {}
 
     @Override
     public void updateSongName(String song_name) {
@@ -283,7 +299,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     @Override
     public void onOverlayViewOn() {
-        Log.d(TAG,"onOverlayViewOn");
+        //Log.d(TAG,"onOverlayViewOn");
         mModalOverlayView.setVisibility(View.VISIBLE);
         mHeaderTextOverlay.setText(getResources().getString(R.string.rest_text));
 
@@ -316,8 +332,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     @Override
     public void onChangeToExercise(int exercise_position_list) {
-        Log.d(TAG,"onChangeToExercise: "+ exercise_position_list);
-
         //restarting list to exercise_position
         list.smoothScrollToPosition(exercise_position_list);
 
@@ -332,29 +346,10 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     }
 
 
-    private void initChronometerOrCountDown(ExerciseRep exercise){
-        if (!utilities.checkIfRep(exercise)) {
-            //hide mChronometer
-            mChronometer.setVisibility(View.GONE);
-            mCountDownTimer.setVisibility(View.VISIBLE);
-
-            //init mCountDownTimer
-            mCountDownTimer.setText(utilities.formatHMS(exercise.getSeconds()));
-        }else {
-            //hide mCountDownTimer
-            mCountDownTimer.setVisibility(View.GONE);
-            mChronometer.setVisibility(View.VISIBLE);
-
-            //changes in the chronometer
-            restartChronometer();
-        }
-    }
 
     @Override
     public void onSetFinished(int set) {
-        Log.d(TAG,"onSetFinished "+set);
         activateVibrationPerSet();
-
 
         //restarting list to first position
         list.smoothScrollToPosition(0);
@@ -397,7 +392,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     @Override
     public void onResumeWorkout() {
         Log.d(TAG,"onResumeWorkout");
-        //UI
         onPlayWorkoutUI();
         onPlayMusicPlayerUI();
     }
@@ -405,7 +399,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     @Override
     public void onPauseWorkout() {
         Log.d(TAG,"onPauseWorkout");
-        //UI
         onPauseWorkoutUI();
         onPauseMusicPlayerUI();
     }
@@ -413,6 +406,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     @Override
     public void onFinishWorkout() {
         Log.d(TAG,"onFinishWorkout");
+
         new MaterialDialog.Builder(this)
                 .title(getResources().getString(R.string.title_dialog))
                 .titleColor(getResources().getColor(R.color.colorPrimaryText))
@@ -456,6 +450,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     private void launchResultsActivity(){
         Intent intent = new Intent(this, ResultsActivity.class);
         intent.putParcelableArrayListExtra("exercises", mExercises);
+        intent.putExtra("sets",mSetsTotal);
         startActivity(intent);
         finish();
     }

@@ -1,4 +1,4 @@
-package com.app.app.silverbarsapp;
+package com.app.app.silverbarsapp.utils;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.net.ConnectivityManager;
 import android.util.Log;
 
 import com.app.app.silverbarsapp.callbacks.MusicCallback;
-import com.app.app.silverbarsapp.utils.Utilities;
 import com.spotify.sdk.android.player.Config;
 import com.spotify.sdk.android.player.ConnectionStateCallback;
 import com.spotify.sdk.android.player.Connectivity;

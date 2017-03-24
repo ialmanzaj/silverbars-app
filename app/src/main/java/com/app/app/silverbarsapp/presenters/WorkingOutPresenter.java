@@ -3,8 +3,8 @@ package com.app.app.silverbarsapp.presenters;
 import android.content.Context;
 import android.util.Log;
 
-import com.app.app.silverbarsapp.MusicHandler;
-import com.app.app.silverbarsapp.WorkoutHandler;
+import com.app.app.silverbarsapp.utils.MusicHandler;
+import com.app.app.silverbarsapp.utils.WorkoutHandler;
 import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.utils.Utilities;

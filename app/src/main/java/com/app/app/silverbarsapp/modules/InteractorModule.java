@@ -12,8 +12,10 @@ import com.app.app.silverbarsapp.interactors.CreateWorkoutInteractor;
 import com.app.app.silverbarsapp.interactors.ExerciseListInteractor;
 import com.app.app.silverbarsapp.interactors.LoginInteractor;
 import com.app.app.silverbarsapp.interactors.MainWorkoutsInteractor;
+import com.app.app.silverbarsapp.interactors.MuscleSelectionInteractor;
 import com.app.app.silverbarsapp.interactors.ProfileInteractor;
 import com.app.app.silverbarsapp.interactors.ProgressionInteractor;
+import com.app.app.silverbarsapp.interactors.ResultsInteractor;
 import com.app.app.silverbarsapp.interactors.SavedWorkoutsInteractor;
 import com.app.app.silverbarsapp.interactors.SpotifyInteractor;
 import com.app.app.silverbarsapp.interactors.UserWorkoutsInteractor;
@@ -73,8 +75,8 @@ public class InteractorModule {
     }
 
     @Provides
-    public CreateWorkoutFinalInteractor provideCreateWorkoutFinalInteractor(DatabaseHelper helper){
-        return new CreateWorkoutFinalInteractor(helper);
+    public CreateWorkoutFinalInteractor provideCreateWorkoutFinalInteractor(DatabaseHelper helper,MainService mainService){
+        return new CreateWorkoutFinalInteractor(helper,mainService);
     }
 
     @Provides
@@ -90,6 +92,16 @@ public class InteractorModule {
     @Provides
     public ProgressionInteractor provideProgressionInteractor(MainService mainService,DatabaseHelper helper){
         return new ProgressionInteractor(mainService,helper);
+    }
+
+    @Provides
+    public ResultsInteractor provideResultsInteractor(DatabaseHelper helper,MainService mainService){
+        return new ResultsInteractor(helper,mainService);
+    }
+
+    @Provides
+    public MuscleSelectionInteractor provideMuscleSelectionInteractor(MainService mainService){
+        return new MuscleSelectionInteractor(mainService);
     }
 
 

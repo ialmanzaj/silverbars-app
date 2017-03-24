@@ -9,7 +9,7 @@ package com.app.app.silverbarsapp.presenters;
  *
  * <p>
  *  The presenter will be the bridge between Activity or Fragment and an interactor.
- *  Basically a presenter will communicate the results of background tasks (like a server request
+ *  Basically a presenter will communicate the results of tab_background tasks (like a server request
  *  or query to database) that are needed to affect the UI
  * </p>
  */

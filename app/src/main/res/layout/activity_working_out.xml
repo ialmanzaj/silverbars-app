@@ -191,7 +191,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
-                    <com.app.app.silverbarsapp.PausableChronometer
+                    <com.app.app.silverbarsapp.utils.PausableChronometer
                         android:id="@+id/chronometer2"
                         android:textColor="@color/black"
                         android:textSize="75sp"

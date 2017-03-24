@@ -133,6 +133,7 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
     @Override
     public void displayNetworkError() {
+        Log.e(TAG,"displayNetworkError");
         onErrorViewOn();
     }
 

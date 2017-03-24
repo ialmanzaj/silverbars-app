@@ -18,7 +18,6 @@ import com.app.app.silverbarsapp.models.Exercise;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,11 +32,11 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
     private static final String TAG = AllExercisesAdapter.class.getSimpleName();
 
     private Context mContext;
-    private List<Exercise> mExercises = new ArrayList<>();
+    private ArrayList<Exercise> mExercises = new ArrayList<>();
 
     private SparseBooleanArray mExercisesSelected = new SparseBooleanArray();
 
-    public AllExercisesAdapter(Context context, List<Exercise> exercises) {
+    public AllExercisesAdapter(Context context, ArrayList<Exercise> exercises) {
         mContext = context;
         mExercises = exercises;
     }

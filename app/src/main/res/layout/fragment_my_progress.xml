@@ -1,94 +1,39 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:scrollbars="vertical"
-    tools:context=".fragments.MyProgressFragment">
-        <LinearLayout
-            android:padding="5dp"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
+    tools:context=".fragments.MyWorkoutsFragment">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <belka.us.androidtoggleswitch.widgets.ToggleSwitch
-                android:id="@+id/toggle_progress"
-                custom:toggleWidth="165dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                custom:activeBgColor="@color/secondColor"
-                custom:activeTextColor="@android:color/white"
-                custom:inactiveBgColor="@color/grey200"
-                custom:inactiveTextColor="@android:color/black"
-                custom:separatorColor="@color/gray_very_light"
-                custom:textToggleLeft="@string/progress_fragment_today_title"
-                custom:textToggleRight="@string/progress_fragment_total_title"/>
-        </LinearLayout>
-        <LinearLayout
-            android:gravity="center_horizontal|center_vertical"
-            android:id="@+id/loading"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <TextView
-                android:id="@+id/loading_text"
-                android:textSize="24sp"
-                android:textColor="@color/black"
-                android:text="Loading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/empty_state"
-            android:gravity="center_horizontal|center_vertical"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <TextView
-                android:textSize="28sp"
-                android:textColor="@color/black"
-                android:text="You haven't train today:("
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <Button
-                android:id="@+id/start"
-                android:text="Start workout"
-                style="@style/ButtonRed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipeContainer"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent">
-            <ScrollView
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <android.support.design.widget.TabLayout
+                style="@style/MyCustomTabLayout"
+                android:id="@+id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                app:tabMode="fixed"
+                app:tabGravity="fill"/>
 
+        </android.support.design.widget.AppBarLayout>
 
-                    <WebView
-                        android:layout_marginTop="5dp"
-                        android:background="@color/white"
-                        android:id="@+id/webview"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+        <android.support.v4.view.ViewPager
+            android:scrollbars="vertical"
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-                    <LinearLayout
-                        android:id="@+id/muscles_content"
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+    </LinearLayout>
 
-                </LinearLayout>
-            </ScrollView>
-        </android.support.v4.widget.SwipeRefreshLayout>
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

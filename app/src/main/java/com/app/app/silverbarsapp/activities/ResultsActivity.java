@@ -5,37 +5,38 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 
 import com.app.app.silverbarsapp.R;
+import com.app.app.silverbarsapp.SilverbarsApp;
+import com.app.app.silverbarsapp.components.DaggerResultsComponent;
 import com.app.app.silverbarsapp.models.ExerciseRep;
+import com.app.app.silverbarsapp.modules.ResultsModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
+import com.app.app.silverbarsapp.presenters.ResultsPresenter;
 import com.app.app.silverbarsapp.utils.Utilities;
+import com.app.app.silverbarsapp.viewsets.ResultsView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
-import butterknife.OnClick;
 
 
 /**
  * Created by isaacalmanza on 10/04/16.
  */
-public class ResultsActivity extends BaseActivity {
+public class ResultsActivity extends BaseActivity implements ResultsView {
 
     private static final String TAG = ResultsActivity.class.getSimpleName();
 
+    @Inject
+    ResultsPresenter mResultsPresenter;
+
     @BindView(R.id.toolbar) Toolbar mToolbar;
-
-    @BindView(R.id.save) Button mSave;
-    @BindView(R.id.webview) WebView webView;
-
-    @BindView(R.id.content) LinearLayout mContentLayout;
 
     private ArrayList<ExerciseRep> mExercises = new ArrayList<>();
 
@@ -47,23 +48,41 @@ public class ResultsActivity extends BaseActivity {
         return R.layout.activity_results;
     }
 
+
     @Nullable
     @Override
     protected BasePresenter getPresenter() {
-        return null;
+        return mResultsPresenter;
     }
 
+    @Override
+    public void injectDependencies() {
+        super.injectDependencies();
+        DaggerResultsComponent.builder()
+                .silverbarsComponent(SilverbarsApp.getApp(this).getComponent())
+                .resultsModule(new ResultsModule(this))
+                .build().inject(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setupToolbar();
+
 
         Bundle extras =  getIntent().getExtras();
+
         mExercises = extras.getParcelableArrayList("exercises");
+        int sets = extras.getInt("sets");
+
+        Log.d(TAG,"mExercises: "+mExercises);
+        Log.d(TAG,"sets: "+sets);
 
 
-        setupToolbar();
-        setupTabs();
+
+
+
+        //setupTabs();
 
 
 
@@ -138,10 +157,10 @@ public class ResultsActivity extends BaseActivity {
         Tab_layout.addTab(muscles);
     }
 
-    @OnClick(R.id.save)
+   /* @OnClick(R.id.save)
     public void saveButton(){
         finish();
-    }
+    }*/
 
     private void getCountTimes(List<String> muscles){}
 
@@ -245,7 +264,6 @@ public class ResultsActivity extends BaseActivity {
     }*/
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -258,5 +276,6 @@ public class ResultsActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 }

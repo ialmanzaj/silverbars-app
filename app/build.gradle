@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
 
-
 repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
@@ -30,7 +29,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
-        versionName "0.0.1"
+        versionName "0.0.0.1"
         multiDexEnabled true
     }
     compileOptions {
@@ -62,14 +61,19 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.4@aar') {
         transitive = true;
     }
+
+    compile 'com.spotify.sdk:spotify-auth-beta23-noconnect-2.20b@aar'
+    compile 'com.spotify.sdk:spotify-player-beta23-noconnect-2.20b@aar'
+
+
+
+
     compile 'com.android.support:appcompat-v7:25.2.0'
-    
     compile 'com.android.support:support-v4:25.2.0'
     compile 'com.android.support:support-annotations:25.2.0'
     compile 'com.android.support:design:25.2.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.google.android.gms:play-services-appindexing:9.8.0'
-
     compile 'com.afollestad.material-dialogs:core:0.8.5.9'
     compile 'org.lucasr.twowayview:core:1.0.0-SNAPSHOT@aar'
     compile 'org.lucasr.twowayview:layouts:1.0.0-SNAPSHOT@aar'
@@ -99,18 +103,11 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-core:4.48'
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'joda-time:joda-time:2.9.4'
-
     compile 'com.github.arimorty:floatingsearchview:1.1.2'
     compile 'com.facebook.android:facebook-android-sdk:4.12.0'
-
     compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
-    compile 'com.spotify.sdk:spotify-auth-beta23-noconnect-2.20b@aar'
-    compile 'com.spotify.sdk:spotify-player-beta23-noconnect-2.20b@aar'
-
     compile 'us.belka:androidtoggleswitch:1.2.2'
-
-
-
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'

@@ -13,7 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.app.app.silverbarsapp.OnItemSelectedListener;
+import com.app.app.silverbarsapp.utils.OnItemSelectedListener;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.fragments.MainWorkoutsFragment;
 import com.app.app.silverbarsapp.fragments.MyProgressFragment;
