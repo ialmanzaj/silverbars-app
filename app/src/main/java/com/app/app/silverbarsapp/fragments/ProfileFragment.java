@@ -1,17 +1,14 @@
 package com.app.app.silverbarsapp.fragments;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
-import com.app.app.silverbarsapp.activities.ProgressionActivity;
 import com.app.app.silverbarsapp.components.DaggerProfileComponent;
 import com.app.app.silverbarsapp.database_models.ProfileFacebook;
 import com.app.app.silverbarsapp.modules.ProfileModule;
@@ -22,7 +19,6 @@ import com.app.app.silverbarsapp.viewsets.ProfileView;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 
 
 public class ProfileFragment extends BaseFragment implements ProfileView{
@@ -31,7 +27,6 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
 
     @BindView(R.id.Profile_name) TextView mProfileName;
     @BindView(R.id.profile_image) ImageView mProfileImg;
-    @BindView(R.id.my_progression) LinearLayout sMyProgression;
 
     @Inject
     ProfilePresenter mProfilePresenter;
@@ -62,12 +57,6 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
         super.onViewCreated(view, savedInstanceState);
 
         mProfilePresenter.getProfile();
-    }
-
-
-    @OnClick(R.id.my_progression)
-    public void myprogression(){
-        startActivity(new Intent(CONTEXT, ProgressionActivity.class));
     }
 
 

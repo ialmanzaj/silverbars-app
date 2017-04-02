@@ -48,7 +48,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
     private static final String TAG = WorkoutActivity.class.getSimpleName();
 
-
     @Inject
     WorkoutPresenter mWorkoutPresenter;
 
@@ -133,10 +132,10 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         mExercises =  getIntent().getParcelableArrayListExtra("exercises");
         boolean isUserWorkout = extras.getBoolean("user_workout",false);
 
-        setExercisesInAdapter(mExercises);
-
         //init the ui
         initUI(isUserWorkout);
+
+        setExercisesInAdapter(mExercises);
     }
 
 
@@ -153,11 +152,13 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
         mVoicePerExercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {});
 
-
         mStartButton.setOnClickListener(view -> LaunchWorkingOutActivity());
         mSelectMusicButton.setOnClickListener(v -> { startActivity(new Intent(this,SelectionMusicActivity.class));});
 
+        saveWorkoutUi(isUserWorkout);
+    }
 
+    private void saveWorkoutUi(boolean isUserWorkout){
         if (!isUserWorkout){
             mSaveWorkoutLayout.setVisibility(View.VISIBLE);
         }
@@ -213,6 +214,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         Log.d(TAG,"onWorkoutcreated: "+created);
     }
 
+
     private void setExercisesInAdapter(ArrayList<ExerciseRep> exercises){
 
         List<String> muscles = new ArrayList<>();
@@ -222,6 +224,8 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
           for (MuscleExercise muscle:  exerciseRep.getExercise().getMuscles()){muscles.add(muscle.getMuscle());}
         }
 
+
+        Log.d(TAG,"weight "+exercises.get(0).getWeight());
 
         adapter = new ExerciseAdapter(this,exercises);
         list.setAdapter(adapter);
@@ -296,10 +300,14 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         Log.d(TAG,"save workout");
         try {
 
+            //check if workout doesnt exist in the database
             if (!mWorkoutPresenter.isWorkoutExist(workoutId)){
+                //save in database
                 mWorkoutPresenter.saveWorkout(getCurrentWorkout());
 
             } else {
+
+                //if exist set workout mode ON
                 mWorkoutPresenter.setWorkoutOn(workoutId);
             }
 

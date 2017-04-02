@@ -17,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.app.app.silverbarsapp.utils.PausableChronometer;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.adapters.ExerciseWorkingOutAdapter;
@@ -28,11 +27,13 @@ import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.WorkingOutPresenter;
 import com.app.app.silverbarsapp.utils.DisableTouchRecyclerListener;
 import com.app.app.silverbarsapp.utils.OnSwipeTouchListener;
+import com.app.app.silverbarsapp.utils.PausableChronometer;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.WorkingOutView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -74,6 +75,10 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     @BindView(R.id.next_exercise) ImageView mNextExercisebutton;
 
     @BindView(R.id.option) TextView mOptionRepOrSecond;
+
+    @BindView(R.id.weight_layout) LinearLayout mWeightLayout;
+    @BindView(R.id.weight) TextView mExerciseWeight;
+
     @BindView(R.id.list) RecyclerView list;
     
     @BindView(R.id.total_exercises) TextView mTotalExercises;
@@ -151,13 +156,22 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         String spotify_token = extras.getString("spotify_token");
 
         //init presenter
-        mWorkingOutPresenter.setInitialSetup(mExercises,play_exercise_audio_availible,mSetsTotal, mRestByExercise, mRestBySet);
+        mWorkingOutPresenter.setInitialSetup(getExerciseWithTimesArray(mExercises),play_exercise_audio_availible,mSetsTotal, mRestByExercise, mRestBySet);
 
         //music setup and UI
         setupMusic(local_playlist,local_song_names,spotify_playlist,spotify_token);
 
         //init THE UI
         initUI();
+    }
+
+
+    private ArrayList<ExerciseRep> getExerciseWithTimesArray(ArrayList<ExerciseRep> exercises){
+        for (ExerciseRep exercise: exercises){
+            exercise.createTimesPerSet(mSetsTotal);
+        }
+
+        return exercises;
     }
 
     private void initUI(){
@@ -195,6 +209,12 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
 
     private void initExerciseRepOrSecond(int exercise_position){
+
+        //setup the weight
+        checkWeight(exercise_position);
+
+
+        //setup the rep or sec
         if (utilities.checkIfRep(mExercises.get(exercise_position))){
             mRepetitionTimerText.setText(String.valueOf(mExercises.get(exercise_position).getRepetition()));
             mOptionRepOrSecond.setText(getString(R.string.working_out_reps));
@@ -203,7 +223,17 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
             mOptionRepOrSecond.setText(getString(R.string.working_out_seconds));
         }
 
+        //setup the chronometer or CountDown
         initChronometerOrCountDown(mExercises.get(exercise_position));
+    }
+
+    private void checkWeight(int exercise_position){
+        if (mExercises.get(exercise_position).getWeight() > 0){
+            mWeightLayout.setVisibility(View.VISIBLE);
+            mExerciseWeight.setText(utilities.formaterDecimal(String.valueOf(mExercises.get(exercise_position).getWeight())));
+        }else {
+            mWeightLayout.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void initChronometerOrCountDown(ExerciseRep exercise){
@@ -299,7 +329,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     @Override
     public void onOverlayViewOn() {
-        //Log.d(TAG,"onOverlayViewOn");
         mModalOverlayView.setVisibility(View.VISIBLE);
         mHeaderTextOverlay.setText(getResources().getString(R.string.rest_text));
 
@@ -309,7 +338,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         //disable next button workout
         mNextExercisebutton.setEnabled(false);
     }
-
 
     @Override
     public void onOverlayViewOff() {
@@ -344,8 +372,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         //change the current exercise indicator
         mCurrentExercisePositionText.setText(String.valueOf(exercise_position_list+1));
     }
-
-
 
     @Override
     public void onSetFinished(int set) {
@@ -445,16 +471,17 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     private void saveTimesOfChronometerPerExercise(){
         Log.d(TAG,"time: "+mChronometer.getTimeElapsed());
+        mWorkingOutPresenter.saveTime(mChronometer.getTimeElapsed());
     }
 
     private void launchResultsActivity(){
+        Log.d(TAG,"exercises"+ Arrays.toString(mWorkingOutPresenter.getExercises().get(0).getTimes_per_set()));
         Intent intent = new Intent(this, ResultsActivity.class);
-        intent.putParcelableArrayListExtra("exercises", mExercises);
+        intent.putParcelableArrayListExtra("exercises", mWorkingOutPresenter.getExercises());
         intent.putExtra("sets",mSetsTotal);
         startActivity(intent);
         finish();
     }
-
 
     private void hideNextExerciseButton(int exercise_position){
         if (exercise_position+1 == mExercises.size()){

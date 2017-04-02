@@ -64,7 +64,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     private ArrayList<Exercise> mExercises = new ArrayList<>();
     private ArrayList<String> muscles_selected;
 
-
     private ArrayList<Integer> mExercisesSelectedIds;
 
 
@@ -91,7 +90,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setupToolbar();
 
         getExtras(getIntent().getExtras());
@@ -131,7 +129,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     }
 
     @OnClick(R.id.reload)
-    public void reload(){
+    public void reloadButton(){
         onErrorOff();
         onProgressViewOn();
         mExerciseListPresenter.getExercises();
@@ -150,7 +148,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
                 mListExercisesIds.add(exercise_id);
             }
         }
-
 
         if (mListExercisesIds.size() > 0) {
             // enviar items a la actividad anterior
@@ -203,7 +200,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
                 }
         }
 
-        Log.d(TAG,"exercises_filtered_muscles: "+exercises_filtered_muscles);
         return exercises_filtered_muscles;
     }
 

@@ -2,14 +2,16 @@ package com.app.app.silverbarsapp.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.RelativeLayout;
 import android.widget.TabHost;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
+import com.app.app.silverbarsapp.adapters.ResultsAdapter;
 import com.app.app.silverbarsapp.components.DaggerResultsComponent;
 import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.modules.ResultsModule;
@@ -19,7 +21,6 @@ import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.ResultsView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -37,17 +38,15 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     ResultsPresenter mResultsPresenter;
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.list) RecyclerView mExercisesList;
 
     private ArrayList<ExerciseRep> mExercises = new ArrayList<>();
-
     private Utilities mUtilities = new Utilities();
-
 
     @Override
     protected int getLayout() {
         return R.layout.activity_results;
     }
-
 
     @Nullable
     @Override
@@ -69,73 +68,22 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         super.onCreate(savedInstanceState);
         setupToolbar();
 
-
         Bundle extras =  getIntent().getExtras();
-
         mExercises = extras.getParcelableArrayList("exercises");
         int sets = extras.getInt("sets");
 
-        Log.d(TAG,"mExercises: "+mExercises);
-        Log.d(TAG,"sets: "+sets);
-
-
-
-
+        setupAdapter();
 
         //setupTabs();
+    }
 
 
-
-       /* mSaveResultsButton.setOnClickListener(view -> {
-
-
-            //mainService.saveMyProgression()
-
-        });*/
-
-
-      /*  if (mExercises != null) {
-
-            int porcentaje[] = new int[mExercises.size()];
-
-            for(int a = 0; a < mExercises.size(); a++){
-
-                //Collections.addAll(mTypeExercises, new List<String>[]{mExercises.get(a).getExercise().getType_exercise()});
-
-
-                if (Objects.equals(mExercises.get(a).getExercise().getLevel(),"NORMAL")){
-                    porcentaje[a] = 3;
-                }else if (Objects.equals(mExercises.get(a).getExercise().getLevel(),"EASY")){
-                    porcentaje[a] = 1;
-                }else if (Objects.equals(mExercises.get(a).getExercise().getLevel(),"HARD")){
-                    porcentaje[a] = 5;
-                }else if (Objects.equals(mExercises.get(a).getExercise().getLevel(),"CHALLENGING")){
-                    porcentaje[a] = 8;
-                }
-
-                porcentaje[a] = porcentaje[a] * mExercises.get(a).getRepetition();
-
-
-                for (Muscle muscle: mExercises.get(a).getExercise().getMuscles()){
-                    muscle.setMuscle_activation(porcentaje[a]);
-
-                    Collections.addAll(mMuscles, muscle);
-
-                    //Log.d(TAG,"muscle: "+muscle.getMuscle_activation());
-
-                }
-
-
-                //Log.v(TAG,"exercise"+mExercises.get(a).getExercise().getExercise_name()+"porcentaje: "+porcentaje[a]);
-            }
-
-            //setMusclesToView(mMuscles);
-           // setTypes(mTypeExercises);
-        }
-
-        */
-
-
+    private void setupAdapter(){
+        //list settings
+        mExercisesList.setLayoutManager(new LinearLayoutManager(this));
+        mExercisesList.setNestedScrollingEnabled(false);
+        mExercisesList.setHasFixedSize(false);
+        mExercisesList.setAdapter(new ResultsAdapter(this,mExercises));
     }
 
     public void setupToolbar(){
@@ -156,113 +104,6 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
         Tab_layout.addTab(muscles);
     }
-
-   /* @OnClick(R.id.save)
-    public void saveButton(){
-        finish();
-    }*/
-
-    private void getCountTimes(List<String> muscles){}
-
-    private void setTypes(List<String> types){
-        List<String> types_oficial = mUtilities.deleteCopiesofList(types);
-
-        for (int a = 0; a<types_oficial.size();a++){
-            RelativeLayout relativeLayout = mUtilities.createViewProgression(this,types_oficial.get(a),100);
-            //mSkillsLayout.addView(relativeLayout);
-        }
-    }
-    
-   /* private List<Muscle> getMuscleProgression(List<Muscle> muscles){
-        List<MuscleProgression> mMusclesProgression = new ArrayList<>();
-        List<String> names_muscles = new ArrayList<>();
-
-
-        for (Muscle muscle: muscles){
-
-            //Log.d(TAG,"muscle: "+muscle.getMuscleName());
-
-            if (!names_muscles.contains(muscle.getMuscleName())){
-
-                MuscleProgression muscleProgression = new MuscleProgression(muscle,)
-
-                mMusclesProgression.add();
-                names_muscles.add(muscle.getMuscleName());
-
-            }else {
-                //Log.d(TAG,"index: "+names_muscles.indexOf(muscle.getMuscleName()));
-
-                int index  = names_muscles.indexOf(muscle.getMuscleName());
-
-                //Muscle muscleSelected = mMusclesProgression.get(index);
-
-                int progression = muscleSelected.getMuscle_activation() + muscle.getMuscle_activation();
-              
-
-                if (progression > 100){
-                    progression = progression - 100;
-
-                    muscleSelected.setProgression_level(muscleSelected.getProgression_level()+1);
-
-                }
-                
-
-                muscleSelected.setMuscle_activation(progression);
-
-               // mMusclesProgression.set(index,muscleSelected);
-
-                Log.d(TAG,"size: "+mMusclesProgression.size());
-
-            }
-        }
-        return mMusclesProgression;
-    }
-*/
-
-
-/*
-    @SuppressLint("SetJavaScriptEnabled")
-    private void setMusclesToView(List<Muscle> musculos){
-
-        if (musculos.size() > 0){
-
-            List<Muscle> mMuscles = getMuscleProgression(musculos);
-
-
-            for (int a = 0;a<mMuscles.size();a++) {
-
-                String muscleName = mMuscles.get(a).getMuscleName();
-                int progression = mMuscles.get(a).getMuscle_activation();
-                int level = mMuscles.get(a).getProgression_level();
-
-                // for webview
-                partes += "#"+ muscleName + ",";
-
-
-                RelativeLayout relativeLayout = createProgressionView(this,muscleName,String.valueOf(level),progression);
-                mContentLayout.addView(relativeLayout);
-            }
-            
-
-        }
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                webView.setWebViewClient(new WebViewClient(){
-                    @Override
-                    public void onPageFinished(WebView view, String url) {
-                        injectJS(partes,webView);
-                        super.onPageFinished(view, url);
-                    }
-                });
-            }
-        });
-
-
-        webView.getSettings().setJavaScriptEnabled(true);
-        loadUrlOfMuscleBody();
-    }*/
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

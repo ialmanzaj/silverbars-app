@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,21 +28,28 @@ public class MyProgressFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (this.isAdded()) {
 
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
+            Toolbar mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+            ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
+            ((AppCompatActivity)getActivity()).setTitle("My Progression");
 
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+
+            ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+            setupViewPager(viewPager);
+
+            TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+            tabLayout.setupWithViewPager(viewPager);
+        }
     }
-
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new TodayProgressFragment(), "Today Progress");
-        adapter.addFragment(new TotalProgressFragment(), "Total Progress");
+
+        adapter.addFragment(new WeeklyProgressFragment(), getActivity().getString(R.string.progress_fragment_today_title));
+        adapter.addFragment(new TotalProgressFragment(), "Last 30 days");
+        adapter.addFragment(new TotalProgressFragment(), getActivity().getString(R.string.progress_fragment_total_title));
         viewPager.setAdapter(adapter);
     }
-
 
 }

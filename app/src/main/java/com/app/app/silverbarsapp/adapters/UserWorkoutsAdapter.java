@@ -45,7 +45,6 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
     public UserWorkoutsAdapter(Context context) {
         this.context = context;
         this.workouts = new ArrayList<>();
-
     }
 
     public void setWorkoutListener(OnWorkoutListener listener){
@@ -74,10 +73,10 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.layout) CardView layout;
-        @BindView(R.id.img_local)ImageView workout_img;
-        @BindView(R.id.text)TextView workout_name;
-        @BindView(R.id.start_button)Button start_button;
-        @BindView(R.id.delete) ImageView delete_button;
+        @BindView(R.id.img_local)ImageView mWorkoutImg;
+        @BindView(R.id.text)TextView mWorkoutName;
+        @BindView(R.id.start_button)Button mStartButton;
+        @BindView(R.id.delete) ImageView mDeleteButton;
 
         @BindView(R.id.initial) TextView initial_workout_name;
 
@@ -90,7 +89,7 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
         }
 
         @OnClick(R.id.delete)
-        public void deleteButton(View view){
+        void deleteButton(View view){
             workout_id = (int) view.getTag();
 
             new MaterialDialog.Builder( context )
@@ -110,7 +109,7 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
 
 
         @OnClick(R.id.start_button)
-        public void start(View view){
+        void startButton(View view){
             Workout workout = (Workout) view.getTag();
 
             Intent intent = new Intent(context, WorkoutActivity.class);
@@ -135,32 +134,34 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
     @Override
     public void onBindViewHolder(ViewHolder viewholder,  int position) {
 
+        viewholder.mWorkoutName.setText(workouts.get(position).getWorkout_name());
+
         viewholder.layout.getLayoutParams().height = utilities.calculateContainerHeight(context) / 3;
 
-        viewholder.workout_name.setText(workouts.get(position).getWorkout_name());
-        viewholder.start_button.setTag(workouts.get(position));
-        viewholder.delete_button.setTag(workouts.get(position).getId());
+        viewholder.mStartButton.setTag(workouts.get(position));
+        viewholder.mDeleteButton.setTag(workouts.get(position).getId());
+
 
         try {
 
             if (Objects.equals(workouts.get(position).getWorkout_image(), "/")){
+
                 viewholder.layout.setBackgroundColor(context.getResources().getColor(R.color.secondColor));
-                viewholder.initial_workout_name.setText(workouts.get(position).getWorkout_name().substring(0,1));
+                //viewholder.initial_workout_name.setText(workouts.get(position).getWorkout_name().substring(0,1));
 
             }else {
 
                 String[] workoutImgDir = workouts.get(position).getWorkout_image().split(context.getFilesDir().getPath()+"/SilverbarsImg/");
+
                 if (workoutImgDir.length == 2){
                     String workoutImgName = workoutImgDir[1];
                     Bitmap imgBitmap;
                     imgBitmap = utilities.loadWorkoutImageFromDevice(context,workoutImgName);
-                    viewholder.workout_img.setImageBitmap(imgBitmap);
+                    viewholder.mWorkoutImg.setImageBitmap(imgBitmap);
                 }
             }
 
-
         }catch (NullPointerException e){Log.e(TAG,"NullPointerException");}
-
     }
 
     @Override

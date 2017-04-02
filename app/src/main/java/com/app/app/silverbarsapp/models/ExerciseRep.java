@@ -22,9 +22,14 @@ public class ExerciseRep implements Parcelable{
     @SerializedName("seconds")
     private int seconds;
 
+    private long[] times_per_set;
+
     private STATE exercise_state = STATE.REP;
 
     private int number;
+
+    private double weight;
+
 
     public ExerciseRep() {}
 
@@ -35,20 +40,22 @@ public class ExerciseRep implements Parcelable{
         this.seconds = seconds;
     }
 
-
-    public ExerciseRep(int id,Exercise exercise,int repetition,int seconds,int tempo_positive,int tempo_isometric,int tempo_negative) {
+    public ExerciseRep(int id,Exercise exercise,int repetition,int seconds,double weight) {
         this.id = id;
         this.exercise = exercise;
         this.repetition = repetition;
         this.seconds = seconds;
+        this.weight = weight;
     }
-
 
     protected ExerciseRep(Parcel in) {
         id = in.readInt();
         exercise = in.readParcelable(Exercise.class.getClassLoader());
         repetition = in.readInt();
         seconds = in.readInt();
+        times_per_set = in.createLongArray();
+        number = in.readInt();
+        weight = in.readDouble();
     }
 
     @Override
@@ -57,6 +64,14 @@ public class ExerciseRep implements Parcelable{
         dest.writeParcelable(exercise, flags);
         dest.writeInt(repetition);
         dest.writeInt(seconds);
+        dest.writeLongArray(times_per_set);
+        dest.writeInt(number);
+        dest.writeDouble(weight);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<ExerciseRep> CREATOR = new Creator<ExerciseRep>() {
@@ -104,6 +119,13 @@ public class ExerciseRep implements Parcelable{
         return number;
     }
 
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
 
     public void setExerciseState(int position){
         exercise_state = STATE.values()[position];
@@ -113,18 +135,21 @@ public class ExerciseRep implements Parcelable{
         return exercise_state;
     }
 
-
-
-    @Override
-    public int describeContents() {
-        return 0;
+    public void createTimesPerSet(int total_sets){
+        times_per_set = new long[total_sets];
     }
 
+    public void addTimesPerSet(int current_set,long time){
+        times_per_set[current_set] = time;
+    }
+
+    public long[] getTimes_per_set() {
+        return times_per_set;
+    }
 
     public enum STATE {
         REP, SECOND,
     }
-
 
 }
 

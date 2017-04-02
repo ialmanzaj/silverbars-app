@@ -18,16 +18,32 @@
 
         <!-- inactive track color (30% transparency) -->
         <item name="android:colorForeground">@color/dark_gray</item>
+
     </style>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <!-- To change the popup menu and app text color  -->
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/gray_active_icon</item>
+
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="titleTextAppearance">@color/white</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorSecondary</item>
+    </style>
+
+    <style name="toolbarStyle" parent="Theme.AppCompat.NoActionBar">
+
         <!-- To change the popup menu and app text color  -->
         <item name="android:textColor">@color/white</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorAccent">@color/secondColor</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
+
+
 
     <style name="nav" parent="Theme.AppCompat.NoActionBar">
         <!-- To change the popup menu and app text color  -->
@@ -44,16 +60,6 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">5dp</item>
-    </style>
-
-    <style name="TextLabel" parent="TextAppearance.AppCompat">
-        <!-- Hint color and label color in FALSE state -->
-        <item name="android:textColorHint">@color/black</item>
-        <item name="android:textSize">20sp</item>
-        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
-        <item name="colorAccent">@color/secondColor</item>
-        <item name="colorControlNormal">@color/black</item>
-        <item name="colorControlActivated">@color/secondColor</item>
     </style>
 
 
@@ -87,17 +93,14 @@
         <item name="android:paddingRight">15dp</item>
         <item name="android:paddingLeft">15dp</item>
         <item name="android:paddingBottom">10dp</item>
-
     </style>
 
     <style name="NavigationViewTheme" parent="AppTheme">
         <item name="textAppearanceListItem">@style/TextAppearance.AppCompat.Body2</item>
     </style>
 
-
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
 
     <style name="FullyTranslucent" parent="AppTheme">
         <item name="android:windowIsTranslucent">true</item>
@@ -109,7 +112,6 @@
     <style name="invisibleTheme" parent="android:Theme.Translucent.NoTitleBar">
         <item name="android:progressBarStyle">@style/InvisibleProgress</item>
     </style>
-
 
     <style name="MyCheckBox" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">@color/grey300</item>
@@ -132,10 +134,47 @@
         <item name="tabTextAppearance">@style/MyCustomTabTextAppearance</item>
         <item name="tabSelectedTextColor">@color/white</item>
     </style>
+
     <style name="MyCustomTabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/black</item>
         <item name="textAllCaps">true</item>
     </style>
+
+    <style name="spinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
+    </style>
+
+    <style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="TextLabel" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/black</item>
+        <item name="android:textSize">20sp</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/secondColor</item>
+        <item name="colorControlNormal">@color/black</item>
+        <item name="colorControlActivated">@color/secondColor</item>
+    </style>
+
+    <style name="TextLabelSecondary" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/gray_active_icon</item>
+        <item name="android:textSize">20sp</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/colorSecondary</item>
+        <item name="colorControlNormal">@color/gray_active_icon</item>
+        <item name="colorControlActivated">@color/colorSecondary</item>
+    </style>
+
+    <style name="NestedScrollBarStyle">
+        <item name="android:scrollbarFadeDuration">2</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:fillViewport">true</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
 
 </resources>

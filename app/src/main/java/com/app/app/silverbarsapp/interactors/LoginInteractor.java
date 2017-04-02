@@ -33,7 +33,6 @@ public class LoginInteractor {
         this.helper = helper;
     }
 
-
     public void getAccessToken(LoginCallback callback, String facebook_token){
         loginService.getAccessToken("convert_token",CONSUMER_KEY,CONSUMER_SECRET,"facebook",facebook_token).enqueue(new Callback<AccessToken>() {
             @Override
@@ -55,21 +54,16 @@ public class LoginInteractor {
         });
     }
 
-    public void saveProfile(ProfileFacebook profile,LoginCallback callback){
+    public void saveProfile(ProfileFacebook profile){
         try {
 
             helper.getProfileFacebook().create(profile);
-
-            callback.onProfileCreated(true);
-
+            Log.d(TAG,"profile created");
 
         } catch (SQLException e) {
-            callback.onProfileCreated(false);
-            e.printStackTrace();
+            Log.e(TAG,"SQLException",e);
         }
-
     }
-
 
 }
 

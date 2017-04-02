@@ -11,14 +11,13 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
-import com.app.app.silverbarsapp.utils.CustomDateView;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.models.Muscle;
 import com.app.app.silverbarsapp.models.MuscleProgression;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ProgressionPresenter;
+import com.app.app.silverbarsapp.utils.CustomDateView;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.ProgressionView;
 
@@ -169,19 +168,9 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
         mMuscleParts += "#" + muscle.getMuscle_name() + ",";
 
         mUtilities.onWebviewReady(mMusclesWebView,mMuscleParts);
-        insertMuscleContent(muscle.getMuscle_name());
     }
 
-    private void insertMuscleContent(String muscle_name){
-        if (sMuscles_names.size() > 0){
-            RelativeLayout relativeLayout = mUtilities.createProgressionView(
-                    this,
-                    muscle_name,
-                    String.valueOf(muscleProgressions.get(sMuscles_names.size()-1).getLevel()),
-                    muscleProgressions.get(sMuscles_names.size()-1).getMuscle_activation_progress());
-            mProgresionContent.addView(relativeLayout);
-        }
-    }
+
 
     private void getMusclesFromProgression(){
         for (MuscleProgression muscleProgression: muscleProgressions){

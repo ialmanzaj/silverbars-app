@@ -39,11 +39,11 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
 
     public class WorkoutsViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.Layout) RelativeLayout Layout;
+        @BindView(R.id.Layout) RelativeLayout layout;
 
-        @BindView(R.id.nombre) TextView exercise_name;
-        @BindView(R.id.imagen_cache)SimpleDraweeView exercise_img_cache;
-        @BindView(R.id.imagen_local)ImageView exercise_img_local;
+        @BindView(R.id.nombre) TextView mExerciseName;
+        @BindView(R.id.imagen_cache)SimpleDraweeView mExerciseImgCache;
+        @BindView(R.id.imagen_local)ImageView mExerciseImglocal;
 
         public WorkoutsViewHolder(View view) {
             super(view);
@@ -61,16 +61,14 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
 
     @Override
     public WorkoutsViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-        return new WorkoutsViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.working_out_adapter, viewGroup, false));
+        return new WorkoutsViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.exercise_working_out, viewGroup, false));
     }
 
 
     @Override
     public void onBindViewHolder(WorkoutsViewHolder viewHolder, int position) {
 
-        viewHolder.Layout.getLayoutParams().width = utilities.calculateContainerWidth(context);
-
-        viewHolder.exercise_name.setText(exercises.get(position).getExercise().getExercise_name());
+        viewHolder.mExerciseName.setText(exercises.get(position).getExercise().getExercise_name());
 
 
         try {
@@ -79,14 +77,11 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
 
 
             if (imageDir.length == 2){
-                viewHolder.exercise_img_cache.setImageURI(
-                        Uri.parse(exercises.get(position).getExercise().getExercise_image()));
+                viewHolder.mExerciseImgCache.setImageURI(Uri.parse(exercises.get(position).getExercise().getExercise_image()));
 
             }else {
-
-                viewHolder.exercise_img_local.setVisibility(View.VISIBLE);
-                viewHolder.exercise_img_local.setImageBitmap(
-                        utilities.loadExerciseImageFromDevice(context,exercises.get(position).getExercise().getExercise_image()));
+                viewHolder.mExerciseImglocal.setVisibility(View.VISIBLE);
+                viewHolder.mExerciseImglocal.setImageBitmap(utilities.loadExerciseImageFromDevice(context,exercises.get(position).getExercise().getExercise_image()));
             }
 
 

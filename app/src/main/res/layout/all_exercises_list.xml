@@ -12,7 +12,6 @@
     card_view:cardElevation="1dp">
 
     <FrameLayout
-
         android:id="@+id/LinearLayout"
         android:layout_height="match_parent"
         android:layout_width="match_parent"

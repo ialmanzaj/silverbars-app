@@ -4,7 +4,6 @@ package com.app.app.silverbarsapp.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -42,7 +41,7 @@ import butterknife.BindView;
  */
 public class TotalProgressFragment extends BaseFragment implements ProgressionView {
 
-    private static final String TAG = TodayProgressFragment.class.getSimpleName();
+    private static final String TAG = WeeklyProgressFragment.class.getSimpleName();
 
     @Inject
     ProgressionPresenter mProgressionPresenter;
@@ -60,7 +59,6 @@ public class TotalProgressFragment extends BaseFragment implements ProgressionVi
 
     @BindView(R.id.loading) LinearLayout mLoadingView;
 
-    @BindView(R.id.swipeContainer) SwipeRefreshLayout mSwipeRefreshLayout;
 
     @BindView(R.id.error_view) LinearLayout mErrorView;
     @BindView(R.id.reload) Button mReload;
@@ -101,21 +99,20 @@ public class TotalProgressFragment extends BaseFragment implements ProgressionVi
         super.onViewCreated(view, savedInstanceState);
 
         if (this.isAdded()) {
-            // Sets the data behind this ListView
 
-            //list settings
-            list.setLayoutManager(new LinearLayoutManager(getActivity()));
-            list.setNestedScrollingEnabled(false);
-
-            adapter = new ProgressionAdapter(getActivity());
-            list.setAdapter(adapter);
-
-            setupWebview();
+            //setupWebview();
         }
+        //mProgressionPresenter.getProgression();
 
-        mProgressionPresenter.getProgression();
+    }
 
-        mSwipeRefreshLayout.setOnRefreshListener(() -> { mProgressionPresenter.getProgression();});
+    private void setupAdapter(){
+        //list settings
+        list.setLayoutManager(new LinearLayoutManager(getActivity()));
+        list.setNestedScrollingEnabled(false);
+
+        adapter = new ProgressionAdapter(getActivity());
+        list.setAdapter(adapter);
     }
 
     private void setupWebview(){
@@ -148,7 +145,7 @@ public class TotalProgressFragment extends BaseFragment implements ProgressionVi
     private void insertMuscleToWebview(String muscle_name){
         //add muscle names to the webview
         mMuscleParts += "#" + muscle_name + ",";
-        mUtilities.injectJS(webView,mMuscleParts);
+        //mUtilities.injectJS(webView,mMuscleParts);
     }
 
     private void updateUi(){
@@ -194,12 +191,6 @@ public class TotalProgressFragment extends BaseFragment implements ProgressionVi
         if (progressions.size() > mProgressions.size()) {
             mProgressions.addAll(progressions);
             getMusclesFromProgression();
-
-        }else {
-
-            Log.d(TAG,"same progressions");
-            //cancel refreshing
-            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 

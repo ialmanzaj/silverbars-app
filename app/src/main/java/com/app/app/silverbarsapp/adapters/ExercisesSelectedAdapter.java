@@ -143,13 +143,11 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
             //set each item touch listener
             viewHolder.setTouchListener(viewHolder);
 
-
             viewHolder.exercise_name.setText(mSelectedExercises.get(position).getExercise_name());
             viewHolder.exercise_img.setImageURI(Uri.parse(mSelectedExercises.get(position).getExercise_image()));
 
         }catch (NullPointerException e){Log.e(TAG,"NullPointerException");}
     }
-
 
     public interface OnExerciseListener {
         void onExerciseDeleted(Exercise exercise,int position);

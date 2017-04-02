@@ -3,7 +3,6 @@ package com.app.app.silverbarsapp.adapters;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +12,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.app.app.silverbarsapp.utils.MutableWatcher;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.models.ExerciseRep;
-import com.app.app.silverbarsapp.utils.Utilities;
+import com.app.app.silverbarsapp.utils.MutableWatcher;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
@@ -36,28 +34,30 @@ public class CreateFinalExercisesAdapter extends RecyclerView.Adapter<CreateFina
 
     private ArrayList<ExerciseRep> mExercises = new ArrayList<>();
     private Context context;
-    private Utilities utilities = new Utilities();
 
-    public CreateFinalExercisesAdapter(Context context, ArrayList<ExerciseRep> exerciseReps) {
+    public CreateFinalExercisesAdapter(Context context, ArrayList<ExerciseRep> exercises) {
         this.context = context;
-        mExercises = exerciseReps;
+        mExercises = exercises;
     }
 
     public ArrayList<ExerciseRep> getExercises(){
         return mExercises;
     }
 
+    public void set(int index,ExerciseRep exerciseRep){
+        mExercises.set(index,exerciseRep);
+        notifyDataSetChanged();
+    }
 
     public class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
-        MutableWatcher mWatcher;
+        MutableWatcher mTextWatcher;
 
-        @BindView(R.id.nombre) TextView exercise_name;
-        @BindView(R.id.repsOrSeconds) AutoCompleteTextView repsOrSeconds;
-        @BindView(R.id.imagen) SimpleDraweeView exercise_img;
+        @BindView(R.id.exercise_name) TextView mExerciseName;
+        @BindView(R.id.repsOrSeconds) AutoCompleteTextView mOptionrepsOrseconds;
+        @BindView(R.id.imagen) SimpleDraweeView mExerciseImg;
         @BindView(R.id.spinner_rep) Spinner mSelectTypeWorkoutSpinner;
-
-        private int positionSpinner = 0;
+        @BindView(R.id.weight) AutoCompleteTextView weightTextView;
 
         public ExerciseViewHolder(View view) {
             super(view);
@@ -66,33 +66,33 @@ public class CreateFinalExercisesAdapter extends RecyclerView.Adapter<CreateFina
             initSpinner();
         }
 
-
         private void initSpinner(){
             //Inicialize classification adapter
             ArrayAdapter<String> mTypeAdapter  = new ArrayAdapter<>(context, R.layout.simple_spinner_item);
-            mTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            mTypeAdapter.add("Rep");
-            mTypeAdapter.add("Seconds");
+            mTypeAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+            mTypeAdapter.add("reps");
+            mTypeAdapter.add("secs");
             mSelectTypeWorkoutSpinner.setAdapter(mTypeAdapter);
             mSelectTypeWorkoutSpinner.setSelection(0);
         }
 
         @OnItemSelected(R.id.spinner_rep)
-        public void spinnerItemSelected(Spinner spinner, int position) {
-            positionSpinner = position;
-
-            int index = mExercises.indexOf(utilities.getExerciseRepById(mExercises, mWatcher.getPosition()));
-            mExercises.get(index).setExerciseState(position);
+        void spinnerItemSelected(Spinner spinner, int position) {
+            mExercises.get( mTextWatcher.getPosition() ).setExerciseState(position);
         }
 
-        @OnTextChanged(value = R.id.repsOrSeconds, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-        public void repChanged(Editable editable){
+        @OnTextChanged(value = R.id.repsOrSeconds)
+         void repChanged(CharSequence charSequence){
+            if (!Objects.equals(charSequence.toString(), "")){
+                mExercises.get(mTextWatcher.getPosition()).setNumber(Integer.parseInt(charSequence.toString()));
+            }
+        }
 
-            if (!Objects.equals(editable.toString(), "")){
-
-                int index = mExercises.indexOf(utilities.getExerciseRepById(mExercises, mWatcher.getPosition()));
-
-                mExercises.get(index).setNumber(Integer.parseInt(editable.toString()));
+        @OnTextChanged(value = R.id.weight)
+        void weightChanged(CharSequence charSequence){
+            if (!Objects.equals(charSequence.toString(), "")){
+                Log.d(TAG,"position "+mTextWatcher.getPosition());
+                mExercises.get(mTextWatcher.getPosition()).setWeight(Double.valueOf(charSequence.toString()));
             }
         }
 
@@ -105,8 +105,7 @@ public class CreateFinalExercisesAdapter extends RecyclerView.Adapter<CreateFina
 
     @Override
     public ExerciseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.exercises_create_final, parent, false);
-        return new ExerciseViewHolder(v);
+        return new ExerciseViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.exercises_create_final, parent, false));
     }
 
     @Override
@@ -114,21 +113,21 @@ public class CreateFinalExercisesAdapter extends RecyclerView.Adapter<CreateFina
 
         try {
 
-            viewHolder.mWatcher = new MutableWatcher();
-            viewHolder.mWatcher.setPosition(mExercises.get(position).getExercise().getId());
+            viewHolder.mTextWatcher = new MutableWatcher();
+            viewHolder.mTextWatcher.updatePosition(position);
+
+            viewHolder.mOptionrepsOrseconds.setTag(mExercises.get(position).getExercise().getId());
+            viewHolder.mOptionrepsOrseconds.setText(String.valueOf(mExercises.get(position).getNumber()));
+            viewHolder.mOptionrepsOrseconds.addTextChangedListener(viewHolder.mTextWatcher);
+
+            viewHolder.weightTextView.setText(String.valueOf(mExercises.get(position).getWeight()));
+
 
             //asignar nombre y repeticiones a cada elemento del recycler.
-            viewHolder.exercise_name.setText(mExercises.get(position).getExercise().getExercise_name());
-
-            viewHolder.repsOrSeconds.setTag(mExercises.get(position).getExercise().getId());
-            viewHolder.repsOrSeconds.setText("0");
-
-            viewHolder.repsOrSeconds.addTextChangedListener(viewHolder.mWatcher);
+            viewHolder.mExerciseName.setText(mExercises.get(position).getExercise().getExercise_name());
 
             //set image in SimpleDraweeView
-            viewHolder.exercise_img.setImageURI(Uri.parse((mExercises.get(position).getExercise().getExercise_image())));
-
-
+            viewHolder.mExerciseImg.setImageURI(Uri.parse((mExercises.get(position).getExercise().getExercise_image())));
 
         }catch (NullPointerException e){Log.e(TAG,"NullPointerException ");}
     }

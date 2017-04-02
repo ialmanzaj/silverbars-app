@@ -10,6 +10,12 @@ repositories {
     flatDir { dirs 'libs' }
 }
 
+repositories {
+    maven {
+        url 'https://dl.bintray.com/bonnguyen/maven'
+    }
+}
+
 android {
 
     packagingOptions {
@@ -26,7 +32,7 @@ android {
 
     defaultConfig {
         applicationId "com.app.app.silverbarsapp"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
         versionName "0.0.0.1"
@@ -64,7 +70,6 @@ dependencies {
 
     compile 'com.spotify.sdk:spotify-auth-beta23-noconnect-2.20b@aar'
     compile 'com.spotify.sdk:spotify-player-beta23-noconnect-2.20b@aar'
-
 
 
 
@@ -108,6 +113,7 @@ dependencies {
     compile 'com.github.kaaes:spotify-web-api-android:0.4.1'
     compile 'us.belka:androidtoggleswitch:1.2.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
+    compile 'com.github.bonnguyen:uberseekbar:1.0.0'
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'

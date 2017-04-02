@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:padding="5dp"
     android:orientation="horizontal"
     android:background="@color/white"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -8,23 +9,49 @@
 
     <TextView
         android:textSize="18sp"
+        android:layout_weight="1"
         android:textColor="@color/black"
         android:id="@+id/muscle_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+
     <TextView
         android:textSize="18sp"
-        android:textColor="@color/black"
+        android:textColor="@color/gray_active_icon"
+        android:text="Level "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:textSize="18sp"
+        android:textColor="@color/gray_active_icon"
         android:id="@+id/level"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView
         android:textSize="18sp"
+        android:text="  "
+        android:textColor="@color/gray_active_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <TextView
+        android:textSize="18sp"
+        android:layout_marginStart="5dp"
         android:textColor="@color/black"
         android:id="@+id/progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <TextView
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:text="%"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 
 </LinearLayout>

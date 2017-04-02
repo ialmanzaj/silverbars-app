@@ -33,8 +33,6 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
     private static final String TAG = WorkoutsAdapter.class.getSimpleName();
 
-    private static final int TYPE_WORKOUT = 0;
-    private static final int TYPE_VIEW_MORE = 1;
 
     private Context context;
     private List<Workout> workouts;
@@ -90,15 +88,12 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
         viewHolder.layout.getLayoutParams().height = utilities.calculateContainerHeight(context) / 3;
 
-
         try {
 
             viewHolder.workout_name.setText(workouts.get(position).getWorkout_name());
             viewHolder.start_button.setTag(workouts.get(position));
 
             viewHolder.workout_img_cache.setImageURI(Uri.parse(workouts.get(position).getWorkout_image()));
-
-
 
         }catch (NullPointerException e){Log.e(TAG,"NullPointerException",e.getCause());}
 
@@ -107,11 +102,6 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
     @Override
     public int getItemCount() {
         return workouts.size();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return position < getItemCount() ? TYPE_WORKOUT : TYPE_VIEW_MORE;
     }
 
     public void setWorkouts(List<Workout> workouts){

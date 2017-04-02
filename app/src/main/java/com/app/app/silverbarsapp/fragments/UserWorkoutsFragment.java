@@ -71,7 +71,6 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG,"UserWorkoutsFragment");
 
 
         if (this.isAdded()){
@@ -95,6 +94,7 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 3) {
             if (resultCode == RESULT_OK){
+                Log.d(TAG,"created succesfully");
 
                 //created succesfully
                 mUserWorkoutsPresenter.getMyWorkouts();

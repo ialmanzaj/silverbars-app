@@ -12,10 +12,10 @@
         android:layout_height="wrap_content"
         app:elevation="2dp">
             <android.support.v7.widget.Toolbar
+                android:theme="@style/toolbarStyle"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary">
+                android:layout_height="wrap_content">
                 <Button
                     android:theme="@style/ButtonRed"
                     android:layout_width="wrap_content"
@@ -294,10 +294,9 @@
                     android:layout_height="match_parent">
 
                     <WebView
-                        android:layout_alignParentTop="true"
                         android:id="@+id/webview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
 
                 </RelativeLayout>
             </FrameLayout>

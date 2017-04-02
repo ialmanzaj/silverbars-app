@@ -17,20 +17,17 @@ import com.facebook.login.LoginResult;
 
 public class LoginPresenter extends BasePresenter  implements LoginCallback{
 
+    private static final String TAG = LoginPresenter.class.getSimpleName();
+
     private LoginView view;
     private LoginInteractor interactor;
 
     private ProfileTracker mProfileTracker;
-    ProfileFacebook profileFacebook;
-
+    private ProfileFacebook profileFacebook;
 
     public LoginPresenter(LoginView view,LoginInteractor interactor){
         this.view = view;
         this.interactor = interactor;
-    }
-
-    private void getAccessToken(String facebook_token){
-        interactor.getAccessToken(this,facebook_token);
     }
 
     public void onLoginSuccess(LoginResult loginResult){
@@ -61,18 +58,17 @@ public class LoginPresenter extends BasePresenter  implements LoginCallback{
     }
 
     private void saveProfile(ProfileFacebook profile){
-        interactor.saveProfile(profile,this);
+        Log.d(TAG,"saveProfile ");
+        interactor.saveProfile(profile);
+    }
+
+    private void getAccessToken(String facebook_token){
+        interactor.getAccessToken(this,facebook_token);
     }
 
     @Override
     public void onToken(AccessToken accessToken) {
-        view.displayToken(accessToken);
-    }
-
-
-    @Override
-    public void onProfileCreated(boolean created) {
-        view.profileCreated(created);
+        view.displayToken(accessToken,profileFacebook.getFirst_name());
     }
 
     @Override
@@ -85,36 +81,22 @@ public class LoginPresenter extends BasePresenter  implements LoginCallback{
         view.displayNetworkError();
     }
 
+    @Override
+    public void onStart() {}
 
     @Override
-    public void onStart() {
-
-    }
+    public void onStop() {}
 
     @Override
-    public void onStop() {
-
-    }
+    public void onResume() {}
 
     @Override
-    public void onResume() {
-
-    }
+    public void onPause() {}
 
     @Override
-    public void onPause() {
-
-    }
+    public void onRestart() {}
 
     @Override
-    public void onRestart() {
-
-    }
-
-    @Override
-    public void onDestroy() {
-
-    }
-
+    public void onDestroy() {}
 
 }

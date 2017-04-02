@@ -65,7 +65,7 @@ public class WorkoutInteractor {
             insertTypes(exerciseRep,exercise);
 
             //re create exercise rep model
-            helper.getExerciseRepDao().create(new ExerciseRep(exercise, exerciseRep.getRepetition(),exerciseRep.getSeconds(),my_saved_workout));
+            helper.getExerciseRepDao().create(new ExerciseRep(exercise, exerciseRep.getRepetition(),exerciseRep.getSeconds(),my_saved_workout,exerciseRep.getWeight()));
         }
         
         

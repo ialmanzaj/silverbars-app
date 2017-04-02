@@ -1,4 +1,4 @@
-package com.app.app.silverbarsapp;
+package com.app.app.silverbarsapp.utils;
 
 import android.content.Context;
 import android.webkit.JavascriptInterface;
@@ -8,10 +8,9 @@ import android.webkit.JavascriptInterface;
  */
 
 public class WebAppInterface {
-    Context mContext;
+    private Context mContext;
 
-
-    MuscleListener listener;
+    private MuscleListener listener;
 
     /** Instantiate the interface and set the context */
     public WebAppInterface(Context c,MuscleListener listener) {

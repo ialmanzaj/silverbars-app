@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
@@ -44,11 +45,16 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     public class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.nombre) TextView exercise_name;
-        @BindView(R.id.repetitions) TextView exercise_rep;
-        @BindView(R.id.option) TextView option;
-        @BindView(R.id.imagen) SimpleDraweeView exercise_img_cache;
-        @BindView(R.id.imagen_local) ImageView exercise_img_local;
+        @BindView(R.id.exercise_name) TextView mExerciseName;
+
+        @BindView(R.id.imagen) SimpleDraweeView mExerciseImgCache;
+        @BindView(R.id.imagen_local) ImageView mExerciseImglocal;
+
+        @BindView(R.id.exercise_number) TextView mExerciseNumber;
+        @BindView(R.id.exercise_option) TextView mExerciseOption;
+
+        @BindView(R.id.weight) TextView mExerciseWeight;
+        @BindView(R.id.weight_layout)LinearLayout mExerciseLayoutWeight;
 
         public ExerciseViewHolder(View view) {
             super(view);
@@ -70,16 +76,25 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     @Override
     public void onBindViewHolder(ExerciseViewHolder viewHolder,int position) {
 
-        viewHolder.exercise_name.setText(exercises.get(position).getExercise().getExercise_name());
+        viewHolder.mExerciseName.setText(exercises.get(position).getExercise().getExercise_name());
 
+        //exercise option ( rep or second )
         if(utilities.checkIfRep(exercises.get(position))){
 
-            viewHolder.exercise_rep.setText(String.valueOf(exercises.get(position).getRepetition()));
+            viewHolder.mExerciseNumber.setText(String.valueOf(exercises.get(position).getRepetition()));
+            viewHolder.mExerciseOption.setText(context.getString(R.string.reps_text));
 
         }else {
 
-            viewHolder.exercise_rep.setText(String.valueOf(exercises.get(position).getSeconds()));
-            viewHolder.option.setText(context.getString(R.string.exercise_adapter_option));
+            viewHolder.mExerciseNumber.setText(String.valueOf(exercises.get(position).getSeconds()));
+            viewHolder.mExerciseOption.setText(context.getString(R.string.exercise_adapter_option));
+        }
+
+        //exercise weight
+        Log.d(TAG,"weight"+exercises.get(position).getWeight());
+        if (exercises.get(position).getWeight() > 0){
+            viewHolder.mExerciseLayoutWeight.setVisibility(View.VISIBLE);
+            viewHolder.mExerciseWeight.setText(utilities.formaterDecimal(String.valueOf(exercises.get(position).getWeight())));
         }
 
 
@@ -90,15 +105,14 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             if (imageDir.length == 2){
                 //Log.d(TAG,"img from json");
 
-                viewHolder.exercise_img_cache.setVisibility(View.VISIBLE);
-                viewHolder.exercise_img_cache.setImageURI(
-                        Uri.parse(exercises.get(position).getExercise().getExercise_image()));
+                viewHolder.mExerciseImgCache.setVisibility(View.VISIBLE);
+                viewHolder.mExerciseImgCache.setImageURI(Uri.parse(exercises.get(position).getExercise().getExercise_image()));
 
             }else {
                 //Log.d(TAG,"img from local");
 
-                viewHolder.exercise_img_local.setVisibility(View.VISIBLE);
-                viewHolder.exercise_img_local.setImageBitmap(utilities.loadExerciseImageFromDevice(context,exercises.get(position).getExercise().getExercise_image()));
+                viewHolder.mExerciseImglocal.setVisibility(View.VISIBLE);
+                viewHolder.mExerciseImglocal.setImageBitmap(utilities.loadExerciseImageFromDevice(context,exercises.get(position).getExercise().getExercise_image()));
             }
 
 

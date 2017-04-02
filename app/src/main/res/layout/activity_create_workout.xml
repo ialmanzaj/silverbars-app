@@ -14,14 +14,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:elevation="2dp">
-
             <android.support.v7.widget.Toolbar
+                app:titleTextColor="@color/white"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:elevation="2dp"
-                android:background="@color/colorPrimary">
-
+                app:elevation="2dp">
                 <Button
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/next"
@@ -30,7 +28,6 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
                     android:layout_marginEnd="5dp"/>
-
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 

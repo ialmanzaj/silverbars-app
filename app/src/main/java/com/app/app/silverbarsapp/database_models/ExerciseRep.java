@@ -30,38 +30,26 @@ public class ExerciseRep  implements Serializable {
     @DatabaseField(foreign = true)
     private MySavedWorkout saved_workout;
 
+    @DatabaseField
+    private double weight;
+
 
     public ExerciseRep() {}
 
-
-    public ExerciseRep(Exercise exercise,int repetition,UserWorkout userWorkout) {
-        this.exercise = exercise;
-        this.repetition = repetition;
-        this.seconds = 0;
-        this.userWorkout = userWorkout;
-    }
-
-    public ExerciseRep(Exercise exercise,int repetition,int seconds,UserWorkout userWorkout) {
+    public ExerciseRep(Exercise exercise,int repetition,int seconds,UserWorkout userWorkout,double weight) {
         this.exercise = exercise;
         this.repetition = repetition;
         this.seconds = seconds;
         this.userWorkout = userWorkout;
+        this.weight = weight;
     }
 
-
-    public ExerciseRep(Exercise exercise,int repetition,MySavedWorkout saved_workout) {
-        this.exercise = exercise;
-        this.repetition = repetition;
-        this.seconds = 0;
-        this.saved_workout = saved_workout;
-    }
-
-
-    public ExerciseRep(Exercise exercise,int repetition,int seconds,MySavedWorkout saved_workout) {
+    public ExerciseRep(Exercise exercise,int repetition,int seconds,MySavedWorkout saved_workout,double weight) {
         this.exercise = exercise;
         this.repetition = repetition;
         this.seconds = seconds;
         this.saved_workout = saved_workout;
+        this.weight = weight;
     }
 
     
@@ -107,6 +95,14 @@ public class ExerciseRep  implements Serializable {
 
     public void setSaved_workout(MySavedWorkout saved_workout) {
         this.saved_workout = saved_workout;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public double getWeight() {
+        return weight;
     }
 
     public MySavedWorkout getSaved_workout() {

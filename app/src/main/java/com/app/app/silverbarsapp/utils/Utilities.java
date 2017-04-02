@@ -14,17 +14,12 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,6 +38,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -66,6 +63,26 @@ public class Utilities {
     private   String strSeparator = "__,__";
 
     public Utilities (){}
+
+    /**
+     * Method to format normal number to decimal and Rounding.
+     */
+    public String formaterDecimal(String originalString){
+        String results = "";
+        Double doubleval;
+        try {
+            if (originalString.contains(",")) {originalString = originalString.replaceAll(",", "");}
+            doubleval = Double.parseDouble(originalString);
+            //Log.v(TAG,"doubleval "+doubleval);
+            DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+            formatter.applyPattern("#,###,###,###.#");
+            results = formatter.format(doubleval);
+        } catch (NumberFormatException nfe) {
+            nfe.printStackTrace();
+        }
+        //Log.v(TAG,"results "+results);
+        return results;
+    }
 
 
     public String formatHMS(int totalSecs){
@@ -591,20 +608,17 @@ public class Utilities {
         return song;
     }
 
-    public  List<String> deleteCopiesofList(List<String> list){
-        List<String> real_list = new ArrayList<>();
-        for (int a = 0; a< list.size();a++) {
-            if (!real_list.contains(list.get(a))) {
-                real_list.add(list.get(a));
+    public  List<String> deleteCopiesofList(List<String> elements_with_copies){
+        List<String> elements_with_no_copies = new ArrayList<>();
+        for (String element : elements_with_copies) {
+            if (!elements_with_no_copies.contains(element)) {
+                elements_with_no_copies.add(element);
             }
         }
-        return real_list;
+        return elements_with_no_copies;
     }
 
-
-
-
-    public  boolean saveHtmInDevice(Context context,ResponseBody body, String name) {
+    public boolean saveHtmInDevice(Context context,ResponseBody body, String name) {
 
         try {
             File file = getFileReady(context,"/html/"+name);
@@ -660,9 +674,9 @@ public class Utilities {
             Log.d(TAG,"muscles_ready: "+muscles_ready);
 
             return "javascript: (" + "window.onload = function () {" +
-                    "partes = Snap.selectAll('" + muscles_ready + "');" +
-                    "partes.forEach( function(elem,i) {" +
-                    "elem.attr({stroke:'#602C8D',fill:'#602C8D'});" +
+                    "muscles = Snap.selectAll('" + muscles_ready + "');" +
+                    "muscles.forEach( function(muscle,i) {" +
+                        "muscle.attr({stroke:'#602C8D',fill:'#602C8D'});" +
                     "});" + "}" + ")()";
         }
         return "";
@@ -731,101 +745,6 @@ public class Utilities {
 
         return relativeLayout;
     }
-
-    public RelativeLayout createViewProgression(Context context, String type_exercise, int progress){
-
-        TextView textView = new TextView(context);
-
-        // TEXT OF TYPE OF EXERCISES
-        RelativeLayout.LayoutParams layoutParams_of_textView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        textView.setGravity(Gravity.START);
-        textView.setLayoutParams(layoutParams_of_textView);
-        textView.setTextColor(context.getResources().getColor(R.color.black));
-        textView.setText(type_exercise);
-
-        TextView progressPorcentaje = new TextView(context);
-        progressPorcentaje.setTextColor(context.getResources().getColor(R.color.black));
-        String progression = progress+"%";
-        progressPorcentaje.setText(progression);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {progressPorcentaje.setTextColor(context.getResources().getColor(R.color.colorSecondary,null));}else {
-            progressPorcentaje.setTextColor(context.getResources().getColor(R.color.colorSecondary));}
-
-
-        LinearLayout linearLayout = new LinearLayout(context);
-        RelativeLayout.LayoutParams layoutParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        layoutParam.addRule(RelativeLayout.ALIGN_PARENT_END);
-        linearLayout.setLayoutParams(layoutParam);
-
-
-        linearLayout.addView(progressPorcentaje);
-
-        RelativeLayout relativeLayout = new RelativeLayout(context);
-        RelativeLayout.LayoutParams match_parent = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        relativeLayout.setLayoutParams(match_parent);
-        relativeLayout.setPadding(15,15,15,15);
-        relativeLayout.setMinimumHeight(45);
-
-
-        relativeLayout.addView(textView);
-        relativeLayout.addView(linearLayout);
-
-        return relativeLayout;
-    }
-
-    public  RelativeLayout createProgressionView(Context context, String exercise, String level, int progress){
-
-        TextView text_exercise = new TextView(context);
-
-        RelativeLayout.LayoutParams layoutParams_of_textView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        text_exercise.setGravity(Gravity.START);
-        text_exercise.setLayoutParams(layoutParams_of_textView);
-        text_exercise.setTextColor(context.getResources().getColor(R.color.black));
-        text_exercise.setText(exercise);
-
-
-        TextView text_level = new TextView(context);
-        LinearLayout.LayoutParams layout_of_textView = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layout_of_textView.setMarginEnd(30);
-        text_level.setLayoutParams(layout_of_textView);
-
-        text_level.setTextColor(context.getResources().getColor(R.color.gray_active_icon));
-        String level_ = context.getResources().getString(R.string.level)+": "+level;
-        text_level.setText(level_);
-
-        TextView progressPorcentaje = new TextView(context);
-        progressPorcentaje.setTextColor(context.getResources().getColor(R.color.black));
-        String progression = progress+"%";
-        progressPorcentaje.setText(progression);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {progressPorcentaje.setTextColor(context.getResources().getColor(R.color.colorSecondary,null));}else {progressPorcentaje.setTextColor(context.getResources().getColor(R.color.colorSecondary));}
-
-
-        LinearLayout linearLayout = new LinearLayout(context);
-        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        RelativeLayout.LayoutParams layoutParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        layoutParam.addRule(RelativeLayout.ALIGN_PARENT_END);
-        linearLayout.setLayoutParams(layoutParam);
-
-        linearLayout.addView(text_level);
-        linearLayout.addView(progressPorcentaje);
-
-        RelativeLayout relativeLayout = new RelativeLayout(context);
-        RelativeLayout.LayoutParams match_parent = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        relativeLayout.setLayoutParams(match_parent);
-        relativeLayout.setPadding(15,15,15,15);
-        relativeLayout.setMinimumHeight(45);
-
-
-        relativeLayout.addView(text_exercise);
-        relativeLayout.addView(linearLayout);
-
-        return relativeLayout;
-    }
-    
-   
-
-
 
 
 }

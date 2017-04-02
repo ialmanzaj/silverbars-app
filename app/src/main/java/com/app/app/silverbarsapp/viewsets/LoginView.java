@@ -7,8 +7,5 @@ import com.app.app.silverbarsapp.models.AccessToken;
  */
 
 public interface LoginView extends BaseView{
-
-    void displayToken(AccessToken accessToken);
-    void profileCreated(Boolean created);
-
+    void displayToken(AccessToken accessToken,String name_account);
 }

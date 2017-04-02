@@ -25,19 +25,20 @@ public class MyWorkoutsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (this.isAdded()) {
+            ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+            setupViewPager(viewPager);
 
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+            TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+            tabLayout.setupWithViewPager(viewPager);
+        }
     }
 
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new UserWorkoutsFragment(), "My Workouts");
-        adapter.addFragment(new SavedWorkoutsFragment(), "Saved Workouts");
+        adapter.addFragment(new UserWorkoutsFragment(), getActivity().getString(R.string.myworkouts_fragment_myworkouts));
+        //adapter.addFragment(new SavedWorkoutsFragment(), getActivity().getString(R.string.myworkouts_fragment_saved));
         viewPager.setAdapter(adapter);
     }
 

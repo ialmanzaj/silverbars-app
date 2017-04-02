@@ -224,9 +224,29 @@
     <string name="working_out_reps">Reps</string>
     <string name="working_out_seconds">Seconds</string>
 
+
+    <!---    Strings of my workouts fragment   -->
+    <string name="myworkouts_fragment_saved">Saved workouts</string>
+    <string name="myworkouts_fragment_myworkouts">My workouts</string>
+
+
     <!---    Strings of progress fragment   -->
-    <string name="progress_fragment_today_title">Today Progress</string>
-    <string name="progress_fragment_total_title">Total Progress</string>
+    <string name="progress_fragment_today_title">Weekly</string>
+    <string name="progress_fragment_total_title">Total</string>
+
+    <array name="item_bg">
+        <item>@drawable/selector_default_button_blackcar</item>
+        <item>@drawable/selector_default_button_blackcar</item>
+        <item>@drawable/selector_default_button_blackcar</item>
+        <item>@drawable/selector_default_button_blackcar</item>
+    </array>
+
+    <string-array name="days">
+        <item>"uberPOOL"</item>
+        <item>"uberX"</item>
+        <item>"BLACK CAR"</item>
+        <item>"VAN"</item>
+    </string-array>
 
 
     <!---           Strings for authentication       -->

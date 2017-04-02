@@ -7,7 +7,6 @@
     <string name="agree">De acuerdo</string>
     <string name="disagree">Desacuerdo</string>
 
-
     <string name="hello_blank_fragment">Hola fragmento en blanco</string>
     <string name="title_activity_login">Ingresar</string>
     <string name="search_hint">Buscar artista</string>
@@ -17,10 +16,8 @@
     <string name="menu_profile">Perfil</string>
     <string name="menu_progression">Mi progreso</string>
 
-
     <string name="action_websearch">Web search</string>
     <string name="app_not_available">Lo siento, no explorador disponible</string>
-
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -35,12 +32,9 @@
     completions.</string>
 
 
-
     <string name="action_settings">Configuraciones</string>
 
-
     <string name="rep_edit">Total de Repeticiones</string>
-
 
     <!-- Strings related to activity_exercise_cards -->
     <string name="exercise_name">Nombre de Ejercicio</string>
@@ -216,8 +210,13 @@
     <string name="working_out_seconds">Segundos</string>
 
 
+    <!---    Strings of my workouts fragment   -->
+    <string name="myworkouts_fragment_saved">Rutinas guardadas</string>
+    <string name="myworkouts_fragment_myworkouts">Mis rutinas</string>
+
+
     <!---    Strings of progress fragment   -->
-    <string name="progress_fragment_today_title">Progreso de hoy</string>
+    <string name="progress_fragment_today_title">Progreso semanal</string>
     <string name="progress_fragment_total_title">Progreso total</string>
 
 

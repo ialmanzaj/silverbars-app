@@ -11,7 +11,7 @@ public class MutableWatcher implements TextWatcher {
 
     private int mPosition;
 
-    public void setPosition(int position) {
+    public void updatePosition(int position) {
         mPosition = position;
     }
 

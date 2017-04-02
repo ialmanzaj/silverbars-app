@@ -13,11 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.app.app.silverbarsapp.utils.OnItemSelectedListener;
 import com.app.app.silverbarsapp.R;
-import com.app.app.silverbarsapp.fragments.MainWorkoutsFragment;
 import com.app.app.silverbarsapp.fragments.MyProgressFragment;
 import com.app.app.silverbarsapp.fragments.MyWorkoutsFragment;
+import com.app.app.silverbarsapp.fragments.ProfileFragment;
+import com.app.app.silverbarsapp.utils.OnItemSelectedListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,17 +63,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         switch (item.getItemId()) {
             case R.id.home:
-                currentFragment = new MainWorkoutsFragment();
-                extras.putString("muscle",muscle);
-                currentFragment.setArguments(extras);
+                currentFragment = new MyWorkoutsFragment();
                 createWorkoutbuttonOn();
                 break;
-            case R.id.my_progression:
+            case R.id.my_workouts:
                 currentFragment = new MyProgressFragment();
                 createWorkoutbuttonff();
                 break;
-            case R.id.my_workouts:
-                currentFragment = new MyWorkoutsFragment();
+            case R.id.my_progression:
+                currentFragment = new ProfileFragment();
                 createWorkoutbuttonff();
                 break;
         }

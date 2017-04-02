@@ -12,10 +12,10 @@ import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
-import com.app.app.silverbarsapp.MuscleListener;
+import com.app.app.silverbarsapp.utils.MuscleListener;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
-import com.app.app.silverbarsapp.WebAppInterface;
+import com.app.app.silverbarsapp.utils.WebAppInterface;
 import com.app.app.silverbarsapp.components.DaggerMuscleSelectionComponent;
 import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.models.Muscle;
@@ -37,8 +37,6 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
 
     private static final String TAG = MuscleSelectionActivity.class.getSimpleName();
 
-    private Utilities utilities = new Utilities();
-
     @Inject
     MuscleSelectionPresenter mMuscleSelectionPresenter;
 
@@ -51,8 +49,9 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
 
     @BindView(R.id.scroll_text) HorizontalScrollView mScrollText;
 
-    private ArrayList<String> muscles_selected = new ArrayList<>();
+    private Utilities utilities = new Utilities();
 
+    private ArrayList<String> muscles_selected = new ArrayList<>();
     private ArrayList<Integer> exercises_selected;
 
 

@@ -9,14 +9,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,10 +24,12 @@ import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.adapters.CreateFinalExercisesAdapter;
 import com.app.app.silverbarsapp.components.DaggerCreateWorkoutFinalComponent;
 import com.app.app.silverbarsapp.models.ExerciseRep;
+import com.app.app.silverbarsapp.models.MuscleExercise;
 import com.app.app.silverbarsapp.models.Workout;
 import com.app.app.silverbarsapp.modules.CreateWorkoutFinalModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.CreateWorkoutFinalPresenter;
+import com.app.app.silverbarsapp.utils.MuscleHandler;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.CreateWorkoutFinalView;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -37,6 +38,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -48,7 +50,6 @@ import butterknife.OnTextChanged;
 public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWorkoutFinalView{
 
     private static final String TAG = CreateWorkoutFinalActivity.class.getSimpleName();
-
 
     @Inject
     CreateWorkoutFinalPresenter mCreateWorkoutFinalPresenter;
@@ -63,20 +64,21 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     @BindView(R.id.list) RecyclerView mExercisesList;
     @BindView(R.id.chageImg) RelativeLayout changeImg;
 
+    @BindView(R.id.strength)SeekBar strenghtBar;
+    @BindView(R.id.porcentaje) TextView mPorcentajeTextView;
 
     private int mCurrentSet = 1;
     private String workoutImage = "/";
 
-
     private CreateFinalExercisesAdapter adapter;
     private Utilities utilities = new Utilities();
-    
+
+    MuscleHandler mMuscleHandler = new MuscleHandler();
     
     @Override
     protected int getLayout() {
         return R.layout.activity_create_workout_final;
     }
-
 
     @Nullable
     @Override
@@ -96,7 +98,6 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(TAG,"onCreate");
         setupToolbar();
 
 
@@ -104,16 +105,49 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         ArrayList<ExerciseRep> mExercisesSelected = utilities.returnExercisesRep(extras.getParcelableArrayList("exercises_selected"));
 
         mExercisesList.setLayoutManager(new LinearLayoutManager(this));
-
         adapter = new CreateFinalExercisesAdapter(this, mExercisesSelected);
         mExercisesList.setAdapter(adapter);
 
         mSets.setText(String.valueOf(mCurrentSet));
+
+        strenghtBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                for (int a = 0;a<adapter.getExercises().size();a++){
+                    ExerciseRep exercise =  adapter.getExercises().get(a);
+
+                    List<String> muscles = new ArrayList<>();
+                    for (MuscleExercise muscle: exercise.getExercise().getMuscles()){muscles.add(muscle.getMuscle());}
+
+                    if (muscles.contains("RECTUS-ABDOMINIS")){
+
+                        exercise.setNumber(progress*2);
+
+                    }else {
+
+
+                        if (exercise.getNumber() < 10){
+                            exercise.setNumber(10);
+                        }
+
+                        exercise.setWeight(progress*2);
+                    }
+
+                    adapter.set(a,exercise);
+                }
+
+                mPorcentajeTextView.setText(String.valueOf(progress));
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
     }
 
 
     @OnClick(R.id.save)
-    public void save(View view){
+    public void saveButton(){
         
         if (Objects.equals(workoutName.getText().toString(), "")){
             Toast.makeText(this, "Select your workout name", Toast.LENGTH_SHORT).show();
@@ -139,16 +173,15 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         }
     }
 
-
-    @OnTextChanged(value = R.id.sets, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
-    public void setsButton(Editable editable) {
-        if (!Objects.equals(editable.toString(), "")) {
-            mCurrentSet = Integer.parseInt(editable.toString());
+    @OnTextChanged(value = R.id.sets)
+    public void setsButton(CharSequence charSequence) {
+        if (!Objects.equals(charSequence.toString(), "")) {
+            mCurrentSet = Integer.parseInt(charSequence.toString());
         }
     }
 
     @OnClick(R.id.chageImg)
-    public void changeImg(){
+    public void changeImgButton(){
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -167,7 +200,6 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         if (requestCode == 1) {
             if (resultCode == RESULT_OK && data != null){
                 if (data.getData() != null) {
-
                         CropImage.activity(data.getData())
                                 .setGuidelines(CropImageView.Guidelines.ON)
                                 .setActivityTitle("Crop Image")
@@ -178,7 +210,6 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
                                 .start(this);
                     }
                 }
-
         }else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
                 CropImage.ActivityResult result = CropImage.getActivityResult(data);
                 if (resultCode == RESULT_OK) {
@@ -212,10 +243,12 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         workout.setWorkout_image(workoutImage);
         workout.setExercises(adapter.getExercises());
         workout.setLevel("");
-        workout.setMain_muscle("");
+        workout.setMain_muscle(mMuscleHandler.getMainMuscle(adapter.getExercises()));
 
         return workout;
     }
+
+
 
     @Override
     public void onWorkoutCreated(boolean created) {
@@ -254,5 +287,3 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     }
 
 }
-
-

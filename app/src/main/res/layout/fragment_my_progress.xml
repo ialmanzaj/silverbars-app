@@ -8,18 +8,22 @@
     android:orientation="vertical"
     tools:context=".fragments.MyWorkoutsFragment">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.design.widget.AppBarLayout
+    <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
+         <!--   <android.support.v7.widget.Toolbar
+                app:layout_scrollFlags="scroll|enterAlways"
+                android:background="@color/colorPrimary"
+                android:minHeight="50dp"
+                app:elevation="2dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />-->
+
             <android.support.design.widget.TabLayout
-                style="@style/MyCustomTabLayout"
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -28,12 +32,12 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v4.view.ViewPager
-            android:scrollbars="vertical"
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <android.support.v4.view.ViewPager
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:scrollbars="vertical"
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

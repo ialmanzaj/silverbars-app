@@ -7,16 +7,18 @@
     android:background="@color/white"
     tools:context=".activities.ExerciseListActivity">
 
-        <android.support.design.widget.CoordinatorLayout
+    <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.design.widget.AppBarLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            <android.support.design.widget.AppBarLayout
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/appbarlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:elevation="2dp">
                 <android.support.v7.widget.Toolbar
+                    android:theme="@style/toolbarStyle"
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -145,4 +147,5 @@
                 </LinearLayout>
             </android.support.v4.widget.NestedScrollView>
         </android.support.design.widget.CoordinatorLayout>
+
 </android.support.v4.widget.DrawerLayout>

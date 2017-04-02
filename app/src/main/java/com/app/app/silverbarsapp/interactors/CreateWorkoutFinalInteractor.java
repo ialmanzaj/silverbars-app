@@ -1,7 +1,5 @@
 package com.app.app.silverbarsapp.interactors;
 
-import android.util.Log;
-
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.callbacks.CreateWorkoutFinalCallback;
 import com.app.app.silverbarsapp.database_models.Exercise;
@@ -45,21 +43,20 @@ public class CreateWorkoutFinalInteractor {
 
         for (com.app.app.silverbarsapp.models.ExerciseRep exerciseRep: workout.getExercises()){
 
-            Exercise exercise = insertExercise(exerciseRep);
+            Exercise exercise = insertExerciseRep(exerciseRep);
             insertTypesOfExercise(exerciseRep,exercise);
             insertMuscles(exerciseRep,exercise);
 
             //re create exercise rep model
-            Log.d(TAG,"state: "+exerciseRep.getExercise_state());
-
+            //Log.d(TAG,"state: "+exerciseRep.getExercise_state());
             switch (exerciseRep.getExercise_state()){
                 case REP:
-                    Log.d(TAG,"rep:"+exerciseRep.getNumber());
-                    helper.getExerciseRepDao().create(new ExerciseRep(exercise, exerciseRep.getNumber(),0,user_workout));
+                    //Log.d(TAG,"rep:"+exerciseRep.getNumber());
+                    helper.getExerciseRepDao().create(new ExerciseRep(exercise, exerciseRep.getNumber(),0,user_workout,exerciseRep.getWeight()));
                     break;
                 case SECOND:
-                    Log.d(TAG,"second:"+exerciseRep.getNumber());
-                    helper.getExerciseRepDao().create(new ExerciseRep(exercise,0,exerciseRep.getNumber(),user_workout));
+                    //Log.d(TAG,"second:"+exerciseRep.getNumber());
+                    helper.getExerciseRepDao().create(new ExerciseRep(exercise,0,exerciseRep.getNumber(),user_workout,exerciseRep.getWeight()));
                     break;
             }
         }
@@ -70,7 +67,7 @@ public class CreateWorkoutFinalInteractor {
 
 
 
-    private Exercise insertExercise(com.app.app.silverbarsapp.models.ExerciseRep exerciseRep) throws SQLException {
+    private Exercise insertExerciseRep(com.app.app.silverbarsapp.models.ExerciseRep exerciseRep) throws SQLException {
 
         Exercise exercise = new Exercise(
                 exerciseRep.getExercise().getExercise_name(),
@@ -92,7 +89,6 @@ public class CreateWorkoutFinalInteractor {
             helper.getTypeDao().create(new TypeExercise(type, exercise));
         }
     }
-
 
     private void insertMuscles(com.app.app.silverbarsapp.models.ExerciseRep exerciseRep, Exercise exercise) throws SQLException {
         //set musles to database

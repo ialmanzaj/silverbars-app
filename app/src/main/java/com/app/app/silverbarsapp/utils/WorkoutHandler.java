@@ -17,10 +17,8 @@ public class WorkoutHandler implements CountDownController.CountDownEvents{
 
     private Utilities utilities = new Utilities();
 
-
     private CountDownController mCountDownController;
     private WorkoutEvents listener;
-
 
     private int mTotalSets;
     private ArrayList<ExerciseRep> exercises;
@@ -44,6 +42,11 @@ public class WorkoutHandler implements CountDownController.CountDownEvents{
         mRestByExercise = restbyexercise;
         mRestBySet = restbyset;
     }
+
+    public ArrayList<ExerciseRep> getExercises(){
+        return exercises;
+    }
+
 
     @Override
     public void onTickMainCounter(String second) {
@@ -114,6 +117,10 @@ public class WorkoutHandler implements CountDownController.CountDownEvents{
         checkOnNextExerciseOrSet(mCurrentExercisePosition);
     }
 
+    public void saveTime(long time){
+        exercises.get(mCurrentExercisePosition).addTimesPerSet(mCurrentSet-1,time);
+    }
+
     private void checkOnNextExerciseOrSet(int currentExercisePosition){
         if (currentExercisePosition<exercises.size())
             onChangeToNextExercise(currentExercisePosition);
@@ -164,9 +171,10 @@ public class WorkoutHandler implements CountDownController.CountDownEvents{
         isWorkoutRest = true;
 
         //starting rest CountDownTimer
-        if (mCurrentExercisePosition+1 <exercises.size()){
+        if (mCurrentExercisePosition+1 < exercises.size()){
             Log.d(TAG,"rest by exercise");
             startRestCountDownTimer(mRestByExercise);
+
         }else {
             Log.d(TAG,"rest by set");
             startRestCountDownTimer(mRestBySet);
@@ -180,7 +188,6 @@ public class WorkoutHandler implements CountDownController.CountDownEvents{
         //set the actual rest var
         mCurrentRest = rest;
         int total_secs = (rest +1);
-
         //create timer
         mCountDownController.createRestTimer(total_secs);
     }
@@ -192,14 +199,13 @@ public class WorkoutHandler implements CountDownController.CountDownEvents{
         //flag rest off
         isWorkoutRest = false;
 
-        // overlay VIEW off
+        //rest finished event
         listener.onRestFinished(exercises.get(mCurrentExercisePosition).getExercise());
 
         //move to the next exercise or set after rest
         mCurrentExercisePosition++;
         checkOnNextExerciseOrSet(mCurrentExercisePosition);
     }
-
 
     public void destroy() {
         //mCountDownController.destroyInicialTimer();

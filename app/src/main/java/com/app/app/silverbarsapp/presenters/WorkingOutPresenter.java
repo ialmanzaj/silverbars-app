@@ -54,6 +54,11 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
     }
 
 
+    public ArrayList<ExerciseRep> getExercises(){
+        return mWorkoutHandler.getExercises();
+    }
+
+
     /**
      *    Music events
      *<p>
@@ -95,6 +100,12 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
         mWorkoutHandler.startRest();
     }
 
+
+
+    public void saveTime(long time){
+        mWorkoutHandler.saveTime(time);
+    }
+
     @Override
     public void onCountDownWorking(String second) {
         view.onCountDownWorking(second);
@@ -122,6 +133,7 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
         mMusicHandler.pauseMusic();
         view.onPauseWorkout();
     }
+
 
 
     @Override

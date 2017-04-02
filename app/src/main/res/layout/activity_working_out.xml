@@ -47,7 +47,6 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
                             android:text="@string/exercise_text"
                             android:textColor="@color/secondColor"
                             android:textSize="16sp"
@@ -97,13 +96,14 @@
                         android:orientation="vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/zero"
                             android:id="@+id/repetition_timer"
                             android:textColor="@color/black"
-                            android:textSize="95sp"
+                            android:textSize="75sp"
                             android:textStyle="bold"
                             android:gravity="bottom" />
 
@@ -117,8 +117,33 @@
                             android:layout_gravity="center_horizontal"
                             android:textColor="@color/dark_gray" />
 
-                    </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/weight_layout"
+                            android:visibility="invisible"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
+                            <TextView
+                                android:textSize="30sp"
+                                android:text="+"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                            <TextView
+                                android:id="@+id/weight"
+                                android:textSize="30sp"
+                                android:text="30"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                            <TextView
+                                android:textSize="30sp"
+                                android:text="kg"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+                    </LinearLayout>
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_weight="1"
@@ -177,7 +202,6 @@
                 <LinearLayout
                     android:gravity="center_horizontal|center_vertical"
                     android:layout_gravity="bottom"
-                    android:minHeight="90dp"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -186,7 +210,7 @@
                     <TextView
                         android:visibility="gone"
                         android:id="@+id/countdown"
-                        android:textSize="75sp"
+                        android:textSize="65sp"
                         android:textColor="@color/black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
@@ -194,7 +218,7 @@
                     <com.app.app.silverbarsapp.utils.PausableChronometer
                         android:id="@+id/chronometer2"
                         android:textColor="@color/black"
-                        android:textSize="75sp"
+                        android:textSize="65sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
@@ -247,7 +271,6 @@
                         <ImageView
                             android:visibility="invisible"
                             android:id="@+id/pause_workout"
-
                             android:layout_centerVertical="true"
                             android:layout_alignParentEnd="true"
                             android:src="@drawable/ic_pause_circle_filled_black_36px"
@@ -256,9 +279,7 @@
                             android:contentDescription="@null" />
 
                         <ImageView
-
                             android:id="@+id/play_workout"
-
                             android:layout_centerVertical="true"
                             android:layout_centerHorizontal="true"
                             android:src="@drawable/ic_play_circle_filled_black_36px"
@@ -285,19 +306,17 @@
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>
-
-
             <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="5dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:background="@color/black"
-                    android:id="@+id/player_layout"
-                    android:baselineAligned="false">
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:background="@color/black"
+                android:id="@+id/player_layout"
+                android:baselineAligned="false">
 
                         <RelativeLayout
                             android:layout_weight="1"
@@ -354,8 +373,7 @@
                                 android:contentDescription="@string/pause_button" />
                         </RelativeLayout>
                 </LinearLayout>
-        </LinearLayout>
-
+    </LinearLayout>
     <LinearLayout
         android:visibility="invisible"
             android:orientation="vertical"
@@ -389,11 +407,8 @@
                 android:layout_marginTop="-30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="sec"
+                android:text="secs"
                 android:textColor="#fff"
                 android:textSize="35sp" />
-
-
         </LinearLayout>
-
 </FrameLayout>

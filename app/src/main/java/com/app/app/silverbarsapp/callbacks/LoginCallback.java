@@ -7,8 +7,5 @@ import com.app.app.silverbarsapp.models.AccessToken;
  */
 
 public interface LoginCallback extends ServerCallback {
-
     void onToken(AccessToken accessToken);
-    void onProfileCreated(boolean created);
-
 }

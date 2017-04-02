@@ -78,13 +78,12 @@ public class SpotifyActivity extends BaseActivity implements SpotifyView{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setupToolbar();
 
         //open login screen
         mSpotifyPresenter.openLoginWindow(this);
 
-        setupToolbar();
         setupAdapter();
-
 
         mReloadButton.setOnClickListener(view -> {});
         mDoneButton.setOnClickListener(view -> {});

@@ -38,7 +38,6 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
         this.workouts = new ArrayList<>();
     }
 
-
     public void set(List<Workout> workouts){
         this.workouts.addAll(workouts);
         notifyDataSetChanged();
@@ -49,15 +48,13 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
         notifyItemInserted(0);
     }
 
-
-
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.layout)FrameLayout layout;
 
-        @BindView(R.id.text)TextView exercise_name;
-        @BindView(R.id.img_local)ImageView exercise_img_local;
-        @BindView(R.id.start_button)Button start_button;
+        @BindView(R.id.text)TextView mExerciseName;
+        @BindView(R.id.img_local)ImageView mExerciseImglocal;
+        @BindView(R.id.start_button)Button mStartButton;
 
         public ViewHolder(View view) {
             super(view);
@@ -92,17 +89,16 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
 
         viewholder.layout.getLayoutParams().height = utilities.calculateContainerHeight(context) / 3;
 
-        viewholder.exercise_name.setText(workouts.get(position).getWorkout_name());
-        viewholder.start_button.setTag(workouts.get(position));
+        viewholder.mExerciseName.setText(workouts.get(position).getWorkout_name());
+        viewholder.mStartButton.setTag(workouts.get(position));
 
         try {
 
             String[] workoutImgDir = workouts.get(position).getWorkout_image().split(context.getFilesDir().getPath()+"/SilverbarsImg/");
 
             if (workoutImgDir.length == 2){
-                viewholder.exercise_img_local.setImageBitmap( utilities.loadWorkoutImageFromDevice(context,workoutImgDir[1]));
+                viewholder.mExerciseImglocal.setImageBitmap( utilities.loadWorkoutImageFromDevice(context,workoutImgDir[1]));
             }
-
 
         }catch (NullPointerException e){Log.e(TAG,"NullPointerException");}
     }
