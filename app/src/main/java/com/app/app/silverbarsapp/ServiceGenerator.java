@@ -1,5 +1,7 @@
 package com.app.app.silverbarsapp;
 
+import android.util.Log;
+
 import com.andretietz.retroauth.AndroidAuthenticationHandler;
 import com.andretietz.retroauth.Retroauth;
 import com.app.app.silverbarsapp.utils.TokenProvider;
@@ -30,22 +32,38 @@ public class ServiceGenerator {
             .addConverterFactory(GsonConverterFactory.create());
 
 
+    private static Retrofit.Builder builder2 = new Retrofit.Builder()
+            .baseUrl(API_URL)
+            .addConverterFactory(GsonConverterFactory.create());
+
+
     public static <S> S createService(Class<S> serviceClass) {
+        return createService(serviceClass,null);
+    }
+
+    public static <S> S createService(Class<S> serviceClass,String token) {
         //logging interceptor
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         httpClient.addInterceptor(logging);
 
         //time outs
-        httpClient.connectTimeout(10, TimeUnit.SECONDS);
-        httpClient.readTimeout(20, TimeUnit.SECONDS);
+        httpClient.connectTimeout(15, TimeUnit.SECONDS);
+        httpClient.readTimeout(25, TimeUnit.SECONDS);
 
-        OkHttpClient client = httpClient.build();
-        Retrofit retrofit = builder.client(client).build();
 
+        // return header complete url with header token
+        if (token != null){
+            Log.d(TAG,"createService with "+token);
+            Retrofit retrofit = builder.client(httpClient.build()).build();
+            return retrofit.create(serviceClass);
+        }
+
+
+        Log.d(TAG,"createService without token");
+        Retrofit retrofit = builder2.client(httpClient.build()).build();
         return retrofit.create(serviceClass);
     }
-
 
 
 

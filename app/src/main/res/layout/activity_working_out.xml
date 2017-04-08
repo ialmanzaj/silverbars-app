@@ -199,30 +199,33 @@
                         </LinearLayout>
                     </RelativeLayout>
                 </LinearLayout>
-                <LinearLayout
-                    android:gravity="center_horizontal|center_vertical"
-                    android:layout_gravity="bottom"
-                    android:orientation="horizontal"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:baselineAligned="false">
 
+                    <com.app.app.silverbarsapp.utils.PausableChronometer
+                        android:id="@+id/total_timer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
                     <TextView
-                        android:visibility="gone"
+                        android:visibility="invisible"
                         android:id="@+id/countdown"
                         android:textSize="65sp"
                         android:textColor="@color/black"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
                     <com.app.app.silverbarsapp.utils.PausableChronometer
+                        android:gravity="center_horizontal"
                         android:id="@+id/chronometer2"
                         android:textColor="@color/black"
                         android:textSize="65sp"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
-                </LinearLayout>
+                </RelativeLayout>
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"

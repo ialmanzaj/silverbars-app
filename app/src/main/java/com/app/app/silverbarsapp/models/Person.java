@@ -32,6 +32,9 @@ public class Person implements Parcelable{
     private List<String> my_workouts;
 
 
+    public Person(){}
+
+
     protected Person(Parcel in) {
         id = in.readInt();
         age = in.readInt();

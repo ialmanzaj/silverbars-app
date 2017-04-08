@@ -23,16 +23,16 @@ public class MuscleDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_muscle_detail);
         ButterKnife.bind(this);
 
-
-        setupToolbar();
+        Bundle extras = getIntent().getExtras();
+        String title = extras.getString("title");
+        setupToolbar(title);
     }
 
-
-    private void setupToolbar(){
+    private void setupToolbar(String title){
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Muscle Detail");
+            getSupportActionBar().setTitle(title);
         }
     }
 

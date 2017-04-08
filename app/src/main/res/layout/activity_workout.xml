@@ -59,7 +59,6 @@
                     android:layout_height="match_parent">
 
                     <RelativeLayout
-                        android:visibility="gone"
                         android:id="@+id/toggle_save_workout"
                         android:minHeight="55dp"
                         android:background="@color/colorSecondary"

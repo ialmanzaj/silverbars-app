@@ -1,17 +1,18 @@
 package com.app.app.silverbarsapp.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by isaacalmanza on 11/13/16.
  */
 
-public class MuscleProgression {
+public class MuscleProgression implements Parcelable{
 
     @SerializedName("muscle")
-    private int muscle_id;
-
-    private Muscle muscle_main;
+    private Muscle muscle;
 
     @SerializedName("person")
     private int person;
@@ -29,20 +30,46 @@ public class MuscleProgression {
     public MuscleProgression(){}
 
 
-    public int getMuscle_id(){
-        return muscle_id;
+    protected MuscleProgression(Parcel in) {
+        muscle = in.readParcelable(Muscle.class.getClassLoader());
+        person = in.readInt();
+        muscle_activation_progress = in.readInt();
+        level = in.readInt();
+        date = in.readString();
     }
 
-    public int getPerson_id() {
-        return person;
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(muscle, flags);
+        dest.writeInt(person);
+        dest.writeInt(muscle_activation_progress);
+        dest.writeInt(level);
+        dest.writeString(date);
     }
 
-    public void setMuscle(Muscle muscle_main) {
-        this.muscle_main = muscle_main;
+    @Override
+    public int describeContents() {
+        return 0;
     }
+
+    public static final Creator<MuscleProgression> CREATOR = new Creator<MuscleProgression>() {
+        @Override
+        public MuscleProgression createFromParcel(Parcel in) {
+            return new MuscleProgression(in);
+        }
+
+        @Override
+        public MuscleProgression[] newArray(int size) {
+            return new MuscleProgression[size];
+        }
+    };
 
     public Muscle getMuscle() {
-        return muscle_main;
+        return muscle;
+    }
+
+    public int getPerson() {
+        return person;
     }
 
     public int getMuscle_activation_progress() {

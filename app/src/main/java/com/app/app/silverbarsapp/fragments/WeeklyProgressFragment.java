@@ -4,7 +4,6 @@ package com.app.app.silverbarsapp.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -17,7 +16,6 @@ import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.activities.MuscleDetailActivity;
 import com.app.app.silverbarsapp.components.DaggerTodayProgressionComponent;
-import com.app.app.silverbarsapp.models.Muscle;
 import com.app.app.silverbarsapp.models.MuscleProgression;
 import com.app.app.silverbarsapp.modules.ProgressionModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
@@ -44,9 +42,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class WeeklyProgressFragment extends BaseFragment implements ProgressionView {
 
     private static final String TAG = WeeklyProgressFragment.class.getSimpleName();
@@ -84,6 +79,12 @@ public class WeeklyProgressFragment extends BaseFragment implements ProgressionV
     private Utilities mUtilities = new Utilities();
     private int mLastMusleId;
 
+    private int mCurrentDay;
+
+
+    List<Integer> list_progress = new ArrayList<>();
+
+
     @Override
     protected int getFragmentLayout() {
         return R.layout.weekly_progress_fragment;
@@ -108,15 +109,21 @@ public class WeeklyProgressFragment extends BaseFragment implements ProgressionV
         super.onViewCreated(view, savedInstanceState);
 
         setupWebview();
-        mProgressionPresenter.getProgression();
+        mProgressionPresenter.getMuscleProgressions();
+        mProgressionPresenter.getExerciseProgression();
 
 
-        mSeekbarWithIntervals.setIntervals(getDaysOfWeek());
+        List<String> days = getDaysOfWeekAbreb();
+        DateTime today = new DateTime();
+        days.set(today.getDayOfWeek()-1,"Today");
 
+        mSeekbarWithIntervals.setIntervals(days);
         mSeekbarWithIntervals.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 Log.d(TAG,"progress "+progress);
+                mCurrentDay = progress;
+                changeSeekBarTextViewColor(progress);
                 switch (progress){
                     case 0:
                         updateUi(getProgressionFiltered(mWeekProgressions,new Interval(Monday.toDateTimeAtStartOfDay(), Days.ONE)));
@@ -148,6 +155,17 @@ public class WeeklyProgressFragment extends BaseFragment implements ProgressionV
         });
     }
 
+
+    private void changeSeekBarTextViewColor(int progress){
+        list_progress.add(progress);
+        mSeekbarWithIntervals.changeTextColorSelected(progress);
+        if (list_progress.size() >= 2){
+            int penultimo_element = list_progress.size()-2;
+            mSeekbarWithIntervals.changeTextColorNoSelected(list_progress.get(penultimo_element));
+        }
+    }
+
+
     private void setupWebview(){
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
@@ -156,10 +174,12 @@ public class WeeklyProgressFragment extends BaseFragment implements ProgressionV
 
     @OnClick(R.id.see_more)
     public void seeMoreButton(){
-        startActivity(new Intent(CONTEXT, MuscleDetailActivity.class));
+        Intent intent = new Intent(CONTEXT, MuscleDetailActivity.class);
+        intent.putExtra("title", getDaysOfWeek().get(mCurrentDay));
+        startActivity(intent);
     }
 
-    private List<String> getDaysOfWeek() {
+    private List<String> getDaysOfWeekAbreb() {
         return new ArrayList<String>() {{
             add("Mon");
             add("Tue");
@@ -171,11 +191,24 @@ public class WeeklyProgressFragment extends BaseFragment implements ProgressionV
         }};
     }
 
+    private List<String> getDaysOfWeek() {
+        return new ArrayList<String>() {{
+            add("Monday");
+            add("Tuesday");
+            add("Wednesday");
+            add("Thursday");
+            add("Friday");
+            add("Saturday");
+            add("Sunday");
+        }};
+    }
+
     @Override
     public void displayProgressions(List<MuscleProgression> progressions) {
+        onLoadingViewOff();
         Collections.reverse(progressions);
         mProgressions.addAll(progressions);
-        getMusclesFromProgression();
+        init();
     }
 
     @Override
@@ -196,44 +229,13 @@ public class WeeklyProgressFragment extends BaseFragment implements ProgressionV
         onErrorViewOn();
     }
 
-    @Override
-    public void displayMuscle(Muscle muscle) {
-        insertMuscleNamesInProgression(muscle);
-        if (muscle.getId() == mLastMusleId){
-            onLoadingViewOff();
+    private void init(){
+        //filter the progressions
+        Interval this_week = new Interval(Monday.toDateTimeAtStartOfDay(), Weeks.ONE);
+        mWeekProgressions = getProgressionFiltered(mProgressions,this_week);
 
-            //filter the progressions
-            Interval this_week = new Interval(Monday.toDateTimeAtStartOfDay(), Weeks.ONE);
-            mWeekProgressions = getProgressionFiltered(mProgressions,this_week);
-
-            //filter the ui
-            Interval monday = new Interval(Monday.toDateTimeAtStartOfDay(), Days.ONE);
-            updateUi(getProgressionFiltered(mWeekProgressions,monday));
-        }
-    }
-
-    private void insertMuscleNamesInProgression(Muscle muscle){
-        for (MuscleProgression progression: mProgressions){
-            if (progression.getMuscle_id() == muscle.getId()){
-                progression.setMuscle(muscle);
-            }
-        }
-    }
-
-    private void getMusclesFromProgression(){
-        List<String> muscles_ids = new ArrayList<>();
-        List<Integer> ids = new ArrayList<>();
-
-        for (MuscleProgression muscleProgression: mProgressions){
-            String muscle_id = String.valueOf(muscleProgression.getMuscle_id());
-            if (!muscles_ids.contains(muscle_id)){
-                muscles_ids.add(muscle_id);
-                ids.add(Integer.valueOf(muscle_id));
-            }
-        }
-
-        mProgressionPresenter.getMuscles(ids);
-        mLastMusleId = Integer.parseInt(muscles_ids.get(muscles_ids.size()-1));
+        //filter the ui
+        mSeekbarWithIntervals.setProgress(new DateTime().getDayOfWeek()-1);
     }
 
 
@@ -247,8 +249,6 @@ public class WeeklyProgressFragment extends BaseFragment implements ProgressionV
         return progressions_filted;
     }
 
-
-
     private boolean filterByDate(MuscleProgression progress,Interval day){
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
         DateTime progress_date = formatter.parseDateTime(progress.getDate());
@@ -256,20 +256,18 @@ public class WeeklyProgressFragment extends BaseFragment implements ProgressionV
     }
 
     private void updateUi(List<MuscleProgression> progressions){
-        Log.d(TAG,"updateUi: "+progressions.size());
-
         if (progressions.size() > 0) {
             Log.d(TAG,"YES update");
             onEmptyViewOff();
             clearWebview();
-            updateMuscle(progressions);
+            updateBodyMuscleWebView(progressions);
         }else {
             Log.d(TAG,"empty");
             onEmptyViewOn("You haven't train :(");
         }
     }
 
-    private void updateMuscle(List<MuscleProgression> progression){
+    private void updateBodyMuscleWebView(List<MuscleProgression> progression){
         for (MuscleProgression muscleProgression: progression){
             insertMuscleToWebview(muscleProgression.getMuscle().getMuscle_name());
         }
@@ -285,9 +283,9 @@ public class WeeklyProgressFragment extends BaseFragment implements ProgressionV
         mMuscleParts = " ";
     }
 
-    private void onEmptyViewOn(String text){mEmptyView.setVisibility(View.VISIBLE);mEmptyText.setText(text);}
+    private void onEmptyViewOn(String text){mEmptyView.setVisibility(View.VISIBLE);mEmptyText.setText(text);mSeeMoreButton.setVisibility(View.GONE);}
 
-    private void onEmptyViewOff(){mEmptyView.setVisibility(View.GONE);}
+    private void onEmptyViewOff(){mEmptyView.setVisibility(View.GONE);mSeeMoreButton.setVisibility(View.VISIBLE);}
 
     private void onLoadingViewOn(){
         mLoadingView.setVisibility(View.VISIBLE);

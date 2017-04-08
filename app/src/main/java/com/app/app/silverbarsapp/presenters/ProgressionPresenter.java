@@ -2,7 +2,6 @@ package com.app.app.silverbarsapp.presenters;
 
 import com.app.app.silverbarsapp.callbacks.ProgressionCallback;
 import com.app.app.silverbarsapp.interactors.ProgressionInteractor;
-import com.app.app.silverbarsapp.models.Muscle;
 import com.app.app.silverbarsapp.models.MuscleProgression;
 import com.app.app.silverbarsapp.viewsets.ProgressionView;
 
@@ -24,15 +23,13 @@ public class ProgressionPresenter extends BasePresenter implements ProgressionCa
         this.interactor = interactor;
     }
 
-    public void getProgression(){
-        interactor.getProgression(this);
+    public void getMuscleProgressions(){
+        interactor.getMuscleProgressions(this);
     }
 
-
-    public void getMuscles(List<Integer> muscles_id){
-        interactor.getMuscle(this,muscles_id);
+    public void getExerciseProgression(){
+        interactor.getExerciseProgression(this);
     }
-
 
     @Override
     public void emptyProgress() {
@@ -45,11 +42,6 @@ public class ProgressionPresenter extends BasePresenter implements ProgressionCa
     }
 
     @Override
-    public void onMuscle(Muscle muscle) {
-        view.displayMuscle(muscle);
-    }
-
-    @Override
     public void onServerError() {
         view.displayServerError();
     }
@@ -58,6 +50,8 @@ public class ProgressionPresenter extends BasePresenter implements ProgressionCa
     public void onNetworkError() {
         view.displayNetworkError();
     }
+
+
 
     @Override
     public void onStart() {}
@@ -75,8 +69,6 @@ public class ProgressionPresenter extends BasePresenter implements ProgressionCa
     public void onRestart() {}
 
     @Override
-    public void onDestroy() {
-        interactor.unsuscribe();
-    }
+    public void onDestroy() {}
 
 }

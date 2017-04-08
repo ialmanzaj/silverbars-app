@@ -128,8 +128,8 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
         storeToken(account, getString(R.string.authentication_TOKEN),  accessToken.getAccess_token(),  accessToken.getRefresh_token());
 
         // finishes the activity and set this account to the "current-active" one
+        startActivity(new Intent(this, UserPreferencesActivity.class));
         finalizeAuthentication(account);
-        startActivity(new Intent(this, MainActivity.class));
     }
 
     @Override

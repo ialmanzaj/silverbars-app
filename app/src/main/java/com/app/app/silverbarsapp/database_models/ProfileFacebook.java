@@ -18,9 +18,7 @@ public class ProfileFacebook {
     @DatabaseField
     private String last_name;
 
-
     public ProfileFacebook(){}
-
 
     public void setId(long id) {
         this.id = id;

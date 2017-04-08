@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
-import com.app.app.silverbarsapp.models.ExerciseRep;
+import com.app.app.silverbarsapp.models.ExerciseProgression;
 
 import java.util.ArrayList;
 
@@ -21,10 +21,18 @@ import butterknife.ButterKnife;
 
 public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ExerciseViewHolder> {
 
-    private Context context;
-    private ArrayList<ExerciseRep> exercises;
 
-    public ResultsAdapter(Context context, ArrayList<ExerciseRep> exercises) {
+    private  static final int BETTER = 2;
+    private  static final int EQUAL = 1;
+    private  static final int WORST = 0;
+
+
+
+    private Context context;
+    private ArrayList<ExerciseProgression> exercises;
+
+
+    public ResultsAdapter(Context context, ArrayList<ExerciseProgression> exercises) {
         this.context = context;
         this.exercises = exercises;
     }
@@ -42,8 +50,31 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.Exercise
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if (exercises.get(position).isPositive()){
+            return BETTER;
+        }else if (exercises.get(position).isEqual()){
+            return EQUAL;
+        }else {
+            return WORST;
+        }
+    }
+
+    @Override
     public ExerciseViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        return  new ExerciseViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.exercise_result_item, viewGroup, false));
+        switch (viewType){
+            case 0:
+                return new ExerciseViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(
+                        R.layout.exercise_result_item_negative, viewGroup, false));
+            case 1:
+                return new ExerciseViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(
+                        R.layout.exercise_result_item_positive, viewGroup, false));
+            case 2:
+                return new ExerciseViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(
+                        R.layout.exercise_result_item_positive, viewGroup, false));
+            default:
+                return null;
+        }
     }
 
     @Override

@@ -4,7 +4,7 @@
     android:id="@+id/layout"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    card_view:cardBackgroundColor="@color/black"
+    card_view:cardBackgroundColor="@color/colorSecondary"
     card_view:cardCornerRadius="2dp"
     card_view:cardElevation="2dp"
     android:layout_margin="4dp">
@@ -60,7 +60,7 @@
             android:background="@color/white">
 
             <Button
-                android:theme="@style/ButtonCreate"
+                android:theme="@style/ButtonRed"
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/btn"
                 android:layout_width="match_parent"

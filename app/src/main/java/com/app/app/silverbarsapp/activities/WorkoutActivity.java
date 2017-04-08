@@ -158,20 +158,29 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         saveWorkoutUi(isUserWorkout);
     }
 
-    private void saveWorkoutUi(boolean isUserWorkout){
+    private void saveWorkoutUi(boolean isUserWorkout) {
         if (!isUserWorkout){
             mSaveWorkoutLayout.setVisibility(View.VISIBLE);
         }
 
-        mSaveWorkoutSwitch.setChecked(mWorkoutPresenter.isWorkoutAvailable(workoutId));
-        mSaveWorkoutSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            if (isChecked){
-                saveWorkout();
-            } else{
-                logMessage("Switch off");
-                mWorkoutPresenter.setWorkoutOff(workoutId);
-            }
-        });
+        try {
+
+            mSaveWorkoutSwitch.setChecked(mWorkoutPresenter.isWorkoutAvailable(workoutId));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+            mSaveWorkoutSwitch.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+                if (isChecked){
+                    saveWorkout();
+                } else{
+                    logMessage("Switch off");
+                    try {
+                        mWorkoutPresenter.setWorkoutOff(workoutId);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
     }
 
 
@@ -277,6 +286,9 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         //songs of spotify
         intent.putExtra("spotify_playlist",mPlaylistSpotify);
         intent.putExtra("spotify_token",mSpotifyToken);
+
+        intent.putExtra("workout_id",workoutId);
+        Log.d(TAG,"workout_id: "+workoutId);
 
         startActivity(intent);
     }

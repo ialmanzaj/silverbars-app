@@ -147,7 +147,7 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
 
     @OnClick(R.id.save)
-    public void saveButton(){
+    public void saveButton() {
         
         if (Objects.equals(workoutName.getText().toString(), "")){
             Toast.makeText(this, "Select your workout name", Toast.LENGTH_SHORT).show();
@@ -165,9 +165,7 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         }
 
         try {
-
-            mCreateWorkoutFinalPresenter.saveWorkout(getWorkoutReady());
-
+            mCreateWorkoutFinalPresenter.saveWorkoutApi(getWorkoutReady());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -241,7 +239,7 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         workout.setWorkout_name(workoutName.getText().toString());
         workout.setSets(mCurrentSet);
         workout.setWorkout_image(workoutImage);
-        workout.setExercises(adapter.getExercises());
+        workout.setExercises(getExercisesReady(adapter.getExercises()));
         workout.setLevel("");
         workout.setMain_muscle(mMuscleHandler.getMainMuscle(adapter.getExercises()));
 
@@ -249,13 +247,24 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     }
 
 
+    private ArrayList<ExerciseRep> getExercisesReady(ArrayList<ExerciseRep> exercises){
+        for (ExerciseRep exercise: exercises){
+            switch (exercise.getExercise_state()){
+                case REP:
+                    exercise.setRepetition(exercise.getNumber());
+                    break;
+                case SECOND:
+                    exercise.setSeconds(exercise.getNumber());
+                    break;
+            }
+        }
+        return exercises;
+    }
 
     @Override
-    public void onWorkoutCreated(boolean created) {
-        if (created){
-            setResult(RESULT_OK, new Intent());
-            finish();
-        }
+    public void displayWorkoutDatabaseCreated() {
+        setResult(RESULT_OK, new Intent());
+        finish();
     }
 
     private boolean didYouSelectedReps(){
@@ -268,9 +277,24 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     }
 
     @Override
-    public void onWorkoutError() {
-        Log.e(TAG,"onWorkoutError");
+    public void displayWorkoutApiCreated(Workout workout) {
+        try {
+            mCreateWorkoutFinalPresenter.saveWorkoutDatabase(workout);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
+    @Override
+    public void displayNetworkError() {
+
+    }
+
+    @Override
+    public void displayServerError() {
+
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -285,5 +309,8 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
 
 }

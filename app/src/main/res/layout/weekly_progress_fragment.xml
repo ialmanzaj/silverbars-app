@@ -97,7 +97,7 @@
         <LinearLayout
             android:layout_alignParentBottom="true"
             android:id="@+id/week"
-            android:padding="16dp"
+            android:padding="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <com.app.app.silverbarsapp.utils.SeekbarWithIntervals

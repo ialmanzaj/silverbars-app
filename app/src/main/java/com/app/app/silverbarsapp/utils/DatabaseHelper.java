@@ -6,12 +6,15 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.database_models.Exercise;
+import com.app.app.silverbarsapp.database_models.ExerciseProgression;
 import com.app.app.silverbarsapp.database_models.ExerciseRep;
 import com.app.app.silverbarsapp.database_models.Muscle;
 import com.app.app.silverbarsapp.database_models.MySavedWorkout;
+import com.app.app.silverbarsapp.database_models.Person;
 import com.app.app.silverbarsapp.database_models.ProfileFacebook;
 import com.app.app.silverbarsapp.database_models.TypeExercise;
 import com.app.app.silverbarsapp.database_models.UserWorkout;
+import com.app.app.silverbarsapp.database_models.WorkoutDone;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
@@ -26,7 +29,7 @@ import static com.app.app.silverbarsapp.Constants.DATABASE_VERSION;
  * Created by isaacalmanza on 01/28/17.
  */
 
-public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
+public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private Dao<MySavedWorkout, Integer> mSavedWorkoutDao;
     private Dao<UserWorkout, Integer> mUserWorkoutDao;
@@ -35,6 +38,9 @@ public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
     private Dao<Muscle, Integer> sMuscleDao;
     private Dao<TypeExercise, Integer> mTypeDao;
     private Dao<ProfileFacebook, Integer> mProfileFacebook;
+    private Dao<Person, Integer> mPersonDao;
+    private Dao<WorkoutDone, Integer> mWorkoutDoneDao;
+    private Dao<ExerciseProgression, Integer> mExerciseProgressionDao;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION,
@@ -59,6 +65,10 @@ public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, MySavedWorkout.class);
             TableUtils.createTable(connectionSource, UserWorkout.class);
             TableUtils.createTable(connectionSource, ProfileFacebook.class);
+            TableUtils.createTable(connectionSource, Person.class);
+            TableUtils.createTable(connectionSource, WorkoutDone.class);
+            TableUtils.createTable(connectionSource, ExerciseProgression.class);
+
 
         }  catch (java.sql.SQLException e) {
             e.printStackTrace();
@@ -79,6 +89,10 @@ public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, MySavedWorkout.class, false);
             TableUtils.dropTable(connectionSource, UserWorkout.class,false);
             TableUtils.dropTable(connectionSource, ProfileFacebook.class,false);
+            TableUtils.dropTable(connectionSource, Person.class,false);
+            TableUtils.dropTable(connectionSource, WorkoutDone.class,false);
+            TableUtils.dropTable(connectionSource, ExerciseProgression.class,false);
+
 
             onCreate(database, connectionSource);
 
@@ -139,13 +153,34 @@ public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
         return mUserWorkoutDao;
     }
 
-
     public Dao<ProfileFacebook, Integer> getProfileFacebook() throws java.sql.SQLException {
         if(mProfileFacebook == null) {
             mProfileFacebook = getDao(ProfileFacebook.class);
         }
         return mProfileFacebook;
     }
+
+    public Dao<Person, Integer> getMyProfile() throws java.sql.SQLException {
+        if(mPersonDao == null) {
+            mPersonDao = getDao(Person.class);
+        }
+        return mPersonDao;
+    }
+
+    public Dao<WorkoutDone, Integer> getWorkoutsDone() throws java.sql.SQLException {
+        if(mWorkoutDoneDao == null) {
+            mWorkoutDoneDao = getDao(WorkoutDone.class);
+        }
+        return mWorkoutDoneDao;
+    }
+
+    public Dao<ExerciseProgression, Integer> getExerciseProgressionDao() throws java.sql.SQLException {
+        if(mExerciseProgressionDao == null) {
+            mExerciseProgressionDao = getDao(ExerciseProgression.class);
+        }
+        return mExerciseProgressionDao;
+    }
+
 
     public void updateSavedWorkout(int workout_id,boolean saved) throws java.sql.SQLException {
         UpdateBuilder<MySavedWorkout, Integer> updateSavedWorkoutBuilder = getSavedWorkoutDao().updateBuilder();

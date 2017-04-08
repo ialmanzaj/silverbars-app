@@ -52,7 +52,7 @@ public class SilverbarsModule {
     @Provides
     @Singleton
     public MainService provideMainService(){
-        return ServiceGenerator.createService(MainService.class);
+        return ServiceGenerator.createService(MainService.class,"token");
     }
 
 

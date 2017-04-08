@@ -136,7 +136,10 @@
             android:value="b9ecbddcccca5a38f0e3e6340858c42f6798648f" />
 
         <activity android:name=".activities.MuscleSelectionActivity" />
-        <activity android:name=".activities.MuscleDetailActivity"></activity>
+        <activity android:name=".activities.MuscleDetailActivity" />
+        <activity android:name=".activities.UserPreferencesActivity" />
+        <activity android:name=".activities.WorkoutsDoneActivity" />
+        <activity android:name=".activities.MonthDetailActivity"></activity>
     </application>
 
 </manifest>

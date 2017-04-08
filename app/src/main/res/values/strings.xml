@@ -234,20 +234,6 @@
     <string name="progress_fragment_today_title">Weekly</string>
     <string name="progress_fragment_total_title">Total</string>
 
-    <array name="item_bg">
-        <item>@drawable/selector_default_button_blackcar</item>
-        <item>@drawable/selector_default_button_blackcar</item>
-        <item>@drawable/selector_default_button_blackcar</item>
-        <item>@drawable/selector_default_button_blackcar</item>
-    </array>
-
-    <string-array name="days">
-        <item>"uberPOOL"</item>
-        <item>"uberX"</item>
-        <item>"BLACK CAR"</item>
-        <item>"VAN"</item>
-    </string-array>
-
 
     <!---           Strings for authentication       -->
     <string name="com.andretietz.retroauth.authentication.ACTION" translatable="false">@string/authentication_ACTION</string>

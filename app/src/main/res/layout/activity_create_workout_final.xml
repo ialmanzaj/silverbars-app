@@ -40,10 +40,11 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
+            android:layout_height="wrap_content"
             android:baselineAligned="false">
 
             <RelativeLayout
+                android:visibility="gone"
                 android:background="@color/white"
                 android:layout_weight="1"
                 android:id="@+id/chageImg"
@@ -74,7 +75,8 @@
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="5dp">
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp">
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
@@ -103,8 +105,8 @@
 
                 <LinearLayout
                     android:gravity="center_vertical"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 

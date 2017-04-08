@@ -22,12 +22,13 @@ public class ExerciseRep implements Parcelable{
     @SerializedName("seconds")
     private int seconds;
 
+    @SerializedName("workout")
+    private int workout;
+
+
     private long[] times_per_set;
-
     private STATE exercise_state = STATE.REP;
-
     private int number;
-
     private double weight;
 
 
@@ -48,11 +49,13 @@ public class ExerciseRep implements Parcelable{
         this.weight = weight;
     }
 
+
     protected ExerciseRep(Parcel in) {
         id = in.readInt();
         exercise = in.readParcelable(Exercise.class.getClassLoader());
         repetition = in.readInt();
         seconds = in.readInt();
+        workout = in.readInt();
         times_per_set = in.createLongArray();
         number = in.readInt();
         weight = in.readDouble();
@@ -64,6 +67,7 @@ public class ExerciseRep implements Parcelable{
         dest.writeParcelable(exercise, flags);
         dest.writeInt(repetition);
         dest.writeInt(seconds);
+        dest.writeInt(workout);
         dest.writeLongArray(times_per_set);
         dest.writeInt(number);
         dest.writeDouble(weight);
@@ -85,6 +89,14 @@ public class ExerciseRep implements Parcelable{
             return new ExerciseRep[size];
         }
     };
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
 
     public Exercise getExercise() {
         return exercise;
@@ -121,6 +133,14 @@ public class ExerciseRep implements Parcelable{
 
     public double getWeight() {
         return weight;
+    }
+
+    public void setWorkout(int workout) {
+        this.workout = workout;
+    }
+
+    public int getWorkout() {
+        return workout;
     }
 
     public void setWeight(double weight) {

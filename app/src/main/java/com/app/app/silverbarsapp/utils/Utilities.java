@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.WindowManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -92,6 +94,15 @@ public class Utilities {
         return String.format(Locale.US,"%02d:%02d:%02d", hours, minutes, seconds);
     }
 
+
+    public String formatHMS(long millis){
+        return String.format(Locale.US,"%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+    }
+
+
     public boolean checkIfRep(ExerciseRep exercise){
         //repetitions  or seconds
         return exercise.getRepetition() > 0;
@@ -133,6 +144,15 @@ public class Utilities {
 
         for (int a = 0;a<exercises.size();a++){
             exercises_ids.add(exercises.get(a).getId());
+        }
+        return exercises_ids;
+    }
+
+    public ArrayList<Integer> getExercisesRepsIds(ArrayList<ExerciseRep> exercises){
+        ArrayList<Integer> exercises_ids = new ArrayList<>();
+
+        for (int a = 0;a<exercises.size();a++){
+            exercises_ids.add(exercises.get(a).getExercise().getId());
         }
         return exercises_ids;
     }
@@ -228,9 +248,15 @@ public class Utilities {
         SharedPreferences sharedPref = context.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
         String default_url = context.getResources().getString(R.string.muscle_path);
         String muscle_url = sharedPref.getString(context.getString(R.string.muscle_path),default_url);
+
+        webView.setWebChromeClient(new WebChromeClient());
+
         if (muscle_url.equals("/")){
+
             webView.loadUrl(BODY_URL);
+
         }else {
+
             String fileurl = "file://"+muscle_url;
             webView.loadUrl(fileurl);
         }

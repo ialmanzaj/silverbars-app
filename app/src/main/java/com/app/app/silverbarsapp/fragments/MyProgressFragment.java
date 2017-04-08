@@ -32,10 +32,11 @@ public class MyProgressFragment extends Fragment {
 
             Toolbar mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
             ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
-            ((AppCompatActivity)getActivity()).setTitle("My Progression");
+            getActivity().setTitle("My Progression");
 
 
             ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+            viewPager.setOffscreenPageLimit(3);
             setupViewPager(viewPager);
 
             TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
@@ -47,7 +48,7 @@ public class MyProgressFragment extends Fragment {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
 
         adapter.addFragment(new WeeklyProgressFragment(), getActivity().getString(R.string.progress_fragment_today_title));
-        adapter.addFragment(new TotalProgressFragment(), "Last 30 days");
+        adapter.addFragment(new MonthlyProgressFragment(), "Last 30 days");
         adapter.addFragment(new TotalProgressFragment(), getActivity().getString(R.string.progress_fragment_total_title));
         viewPager.setAdapter(adapter);
     }

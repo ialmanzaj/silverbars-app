@@ -1,11 +1,11 @@
 package com.app.app.silverbarsapp.components;
 
 /**
- * Created by isaacalmanza on 03/24/17.
+ * Created by isaacalmanza on 04/06/17.
  */
 
 import com.app.app.silverbarsapp.ActivityScope;
-import com.app.app.silverbarsapp.fragments.TotalProgressFragment;
+import com.app.app.silverbarsapp.fragments.MonthlyProgressFragment;
 import com.app.app.silverbarsapp.modules.ProgressionModule;
 import com.app.app.silverbarsapp.presenters.ProgressionPresenter;
 
@@ -24,9 +24,8 @@ import dagger.Component;
         dependencies = SilverbarsComponent.class,
         modules =  ProgressionModule.class
 )
-public interface TotalProgressionComponent {
-
-    void inject(TotalProgressFragment fragment);
-
+public interface MonthlyProgressionComponent {
+    void inject(MonthlyProgressFragment fragment);
     ProgressionPresenter getPresenter();
 }
+

@@ -8,14 +8,18 @@ import com.app.app.silverbarsapp.viewsets.UserWorkoutsView;
 import java.sql.SQLException;
 import java.util.List;
 
+
 /**
  * Created by isaacalmanza on 01/12/17.
  */
 
 public class UserWorkoutsPresenter extends BasePresenter implements UserWorkoutsCallback {
 
+    private static final String TAG = UserWorkoutsPresenter.class.getSimpleName();
+
     private UserWorkoutsView view;
     private UserWorkoutsInteractor interactor;
+
 
     public UserWorkoutsPresenter(UserWorkoutsView view,UserWorkoutsInteractor interactor){
         this.view = view;
@@ -38,8 +42,6 @@ public class UserWorkoutsPresenter extends BasePresenter implements UserWorkouts
         }
     }
 
-
-
     @Override
     public void onWorkouts(List<Workout> user_workouts) {
         view.onWorkouts(user_workouts);
@@ -51,36 +53,22 @@ public class UserWorkoutsPresenter extends BasePresenter implements UserWorkouts
     }
 
 
+    @Override
+    public void onStart() {}
 
     @Override
-    public void onStart() {
-
-    }
+    public void onStop() {}
 
     @Override
-    public void onStop() {
-
-    }
+    public void onResume() {}
 
     @Override
-    public void onResume() {
-
-    }
+    public void onPause() {}
 
     @Override
-    public void onPause() {
-
-    }
+    public void onRestart() {}
 
     @Override
-    public void onRestart() {
-
-    }
-
-    @Override
-    public void onDestroy() {
-
-    }
-
+    public void onDestroy() {}
 
 }

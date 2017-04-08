@@ -2,10 +2,8 @@ package com.app.app.silverbarsapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +19,6 @@ import com.app.app.silverbarsapp.utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -142,26 +139,16 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
         viewholder.mDeleteButton.setTag(workouts.get(position).getId());
 
 
-        try {
 
-            if (Objects.equals(workouts.get(position).getWorkout_image(), "/")){
-
-                viewholder.layout.setBackgroundColor(context.getResources().getColor(R.color.secondColor));
-                //viewholder.initial_workout_name.setText(workouts.get(position).getWorkout_name().substring(0,1));
-
-            }else {
-
-                String[] workoutImgDir = workouts.get(position).getWorkout_image().split(context.getFilesDir().getPath()+"/SilverbarsImg/");
+                /*String[] workoutImgDir = workouts.get(position).getWorkout_image().split(context.getFilesDir().getPath()+"/SilverbarsImg/");
 
                 if (workoutImgDir.length == 2){
                     String workoutImgName = workoutImgDir[1];
                     Bitmap imgBitmap;
                     imgBitmap = utilities.loadWorkoutImageFromDevice(context,workoutImgName);
                     viewholder.mWorkoutImg.setImageBitmap(imgBitmap);
-                }
-            }
+                }*/
 
-        }catch (NullPointerException e){Log.e(TAG,"NullPointerException");}
     }
 
     @Override

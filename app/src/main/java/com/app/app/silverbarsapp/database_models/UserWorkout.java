@@ -10,14 +10,16 @@ import com.j256.ormlite.table.DatabaseTable;
 public class UserWorkout extends Workout{
 
 
-    @DatabaseField(generatedId = true,canBeNull = false, columnName = "id")
+    @DatabaseField(id = true, columnName = "ID", canBeNull = false)
     private int id;
 
 
     public UserWorkout(){}
 
-    public UserWorkout(String workout_name, String workout_image, int sets, String level, String main_muscle) {
+
+    public UserWorkout(int id,String workout_name, String workout_image, int sets, String level, String main_muscle) {
         super(workout_name, workout_image, sets, level, main_muscle);
+        this.id = id;
     }
 
     public int getId() {

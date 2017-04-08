@@ -26,9 +26,7 @@ public class WorkoutPresenter extends BasePresenter implements WorkoutCallback {
     private WorkoutView view;
     private Context context;
 
-
     private Utilities utilities = new Utilities();
-
 
     private  int ISOMETRIC = 0,CARDIO = 0,PYLOMETRICS = 0,STRENGTH = 0;
 
@@ -110,11 +108,8 @@ public class WorkoutPresenter extends BasePresenter implements WorkoutCallback {
     }
 
 
-
-
-
     public void saveWorkout(Workout workout) throws SQLException {
-            interactor.saveWorkout(workout,this);
+        interactor.saveWorkout(workout,this);
     }
 
 
@@ -123,46 +118,24 @@ public class WorkoutPresenter extends BasePresenter implements WorkoutCallback {
     }
 
 
-    public boolean isWorkoutExist(int workout_id){
-        try {
-
-            return interactor.isWorkoutExist(workout_id);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false;
+    public boolean isWorkoutExist(int workout_id) throws SQLException {
+        return interactor.isWorkoutExist(workout_id);
     }
 
 
-    private boolean isWorkoutOn(int workoutId){
-        try {
-
-            return interactor.isWorkoutSaved(workoutId);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+    private boolean isWorkoutOn(int workoutId) throws SQLException {
+        return interactor.isWorkoutSaved(workoutId);
     }
 
 
 
-    public void setWorkoutOff(int workout_id){
-        try {
-
-            if (isWorkoutExist(workout_id)) {
-                interactor.setWorkoutOff(workout_id);
-            }
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void setWorkoutOff(int workout_id) throws SQLException {
+        if (isWorkoutExist(workout_id)) {
+            interactor.setWorkoutOff(workout_id);
         }
     }
 
-    public boolean isWorkoutAvailable(int workout_id){
+    public boolean isWorkoutAvailable(int workout_id) throws SQLException {
         if (isWorkoutExist(workout_id)){
             return isWorkoutOn(workout_id);
         }

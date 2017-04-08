@@ -2,9 +2,6 @@ package com.app.app.silverbarsapp.utils;
 
 import android.os.CountDownTimer;
 
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-
 /**
  * Created by isaacalmanza on 02/19/17.
  */
@@ -20,6 +17,8 @@ public class CountDownController {
 
     //save the the seconds to finish the coutdown
     private int mCurrentSecondsMainTimer,mCurrentSecondsRestTimer;
+
+    private Utilities utilities = new Utilities();
 
     public CountDownController(CountDownEvents listener){
         this.listener = listener;
@@ -37,7 +36,8 @@ public class CountDownController {
                 long millis = milisecond - 1000;
                 //save current second to resume-pause
                 mCurrentSecondsMainTimer  = Math.round(millis * 0.001f);
-                String text = String.format(Locale.US,"%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis), TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+
+                String text = utilities.formatHMS(millis);
 
                 listener.onTickMainCounter(text);
             }

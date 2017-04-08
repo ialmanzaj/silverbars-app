@@ -48,7 +48,6 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
 
     UserWorkoutsAdapter adapter;
 
-
     @Override
     protected int getFragmentLayout() {
         return R.layout.fragment_user_workouts;
@@ -71,8 +70,6 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
         if (this.isAdded()){
             adapter = new UserWorkoutsAdapter(getActivity());
             adapter.setWorkoutListener(this);
@@ -104,7 +101,6 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
 
     @Override
     public void onWorkouts(List<Workout> user_workouts) {
-        Log.d(TAG,"workouts: "+user_workouts.get(0).getWorkout_name());
         onEmptyViewOff();
         adapter.set(user_workouts);
     }

@@ -13,7 +13,6 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import com.app.app.silverbarsapp.R;
-import com.app.app.silverbarsapp.models.Muscle;
 import com.app.app.silverbarsapp.models.MuscleProgression;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ProgressionPresenter;
@@ -99,7 +98,7 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
         List<MuscleProgression> progressions = new Gson().fromJson(getJson(),new TypeToken<ArrayList<MuscleProgression>>(){}.getType());
         setMusclesToView(progressions);*/
 
-        mProgressionPresenter.getProgression();
+        mProgressionPresenter.getMuscleProgressions();
     }
 
     public void setupToolbar(){
@@ -158,16 +157,6 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
         });
 
         return customDateView;
-    }
-
-    @Override
-    public void displayMuscle(Muscle muscle) {
-        sMuscles_names.add(muscle.getMuscle_name());
-
-        //add muscle names to the webview
-        mMuscleParts += "#" + muscle.getMuscle_name() + ",";
-
-        mUtilities.onWebviewReady(mMusclesWebView,mMuscleParts);
     }
 
 

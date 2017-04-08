@@ -2,6 +2,7 @@ package com.app.app.silverbarsapp.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,6 +25,8 @@ public class SeekbarWithIntervals extends LinearLayout {
 
     private int WidthMeasureSpec = 0;
     private int HeightMeasureSpec = 0;
+
+    private int last_selected = 0;
 
     public SeekbarWithIntervals(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -82,7 +85,7 @@ public class SeekbarWithIntervals extends LinearLayout {
 
                if (a == 0){
                     textViewInterval.setGravity(Gravity.START);
-                   param.setMargins(0, 0, (int) (getResources().getDimension(R.dimen.activity_horizontal_margin))*-1, 0);
+                    param.setMargins(0, 0, (int) (getResources().getDimension(R.dimen.activity_horizontal_margin))*-1, 0);
                 }
 
                 getLinearLayout().addView(textViewInterval, param);
@@ -101,6 +104,17 @@ public class SeekbarWithIntervals extends LinearLayout {
 
     public void setOnSeekBarChangeListener(SeekBar.OnSeekBarChangeListener onSeekBarChangeListener) {
         getSeekBar().setOnSeekBarChangeListener(onSeekBarChangeListener);
+    }
+
+
+    public void changeTextColorSelected(int selected){
+        TextView view = (TextView) getLinearLayout().getChildAt(selected);
+        view.setTextColor(Color.BLACK);
+    }
+
+    public void changeTextColorNoSelected(int last_selected){
+        TextView view = (TextView) getLinearLayout().getChildAt(last_selected);
+        view.setTextColor(getResources().getColor(R.color.gray_active_icon));
     }
 
     private LinearLayout getLinearLayout() {

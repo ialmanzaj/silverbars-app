@@ -1,15 +1,22 @@
 package com.app.app.silverbarsapp.interactors;
 
+import android.util.Log;
+
+import com.app.app.silverbarsapp.DatabaseQueries;
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.callbacks.CreateWorkoutFinalCallback;
-import com.app.app.silverbarsapp.database_models.Exercise;
-import com.app.app.silverbarsapp.database_models.ExerciseRep;
-import com.app.app.silverbarsapp.database_models.Muscle;
-import com.app.app.silverbarsapp.database_models.TypeExercise;
-import com.app.app.silverbarsapp.database_models.UserWorkout;
+import com.app.app.silverbarsapp.models.Workout;
 import com.app.app.silverbarsapp.utils.DatabaseHelper;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by isaacalmanza on 01/12/17.
@@ -19,85 +26,68 @@ public class CreateWorkoutFinalInteractor {
 
     private static final String TAG = CreateWorkoutFinalInteractor.class.getSimpleName();
 
-    private DatabaseHelper helper;
     private MainService mainService;
+    private DatabaseQueries queries;
+    private DatabaseHelper helper;
 
     public CreateWorkoutFinalInteractor(DatabaseHelper helper, MainService mainService){
         this.helper = helper;
         this.mainService = mainService;
+        this.queries = new DatabaseQueries(helper);
     }
 
-    public void insertWorkout(com.app.app.silverbarsapp.models.Workout workout, CreateWorkoutFinalCallback callback) throws SQLException {
+    public void saveWorkoutDatabase(com.app.app.silverbarsapp.models.Workout workout,CreateWorkoutFinalCallback callback) throws SQLException {
+        Log.d(TAG,"id "+workout.getId());
+        queries.insertUserWorkout(workout);
+        callback.onWorkoutDatabaseCreated();
+    }
 
-        UserWorkout user_workout = new UserWorkout(
+    public void saveWorkoutInApi(Workout workout, CreateWorkoutFinalCallback callback) throws SQLException {
+        mainService.createMyWorkout(
+                helper.getMyProfile().queryForAll().get(0).getId(),
                 workout.getWorkout_name(),
-                workout.getWorkout_image(),
+                null,
                 workout.getSets(),
-                workout.getLevel(),
+                "EASY",
                 workout.getMainMuscle()
-        );
+        ).enqueue(new Callback<Workout>() {
+            @Override
+            public void onResponse(Call<Workout> call, Response<Workout> response) {
+                if (response.isSuccessful()){
 
-        //create user workout
-        helper.getUserWorkoutDao().create(user_workout);
-        //Log.d(TAG,"workouts size: "+helper.getSavedWorkoutDao().queryForAll().size());
+                    Workout workout = response.body();
+                    Log.d(TAG,"id"+workout.getId());
 
-        for (com.app.app.silverbarsapp.models.ExerciseRep exerciseRep: workout.getExercises()){
+                   callback.onWorkoutApiCreated(workout);
 
-            Exercise exercise = insertExerciseRep(exerciseRep);
-            insertTypesOfExercise(exerciseRep,exercise);
-            insertMuscles(exerciseRep,exercise);
-
-            //re create exercise rep model
-            //Log.d(TAG,"state: "+exerciseRep.getExercise_state());
-            switch (exerciseRep.getExercise_state()){
-                case REP:
-                    //Log.d(TAG,"rep:"+exerciseRep.getNumber());
-                    helper.getExerciseRepDao().create(new ExerciseRep(exercise, exerciseRep.getNumber(),0,user_workout,exerciseRep.getWeight()));
-                    break;
-                case SECOND:
-                    //Log.d(TAG,"second:"+exerciseRep.getNumber());
-                    helper.getExerciseRepDao().create(new ExerciseRep(exercise,0,exerciseRep.getNumber(),user_workout,exerciseRep.getWeight()));
-                    break;
+                }else {
+                    Log.e(TAG, "onFailure"+response.errorBody());
+                }
             }
-        }
-
-        //on workout created
-        callback.onWorkoutCreated(true);
+            @Override
+            public void onFailure(Call<Workout> call, Throwable t) {
+                Log.e(TAG,"onFailure",t);
+            }
+        });
     }
 
-
-
-    private Exercise insertExerciseRep(com.app.app.silverbarsapp.models.ExerciseRep exerciseRep) throws SQLException {
-
-        Exercise exercise = new Exercise(
-                exerciseRep.getExercise().getExercise_name(),
-                exerciseRep.getExercise().getLevel(),
-                exerciseRep.getExercise().getExercise_audio(),
-                exerciseRep.getExercise().getExercise_image()
-        );
-
-        //exercise created in database
-        helper.getExerciseDao().create(exercise);
-
-        //ruturn exercise created
-        return exercise;
+    public void insertExercisesRepsApi(ArrayList<com.app.app.silverbarsapp.models.ExerciseRep> exercises, CreateWorkoutFinalCallback callback){
+        Observable.from(exercises)
+                .flatMap(exercise ->
+                        mainService.insertExercisesReps(
+                        exercise.getExercise().getId(),
+                                exercise.getWorkout(),
+                                exercise.getRepetition(),
+                                exercise.getSeconds()
+                        ))
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(callback::onExerciseApiCreated,
+                        error -> Log.e(TAG,"error ",error));
     }
 
-    private void insertTypesOfExercise(com.app.app.silverbarsapp.models.ExerciseRep exerciseRep, Exercise exercise) throws SQLException {
-        //set types exercises to database
-        for (String type: exerciseRep.getExercise().getType_exercise()){
-            helper.getTypeDao().create(new TypeExercise(type, exercise));
-        }
+    public void unsuscribe(){
+
     }
-
-    private void insertMuscles(com.app.app.silverbarsapp.models.ExerciseRep exerciseRep, Exercise exercise) throws SQLException {
-        //set musles to database
-        for (com.app.app.silverbarsapp.models.MuscleExercise muscle: exerciseRep.getExercise().getMuscles()){
-            helper.getMuscleDao().create(
-                    new Muscle(muscle.getMuscle(), muscle.getMuscle_activation(), muscle.getClassification(), muscle.getProgression_level(), exercise));
-        }
-    }
-
-
 
 }

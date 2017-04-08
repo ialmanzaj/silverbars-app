@@ -33,7 +33,6 @@ import com.app.app.silverbarsapp.viewsets.WorkingOutView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -86,10 +85,13 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     @BindView(R.id.chronometer2) PausableChronometer mChronometer;
     @BindView(R.id.countdown) TextView mCountDownTimer;
 
+    @BindView(R.id.total_timer) PausableChronometer mTotalTimerChronometer;
+
     private ArrayList<ExerciseRep> mExercises;
 
     private boolean mVibrationPerSet;
     private int mSetsTotal;
+    private int mWorkout_id;
 
     @Override
     protected int getLayout() {
@@ -134,6 +136,10 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
 
     private void getExtras(Bundle extras){
+        mWorkout_id = extras.getInt("workout_id");
+
+        Log.d(TAG,"workout_id: "+mWorkout_id);
+
         mExercises = extras.getParcelableArrayList("exercises");
 
         mSetsTotal = extras.getInt("sets");
@@ -288,6 +294,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     private void startChronometer(){
         Log.d(TAG,"startChronometer");
         mChronometer.start();
+        mTotalTimerChronometer.start();
     }
 
     private void restartChronometer(){
@@ -475,10 +482,15 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     }
 
     private void launchResultsActivity(){
-        Log.d(TAG,"exercises"+ Arrays.toString(mWorkingOutPresenter.getExercises().get(0).getTimes_per_set()));
+
+
         Intent intent = new Intent(this, ResultsActivity.class);
+
         intent.putParcelableArrayListExtra("exercises", mWorkingOutPresenter.getExercises());
         intent.putExtra("sets",mSetsTotal);
+        intent.putExtra("total_time",utilities.formatHMS(mTotalTimerChronometer.getTimeElapsed()));
+        intent.putExtra("workout_id",mWorkout_id);
+
         startActivity(intent);
         finish();
     }

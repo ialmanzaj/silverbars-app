@@ -1,6 +1,5 @@
 package com.app.app.silverbarsapp.viewsets;
 
-import com.app.app.silverbarsapp.models.Muscle;
 import com.app.app.silverbarsapp.models.MuscleProgression;
 
 import java.util.List;
@@ -12,5 +11,4 @@ import java.util.List;
 public interface ProgressionView extends BaseView {
     void emptyProgress();
     void displayProgressions(List<MuscleProgression> progressions);
-    void displayMuscle(Muscle muscle);
 }
