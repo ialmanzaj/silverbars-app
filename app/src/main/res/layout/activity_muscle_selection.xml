@@ -38,11 +38,11 @@
             android:layout_height="0dp" />
 
         <LinearLayout
+            android:background="@color/grey100"
             android:gravity="end"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
 
             <HorizontalScrollView
                 android:layout_weight="1"
@@ -55,6 +55,8 @@
                         android:layout_height="match_parent">
 
                         <TextView
+                            android:textSize="18sp"
+                            android:text="Exercises"
                             android:layout_centerVertical="true"
                             android:textColor="@color/black"
                             android:id="@+id/muscles_selected"

@@ -43,7 +43,7 @@
             android:id="@+id/loading_text"
             android:textSize="24sp"
             android:textColor="@color/black"
-            android:text="Loading"
+            android:text="Loading..."
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -85,26 +85,39 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/see_more"
-            style="@style/ButtonCreate"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:text="Ver mas"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:visibility="invisible"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#c81f1f1f"
+            android:id="@+id/modal_overlay">
+
+            <TextView
+                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Haga click en el musculo quieres ver"
+                android:layout_gravity="top|center"
+                android:textSize="22sp"
+                android:textColor="#fff" />
+
+        </LinearLayout>
 
         <LinearLayout
+            android:background="@color/grey100"
             android:layout_alignParentBottom="true"
             android:id="@+id/week"
-           android:padding="12dp"
+            android:padding="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.app.app.silverbarsapp.utils.SeekbarWithIntervals
+            <com.app.app.silverbarsapp.widgets.SeekbarWithIntervals
                 android:id="@+id/seekbarWithIntervals"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
+
 
     </RelativeLayout>
 </LinearLayout>

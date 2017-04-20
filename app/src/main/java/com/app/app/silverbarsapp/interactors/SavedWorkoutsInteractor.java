@@ -1,17 +1,10 @@
 package com.app.app.silverbarsapp.interactors;
 
 import com.app.app.silverbarsapp.callbacks.SavedWorkoutsCallback;
-import com.app.app.silverbarsapp.database_models.Exercise;
-import com.app.app.silverbarsapp.database_models.ExerciseRep;
-import com.app.app.silverbarsapp.database_models.Muscle;
 import com.app.app.silverbarsapp.database_models.MySavedWorkout;
-import com.app.app.silverbarsapp.database_models.TypeExercise;
-import com.app.app.silverbarsapp.models.Workout;
 import com.app.app.silverbarsapp.utils.DatabaseHelper;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by isaacalmanza on 02/10/17.
@@ -41,7 +34,7 @@ public class SavedWorkoutsInteractor {
 
     private void getSavedWorkouts(SavedWorkoutsCallback callback) throws SQLException {
 
-        List<Workout> saved_workouts = new ArrayList<>();
+       /* List<Workout> saved_workouts = new ArrayList<>();
 
         for (MySavedWorkout my_saved_workout:  helper.getSavedWorkoutDao().queryForAll()){
 
@@ -106,7 +99,7 @@ public class SavedWorkoutsInteractor {
         }
 
         //return saved_workouts_database list saved
-        callback.onWorkouts(saved_workouts);
+        callback.onWorkouts(saved_workouts);*/
     }
 
 

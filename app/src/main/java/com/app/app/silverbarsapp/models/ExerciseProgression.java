@@ -43,10 +43,9 @@ public class ExerciseProgression implements Parcelable{
     @SerializedName("total_weight")
     private double total_weight;
 
-
     private boolean isEqual;
     private boolean isPositive;
-
+    private double progress;
 
     public ExerciseProgression(){}
 
@@ -65,6 +64,7 @@ public class ExerciseProgression implements Parcelable{
         total_weight = in.readDouble();
         isEqual = in.readByte() != 0;
         isPositive = in.readByte() != 0;
+        progress = in.readDouble();
     }
 
     @Override
@@ -82,6 +82,7 @@ public class ExerciseProgression implements Parcelable{
         dest.writeDouble(total_weight);
         dest.writeByte((byte) (isEqual ? 1 : 0));
         dest.writeByte((byte) (isPositive ? 1 : 0));
+        dest.writeDouble(progress);
     }
 
     @Override
@@ -101,6 +102,13 @@ public class ExerciseProgression implements Parcelable{
         }
     };
 
+    public double getProgress() {
+        return progress;
+    }
+
+    public void setProgress(double progress) {
+        this.progress = progress;
+    }
 
     public boolean isPositive() {
         return isPositive;
@@ -124,6 +132,18 @@ public class ExerciseProgression implements Parcelable{
 
     public int getTotal_repetition() {
         return total_repetition;
+    }
+
+    public void setTotal_repetition(int total_repetition) {
+        this.total_repetition = total_repetition;
+    }
+
+    public void setTotal_seconds(int total_seconds) {
+        this.total_seconds = total_seconds;
+    }
+
+    public void setTotal_time(double total_time) {
+        this.total_time = total_time;
     }
 
     public int getRepetitions_done() {

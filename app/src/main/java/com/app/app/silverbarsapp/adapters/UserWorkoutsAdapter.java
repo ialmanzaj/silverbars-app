@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.app.app.silverbarsapp.Filter;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.activities.WorkoutActivity;
 import com.app.app.silverbarsapp.models.Workout;
@@ -38,6 +39,7 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
     private OnWorkoutListener listener;
 
     private Utilities utilities = new Utilities();
+    Filter filter = new Filter();
 
     public UserWorkoutsAdapter(Context context) {
         this.context = context;
@@ -60,7 +62,7 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
 
     private void delete(int workout_id){
         //remove from the adapter
-        workouts.remove(utilities.getWorkoutById(workouts,workout_id));
+        workouts.remove(filter.getWorkoutById(workouts,workout_id));
         notifyDataSetChanged();
 
         //notify listener of the activity and delete from the database

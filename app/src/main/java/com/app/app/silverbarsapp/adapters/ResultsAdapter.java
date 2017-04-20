@@ -21,16 +21,12 @@ import butterknife.ButterKnife;
 
 public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ExerciseViewHolder> {
 
-
     private  static final int BETTER = 2;
     private  static final int EQUAL = 1;
     private  static final int WORST = 0;
 
-
-
     private Context context;
     private ArrayList<ExerciseProgression> exercises;
-
 
     public ResultsAdapter(Context context, ArrayList<ExerciseProgression> exercises) {
         this.context = context;
@@ -68,7 +64,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.Exercise
                         R.layout.exercise_result_item_negative, viewGroup, false));
             case 1:
                 return new ExerciseViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(
-                        R.layout.exercise_result_item_positive, viewGroup, false));
+                        R.layout.exercise_result_item_equal, viewGroup, false));
             case 2:
                 return new ExerciseViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(
                         R.layout.exercise_result_item_positive, viewGroup, false));
@@ -80,7 +76,13 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.Exercise
     @Override
     public void onBindViewHolder(ExerciseViewHolder viewHolder, int position) {
         viewHolder.exercise_name.setText(exercises.get(position).getExercise().getExercise_name());
-        viewHolder.total.setText("25 reps");
+
+
+        if (exercises.get(position).getTotal_repetition() > 0) {
+            viewHolder.total.setText(String.valueOf(exercises.get(position).getRepetitions_done() + " reps"));
+        }else
+            viewHolder.total.setText(String.valueOf(exercises.get(position).getSeconds_done() + " secs"));
+
     }
 
 

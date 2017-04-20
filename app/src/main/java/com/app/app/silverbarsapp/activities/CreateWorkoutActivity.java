@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.Toast;
 
+import com.app.app.silverbarsapp.Filter;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.adapters.ExercisesSelectedAdapter;
 import com.app.app.silverbarsapp.models.Exercise;
@@ -42,6 +43,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
 
     private Utilities utilities = new Utilities();
+    Filter filter = new Filter();
 
     @BindView(R.id.toolbar) Toolbar toolbar;
 
@@ -53,7 +55,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     @BindView(R.id.readd) Button mReAddButton;
     @BindView(R.id.next) Button mNextbutton;
     @BindView(R.id.add_exercises) Button mAddExerciseButton;
-
 
     @BindView(R.id.exercises_selected) RecyclerView mExercisesSelectedList;
 
@@ -112,7 +113,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         utilities.loadUrlOfMuscleBody(this,webView);
     }
 
-
     private void setupAdapter(){
         mExercisesSelectedList.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ExercisesSelectedAdapter(this,this);
@@ -155,7 +155,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         Intent intent = new Intent(this,MuscleSelectionActivity.class);
 
 
-        intent.putExtra("exercises",utilities.getExercisesIds(adapter.getSelectedExercises()));
+        intent.putExtra("exercises",filter.getExercisesIds(adapter.getSelectedExercises()));
         startActivityForResult(intent,LIST_EXERCISES_SELECTION);
     }
 
@@ -209,7 +209,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     }
 
     private void updateMusclesView(){
-        updateMuscleView(utilities.getMusclesFromExercises(adapter.getSelectedExercises()));
+        updateMuscleView(filter.getMusclesFromExercises(adapter.getSelectedExercises()));
         reloadWebview();
     }
 
@@ -218,10 +218,10 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         onEmptyViewOff();
 
         //set exercises in adapter
-        adapter.setExercises(utilities.getExercisesById(list_all_exercises,list_exercises_id));
+        adapter.setExercises(filter.getExercisesById(list_all_exercises,list_exercises_id));
 
         //updated muscles view
-        updateMuscleView(utilities.getMusclesFromExercises(utilities.getExercisesById(list_all_exercises,list_exercises_id)));
+        updateMuscleView(filter.getMusclesFromExercises(filter.getExercisesById(list_all_exercises,list_exercises_id)));
         utilities.injectJS(webView,sMusclesBodyView);
     }
 
@@ -239,7 +239,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             sMusclesBodyView = utilities.getMusclesReadyForWebview(utilities.deleteCopiesofList(musculos));
         }
     }
-
 
     private void onEmptyViewOff(){
         mEmptyView.setVisibility(View.GONE);

@@ -14,7 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.app.app.silverbarsapp.R;
-import com.app.app.silverbarsapp.fragments.MyProgressFragment;
+import com.app.app.silverbarsapp.fragments.ProgressFragment;
 import com.app.app.silverbarsapp.fragments.MyWorkoutsFragment;
 import com.app.app.silverbarsapp.fragments.ProfileFragment;
 import com.app.app.silverbarsapp.utils.OnItemSelectedListener;
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 createWorkoutbuttonOn();
                 break;
             case R.id.my_workouts:
-                currentFragment = new MyProgressFragment();
+                currentFragment = new ProgressFragment();
                 createWorkoutbuttonff();
                 break;
             case R.id.my_progression:

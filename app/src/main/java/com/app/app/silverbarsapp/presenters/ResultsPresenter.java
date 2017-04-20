@@ -3,11 +3,11 @@ package com.app.app.silverbarsapp.presenters;
 import com.app.app.silverbarsapp.callbacks.ResultsCallback;
 import com.app.app.silverbarsapp.database_models.ExerciseProgression;
 import com.app.app.silverbarsapp.interactors.ResultsInteractor;
-import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.models.WorkoutDone;
 import com.app.app.silverbarsapp.viewsets.ResultsView;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +20,7 @@ public class ResultsPresenter extends BasePresenter  implements ResultsCallback 
 
     private ResultsView view;
     private ResultsInteractor interactor;
+    ArrayList<com.app.app.silverbarsapp.models.ExerciseProgression> mExercises;
 
     public ResultsPresenter(ResultsView view,ResultsInteractor interactor){
         this.view = view;
@@ -30,13 +31,26 @@ public class ResultsPresenter extends BasePresenter  implements ResultsCallback 
         interactor.createWorkoutDone(workout_id,sets,total_time,this);
     }
 
-    public void getExercisesProgression(List<ExerciseRep> exercises) throws SQLException {
+    public void saveExerciseProgressions(int workout_id, ArrayList<com.app.app.silverbarsapp.models.ExerciseProgression> exercises) throws SQLException {
+        mExercises = exercises;
+        interactor.saveExerciseProgressions(workout_id,exercises,this);
+    }
+
+
+    public void getExercisesProgression(List<com.app.app.silverbarsapp.models.ExerciseProgression> exercises) throws SQLException {
         interactor.getProgressions(exercises,this);
     }
 
     @Override
     public void onWorkoutDone(WorkoutDone workout) {
         view.onWorkoutDone(workout);
+    }
+
+    @Override
+    public void onSavedExerciseProgress(com.app.app.silverbarsapp.models.ExerciseProgression exerciseProgression) {
+        if (exerciseProgression.getExercise().getId() == mExercises.get(mExercises.size() -1).getExercise().getId()){
+            view.onExerciseProgressionsSaved();
+        }
     }
 
     @Override
@@ -49,7 +63,14 @@ public class ResultsPresenter extends BasePresenter  implements ResultsCallback 
         view.onExerciseProgression(exerciseProgression);
     }
 
-
+    @Override
+    public void onServerError() {
+        view.displayServerError();
+    }
+    @Override
+    public void onNetworkError() {
+        view.displayNetworkError();
+    }
 
     @Override
     public void onStart() {}
@@ -68,14 +89,5 @@ public class ResultsPresenter extends BasePresenter  implements ResultsCallback 
 
     @Override
     public void onDestroy() {}
-
-    @Override
-    public void onServerError() {
-        view.displayServerError();
-    }
-    @Override
-    public void onNetworkError() {
-        view.displayNetworkError();
-    }
 
 }

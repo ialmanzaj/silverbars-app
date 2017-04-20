@@ -13,23 +13,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.app.app.silverbarsapp.Filter;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.adapters.AllExercisesAdapter;
 import com.app.app.silverbarsapp.components.DaggerExerciseListComponent;
 import com.app.app.silverbarsapp.models.Exercise;
-import com.app.app.silverbarsapp.models.MuscleExercise;
 import com.app.app.silverbarsapp.modules.ExerciseListModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ExerciseListPresenter;
-import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.ExerciseListView;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -43,7 +41,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
     private static final String TAG = ExerciseListActivity.class.getSimpleName();
 
-    private Utilities utilities = new Utilities();
 
     @Inject
     ExerciseListPresenter mExerciseListPresenter;
@@ -65,6 +62,8 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     private ArrayList<String> muscles_selected;
 
     private ArrayList<Integer> mExercisesSelectedIds;
+
+    Filter filter = new Filter();
 
 
     @Override
@@ -160,55 +159,31 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
     }
 
-
     @Override
     public void displayExercises(List<Exercise> exercises) {
         onProgressViewOff();
         mExercises.addAll(exercises);
-
         if (mExercisesSelectedIds != null){
-            setExercisesView(filterExerciseByMuscle(muscles_selected, getExercisesNoSelected(mExercisesSelectedIds,mExercises)));
+            setExercisesView(
+                    filter.filterExerciseByMuscle(muscles_selected,
+                            filter.getExercisesNoSelected(mExercisesSelectedIds,mExercises)));
         }else {
-            setExercisesView(filterExerciseByMuscle(muscles_selected,mExercises));
+            setExercisesView(filter.filterExerciseByMuscle(muscles_selected,mExercises));
         }
-
     }
 
     @Override
     public void displayNetworkError() {
+        Log.e(TAG,"displayNetworkError");
         onErrorOn();
     }
 
     @Override
     public void displayServerError() {
+        Log.e(TAG,"displayServerError");
         onErrorOn();
     }
 
-
-    private ArrayList<Exercise> filterExerciseByMuscle(ArrayList<String> muscles_selected,ArrayList<Exercise> exercises){
-        Log.d(TAG,"muscles_selected: "+muscles_selected);
-        ArrayList<Exercise> exercises_filtered_muscles = new ArrayList<>();
-        for (Exercise exercise: exercises){
-                for (String muscle_name: muscles_selected){
-                    for (MuscleExercise muscle: exercise.getMuscles()){
-                        if (Objects.equals(muscle_name, muscle.getMuscle())){
-                            if (!exercises_filtered_muscles.contains(exercise)) {
-                                exercises_filtered_muscles.add(exercise);
-                            }
-                        }
-                    }
-                }
-        }
-
-        return exercises_filtered_muscles;
-    }
-
-    private ArrayList<Exercise> getExercisesNoSelected(ArrayList<Integer> exercises_ids,ArrayList<Exercise> exercises){
-        for (Integer exercise_id: exercises_ids){
-            exercises.remove(utilities.getExerciseById(exercises,exercise_id));
-        }
-        return exercises;
-    }
 
     private void setExercisesView(ArrayList<Exercise> exercises){
         if (exercises.size() > 0) {
@@ -246,7 +221,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            Log.d(TAG, "action bar clicked");
+            //Log.d(TAG, "action bar clicked");
             finish();
         }
         return super.onOptionsItemSelected(item);

@@ -6,7 +6,6 @@ import com.app.app.silverbarsapp.DatabaseQueries;
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.callbacks.ResultsCallback;
 import com.app.app.silverbarsapp.database_models.ExerciseProgression;
-import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.models.WorkoutDone;
 import com.app.app.silverbarsapp.utils.DatabaseHelper;
 
@@ -19,6 +18,9 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by isaacalmanza on 03/18/17.
@@ -38,13 +40,11 @@ public class ResultsInteractor {
         queries = new DatabaseQueries(helper);
     }
 
-
-
     public void createWorkoutDone(int workout_id, int sets, String total_time, ResultsCallback callback) throws SQLException {
         mainService.createWorkoutDone(
                 new DateTime().toString(),
                 workout_id,
-                databaseHelper.getMyProfile().queryForAll().get(0).getId(),
+                queries.getMyProfile().getId(),
                 sets,
                 total_time
        ).enqueue(new Callback<WorkoutDone>() {
@@ -54,19 +54,46 @@ public class ResultsInteractor {
                     callback.onWorkoutDone(response.body());
                 }else {
                     Log.e(TAG,""+response.errorBody()+" code "+response.code());
+                    callback.onServerError();
                 }
             }
             @Override
             public void onFailure(Call<WorkoutDone> call, Throwable t) {
                 Log.e(TAG,"onFailure",t);
+                callback.onNetworkError();
             }
         });
     }
 
+    public void saveExerciseProgressions(
+            int my_workout_done_id, ArrayList<com.app.app.silverbarsapp.models.ExerciseProgression> exercises,
+            ResultsCallback callback) throws SQLException {
 
-    public void getProgressions(List<ExerciseRep> exercises, ResultsCallback callback) throws SQLException {
+        int my_id = queries.getMyProfile().getId();
+
+        Observable.from(exercises)
+                .flatMap(exercise ->  mainService.saveExerciseProgression(
+                        my_workout_done_id,
+                        my_id,
+                        exercise.getExercise().getId(),
+                        0,
+                        exercise.getTotal_repetition(),
+                        exercise.getRepetitions_done(),
+                        exercise.getTotal_seconds(),
+                        exercise.getSeconds_done(),
+                        exercise.getTotal_weight(),
+                        new DateTime().toString()
+                )) .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(callback::onSavedExerciseProgress,
+                        error -> Log.e(TAG, "onFailure error ", error)
+                );
+    }
+
+
+    public void getProgressions(List<com.app.app.silverbarsapp.models.ExerciseProgression> exercises, ResultsCallback callback) throws SQLException {
         List<ExerciseProgression> progressions = new ArrayList<>();
-       for (ExerciseRep exercise: exercises){
+       for (com.app.app.silverbarsapp.models.ExerciseProgression exercise: exercises){
 
            ExerciseProgression exerciseProgression =
                    queries.searchExerciseProgressionByExerciseid(exercise.getExercise().getId());

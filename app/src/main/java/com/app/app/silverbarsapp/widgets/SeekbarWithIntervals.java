@@ -1,4 +1,4 @@
-package com.app.app.silverbarsapp.utils;
+package com.app.app.silverbarsapp.widgets;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,7 +26,6 @@ public class SeekbarWithIntervals extends LinearLayout {
     private int WidthMeasureSpec = 0;
     private int HeightMeasureSpec = 0;
 
-    private int last_selected = 0;
 
     public SeekbarWithIntervals(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -68,11 +67,23 @@ public class SeekbarWithIntervals extends LinearLayout {
 
     public void setProgress(int progress) {
         getSeekBar().setProgress(progress);
+        //changeTextColorSelected(progress);
     }
 
     public void setIntervals(List<String> intervals) {
         displayIntervals(intervals);
         getSeekBar().setMax(intervals.size() - 1);
+
+    }
+
+    public void setInitialProgress(int monday){
+        if (monday == 1) {
+            getSeekBar().setProgress(getMax()-2);
+        }
+    }
+
+    public int getMax() {
+        return getSeekBar().getMax();
     }
 
     private void displayIntervals(List<String> intervals) {
@@ -105,7 +116,6 @@ public class SeekbarWithIntervals extends LinearLayout {
     public void setOnSeekBarChangeListener(SeekBar.OnSeekBarChangeListener onSeekBarChangeListener) {
         getSeekBar().setOnSeekBarChangeListener(onSeekBarChangeListener);
     }
-
 
     public void changeTextColorSelected(int selected){
         TextView view = (TextView) getLinearLayout().getChildAt(selected);

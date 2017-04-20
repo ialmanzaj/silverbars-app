@@ -45,6 +45,10 @@ public class DatabaseQueries {
         );
     }
 
+    public com.app.app.silverbarsapp.database_models.Person getMyProfile() throws SQLException {
+        return helper.getMyProfile().queryForAll().get(0);
+    }
+
     public boolean existExerciseProgressionById(int id) throws SQLException {
         return helper.getExerciseProgressionDao().queryForId(id) != null;
     }
@@ -83,7 +87,7 @@ public class DatabaseQueries {
        if (helper.getExerciseProgressionDao().queryForEq("exercise_id",exercise_id).size() <= 0) {
             return null;
         }else {
-            return getExerciseProgression(exercise_id);
+            return getLastExerciseProgression(exercise_id);
         }
     }
 
@@ -91,9 +95,13 @@ public class DatabaseQueries {
         return helper.getExerciseProgressionDao().queryForAll();
     }
 
-    private ExerciseProgression getExerciseProgression(int exercise_id) throws SQLException {
+    private ExerciseProgression getLastExerciseProgression(int exercise_id) throws SQLException {
         return helper.getExerciseProgressionDao().queryForEq("exercise_id",exercise_id).get(
                 helper.getExerciseProgressionDao().queryForEq("exercise_id",exercise_id).size() -1);
+    }
+
+    public List<ExerciseProgression> getExerciseProgressionsById(int exercise_id) throws SQLException {
+        return helper.getExerciseProgressionDao().queryForEq("exercise_id",exercise_id);
     }
 
 
@@ -124,10 +132,13 @@ public class DatabaseQueries {
 
             //insert exercise rep
             helper.getExerciseRepDao().create(
-                    new ExerciseRep(exercise_database,
+                    new ExerciseRep(
+                            exercise_database,
                             exerciseRep.getRepetition(),
                             exerciseRep.getSeconds(),
-                            user_workout,exerciseRep.getWeight())
+                            user_workout,
+                            exerciseRep.getWeight()
+                    )
             );
         }
 
@@ -289,13 +300,16 @@ public class DatabaseQueries {
 
         //get the muscles
         for (Muscle muscle: exercise_database.getMuscles()){
-            muscles.add(new com.app.app.silverbarsapp.models.MuscleExercise(
-                    muscle.getMuscle(),
-                    muscle.getMuscle_activation(),
-                    muscle.getClassification(),
-                    muscle.getProgression_level()));
-        }
 
+            com.app.app.silverbarsapp.models.MuscleExercise muscleExercise = new com.app.app.silverbarsapp.models.MuscleExercise();
+
+            muscleExercise.setMuscle(muscle.getMuscle());
+            muscleExercise.setClassification( muscle.getClassification());
+            muscleExercise.setMuscle_activation(muscle.getMuscle_activation());
+            muscleExercise.setProgression_level( muscle.getProgression_level());
+
+            muscles.add(muscleExercise);
+        }
         return muscles;
     }
 

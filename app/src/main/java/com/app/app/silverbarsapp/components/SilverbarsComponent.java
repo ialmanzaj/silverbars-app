@@ -8,6 +8,7 @@ import android.content.Context;
 
 import com.app.app.silverbarsapp.interactors.CreateWorkoutFinalInteractor;
 import com.app.app.silverbarsapp.interactors.CreateWorkoutInteractor;
+import com.app.app.silverbarsapp.interactors.ExerciseDetailInteractor;
 import com.app.app.silverbarsapp.interactors.ExerciseListInteractor;
 import com.app.app.silverbarsapp.interactors.LoginInteractor;
 import com.app.app.silverbarsapp.interactors.MainWorkoutsInteractor;
@@ -79,4 +80,6 @@ public interface SilverbarsComponent {
     UserPreferencesInteractor getUserPreferencesInteractor();
 
     WorkoutsDoneInteractor getWorkoutsDoneInteractor();
+
+    ExerciseDetailInteractor getExerciseDetailInteractor();
 }

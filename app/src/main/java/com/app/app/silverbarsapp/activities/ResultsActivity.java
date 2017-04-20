@@ -8,16 +8,18 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.app.app.silverbarsapp.ProgressionAlgoritm;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.adapters.ResultsAdapter;
 import com.app.app.silverbarsapp.components.DaggerResultsComponent;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
-import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.models.WorkoutDone;
 import com.app.app.silverbarsapp.modules.ResultsModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
@@ -47,16 +49,19 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.total_time) TextView mTotalTime;
+    @BindView(R.id.sets) TextView mTotalSets;
     @BindView(R.id.list) RecyclerView mExercisesList;
 
-    private Utilities utilities = new Utilities();
+    @BindView(R.id.loading) LinearLayout mLoadingView;
+    @BindView(R.id.error_view) LinearLayout mErrorView;
 
+    private Utilities utilities = new Utilities();
+    ProgressionAlgoritm progressionAlgoritm = new ProgressionAlgoritm();
 
     private int workout_id;
     private int sets;
-    String total_time;
-    private ArrayList<ExerciseRep> mExercises = new ArrayList<>();
-    private Utilities mUtilities = new Utilities();
+    private String total_time;
+    private ArrayList<ExerciseProgression> mExercises = new ArrayList<>();
 
     @Override
     protected int getLayout() {
@@ -90,6 +95,7 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         sets = extras.getInt("sets");
         total_time = extras.getString("total_time");
 
+        mTotalSets.setText(String.valueOf(sets));
         mTotalTime.setText(String.valueOf(total_time));
 
         try {
@@ -97,9 +103,17 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        //setupTabs();
+
+        setupTabs();
     }
 
+    private void setupAdapter(ArrayList<ExerciseProgression> exercises){
+        //list settings
+        mExercisesList.setLayoutManager(new LinearLayoutManager(this));
+        mExercisesList.setNestedScrollingEnabled(false);
+        mExercisesList.setHasFixedSize(false);
+        mExercisesList.setAdapter(new ResultsAdapter(this,exercises));
+    }
 
     public void setupToolbar(){
         if (mToolbar != null) {
@@ -112,20 +126,33 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         TabHost Tab_layout = (TabHost) findViewById(R.id.tabHost2);
         Tab_layout.setup();
 
-        TabHost.TabSpec muscles = Tab_layout.newTabSpec(getResources().getString(R.string.tab_muscles));
+        TabHost.TabSpec overview = Tab_layout.newTabSpec("Overview");
+        overview.setIndicator("Overview");
+        overview.setContent(R.id.overview);
 
-        muscles.setIndicator(getResources().getString(R.string.tab_muscles));
-        muscles.setContent(R.id.muscles);
+        Tab_layout.addTab(overview);
 
-        Tab_layout.addTab(muscles);
+        TabHost.TabSpec exercises = Tab_layout.newTabSpec("Exercises");
+        exercises.setIndicator("Exercises");
+        exercises.setContent(R.id.exercises);
+
+        Tab_layout.addTab(exercises);
     }
 
-
-
     @OnClick(R.id.save_button)
-    public void save(){
+    public void savebutton(){
+        saveResults();
+    }
 
+    @OnClick(R.id.reload)
+    public void reload(){
+        onErrorViewOff();
+        saveResults();
+    }
+
+    private void saveResults(){
         try {
+            onLoadingViewOn();
             mResultsPresenter.createWorkoutDone(workout_id,sets,total_time);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -134,116 +161,59 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
     @Override
     public void displayNetworkError() {
+        Log.e(TAG,"displayNetworkError");
+        onErrorViewOn();
     }
 
     @Override
     public void displayServerError() {
+        Log.e(TAG,"displayServerError");
+        onErrorViewOn();
     }
 
     @Override
     public void onWorkoutDone(WorkoutDone workout) {
-        Log.d(TAG,"workout" +workout.getDate());
+        Log.d(TAG,"workout done saved: " +workout.getId());
+        try {
+            mResultsPresenter.saveExerciseProgressions(workout.getId(),mExercises);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onExerciseProgressionsSaved() {
+        onLoadingViewOff();
         utilities.toast(this,"Your results are saved");
+        finish();
     }
 
     @Override
     public void isEmptyProgression() {
         Log.d(TAG,"isEmptyProgression");
-        //setupAdapter(mExercises);
+        setupAdapter(progressionAlgoritm.addFirstProgressions(mExercises));
     }
 
     @Override
     public void onExerciseProgression(List<com.app.app.silverbarsapp.database_models.ExerciseProgression> exerciseProgressions) {
-        Log.d(TAG,"onExerciseProgression");
-        setupAdapter(compareExerciseProgression(exerciseProgressions,mExercises));
-    }
-
-
-    private void setupAdapter(ArrayList<ExerciseProgression> exercises){
-        //list settings
-        mExercisesList.setLayoutManager(new LinearLayoutManager(this));
-        mExercisesList.setNestedScrollingEnabled(false);
-        mExercisesList.setHasFixedSize(false);
-        mExercisesList.setAdapter(new ResultsAdapter(this,exercises));
-    }
-
-
-    private ArrayList<ExerciseProgression> compareExerciseProgression(List<com.app.app.silverbarsapp.database_models.ExerciseProgression> exerciseProgressions, ArrayList<ExerciseRep> current_exercises){
-        ArrayList<ExerciseProgression> progressions = new ArrayList<>();
-
-        for (com.app.app.silverbarsapp.database_models.ExerciseProgression old_last_exercise_progression: exerciseProgressions){
-            for (ExerciseRep current_exercise: current_exercises){
-
-                ExerciseProgression exerciseProgression_ready = new ExerciseProgression();
-
-                if (old_last_exercise_progression.getExercise().getId() == current_exercise.getExercise().getId()){
-
-                    if (old_last_exercise_progression.getRepetitions_done() > 0){
-
-                        exerciseProgression_ready.setExercise(current_exercise.getExercise());
-                        exerciseProgression_ready.setRepetitions_done(current_exercise.getRepetition());
-
-                        if ( current_exercise.getRepetition()  > old_last_exercise_progression.getRepetitions_done()){
-
-                            Log.d(TAG,current_exercise.getExercise().getExercise_name()+" rep mejoro ");
-                            exerciseProgression_ready.setPositive(true);
-
-                        }else if(current_exercise.getRepetition() == old_last_exercise_progression.getRepetitions_done()) {
-
-                            exerciseProgression_ready.setEqual(true);
-
-
-                        }else {
-
-                            Log.d(TAG,current_exercise.getExercise().getExercise_name()+" rep bajo ");
-                            exerciseProgression_ready.setPositive(false);
-                        }
-
-                        progressions.add(exerciseProgression_ready);
-
-                    }else {
-
-                        exerciseProgression_ready.setExercise(current_exercise.getExercise());
-                        exerciseProgression_ready.setSeconds_done(current_exercise.getSeconds());
-
-                        if ( current_exercise.getSeconds()  > old_last_exercise_progression.getSeconds_done()){
-
-                            Log.d(TAG,"current_exercise second es mayor "+current_exercise.getExercise().getExercise_name());
-                            exerciseProgression_ready.setPositive(true);
-
-                        }else if(current_exercise.getSeconds() == old_last_exercise_progression.getSeconds_done()) {
-
-                            exerciseProgression_ready.setEqual(true);
-
-                        }else {
-                            Log.d(TAG,"current_exercise second es mayor "+current_exercise.getExercise().getExercise_name());
-                            exerciseProgression_ready.setPositive(false);
-                        }
-
-
-                        progressions.add(exerciseProgression_ready);
-                    }
-
-
-                }else {
-
-                    Log.d(TAG,"No tiene progressiones viejas"+current_exercise.getExercise().getExercise_name());
-                    exerciseProgression_ready.setExercise(current_exercise.getExercise());
-                    exerciseProgression_ready.setRepetitions_done(current_exercise.getRepetition());
-                    exerciseProgression_ready.setSeconds_done(current_exercise.getSeconds());
-                    exerciseProgression_ready.setPositive(true);
-
-                    progressions.add(exerciseProgression_ready);
-
-                }
-            }
-        }
-
-
+        Log.d(TAG,"onExerciseProgression "+exerciseProgressions.size());
         Log.d(TAG,"mExercises "+mExercises.size());
-        Log.d(TAG,"progressions "+progressions.size());
-        return progressions;
+        setupAdapter(progressionAlgoritm.compareExerciseProgression(exerciseProgressions,mExercises));
     }
+
+
+    private void onLoadingViewOn(){
+        mLoadingView.setVisibility(View.VISIBLE);
+    }
+
+    private void onLoadingViewOff(){
+        mLoadingView.setVisibility(View.GONE);
+    }
+
+    private void onErrorViewOn(){mErrorView.setVisibility(View.VISIBLE);}
+
+    private void onErrorViewOff(){mErrorView.setVisibility(View.GONE);}
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -252,7 +222,7 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            Log.d(TAG, "action bar clicked");
+            //Log.d(TAG, "action bar clicked");
             dialog();
         }
         return super.onOptionsItemSelected(item);
@@ -262,7 +232,6 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     public void onBackPressed() {
         dialog();
     }
-
 
     private void dialog(){
         new MaterialDialog.Builder(this)

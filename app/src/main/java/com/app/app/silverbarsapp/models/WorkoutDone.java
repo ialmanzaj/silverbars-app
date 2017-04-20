@@ -28,8 +28,7 @@ public class WorkoutDone implements Parcelable{
 
 
     @SerializedName("sets_completed")
-    private double sets_completed;
-
+    private int sets_completed;
 
     public WorkoutDone(){}
 
@@ -40,7 +39,17 @@ public class WorkoutDone implements Parcelable{
         workout = in.readParcelable(Workout.class.getClassLoader());
         person = in.readInt();
         total_time = in.readString();
-        sets_completed = in.readDouble();
+        sets_completed = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(date);
+        dest.writeParcelable(workout, flags);
+        dest.writeInt(person);
+        dest.writeString(total_time);
+        dest.writeInt(sets_completed);
     }
 
     public static final Creator<WorkoutDone> CREATOR = new Creator<WorkoutDone>() {
@@ -67,12 +76,17 @@ public class WorkoutDone implements Parcelable{
         return person;
     }
 
-    public double getSets_completed() {
-        return sets_completed;
-    }
 
     public Workout getWorkout() {
         return workout;
+    }
+
+    public String getTotal_time() {
+        return total_time;
+    }
+
+    public int getSets_completed() {
+        return sets_completed;
     }
 
     @Override
@@ -80,13 +94,5 @@ public class WorkoutDone implements Parcelable{
         return 0;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(date);
-        dest.writeParcelable(workout, flags);
-        dest.writeInt(person);
-        dest.writeString(total_time);
-        dest.writeDouble(sets_completed);
-    }
+
 }

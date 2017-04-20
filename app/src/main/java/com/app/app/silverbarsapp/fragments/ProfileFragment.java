@@ -1,14 +1,17 @@
 package com.app.app.silverbarsapp.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
+import com.app.app.silverbarsapp.activities.WorkoutsDoneActivity;
 import com.app.app.silverbarsapp.components.DaggerProfileComponent;
 import com.app.app.silverbarsapp.database_models.ProfileFacebook;
 import com.app.app.silverbarsapp.modules.ProfileModule;
@@ -27,6 +30,8 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
 
     @BindView(R.id.Profile_name) TextView mProfileName;
     @BindView(R.id.profile_image) ImageView mProfileImg;
+
+    @BindView(R.id.my_workouts_done) LinearLayout mMyWorkoutsDone;
 
     @Inject
     ProfilePresenter mProfilePresenter;
@@ -55,8 +60,9 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         mProfilePresenter.getProfile();
+
+        mMyWorkoutsDone.setOnClickListener(v -> {startActivity(new Intent(CONTEXT, WorkoutsDoneActivity.class));});
     }
 
 

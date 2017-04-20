@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.models.ExerciseRep;
-import com.app.app.silverbarsapp.utils.MutableWatcher;
+import com.app.app.silverbarsapp.widgets.MutableWatcher;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;

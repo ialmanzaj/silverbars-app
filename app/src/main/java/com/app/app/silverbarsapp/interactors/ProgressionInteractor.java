@@ -25,15 +25,12 @@ public class ProgressionInteractor {
     private static final String TAG = ProgressionInteractor.class.getSimpleName();
 
     private MainService mainService;
-    private DatabaseHelper helper;
     private DatabaseQueries queries;
 
     public ProgressionInteractor(MainService mainService, DatabaseHelper helper){
         this.mainService = mainService;
-        this.helper = helper;
         queries = new DatabaseQueries(helper);
     }
-
 
     public void getMuscleProgressions(ProgressionCallback callback){
         mainService.getProgression().enqueue(new Callback<List<MuscleProgression>>() {
@@ -41,17 +38,15 @@ public class ProgressionInteractor {
             public void onResponse(Call<List<MuscleProgression>> call, Response<List<MuscleProgression>> response) {
                 if (response.isSuccessful()){
 
-                    if (response.body().isEmpty()){
+                  /*  if (response.body().isEmpty()){
                         callback.emptyProgress();
                         return;
-                    }
-
-                    callback.onProgression(response.body());
+                    }*/
 
                 }else {
-                        callback.onServerError();
-                    }
+                    callback.onServerError();
                 }
+            }
             @Override
             public void onFailure(Call<List<MuscleProgression>> call, Throwable t) {
                 callback.onNetworkError();
@@ -67,37 +62,38 @@ public class ProgressionInteractor {
                 if (response.isSuccessful()){
 
                     if (response.body().isEmpty()){
+                        callback.emptyProgress();
                         return;
                     }
 
+                    callback.onProgression(response.body());
+
                     for (ExerciseProgression exerciseProgression: response.body()){
-
                         try {
-
                             saveExercisesProgressionDatabase(exerciseProgression);
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-
                     }
+
+                }else {
+                    Log.e(TAG,"error" + response.code() + response.errorBody());
+                    callback.onServerError();
                 }
             }
             @Override
             public void onFailure(Call<List<ExerciseProgression>> call, Throwable t) {
                 Log.e(TAG,"onFailure",t);
+                callback.onNetworkError();
             }
         });
     }
 
-
     private void saveExercisesProgressionDatabase(ExerciseProgression exerciseProgression) throws SQLException {
-        Log.d(TAG,"progression size "+ queries.getExerciseProgressions().size());
+        //Log.d(TAG,"progression size "+ queries.getExerciseProgressions().size());
         if (!queries.existExerciseProgressionById(exerciseProgression.getId())) {
             queries.saveExerciseProgression(exerciseProgression);
-        }else {
-            //queries.deleteExerciseProgression(exerciseProgression.getId());
         }
     }
-
 
 }

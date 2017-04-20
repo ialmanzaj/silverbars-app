@@ -11,7 +11,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class MuscleExercise implements Parcelable {
 
-
     @SerializedName("muscle")
     private String muscle;
 
@@ -25,14 +24,6 @@ public class MuscleExercise implements Parcelable {
 
 
     public MuscleExercise(){}
-
-
-    public MuscleExercise(String muscle,int muscle_activation,String classification,int progression_level){
-        this.muscle = muscle;
-        this.muscle_activation = muscle_activation;
-        this.classification = classification;
-        this.progression_level = progression_level;
-    }
 
 
     protected MuscleExercise(Parcel in) {
@@ -66,12 +57,28 @@ public class MuscleExercise implements Parcelable {
         return muscle;
     }
 
+    public void setMuscle(String muscle) {
+        this.muscle = muscle;
+    }
+
+    public void setClassification(String classification) {
+        this.classification = classification;
+    }
+
     public int getMuscle_activation() {
         return muscle_activation;
     }
 
+    public void setMuscle_activation(int muscle_activation) {
+        this.muscle_activation = muscle_activation;
+    }
+
     public int getProgression_level() {
         return progression_level;
+    }
+
+    public void setProgression_level(int progression_level) {
+        this.progression_level = progression_level;
     }
 
     public String getClassification() {

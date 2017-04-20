@@ -48,7 +48,7 @@ public class CreateWorkoutFinalInteractor {
                 workout.getWorkout_name(),
                 null,
                 workout.getSets(),
-                "EASY",
+                workout.getLevel(),
                 workout.getMainMuscle()
         ).enqueue(new Callback<Workout>() {
             @Override
@@ -61,7 +61,7 @@ public class CreateWorkoutFinalInteractor {
                    callback.onWorkoutApiCreated(workout);
 
                 }else {
-                    Log.e(TAG, "onFailure"+response.errorBody());
+                    Log.e(TAG, "onFailure: "+response.errorBody());
                 }
             }
             @Override
@@ -78,12 +78,15 @@ public class CreateWorkoutFinalInteractor {
                         exercise.getExercise().getId(),
                                 exercise.getWorkout(),
                                 exercise.getRepetition(),
-                                exercise.getSeconds()
+                                exercise.getSeconds(),
+                                exercise.getWeight()
                         ))
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(callback::onExerciseApiCreated,
-                        error -> Log.e(TAG,"error ",error));
+                        error ->
+                            Log.e(TAG, "insertExercisesRepsApi error ", error)
+                );
     }
 
     public void unsuscribe(){

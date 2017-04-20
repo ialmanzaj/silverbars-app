@@ -6,7 +6,7 @@ import android.view.MotionEvent;
 /**
  * Created by andre_000 on 5/30/2016.
  */
-public class DisableTouchRecyclerListener implements RecyclerView.OnItemTouchListener {
+public class DisableTouchRecyclerListener extends RecyclerView.OnScrollListener implements RecyclerView.OnItemTouchListener {
 
     @Override
     public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {

@@ -33,7 +33,9 @@
         <item name="titleTextAppearance">@color/white</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorSecondary</item>
+
     </style>
+
 
     <style name="toolbarStyle" parent="Theme.AppCompat.NoActionBar">
 

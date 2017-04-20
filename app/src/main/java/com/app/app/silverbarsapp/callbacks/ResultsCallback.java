@@ -11,7 +11,10 @@ import java.util.List;
 
 public interface ResultsCallback extends ServerCallback{
     void onWorkoutDone(WorkoutDone workout);
+    void onSavedExerciseProgress(com.app.app.silverbarsapp.models.ExerciseProgression exerciseProgression);
+
 
     void isEmptyProgression();
     void onExerciseProgression(List<ExerciseProgression> exercisesProgression);
+
 }

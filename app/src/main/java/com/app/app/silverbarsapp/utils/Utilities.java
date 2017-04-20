@@ -2,28 +2,20 @@ package com.app.app.silverbarsapp.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.PorterDuff;
 import android.media.MediaMetadataRetriever;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.app.silverbarsapp.MainService;
@@ -31,7 +23,6 @@ import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.models.MuscleExercise;
-import com.app.app.silverbarsapp.models.Workout;
 import com.spotify.sdk.android.player.Connectivity;
 
 import java.io.File;
@@ -108,14 +99,6 @@ public class Utilities {
         return exercise.getRepetition() > 0;
     }
 
-    public List<Exercise> getExercisesById(List<Exercise> all_exercises_list, List<Integer> exercises_id){
-        List<Exercise> exerciseList = new ArrayList<>();
-        for (Integer exercise_id: exercises_id){
-            exerciseList.add(getExerciseById(all_exercises_list,exercise_id));
-        }
-        return exerciseList;
-    }
-
     public ArrayList<ExerciseRep> returnExercisesRep(List<Exercise> exercises){
         ArrayList<ExerciseRep> exerciseReps = new ArrayList<>();
         for (Exercise exercise: exercises){
@@ -125,65 +108,6 @@ public class Utilities {
             exerciseReps.add(exerciseRep);
         }
         return exerciseReps;
-    }
-
-
-    public List<String> getMusclesFromExercises(List<Exercise> exercises){
-        List<String> muscles_names = new ArrayList<>();
-        for(Exercise exercise:exercises){
-            //add muscles array
-            for (MuscleExercise muscle: exercise.getMuscles()){
-                muscles_names.add(muscle.getMuscle());
-            }
-        }
-        return muscles_names;
-    }
-
-    public ArrayList<Integer> getExercisesIds(ArrayList<Exercise> exercises){
-        ArrayList<Integer> exercises_ids = new ArrayList<>();
-
-        for (int a = 0;a<exercises.size();a++){
-            exercises_ids.add(exercises.get(a).getId());
-        }
-        return exercises_ids;
-    }
-
-    public ArrayList<Integer> getExercisesRepsIds(ArrayList<ExerciseRep> exercises){
-        ArrayList<Integer> exercises_ids = new ArrayList<>();
-
-        for (int a = 0;a<exercises.size();a++){
-            exercises_ids.add(exercises.get(a).getExercise().getId());
-        }
-        return exercises_ids;
-    }
-
-    public Workout getWorkoutById(List<Workout> workouts, int workout_id){
-        for (Workout workout: workouts){
-            if (workout.getId() == workout_id){
-                return workout;
-            }
-        }
-        return null;
-    }
-
-
-    public Exercise getExerciseById(List<Exercise> exercises, int exercise_id){
-        for (Exercise exercise: exercises){
-            if (exercise.getId() == exercise_id){
-                return exercise;
-            }
-        }
-        return null;
-    }
-
-
-    public ExerciseRep getExerciseRepById(List<ExerciseRep> exercises, int exercise_id){
-        for (ExerciseRep exercise: exercises){
-            if (exercise.getExercise().getId() == exercise_id){
-                return exercise;
-            }
-        }
-        return null;
     }
 
 
@@ -197,6 +121,9 @@ public class Utilities {
             return Connectivity.OFFLINE;
         }
     }
+
+
+
 
     public ArrayList<File> findSongs(Context context,File root){
         ArrayList<File> songs = new ArrayList<File>();
@@ -243,6 +170,11 @@ public class Utilities {
     public void toast(Context context,String text){
         Toast.makeText(context.getApplicationContext(),text,Toast.LENGTH_SHORT).show();
     }
+
+    public void toastLong(Context context,String text){
+        Toast.makeText(context.getApplicationContext(),text,Toast.LENGTH_LONG).show();
+    }
+
 
     public void loadUrlOfMuscleBody(Context context, WebView webView){
         SharedPreferences sharedPref = context.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
@@ -644,6 +576,16 @@ public class Utilities {
         return elements_with_no_copies;
     }
 
+    public  List<String> deleteCopiesofMuscles(List<MuscleExercise> elements_with_copies){
+        List<String> elements_with_no_copies = new ArrayList<>();
+        for (MuscleExercise element : elements_with_copies) {
+            if (!elements_with_no_copies.contains(element.getMuscle())) {
+                elements_with_no_copies.add(element.getMuscle());
+            }
+        }
+        return elements_with_no_copies;
+    }
+
     public boolean saveHtmInDevice(Context context,ResponseBody body, String name) {
 
         try {
@@ -682,19 +624,7 @@ public class Utilities {
     }
 
 
-    public void injectJS(WebView webView,String muscles) {
-        Log.d(TAG,"muscles: "+muscles);
-        try {
-
-            webView.loadUrl(getJavascriptReady(muscles));
-
-        } catch (Exception e) {
-            Log.e(TAG,"Exception",e);
-        }
-    }
-
-
-    private String getJavascriptReady(String muscles){
+    private String getJsReady(String muscles){
         if (!Objects.equals(muscles, "")) {
             final String muscles_ready = removeLastChar(muscles);
             Log.d(TAG,"muscles_ready: "+muscles_ready);
@@ -708,6 +638,62 @@ public class Utilities {
         return "";
     }
 
+    public void injectJS(WebView webView,String muscles) {
+        Log.d(TAG,"muscles: "+muscles);
+        try {
+
+            webView.loadUrl(getJsReady(muscles));
+
+        } catch (Exception e) {
+            Log.e(TAG,"Exception",e);
+        }
+    }
+
+    private String getJsOnClickReady(String muscles){
+        muscles = removeLastChar(muscles);
+        Log.d(TAG,"muscles:"+muscles);
+        return "javascript: (" + "window.onload = function () {" +
+                "var muscles = Snap.selectAll('" + muscles + "');" +
+                "muscles.forEach( function(muscle,i) {" +
+                    "muscle.node.onclick = function () {"+
+                        "muscle.attr({stroke:'#602C8D',fill:'#602C8D'});"+
+                        "Android.setMuscle(muscle.node.id);"+
+                "};" + "});" + "}" + ")()";
+    }
+
+    private String getJsClickPaintedReady(String muscles){
+        muscles = removeLastChar(muscles);
+        Log.d(TAG,"muscles:"+muscles);
+        return "javascript: (" + "window.onload = function () {" +
+                "var muscles = Snap.selectAll('" + muscles + "');" +
+                "muscles.forEach( function(muscle,i) {" +
+                    "muscle.attr({stroke:'#602C8D',fill:'#602C8D'});"+
+                    "muscle.node.onclick = function () {"+
+                        "Android.setMuscle(muscle.node.id);"+
+                "};" + "});" + "}" + ")()";
+    }
+
+    public void injectJSOnClick(WebView webView,String muscles) {
+
+        try {
+
+            webView.loadUrl(getJsOnClickReady(muscles));
+
+        } catch (Exception e) {
+            Log.e(TAG,"Exception",e);
+        }
+    }
+
+    private void injectJSOnClickPainted(WebView webView,String muscles) {
+
+        try {
+
+            webView.loadUrl(getJsClickPaintedReady(muscles));
+
+        } catch (Exception e) {
+            Log.e(TAG,"Exception",e);
+        }
+    }
 
     public String getMusclesReadyForWebview(List<String> muscles_names){
         String muscles_body = "";
@@ -728,49 +714,14 @@ public class Utilities {
         });
     }
 
-
-    public RelativeLayout createRelativeProgress(Context context, String type_exercise, int progress){
-
-        TextView textView = new TextView(context);
-
-        // TEXT OF TYPE OF EXERCISES
-        RelativeLayout.LayoutParams layoutParams_of_textView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        textView.setGravity(Gravity.START);
-        textView.setLayoutParams(layoutParams_of_textView);
-        textView.setTextColor(context.getResources().getColor(R.color.black));
-        textView.setText(type_exercise);
-
-
-        // Progress
-        ProgressBar progressBar = new ProgressBar(context,null ,android.R.attr.progressBarStyleHorizontal);
-        RelativeLayout.LayoutParams layoutParams_Progress = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams_Progress.addRule(RelativeLayout.ALIGN_PARENT_END);
-        progressBar.setLayoutParams(layoutParams_Progress);
-        progressBar.getLayoutParams().width = calculateContainerWidth(context) / 2;
-        progressBar.setMax(100);
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            progressBar.setProgressTintList(ColorStateList.valueOf(Color.RED));
-            progressBar.setBackgroundTintList((ColorStateList.valueOf(Color.RED)));
-        }else {
-            progressBar.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-        }
-
-
-        progressBar.setProgress(progress);
-
-        RelativeLayout relativeLayout = new RelativeLayout(context);
-        RelativeLayout.LayoutParams match_parent = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        relativeLayout.setLayoutParams(match_parent);
-        relativeLayout.setPadding(15,15,15,15);
-        relativeLayout.setMinimumHeight(45);
-
-        relativeLayout.addView(textView);
-        relativeLayout.addView(progressBar);
-
-        return relativeLayout;
+    public void onWebviewClickReady(WebView webView,String muscles){
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                injectJSOnClickPainted(webView,muscles);
+            }
+        });
     }
-
 
 }

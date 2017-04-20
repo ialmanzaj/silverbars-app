@@ -216,7 +216,7 @@
 
 
     <!---    Strings of progress fragment   -->
-    <string name="progress_fragment_today_title">Progreso semanal</string>
+    <string name="progress_fragment_today_title">Progreso diario</string>
     <string name="progress_fragment_total_title">Progreso total</string>
 
 

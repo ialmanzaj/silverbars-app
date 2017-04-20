@@ -16,9 +16,9 @@ import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.adapters.ViewPagerAdapter;
 
 
-public class MyProgressFragment extends Fragment {
+public class ProgressFragment extends Fragment {
 
-    private static final String TAG = MyProgressFragment.class.getSimpleName();
+    private static final String TAG = ProgressFragment.class.getSimpleName();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,9 +47,9 @@ public class MyProgressFragment extends Fragment {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
 
-        adapter.addFragment(new WeeklyProgressFragment(), getActivity().getString(R.string.progress_fragment_today_title));
-        adapter.addFragment(new MonthlyProgressFragment(), "Last 30 days");
-        adapter.addFragment(new TotalProgressFragment(), getActivity().getString(R.string.progress_fragment_total_title));
+        adapter.addFragment(new ProgressFragmentDaily(), getActivity().getString(R.string.progress_fragment_today_title));
+        adapter.addFragment(new ProgressWeeklyFragment(), "Weekly");
+        adapter.addFragment(new ProgressTotalFragment(), getActivity().getString(R.string.progress_fragment_total_title));
         viewPager.setAdapter(adapter);
     }
 

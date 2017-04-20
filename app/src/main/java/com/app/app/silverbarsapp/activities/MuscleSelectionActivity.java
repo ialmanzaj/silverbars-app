@@ -78,9 +78,7 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getIntent().getExtras() != null) {
-            getExtras(getIntent().getExtras());
-        }
+        if (getIntent().getExtras() != null) {getExtras(getIntent().getExtras());}
 
         setupToolbar();
         setupWebview();
@@ -103,7 +101,6 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
 
     private void getExtras(Bundle extras){
         exercises_selected = extras.getIntegerArrayList("exercises");
-        Log.d(TAG,"exercises_selected: "+exercises_selected);
     }
 
     @OnClick(R.id.look_exercises)
@@ -129,7 +126,6 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
             intent.putExtra("exercises",exercises_selected);
         }
 
-
         intent.putExtra("muscles",muscles_selected);
         startActivityForResult(intent,1);
     }
@@ -151,46 +147,23 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
                     setResult(RESULT_OK, return_intent);
                     finish();
                 }
-
             }
         }
     }
 
-
-    public void injectJS(WebView webView,String muscles) {
-
-        try {
-
-            webView.loadUrl(getJavascriptReady(muscles));
-
-        } catch (Exception e) {
-            Log.e(TAG,"Exception",e);
-        }
+    @Override
+    public void displayNetworkError() {
+        Log.e(TAG,"displayNetworkError");
     }
 
-    private String getJavascriptReady(String muscles){
-            muscles = utilities.removeLastChar(muscles);
-            Log.d(TAG,"muscles:"+muscles);
-            return "javascript: (" + "window.onload = function () {" +
-                    "var muscles = Snap.selectAll('" + muscles + "');" +
-                    "muscles.forEach( function(muscle,i) {" +
-                        "muscle.node.onclick = function () {"+
-                            "muscle.attr({stroke:'#602C8D',fill:'#602C8D'});"+
-                            "Android.setMuscle(muscle.node.id);"+
-                        "};" +
-                     "});" + "}" + ")()";
+    @Override
+    public void displayServerError() {
+        Log.e(TAG,"displayServerError");
     }
-
-
-    @Override
-    public void displayNetworkError() {}
-
-    @Override
-    public void displayServerError() {}
 
     @Override
     public void getMuscles(List<Muscle> muscles) {
-        Log.d(TAG,"muscles "+muscles);
+        //Log.d(TAG,"muscles "+muscles);
 
         List<String> muscles_names = new ArrayList<>();
 
@@ -198,7 +171,7 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
             muscles_names.add(muscle.getMuscle_name());
         }
 
-        injectJS(myWebView,utilities.getMusclesReadyForWebview(muscles_names));
+        utilities.injectJSOnClick(myWebView,utilities.getMusclesReadyForWebview(muscles_names));
     }
 
     @Override
@@ -209,6 +182,7 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
             //stuff that updates ui
             mMusclesTextSelected.setText(muscles_selected.toString());
         });
+
 
         mScrollText.postDelayed(() -> mScrollText.fullScroll(HorizontalScrollView.FOCUS_RIGHT), 100L);
     }

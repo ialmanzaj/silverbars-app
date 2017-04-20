@@ -60,14 +60,13 @@ public interface MainService {
             R.string.authentication_TOKEN})
     @FormUrlEncoded
     @POST("v1/muscleprogressions/")
-    Call<MuscleProgression> saveMuscleProgression(@Field("muscle") Muscle muscle,
-                                              @Field("muscle_activation_progress") String muscle_activation_progress,
-                                              @Field("person") int person,
-                                              @Field("level") String level,
-                                              @Field("date") String date);
-
-
-
+    Call<MuscleProgression> saveMuscleProgression(
+            @Field("muscle") Muscle muscle,
+            @Field("muscle_activation_progress") String muscle_activation_progress,
+            @Field("person") int person,
+            @Field("level") String level,
+            @Field("date") String date
+    );
 
     @Authenticated({R.string.authentication_ACCOUNT,
             R.string.authentication_TOKEN})
@@ -89,23 +88,28 @@ public interface MainService {
     @Authenticated({R.string.authentication_ACCOUNT,
             R.string.authentication_TOKEN})
     @GET("v1/userworkoutsdone/")
-    Call<WorkoutDone> getWorkoutsDone();
+    Call<List<WorkoutDone>> getWorkoutsDone();
 
     @Authenticated({R.string.authentication_ACCOUNT,
             R.string.authentication_TOKEN})
     @FormUrlEncoded
     @POST("v1/exerciseprogressions/")
-    Call<ExerciseProgression> saveExerciseProgression(
-            @Field("muscle") Muscle muscle,
-            @Field("muscle_activation_progress") String muscle_activation_progress,
+    Observable<ExerciseProgression> saveExerciseProgression(
+            @Field("my_workout_done_id") int my_workout_done_id,
             @Field("person") int person,
-            @Field("level") String level,
-            @Field("date") String date);
+            @Field("exercise_id") int exercise_id,
+            @Field("total_time") double total_time,
+            @Field("total_repetition") int total_repetition,
+            @Field("repetitions_done") int repetitions_done,
+            @Field("total_seconds") int total_seconds,
+            @Field("seconds_done") int seconds_done,
+            @Field("total_weight") double total_weight,
+            @Field("date") String date
+    );
 
     @Authenticated({R.string.authentication_ACCOUNT, R.string.authentication_TOKEN})
     @GET("v1/exerciseprogressions/")
     Call<List<ExerciseProgression>> getExercisesProgression();
-
 
     @Authenticated({R.string.authentication_ACCOUNT,
             R.string.authentication_TOKEN})
@@ -117,7 +121,8 @@ public interface MainService {
             @Field("workout_image") String workout_image,
             @Field("sets") int sets,
             @Field("level") String level,
-            @Field("main_muscle") String main_muscle);
+            @Field("main_muscle") String main_muscle
+    );
 
     @Authenticated({R.string.authentication_ACCOUNT, R.string.authentication_TOKEN})
     @FormUrlEncoded
@@ -126,13 +131,14 @@ public interface MainService {
             @Field("exercise_id") int exercise_id,
             @Field("workout") int workout,
             @Field("repetition") int repetition,
-            @Field("seconds") int seconds);
+            @Field("seconds") int seconds,
+            @Field("weight") double weight
+    );
 
     @Authenticated({R.string.authentication_ACCOUNT,
             R.string.authentication_TOKEN})
     @GET("v1/muscles/{id}/")
     Observable<Muscle> getMuscle(@Path("id") int id);
-
 
     @Authenticated({R.string.authentication_ACCOUNT, R.string.authentication_TOKEN})
     @GET("v1/me/")

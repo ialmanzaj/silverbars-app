@@ -5,32 +5,35 @@ package com.app.app.silverbarsapp.viewsets;
  */
 
 public interface WorkingOutView {
-
-    void onCountDownReady(int seconds);
-    void onCountDownWorking(String second);
+    //music ui events controllers
+    void onPauseMusic();
+    void onPlayMusic();
 
     //music interfaces
     void updateSongName(String song_name);
     void updateArtistName(String artist_name);
 
-
+    //main chronometer
     void onStartChronometer();
     void onStopChronometer();
 
+    //and countdown
+    void onCountDownWorking(String second);
+
+    //workout UI events
     void onWorkoutReady();
     void onResumeWorkout();
     void onPauseWorkout();
     void onFinishWorkout();
 
-    void onPauseMusic();
-    void onPlayMusic();
-
-    //counter
+    //rest events
     void onRestCounterStarted(String second);
+    void onRestFinished();
 
     void onChangeToExercise(int exercise_position);
     void onSetFinished(int set);
 
+    //overlay events
     void onOverlayViewOn();
     void onOverlayViewOff();
 }

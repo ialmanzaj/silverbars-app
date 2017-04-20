@@ -1,44 +1,13 @@
 package com.app.app.silverbarsapp.activities;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.HorizontalScrollView;
-import android.widget.LinearLayout;
-
-import com.app.app.silverbarsapp.R;
-import com.app.app.silverbarsapp.models.MuscleProgression;
-import com.app.app.silverbarsapp.presenters.BasePresenter;
-import com.app.app.silverbarsapp.presenters.ProgressionPresenter;
-import com.app.app.silverbarsapp.utils.CustomDateView;
-import com.app.app.silverbarsapp.utils.Utilities;
-import com.app.app.silverbarsapp.viewsets.ProgressionView;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.inject.Inject;
-
-import butterknife.BindView;
+import android.support.v7.app.AppCompatActivity;
 
 
 /**
  * Created by isaacalmanza on 10/04/16.
  */
-public class ProgressionActivity extends BaseActivity implements ProgressionView {
+public class ProgressionActivity extends AppCompatActivity {
+/*
 
     private static final String TAG = ProgressionActivity.class.getSimpleName();
 
@@ -79,10 +48,12 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
     @Override
     public void injectDependencies() {
         super.injectDependencies();
-       /* DaggerProgressionComponent.builder()
+       */
+/* DaggerProgressionComponent.builder()
                 .silverbarsComponent(SilverbarsApp.getApp(this).getComponent())
                 .progressionModule(new ProgressionModule(this))
-                .build().inject(this);*/
+                .build().inject(this);*//*
+
     }
 
     @Override
@@ -94,9 +65,11 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
 
         // appBarLayout.setExpanded(false, true);
 
-       /* onLoadingViewOff();
+       */
+/* onLoadingViewOff();
         List<MuscleProgression> progressions = new Gson().fromJson(getJson(),new TypeToken<ArrayList<MuscleProgression>>(){}.getType());
-        setMusclesToView(progressions);*/
+        setMusclesToView(progressions);*//*
+
 
         mProgressionPresenter.getMuscleProgressions();
     }
@@ -180,7 +153,8 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
 
     private void getMusclePorcentaje(List<MuscleProgression> muscleProgressions){
 
-       /* List<MuscleProgression> mMusclesProgress = new ArrayList <>();
+       */
+/* List<MuscleProgression> mMusclesProgress = new ArrayList <>();
         List<String> muscles_names = new ArrayList <>();
 
         int progress;
@@ -219,7 +193,8 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
                 }
 
             }
-        }*/
+        }*//*
+
     }
 
 
@@ -281,5 +256,6 @@ public class ProgressionActivity extends BaseActivity implements ProgressionView
         }
         return super.onOptionsItemSelected(item);
     }
+*/
 
 }

@@ -5,7 +5,7 @@ package com.app.app.silverbarsapp.components;
  */
 
 import com.app.app.silverbarsapp.ActivityScope;
-import com.app.app.silverbarsapp.fragments.MyProgressFragment;
+import com.app.app.silverbarsapp.fragments.ProgressFragment;
 import com.app.app.silverbarsapp.modules.ProgressionModule;
 import com.app.app.silverbarsapp.presenters.ProgressionPresenter;
 
@@ -26,7 +26,7 @@ import dagger.Component;
 )
 public interface ProgressionComponent {
 
-    void inject(MyProgressFragment fragment);
+    void inject(ProgressFragment fragment);
 
     ProgressionPresenter getPresenter();
 }

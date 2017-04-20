@@ -111,13 +111,10 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
         view.onCountDownWorking(second);
     }
 
-
     @Override
     public void onWorkoutPlayed(ExerciseRep exercise) {
         if (utilities.checkIfRep(exercise)){
             view.onStartChronometer();
-        }else {
-            view.onCountDownReady(exercise.getSeconds());
         }
 
         mMusicHandler.playMusic();
@@ -159,6 +156,7 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
     @Override
     public void onRestFinished(Exercise exercise) {
         view.onOverlayViewOff();
+        view.onRestFinished();
 
         //play exercise audio
         if (isAudioExerciseActive){

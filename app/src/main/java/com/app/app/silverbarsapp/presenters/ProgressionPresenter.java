@@ -2,7 +2,7 @@ package com.app.app.silverbarsapp.presenters;
 
 import com.app.app.silverbarsapp.callbacks.ProgressionCallback;
 import com.app.app.silverbarsapp.interactors.ProgressionInteractor;
-import com.app.app.silverbarsapp.models.MuscleProgression;
+import com.app.app.silverbarsapp.models.ExerciseProgression;
 import com.app.app.silverbarsapp.viewsets.ProgressionView;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class ProgressionPresenter extends BasePresenter implements ProgressionCa
     }
 
     @Override
-    public void onProgression(List<MuscleProgression> progressions) {
+    public void onProgression(List<ExerciseProgression> progressions) {
         view.displayProgressions(progressions);
     }
 

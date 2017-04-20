@@ -11,9 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -24,7 +26,6 @@ import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.adapters.CreateFinalExercisesAdapter;
 import com.app.app.silverbarsapp.components.DaggerCreateWorkoutFinalComponent;
 import com.app.app.silverbarsapp.models.ExerciseRep;
-import com.app.app.silverbarsapp.models.MuscleExercise;
 import com.app.app.silverbarsapp.models.Workout;
 import com.app.app.silverbarsapp.modules.CreateWorkoutFinalModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
@@ -38,7 +39,6 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -67,11 +67,16 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     @BindView(R.id.strength)SeekBar strenghtBar;
     @BindView(R.id.porcentaje) TextView mPorcentajeTextView;
 
+    @BindView(R.id.loading) LinearLayout mLoadingView;
+    @BindView(R.id.error_view) LinearLayout mErrorView;
+
+
     private int mCurrentSet = 1;
     private String workoutImage = "/";
 
     private CreateFinalExercisesAdapter adapter;
     private Utilities utilities = new Utilities();
+
 
     MuscleHandler mMuscleHandler = new MuscleHandler();
     
@@ -110,7 +115,7 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
         mSets.setText(String.valueOf(mCurrentSet));
 
-        strenghtBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        /*strenghtBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 for (int a = 0;a<adapter.getExercises().size();a++){
@@ -142,9 +147,14 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
             public void onStartTrackingTouch(SeekBar seekBar) {}
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
+        });*/
     }
 
+    public void setupToolbar(){
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getResources().getString(R.string.save_workout));
+    }
 
     @OnClick(R.id.save)
     public void saveButton() {
@@ -165,6 +175,8 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         }
 
         try {
+
+            onLoadingViewOn();
             mCreateWorkoutFinalPresenter.saveWorkoutApi(getWorkoutReady());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -178,19 +190,15 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         }
     }
 
-    @OnClick(R.id.chageImg)
+   /* @OnClick(R.id.chageImg)
     public void changeImgButton(){
         Intent intent = new Intent();
-        intent.setType("image/*");
+        intent.setType("image*//*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
-    }
+    }*/
 
-    public void setupToolbar(){
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getResources().getString(R.string.save_workout));
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -214,7 +222,7 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
                     Uri resultUri = result.getUri();
                     workoutImage = resultUri.getPath();
-                    Log.d(TAG,"workoutImage "+workoutImage);
+                    //Log.d(TAG,"workoutImage "+workoutImage);
 
                 try {
 
@@ -240,10 +248,47 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         workout.setSets(mCurrentSet);
         workout.setWorkout_image(workoutImage);
         workout.setExercises(getExercisesReady(adapter.getExercises()));
-        workout.setLevel("");
+        workout.setLevel(getLevel(adapter.getExercises()));
         workout.setMain_muscle(mMuscleHandler.getMainMuscle(adapter.getExercises()));
 
+        Log.d(TAG,"LEVEL "+getLevel(adapter.getExercises()));;
+
         return workout;
+    }
+
+
+    private String getLevel(ArrayList<ExerciseRep> exercises){
+        int challenging = 4,hard = 3,normal = 2,easy = 1;
+        int challeging_list = 0,hard_list = 0,normal_list = 0,easy_list = 0;
+
+        for (ExerciseRep exercise: exercises){
+            switch (exercise.getExercise().getLevel()) {
+                case "EASY":
+                    easy_list = easy_list + (easy);
+                    break;
+                case "NORMAL":
+                    normal_list = normal_list + (normal);
+                    break;
+                case "HARD":
+                    hard_list = hard_list + (hard);
+                    break;
+                case "CHALLENGING":
+                    challeging_list = challeging_list + (challenging);
+                    break;
+            }
+        }
+
+
+        if (challeging_list > hard_list){
+            return "CHALLENGING";
+        }else if (hard_list > normal_list){
+            return "HARD";
+        }else if (normal_list > easy_list){
+            return "NORMAL";
+        } else {
+            return "EASY";
+        }
+
     }
 
 
@@ -263,6 +308,7 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
     @Override
     public void displayWorkoutDatabaseCreated() {
+        Log.d(TAG,"displayWorkoutDatabaseCreated");
         setResult(RESULT_OK, new Intent());
         finish();
     }
@@ -287,14 +333,29 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
     @Override
     public void displayNetworkError() {
-
+        Log.e(TAG,"displayNetworkError");
+        onLoadingViewOff();
+        onErrorViewOn();
     }
 
     @Override
     public void displayServerError() {
-
+        Log.e(TAG,"displayServerError");
+        onLoadingViewOff();
+        onErrorViewOn();
     }
 
+    private void onLoadingViewOn(){
+        mLoadingView.setVisibility(View.VISIBLE);
+    }
+
+    private void onLoadingViewOff(){
+        mLoadingView.setVisibility(View.GONE);
+    }
+
+    private void onErrorViewOn(){mErrorView.setVisibility(View.VISIBLE);}
+
+    private void onErrorViewOff(){mErrorView.setVisibility(View.GONE);}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -303,14 +364,12 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            Log.d(TAG, "action bar clicked");
+            //Log.d(TAG, "action bar clicked");
             setResult(RESULT_CANCELED, new Intent());
             finish();
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 
 
 }

@@ -21,6 +21,7 @@ import com.app.app.silverbarsapp.viewsets.UserWorkoutsView;
 
 import org.lucasr.twowayview.widget.TwoWayView;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -101,6 +102,7 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
 
     @Override
     public void onWorkouts(List<Workout> user_workouts) {
+        Collections.reverse(user_workouts);
         onEmptyViewOff();
         adapter.set(user_workouts);
     }

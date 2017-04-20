@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.WorkingOutActivity"
     android:background="#fff">
 
@@ -14,8 +15,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="3"
-                android:minHeight="150dp">
+                android:layout_weight="10">
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
@@ -88,6 +88,7 @@
                                 android:textColor="@color/secondColor"
                                 android:textSize="32sp"
                                 android:layout_gravity="center_horizontal|top" />
+
                         </LinearLayout>
                     </RelativeLayout>
                     <LinearLayout
@@ -103,7 +104,7 @@
                             android:text="@string/zero"
                             android:id="@+id/repetition_timer"
                             android:textColor="@color/black"
-                            android:textSize="75sp"
+                            android:textSize="80sp"
                             android:textStyle="bold"
                             android:gravity="bottom" />
 
@@ -171,7 +172,6 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:text="1"
                                 android:id="@+id/current_set"
                                 android:gravity="center"
@@ -181,7 +181,6 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:text="/"
                                 android:gravity="center"
                                 android:textColor="@color/colorSecondary"
@@ -190,7 +189,6 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
                                 android:text="@string/zero"
                                 android:id="@+id/sets_total"
                                 android:textSize="32sp"
@@ -204,11 +202,6 @@
                     android:layout_height="wrap_content"
                     android:baselineAligned="false">
 
-                    <com.app.app.silverbarsapp.utils.PausableChronometer
-                        android:id="@+id/total_timer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
                     <TextView
                         android:visibility="invisible"
                         android:id="@+id/countdown"
@@ -217,7 +210,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
-                    <com.app.app.silverbarsapp.utils.PausableChronometer
+                    <com.app.app.silverbarsapp.widgets.PausableChronometer
                         android:gravity="center_horizontal"
                         android:id="@+id/chronometer2"
                         android:textColor="@color/black"
@@ -226,6 +219,27 @@
                         android:layout_height="wrap_content" />
 
                 </RelativeLayout>
+                <LinearLayout
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:text="Total time: "
+                        android:textSize="22sp"
+                        android:textColor="@color/gray_active_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <com.app.app.silverbarsapp.widgets.PausableChronometer
+                        android:textSize="22sp"
+                        android:textColor="@color/gray_active_icon"
+                        android:id="@+id/total_timer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
@@ -353,7 +367,6 @@
                                 android:layout_below="@+id/song_name" />
 
                         </RelativeLayout>
-
                         <RelativeLayout
                             android:gravity="center_vertical"
                             android:layout_width="wrap_content"
@@ -390,7 +403,6 @@
                 android:layout_marginTop="-60dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/get_ready_text"
                 android:id="@+id/headerText"
                 android:layout_gravity="top|center"
                 android:textSize="50sp"
@@ -413,5 +425,68 @@
                 android:text="secs"
                 android:textColor="#fff"
                 android:textSize="35sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="invisible"
+        android:orientation="vertical"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#c81f1f1f"
+        android:id="@+id/review">
+
+        <TextView
+            android:gravity="bottom"
+            android:layout_weight="1"
+            android:id="@+id/exercise_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="50sp"
+            android:textColor="#fff" />
+
+        <LinearLayout
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/exercise_option"
+                android:gravity="center_vertical"
+                android:text=""
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textColor="#fff" />
+
+            <com.shawnlin.numberpicker.NumberPicker
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/numberPicker"
+                app:np_dividerColor="@color/secondColor"
+                app:np_max="15"
+                app:np_min="0"
+                app:np_value="12"
+                app:np_selectedTextColor="@color/white"
+                app:np_textColor="@color/colorPrimary"
+                app:np_textSize="26sp" />
+
         </LinearLayout>
+        <LinearLayout
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/save_progress"
+                android:padding="20dp"
+                android:text="save and continue"
+                android:theme="@style/ButtonGreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </LinearLayout>
 </FrameLayout>

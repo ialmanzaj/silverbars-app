@@ -9,6 +9,7 @@ import com.app.app.silverbarsapp.LoginService;
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.interactors.CreateWorkoutFinalInteractor;
 import com.app.app.silverbarsapp.interactors.CreateWorkoutInteractor;
+import com.app.app.silverbarsapp.interactors.ExerciseDetailInteractor;
 import com.app.app.silverbarsapp.interactors.ExerciseListInteractor;
 import com.app.app.silverbarsapp.interactors.LoginInteractor;
 import com.app.app.silverbarsapp.interactors.MainWorkoutsInteractor;
@@ -114,6 +115,11 @@ public class InteractorModule {
     @Provides
     public WorkoutsDoneInteractor provideWorkoutsDoneInteractor(DatabaseHelper databaseHelper, MainService mainService){
         return new WorkoutsDoneInteractor(databaseHelper,mainService);
+    }
+
+    @Provides
+    public ExerciseDetailInteractor provideExerciseDetailInteractor(DatabaseHelper databaseHelper){
+        return new ExerciseDetailInteractor(databaseHelper);
     }
 
 

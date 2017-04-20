@@ -10,8 +10,11 @@ import java.util.List;
  */
 
 public interface ResultsView extends BaseView{
+    //api
     void onWorkoutDone(WorkoutDone workout);
+    void onExerciseProgressionsSaved();
 
+    //database
     void isEmptyProgression();
     void onExerciseProgression(List<ExerciseProgression> exercisesProgression);
 }

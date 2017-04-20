@@ -1,6 +1,6 @@
 package com.app.app.silverbarsapp.callbacks;
 
-import com.app.app.silverbarsapp.models.MuscleProgression;
+import com.app.app.silverbarsapp.models.ExerciseProgression;
 
 import java.util.List;
 
@@ -10,5 +10,5 @@ import java.util.List;
 
 public interface ProgressionCallback extends ServerCallback{
     void emptyProgress();
-    void onProgression(List<MuscleProgression> progressions);
+    void onProgression(List<ExerciseProgression> progressions);
 }

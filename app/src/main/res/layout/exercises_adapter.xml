@@ -21,7 +21,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.2">
+                android:layout_weight="1">
 
                 <ImageView
                     android:visibility="gone"
@@ -58,11 +58,9 @@
                     android:id="@+id/exercise_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="22sp"
+                    android:textSize="20sp"
                     android:maxLines="1"
-                    android:ellipsize="marquee"
                     android:layout_marginBottom="5dp"/>
-
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="wrap_content"
@@ -86,8 +84,6 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
                         android:gravity="center_horizontal" />
-
-
                     <LinearLayout
                         android:layout_marginStart="15dp"
                         android:gravity="bottom"
@@ -117,10 +113,9 @@
                             android:text="Kg"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
-
                     </LinearLayout>
-
                 </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
 

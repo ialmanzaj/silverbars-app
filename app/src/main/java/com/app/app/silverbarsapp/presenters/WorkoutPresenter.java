@@ -2,9 +2,7 @@ package com.app.app.silverbarsapp.presenters;
 
 import android.content.Context;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
-import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.callbacks.WorkoutCallback;
 import com.app.app.silverbarsapp.interactors.WorkoutInteractor;
 import com.app.app.silverbarsapp.models.Workout;
@@ -57,7 +55,7 @@ public class WorkoutPresenter extends BasePresenter implements WorkoutCallback {
         //Log.v(TAG,"STRENGTH: "+STRENGTH);
 
 
-        int ISOMETRIC_ = 0, CARDIO_ = 0, STRENGTH_ = 0, PYLOMETRICS_ = 0;
+      /*  int ISOMETRIC_ = 0, CARDIO_ = 0, STRENGTH_ = 0, PYLOMETRICS_ = 0;
 
         if (ISOMETRIC > 0){
             //Log.v(TAG,"porcentaje ISOMETRIC: "+ISOMETRIC+"/"+types.size());
@@ -91,6 +89,8 @@ public class WorkoutPresenter extends BasePresenter implements WorkoutCallback {
             RelativeLayout relativeLayout = utilities.createRelativeProgress(context,context.getResources().getString(R.string.PYLOMETRICS),PYLOMETRICS_);
             contentInfo.addView(relativeLayout);
         }
+        */
+
     }
 
     private void getCountTimes(List<String> list){

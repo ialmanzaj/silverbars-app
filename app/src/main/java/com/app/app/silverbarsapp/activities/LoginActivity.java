@@ -7,15 +7,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
@@ -50,14 +47,9 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
     @Inject
     LoginPresenter mLoginPresenter;
 
-    @BindView(R.id.login_progress) View mProgressView;
+    @BindView(R.id.loading)LinearLayout mLoadingView;
 
-    @BindView(R.id.logo)ImageView mLogo;
-
-    @BindView(R.id.container)RelativeLayout container;
-    @BindView(R.id.slogan_login)TextView slogan_login;
-
-    @BindView(R.id.login_button) LoginButton mLoginButton;
+    @BindView(R.id.login_button) LoginButton mFacebookButton;
 
     private CallbackManager callbackManager;
 
@@ -102,8 +94,8 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
 
-        mLoginButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
-        mLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        mFacebookButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
+        mFacebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 onLoadingOn();
@@ -154,10 +146,7 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
     }
 
     private void onLoadingOn(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {container.setBackgroundColor(getResources().getColor(R.color.black,getTheme()));}else {container.setBackgroundColor(getResources().getColor(R.color.black));}
-        mProgressView.setVisibility(View.VISIBLE);
-        slogan_login.setVisibility(View.VISIBLE);
-        mLoginButton.setVisibility(View.GONE);
+        mLoadingView.setVisibility(View.VISIBLE);
     }
 
 }
