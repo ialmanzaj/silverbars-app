@@ -32,4 +32,13 @@ public class Constants {
     @SuppressWarnings("SpellCheckingInspection")
     public static final String REDIRECT_URI = "testschema://callback";
 
+
+    public static final int BETTER = 2;
+    public static final int EQUAL = 1;
+    public static final int WORST = 0;
+
+    public   static final int DAILY = 0;
+    public   static final int WEEK = 1;
+    public   static final int MONTH = 2;
+
 }

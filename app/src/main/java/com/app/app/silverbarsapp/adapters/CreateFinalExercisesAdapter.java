@@ -91,7 +91,6 @@ public class CreateFinalExercisesAdapter extends RecyclerView.Adapter<CreateFina
         @OnTextChanged(value = R.id.weight)
         void weightChanged(CharSequence charSequence){
             if (!Objects.equals(charSequence.toString(), "")){
-                Log.d(TAG,"position "+mTextWatcher.getPosition());
                 mExercises.get(mTextWatcher.getPosition()).setWeight(Double.valueOf(charSequence.toString()));
             }
         }

@@ -27,10 +27,8 @@
             android:text="@string/reload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
     </LinearLayout>
     <LinearLayout
-
         android:gravity="center_horizontal|center_vertical"
         android:id="@+id/loading"
         android:orientation="vertical"
@@ -43,7 +41,7 @@
             android:id="@+id/loading_text"
             android:textSize="24sp"
             android:textColor="@color/black"
-            android:text="Loading..."
+            android:text="@string/loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -69,7 +67,7 @@
                     android:id="@+id/empty_text"
                     android:textSize="35sp"
                     android:textColor="@color/black"
-                    android:text="You haven't train :("
+                    android:text="@string/fragment_progress_empty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -81,8 +79,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
-
-
         <LinearLayout
             android:visibility="gone"
             android:gravity="center_vertical|center_horizontal"
@@ -95,7 +91,7 @@
             <TextView
                 android:textAlignment="center"
                 android:textSize="20sp"
-                android:text="Seleccione el musculo que desea ver"
+                android:text="@string/fragment_progress_muscle_selection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|center"
@@ -103,26 +99,28 @@
 
             <Button
                 android:id="@+id/okay"
-                android:text="Entendido"
+                android:text="@string/fragment_progress_okaybutton"
                 android:theme="@style/ButtonGreen"
-                android:padding="20dp"
+                android:padding="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
         <ImageView
             android:id="@+id/info"
-            android:layout_marginEnd="5dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_alignParentEnd="true"
             android:src="@drawable/ic_info_outline_black_24px"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null" />
+
         <LinearLayout
             android:background="@color/grey100"
             android:layout_alignParentBottom="true"
             android:id="@+id/week"
-           android:padding="12dp"
+            android:padding="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <com.app.app.silverbarsapp.widgets.SeekbarWithIntervals

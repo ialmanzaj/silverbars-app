@@ -1,4 +1,4 @@
-package com.app.app.silverbarsapp.utils;
+package com.app.app.silverbarsapp.adapters;
 
 
 

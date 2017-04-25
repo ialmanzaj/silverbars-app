@@ -78,9 +78,6 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //mMuscleSelected = getArguments().getString("muscle");
-
-        //get my workouts from api
        mMainWorkoutsPresenter.getMyWorkout();
     }
 
@@ -182,6 +179,4 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
     private void onErrorViewOff(){
         mErrorView.setVisibility(View.GONE);
     }
-
-
 }

@@ -4,6 +4,8 @@ import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+import com.app.app.silverbarsapp.adapters.ItemTouchHelperAdapter;
+
 /**
  * Created by isaacalmanza on 07/27/16.
  */

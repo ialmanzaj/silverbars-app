@@ -18,8 +18,10 @@ import com.app.app.silverbarsapp.ProgressionAlgoritm;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.adapters.ResultsAdapter;
+import com.app.app.silverbarsapp.adapters.ResultsMuscleActivation;
 import com.app.app.silverbarsapp.components.DaggerResultsComponent;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
+import com.app.app.silverbarsapp.models.MuscleActivation;
 import com.app.app.silverbarsapp.models.WorkoutDone;
 import com.app.app.silverbarsapp.modules.ResultsModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
@@ -29,7 +31,6 @@ import com.app.app.silverbarsapp.viewsets.ResultsView;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -50,17 +51,20 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.total_time) TextView mTotalTime;
     @BindView(R.id.sets) TextView mTotalSets;
-    @BindView(R.id.list) RecyclerView mExercisesList;
+    @BindView(R.id.exercises) RecyclerView mExercisesList;
 
     @BindView(R.id.loading) LinearLayout mLoadingView;
     @BindView(R.id.error_view) LinearLayout mErrorView;
 
+    @BindView(R.id.muscles) RecyclerView mMuscleActivation;
+
+
     private Utilities utilities = new Utilities();
-    ProgressionAlgoritm progressionAlgoritm = new ProgressionAlgoritm();
+    private ProgressionAlgoritm progressionAlgoritm = new ProgressionAlgoritm();
 
     private int workout_id;
-    private int sets;
     private String total_time;
+    private int sets_completed;
     private ArrayList<ExerciseProgression> mExercises = new ArrayList<>();
 
     @Override
@@ -87,24 +91,31 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupToolbar();
+        setupTabs();
 
         Bundle extras =  getIntent().getExtras();
 
         workout_id = extras.getInt("workout_id");
         mExercises = extras.getParcelableArrayList("exercises");
-        sets = extras.getInt("sets");
+        int total_sets = extras.getInt("sets");
+        sets_completed = extras.getInt("sets_completed");
         total_time = extras.getString("total_time");
 
-        mTotalSets.setText(String.valueOf(sets));
+
+        mTotalSets.setText(String.valueOf(sets_completed-1)+"/"+String.valueOf(total_sets));
         mTotalTime.setText(String.valueOf(total_time));
 
+
+        getOldProgression();
+    }
+
+
+    private void getOldProgression(){
         try {
             mResultsPresenter.getExercisesProgression(mExercises);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        setupTabs();
     }
 
     private void setupAdapter(ArrayList<ExerciseProgression> exercises){
@@ -118,7 +129,7 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     public void setupToolbar(){
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
-            getSupportActionBar().setTitle("Results");
+            getSupportActionBar().setTitle(getString(R.string.activity_results_title));
         }
     }
 
@@ -127,16 +138,27 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         Tab_layout.setup();
 
         TabHost.TabSpec overview = Tab_layout.newTabSpec("Overview");
-        overview.setIndicator("Overview");
+        overview.setIndicator(getString(R.string.activity_results_tab_overview));
         overview.setContent(R.id.overview);
 
-        Tab_layout.addTab(overview);
-
         TabHost.TabSpec exercises = Tab_layout.newTabSpec("Exercises");
-        exercises.setIndicator("Exercises");
+        exercises.setIndicator(getString(R.string.activity_results_tab_exercises));
         exercises.setContent(R.id.exercises);
 
+        TabHost.TabSpec muscles = Tab_layout.newTabSpec("Muscles");
+        muscles.setIndicator("Muscles");
+        muscles.setContent(R.id.muscles);
+
+        Tab_layout.addTab(overview);
         Tab_layout.addTab(exercises);
+        Tab_layout.addTab(muscles);
+    }
+
+    private void setupAdapterMuscleActivation(ArrayList<MuscleActivation> muscleActivations){
+        mMuscleActivation.setLayoutManager(new LinearLayoutManager(this));
+        mMuscleActivation.setNestedScrollingEnabled(false);
+        mMuscleActivation.setHasFixedSize(false);
+        mMuscleActivation.setAdapter(new ResultsMuscleActivation(muscleActivations));
     }
 
     @OnClick(R.id.save_button)
@@ -147,13 +169,14 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     @OnClick(R.id.reload)
     public void reload(){
         onErrorViewOff();
+        onLoadingViewOn();
         saveResults();
     }
 
     private void saveResults(){
         try {
             onLoadingViewOn();
-            mResultsPresenter.createWorkoutDone(workout_id,sets,total_time);
+            mResultsPresenter.createWorkoutDone(workout_id,sets_completed,total_time);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -173,7 +196,7 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
     @Override
     public void onWorkoutDone(WorkoutDone workout) {
-        Log.d(TAG,"workout done saved: " +workout.getId());
+        //Log.d(TAG,"workout done saved: " +workout.getId());
         try {
             mResultsPresenter.saveExerciseProgressions(workout.getId(),mExercises);
         } catch (SQLException e) {
@@ -184,21 +207,20 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     @Override
     public void onExerciseProgressionsSaved() {
         onLoadingViewOff();
-        utilities.toast(this,"Your results are saved");
+        utilities.toast(this,getString(R.string.activity_results_saved));
         finish();
     }
 
     @Override
     public void isEmptyProgression() {
-        Log.d(TAG,"isEmptyProgression");
         setupAdapter(progressionAlgoritm.addFirstProgressions(mExercises));
     }
 
     @Override
-    public void onExerciseProgression(List<com.app.app.silverbarsapp.database_models.ExerciseProgression> exerciseProgressions) {
-        Log.d(TAG,"onExerciseProgression "+exerciseProgressions.size());
-        Log.d(TAG,"mExercises "+mExercises.size());
-        setupAdapter(progressionAlgoritm.compareExerciseProgression(exerciseProgressions,mExercises));
+    public void onExerciseProgression(ArrayList<ExerciseProgression> exerciseProgressions) {
+        ArrayList<ExerciseProgression> progressions_compared =  progressionAlgoritm.compareExerciseProgression(exerciseProgressions,mExercises);
+        setupAdapter(progressions_compared);
+        setupAdapterMuscleActivation(progressionAlgoritm.getMusclesActivationByExercisesProgressions(mExercises));
     }
 
 
@@ -214,6 +236,10 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
     private void onErrorViewOff(){mErrorView.setVisibility(View.GONE);}
 
+    @Override
+    public void onBackPressed() {
+        dialog();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -228,20 +254,15 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        dialog();
-    }
-
     private void dialog(){
         new MaterialDialog.Builder(this)
-                .title(getResources().getString(R.string.title_dialog))
+                .title(getString(R.string.activity_results_dialog_title))
                 .titleColor(getResources().getColor(R.color.colorPrimaryText))
                 .contentColor(getResources().getColor(R.color.colorPrimaryText))
                 .positiveColor(getResources().getColor(R.color.colorPrimaryText))
                 .negativeColor(getResources().getColor(R.color.colorPrimaryText))
                 .backgroundColor(Color.WHITE)
-                .content(getResources().getString(R.string.content_dialog))
+                .content(getString(R.string.activity_results_dialog_content))
                 .positiveText(getResources().getString(R.string.positive_dialog))
                 .onPositive((dialog, which) -> {
                     finish();

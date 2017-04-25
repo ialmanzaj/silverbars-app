@@ -5,6 +5,7 @@ import android.util.Log;
 import com.app.app.silverbarsapp.DatabaseQueries;
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.callbacks.UserPreferencesCallback;
+import com.app.app.silverbarsapp.models.ExerciseProgression;
 import com.app.app.silverbarsapp.models.Person;
 import com.app.app.silverbarsapp.models.Workout;
 import com.app.app.silverbarsapp.utils.DatabaseHelper;
@@ -25,11 +26,77 @@ public class UserPreferencesInteractor {
     private static final String TAG = UserPreferencesInteractor.class.getSimpleName();
 
     private MainService mainService;
-    private DatabaseQueries databaseQueries;
+    private DatabaseQueries queries;
 
     public UserPreferencesInteractor(DatabaseHelper databaseHelper, MainService mainService){
         this.mainService = mainService;
-        databaseQueries = new DatabaseQueries(databaseHelper);
+        queries = new DatabaseQueries(databaseHelper);
+    }
+
+    public void getMyWorkouts(UserPreferencesCallback callback){
+        mainService.getMyWorkouts().enqueue(new Callback<List<Workout>>() {
+            @Override
+            public void onResponse(Call<List<Workout>> call, Response<List<Workout>> response) {
+                if(response.isSuccessful()){
+
+                    try {
+
+                        for (Workout workout: response.body()){queries.saveMyWorkout(workout);}
+                        getExerciseProgression(callback);
+
+                    } catch (SQLException e) {e.printStackTrace();}
+
+                }else {
+                    Log.e(TAG,response.errorBody()+"");
+                    callback.onServerError();
+                }
+            }
+            @Override
+            public void onFailure(Call<List<Workout>> call, Throwable t) {
+                Log.e(TAG,"onFailure",t);
+                callback.onNetworkError();
+            }
+        });
+    }
+
+    private void getExerciseProgression(UserPreferencesCallback callback){
+        mainService.getExercisesProgression().enqueue(new Callback<List<ExerciseProgression>>() {
+            @Override
+            public void onResponse(Call<List<ExerciseProgression>> call, Response<List<ExerciseProgression>> response) {
+                if (response.isSuccessful()){
+
+                    if (response.body().isEmpty()){
+                        callback.onWorkoutsSaved();
+                        return;
+                    }
+
+
+                    for (ExerciseProgression exerciseProgression: response.body()){
+                        try {
+                            saveExercisesProgressionDatabase(exerciseProgression);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    //tell the callback to return
+                    callback.onWorkoutsSaved();
+
+                }else {
+                    Log.e(TAG,"error" + response.code() + response.errorBody());
+                    callback.onServerError();
+                }
+            }
+            @Override
+            public void onFailure(Call<List<ExerciseProgression>> call, Throwable t) {
+                Log.e(TAG,"onFailure",t);
+                callback.onNetworkError();
+            }
+        });
+    }
+
+    private void saveExercisesProgressionDatabase(ExerciseProgression exerciseProgression) throws SQLException {
+        queries.saveExerciseProgression(exerciseProgression);
     }
 
     public void getMyProfile(UserPreferencesCallback callback){
@@ -47,9 +114,8 @@ public class UserPreferencesInteractor {
 
                     } catch (SQLException e) {e.printStackTrace();}
 
-
                 }else {
-                    Log.e(TAG,response.errorBody()+"");
+                    Log.e(TAG,response.errorBody()+" "+response.code());
                     callback.onServerError();
                 }
             }
@@ -61,36 +127,9 @@ public class UserPreferencesInteractor {
         });
     }
 
-    public void getMyWorkouts(UserPreferencesCallback callback){
-        mainService.getMyWorkouts().enqueue(new Callback<List<Workout>>() {
-            @Override
-            public void onResponse(Call<List<Workout>> call, Response<List<Workout>> response) {
-                if(response.isSuccessful()){
-
-                    try {
-
-                        Log.d(TAG,"insert workout");
-                        for (Workout workout: response.body()){databaseQueries.insertUserWorkout(workout);}
-
-                        callback.onWorkoutsSaved();
-
-
-                    } catch (SQLException e) {e.printStackTrace();}
-                }else {
-                    Log.e(TAG,response.errorBody()+"");
-                }
-            }
-            @Override
-            public void onFailure(Call<List<Workout>> call, Throwable t) {
-                Log.e(TAG,"onFailure",t);
-                callback.onServerError();
-            }
-        });
-    }
-
     private void saveProfile(Person person, UserPreferencesCallback callback) throws SQLException {
-        databaseQueries.saveProfile(person);
-        callback.onProfileSaved();
+        queries.saveProfile(person);
+        callback.onProfileSaved(person);
     }
 
 

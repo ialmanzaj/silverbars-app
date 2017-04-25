@@ -3,6 +3,7 @@
     <color name="colorPrimary">#212121</color>
     <color name="colorPrimaryDark">#000</color>
     <color name="colorSecondary">#512da8</color>
+    <color name="morado_oscuro">#3C1964</color>
     <color name="itemSelected">#92673ab7</color>
     <color name="colorAccent">#607d8b</color>
     <color name="colorPrimaryText">#212121</color>

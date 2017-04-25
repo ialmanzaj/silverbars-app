@@ -9,36 +9,43 @@ import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
+import com.app.app.silverbarsapp.utils.Utilities;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.app.app.silverbarsapp.Constants.BETTER;
+import static com.app.app.silverbarsapp.Constants.EQUAL;
+import static com.app.app.silverbarsapp.Constants.WORST;
+
 /**
  * Created by isaacalmanza on 03/28/17.
  */
 
-public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ExerciseViewHolder> {
-
-    private  static final int BETTER = 2;
-    private  static final int EQUAL = 1;
-    private  static final int WORST = 0;
+public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultViewHolder> {
 
     private Context context;
     private ArrayList<ExerciseProgression> exercises;
+    private Utilities utilities = new Utilities();
 
     public ResultsAdapter(Context context, ArrayList<ExerciseProgression> exercises) {
         this.context = context;
         this.exercises = exercises;
     }
 
-    public class ExerciseViewHolder extends RecyclerView.ViewHolder {
+    public class ResultViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.exercise_name) TextView exercise_name;
         @BindView(R.id.total) TextView total;
+        @BindView(R.id.weight) TextView weight;
+        @BindView(R.id.type_progress) TextView type_progress;
 
-        public ExerciseViewHolder(View view) {
+
+        @BindView(R.id.progress) TextView progress;
+
+        public ResultViewHolder(View view) {
             super(view);
             //binding views
             ButterKnife.bind(this,view);
@@ -57,16 +64,16 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.Exercise
     }
 
     @Override
-    public ExerciseViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public ResultViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         switch (viewType){
-            case 0:
-                return new ExerciseViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(
+            case WORST:
+                return new ResultViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(
                         R.layout.exercise_result_item_negative, viewGroup, false));
-            case 1:
-                return new ExerciseViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(
+            case EQUAL:
+                return new ResultViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(
                         R.layout.exercise_result_item_equal, viewGroup, false));
-            case 2:
-                return new ExerciseViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(
+            case BETTER:
+                return new ResultViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(
                         R.layout.exercise_result_item_positive, viewGroup, false));
             default:
                 return null;
@@ -74,23 +81,37 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.Exercise
     }
 
     @Override
-    public void onBindViewHolder(ExerciseViewHolder viewHolder, int position) {
-        viewHolder.exercise_name.setText(exercises.get(position).getExercise().getExercise_name());
+    public void onBindViewHolder(ResultViewHolder viewHolder, int position) {
 
+        viewHolder.exercise_name.setText(exercises.get(position).getExercise().getExercise_name());
+        viewHolder.progress.setText(utilities.formaterDecimal(String.valueOf(exercises.get(position).getProgress())));
+
+        if (exercises.get(position).getTotal_weight() > 0) {
+            viewHolder.weight.setText(
+                    " (+"+
+                    utilities.formaterDecimal(String.valueOf(exercises.get(position).getTotal_weight()))
+                    +"kg" +")");
+        }
 
         if (exercises.get(position).getTotal_repetition() > 0) {
             viewHolder.total.setText(String.valueOf(exercises.get(position).getRepetitions_done() + " reps"));
-        }else
+        }else {
             viewHolder.total.setText(String.valueOf(exercises.get(position).getSeconds_done() + " secs"));
+        }
+
+
+        if (exercises.get(position).isWeightImprove()){
+            viewHolder.type_progress.setText("weight");
+            return;
+        }
+
+        if (exercises.get(position).isRepImprove()){viewHolder.type_progress.setText("reps");}
+        else {viewHolder.type_progress.setText("seconds");}
 
     }
-
-
     @Override
     public int getItemCount() {
         return exercises.size();
     }
-
-
 
 }

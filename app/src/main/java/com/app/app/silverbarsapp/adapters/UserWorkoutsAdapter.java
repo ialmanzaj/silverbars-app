@@ -39,7 +39,7 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
     private OnWorkoutListener listener;
 
     private Utilities utilities = new Utilities();
-    Filter filter = new Filter();
+    private Filter filter = new Filter();
 
     public UserWorkoutsAdapter(Context context) {
         this.context = context;
@@ -92,20 +92,17 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
             workout_id = (int) view.getTag();
 
             new MaterialDialog.Builder( context )
-                    .title("Delete workout").titleColor(context.getResources().getColor(R.color.black))
-                    .content("Desea eliminar este workout").contentColor(context.getResources().getColor(R.color.black))
+                    .title(R.string.user_workout_adapter_delete_title).titleColor(context.getResources().getColor(R.color.black))
+                    .content(R.string.user_workout_adapter_delete_content).contentColor(context.getResources().getColor(R.color.black))
                     .positiveText("Yes")
                     .onPositive((dialog, which) -> {
-
                         delete(workout_id);
-
                     })
                     .negativeText("No")
                     .onNegative((dialog, which) -> {
                         dialog.dismiss();
                     }).show();
         }
-
 
         @OnClick(R.id.start_button)
         void startButton(View view){
@@ -132,32 +129,17 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder viewholder,  int position) {
-
-        viewholder.mWorkoutName.setText(workouts.get(position).getWorkout_name());
-
         viewholder.layout.getLayoutParams().height = utilities.calculateContainerHeight(context) / 3;
 
+        viewholder.mWorkoutName.setText(workouts.get(position).getWorkout_name());
         viewholder.mStartButton.setTag(workouts.get(position));
         viewholder.mDeleteButton.setTag(workouts.get(position).getId());
-
-
-
-                /*String[] workoutImgDir = workouts.get(position).getWorkout_image().split(context.getFilesDir().getPath()+"/SilverbarsImg/");
-
-                if (workoutImgDir.length == 2){
-                    String workoutImgName = workoutImgDir[1];
-                    Bitmap imgBitmap;
-                    imgBitmap = utilities.loadWorkoutImageFromDevice(context,workoutImgName);
-                    viewholder.mWorkoutImg.setImageBitmap(imgBitmap);
-                }*/
-
     }
 
     @Override
     public int getItemCount() {
         return workouts.size();
     }
-
 
     public interface OnWorkoutListener {
         void deleteWorkout(int workout_id);

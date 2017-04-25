@@ -141,7 +141,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         });
     }
 
-
     @OnClick({ R.id.play_music,R.id.pause_music,R.id.play_workout, R.id.pause_workout,R.id.stop_workout, R.id.next_exercise})
     public void onClick(View view) {
         int id = view.getId();
@@ -172,7 +171,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
                 break;
         }
     }
-
 
     @OnClick(R.id.save_progress)
     public void saveProgress(){
@@ -211,7 +209,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
         mVibrationPerSet = extras.getBoolean("vibration_per_set");
 
-        boolean play_exercise_audio_availible = extras.getBoolean("exercise_audio");
+        boolean play_exercise_audio = extras.getBoolean("exercise_audio");
 
         //local music
         ArrayList<File> local_playlist = (ArrayList) extras.getParcelableArrayList("playlist_local");
@@ -223,8 +221,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
         //init presenter
         mWorkingOutPresenter.setInitialSetup(
-                getExerciseWithTimesArray(mExercises)
-                ,play_exercise_audio_availible,mSetsTotal, mRestByExercise, mRestBySet);
+                getExerciseWithTimesArray(mExercises),play_exercise_audio,mSetsTotal, mRestByExercise, mRestBySet);
 
         //music setup and UI
         setupMusic(local_playlist,local_song_names,spotify_playlist,spotify_token);
@@ -246,6 +243,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
             exerciseProgression.setExercise(exercise.getExercise());
             exerciseProgression.setTotal_repetition(exercise.getRepetition());
             exerciseProgression.setTotal_seconds(exercise.getSeconds());
+            exerciseProgression.setTotal_weight(exercise.getWeight());
             exerciseProgressions.add(exerciseProgression);
         }
 
@@ -266,7 +264,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         //set total sets
         mTotalSetsText.setText(String.valueOf(mSetsTotal));
     }
-
 
     private void setupAdapter(){
         // disables scolling
@@ -553,6 +550,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
         intent.putParcelableArrayListExtra("exercises", progressions);
         intent.putExtra("sets",mSetsTotal);
+        intent.putExtra("sets_completed",Integer.parseInt(mCurrentSetText.getText().toString()));
         intent.putExtra("total_time",utilities.formatHMS(mTotalTimerChronometer.getTimeElapsed()));
         intent.putExtra("workout_id",mWorkout_id);
 

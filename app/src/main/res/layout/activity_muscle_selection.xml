@@ -19,17 +19,55 @@
                 android:layout_height="wrap_content"
                 app:elevation="2dp" />
         </android.support.design.widget.AppBarLayout>
-
+    <LinearLayout
+        android:background="@color/white"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:id="@+id/error_view">
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/gray_active_icon"
+            android:text="@string/error_message"/>
+        <Button
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/reload"
+            android:text="@string/reload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:gravity="center_horizontal|center_vertical"
+        android:background="@color/white"
+        android:id="@+id/loading"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/loading_text"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:text="@string/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
         <TextView
             android:layout_gravity="center_horizontal"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:text="Selecciona el musculos que desees entrenar"
+            android:text="@string/activity_muscle_selection_title"
             android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
-
         <WebView
             android:layout_weight="1"
             android:background="@color/white"
@@ -56,7 +94,7 @@
 
                         <TextView
                             android:textSize="18sp"
-                            android:text="Exercises"
+                            android:text="@string/activity_muscle_selection_exercises"
                             android:layout_centerVertical="true"
                             android:textColor="@color/black"
                             android:id="@+id/muscles_selected"
@@ -65,14 +103,12 @@
 
                     </RelativeLayout>
                 </HorizontalScrollView>
-
             <Button
                 android:theme="@style/ButtonRed"
-                android:id="@+id/look_exercises"
-                android:text="buscar ejercicios"
+                android:id="@+id/search_exercises"
+                android:text="@string/activity_muscle_selection_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
-
 </LinearLayout>

@@ -60,11 +60,9 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
     private ArrayList<Exercise> mExercises = new ArrayList<>();
     private ArrayList<String> muscles_selected;
-
     private ArrayList<Integer> mExercisesSelectedIds;
 
-    Filter filter = new Filter();
-
+    private Filter filter = new Filter();
 
     @Override
     protected int getLayout() {
@@ -135,7 +133,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     }
 
     @OnClick(R.id.add_exercises)
-    public void addExercises(){
+    public void addExercisesButton(){
 
         ArrayList<Integer> mListExercisesIds = new ArrayList<>();
 
@@ -149,10 +147,9 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
         }
 
         if (mListExercisesIds.size() > 0) {
-            // enviar items a la actividad anterior
+
             Intent return_intent = new Intent();
-            return_intent.putExtra("exercises",mExercises);
-            return_intent.putExtra("exercises_selected",mListExercisesIds);
+            return_intent.putExtra("exercises_selected",filter.getExercisesById(mExercises, mListExercisesIds));
             setResult(RESULT_OK, return_intent);
             finish();
         }
@@ -183,7 +180,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
         Log.e(TAG,"displayServerError");
         onErrorOn();
     }
-
 
     private void setExercisesView(ArrayList<Exercise> exercises){
         if (exercises.size() > 0) {

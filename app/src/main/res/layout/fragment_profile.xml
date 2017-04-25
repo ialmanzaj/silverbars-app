@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".fragments.ProfileFragment"
-    android:background="#fff">
+    android:background="@color/white">
 
   <ImageView
       android:layout_marginTop="10dp"
@@ -26,12 +26,12 @@
       android:layout_gravity="center"
       android:textColor="@color/colorPrimaryText" />
 
-
     <android.support.v7.widget.CardView
         android:layout_marginTop="10dp"
         app:cardElevation="0.5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:background="?selectableItemBackgroundBorderless"
             android:id="@+id/my_workouts_done"
@@ -48,7 +48,7 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="My workouts done"
+                android:text="@string/fragment_profile_workout_done"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 

@@ -92,12 +92,12 @@ public class WorkoutsDoneActivity extends BaseActivity implements WorkoutsDoneVi
 
     @Override
     public void displayNetworkError() {
-
+        Log.e(TAG,"displayNetworkError");
     }
 
     @Override
     public void displayServerError() {
-
+        Log.e(TAG,"displayServerError");
     }
 
     @Override
@@ -107,7 +107,7 @@ public class WorkoutsDoneActivity extends BaseActivity implements WorkoutsDoneVi
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            Log.d(TAG, "action bar clicked");
+            //Log.d(TAG, "action bar clicked");
             finish();
         }
         return super.onOptionsItemSelected(item);

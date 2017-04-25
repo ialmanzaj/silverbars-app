@@ -21,8 +21,10 @@ import android.widget.Toast;
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.models.Exercise;
+import com.app.app.silverbarsapp.models.ExerciseProgression;
 import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.models.MuscleExercise;
+import com.app.app.silverbarsapp.models.Skill;
 import com.spotify.sdk.android.player.Connectivity;
 
 import java.io.File;
@@ -45,6 +47,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import static com.app.app.silverbarsapp.Constants.BODY_URL;
+import static com.app.app.silverbarsapp.Constants.DAILY;
+import static com.app.app.silverbarsapp.Constants.MONTH;
+import static com.app.app.silverbarsapp.Constants.WEEK;
 
 /**
  * Created by isaacalmanza on 08/10/16.
@@ -56,6 +61,119 @@ public class Utilities {
     private   String strSeparator = "__,__";
 
     public Utilities (){}
+
+    public String getDate(int type_date){
+        switch (type_date){
+            case DAILY: return "day";
+            case WEEK: return "week";
+            case MONTH: return "month";
+            default:
+                return "";
+        }
+    }
+
+    public List<Skill> getTypesByExerciseProgression(ArrayList<ExerciseProgression> exercises){
+        List<Skill> types = new ArrayList<>();
+        List<String> types_list = new ArrayList<>();
+        for (ExerciseProgression exercise: exercises){
+            for (String type: exercise.getExercise().getType_exercise()){
+                types_list.add(type);
+            }
+        }
+        for (String type : deleteCopiesofList(types_list)){
+            double porcentaje = (counter(types_list,type)*100 / types_list.size());
+            //Log.d(TAG,type +" " + porcentaje);
+            types.add(new Skill(type, (int) porcentaje));
+        }
+
+        return types;
+    }
+
+
+
+    public List<Skill> getTypesByExerciseRep(ArrayList<ExerciseRep> exercises){
+        List<Skill> types = new ArrayList<>();
+        List<String> types_list = new ArrayList<>();
+        for (ExerciseRep exercise: exercises){
+            for (String type: exercise.getExercise().getType_exercise()){
+                types_list.add(type);
+            }
+        }
+        for (String type : deleteCopiesofList(types_list)){
+            double porcentaje = (counter(types_list,type)*100 / types_list.size());
+            //Log.d(TAG,type +" " + porcentaje);
+            types.add(new Skill(type, (int) porcentaje));
+        }
+
+        return types;
+    }
+
+    public List<Skill> getTypesByExercise(List<Exercise> exercises){
+        List<Skill> types = new ArrayList<>();
+        List<String> types_list = new ArrayList<>();
+        for (Exercise exercise: exercises){
+            for (String type: exercise.getType_exercise()){
+                types_list.add(type);
+            }
+        }
+        for (String type : deleteCopiesofList(types_list)){
+            double porcentaje = (counter(types_list,type)*100 / types_list.size());
+            //Log.d(TAG,type +" " + porcentaje);
+            types.add(new Skill(type, (int) porcentaje));
+        }
+
+        return types;
+    }
+
+    public int counter(List<String> list,String s){
+        int count = 0;
+        for (String element: list){
+            if (Objects.equals(element, s)){
+                count = count+1;
+            }
+        }
+        return count;
+    }
+
+
+    public static class HandlerMover{
+        int position = 0;
+        int size;
+        public HandlerMover(int size){
+            this.size = size;
+        }
+
+        public boolean allowToMove(int pos){
+            return pos != -1;
+        }
+
+        public void setPosition(int position) {
+            this.position = position;
+        }
+
+        public int moveNext(){
+            if ( size > 1 && position + 1 < size) {
+                position = (position + 1) % size;
+                //Log.d(TAG,"next "+position);
+                return position;
+            }
+            return -1;
+        }
+
+        public int getPosition(){
+            return position;
+        }
+
+        public int movePreview(){
+            if (size > 1 && (position-1) >= 0 ) {
+                position = (position - 1) % size;
+                //Log.d(TAG,"preview "+position);
+                return position;
+            }
+           return -1;
+        }
+    }
+
 
     /**
      * Method to format normal number to decimal and Rounding.

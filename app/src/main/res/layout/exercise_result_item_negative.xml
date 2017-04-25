@@ -7,37 +7,109 @@
     android:layout_marginStart="5dp"
     android:layout_marginEnd="5dp"
     card_view:cardCornerRadius="2dp"
-    card_view:cardElevation="0.5dp">
+    card_view:cardElevation="0.8dp">
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:background="?selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:background="@color/white"
-        android:padding="5dp"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_weight="1"
-            android:id="@+id/exercise_name"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:minHeight="35dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/total"
-            android:textSize="22sp"
-            android:textColor="@color/secondColor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/exercise_name"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
-        <ImageView
-            android:tint="@color/secondColor"
-            android:layout_gravity="bottom"
-            android:src="@drawable/ic_arrow_downward_black_24px"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:contentDescription="@null" />
+                <TextView
+                    android:id="@+id/weight"
+                    android:textSize="20sp"
+                    android:textColor="@color/gray_active_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/total"
+                android:textSize="22sp"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:tint="@color/secondColor"
+                android:src="@drawable/ic_arrow_downward_black_24px"
+                android:layout_width="22dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/progress"
+                android:text="0"
+                android:textColor="@color/secondColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
+
+            <TextView
+                android:text="%"
+                android:textColor="@color/secondColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
+
+            <TextView
+                android:text="less "
+                android:layout_marginStart="5dp"
+                android:textColor="@color/gray_active_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/type_progress"
+                android:text=" than the "
+                android:textColor="@color/gray_active_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/date"
+                android:textColor="@color/gray_active_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
+
+            <TextView
+                android:text=" before"
+                android:textColor="@color/gray_active_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

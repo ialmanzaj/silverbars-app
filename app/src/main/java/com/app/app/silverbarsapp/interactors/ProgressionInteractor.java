@@ -60,13 +60,13 @@ public class ProgressionInteractor {
             @Override
             public void onResponse(Call<List<ExerciseProgression>> call, Response<List<ExerciseProgression>> response) {
                 if (response.isSuccessful()){
-
                     if (response.body().isEmpty()){
                         callback.emptyProgress();
                         return;
                     }
 
                     callback.onProgression(response.body());
+
 
                     for (ExerciseProgression exerciseProgression: response.body()){
                         try {
@@ -76,11 +76,15 @@ public class ProgressionInteractor {
                         }
                     }
 
+
                 }else {
                     Log.e(TAG,"error" + response.code() + response.errorBody());
                     callback.onServerError();
                 }
+
+
             }
+
             @Override
             public void onFailure(Call<List<ExerciseProgression>> call, Throwable t) {
                 Log.e(TAG,"onFailure",t);
@@ -90,10 +94,7 @@ public class ProgressionInteractor {
     }
 
     private void saveExercisesProgressionDatabase(ExerciseProgression exerciseProgression) throws SQLException {
-        //Log.d(TAG,"progression size "+ queries.getExerciseProgressions().size());
-        if (!queries.existExerciseProgressionById(exerciseProgression.getId())) {
-            queries.saveExerciseProgression(exerciseProgression);
-        }
+        queries.saveExerciseProgression(exerciseProgression);
     }
 
 }

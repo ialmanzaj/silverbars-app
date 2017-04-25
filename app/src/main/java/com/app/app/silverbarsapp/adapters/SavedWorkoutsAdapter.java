@@ -63,7 +63,7 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
         }
 
         @OnClick(R.id.start_button)
-        public void start(View view){
+        public void startButton(View view){
             Workout workout = (Workout) view.getTag();
 
             Intent intent = new Intent(context, WorkoutActivity.class);
@@ -86,7 +86,6 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
 
     @Override
     public void onBindViewHolder(ViewHolder viewholder,  int position) {
-
         viewholder.layout.getLayoutParams().height = utilities.calculateContainerHeight(context) / 3;
 
         viewholder.mExerciseName.setText(workouts.get(position).getWorkout_name());

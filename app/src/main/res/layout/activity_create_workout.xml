@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context=".activities.CreateWorkoutActivity">
-
         <android.support.design.widget.AppBarLayout
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/appbarlayout"
@@ -30,7 +29,6 @@
                     android:layout_marginEnd="5dp"/>
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
-
         <TabHost
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -57,11 +55,10 @@
 
                     <LinearLayout
                         android:background="@color/white"
-                        android:id="@+id/rutina_"
+                        android:id="@+id/workout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
-
                         <LinearLayout
                             android:id="@+id/content_empty"
                             android:gravity="center_vertical"
@@ -87,9 +84,7 @@
                                 android:text="@string/add_exercises_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
-
                         </LinearLayout>
-
                         <RelativeLayout
                             android:orientation="vertical"
                             android:layout_width="match_parent"
@@ -114,18 +109,44 @@
                         </RelativeLayout>
                     </LinearLayout>
                     <LinearLayout
-                        android:id="@+id/muscles_"
+                        android:id="@+id/muscles"
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
                         <WebView
                             android:background="@color/white"
                             android:id="@+id/webview"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" />
-
                     </LinearLayout>
+
+                  <!--  <LinearLayout
+                        android:orientation="vertical"
+                        android:id="@+id/types"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <LinearLayout
+                            android:id="@+id/content_empty_types"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <TextView
+                                android:textColor="@android:color/black"
+                                android:textSize="26sp"
+                                android:layout_gravity="center_horizontal|center_vertical"
+                                android:text="@string/empty_create"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+                        <android.support.v7.widget.RecyclerView
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:id="@+id/skills"
+                            android:layout_gravity="center_horizontal" />
+                    </LinearLayout>-->
+
+
                 </FrameLayout>
             </LinearLayout>
 

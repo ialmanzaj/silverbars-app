@@ -2,9 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:id="@+id/swipeContainer"
     android:layout_height="match_parent">
-
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
@@ -43,7 +41,7 @@
             android:id="@+id/loading_text"
             android:textSize="24sp"
             android:textColor="@color/black"
-            android:text="Loading..."
+            android:text="@string/loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -72,7 +70,7 @@
                     android:id="@+id/empty_text"
                     android:textSize="35sp"
                     android:textColor="@color/black"
-                    android:text="You haven't train :("
+                    android:text="@string/fragment_progress_empty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -84,26 +82,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
-
         <LinearLayout
-            android:visibility="invisible"
+            android:visibility="gone"
+            android:gravity="center_vertical|center_horizontal"
             android:orientation="vertical"
-            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#c81f1f1f"
             android:id="@+id/modal_overlay">
 
             <TextView
-                android:layout_marginTop="20dp"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="@string/fragment_progress_muscle_selection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Haga click en el musculo quieres ver"
                 android:layout_gravity="top|center"
-                android:textSize="22sp"
-                android:textColor="#fff" />
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/okay"
+                android:text="@string/fragment_progress_okaybutton"
+                android:theme="@style/ButtonGreen"
+                android:padding="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
+        <ImageView
+            android:id="@+id/info"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_info_outline_black_24px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null" />
 
         <LinearLayout
             android:background="@color/grey100"

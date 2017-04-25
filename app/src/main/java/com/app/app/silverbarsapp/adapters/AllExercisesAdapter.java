@@ -77,19 +77,14 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
 
     @Override
     public void onBindViewHolder(ExerciseViewHolder viewHolder, int position) {
-
         try {
 
             viewHolder.exercise_name.setText(mExercises.get(position).getExercise_name());
 
-            //checkbox settings
             viewHolder.selection.setTag(mExercises.get(position).getId());
             mExercisesSelected.put(mExercises.get(position).getId(),false);
 
-            //img
             viewHolder.exercise_img.setImageURI(Uri.parse(mExercises.get(position).getExercise_image()));
-
-
 
         }catch (NullPointerException e){Log.e(TAG,"NullPointerException");}
     }

@@ -1,9 +1,9 @@
 package com.app.app.silverbarsapp.viewsets;
 
-import com.app.app.silverbarsapp.database_models.ExerciseProgression;
+import com.app.app.silverbarsapp.models.ExerciseProgression;
 import com.app.app.silverbarsapp.models.WorkoutDone;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by isaacalmanza on 03/18/17.
@@ -16,5 +16,5 @@ public interface ResultsView extends BaseView{
 
     //database
     void isEmptyProgression();
-    void onExerciseProgression(List<ExerciseProgression> exercisesProgression);
+    void onExerciseProgression(ArrayList<ExerciseProgression> exercisesProgression);
 }

@@ -73,7 +73,6 @@ public class SeekbarWithIntervals extends LinearLayout {
     public void setIntervals(List<String> intervals) {
         displayIntervals(intervals);
         getSeekBar().setMax(intervals.size() - 1);
-
     }
 
     public void setInitialProgress(int monday){

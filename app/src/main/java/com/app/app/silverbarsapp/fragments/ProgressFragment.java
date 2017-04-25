@@ -6,8 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,11 +27,9 @@ public class ProgressFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (this.isAdded()) {
-
-            Toolbar mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
-            ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
-            getActivity().setTitle("My Progression");
-
+            //Toolbar mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+            //((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
+            //getActivity().setTitle("My Progression");
 
             ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
             viewPager.setOffscreenPageLimit(3);
@@ -46,10 +42,9 @@ public class ProgressFragment extends Fragment {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-
-        adapter.addFragment(new ProgressFragmentDaily(), getActivity().getString(R.string.progress_fragment_today_title));
-        adapter.addFragment(new ProgressWeeklyFragment(), "Weekly");
-        adapter.addFragment(new ProgressTotalFragment(), getActivity().getString(R.string.progress_fragment_total_title));
+        adapter.addFragment(new ProgressFragmentDaily(), getActivity().getString(R.string.progress_fragment_daily));
+        adapter.addFragment(new ProgressWeeklyFragment(),getActivity().getString(R.string.progress_fragment_weekly));
+        adapter.addFragment(new ProgressMonthlyFragment(), getActivity().getString(R.string.progress_fragment_monthly));
         viewPager.setAdapter(adapter);
     }
 

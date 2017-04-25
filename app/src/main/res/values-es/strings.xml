@@ -2,22 +2,19 @@
 <resources>
     <string name="app_name">Silverbars</string>
 
-    <string name="title_activity_navigation">navegacion</string>
-    <string name="content">Contentido</string>
-    <string name="agree">De acuerdo</string>
-    <string name="disagree">Desacuerdo</string>
 
-    <string name="hello_blank_fragment">Hola fragmento en blanco</string>
-    <string name="title_activity_login">Ingresar</string>
-    <string name="search_hint">Buscar artista</string>
-
+    <!-- Strings MAIN-MENU BOTTOM-BAR  -->
     <string name="menu_home">Inicio</string>
     <string name="menu_myworkouts">Mis rutinas</string>
     <string name="menu_profile">Perfil</string>
     <string name="menu_progression">Mi progreso</string>
 
+    <string name="hello_blank_fragment">Hola fragmento en blanco</string>
+    <string name="title_activity_login">Ingresar</string>
+    <string name="content">Contenido</string>
     <string name="action_websearch">Web search</string>
     <string name="app_not_available">Lo siento, no explorador disponible</string>
+
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -30,6 +27,8 @@
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
     completions.</string>
+
+    <string name="search_hint">Buscar artista</string>
 
 
     <string name="action_settings">Configuraciones</string>
@@ -93,9 +92,6 @@
     <string name="resume_workout_text">SEGUIR RUTINA</string>
     <string name="pause_workout_text">PAUSAR RUTINA</string>
     <string name="rest_text">Descanso</string>
-    <string name="tab_overview">RUTINA</string>
-
-    <string name="tab_muscles">Músculos</string>
 
     <string name="set_edit">Total de Sets</string>
 
@@ -105,7 +101,7 @@
     <string name="tab_workouts_home">Rutinas</string>
     <string name="tab_myworkouts_home">Mis Rutinas</string>
     <string name="tab_profile">Perfil</string>
-    <string name="tab_exercises">Ejercicios</string>
+
 
     <string-array name="navigation_array">
         <item>Rutinas</item>
@@ -143,7 +139,6 @@
     <string name="error_failure">La conexion fallo</string>
     <string name="error_message">Por Favor, intenta de nuevo</string>
     <string name="reload">Recargar</string>
-
 
     <string name="title_dialog">Estas seguro de terminar la rutina?</string>
     <string name="content_dialog">Vas a perder el progreso de tu rutina.</string>
@@ -199,25 +194,94 @@
     <string name="add_exercises_button">Añadir ejercicio a rutina</string>
     <string name="level">Nivel</string>
 
-
     <!---    Strings of LOGIN    -->
     <string name="slogan_login">Iniciando sesion para empezar a entrenar</string>
     <string name="slogan_silverbars">Be your own machine</string>
-
 
     <!---    Strings of workingout activity    -->
     <string name="working_out_reps">Reps</string>
     <string name="working_out_seconds">Segundos</string>
 
-
     <!---    Strings of my workouts fragment   -->
     <string name="myworkouts_fragment_saved">Rutinas guardadas</string>
     <string name="myworkouts_fragment_myworkouts">Mis rutinas</string>
 
-
     <!---    Strings of progress fragment   -->
-    <string name="progress_fragment_today_title">Progreso diario</string>
-    <string name="progress_fragment_total_title">Progreso total</string>
+    <string name="progress_fragment_daily">Diario</string>
+    <string name="progress_fragment_weekly">Semanal</string>
+    <string name="progress_fragment_monthly">Mensual</string>
+
+    <!---    Strings of activity create workout_final   -->
+    <string name="activity_create_workout_final_saving">Guardando…</string>
+
+    <!---    Strings of activity exercise_list  -->
+    <string name="activity_exercise_list_empty">No hay mas ejercicios:(</string>
+
+    <string name="loading">Cargando…</string>
+
+    <!---    Strings of activity activity_muscle_selection  -->
+    <string name="activity_muscle_selection_title">Selecciona los musculos vas a entrenar</string>
+    <string name="activity_muscle_selection_exercises">Ejercicios</string>
+    <string name="activity_muscle_selection_search">Buscar ejercicios</string>
+    <string name="activity_muscle_selection_selection">Seleccione que musculos</string>
+    <string name="activity_muscle_selection_toolbar">Seleccion de ejercicio por musculos</string>
+
+    <!---    Strings of activity_results -->
+    <string name="activity_results_title">Resultados</string>
+    <string name="activity_results_saving">Guardando…</string>
+    <string name="activity_results_save">Guardar resultados</string>
+    <string name="activity_results_sets">Sets completados: </string>
+    <string name="activity_results_time">Tiempo total de rutina:</string>
+    <string name="activity_results_saved">Tus resultados han sido guardados!</string>
+    <string name="activity_results_dialog_title">Guardar Resultados</string>
+    <string name="activity_results_dialog_content">Esta seguro que desea perder sus resultados?</string>
+
+    <!---    Strings of activity_workingout -->
+    <string name="activity_workingout_second">sec</string>
+    <string name="activity_workingout_save">Guardar y continuar</string>
+    <string name="activity_workingout_total">Tiempo total:</string>
+
+    <!---    Strings of fragment profile -->
+    <string name="fragment_profile_workout_done">Mis rutinas terminadas</string>
+
+    <!---    Strings of fragment progress -->
+    <string name="fragment_progress_empty">No has entrenado :(</string>
+    <string name="fragment_progress_muscle_selection">Selecciona que musculo para ver mi progreso</string>
+    <string name="fragment_progress_okaybutton">Okay</string>
+
+    <string name="activity_create_workout_deleted">Ejercicio borrado</string>
+    <string name="activity_create_workout_restored">Ejercicio fue restaurado!</string>
+    <string name="activity_create_workout_undo">DESHACER</string>
+
+    <!---    Strings of activity_create_workout_final -->
+    <string name="activity_create_workout_final_workout_name_seleccion">Select your workout name</string>
+    <string name="activity_create_workout_final_sets_seleccion">Select your sets</string>
+    <string name="activity_create_workout_final_reps_seleccion">Select your reps or seconds</string>
+
+
+    <string name="activity_user_preferences">Cargando configuraciones iniciales</string>
+
+    <string name="user_workout_adapter_delete_title">Borrar rutina</string>
+    <string name="user_workout_adapter_delete_content">Esta seguro, que desea eliminar esta rutina?</string>
+
+    <!---    Strings of DIALOG  -->
+    <string name="yes_option">SI</string>
+    <string name="no_option">NO</string>
+
+    <string name="agree">De acuerdo</string>
+    <string name="disagree">Desacuerdo</string>
+
+    <!---    Strings of tabs  -->
+    <string name="tab_workout">Rutina</string>
+    <string name="tab_muscles">Músculos</string>
+    <string name="tab_exercises">Ejercicios</string>
+
+
+    <!---    Strings of tabs of activity results  -->
+    <string name="activity_results_tab_overview">General</string>
+    <string name="activity_results_tab_exercises">Ejercicios</string>
+
+    <string name="activity_workout_save_workout">Descargar rutina</string>
 
 
 </resources>

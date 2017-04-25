@@ -5,7 +5,6 @@
     android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <android.support.design.widget.AppBarLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
@@ -28,13 +27,11 @@
                     android:id="@+id/start_button" />
             </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-
     <TabHost
         android:id="@+id/tabHost2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -72,7 +69,7 @@
                             <android.support.v7.widget.SwitchCompat
                                 android:textSize="18sp"
                                 android:textColor="@color/white"
-                                android:text="Descargar rutina"
+                                android:text="@string/activity_workout_save_workout"
                                 android:theme="@style/MySwitch"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="20dp"
@@ -185,13 +182,11 @@
                             android:layout_alignParentEnd="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
-
                             <android.support.design.widget.TextInputLayout
                                 android:layout_marginEnd="10dp"
                                 android:theme="@style/TextLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
-
                                 <AutoCompleteTextView
                                     android:gravity="center_horizontal"
                                     android:id="@+id/rest_by_exercise"
@@ -207,7 +202,6 @@
                                     android:inputType="number"
                                     android:maxLines="1" />
                             </android.support.design.widget.TextInputLayout>
-
                         </LinearLayout>
                     </RelativeLayout>
                     <RelativeLayout
@@ -230,14 +224,11 @@
                             android:layout_alignParentEnd="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
-
-
                             <android.support.design.widget.TextInputLayout
                                 android:layout_marginEnd="10dp"
                                 android:theme="@style/TextLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
-
                                 <AutoCompleteTextView
                                     android:gravity="center_horizontal"
                                     android:id="@+id/rest_by_set"
@@ -252,12 +243,9 @@
                                     android:textColorHint="@color/black"
                                     android:inputType="number"
                                     android:maxLines="1" />
-
                             </android.support.design.widget.TextInputLayout>
-
                         </LinearLayout>
                     </RelativeLayout>
-
                     <android.support.v7.widget.SwitchCompat
                         android:id="@+id/voice_per_exercise"
                         android:minHeight="45dp"
@@ -278,26 +266,28 @@
                     android:id="@+id/exercises"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
                     <android.support.v7.widget.RecyclerView
                         android:layout_height="match_parent"
                         android:layout_width="match_parent"
                         android:id="@+id/list"
                         android:layout_gravity="center_horizontal" />
-
                 </LinearLayout>
                 <RelativeLayout
                     android:scrollbars="vertical"
                     android:id="@+id/muscles"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-
                     <WebView
                         android:id="@+id/webview"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
-
                 </RelativeLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:visibility="gone"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:id="@+id/skills"
+                    android:layout_gravity="center_horizontal" />
             </FrameLayout>
         </LinearLayout>
     </TabHost>

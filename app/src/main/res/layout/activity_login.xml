@@ -1,11 +1,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/white"
+    android:background="@color/morado_oscuro"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="activities.LoginActivity">
-
+    <LinearLayout
+        android:background="@color/white"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:id="@+id/error_view">
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/gray_active_icon"
+            android:text="@string/error_message"/>
+        <Button
+            android:text="@string/reload"
+            android:id="@+id/reload"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
     <LinearLayout
         android:visibility="gone"
         android:gravity="center_vertical|center_horizontal"
@@ -36,9 +58,7 @@
             android:id="@+id/loading_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
     </LinearLayout>
-
     <LinearLayout
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical"
@@ -46,7 +66,6 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:tint="@color/black"
             android:src="@drawable/silverbars"
             android:id="@+id/logo"
             android:layout_width="match_parent"
@@ -55,7 +74,7 @@
 
         <TextView
             android:textSize="28sp"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:id="@+id/slogan"
             android:text="@string/slogan_silverbars"
             android:layout_width="wrap_content"
@@ -69,6 +88,4 @@
             style="@style/FacebookLoginButton" />
 
     </LinearLayout>
-
-
 </LinearLayout>

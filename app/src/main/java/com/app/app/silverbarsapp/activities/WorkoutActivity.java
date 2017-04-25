@@ -70,6 +70,10 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     @BindView(R.id.start_button) Button mStartButton;
     @BindView(R.id.SelectMusic) RelativeLayout mSelectMusicButton;
 
+
+    @BindView(R.id.skills)RecyclerView mSkillsList;
+
+
     private ExerciseAdapter adapter;
 
     private int workoutId = 0, workoutSets = 0;
@@ -113,14 +117,17 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //init the presenter to get the context
         mWorkoutPresenter.init(this);
+
+        //get the extras
         getExtras(getIntent().getExtras());
+
         setupToolbar();
         setupTabs();
         setupWebview();
         setupAdapter();
     }
-
 
     private void getExtras(Bundle extras){
         workoutId = extras.getInt("workout_id",0);
@@ -151,7 +158,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         RestbySet.setText("60");
 
         mVoicePerExercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {});
-
         mStartButton.setOnClickListener(view -> LaunchWorkingOutActivity());
         mSelectMusicButton.setOnClickListener(v -> { startActivity(new Intent(this,SelectionMusicActivity.class));});
 
@@ -188,11 +194,11 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         //Defining Tabs
         mTabLayout.setup();
 
-        TabHost.TabSpec overview = mTabLayout.newTabSpec(getResources().getString(R.string.tab_overview));
+        TabHost.TabSpec overview = mTabLayout.newTabSpec(getResources().getString(R.string.tab_workout));
         TabHost.TabSpec muscles = mTabLayout.newTabSpec(getResources().getString(R.string.tab_muscles));
         TabHost.TabSpec exercises = mTabLayout.newTabSpec(getResources().getString(R.string.tab_exercises));
 
-        overview.setIndicator(getResources().getString(R.string.tab_overview));
+        overview.setIndicator(getResources().getString(R.string.tab_workout));
         overview.setContent(R.id.overview);
 
         muscles.setIndicator(getResources().getString(R.string.tab_muscles));
@@ -201,9 +207,14 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         exercises.setIndicator(getResources().getString(R.string.tab_exercises));
         exercises.setContent(R.id.exercises);
 
+       /* TabHost.TabSpec skills = mTabLayout.newTabSpec("Focus");
+        skills.setIndicator("Focus");
+        skills.setContent(R.id.skills);*/
+
         mTabLayout.addTab(overview);
         mTabLayout.addTab(exercises);
         mTabLayout.addTab(muscles);
+        //mTabLayout.addTab(skills);
     }
 
     private void setupWebview(){
@@ -223,18 +234,13 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         Log.d(TAG,"onWorkoutcreated: "+created);
     }
 
-
     private void setExercisesInAdapter(ArrayList<ExerciseRep> exercises){
-
         List<String> muscles = new ArrayList<>();
 
         for (ExerciseRep exerciseRep: exercises){
             //Collections.addAll(TypeExercises, new List<String>[]{exerciseRep.getExercise().getType_exercise()});
           for (MuscleExercise muscle:  exerciseRep.getExercise().getMuscles()){muscles.add(muscle.getMuscle());}
         }
-
-
-        Log.d(TAG,"weight "+exercises.get(0).getWeight());
 
         adapter = new ExerciseAdapter(this,exercises);
         list.setAdapter(adapter);
@@ -335,7 +341,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            Log.d(TAG, "action bar clicked");
+            //Log.d(TAG, "action bar clicked");
             finish();
         }
         return super.onOptionsItemSelected(item);

@@ -38,7 +38,7 @@ public class CreateWorkoutFinalInteractor {
 
     public void saveWorkoutDatabase(com.app.app.silverbarsapp.models.Workout workout,CreateWorkoutFinalCallback callback) throws SQLException {
         Log.d(TAG,"id "+workout.getId());
-        queries.insertUserWorkout(workout);
+        queries.saveMyWorkout(workout);
         callback.onWorkoutDatabaseCreated();
     }
 

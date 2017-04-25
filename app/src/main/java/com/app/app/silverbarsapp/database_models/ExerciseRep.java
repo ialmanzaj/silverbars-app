@@ -52,7 +52,6 @@ public class ExerciseRep  implements Serializable {
         this.weight = weight;
     }
 
-    
     public int getId() {
         return id;
     }
@@ -60,17 +59,17 @@ public class ExerciseRep  implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
-    
+
+    public void setExercise(Exercise exercise) {
+        this.exercise = exercise;
+    }
+
     public Exercise getExercise() {
         return exercise;
     }
 
     public int getRepetition() {
         return repetition;
-    }
-
-    public void setExercise(Exercise exercise) {
-        this.exercise = exercise;
     }
 
     public void setRepetition(int repetition) {

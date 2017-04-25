@@ -55,7 +55,7 @@ public class SavedWorkoutsInteractor {
 
 
                 //get the muscles
-                for (Muscle muscle: exercise_database.getMuscles()){
+                for (Muscle muscle: exercise_database.getMusclesFromExerciseProgression()){
                     muscles.add(new com.app.app.silverbarsapp.models.MuscleExercise(
                             muscle.getMuscle(),
                             muscle.getMuscle_activation(), muscle.getClassification(),

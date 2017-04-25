@@ -1,7 +1,5 @@
 package com.app.app.silverbarsapp.interactors;
 
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.app.app.silverbarsapp.MainService;
@@ -42,36 +40,24 @@ public class ProfileInteractor {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
-
-    public void downloadProfileImage(final Context context, String url,String imgName){
-
+    public void getProfileImage(ProfileCallback callback) throws SQLException {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://graph.facebook.com/")
                 .build();
-        String url_complete = url + "/picture?type=large";
+
+        String url_complete =  helper.getProfileFacebook().queryForAll().get(0).getId() + "/picture?type=large";
+
+        Log.d(TAG,"url_complete: "+url_complete);
 
         MainService downloadService = retrofit.create(MainService.class);
-
         downloadService.downloadFile(url_complete).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-
-                    Bitmap bitmap = null;
-
-                    if (response.isSuccessful()) {
-
-                       /* boolean writtenToDisk = utilities.saveWorkoutImgInDevice(context,response.body(),imgName);
-                        if(writtenToDisk){bitmap = utilities.loadWorkoutImageFromDevice(context,imgName);}
-                        profile_image.setImageBitmap(bitmap);*/
-
-                    }
-                    else {
-                        Log.v(TAG, "Download server contact failed");
-                    }
+                    Log.d(TAG,"response ");
+                    callback.getProfileImg(response.body());
 
                 } else {
                     Log.v(TAG,"State server contact failed");

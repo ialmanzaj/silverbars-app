@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.models.Exercise;
-import com.app.app.silverbarsapp.utils.ItemTouchHelperAdapter;
 import com.app.app.silverbarsapp.utils.ItemTouchHelperViewHolder;
 import com.app.app.silverbarsapp.utils.OnStartDragListener;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -38,16 +37,13 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
     private ArrayList<Exercise> mSelectedExercises;
     private OnExerciseListener listener;
 
-
     public ExercisesSelectedAdapter(Context context, OnStartDragListener dragStartListener) {
         mContext = context;
         mDragStartListener = dragStartListener;
         mSelectedExercises = new ArrayList<>();
     }
 
-
     public void setOnDataChangeListener(OnExerciseListener onDataChangeListener){listener = onDataChangeListener;}
-
 
     public void setExercises(List<Exercise> exercises){
         mSelectedExercises.addAll(exercises);
@@ -117,7 +113,6 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
 
     @Override
     public void onItemDismiss(int position) {
-
         //notify exercise deleted exercise
         listener.onExerciseDeleted(mSelectedExercises.get(position),position);
 
@@ -132,8 +127,7 @@ public class ExercisesSelectedAdapter extends RecyclerView.Adapter<ExercisesSele
 
     @Override
     public SelectedExercisesHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View dialog = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.exercises, viewGroup, false);
-        return new SelectedExercisesHolder(dialog);
+        return new SelectedExercisesHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.exercises, viewGroup, false));
     }
 
     @Override

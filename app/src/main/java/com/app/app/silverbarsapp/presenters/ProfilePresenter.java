@@ -5,6 +5,10 @@ import com.app.app.silverbarsapp.database_models.ProfileFacebook;
 import com.app.app.silverbarsapp.interactors.ProfileInteractor;
 import com.app.app.silverbarsapp.viewsets.ProfileView;
 
+import java.sql.SQLException;
+
+import okhttp3.ResponseBody;
+
 /**
  * Created by isaacalmanza on 01/28/17.
  */
@@ -23,11 +27,20 @@ public class ProfilePresenter extends BasePresenter implements ProfileCallback{
         interactor.getProfile(this);
     }
 
+    public void getProfileImg() throws SQLException {
+        interactor.getProfileImage(this);
+    }
+
+
     @Override
     public void getProfileFacebook(ProfileFacebook profile) {
         view.displayProfileFacebook(profile);
     }
 
+    @Override
+    public void getProfileImg(ResponseBody img) {
+        view.displayProfileImg(img);
+    }
 
     @Override
     public void onStart() {}

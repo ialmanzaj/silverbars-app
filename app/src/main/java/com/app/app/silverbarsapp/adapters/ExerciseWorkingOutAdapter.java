@@ -28,7 +28,6 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
 
     private List<ExerciseRep> exercises;
     private Context context;
-
     private Utilities utilities = new Utilities();
 
     public ExerciseWorkingOutAdapter(Context context, List<ExerciseRep> exercises) {

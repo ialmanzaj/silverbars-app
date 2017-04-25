@@ -1,9 +1,9 @@
 package com.app.app.silverbarsapp.callbacks;
 
-import com.app.app.silverbarsapp.database_models.ExerciseProgression;
+import com.app.app.silverbarsapp.models.ExerciseProgression;
 import com.app.app.silverbarsapp.models.WorkoutDone;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by isaacalmanza on 03/18/17.
@@ -11,10 +11,10 @@ import java.util.List;
 
 public interface ResultsCallback extends ServerCallback{
     void onWorkoutDone(WorkoutDone workout);
-    void onSavedExerciseProgress(com.app.app.silverbarsapp.models.ExerciseProgression exerciseProgression);
+    void onSavedExerciseProgress(ExerciseProgression exerciseProgression);
 
 
     void isEmptyProgression();
-    void onExerciseProgression(List<ExerciseProgression> exercisesProgression);
+    void onExerciseProgression(ArrayList<ExerciseProgression> exercisesProgression);
 
 }

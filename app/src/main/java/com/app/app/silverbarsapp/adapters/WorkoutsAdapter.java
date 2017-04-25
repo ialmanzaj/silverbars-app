@@ -33,17 +33,27 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
     private static final String TAG = WorkoutsAdapter.class.getSimpleName();
 
-
     private Context context;
     private List<Workout> workouts;
-
     private Utilities  utilities = new Utilities();
-
 
     public WorkoutsAdapter(Context context) {
         this.context = context;
         this.workouts = new ArrayList<>();
+    }
 
+    public void setWorkouts(List<Workout> workouts){
+        this.workouts.addAll(workouts);
+        notifyDataSetChanged();
+    }
+
+    public List<Workout> getWorkouts() {
+        return workouts;
+    }
+
+    public void clear(){
+        workouts.clear();
+        notifyDataSetChanged();
     }
 
     public class WorkoutHolder extends RecyclerView.ViewHolder {
@@ -75,7 +85,6 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
             context.startActivity(intent);
         }
-
     }
 
     @Override
@@ -103,20 +112,5 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
     public int getItemCount() {
         return workouts.size();
     }
-
-    public void setWorkouts(List<Workout> workouts){
-        this.workouts.addAll(workouts);
-        notifyDataSetChanged();
-    }
-
-    public List<Workout> getWorkouts() {
-        return workouts;
-    }
-
-    public void clear(){
-        workouts.clear();
-        notifyDataSetChanged();
-    }
-
 
 }

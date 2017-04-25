@@ -28,12 +28,10 @@ public class MyWorkoutsFragment extends Fragment {
         if (this.isAdded()) {
             ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
             setupViewPager(viewPager);
-
             TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
             tabLayout.setupWithViewPager(viewPager);
         }
     }
-
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
@@ -41,10 +39,5 @@ public class MyWorkoutsFragment extends Fragment {
         //adapter.addFragment(new SavedWorkoutsFragment(), getActivity().getString(R.string.myworkouts_fragment_saved));
         viewPager.setAdapter(adapter);
     }
-
-
-
-
-
 
 }

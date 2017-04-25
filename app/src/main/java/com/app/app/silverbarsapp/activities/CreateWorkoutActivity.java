@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -41,10 +40,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     private static final int FINAL_CREATE_WORKOUT = 2;
     private static final int LIST_EXERCISES_SELECTION = 1;
 
-
-    private Utilities utilities = new Utilities();
-    Filter filter = new Filter();
-
     @BindView(R.id.toolbar) Toolbar toolbar;
 
     @BindView(R.id.content) LinearLayout mMainContentLayout;
@@ -53,29 +48,35 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     @BindView(R.id.webview) WebView webView;
 
     @BindView(R.id.readd) Button mReAddButton;
-    @BindView(R.id.next) Button mNextbutton;
-    @BindView(R.id.add_exercises) Button mAddExerciseButton;
 
     @BindView(R.id.exercises_selected) RecyclerView mExercisesSelectedList;
 
+    /*@BindView(R.id.skills)RecyclerView mSkillsList;
+    @BindView(R.id.content_empty_types) LinearLayout mEmptyTypesView;
+
+    private SkillAdapter skill_adapter;*/
 
     private ExercisesSelectedAdapter adapter;
     private ItemTouchHelper mItemTouchHelper;
 
-    private ArrayList<Exercise> mExercisesAllList;
+    private String mMusclesStringJs = " ";
 
-    private String sMusclesBodyView = "";
-
-    //private  int ISOMETRIC = 0,CARDIO = 0,PYLOMETRICS = 0,STRENGTH = 0;
+    private Utilities utilities = new Utilities();
+    private Filter filter = new Filter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_workout);
         ButterKnife.bind(this);
+
+        initUI();
+    }
+
+    private void initUI(){
         setupToolbar();
         setupTabs();
-        setupAdapter();
+        setupExercisesAdapter();
         setupWebview();
     }
 
@@ -93,19 +94,52 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost3);
         tabHost2.setup();
 
-        TabHost.TabSpec rutina = tabHost2.newTabSpec(getResources().getString(R.string.tab_overview));
+        TabHost.TabSpec rutina = tabHost2.newTabSpec(getResources().getString(R.string.tab_workout));
+        rutina.setIndicator(getResources().getString(R.string.tab_workout));
+        rutina.setContent(R.id.workout);
+
         TabHost.TabSpec muscles = tabHost2.newTabSpec(getResources().getString(R.string.tab_muscles));
-
-        rutina.setIndicator(getResources().getString(R.string.tab_overview));
-        rutina.setContent(R.id.rutina_);
-
         muscles.setIndicator(getResources().getString(R.string.tab_muscles));
-        muscles.setContent(R.id.muscles_);
+        muscles.setContent(R.id.muscles);
 
+      /*  TabHost.TabSpec skills = tabHost2.newTabSpec("Focus");
+        skills.setIndicator("Focus");
+        skills.setContent(R.id.types);
+*/
         tabHost2.addTab(rutina);
         tabHost2.addTab(muscles);
+        //tabHost2.addTab(skills);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == LIST_EXERCISES_SELECTION) {
+            if (resultCode == RESULT_OK){
+                if (data.hasExtra("exercises_selected")) {
+
+                    ArrayList<Exercise>  exercises = data.getParcelableArrayListExtra("exercises_selected");
+                    setExercisesAdapter(exercises);
+                }
+            }
+        } else if (requestCode == FINAL_CREATE_WORKOUT){
+            if (resultCode == RESULT_OK ){
+                setResult(RESULT_OK, new Intent());
+                finish();
+            }
+        }
+    }
+
+   /* private void setupAdapterSkills(List<Exercise> exercises){
+        onEmptyTypesViewOff();
+
+        //list settings
+        mSkillsList.setLayoutManager(new LinearLayoutManager(this));
+        mSkillsList.setNestedScrollingEnabled(false);
+        mSkillsList.setHasFixedSize(false);
+        skill_adapter = new SkillAdapter(utilities.getTypesByExercise(exercises));
+        mSkillsList.setAdapter(skill_adapter);
+    }*/
 
     private void setupWebview(){
         WebSettings webSettings = webView.getSettings();
@@ -113,7 +147,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         utilities.loadUrlOfMuscleBody(this,webView);
     }
 
-    private void setupAdapter(){
+    private void setupExercisesAdapter(){
         mExercisesSelectedList.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ExercisesSelectedAdapter(this,this);
 
@@ -129,19 +163,15 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     @OnClick(R.id.next)
     public void nextButton(){
-
         if (adapter.getItemCount() < 1) {
             Toast.makeText(this, getResources().getString(R.string.exercises_no_selected), Toast.LENGTH_SHORT).show();
             return;
         }
 
-
         Intent intent = new Intent(this, CreateWorkoutFinalActivity.class);
-        intent.putParcelableArrayListExtra("exercises", mExercisesAllList);
         intent.putParcelableArrayListExtra("exercises_selected", adapter.getSelectedExercises());
         startActivityForResult(intent,FINAL_CREATE_WORKOUT);
     }
-
 
     @OnClick(R.id.add_exercises)
     public void addExerciseButton(){
@@ -151,61 +181,28 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     @OnClick(R.id.readd)
     public void readAddExerciseButton(){
-
         Intent intent = new Intent(this,MuscleSelectionActivity.class);
-
-
         intent.putExtra("exercises",filter.getExercisesIds(adapter.getSelectedExercises()));
         startActivityForResult(intent,LIST_EXERCISES_SELECTION);
     }
 
+    private void setExercisesAdapter(List<Exercise> exercises){
+        //empty view off
+        onEmptyViewOff();
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LIST_EXERCISES_SELECTION) {
-            if (resultCode == RESULT_OK){
-                if (data.hasExtra("exercises") && data.hasExtra("exercises_selected")) {
+        //set exercises in adapter
+        //setupAdapterSkills(exercises);
+        adapter.setExercises(exercises);
 
-                    mExercisesAllList =  data.getParcelableArrayListExtra("exercises");
-                    ArrayList<Integer> mExercisesSelectedListIds = data.getIntegerArrayListExtra("exercises_selected");
-
-                    setExercisesAdapter(mExercisesAllList, mExercisesSelectedListIds);
-                }
-            }
-
-        } else if (requestCode == FINAL_CREATE_WORKOUT){
-            if (resultCode == RESULT_OK ){
-                setResult(RESULT_OK, new Intent());
-                finish();
-            }
-        }
-    }
-
-    @Override
-    public void onExerciseDeleted(Exercise exercise,int position) {
-        Log.d(TAG,"onExerciseDeleted");
-
-        //show snackbar of exercise deleted
-        Snackbar.make(mMainContentLayout, "Exercise deleted", Snackbar.LENGTH_LONG).setAction("UNDO", view -> {
-
-            //re add element to the adapter
-            adapter.insert(position,exercise);
-
-            //update muscle view
-            updateMusclesView();
-
-            //show again the snackbar of restored
-            Snackbar snackbar_restored = Snackbar.make(mMainContentLayout, "Exercise is restored!", Snackbar.LENGTH_SHORT);
-            snackbar_restored.show();
-
-        }).show();
+        //updated muscles view
+        updateMuscleView(filter.getMusclesFromExercises(exercises));
+        utilities.injectJS(webView,mMusclesStringJs);
     }
 
     @Override
     public void onUpdateMuscleView() {
-        Log.d(TAG,"onUpdateMuscleView");
         updateMusclesView();
+        //updateTypes();
     }
 
     private void updateMusclesView(){
@@ -213,31 +210,41 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         reloadWebview();
     }
 
-    private void setExercisesAdapter(List<Exercise> list_all_exercises,List<Integer> list_exercises_id){
-        //empty view off
-        onEmptyViewOff();
+   /* private void updateTypes(){
+        skill_adapter.set(utilities.getTypesByExercise(adapter.getSelectedExercises()));
+    }*/
 
-        //set exercises in adapter
-        adapter.setExercises(filter.getExercisesById(list_all_exercises,list_exercises_id));
+    @Override
+    public void onExerciseDeleted(Exercise exercise,int position) {
+        //show snackbar of exercise deleted
+        Snackbar.make(mMainContentLayout, R.string.activity_create_workout_deleted, Snackbar.LENGTH_LONG).setAction
+                (R.string.activity_create_workout_undo, view -> {
 
-        //updated muscles view
-        updateMuscleView(filter.getMusclesFromExercises(filter.getExercisesById(list_all_exercises,list_exercises_id)));
-        utilities.injectJS(webView,sMusclesBodyView);
-    }
+                    //re add element to the adapter
+                    adapter.insert(position,exercise);
+                    //update muscle view
+                    updateMusclesView();
 
-    private void reloadWebview(){
-        webView.reload();
-        utilities.loadUrlOfMuscleBody(this,webView);
-        utilities.onWebviewReady(webView,sMusclesBodyView);
+                    //show again the snackbar of restored
+                    Snackbar snackbar_restored = Snackbar.make(mMainContentLayout, R.string.activity_create_workout_restored,
+                            Snackbar.LENGTH_SHORT);
+                    snackbar_restored.show();
+        }).show();
     }
 
     private void updateMuscleView(List<String> musculos){
         //Log.d(TAG,"muscle size "+musculos.size());
         if (musculos.size() < 1){
-            sMusclesBodyView = " ";
+            mMusclesStringJs = " ";
         }else {
-            sMusclesBodyView = utilities.getMusclesReadyForWebview(utilities.deleteCopiesofList(musculos));
+            mMusclesStringJs = utilities.getMusclesReadyForWebview(utilities.deleteCopiesofList(musculos));
         }
+    }
+
+    private void reloadWebview(){
+        webView.reload();
+        utilities.loadUrlOfMuscleBody(this,webView);
+        utilities.onWebviewReady(webView,mMusclesStringJs);
     }
 
     private void onEmptyViewOff(){
@@ -245,6 +252,14 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         mReAddButton.setVisibility(View.VISIBLE);
         mExercisesSelectedList.setVisibility(View.VISIBLE);
     }
+
+    /*private void onEmptyTypesViewOn(){
+        mEmptyTypesView.setVisibility(View.VISIBLE);
+    }
+
+    private void onEmptyTypesViewOff(){
+        mEmptyTypesView.setVisibility(View.GONE);
+    }*/
 
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {mItemTouchHelper.startDrag(viewHolder);}
@@ -256,7 +271,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            Log.d(TAG, "action bar clicked");
+            //Log.d(TAG, "action bar clicked");
             finish();
         }
         return super.onOptionsItemSelected(item);

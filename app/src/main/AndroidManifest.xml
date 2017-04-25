@@ -139,6 +139,9 @@
         <activity android:name=".activities.ExerciseDetailActivity" />
         <activity android:name=".activities.UserPreferencesActivity" />
         <activity android:name=".activities.WorkoutsDoneActivity" />
+        <activity android:name=".activities.ExerciseDetailDailyActivity" />
+        <activity android:name=".activities.ExerciseDetailMonthlyActivity" />
+        <activity android:name=".activities.ExerciseDetailWeeklyActivity"></activity>
     </application>
 
 </manifest>

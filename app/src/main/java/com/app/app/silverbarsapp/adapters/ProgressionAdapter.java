@@ -62,7 +62,6 @@ public class ProgressionAdapter extends RecyclerView.Adapter<ProgressionAdapter.
 
     @Override
     public void onBindViewHolder(ProgressionAdapter.ViewHolder viewholder, int position) {
-
         viewholder.mMuscleName.setText(progressions.get(position).getMuscle().getMuscle_name());
         viewholder.mMuscleLevel.setText(String.valueOf(progressions.get(position).getLevel()));
         viewholder.mMuscleProgres.setText(String.valueOf(progressions.get(position).getMuscle_activation_progress()));
@@ -72,6 +71,5 @@ public class ProgressionAdapter extends RecyclerView.Adapter<ProgressionAdapter.
     public int getItemCount() {
         return progressions.size();
     }
-
 
 }

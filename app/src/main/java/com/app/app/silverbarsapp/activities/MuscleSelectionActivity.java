@@ -6,23 +6,24 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.webkit.WebSettings;
+import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.app.app.silverbarsapp.utils.MuscleListener;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
-import com.app.app.silverbarsapp.utils.WebAppInterface;
 import com.app.app.silverbarsapp.components.DaggerMuscleSelectionComponent;
 import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.models.Muscle;
 import com.app.app.silverbarsapp.modules.MuscleSelectionModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.MuscleSelectionPresenter;
+import com.app.app.silverbarsapp.utils.MuscleListener;
 import com.app.app.silverbarsapp.utils.Utilities;
+import com.app.app.silverbarsapp.utils.WebAppInterface;
 import com.app.app.silverbarsapp.viewsets.MuscleSelectionView;
 
 import java.util.ArrayList;
@@ -43,17 +44,19 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     @BindView(R.id.toolbar) Toolbar toolbar;
 
     @BindView(R.id.webview) WebView myWebView;
-    @BindView(R.id.look_exercises) Button mLookExercises;
+    @BindView(R.id.search_exercises) Button mLookExercises;
 
     @BindView(R.id.muscles_selected)TextView mMusclesTextSelected;
 
     @BindView(R.id.scroll_text) HorizontalScrollView mScrollText;
 
+    @BindView(R.id.loading) LinearLayout mLoadingView;
+    @BindView(R.id.error_view) LinearLayout mErrorView;
+
     private Utilities utilities = new Utilities();
 
     private ArrayList<String> muscles_selected = new ArrayList<>();
-    private ArrayList<Integer> exercises_selected;
-
+    private ArrayList<Integer> exercises_ids_selected;
 
     @Override
     protected int getLayout() {
@@ -78,56 +81,36 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getIntent().getExtras() != null) {getExtras(getIntent().getExtras());}
-
         setupToolbar();
         setupWebview();
-
         mMuscleSelectionPresenter.getMuscles();
+
+        if (getIntent().getExtras() != null) {getExtras(getIntent().getExtras());}
+    }
+
+    private void getExtras(Bundle extras){
+        exercises_ids_selected = extras.getIntegerArrayList("exercises_selected");
     }
 
     private void setupWebview(){
-        WebSettings webSettings = myWebView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        myWebView.addJavascriptInterface( new WebAppInterface(this,this), "Android");
+        myWebView.getSettings().setJavaScriptEnabled(true);
+        myWebView.addJavascriptInterface(new WebAppInterface(this,this), "Android");
         utilities.loadUrlOfMuscleBody(this,myWebView);
     }
 
     public void setupToolbar(){
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Muscle seleccion");
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.activity_muscle_selection_toolbar);
+        }
     }
 
-    private void getExtras(Bundle extras){
-        exercises_selected = extras.getIntegerArrayList("exercises");
-    }
-
-    @OnClick(R.id.look_exercises)
-    public void searchExercises(){
-
-        if (muscles_selected.size() < 1){
-            utilities.toast(this,"Seleccione que musculos");
-            return;
-        }
-
-        if (exercises_selected != null){
-            startExerciseList(true);
-        }else {
-            startExerciseList(false);
-        }
-
-    }
-
-
-    private void startExerciseList(boolean exist_exercise_selected){
-        Intent intent = new Intent(this, ExerciseListActivity.class);
-        if (exist_exercise_selected){
-            intent.putExtra("exercises",exercises_selected);
-        }
-
-        intent.putExtra("muscles",muscles_selected);
-        startActivityForResult(intent,1);
+    @OnClick(R.id.reload)
+    public void reload(){
+        onErrorViewOff();
+        onLoadingViewOn();
+        mMuscleSelectionPresenter.getMuscles();
     }
 
     @Override
@@ -135,15 +118,12 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK){
-                if (data.hasExtra("exercises") && data.hasExtra("exercises_selected")) {
+                if (data.hasExtra("exercises_selected")) {
 
-                    ArrayList<Exercise> all_exercises = data.getParcelableArrayListExtra("exercises");
-                    ArrayList<Integer> mExercisesSelectedListIds = data.getIntegerArrayListExtra("exercises_selected");
-
+                    ArrayList<Exercise>  exercises = data.getParcelableArrayListExtra("exercises_selected");
 
                     Intent return_intent = new Intent();
-                    return_intent.putExtra("exercises",all_exercises);
-                    return_intent.putExtra("exercises_selected",mExercisesSelectedListIds);
+                    return_intent.putExtra("exercises_selected",exercises);
                     setResult(RESULT_OK, return_intent);
                     finish();
                 }
@@ -151,19 +131,47 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
         }
     }
 
+
+    @OnClick(R.id.search_exercises)
+    public void searchExercisesButton(){
+
+        if (muscles_selected.size() < 1){
+            utilities.toast(this,getString(R.string.activity_muscle_selection_selection));
+            return;
+        }
+
+        if (exercises_ids_selected != null){
+            startExerciseList(true);
+        }else {
+            startExerciseList(false);
+        }
+    }
+
+    private void startExerciseList(boolean exist_exercise_selected){
+        Intent intent = new Intent(this, ExerciseListActivity.class);
+        if (exist_exercise_selected){
+            intent.putExtra("exercises",exercises_ids_selected);
+        }
+        intent.putExtra("muscles",muscles_selected);
+        startActivityForResult(intent,1);
+    }
+
     @Override
     public void displayNetworkError() {
         Log.e(TAG,"displayNetworkError");
+        onErrorViewOn();
     }
 
     @Override
     public void displayServerError() {
         Log.e(TAG,"displayServerError");
+        onErrorViewOn();
     }
 
     @Override
     public void getMuscles(List<Muscle> muscles) {
         //Log.d(TAG,"muscles "+muscles);
+        onLoadingViewOff();
 
         List<String> muscles_names = new ArrayList<>();
 
@@ -171,7 +179,7 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
             muscles_names.add(muscle.getMuscle_name());
         }
 
-        utilities.injectJSOnClick(myWebView,utilities.getMusclesReadyForWebview(muscles_names));
+        myWebView.post(() -> utilities.injectJSOnClick(myWebView,utilities.getMusclesReadyForWebview(muscles_names)));
     }
 
     @Override
@@ -180,13 +188,23 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
 
         runOnUiThread(() -> {
             //stuff that updates ui
-            mMusclesTextSelected.setText(muscles_selected.toString());
+            mMusclesTextSelected.setText(muscles_selected.toString().replace("[","").replace("]",""));
         });
-
 
         mScrollText.postDelayed(() -> mScrollText.fullScroll(HorizontalScrollView.FOCUS_RIGHT), 100L);
     }
 
+    private void onLoadingViewOn(){
+        mLoadingView.setVisibility(View.VISIBLE);
+    }
+
+    private void onLoadingViewOff(){
+        mLoadingView.setVisibility(View.GONE);
+    }
+
+    private void onErrorViewOn(){mErrorView.setVisibility(View.VISIBLE);}
+
+    private void onErrorViewOff(){mErrorView.setVisibility(View.GONE);}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -195,7 +213,7 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            Log.d(TAG, "action bar clicked");
+            //Log.d(TAG, "action bar clicked");
             finish();
         }
         return super.onOptionsItemSelected(item);

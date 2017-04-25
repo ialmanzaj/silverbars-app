@@ -38,7 +38,6 @@ public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkouts
 
     SavedWorkoutsAdapter adapter;
 
-
     @Override
     protected int getFragmentLayout() {
         return R.layout.fragment_saved_workouts;
@@ -52,7 +51,6 @@ public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkouts
     @Override
     public void injectDependencies() {
         super.injectDependencies();
-
         DaggerSavedWorkoutsComponent.builder()
                 .silverbarsComponent(SilverbarsApp.getApp(CONTEXT).getComponent())
                 .savedWorkoutsModule(new SavedWorkoutsModule(this))
@@ -62,8 +60,6 @@ public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkouts
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG,"SavedWorkoutsFragment");
-
         if (this.isAdded()){
             adapter = new SavedWorkoutsAdapter(getActivity());
             mLocalWorkoutsList.setAdapter(adapter);
@@ -74,7 +70,6 @@ public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkouts
 
     @Override
     public void onWorkouts(List<Workout> workouts) {
-        Log.d(TAG,"workouts: "+workouts.get(0).getWorkout_name());
         onEmptyOff();
         adapter.set(workouts);
     }
@@ -82,11 +77,15 @@ public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkouts
     @Override
     public void onEmptyWorkouts() {
         Log.i(TAG,"empty");
+        onEmptyOn();
     }
-
 
     private void onEmptyOff(){
         mEmpyStateSavedWorkout.setVisibility(View.GONE);
+    }
+
+    private void onEmptyOn(){
+        mEmpyStateSavedWorkout.setVisibility(View.VISIBLE);
     }
 
 }

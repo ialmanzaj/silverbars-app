@@ -2,8 +2,10 @@ package com.app.app.silverbarsapp.fragments;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,11 +19,15 @@ import com.app.app.silverbarsapp.database_models.ProfileFacebook;
 import com.app.app.silverbarsapp.modules.ProfileModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ProfilePresenter;
+import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.ProfileView;
+
+import java.sql.SQLException;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import okhttp3.ResponseBody;
 
 
 public class ProfileFragment extends BaseFragment implements ProfileView{
@@ -35,6 +41,8 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
 
     @Inject
     ProfilePresenter mProfilePresenter;
+
+    private Utilities utilities = new Utilities();
 
     @Override
     protected int getFragmentLayout() {
@@ -50,7 +58,6 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
     @Override
     public void injectDependencies() {
         super.injectDependencies();
-
         DaggerProfileComponent.builder()
                 .silverbarsComponent(SilverbarsApp.getApp(CONTEXT).getComponent())
                 .profileModule(new ProfileModule(this))
@@ -61,14 +68,44 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mProfilePresenter.getProfile();
+        getImg();
 
         mMyWorkoutsDone.setOnClickListener(v -> {startActivity(new Intent(CONTEXT, WorkoutsDoneActivity.class));});
     }
 
+    private void getImg(){
+        Bitmap profile_img = getProfileImg();
+
+        if (profile_img != null){
+            setProfileImg(getProfileImg());
+        }else {
+
+            try {
+                mProfilePresenter.getProfileImg();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @Override
     public void displayProfileFacebook(ProfileFacebook profile) {
         mProfileName.setText(profile.getFirst_name() +" "+ profile.getLast_name());
+    }
+
+    @Override
+    public void displayProfileImg(ResponseBody img) {
+        Log.d(TAG,"displayProfileImg");
+        if (utilities.saveWorkoutImgInDevice(CONTEXT,img,"profile")){
+           setProfileImg(getProfileImg());
+        }
+    }
+    private void setProfileImg(Bitmap bitmap){
+        mProfileImg.setImageBitmap(bitmap);
+    }
+
+    private Bitmap getProfileImg(){
+        return utilities.loadWorkoutImageFromDevice(CONTEXT,"profile");
     }
 
 

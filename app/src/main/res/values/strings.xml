@@ -1,20 +1,26 @@
 <resources>
+
+    <!---           Strings for authentication       -->
+    <string name="com.andretietz.retroauth.authentication.ACTION" translatable="false">@string/authentication_ACTION</string>
+    <string name="authentication_ACTION" translatable="false">com.app.app.silverbarsapp.ACTION</string>
+    <string name="authentication_ACCOUNT" translatable="false">com.app.app.silverbarsapp.ACCOUNT</string>
+    <string name="authentication_USER" translatable="false">com.app.app.silverbarsapp.USER</string>
+    <string name="authentication_TOKEN" translatable="false">com.app.app.silverbarsapp.TOKEN</string>
+
+
     <string name="app_name">Silverbars</string>
 
-    <string name="rep_edit">Total of Repetitions</string>
-    <string name="filtertitle">Workout filter</string>
 
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_login">Sign in</string>
-    <string name="search_hint">Search artist</string>
-
-
+    <!-- Strings MAIN-MENU BOTTOM-BAR  -->
     <string name="menu_home">Home</string>
     <string name="menu_myworkouts">My workouts</string>
     <string name="menu_profile">Profile</string>
     <string name="menu_progression">My progression</string>
 
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="search_hint">Search artist</string>
 
     <!-- Strings related to dialog -->
     <string name="content">Content</string>
@@ -37,13 +43,14 @@
     <string name="facebook_app_id" translatable="false">183093092104411</string>
     <string name="fb_login_protocol_scheme" translatable="false">183093092104411</string>
 
-    <string name="drawer_open">Open Drawer</string>
-    <string name="drawer_close">Close Drawer</string>
     <string name="action_websearch">Web search</string>
 
     <string name="app_not_available">Sorry, there\'s no web browser available</string>
     <string name="sign_in" translatable="false">False</string>
 
+
+    <string name="rep_edit">Total of Repetitions</string>
+    <string name="filtertitle">Workout filter</string>
 
     <!-- Strings related to activity_myworkouts -->
     <string name="blank_text_my_workouts">THERE\'S NO WORKOUT YET</string>
@@ -65,7 +72,6 @@
     <string name="artist_name">Artist name</string>
     <string name="number_five">5</string>
     <string name="get_ready_text">Get Ready!</string>
-
 
     <!-- Strings related to activity_workouts -->
     <string name="number_sets_text">Number of Sets:</string>
@@ -93,15 +99,9 @@
     <string name="resume_workout_text">RESUME WORKOUT</string>
     <string name="pause_workout_text">PAUSE WORKOUT</string>
     <string name="rest_text">Rest</string>
-    <string name="tab_overview">Workout</string>
 
-    <string name="tab_muscles">Muscles</string>
 
     <string name="done_text">DONE</string>
-    <string name="title_activity_navigation">navigation</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
     <string name="set_edit">Total of Sets</string>
@@ -113,7 +113,7 @@
     <string name="tab_workouts_home">Workouts</string>
     <string name="tab_myworkouts_home">My Workouts</string>
     <string name="tab_profile">Profile</string>
-    <string name="tab_exercises">Exercises</string>
+
 
     <string-array name="navigation_array">
         <item>Workouts</item>
@@ -198,7 +198,6 @@
 
     <string name="premium">Only Premium</string>
 
-    <string name="skills">My Skills</string>
     <string name="empty_playlist">There\'s no playlist</string>
     <string name="results">My Results</string>
 
@@ -219,27 +218,85 @@
     <string name="slogan_login">Logging in to start training</string>
     <string name="slogan_silverbars">Be your own machine</string>
 
-
     <!---    Strings of workingout activity    -->
     <string name="working_out_reps">Reps</string>
     <string name="working_out_seconds">Seconds</string>
-
 
     <!---    Strings of my workouts fragment   -->
     <string name="myworkouts_fragment_saved">Saved workouts</string>
     <string name="myworkouts_fragment_myworkouts">My workouts</string>
 
-
     <!---    Strings of progress fragment   -->
-    <string name="progress_fragment_today_title">Daily</string>
-    <string name="progress_fragment_total_title">Total</string>
+    <string name="progress_fragment_daily">Daily</string>
+    <string name="progress_fragment_weekly">Weekly</string>
+    <string name="progress_fragment_monthly">Monthly</string>
+
+    <!---    Strings of activity create workout_final   -->
+    <string name="activity_create_workout_final_saving">Saving…</string>
+
+    <!---    Strings of activity exercise_list  -->
+    <string name="activity_exercise_list_empty">There\'s no more exercises:(</string>
+
+    <string name="loading">Loading…</string>
+
+    <!---    Strings of activity activity_muscle_selection  -->
+    <string name="activity_muscle_selection_toolbar">Exercise selection per muscle</string>
+    <string name="activity_muscle_selection_title">Select the muscles that you want to train</string>
+    <string name="activity_muscle_selection_exercises">Exercises</string>
+    <string name="activity_muscle_selection_search">Search exercises</string>
+    <string name="activity_muscle_selection_selection">Select which muscles</string>
+
+    <!---    Strings of activity_results -->
+    <string name="activity_results_title">Results</string>
+    <string name="activity_results_saving">Saving…</string>
+    <string name="activity_results_save">Save results</string>
+    <string name="activity_results_sets">Sets completed:</string>
+    <string name="activity_results_time">Total time of the workout:</string>
+    <string name="activity_results_saved">Your results are saved!</string>
+    <string name="activity_results_dialog_title">Save Results</string>
+    <string name="activity_results_dialog_content">Are you sure that you want to lose your results?</string>
+
+    <!---    Strings of activity_workingout -->
+    <string name="activity_workingout_second">sec</string>
+    <string name="activity_workingout_save">Save and continue</string>
+    <string name="activity_workingout_total">Total time:</string>
+
+    <!---    Strings of fragment profile -->
+    <string name="fragment_profile_workout_done">My workouts done</string>
+
+    <!---    Strings of fragment progress -->
+    <string name="fragment_progress_empty">You haven\'t train :(</string>
+    <string name="fragment_progress_muscle_selection">Select which muscle to see my progression</string>
+    <string name="fragment_progress_okaybutton">Okay</string>
+
+    <string name="activity_create_workout_deleted">Exercise deleted</string>
+    <string name="activity_create_workout_restored">Exercise is restored!</string>
+    <string name="activity_create_workout_undo">UNDO</string>
+
+    <string name="activity_create_workout_final_workout_name_seleccion">Select your workout name</string>
+    <string name="activity_create_workout_final_sets_seleccion">Select your sets</string>
+    <string name="activity_create_workout_final_reps_seleccion">Select your reps or seconds</string>
+
+    <string name="activity_user_preferences">Loading initial settings</string>
+
+    <string name="user_workout_adapter_delete_title">Delete workout</string>
+    <string name="user_workout_adapter_delete_content">Are you sure to want to delete this workout?</string>
+
+    <!---    Strings of tabs  -->
+    <string name="tab_workout">Workout</string>
+    <string name="tab_muscles">Muscles</string>
+    <string name="tab_exercises">Exercises</string>
+
+    <!---    Strings of DIALOG  -->
+    <string name="yes_option">YES</string>
+    <string name="no_option">NO</string>
+
+    <!---    Strings of tabs of activity results  -->
+    <string name="activity_results_tab_overview">Overview</string>
+    <string name="activity_results_tab_exercises">Exercises</string>
+
+    <string name="activity_workout_save_workout">Download workout</string>
 
 
-
-    <!---           Strings for authentication       -->
-    <string name="com.andretietz.retroauth.authentication.ACTION" translatable="false">@string/authentication_ACTION</string>
-    <string name="authentication_ACTION" translatable="false">com.app.app.silverbarsapp.ACTION</string>
-    <string name="authentication_ACCOUNT" translatable="false">com.app.app.silverbarsapp.ACCOUNT</string>
-    <string name="authentication_TOKEN" translatable="false">com.app.app.silverbarsapp.TOKEN</string>
 </resources>
 
