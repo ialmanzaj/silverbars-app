@@ -17,8 +17,6 @@ import com.app.app.silverbarsapp.database_models.UserWorkout;
 import com.app.app.silverbarsapp.database_models.WorkoutDone;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.DeleteBuilder;
-import com.j256.ormlite.stmt.UpdateBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
@@ -39,6 +37,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private Dao<TypeExercise, Integer> mTypeDao;
     private Dao<ProfileFacebook, Integer> mProfileFacebook;
     private Dao<Person, Integer> mPersonDao;
+
     private Dao<WorkoutDone, Integer> mWorkoutDoneDao;
     private Dao<ExerciseProgression, Integer> mExerciseProgressionDao;
 
@@ -181,19 +180,5 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return mExerciseProgressionDao;
     }
 
-
-    public void updateSavedWorkout(int workout_id,boolean saved) throws java.sql.SQLException {
-        UpdateBuilder<MySavedWorkout, Integer> updateSavedWorkoutBuilder = getSavedWorkoutDao().updateBuilder();
-        updateSavedWorkoutBuilder.where().idEq(workout_id);
-        updateSavedWorkoutBuilder.updateColumnValue("saved",saved);
-        updateSavedWorkoutBuilder.update();
-    }
-
-
-    public void deleteUserWorkout(int workout_id) throws java.sql.SQLException {
-        DeleteBuilder<UserWorkout, Integer> deleteUserWorkoutBuilder = getUserWorkoutDao().deleteBuilder();
-        deleteUserWorkoutBuilder.where().idEq(workout_id);
-        deleteUserWorkoutBuilder.delete();
-    }
 
 }

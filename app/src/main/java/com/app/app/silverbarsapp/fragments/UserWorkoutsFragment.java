@@ -74,10 +74,8 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
         if (this.isAdded()){
             adapter = new UserWorkoutsAdapter(getActivity());
             adapter.setWorkoutListener(this);
-
             mMyWorkoutViewList.setAdapter(adapter);
         }
-
 
         mUserWorkoutsPresenter.getMyWorkouts();
     }
@@ -92,7 +90,7 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 3) {
             if (resultCode == RESULT_OK){
-                Log.d(TAG,"created succesfully");
+                //Log.d(TAG,"created succesfully");
 
                 //created succesfully
                 mUserWorkoutsPresenter.getMyWorkouts();
@@ -119,6 +117,7 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
     @Override
     public void onEmptyWorkouts() {
         Log.i(TAG,"onEmptyWorkouts");
+        onEmptyViewOn();
     }
 
     private void onEmptyViewOn(){

@@ -160,17 +160,17 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     public void saveButton() {
         
         if (Objects.equals(workoutName.getText().toString(), "")){
-            Toast.makeText(this, "Select your workout name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.activity_create_workout_final_workout_name_seleccion, Toast.LENGTH_SHORT).show();
             return;
         }
         
         if (mCurrentSet < 1){
-            Toast.makeText(this, "Select your sets", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.activity_create_workout_final_sets_seleccion, Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!didYouSelectedReps()){
-            Toast.makeText(this, "Select your reps or seconds", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.activity_create_workout_final_reps_seleccion, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -190,6 +190,7 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         }
     }
 
+
    /* @OnClick(R.id.chageImg)
     public void changeImgButton(){
         Intent intent = new Intent();
@@ -197,8 +198,6 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
     }*/
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -291,7 +290,6 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
     }
 
-
     private ArrayList<ExerciseRep> getExercisesReady(ArrayList<ExerciseRep> exercises){
         for (ExerciseRep exercise: exercises){
             switch (exercise.getExercise_state()){
@@ -308,7 +306,6 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
     @Override
     public void displayWorkoutDatabaseCreated() {
-        Log.d(TAG,"displayWorkoutDatabaseCreated");
         setResult(RESULT_OK, new Intent());
         finish();
     }

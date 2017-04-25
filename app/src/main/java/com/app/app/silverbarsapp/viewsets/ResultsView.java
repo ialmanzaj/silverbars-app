@@ -1,6 +1,6 @@
 package com.app.app.silverbarsapp.viewsets;
 
-import com.app.app.silverbarsapp.database_models.ExerciseProgression;
+import com.app.app.silverbarsapp.models.ExerciseProgression;
 import com.app.app.silverbarsapp.models.WorkoutDone;
 
 import java.util.List;

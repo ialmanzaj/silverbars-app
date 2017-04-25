@@ -26,11 +26,20 @@ public class WorkoutDone implements Parcelable{
     @SerializedName("total_time")
     private String total_time;
 
-
     @SerializedName("sets_completed")
     private int sets_completed;
 
     public WorkoutDone(){}
+
+
+    public WorkoutDone(int id,String date, Workout workout,int person,String total_time,int sets_completed){
+        this.id = id;
+        this.date = date;
+        this.workout = workout;
+        this.person = person;
+        this.total_time = total_time;
+        this.sets_completed = sets_completed;
+    }
 
 
     protected WorkoutDone(Parcel in) {

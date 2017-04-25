@@ -226,7 +226,7 @@
                 android:id="@+id/loading_text"
                 android:textSize="24sp"
                 android:textColor="@color/black"
-                android:text="Saving..."
+                android:text="@string/activity_create_workout_final_saving"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>

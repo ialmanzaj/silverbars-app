@@ -24,7 +24,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         if (activeAccount != null){
 
-            startMainActivity();
+            String active_user = AccountManager.get(this).getUserData(activeAccount, getString(R.string.authentication_USER));
+
+            if (active_user != null){  startMainActivity();}
+
 
         } else {
             startLogin();

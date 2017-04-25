@@ -5,7 +5,7 @@ import android.util.Log;
 import com.app.app.silverbarsapp.DatabaseQueries;
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.callbacks.ResultsCallback;
-import com.app.app.silverbarsapp.database_models.ExerciseProgression;
+import com.app.app.silverbarsapp.models.ExerciseProgression;
 import com.app.app.silverbarsapp.models.WorkoutDone;
 import com.app.app.silverbarsapp.utils.DatabaseHelper;
 
@@ -30,12 +30,10 @@ public class ResultsInteractor {
 
     private static final String TAG = ResultsInteractor.class.getSimpleName();
 
-    private DatabaseHelper databaseHelper;
     private MainService mainService;
     private DatabaseQueries queries;
 
     public ResultsInteractor(DatabaseHelper helper,MainService mainService){
-        this.databaseHelper = helper;
         this.mainService = mainService;
         queries = new DatabaseQueries(helper);
     }
@@ -51,9 +49,11 @@ public class ResultsInteractor {
             @Override
             public void onResponse(Call<WorkoutDone> call, Response<WorkoutDone> response) {
                 if(response.isSuccessful()){
+
                     callback.onWorkoutDone(response.body());
+
                 }else {
-                    Log.e(TAG,""+response.errorBody()+" code "+response.code());
+                    Log.e(TAG,"error "+response.errorBody()+" code "+response.code());
                     callback.onServerError();
                 }
             }
@@ -86,17 +86,16 @@ public class ResultsInteractor {
                 )) .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(callback::onSavedExerciseProgress,
-                        error -> Log.e(TAG, "onFailure error ", error)
+                        error -> {Log.e(TAG, "onFailure error ", error);callback.onNetworkError();}
                 );
     }
 
 
-    public void getProgressions(List<com.app.app.silverbarsapp.models.ExerciseProgression> exercises, ResultsCallback callback) throws SQLException {
+    public void getProgressions(List<ExerciseProgression> exercises, ResultsCallback callback) throws SQLException {
         List<ExerciseProgression> progressions = new ArrayList<>();
-       for (com.app.app.silverbarsapp.models.ExerciseProgression exercise: exercises){
+       for (ExerciseProgression exercise: exercises){
 
-           ExerciseProgression exerciseProgression =
-                   queries.searchExerciseProgressionByExerciseid(exercise.getExercise().getId());
+           ExerciseProgression exerciseProgression = queries.getLastProgressionByExerciseId(exercise.getExercise().getId());
 
            if (exerciseProgression != null){
                progressions.add(exerciseProgression);
@@ -110,6 +109,7 @@ public class ResultsInteractor {
        }
 
     }
+
 
 
 

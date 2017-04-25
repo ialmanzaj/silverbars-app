@@ -85,7 +85,8 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
                 md.update(signature.toByteArray());
                 Log.d("KeyHash ", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
-        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {Log.e(TAG,"NameNotFoundException or NoSuchAlgorithmException",e);}
+        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
+            Log.e(TAG,"NameNotFoundException or NoSuchAlgorithmException",e);}
 
         callbackManager = CallbackManager.Factory.create();
     }
@@ -115,9 +116,9 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
 
     @Override
     public void displayToken(AccessToken accessToken,String account_name) {
-        Log.d(TAG,"displayToken "+account_name);
         Account account = createOrGetAccount(account_name);
         storeToken(account, getString(R.string.authentication_TOKEN),  accessToken.getAccess_token(),  accessToken.getRefresh_token());
+        storeUserData(account,getString(R.string.authentication_USER),"user");
 
         // finishes the activity and set this account to the "current-active" one
         startActivity(new Intent(this, UserPreferencesActivity.class));

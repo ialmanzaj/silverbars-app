@@ -28,7 +28,6 @@ public class MyWorkoutsFragment extends Fragment {
         if (this.isAdded()) {
             ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
             setupViewPager(viewPager);
-
             TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
             tabLayout.setupWithViewPager(viewPager);
         }

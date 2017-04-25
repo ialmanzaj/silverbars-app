@@ -70,7 +70,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
     @Override
     public ExerciseViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        return new ExerciseViewHolder( LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.exercises_adapter, viewGroup, false));
+        return new ExerciseViewHolder(
+                LayoutInflater.from(viewGroup.getContext()).inflate(
+                        R.layout.exercises_adapter, viewGroup, false));
     }
 
     @Override
@@ -91,7 +93,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         }
 
         //exercise weight
-        Log.d(TAG,"weight"+exercises.get(position).getWeight());
         if (exercises.get(position).getWeight() > 0){
             viewHolder.mExerciseLayoutWeight.setVisibility(View.VISIBLE);
             viewHolder.mExerciseWeight.setText(utilities.formaterDecimal(String.valueOf(exercises.get(position).getWeight())));

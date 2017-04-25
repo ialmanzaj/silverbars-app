@@ -50,7 +50,6 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
     @Override
     public void injectDependencies() {
         super.injectDependencies();
-
         DaggerProfileComponent.builder()
                 .silverbarsComponent(SilverbarsApp.getApp(CONTEXT).getComponent())
                 .profileModule(new ProfileModule(this))
@@ -61,15 +60,12 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mProfilePresenter.getProfile();
-
         mMyWorkoutsDone.setOnClickListener(v -> {startActivity(new Intent(CONTEXT, WorkoutsDoneActivity.class));});
     }
-
 
     @Override
     public void displayProfileFacebook(ProfileFacebook profile) {
         mProfileName.setText(profile.getFirst_name() +" "+ profile.getLast_name());
     }
-
 
 }

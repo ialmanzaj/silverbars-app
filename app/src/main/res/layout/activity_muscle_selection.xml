@@ -19,16 +19,14 @@
                 android:layout_height="wrap_content"
                 app:elevation="2dp" />
         </android.support.design.widget.AppBarLayout>
-
         <TextView
             android:layout_gravity="center_horizontal"
             android:textAlignment="center"
             android:textSize="20sp"
-            android:text="Selecciona el musculos que desees entrenar"
+            android:text="@string/activity_muscle_selection_title"
             android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
 
         <WebView
             android:layout_weight="1"
@@ -56,7 +54,7 @@
 
                         <TextView
                             android:textSize="18sp"
-                            android:text="Exercises"
+                            android:text="@string/activity_muscle_selection_exercises"
                             android:layout_centerVertical="true"
                             android:textColor="@color/black"
                             android:id="@+id/muscles_selected"
@@ -65,14 +63,12 @@
 
                     </RelativeLayout>
                 </HorizontalScrollView>
-
             <Button
                 android:theme="@style/ButtonRed"
                 android:id="@+id/look_exercises"
-                android:text="buscar ejercicios"
+                android:text="@string/activity_muscle_selection_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
-
 </LinearLayout>

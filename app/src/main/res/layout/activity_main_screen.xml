@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <RelativeLayout
         android:layout_weight="1"
         android:layout_width="wrap_content"
@@ -28,7 +27,6 @@
             android:layout_margin="@dimen/fab_margin" />
 
     </RelativeLayout>
-
     <android.support.design.widget.BottomNavigationView
         android:theme="@style/nav"
         android:layout_width="match_parent"

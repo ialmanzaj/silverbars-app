@@ -15,7 +15,6 @@
         app:elevation="2dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:background="@color/colorPrimary">
-
     </android.support.v7.widget.Toolbar>
     <RelativeLayout
         android:layout_width="match_parent"
@@ -24,7 +23,6 @@
         android:gravity="center"
         android:paddingTop="7dp"
         android:paddingBottom="7dp"
-
         android:id="@+id/close_session">
 
         <TextView

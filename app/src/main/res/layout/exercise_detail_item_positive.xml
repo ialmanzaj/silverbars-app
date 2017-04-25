@@ -7,7 +7,7 @@
     android:layout_marginStart="5dp"
     android:layout_marginEnd="5dp"
     card_view:cardCornerRadius="2dp"
-    card_view:cardElevation="0.5dp">
+    card_view:cardElevation="0.8dp">
 
     <LinearLayout
         android:background="?selectableItemBackgroundBorderless"
@@ -17,17 +17,31 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:minHeight="35dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
+
+            <LinearLayout
                 android:layout_weight="1"
-                android:id="@+id/exercise_name"
-                android:textSize="20sp"
-                android:textColor="@color/black"
+                android:orientation="horizontal"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/exercise_name"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/weight"
+                        android:textSize="20sp"
+                        android:textColor="@color/gray_active_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
 
             <TextView
                 android:id="@+id/total"
@@ -38,6 +52,7 @@
 
         </LinearLayout>
         <LinearLayout
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -45,23 +60,56 @@
             <ImageView
                 android:tint="@color/greenColor"
                 android:src="@drawable/ic_arrow_upward_black_24px"
-                android:layout_width="20dp"
+                android:layout_width="22dp"
                 android:layout_height="wrap_content"
                 android:contentDescription="@null" />
 
             <TextView
                 android:id="@+id/progress"
-                android:text="10%"
+                android:text="10"
+                android:textColor="@color/greenColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
+            <TextView
+                android:text="%"
+                android:textColor="@color/greenColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
+
+            <TextView
+                android:text="more "
                 android:layout_marginStart="5dp"
                 android:textColor="@color/gray_active_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp" />
 
+
             <TextView
                 android:id="@+id/type_progress"
-                android:text="from the week before"
-                android:layout_marginStart="5dp"
+                android:textColor="@color/gray_active_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
+
+            <TextView
+                android:text=" than the "
+                android:textColor="@color/gray_active_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/date"
+                android:textColor="@color/gray_active_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
+
+            <TextView
+                android:text=" before"
                 android:textColor="@color/gray_active_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

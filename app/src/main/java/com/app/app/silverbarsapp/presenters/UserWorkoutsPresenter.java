@@ -28,7 +28,7 @@ public class UserWorkoutsPresenter extends BasePresenter implements UserWorkouts
 
     public void getMyWorkouts() {
         try {
-            interactor.getWorkout(this);
+            interactor.getMyWorkouts(this);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -36,7 +36,7 @@ public class UserWorkoutsPresenter extends BasePresenter implements UserWorkouts
 
     public void deleteWorkout(int workout_id) {
         try {
-            interactor.deleteWorkout(workout_id);
+            interactor.deleteMyWorkout(workout_id);
         } catch (SQLException e) {
             e.printStackTrace();
         }

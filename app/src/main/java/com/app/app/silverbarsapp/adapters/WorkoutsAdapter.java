@@ -33,17 +33,14 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
     private static final String TAG = WorkoutsAdapter.class.getSimpleName();
 
-
     private Context context;
     private List<Workout> workouts;
 
     private Utilities  utilities = new Utilities();
 
-
     public WorkoutsAdapter(Context context) {
         this.context = context;
         this.workouts = new ArrayList<>();
-
     }
 
     public class WorkoutHolder extends RecyclerView.ViewHolder {
@@ -75,7 +72,6 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
             context.startActivity(intent);
         }
-
     }
 
     @Override
@@ -117,6 +113,5 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         workouts.clear();
         notifyDataSetChanged();
     }
-
 
 }

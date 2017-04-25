@@ -6,7 +6,9 @@ import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
 import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.models.MuscleExercise;
+import com.app.app.silverbarsapp.models.Skill;
 import com.app.app.silverbarsapp.models.Workout;
+import com.app.app.silverbarsapp.utils.Utilities;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -28,6 +30,41 @@ public class Filter {
 
     public Filter(){}
 
+
+
+
+    public List<MuscleExercise> getMuscles(ArrayList<ExerciseProgression> exercises){
+        List<MuscleExercise> muscles = new ArrayList<>();
+        for (ExerciseProgression exerciseProgression: exercises){
+            for (MuscleExercise muscleExercise: exerciseProgression.getExercise().getMuscles()){
+                muscles.add(muscleExercise);
+            }
+        }
+
+        return muscles;
+    }
+
+    public ArrayList<ExerciseProgression> getLastProgressions(List<ExerciseProgression> exercises_selected,List<ExerciseProgression> progressions){
+        ArrayList<ExerciseProgression> last_exercisesProgressions = new ArrayList<>();
+        for (ExerciseProgression exercise_selected:exercises_selected){
+            List<ExerciseProgression> exercises_found = filterProgressionByExercise(exercise_selected.getExercise().getId(),progressions);
+            if (exercises_found.size() > 2){
+                last_exercisesProgressions.add(exercises_found.get(exercises_found.size()-2));
+            }
+        }
+        return last_exercisesProgressions;
+    }
+
+    public List<String> getMusclesString(ArrayList<ExerciseProgression> exercises){
+        List<String> muscles = new ArrayList<>();
+        for (ExerciseProgression exerciseProgression: exercises){
+            for (MuscleExercise muscleExercise: exerciseProgression.getExercise().getMuscles()){
+                muscles.add(muscleExercise.getMuscle());
+            }
+        }
+
+        return muscles;
+    }
 
     public List<Exercise> getExercisesById(List<Exercise> all_exercises_list, List<Integer> exercises_id){
         List<Exercise> exerciseList = new ArrayList<>();
@@ -106,8 +143,8 @@ public class Filter {
     }
 
 
-    public List<ExerciseProgression> filterProgressionByExercise(int exercise_id,List<ExerciseProgression> old_progressions_exercises){
-        List<ExerciseProgression> progressions = new ArrayList<>();
+    public ArrayList<ExerciseProgression> filterProgressionByExercise(int exercise_id,List<ExerciseProgression> old_progressions_exercises){
+        ArrayList<ExerciseProgression> progressions = new ArrayList<>();
         for (ExerciseProgression old_last_progression : old_progressions_exercises) {
             if (old_last_progression.getExercise().getId() == exercise_id){
                 progressions.add(old_last_progression); ;
@@ -143,8 +180,7 @@ public class Filter {
 
         for (ExerciseProgression exerciseProgression: progressions){
 
-            DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
-            DateTime progress_date = formatter.parseDateTime(exerciseProgression.getDate());
+            DateTime progress_date = getDateFormated(exerciseProgression.getDate());
 
             if (filterByDate(progress_date,interval_days)){
                 progressions_filted.add(exerciseProgression);
@@ -152,6 +188,11 @@ public class Filter {
         }
 
         return progressions_filted;
+    }
+
+    public DateTime getDateFormated(String date){
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
+        return formatter.parseDateTime(date);
     }
 
     public ArrayList<ExerciseProgression> getProgressionFilteredByMuscle(List<ExerciseProgression> progressions,String muscle){
@@ -173,4 +214,9 @@ public class Filter {
     public boolean filterByDate(DateTime day, Interval date_interval){
         return date_interval.contains(day);
     }
+
+
+
+
+
 }

@@ -135,7 +135,7 @@
                             <TextView
                                 android:id="@+id/weight"
                                 android:textSize="30sp"
-                                android:text="30"
+                                android:text="0"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
                             <TextView
@@ -143,6 +143,7 @@
                                 android:text="kg"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
+
                         </LinearLayout>
                     </LinearLayout>
                     <RelativeLayout
@@ -226,7 +227,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:text="Total time: "
+                        android:text="@string/activity_workingout_total"
                         android:textSize="22sp"
                         android:textColor="@color/gray_active_icon"
                         android:layout_width="wrap_content"
@@ -406,7 +407,7 @@
                 android:id="@+id/headerText"
                 android:layout_gravity="top|center"
                 android:textSize="50sp"
-                android:textColor="#fff" />
+                android:textColor="@color/white" />
 
             <TextView
                 android:layout_marginTop="20dp"
@@ -414,7 +415,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/number_five"
-                android:textColor="#fff"
+                android:textColor="@color/white"
                 android:textStyle="bold"
                 android:textSize="140sp" />
 
@@ -422,11 +423,11 @@
                 android:layout_marginTop="-30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="secs"
-                android:textColor="#fff"
+                android:text="@string/activity_workingout_second"
+                android:textColor="@color/white"
                 android:textSize="35sp" />
-    </LinearLayout>
 
+    </LinearLayout>
     <LinearLayout
         android:visibility="invisible"
         android:orientation="vertical"
@@ -437,12 +438,13 @@
         android:id="@+id/review">
 
         <TextView
+            android:textAlignment="center"
             android:gravity="bottom"
             android:layout_weight="1"
             android:id="@+id/exercise_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="50sp"
+            android:textSize="55sp"
             android:textColor="#fff" />
 
         <LinearLayout
@@ -479,14 +481,15 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <Button
                 android:id="@+id/save_progress"
                 android:padding="20dp"
-                android:text="save and continue"
+                android:text="@string/activity_workingout_save"
                 android:theme="@style/ButtonGreen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-        </LinearLayout>
 
+        </LinearLayout>
     </LinearLayout>
 </FrameLayout>

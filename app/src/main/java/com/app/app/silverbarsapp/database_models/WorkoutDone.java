@@ -1,11 +1,12 @@
 package com.app.app.silverbarsapp.database_models;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Created by isaacalmanza on 04/06/17.
  */
-
+@DatabaseTable
 public class WorkoutDone {
 
     @DatabaseField(id = true, columnName = "ID", canBeNull = false)
@@ -15,7 +16,7 @@ public class WorkoutDone {
     private String date;
 
     @DatabaseField(foreign = true)
-    private UserWorkout workout;
+    private UserWorkout my_workout;
 
     @DatabaseField
     private int person;
@@ -24,10 +25,20 @@ public class WorkoutDone {
     private String total_time;
 
     @DatabaseField
-    private double sets_completed;
+    private int sets_completed;
 
 
     public WorkoutDone(){}
+
+
+    public WorkoutDone(int id, String date, UserWorkout my_workout, int person, String total_time, int sets_completed){
+        this.id = id;
+        this.date = date;
+        this.my_workout = my_workout;
+        this.person = person;
+        this.total_time = total_time;
+        this.sets_completed = sets_completed;
+    }
 
 
     public int getId() {
@@ -38,7 +49,7 @@ public class WorkoutDone {
         return date;
     }
 
-    public double getSets_completed() {
+    public int getSets_completed() {
         return sets_completed;
     }
 
@@ -50,7 +61,7 @@ public class WorkoutDone {
         return total_time;
     }
 
-    public UserWorkout getWorkout() {
-        return workout;
+    public UserWorkout getMy_workout() {
+        return my_workout;
     }
 }

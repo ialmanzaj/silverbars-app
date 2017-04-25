@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.adapters.ExerciseAdapter;
+import com.app.app.silverbarsapp.adapters.SkillAdapter;
 import com.app.app.silverbarsapp.components.DaggerWorkoutComponent;
 import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.models.MuscleExercise;
@@ -70,6 +71,10 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     @BindView(R.id.start_button) Button mStartButton;
     @BindView(R.id.SelectMusic) RelativeLayout mSelectMusicButton;
 
+
+    @BindView(R.id.skills)RecyclerView mSkillsList;
+
+
     private ExerciseAdapter adapter;
 
     private int workoutId = 0, workoutSets = 0;
@@ -113,14 +118,18 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //init the presenter to get the context
         mWorkoutPresenter.init(this);
+
         getExtras(getIntent().getExtras());
+
+
         setupToolbar();
         setupTabs();
         setupWebview();
         setupAdapter();
     }
-
 
     private void getExtras(Bundle extras){
         workoutId = extras.getInt("workout_id",0);
@@ -136,8 +145,16 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         initUI(isUserWorkout);
 
         setExercisesInAdapter(mExercises);
+       // setupAdapterSkills(mExercises);
     }
 
+    private void setupAdapterSkills(ArrayList<ExerciseRep> exercises){
+        //list settings
+        mSkillsList.setLayoutManager(new LinearLayoutManager(this));
+        mSkillsList.setNestedScrollingEnabled(false);
+        mSkillsList.setHasFixedSize(false);
+        mSkillsList.setAdapter(new SkillAdapter(utilities.getTypesExercise(exercises)));
+    }
 
     public void setupToolbar(){
         setSupportActionBar(myToolbar);
@@ -151,7 +168,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         RestbySet.setText("60");
 
         mVoicePerExercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {});
-
         mStartButton.setOnClickListener(view -> LaunchWorkingOutActivity());
         mSelectMusicButton.setOnClickListener(v -> { startActivity(new Intent(this,SelectionMusicActivity.class));});
 
@@ -201,9 +217,14 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         exercises.setIndicator(getResources().getString(R.string.tab_exercises));
         exercises.setContent(R.id.exercises);
 
+       /* TabHost.TabSpec skills = mTabLayout.newTabSpec("Focus");
+        skills.setIndicator("Focus");
+        skills.setContent(R.id.skills);*/
+
         mTabLayout.addTab(overview);
         mTabLayout.addTab(exercises);
         mTabLayout.addTab(muscles);
+        //mTabLayout.addTab(skills);
     }
 
     private void setupWebview(){
@@ -223,18 +244,13 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         Log.d(TAG,"onWorkoutcreated: "+created);
     }
 
-
     private void setExercisesInAdapter(ArrayList<ExerciseRep> exercises){
-
         List<String> muscles = new ArrayList<>();
 
         for (ExerciseRep exerciseRep: exercises){
             //Collections.addAll(TypeExercises, new List<String>[]{exerciseRep.getExercise().getType_exercise()});
           for (MuscleExercise muscle:  exerciseRep.getExercise().getMuscles()){muscles.add(muscle.getMuscle());}
         }
-
-
-        Log.d(TAG,"weight "+exercises.get(0).getWeight());
 
         adapter = new ExerciseAdapter(this,exercises);
         list.setAdapter(adapter);

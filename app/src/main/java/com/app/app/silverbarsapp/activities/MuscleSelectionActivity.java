@@ -96,7 +96,7 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     public void setupToolbar(){
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Muscle seleccion");
+        getSupportActionBar().setTitle(R.string.activity_muscle_selection_toolbar);
     }
 
     private void getExtras(Bundle extras){
@@ -107,7 +107,7 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     public void searchExercises(){
 
         if (muscles_selected.size() < 1){
-            utilities.toast(this,"Seleccione que musculos");
+            utilities.toast(this,getString(R.string.activity_muscle_selection_selection));
             return;
         }
 
@@ -118,7 +118,6 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
         }
 
     }
-
 
     private void startExerciseList(boolean exist_exercise_selected){
         Intent intent = new Intent(this, ExerciseListActivity.class);
@@ -180,13 +179,12 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
 
         runOnUiThread(() -> {
             //stuff that updates ui
-            mMusclesTextSelected.setText(muscles_selected.toString());
+            mMusclesTextSelected.setText(muscles_selected.toString().replace("[","").replace("]",""));
         });
 
 
         mScrollText.postDelayed(() -> mScrollText.fullScroll(HorizontalScrollView.FOCUS_RIGHT), 100L);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

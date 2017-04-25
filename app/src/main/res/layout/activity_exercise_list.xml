@@ -6,11 +6,9 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context=".activities.ExerciseListActivity">
-
     <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
             <android.support.design.widget.AppBarLayout
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/appbarlayout"
@@ -23,7 +21,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:elevation="2dp">
-
                     <LinearLayout
                         android:gravity="center_vertical|center_horizontal"
                         android:minHeight="50dp"
@@ -33,14 +30,11 @@
                         android:orientation="vertical"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent">
-
                         <ImageButton
                             android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-
                             android:contentDescription="@null"/>
-
                     </LinearLayout>
                 </android.support.v7.widget.Toolbar>
             </android.support.design.widget.AppBarLayout>
@@ -63,7 +57,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
                         <TextView
-                            android:text="No hay mas ejercicios:("
+                            android:text="@string/activity_exercise_list_empty"
                             android:gravity="center"
                             android:textAlignment="center"
                             android:id="@+id/empty_text"
@@ -72,7 +66,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
                     </LinearLayout>
-
                     <LinearLayout
                         android:gravity="center_vertical"
                         android:visibility="gone"
@@ -112,7 +105,7 @@
                         <TextView
                             android:textSize="22sp"
                             android:textColor="@color/black"
-                            android:text="Loading..."
+                            android:text="@string/loading"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
                     </LinearLayout>
@@ -120,8 +113,6 @@
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
-
                         <android.support.v7.widget.RecyclerView
                             app:layout_behavior="@string/appbar_scrolling_view_behavior"
                             android:layout_above="@+id/add_exercises"
@@ -129,7 +120,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:id="@+id/exercises_list" />
-
                         <Button
                             android:theme="@style/ButtonRed"
                             android:id="@+id/add_exercises"
@@ -138,14 +128,8 @@
                             android:text="@string/add_exercises_button"
                             android:textSize="18sp"
                             android:layout_alignParentBottom="true" />
-
                     </RelativeLayout>
-
-
-
-
                 </LinearLayout>
             </android.support.v4.widget.NestedScrollView>
         </android.support.design.widget.CoordinatorLayout>
-
 </android.support.v4.widget.DrawerLayout>

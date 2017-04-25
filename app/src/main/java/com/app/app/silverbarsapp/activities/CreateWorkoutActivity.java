@@ -41,7 +41,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     private static final int FINAL_CREATE_WORKOUT = 2;
     private static final int LIST_EXERCISES_SELECTION = 1;
 
-
     private Utilities utilities = new Utilities();
     Filter filter = new Filter();
 
@@ -58,15 +57,12 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     @BindView(R.id.exercises_selected) RecyclerView mExercisesSelectedList;
 
-
     private ExercisesSelectedAdapter adapter;
     private ItemTouchHelper mItemTouchHelper;
 
     private ArrayList<Exercise> mExercisesAllList;
 
     private String sMusclesBodyView = "";
-
-    //private  int ISOMETRIC = 0,CARDIO = 0,PYLOMETRICS = 0,STRENGTH = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +102,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         tabHost2.addTab(muscles);
     }
 
-
     private void setupWebview(){
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -129,12 +124,10 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     @OnClick(R.id.next)
     public void nextButton(){
-
         if (adapter.getItemCount() < 1) {
             Toast.makeText(this, getResources().getString(R.string.exercises_no_selected), Toast.LENGTH_SHORT).show();
             return;
         }
-
 
         Intent intent = new Intent(this, CreateWorkoutFinalActivity.class);
         intent.putParcelableArrayListExtra("exercises", mExercisesAllList);
@@ -151,14 +144,10 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     @OnClick(R.id.readd)
     public void readAddExerciseButton(){
-
         Intent intent = new Intent(this,MuscleSelectionActivity.class);
-
-
         intent.putExtra("exercises",filter.getExercisesIds(adapter.getSelectedExercises()));
         startActivityForResult(intent,LIST_EXERCISES_SELECTION);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -185,26 +174,24 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     @Override
     public void onExerciseDeleted(Exercise exercise,int position) {
         Log.d(TAG,"onExerciseDeleted");
-
         //show snackbar of exercise deleted
-        Snackbar.make(mMainContentLayout, "Exercise deleted", Snackbar.LENGTH_LONG).setAction("UNDO", view -> {
+        Snackbar.make(mMainContentLayout, R.string.activity_create_workout_deleted, Snackbar.LENGTH_LONG).setAction
+                (R.string.activity_create_workout_undo, view -> {
 
-            //re add element to the adapter
-            adapter.insert(position,exercise);
+                    //re add element to the adapter
+                    adapter.insert(position,exercise);
+                    //update muscle view
+                    updateMusclesView();
 
-            //update muscle view
-            updateMusclesView();
-
-            //show again the snackbar of restored
-            Snackbar snackbar_restored = Snackbar.make(mMainContentLayout, "Exercise is restored!", Snackbar.LENGTH_SHORT);
-            snackbar_restored.show();
-
+                    //show again the snackbar of restored
+                    Snackbar snackbar_restored = Snackbar.make(mMainContentLayout, R.string.activity_create_workout_restored,
+                            Snackbar.LENGTH_SHORT);
+                    snackbar_restored.show();
         }).show();
     }
 
     @Override
     public void onUpdateMuscleView() {
-        Log.d(TAG,"onUpdateMuscleView");
         updateMusclesView();
     }
 

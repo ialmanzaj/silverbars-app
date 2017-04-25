@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by isaacalmanza on 04/04/17.
  */
-public class ExerciseProgression implements Parcelable{
+public class ExerciseProgression extends Progression implements Parcelable{
 
     @SerializedName("id")
     private int id;
@@ -43,14 +43,30 @@ public class ExerciseProgression implements Parcelable{
     @SerializedName("total_weight")
     private double total_weight;
 
-    private boolean isEqual;
-    private boolean isPositive;
     private double progress;
+
 
     public ExerciseProgression(){}
 
 
+    public ExerciseProgression(int id,String date,WorkoutDone my_workout_done,int person,double total_time,Exercise exercise,
+                               int total_repetition,int repetitions_done,int total_seconds,int seconds_done,double total_weight){
+        this.id = id;
+        this.date = date;
+        this.my_workout_done = my_workout_done;
+        this.person =person;
+        this.total_time= total_time;
+        this.exercise = exercise;
+        this.total_repetition = total_repetition;
+        this.repetitions_done =repetitions_done;
+        this.total_seconds = total_seconds;
+        this.seconds_done = seconds_done;
+        this.total_weight = total_weight;
+    }
+
+
     protected ExerciseProgression(Parcel in) {
+        super(in);
         id = in.readInt();
         date = in.readString();
         my_workout_done = in.readParcelable(WorkoutDone.class.getClassLoader());
@@ -62,13 +78,12 @@ public class ExerciseProgression implements Parcelable{
         total_seconds = in.readInt();
         seconds_done = in.readInt();
         total_weight = in.readDouble();
-        isEqual = in.readByte() != 0;
-        isPositive = in.readByte() != 0;
         progress = in.readDouble();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
         dest.writeInt(id);
         dest.writeString(date);
         dest.writeParcelable(my_workout_done, flags);
@@ -80,8 +95,6 @@ public class ExerciseProgression implements Parcelable{
         dest.writeInt(total_seconds);
         dest.writeInt(seconds_done);
         dest.writeDouble(total_weight);
-        dest.writeByte((byte) (isEqual ? 1 : 0));
-        dest.writeByte((byte) (isPositive ? 1 : 0));
         dest.writeDouble(progress);
     }
 
@@ -110,20 +123,17 @@ public class ExerciseProgression implements Parcelable{
         this.progress = progress;
     }
 
-    public boolean isPositive() {
-        return isPositive;
+
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public boolean isEqual() {
-        return isEqual;
+    public void setMy_workout_done(WorkoutDone my_workout_done) {
+        this.my_workout_done = my_workout_done;
     }
 
-    public void setEqual(boolean equal) {
-        isEqual = equal;
-    }
-
-    public void setPositive(boolean positive) {
-        isPositive = positive;
+    public void setPerson(int person) {
+        this.person = person;
     }
 
     public int getId() {

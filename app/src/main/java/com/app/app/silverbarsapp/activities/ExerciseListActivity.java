@@ -184,7 +184,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
         onErrorOn();
     }
 
-
     private void setExercisesView(ArrayList<Exercise> exercises){
         if (exercises.size() > 0) {
             adapter = new AllExercisesAdapter(this, exercises);

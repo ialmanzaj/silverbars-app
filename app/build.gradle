@@ -113,12 +113,12 @@ dependencies {
     compile 'us.belka:androidtoggleswitch:1.2.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
     compile 'com.github.bonnguyen:uberseekbar:1.0.0'
+    compile 'com.shawnlin:number-picker:2.4.3'
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support:support-annotations:25.2.0'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.4'
-    compile 'com.shawnlin:number-picker:2.4.3'
 }
 
 

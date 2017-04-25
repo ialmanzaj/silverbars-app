@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:id="@+id/error_view">
+
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/gray_active_icon"
+            android:text="@string/error_message"/>
+
+        <Button
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/reload"
+            android:text="@string/reload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+    <LinearLayout
+
+        android:gravity="center_horizontal|center_vertical"
+        android:id="@+id/loading"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/loading_text"
+            android:textSize="24sp"
+            android:textColor="@color/black"
+            android:text="@string/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:background="@color/white"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/empty_state"
+                android:gravity="center_horizontal|center_vertical"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:gravity="center"
+                    android:textAlignment="center"
+                    android:id="@+id/empty_text"
+                    android:textSize="35sp"
+                    android:textColor="@color/black"
+                    android:text="@string/fragment_progress_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <WebView
+                android:layout_marginTop="5dp"
+                android:id="@+id/webview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:visibility="gone"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#c81f1f1f"
+            android:id="@+id/modal_overlay">
+            <TextView
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="@string/fragment_progress_muscle_selection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:textColor="#fff" />
+            <Button
+                android:id="@+id/okay"
+                android:text="@string/fragment_progress_okaybutton"
+                android:theme="@style/ButtonGreen"
+                android:padding="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/info"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_info_outline_black_24px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null" />
+
+        <LinearLayout
+            android:gravity="center_horizontal|center_vertical"
+            android:background="@color/grey100"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/preview"
+                android:tint="@color/colorSecondary"
+                android:layout_weight="1"
+                android:src="@drawable/ic_keyboard_arrow_left_black_24px"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:contentDescription="@null" />
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_weight="2"
+                android:id="@+id/months"
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/next"
+                android:tint="@color/colorSecondary"
+                android:layout_weight="1"
+                android:src="@drawable/ic_keyboard_arrow_right_black_24px"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>

@@ -56,11 +56,11 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     @BindView(R.id.error_view) LinearLayout mErrorView;
 
     private Utilities utilities = new Utilities();
-    ProgressionAlgoritm progressionAlgoritm = new ProgressionAlgoritm();
+    private ProgressionAlgoritm progressionAlgoritm = new ProgressionAlgoritm();
 
     private int workout_id;
-    private int sets;
     private String total_time;
+    private int sets_completed;
     private ArrayList<ExerciseProgression> mExercises = new ArrayList<>();
 
     @Override
@@ -92,19 +92,28 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
         workout_id = extras.getInt("workout_id");
         mExercises = extras.getParcelableArrayList("exercises");
-        sets = extras.getInt("sets");
+        int total_sets = extras.getInt("sets");
+
+        sets_completed = extras.getInt("sets_completed");
+        Log.d(TAG,"sets_completed: "+sets_completed);
+
         total_time = extras.getString("total_time");
 
-        mTotalSets.setText(String.valueOf(sets));
+        mTotalSets.setText(String.valueOf(sets_completed-1)+"/"+String.valueOf(total_sets));
         mTotalTime.setText(String.valueOf(total_time));
 
+        getOldProgression();
+
+
+        setupTabs();
+    }
+
+    private void getOldProgression(){
         try {
             mResultsPresenter.getExercisesProgression(mExercises);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        setupTabs();
     }
 
     private void setupAdapter(ArrayList<ExerciseProgression> exercises){
@@ -144,16 +153,18 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         saveResults();
     }
 
+
     @OnClick(R.id.reload)
     public void reload(){
         onErrorViewOff();
+        onLoadingViewOn();
         saveResults();
     }
 
     private void saveResults(){
         try {
             onLoadingViewOn();
-            mResultsPresenter.createWorkoutDone(workout_id,sets,total_time);
+            mResultsPresenter.createWorkoutDone(workout_id,sets_completed,total_time);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -195,12 +206,9 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     }
 
     @Override
-    public void onExerciseProgression(List<com.app.app.silverbarsapp.database_models.ExerciseProgression> exerciseProgressions) {
-        Log.d(TAG,"onExerciseProgression "+exerciseProgressions.size());
-        Log.d(TAG,"mExercises "+mExercises.size());
+    public void onExerciseProgression(List<ExerciseProgression> exerciseProgressions) {
         setupAdapter(progressionAlgoritm.compareExerciseProgression(exerciseProgressions,mExercises));
     }
-
 
     private void onLoadingViewOn(){
         mLoadingView.setVisibility(View.VISIBLE);
