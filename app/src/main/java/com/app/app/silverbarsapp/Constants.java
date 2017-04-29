@@ -19,7 +19,6 @@ public class Constants {
     public static final String DATABASE_NAME = "SILVERBARS";
     public static final int DATABASE_VERSION = 1;
 
-
     //API CONSTANTS
     public static final String CONSUMER_KEY = "kifIn2frPiZ5TvPsg5oRb3raVNCST68EgMYmBtAf";
     public static final String CONSUMER_SECRET = "CwXWya5eZfaUpdOES9H3xlS3SBF2FuaUD4xcXC6WPUK08d5GEIpmRNPICrjq3any1ymYhWx57ZtroC1nW6YGg42dOX6Zwt0HR8kYTGK3Ykkg6aPJ2lC1zK5nGXH6mI4u";
