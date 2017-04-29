@@ -14,6 +14,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import com.app.app.silverbarsapp.models.Workout;
 import com.app.app.silverbarsapp.modules.WorkoutModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.WorkoutPresenter;
+import com.app.app.silverbarsapp.utils.MusclesWebviewHandler;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.WorkoutView;
 
@@ -58,7 +60,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     @BindView(R.id.rest_by_set) AutoCompleteTextView RestbySet;
     @BindView(R.id.rest_by_exercise) AutoCompleteTextView RestbyExercise;
 
-    @BindView(R.id.list) RecyclerView list;
+    @BindView(R.id.exercises) RecyclerView mExercisesList;
     @BindView(R.id.muscles) RelativeLayout mBodyMuscleWrapper;
     @BindView(R.id.webview) WebView webview;
 
@@ -68,7 +70,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     @BindView(R.id.voice_per_exercise)SwitchCompat mVoicePerExercise;
 
     @BindView(R.id.start_button) Button mStartButton;
-    @BindView(R.id.SelectMusic) RelativeLayout mSelectMusicButton;
+    @BindView(R.id.select_music) LinearLayout mSelectMusicButton;
 
 
     @BindView(R.id.skills)RecyclerView mSkillsList;
@@ -93,6 +95,8 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     private ArrayList<ExerciseRep> mExercises;
 
     private Utilities utilities = new Utilities();
+    MusclesWebviewHandler mMusclesWebviewHandler = new MusclesWebviewHandler();
+
 
     @Override
     protected int getLayout() {
@@ -179,7 +183,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
                 if (isChecked){
                     saveWorkout();
                 } else{
-                    logMessage("Switch off");
+                    //logMessage("Switch off");
                     try {
                         mWorkoutPresenter.setWorkoutOff(workoutId);
                     } catch (SQLException e) {
@@ -223,15 +227,15 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     }
 
     private void setupAdapter(){
-        //list settings
-        list.setLayoutManager(new LinearLayoutManager(this));
-        list.setNestedScrollingEnabled(false);
-        list.setHasFixedSize(false);
+        //mExercisesList settings
+        mExercisesList.setLayoutManager(new LinearLayoutManager(this));
+        mExercisesList.setNestedScrollingEnabled(false);
+        mExercisesList.setHasFixedSize(false);
     }
 
     @Override
     public void onWorkout(boolean created) {
-        Log.d(TAG,"onWorkoutcreated: "+created);
+        //Log.d(TAG,"onWorkoutcreated: "+created);
     }
 
     private void setExercisesInAdapter(ArrayList<ExerciseRep> exercises){
@@ -243,7 +247,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         }
 
         adapter = new ExerciseAdapter(this,exercises);
-        list.setAdapter(adapter);
+        mExercisesList.setAdapter(adapter);
 
         setMusclesToView(muscles);
         //putTypesInWorkout(TypeExercises);
@@ -301,13 +305,11 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
     private void setMusclesToView(List<String> musculos){
         if (musculos.size() > 0){
-            mMuscleParts  = utilities.getMusclesReadyForWebview(utilities.deleteCopiesofList(musculos));
+            mMuscleParts  = mMusclesWebviewHandler.getMusclesReadyForWebview(utilities.deleteCopiesofList(musculos));
         }
-        utilities.onWebviewReady(webview,mMuscleParts);
-    }
 
-    private void logMessage(String msg) {
-        Log.v(TAG, msg);
+        mMusclesWebviewHandler.paint(mMuscleParts);
+        mMusclesWebviewHandler.execute(webview);
     }
 
     private Workout getCurrentWorkout(){
@@ -315,7 +317,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     }
 
     private void saveWorkout() {
-        Log.d(TAG,"save workout");
+        //Log.d(TAG,"save workout");
         try {
 
             //check if workout doesnt exist in the database

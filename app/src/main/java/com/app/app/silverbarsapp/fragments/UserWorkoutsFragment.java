@@ -3,7 +3,6 @@ package com.app.app.silverbarsapp.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -115,7 +114,7 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
 
     @Override
     public void onEmptyWorkouts() {
-        Log.i(TAG,"onEmptyWorkouts");
+       // Log.i(TAG,"onEmptyWorkouts");
         onEmptyViewOn();
     }
 

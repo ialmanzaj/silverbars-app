@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -95,7 +94,7 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
 
     @Override
     public void displayProfileImg(ResponseBody img) {
-        Log.d(TAG,"displayProfileImg");
+        //Log.d(TAG,"displayProfileImg");
         if (utilities.saveWorkoutImgInDevice(CONTEXT,img,"profile")){
            setProfileImg(getProfileImg());
         }

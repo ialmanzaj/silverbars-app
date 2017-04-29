@@ -15,7 +15,6 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.app.app.silverbarsapp.MainService;
@@ -742,104 +741,5 @@ public class Utilities {
     }
 
 
-    private String getJsReady(String muscles){
-        if (!Objects.equals(muscles, "")) {
-            final String muscles_ready = removeLastChar(muscles);
-            Log.d(TAG,"muscles_ready: "+muscles_ready);
-
-            return "javascript: (" + "window.onload = function () {" +
-                    "muscles = Snap.selectAll('" + muscles_ready + "');" +
-                    "muscles.forEach( function(muscle,i) {" +
-                        "muscle.attr({stroke:'#602C8D',fill:'#602C8D'});" +
-                    "});" + "}" + ")()";
-        }
-        return "";
-    }
-
-    public void injectJS(WebView webView,String muscles) {
-        Log.d(TAG,"muscles: "+muscles);
-        try {
-
-            webView.loadUrl(getJsReady(muscles));
-
-        } catch (Exception e) {
-            Log.e(TAG,"Exception",e);
-        }
-    }
-
-    private String getJsOnClickReady(String muscles){
-        muscles = removeLastChar(muscles);
-        Log.d(TAG,"muscles:"+muscles);
-        return "javascript: (" + "window.onload = function () {" +
-                "var muscles = Snap.selectAll('" + muscles + "');" +
-                "muscles.forEach( function(muscle,i) {" +
-                    "muscle.node.onclick = function () {"+
-                        "muscle.attr({stroke:'#602C8D',fill:'#602C8D'});"+
-                        "Android.setMuscle(muscle.node.id);"+
-                "};" + "});" + "}" + ")()";
-    }
-
-    private String getJsClickPaintedReady(String muscles){
-        muscles = removeLastChar(muscles);
-        Log.d(TAG,"muscles:"+muscles);
-        return "javascript: (" + "window.onload = function () {" +
-                "var muscles = Snap.selectAll('" + muscles + "');" +
-                "muscles.forEach( function(muscle,i) {" +
-                    "muscle.attr({stroke:'#602C8D',fill:'#602C8D'});"+
-                    "muscle.node.onclick = function () {"+
-                        "Android.setMuscle(muscle.node.id);"+
-                "};" + "});" + "}" + ")()";
-    }
-
-    public void injectJSOnClick(WebView webView,String muscles) {
-
-        try {
-
-            webView.loadUrl(getJsOnClickReady(muscles));
-
-        } catch (Exception e) {
-            Log.e(TAG,"Exception",e);
-        }
-    }
-
-    private void injectJSOnClickPainted(WebView webView,String muscles) {
-
-        try {
-
-            webView.loadUrl(getJsClickPaintedReady(muscles));
-
-        } catch (Exception e) {
-            Log.e(TAG,"Exception",e);
-        }
-    }
-
-    public String getMusclesReadyForWebview(List<String> muscles_names){
-        String muscles_body = "";
-        for (String muscle_name: muscles_names){
-            muscles_body += "#"+ muscle_name + ",";
-        }
-        return muscles_body;
-    }
-
-
-    public void onWebviewReady(WebView webView,String muscles){
-        webView.setWebViewClient(new WebViewClient(){
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                injectJS(webView,muscles);
-            }
-        });
-    }
-
-    public void onWebviewClickReady(WebView webView,String muscles){
-        webView.setWebViewClient(new WebViewClient(){
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                injectJSOnClickPainted(webView,muscles);
-            }
-        });
-    }
 
 }

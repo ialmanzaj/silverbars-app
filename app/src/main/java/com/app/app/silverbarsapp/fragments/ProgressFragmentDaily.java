@@ -25,6 +25,7 @@ import com.app.app.silverbarsapp.modules.ProgressionModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ProgressionPresenter;
 import com.app.app.silverbarsapp.utils.MuscleListener;
+import com.app.app.silverbarsapp.utils.MusclesWebviewHandler;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.utils.WebAppInterface;
 import com.app.app.silverbarsapp.viewsets.ProgressionView;
@@ -74,6 +75,8 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
 
     private Utilities mUtilities = new Utilities();
     private Filter filter = new Filter();
+    MusclesWebviewHandler mMusclesWebviewHandler = new MusclesWebviewHandler();
+
 
     private int mCurrentDay;
     List<Integer> list_progress = new ArrayList<>();
@@ -121,7 +124,7 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
                 changeSeekBarTextViewColor(progress);
                 //Log.d(TAG,"progress "+progress);
                 mCurrentDay = progress;
-                updateUi(getProgressionByDay(progress));
+                updateMainUi(getProgressionByDay(progress));
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -174,25 +177,25 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
     private ArrayList<ExerciseProgression> getProgressionByDay(int day){
         switch (day) {
             case 0:
-                Log.d(TAG, "Monday");
+                //Log.d(TAG, "Monday");
                 return filter.getProgressionFiltered(mWeekProgressions, getDays().get(0));
             case 1:
-                Log.d(TAG, "Tuesday");
+                //Log.d(TAG, "Tuesday");
                 return (filter.getProgressionFiltered(mWeekProgressions, getDays().get(1)));
             case 2:
-                Log.d(TAG, "Wednesday");
+                //Log.d(TAG, "Wednesday");
                 return(filter.getProgressionFiltered(mWeekProgressions, getDays().get(2)));
             case 3:
-                Log.d(TAG, "Thursday");
+                //Log.d(TAG, "Thursday");
                 return(filter.getProgressionFiltered(mWeekProgressions, getDays().get(3)));
             case 4:
-                Log.d(TAG, "Friday");
+                //Log.d(TAG, "Friday");
                 return(filter.getProgressionFiltered(mWeekProgressions, getDays().get(4)));
             case 5:
-                Log.d(TAG, "Saturday");
+                //Log.d(TAG, "Saturday");
                 return(filter.getProgressionFiltered(mWeekProgressions, getDays().get(5)));
             case 6:
-                Log.d(TAG, "Sunday");
+                //Log.d(TAG, "Sunday");
                 return(filter.getProgressionFiltered(mWeekProgressions, getDays().get(6) ));
             default:
                 return null;
@@ -236,7 +239,7 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
     @Override
     public void emptyProgress() {
         onLoadingViewOff();
-        onEmptyViewOn("You haven't train :(");
+        onEmptyViewOn(CONTEXT.getString(R.string.fragment_progress_daily_empty));
         initUI();
     }
 
@@ -249,14 +252,14 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
     }
 
     private void init(List<ExerciseProgression> progressions){
-        Log.d(TAG,"init");
+        //Log.d(TAG,"init");
 
         //filter the progressions
         Interval this_week = new Interval(getLocalDates().get(0).toDateTimeAtStartOfDay().minusDays(1), Weeks.ONE);
         mWeekProgressions = filter.getProgressionFiltered(progressions,this_week);
 
-        Log.d(TAG,"this_week: "+this_week);
-        Log.d(TAG,"mWeekProgressions: "+mWeekProgressions);
+        //Log.d(TAG,"this_week: "+this_week);
+        //Log.d(TAG,"mWeekProgressions: "+mWeekProgressions);
 
 
         initUI();
@@ -288,13 +291,13 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
         return Arrays.asList(CONTEXT.getResources().getStringArray(R.array.days));
     }
 
-    private void updateUi(List<ExerciseProgression> progressions_filtered){
+    private void updateMainUi(List<ExerciseProgression> progressions_filtered){
         if (progressions_filtered.size() > 0) {
             onEmptyViewOff();
             clearWebview();
             updateBodyMuscleWebView(progressions_filtered);
         }else {
-            onEmptyViewOn("You haven't train :(");
+            onEmptyViewOn(CONTEXT.getString(R.string.fragment_progress_daily_empty));
         }
     }
 
@@ -307,8 +310,8 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
     }
 
     private void insertMuscleToWebview(String muscle_name){
-        mMuscleParts += "#" + muscle_name + ",";
-        mUtilities.onWebviewClickReady(webView,mMuscleParts);
+        mMuscleParts += mMusclesWebviewHandler.getMuscleReadyForWebview(muscle_name);
+        mMusclesWebviewHandler.onWebviewOnClickPain(webView,mMuscleParts);
     }
 
     private void clearWebview(){

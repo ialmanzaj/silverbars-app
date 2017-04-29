@@ -41,7 +41,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
     private static final String TAG = ExerciseListActivity.class.getSimpleName();
 
-
     @Inject
     ExerciseListPresenter mExerciseListPresenter;
 

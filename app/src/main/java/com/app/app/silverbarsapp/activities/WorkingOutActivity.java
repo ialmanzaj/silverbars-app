@@ -7,7 +7,6 @@ import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -77,7 +76,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     @BindView(R.id.weight_layout) LinearLayout mWeightLayout;
     @BindView(R.id.weight) TextView mExerciseWeight;
 
-    @BindView(R.id.list) RecyclerView list;
+    @BindView(R.id.list) RecyclerView mExercisesList;
     
     @BindView(R.id.total_exercises) TextView mTotalExercises;
 
@@ -141,37 +140,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         });
     }
 
-    @OnClick({ R.id.play_music,R.id.pause_music,R.id.play_workout, R.id.pause_workout,R.id.stop_workout, R.id.next_exercise})
-    public void onClick(View view) {
-        int id = view.getId();
-        switch (id){
-            case R.id.play_music:
-                //Log.i(TAG,"play_music");
-                mWorkingOutPresenter.playMusic();
-                break;
-            case R.id.pause_music:
-                //Log.i(TAG,"pause_music");
-                mWorkingOutPresenter.pauseMusic();
-                break;
-            case R.id.play_workout:
-                Log.i(TAG,"play workout");
-                mWorkingOutPresenter.playWorkout();
-                break;
-            case R.id.pause_workout:
-                Log.i(TAG,"pause_workout");
-                mWorkingOutPresenter.pauseWorkout();
-                break;
-            case R.id.stop_workout:
-                Log.i(TAG,"stop_workout");
-                stopWorkout();
-                break;
-            case R.id.next_exercise:
-                Log.i(TAG,"next_exercise");
-                mWorkingOutPresenter.nextExercise();
-                break;
-        }
-    }
-
     @OnClick(R.id.save_progress)
     public void saveProgress(){
         int index = Integer.parseInt(mCurrentExercisePositionText.getText().toString())-1;
@@ -187,7 +155,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
             exerciseProgression.setSeconds_done(mNumberPicker.getValue());
         }
 
-        //add to the list again with the user data
+        //add to the mExercisesList again with the user data
         progressions.set(index,exerciseProgression);
 
 
@@ -195,6 +163,39 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         onOverlayUiOff();
         onReviewOff();
     }
+
+    @OnClick({ R.id.play_music,R.id.pause_music,R.id.play_workout, R.id.pause_workout,R.id.stop_workout, R.id.next_exercise})
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id){
+            case R.id.play_music:
+                //Log.i(TAG,"play_music");
+                mWorkingOutPresenter.playMusic();
+                break;
+            case R.id.pause_music:
+                //Log.i(TAG,"pause_music");
+                mWorkingOutPresenter.pauseMusic();
+                break;
+            case R.id.play_workout:
+                //Log.i(TAG,"play workout");
+                mWorkingOutPresenter.playWorkout();
+                break;
+            case R.id.pause_workout:
+                //Log.i(TAG,"pause_workout");
+                mWorkingOutPresenter.pauseWorkout();
+                break;
+            case R.id.stop_workout:
+                //Log.i(TAG,"stop_workout");
+                stopWorkout();
+                break;
+            case R.id.next_exercise:
+                //Log.i(TAG,"next_exercise");
+                mWorkingOutPresenter.nextExercise();
+                break;
+        }
+    }
+
+
 
     private void getExtras(Bundle extras){
         mWorkout_id = extras.getInt("workout_id");
@@ -204,8 +205,8 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         int mRestByExercise = extras.getInt("rest_exercise");
         int mRestBySet = extras.getInt("rest_set");
 
-        Log.i(TAG,"mRestByExercise: "+ mRestByExercise);
-        Log.i(TAG,"RestBySet: "+ mRestBySet);
+        //Log.i(TAG,"mRestByExercise: "+ mRestByExercise);
+        //Log.i(TAG,"RestBySet: "+ mRestBySet);
 
         mVibrationPerSet = extras.getBoolean("vibration_per_set");
 
@@ -228,7 +229,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
         //init THE UI
         initUI();
-
 
         //set new array progression to the other user data that we need
         progressions = getProgression(mExercises);
@@ -267,11 +267,11 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     private void setupAdapter(){
         // disables scolling
-        list.addOnItemTouchListener(new DisableTouchRecyclerListener());
-        // list en linear
-        list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mExercisesList.addOnItemTouchListener(new DisableTouchRecyclerListener());
+        // mExercisesList en linear
+        mExercisesList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         // Crear  nuevo adaptador
-        list.setAdapter(new ExerciseWorkingOutAdapter(this,mExercises));
+        mExercisesList.setAdapter(new ExerciseWorkingOutAdapter(this,mExercises));
     }
 
     private void setupMusic(ArrayList<File> local_playlist,String[] local_song_names,String spotify_playlist,String spotify_token){
@@ -340,17 +340,17 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         mNumberPicker.setMinValue(0);
 
         if (utilities.checkIfRep(exercise)) {
-            mExerciseOption.setText("Repetition completed: ");
+            mExerciseOption.setText(getString(R.string.activity_workingout_review_rep));
             mNumberPicker.setMaxValue(exercise.getRepetition());
         }else {
-            mExerciseOption.setText("Second completed: ");
+            mExerciseOption.setText(getString(R.string.activity_workingout_review_sec));
             mNumberPicker.setMaxValue(exercise.getSeconds());
         }
     }
 
 
     private void startChronometer(){
-        Log.d(TAG,"startChronometer");
+        //Log.d(TAG,"startChronometer");
         mChronometer.start();
 
 
@@ -360,12 +360,12 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     }
 
     private void restartChronometer(){
-        Log.d(TAG,"restartChronometer");
+        //Log.d(TAG,"restartChronometer");
         mChronometer.reset();
     }
 
     private void stopChronometer(){
-        Log.d(TAG,"stopChronometer");
+        //Log.d(TAG,"stopChronometer");
         mChronometer.stop();
     }
 
@@ -381,26 +381,25 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     @Override
     public void onPauseMusic() {
-        Log.d(TAG,"onPauseMusic");
+        //Log.d(TAG,"onPauseMusic");
         onPauseMusicPlayerUI();
         onScreenOff();
     }
 
     @Override
     public void onPlayMusic() {
-        Log.d(TAG,"onPlayMusic");
+        //Log.d(TAG,"onPlayMusic");
         onPlayMusicPlayerUI();
         onScreenOn();
     }
 
     @Override
     public void onWorkoutReady() {
-        Log.d(TAG,"onWorkoutReady");
+        //Log.d(TAG,"onWorkoutReady");
         mPlayWorkoutButton.setVisibility(View.VISIBLE);
         mStopWorkoutButton.setVisibility(View.INVISIBLE);
         mPauseWorkoutButton.setVisibility(View.INVISIBLE);
     }
-
 
     @Override
     public void onRestCounterStarted(String second) {
@@ -413,7 +412,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         setupPicker(mExercises.get(Integer.parseInt(mCurrentExercisePositionText.getText().toString()) -1));
         onReviewOn();
     }
-
 
     @Override
     public void onOverlayViewOn() {
@@ -436,8 +434,8 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     @Override
     public void onChangeToExercise(int exercise_position_list) {
-        //restarting list to exercise_position
-        list.smoothScrollToPosition(exercise_position_list);
+        //restarting mExercisesList to exercise_position
+        mExercisesList.smoothScrollToPosition(exercise_position_list);
 
         //changes of exercise
         initExerciseRepOrSecond(exercise_position_list);
@@ -453,8 +451,8 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     public void onSetFinished(int set) {
         activateVibrationPerSet();
 
-        //restarting list to first position
-        list.smoothScrollToPosition(0);
+        //restarting mExercisesList to first position
+        mExercisesList.smoothScrollToPosition(0);
 
         //changes of exercise
         initExerciseRepOrSecond(0);
@@ -486,21 +484,21 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     @Override
     public void onResumeWorkout() {
-        Log.d(TAG,"onResumeWorkout");
+        //Log.d(TAG,"onResumeWorkout");
         onPlayWorkoutUI();
         onPlayMusicPlayerUI();
     }
 
     @Override
     public void onPauseWorkout() {
-        Log.d(TAG,"onPauseWorkout");
+        //Log.d(TAG,"onPauseWorkout");
         onPauseWorkoutUI();
         onPauseMusicPlayerUI();
     }
 
     @Override
     public void onFinishWorkout() {
-        Log.d(TAG,"onFinishWorkout");
+        //Log.d(TAG,"onFinishWorkout");
 
         onScreenOff();
         launchResultsActivity();
@@ -534,14 +532,14 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     }
 
     private void stopWorkout(){
-        Log.d(TAG,"stopWorkout");
+        //Log.d(TAG,"stopWorkout");
         saveTimesOfChronometerPerExercise();
         mWorkingOutPresenter.pauseWorkout();
         mWorkingOutPresenter.startRest();
     }
 
     private void saveTimesOfChronometerPerExercise(){
-        Log.d(TAG,"time: "+mChronometer.getTimeElapsed());
+        //Log.d(TAG,"time: "+mChronometer.getTimeElapsed());
         mWorkingOutPresenter.saveTime(mChronometer.getTimeElapsed());
     }
 
@@ -609,13 +607,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         mPlayWorkoutButton.setEnabled(true);
     }
 
-    private void onReviewOn(){
-        mReviewExerciseView.setVisibility(View.VISIBLE);
-    }
-
-    private void onReviewOff(){
-        mReviewExerciseView.setVisibility(View.GONE);
-    }
 
     private void onScreenOn(){getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);}
 
@@ -631,5 +622,15 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
             }
         }
     }
+
+
+    private void onReviewOn(){
+        mReviewExerciseView.setVisibility(View.VISIBLE);
+    }
+
+    private void onReviewOff(){
+        mReviewExerciseView.setVisibility(View.GONE);
+    }
+
 
 }

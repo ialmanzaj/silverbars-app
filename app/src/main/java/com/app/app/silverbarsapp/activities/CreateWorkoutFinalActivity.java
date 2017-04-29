@@ -265,8 +265,6 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         workout.setLevel(getLevel(adapter.getExercises()));
         workout.setMain_muscle(mMuscleHandler.getMainMuscle(adapter.getExercises()));
 
-        Log.d(TAG,"LEVEL "+getLevel(adapter.getExercises()));;
-
         return workout;
     }
 

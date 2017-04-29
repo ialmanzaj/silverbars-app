@@ -131,9 +131,9 @@
     </string-array>
 
 
-    <string name="rest_text_set">Descanso entre Serie</string>
+    <string name="rest_text_set">Descanso entre serie</string>
+    <string name="rest_text_exercise">Descanso entre ejercicio</string>
 
-    <string name="rest_text_exercise">Descanso entre Ejercicio</string>
     <string name="error_title_internet">Estás sin conexión a internet</string>
     <string name="error_message_internet">Por Favor, Conectate a Internet y prueba de nuevo</string>
     <string name="error_failure">La conexion fallo</string>
@@ -195,7 +195,7 @@
     <string name="level">Nivel</string>
 
     <!---    Strings of LOGIN    -->
-    <string name="slogan_login">Iniciando sesion para empezar a entrenar</string>
+    <string name="slogan_login">Iniciando sesión para empezar a entrenar</string>
     <string name="slogan_silverbars">Be your own machine</string>
 
     <!---    Strings of workingout activity    -->
@@ -215,16 +215,16 @@
     <string name="activity_create_workout_final_saving">Guardando…</string>
 
     <!---    Strings of activity exercise_list  -->
-    <string name="activity_exercise_list_empty">No hay mas ejercicios:(</string>
+    <string name="activity_exercise_list_empty">No hay mas ejercicios :(</string>
 
     <string name="loading">Cargando…</string>
 
     <!---    Strings of activity activity_muscle_selection  -->
-    <string name="activity_muscle_selection_title">Selecciona los musculos vas a entrenar</string>
+    <string name="activity_muscle_selection_title">Selecciona los músculos vas a entrenar</string>
     <string name="activity_muscle_selection_exercises">Ejercicios</string>
     <string name="activity_muscle_selection_search">Buscar ejercicios</string>
-    <string name="activity_muscle_selection_selection">Seleccione que musculos</string>
-    <string name="activity_muscle_selection_toolbar">Seleccion de ejercicio por musculos</string>
+    <string name="activity_muscle_selection_selection">Seleccione que músculos</string>
+    <string name="activity_muscle_selection_toolbar">Selección de ejercicio por músculo</string>
 
     <!---    Strings of activity_results -->
     <string name="activity_results_title">Resultados</string>
@@ -240,13 +240,15 @@
     <string name="activity_workingout_second">sec</string>
     <string name="activity_workingout_save">Guardar y continuar</string>
     <string name="activity_workingout_total">Tiempo total:</string>
+    <string name="activity_workingout_review_rep">Repeticiones completadas:</string>
+    <string name="activity_workingout_review_sec">Segundos completados:</string>
 
     <!---    Strings of fragment profile -->
     <string name="fragment_profile_workout_done">Mis rutinas terminadas</string>
 
     <!---    Strings of fragment progress -->
     <string name="fragment_progress_empty">No has entrenado :(</string>
-    <string name="fragment_progress_muscle_selection">Selecciona que musculo para ver mi progreso</string>
+    <string name="fragment_progress_muscle_selection">Selecciona que músculo para ver progreso</string>
     <string name="fragment_progress_okaybutton">Okay</string>
 
     <string name="activity_create_workout_deleted">Ejercicio borrado</string>
@@ -254,9 +256,9 @@
     <string name="activity_create_workout_undo">DESHACER</string>
 
     <!---    Strings of activity_create_workout_final -->
-    <string name="activity_create_workout_final_workout_name_seleccion">Select your workout name</string>
-    <string name="activity_create_workout_final_sets_seleccion">Select your sets</string>
-    <string name="activity_create_workout_final_reps_seleccion">Select your reps or seconds</string>
+    <string name="activity_create_workout_final_workout_name_seleccion">Selecciona el nombre de tu rutina</string>
+    <string name="activity_create_workout_final_sets_seleccion">Selecciona tus sets</string>
+    <string name="activity_create_workout_final_reps_seleccion">Selecciona tus reps o segundos</string>
 
 
     <string name="activity_user_preferences">Cargando configuraciones iniciales</string>
@@ -276,12 +278,15 @@
     <string name="tab_muscles">Músculos</string>
     <string name="tab_exercises">Ejercicios</string>
 
-
     <!---    Strings of tabs of activity results  -->
     <string name="activity_results_tab_overview">General</string>
     <string name="activity_results_tab_exercises">Ejercicios</string>
 
     <string name="activity_workout_save_workout">Descargar rutina</string>
+
+    <string name="fragment_progress_daily_empty">No has entrenado :(</string>
+    <string name="fragment_progress_weekly_empty">No has entrenado :(</string>
+    <string name="fragment_progress_monthly_empty">No has entrenado:(</string>
 
 
 </resources>

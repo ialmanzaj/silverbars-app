@@ -32,7 +32,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         } else {
             startLogin();
         }
-
     }
 
     private void startLogin(){
@@ -42,11 +41,9 @@ public class SplashScreenActivity extends AppCompatActivity {
         finish();
     }
 
-
     private void startMainActivity(){
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
-
 
 }

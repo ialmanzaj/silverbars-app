@@ -58,7 +58,6 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
     @BindView(R.id.muscles) RecyclerView mMuscleActivation;
 
-
     private Utilities utilities = new Utilities();
     private ProgressionAlgoritm progressionAlgoritm = new ProgressionAlgoritm();
 
@@ -109,6 +108,13 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         getOldProgression();
     }
 
+    private void formatTime(String time){
+        String[] total_time = time.split(":");
+
+        String formated = total_time[0] + "min" +"," + total_time[1] + "min" +"," +total_time[2];
+
+        Log.d(TAG,"formated "+formated);
+    }
 
     private void getOldProgression(){
         try {
@@ -119,7 +125,7 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     }
 
     private void setupAdapter(ArrayList<ExerciseProgression> exercises){
-        //list settings
+        //mExercisesList settings
         mExercisesList.setLayoutManager(new LinearLayoutManager(this));
         mExercisesList.setNestedScrollingEnabled(false);
         mExercisesList.setHasFixedSize(false);
@@ -146,7 +152,7 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         exercises.setContent(R.id.exercises);
 
         TabHost.TabSpec muscles = Tab_layout.newTabSpec("Muscles");
-        muscles.setIndicator("Muscles");
+        muscles.setIndicator(getString(R.string.tab_muscles));
         muscles.setContent(R.id.muscles);
 
         Tab_layout.addTab(overview);

@@ -24,6 +24,7 @@ import com.app.app.silverbarsapp.modules.ProgressionModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ProgressionPresenter;
 import com.app.app.silverbarsapp.utils.MuscleListener;
+import com.app.app.silverbarsapp.utils.MusclesWebviewHandler;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.utils.WebAppInterface;
 import com.app.app.silverbarsapp.viewsets.ProgressionView;
@@ -70,6 +71,8 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
     private List<ExerciseProgression> mMonthProgressions = new ArrayList<>();
 
     private Utilities mUtilities = new Utilities();
+    MusclesWebviewHandler mMusclesWebviewHandler = new MusclesWebviewHandler();
+
     private Filter filter = new Filter();
 
     String mMuscleParts = " ";
@@ -115,7 +118,7 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     mCurrentWeek = progress;
                     changeSeekBarTextViewColor(progress);
-                    updateUi(getProgressionByWeek(progress));
+                    updateMainUi(getProgressionByWeek(progress));
                 }
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -186,9 +189,9 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
 
     @Override
     public void emptyProgress() {
-        Log.d(TAG,"emptyProgress");
+        //Log.d(TAG,"emptyProgress");
         onLoadingViewOff();
-        onEmptyViewOn("You haven't train ever:(");
+        onEmptyViewOn(CONTEXT.getString(R.string.fragment_progress_weekly_empty));
         initUI();
     }
 
@@ -250,16 +253,16 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
 
     private int whichWeekIs(DateTime today){
         if (filter.filterByDate(today,getWeeks().get(1))){
-           Log.d(TAG,"week_one: ");
+           //Log.d(TAG,"week_one: ");
             return 0;
         }else if (filter.filterByDate(today,getWeeks().get(2))){
-            Log.d(TAG,"week_two: ");
+            //Log.d(TAG,"week_two: ");
             return 1;
         }else if (filter.filterByDate(today,getWeeks().get(3))){
-            Log.d(TAG,"week_three: "+getWeeks().get(3));
+            //Log.d(TAG,"week_three: "+getWeeks().get(3));
             return 2;
         } else if (filter.filterByDate(today,getWeeks().get(4))){
-            Log.d(TAG,"week_four: "+getWeeks().get(4));
+            //Log.d(TAG,"week_four: "+getWeeks().get(4));
             return 3;
         }
         return -1;
@@ -275,7 +278,7 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
         }};
     }
 
-    private void updateUi(List<ExerciseProgression> progressions){
+    private void updateMainUi(List<ExerciseProgression> progressions){
         if (progressions.size() > 0) {
             onEmptyViewOff();
 
@@ -284,7 +287,7 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
             updateBodyMuscleWebView(progressions);
 
         }else {
-            onEmptyViewOn("You haven't train :(");
+            onEmptyViewOn(CONTEXT.getString(R.string.fragment_progress_weekly_empty));
         }
     }
 
@@ -297,8 +300,8 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
     }
 
     private void insertMuscleToWebview(String muscle_name){
-        mMuscleParts += "#" + muscle_name + ",";
-        mUtilities.onWebviewClickReady(webView,mMuscleParts);
+        mMuscleParts += mMusclesWebviewHandler.getMuscleReadyForWebview(muscle_name);
+        mMusclesWebviewHandler.onWebviewOnClickPain(webView,mMuscleParts);
     }
 
     private void clearWebview(){

@@ -118,7 +118,6 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
     @OnClick(R.id.reload)
     public void reload(){
         onErrorViewOff();
-
     }
 
     @Override

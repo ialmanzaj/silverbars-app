@@ -21,6 +21,7 @@ import com.app.app.silverbarsapp.Filter;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.adapters.ExercisesSelectedAdapter;
 import com.app.app.silverbarsapp.models.Exercise;
+import com.app.app.silverbarsapp.utils.MusclesWebviewHandler;
 import com.app.app.silverbarsapp.utils.OnStartDragListener;
 import com.app.app.silverbarsapp.utils.SimpleItemTouchHelperCallback;
 import com.app.app.silverbarsapp.utils.Utilities;
@@ -63,6 +64,10 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     private Utilities utilities = new Utilities();
     private Filter filter = new Filter();
+
+
+    MusclesWebviewHandler mMusclesWebviewHandler= new MusclesWebviewHandler();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +138,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
    /* private void setupAdapterSkills(List<Exercise> exercises){
         onEmptyTypesViewOff();
 
-        //list settings
+        //mExercisesList settings
         mSkillsList.setLayoutManager(new LinearLayoutManager(this));
         mSkillsList.setNestedScrollingEnabled(false);
         mSkillsList.setHasFixedSize(false);
@@ -196,7 +201,9 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
         //updated muscles view
         updateMuscleView(filter.getMusclesFromExercises(exercises));
-        utilities.injectJS(webView,mMusclesStringJs);
+
+        mMusclesWebviewHandler.paint(mMusclesStringJs);
+        mMusclesWebviewHandler.execute(webView);
     }
 
     @Override
@@ -237,14 +244,14 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         if (musculos.size() < 1){
             mMusclesStringJs = " ";
         }else {
-            mMusclesStringJs = utilities.getMusclesReadyForWebview(utilities.deleteCopiesofList(musculos));
+            mMusclesStringJs = mMusclesWebviewHandler.getMusclesReadyForWebview(utilities.deleteCopiesofList(musculos));
         }
     }
 
     private void reloadWebview(){
         webView.reload();
         utilities.loadUrlOfMuscleBody(this,webView);
-        utilities.onWebviewReady(webView,mMusclesStringJs);
+        mMusclesWebviewHandler.onWebviewReadyPaint(webView,mMusclesStringJs);
     }
 
     private void onEmptyViewOff(){

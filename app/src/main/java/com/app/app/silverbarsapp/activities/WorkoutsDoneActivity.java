@@ -68,7 +68,7 @@ public class WorkoutsDoneActivity extends BaseActivity implements WorkoutsDoneVi
 
 
     private void setupAdapter(){
-        //list settings
+        //mExercisesList settings
         mWorkoutsDoneList.setLayoutManager(new LinearLayoutManager(this));
         mWorkoutsDoneList.setNestedScrollingEnabled(false);
         mWorkoutsDoneList.setHasFixedSize(false);

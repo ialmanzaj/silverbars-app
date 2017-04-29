@@ -106,7 +106,7 @@ public class MusicHandler implements MusicCallback {
         setupExercisePlayer(exercise_audio_file);
 
         mExerciseAudioPlayer.setOnPreparedListener(player -> {
-            Log.e("mExerciseAudioPlayer","ready!");
+            //Log.e("mExerciseAudioPlayer","ready!");
 
             if (isLocalPlayerAvailable() && mLocalPlayer.isPlaying())
                 mLocalPlayer.setVolume(0.04f,0.04f);

@@ -60,22 +60,53 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
-        <TextView
-            android:layout_gravity="center_horizontal"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:text="@string/activity_muscle_selection_title"
-            android:textColor="@color/black"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <WebView
-            android:layout_weight="1"
             android:background="@color/white"
             android:id="@+id/webview"
             android:layout_width="match_parent"
-            android:layout_height="0dp" />
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/info"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_info_outline_black_24px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null" />
 
         <LinearLayout
+            android:visibility="gone"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#c81f1f1f"
+            android:id="@+id/modal_overlay">
+            <TextView
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="@string/activity_muscle_selection_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center"
+                android:textColor="#fff" />
+            <Button
+                android:id="@+id/okay"
+                android:text="@string/fragment_progress_okaybutton"
+                android:theme="@style/ButtonGreen"
+                android:padding="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_alignParentBottom="true"
             android:background="@color/grey100"
             android:gravity="end"
             android:orientation="horizontal"
@@ -88,27 +119,28 @@
                 android:id="@+id/scroll_text"
                 android:layout_height="match_parent">
 
-                    <RelativeLayout
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:textSize="18sp"
+                        android:text="@string/activity_muscle_selection_exercises"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/black"
+                        android:id="@+id/muscles_selected"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent">
+                        android:layout_height="wrap_content" />
 
-                        <TextView
-                            android:textSize="18sp"
-                            android:text="@string/activity_muscle_selection_exercises"
-                            android:layout_centerVertical="true"
-                            android:textColor="@color/black"
-                            android:id="@+id/muscles_selected"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                    </RelativeLayout>
-                </HorizontalScrollView>
+                </RelativeLayout>
+            </HorizontalScrollView>
             <Button
                 android:theme="@style/ButtonRed"
                 android:id="@+id/search_exercises"
                 android:text="@string/activity_muscle_selection_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-
         </LinearLayout>
+
+    </RelativeLayout>
 </LinearLayout>

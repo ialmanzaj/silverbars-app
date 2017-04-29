@@ -260,13 +260,15 @@
     <string name="activity_workingout_second">sec</string>
     <string name="activity_workingout_save">Save and continue</string>
     <string name="activity_workingout_total">Total time:</string>
+    <string name="activity_workingout_review_rep">Repetitions completed:</string>
+    <string name="activity_workingout_review_sec">Seconds completed:</string>
 
     <!---    Strings of fragment profile -->
     <string name="fragment_profile_workout_done">My workouts done</string>
 
     <!---    Strings of fragment progress -->
     <string name="fragment_progress_empty">You haven\'t train :(</string>
-    <string name="fragment_progress_muscle_selection">Select which muscle to see my progression</string>
+    <string name="fragment_progress_muscle_selection">Select which muscle to see progression</string>
     <string name="fragment_progress_okaybutton">Okay</string>
 
     <string name="activity_create_workout_deleted">Exercise deleted</string>
@@ -296,6 +298,10 @@
     <string name="activity_results_tab_exercises">Exercises</string>
 
     <string name="activity_workout_save_workout">Download workout</string>
+
+    <string name="fragment_progress_daily_empty">You haven\'t train :(</string>
+    <string name="fragment_progress_weekly_empty">You haven\'t train :(</string>
+    <string name="fragment_progress_monthly_empty">You haven\'t train :(</string>
 
 
 </resources>

@@ -119,7 +119,7 @@ public class ExerciseDetailActivity extends BaseActivity implements ExerciseDeta
     }
 
     private void setupAdapter(ArrayList<ExerciseProgression> exercises,int type_date){
-        //list settings
+        //mExercisesList settings
         mExercisesList.setLayoutManager(new LinearLayoutManager(this));
         mExercisesList.setNestedScrollingEnabled(false);
         mExercisesList.setHasFixedSize(false);
@@ -127,7 +127,7 @@ public class ExerciseDetailActivity extends BaseActivity implements ExerciseDeta
     }
 
     private void setupAdapterSkills(ArrayList<ExerciseProgression> exercises){
-        //list settings
+        //mExercisesList settings
         mSkillsList.setLayoutManager(new LinearLayoutManager(this));
         mSkillsList.setNestedScrollingEnabled(false);
         mSkillsList.setHasFixedSize(false);
@@ -136,7 +136,7 @@ public class ExerciseDetailActivity extends BaseActivity implements ExerciseDeta
 
     private void setupAdapterMuscleActivation(MuscleActivation muscleActivation,int type_date ){
         MuscleActivationAdapter adapter = new MuscleActivationAdapter(type_date);
-        //list settings
+        //mExercisesList settings
         adapter.add(muscleActivation);
         mMuscleActivation.setLayoutManager(new LinearLayoutManager(this));
         mMuscleActivation.setNestedScrollingEnabled(false);

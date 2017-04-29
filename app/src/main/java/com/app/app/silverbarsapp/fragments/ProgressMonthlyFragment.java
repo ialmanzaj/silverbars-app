@@ -27,6 +27,7 @@ import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ProgressionPresenter;
 import com.app.app.silverbarsapp.utils.DisableTouchRecyclerListener;
 import com.app.app.silverbarsapp.utils.MuscleListener;
+import com.app.app.silverbarsapp.utils.MusclesWebviewHandler;
 import com.app.app.silverbarsapp.utils.OnSwipeTouchListener;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.utils.WebAppInterface;
@@ -72,10 +73,12 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
     @BindView(R.id.modal_overlay) LinearLayout mModal;
     @BindView(R.id.info) ImageView mInfo;
 
-    ArrayList<ExerciseProgression> mYearProgressions;
+    private ArrayList<ExerciseProgression> mYearProgressions;
+
 
     private Utilities.HandlerMover handlerMover;
-    Filter filter = new Filter();
+    private Filter filter = new Filter();
+    MusclesWebviewHandler mMusclesWebviewHandler = new MusclesWebviewHandler();
 
     private String mMuscleParts = " ";
     SimpleStringAdapter adapter;
@@ -168,7 +171,7 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         if (handlerMover.allowToMove(position)) {
             mCurrentMonth = position;
             mMonths.post(() -> mMonths.smoothScrollToPosition(mCurrentMonth));
-            updateUi(getProgressionByMonth(mCurrentMonth));
+            updateMainView(getProgressionByMonth(mCurrentMonth));
         }
     }
 
@@ -178,7 +181,7 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         if (handlerMover.allowToMove(position)) {
             mCurrentMonth = position;
             mMonths.post(() -> mMonths.smoothScrollToPosition(mCurrentMonth));
-            updateUi(getProgressionByMonth(mCurrentMonth));
+            updateMainView(getProgressionByMonth(mCurrentMonth));
         }
     }
 
@@ -216,7 +219,7 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
     @Override
     public void emptyProgress() {
         onLoadingViewOff();
-        onEmptyViewOn("You haven't train :(");
+        onEmptyViewOn(CONTEXT.getString(R.string.fragment_progress_weekly_empty));
         initUI();
     }
 
@@ -244,7 +247,6 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         initUI();
     }
 
-
     private void initUI(){
         //filter the progressions to get the current month
         mCurrentMonth = whichMonthIs(new DateTime());
@@ -256,7 +258,7 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         handlerMover.setPosition(mCurrentMonth);
 
         //update the ui with the current month
-        updateUi(getProgressionByMonth(mCurrentMonth));
+        updateMainView(getProgressionByMonth(mCurrentMonth));
     }
 
     private int whichMonthIs(DateTime today){
@@ -313,56 +315,56 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
     private ArrayList<ExerciseProgression> getProgressionByMonth(int month) {
         switch (month){
             case 0:
-                Log.d(TAG,"January: "+getMonths().get(0));
+                //Log.d(TAG,"January: "+getMonths().get(0));
                 return filter.getProgressionFiltered(mYearProgressions, getMonths().get(0));
             case 1:
-                Log.d(TAG,"February: "+getMonths().get(1));
+                //Log.d(TAG,"February: "+getMonths().get(1));
                 return filter.getProgressionFiltered(mYearProgressions,getMonths().get(1));
             case 2:
-                Log.d(TAG,"March: "+getMonths().get(2));
+                //Log.d(TAG,"March: "+getMonths().get(2));
                 return filter.getProgressionFiltered(mYearProgressions,getMonths().get(2));
             case 3:
-                Log.d(TAG,"April: "+getMonths().get(3));
+                //Log.d(TAG,"April: "+getMonths().get(3));
                 return filter.getProgressionFiltered(mYearProgressions,getMonths().get(3));
             case 4:
-                Log.d(TAG,"May: "+getMonths().get(4));
+                //Log.d(TAG,"May: "+getMonths().get(4));
                 return filter.getProgressionFiltered(mYearProgressions,getMonths().get(4));
             case 5:
-                Log.d(TAG,"June: "+getMonths().get(5));
+                //Log.d(TAG,"June: "+getMonths().get(5));
                 return filter.getProgressionFiltered(mYearProgressions,getMonths().get(5));
             case 6:
-                Log.d(TAG,"July: "+getMonths().get(6));
+                //Log.d(TAG,"July: "+getMonths().get(6));
                 return filter.getProgressionFiltered(mYearProgressions,getMonths().get(6));
             case 7:
-                Log.d(TAG,"August: "+getMonths().get(7));
+                //Log.d(TAG,"August: "+getMonths().get(7));
                 return filter.getProgressionFiltered(mYearProgressions,getMonths().get(7));
             case 8:
-                Log.d(TAG,"September: "+getMonths().get(8));
+                //Log.d(TAG,"September: "+getMonths().get(8));
                 return filter.getProgressionFiltered(mYearProgressions,getMonths().get(8));
             case 9:
-                Log.d(TAG,"October: "+getMonths().get(9));
+                //Log.d(TAG,"October: "+getMonths().get(9));
                 return filter.getProgressionFiltered(mYearProgressions,getMonths().get(9));
             case 10:
-                Log.d(TAG,"November: "+getMonths().get(10));
+                //Log.d(TAG,"November: "+getMonths().get(10));
                 return(filter.getProgressionFiltered(mYearProgressions,getMonths().get(10)));
             case 11:
-                Log.d(TAG,"December: "+getMonths().get(11));
+                //Log.d(TAG,"December: "+getMonths().get(11));
                 return(filter.getProgressionFiltered(mYearProgressions,getMonths().get(11)));
             default:
                 return null;
         }
     }
 
-    private void updateUi(List<ExerciseProgression> progressions_filtered){
-
+    private void updateMainView(List<ExerciseProgression> progressions_filtered){
         if (progressions_filtered.size() > 0) {
-            Log.d(TAG,"YES update");
+
             onEmptyViewOff();
             clearWebview();
             updateBodyMuscleWebView(progressions_filtered);
+
         }else {
-            Log.d(TAG,"empty");
-            onEmptyViewOn("You haven't train :(");
+
+            onEmptyViewOn(CONTEXT.getString(R.string.fragment_progress_monthly_empty));
         }
     }
 
@@ -375,8 +377,8 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
     }
 
     private void insertMuscleToWebview(String muscle_name){
-        mMuscleParts += "#" + muscle_name + ",";
-        webView.post( () ->  mUtilities.onWebviewClickReady(webView,mMuscleParts));
+        mMuscleParts += mMusclesWebviewHandler.getMuscleReadyForWebview(muscle_name);
+        webView.post( () ->  mMusclesWebviewHandler.onWebviewOnClickPain(webView,mMuscleParts));
     }
 
     private void clearWebview(){

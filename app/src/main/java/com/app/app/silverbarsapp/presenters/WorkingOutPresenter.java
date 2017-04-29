@@ -1,13 +1,12 @@
 package com.app.app.silverbarsapp.presenters;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.app.app.silverbarsapp.utils.MusicHandler;
-import com.app.app.silverbarsapp.utils.WorkoutHandler;
 import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.models.ExerciseRep;
+import com.app.app.silverbarsapp.utils.MusicHandler;
 import com.app.app.silverbarsapp.utils.Utilities;
+import com.app.app.silverbarsapp.utils.WorkoutHandler;
 import com.app.app.silverbarsapp.viewsets.WorkingOutView;
 
 import java.io.File;
@@ -56,6 +55,10 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
 
     public ArrayList<ExerciseRep> getExercises(){
         return mWorkoutHandler.getExercises();
+    }
+
+    public boolean isWorkoutPaused() {
+        return mWorkoutHandler.isWorkoutPaused();
     }
 
 
@@ -135,7 +138,7 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
 
     @Override
     public void onWorkoutFinished() {
-        Log.d(TAG,"onWorkoutFinished");
+        //Log.d(TAG,"onWorkoutFinished");
         view.onFinishWorkout();
     }
 
@@ -167,7 +170,7 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
 
     @Override
     public void onChangeToNextExercise(int exercise_position) {
-        Log.d(TAG,"onChangeToNextExercise "+exercise_position);
+        //Log.d(TAG,"onChangeToNextExercise "+exercise_position);
         view.onChangeToExercise(exercise_position);
 
         //reset the workout UI
@@ -176,7 +179,7 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
 
     @Override
     public void onChangeToNextSet(int current_set) {
-        Log.d(TAG,"onChangeToNextSet "+current_set);
+        //Log.d(TAG,"onChangeToNextSet "+current_set);
         view.onSetFinished(current_set);
 
         //reset the workout UI
@@ -206,37 +209,37 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
 
     @Override
     public void onStart() {
-        Log.d(TAG,"onStart");
+        //Log.d(TAG,"onStart");
         //playWorkout();
     }
 
     @Override
     public void onResume() {
-        Log.d(TAG,"onResume");
+       // Log.d(TAG,"onResume");
         //playWorkout();
     }
 
     @Override
     public void onPause() {
-        Log.d(TAG,"onPause");
+       // Log.d(TAG,"onPause");
         //pauseWorkout();
     }
 
     @Override
     public void onRestart() {
-        Log.d(TAG,"onRestart");
+        //Log.d(TAG,"onRestart");
         //playWorkout();
     }
 
     @Override
     public void onStop() {
-        Log.d(TAG,"onStop");
+        //Log.d(TAG,"onStop");
         //pauseWorkout();
     }
 
     @Override
     public void onDestroy() {
-        Log.d(TAG,"onDestroy");
+        //Log.d(TAG,"onDestroy");
         destroy();
     }
 
@@ -245,7 +248,4 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
         mWorkoutHandler.destroy();
     }
 
-    public boolean isWorkoutPaused() {
-        return mWorkoutHandler.isWorkoutPaused();
-    }
 }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import com.app.app.silverbarsapp.modules.MuscleSelectionModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.MuscleSelectionPresenter;
 import com.app.app.silverbarsapp.utils.MuscleListener;
+import com.app.app.silverbarsapp.utils.MusclesWebviewHandler;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.utils.WebAppInterface;
 import com.app.app.silverbarsapp.viewsets.MuscleSelectionView;
@@ -53,7 +55,13 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     @BindView(R.id.loading) LinearLayout mLoadingView;
     @BindView(R.id.error_view) LinearLayout mErrorView;
 
+    @BindView(R.id.modal_overlay) LinearLayout mModal;
+    @BindView(R.id.info) ImageView mInfo;
+
+
     private Utilities utilities = new Utilities();
+
+    MusclesWebviewHandler mMusclesWebviewHandler = new MusclesWebviewHandler();
 
     private ArrayList<String> muscles_selected = new ArrayList<>();
     private ArrayList<Integer> exercises_ids_selected;
@@ -105,6 +113,17 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
             getSupportActionBar().setTitle(R.string.activity_muscle_selection_toolbar);
         }
     }
+
+    @OnClick(R.id.info)
+    public void infoButton(){
+        mModal.setVisibility(View.VISIBLE);
+    }
+
+    @OnClick(R.id.okay)
+    public void okayButton(){
+        mModal.setVisibility(View.GONE);
+    }
+
 
     @OnClick(R.id.reload)
     public void reload(){
@@ -179,19 +198,51 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
             muscles_names.add(muscle.getMuscle_name());
         }
 
-        myWebView.post(() -> utilities.injectJSOnClick(myWebView,utilities.getMusclesReadyForWebview(muscles_names)));
+        String muscles_for_js = mMusclesWebviewHandler.getMusclesReadyForWebview(muscles_names);
+
+        myWebView.post(() -> {
+            mMusclesWebviewHandler.paintOnClick(muscles_for_js);
+            mMusclesWebviewHandler.execute(myWebView);
+        });
+
     }
 
     @Override
     public void onMuscleSelected(String muscle) {
-        muscles_selected.add(muscle);
+        if (!muscles_selected.contains(muscle)){
 
-        runOnUiThread(() -> {
-            //stuff that updates ui
-            mMusclesTextSelected.setText(muscles_selected.toString().replace("[","").replace("]",""));
-        });
+            //add muscle
+            muscles_selected.add(muscle);
 
-        mScrollText.postDelayed(() -> mScrollText.fullScroll(HorizontalScrollView.FOCUS_RIGHT), 100L);
+            runOnUiThread(() -> {
+                //stuff that updates ui
+                mMusclesTextSelected.setText(muscles_selected.toString().replace("[","").replace("]",""));
+            });
+
+            mScrollText.postDelayed(() -> mScrollText.fullScroll(HorizontalScrollView.FOCUS_RIGHT), 100L);
+
+
+        }else {
+            //Log.d(TAG,"muscle selected: "+muscle);
+
+            String muscles_for_js = mMusclesWebviewHandler.getMuscleReadyForWebview(muscle);
+
+            myWebView.post(() -> {
+                mMusclesWebviewHandler.removePaint(muscles_for_js);
+                mMusclesWebviewHandler.execute(myWebView);
+            });
+
+            //remove muscle
+            muscles_selected.remove(muscle);
+
+
+            runOnUiThread(() -> {
+                //stuff that updates ui
+                mMusclesTextSelected.setText(muscles_selected.toString().replace("[","").replace("]",""));
+            });
+
+            mScrollText.postDelayed(() -> mScrollText.fullScroll(HorizontalScrollView.FOCUS_RIGHT), 100L);
+        }
     }
 
     private void onLoadingViewOn(){
