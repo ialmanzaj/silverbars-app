@@ -31,6 +31,7 @@ import com.app.app.silverbarsapp.viewsets.ResultsView;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -102,18 +103,18 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
 
         mTotalSets.setText(String.valueOf(sets_completed-1)+"/"+String.valueOf(total_sets));
-        mTotalTime.setText(String.valueOf(total_time));
+        mTotalTime.setText(formatTime(String.valueOf(total_time)));
 
 
         getOldProgression();
     }
 
-    private void formatTime(String time){
+    private String formatTime(String time){
         String[] total_time = time.split(":");
-
-        String formated = total_time[0] + "min" +"," + total_time[1] + "min" +"," +total_time[2];
-
-        Log.d(TAG,"formated "+formated);
+        Log.d(TAG,"total_time "+ Arrays.toString(total_time));
+        return total_time[0] + "min"
+                +"," + Integer.parseInt(total_time[1]) + "sec" +","
+                + Integer.parseInt(total_time[2])  + "mili" ;
     }
 
     private void getOldProgression(){
@@ -125,7 +126,6 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     }
 
     private void setupAdapter(ArrayList<ExerciseProgression> exercises){
-        //mExercisesList settings
         mExercisesList.setLayoutManager(new LinearLayoutManager(this));
         mExercisesList.setNestedScrollingEnabled(false);
         mExercisesList.setHasFixedSize(false);
@@ -224,7 +224,8 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
     @Override
     public void onExerciseProgression(ArrayList<ExerciseProgression> exerciseProgressions) {
-        ArrayList<ExerciseProgression> progressions_compared =  progressionAlgoritm.compareExerciseProgression(exerciseProgressions,mExercises);
+        ArrayList<ExerciseProgression> progressions_compared =
+                progressionAlgoritm.compareExerciseProgression(exerciseProgressions,mExercises);
         setupAdapter(progressions_compared);
         setupAdapterMuscleActivation(progressionAlgoritm.getMusclesActivationByExercisesProgressions(mExercises));
     }
@@ -247,6 +248,20 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         dialog();
     }
 
+    private void dialog(){
+        new MaterialDialog.Builder(this)
+                .title(getString(R.string.activity_results_dialog_title))
+                .titleColor(getResources().getColor(R.color.colorPrimaryText))
+                .contentColor(getResources().getColor(R.color.colorPrimaryText))
+                .positiveColor(getResources().getColor(R.color.colorPrimaryText))
+                .negativeColor(getResources().getColor(R.color.colorPrimaryText))
+                .backgroundColor(Color.WHITE)
+                .content(getString(R.string.activity_results_dialog_content))
+                .positiveText(getResources().getString(R.string.positive_dialog))
+                .onPositive((dialog, which) -> finish()).negativeText(getResources().getString(R.string.negative_dialog)).
+                onNegative((dialog, which) -> dialog.dismiss()).show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -258,23 +273,5 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
             dialog();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void dialog(){
-        new MaterialDialog.Builder(this)
-                .title(getString(R.string.activity_results_dialog_title))
-                .titleColor(getResources().getColor(R.color.colorPrimaryText))
-                .contentColor(getResources().getColor(R.color.colorPrimaryText))
-                .positiveColor(getResources().getColor(R.color.colorPrimaryText))
-                .negativeColor(getResources().getColor(R.color.colorPrimaryText))
-                .backgroundColor(Color.WHITE)
-                .content(getString(R.string.activity_results_dialog_content))
-                .positiveText(getResources().getString(R.string.positive_dialog))
-                .onPositive((dialog, which) -> {
-                    finish();
-                }).negativeText(getResources().getString(R.string.negative_dialog)).
-                onNegative((dialog, which) -> {
-                    dialog.dismiss();
-                }).show();
     }
 }

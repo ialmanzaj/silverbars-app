@@ -65,10 +65,8 @@ public class ExerciseDetailWeeklyActivity extends AppCompatActivity {
         setupAdapterSkills(mExercises);
 
 
-        if (extras.getParcelable("muscle_activation") != null) {
-            MuscleActivation muscleActivation = extras.getParcelable("muscle_activation");
-            setupAdapterMuscleActivation(muscleActivation,type_date);
-        }
+        MuscleActivation muscleActivation = extras.getParcelable("muscle_activation");
+        setupAdapterMuscleActivation(muscleActivation,type_date);
     }
 
 

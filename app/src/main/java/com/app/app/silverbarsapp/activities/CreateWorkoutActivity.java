@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -89,7 +88,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(getResources().getString(R.string.text_create_workout));
+            getSupportActionBar().setTitle(getResources().getString(R.string.activity_create_workout_create_button));
             toolbar.setNavigationIcon(R.drawable.ic_clear_white_24px);
         }
     }
@@ -147,9 +146,8 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     }*/
 
     private void setupWebview(){
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-        utilities.loadUrlOfMuscleBody(this,webView);
+        webView.getSettings().setJavaScriptEnabled(true);
+        utilities.loadBodyFromLocal(this,webView);
     }
 
     private void setupExercisesAdapter(){
@@ -196,13 +194,10 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         onEmptyViewOff();
 
         //set exercises in adapter
-        //setupAdapterSkills(exercises);
         adapter.setExercises(exercises);
 
-        //updated muscles view
-        updateMuscleView(filter.getMusclesFromExercises(exercises));
-
-        mMusclesWebviewHandler.paint(mMusclesStringJs);
+        //update  body muscle of webview
+        mMusclesWebviewHandler.paint(getMusclesReady(filter.getMusclesFromExercises(exercises)));
         mMusclesWebviewHandler.execute(webView);
     }
 
@@ -213,8 +208,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
     }
 
     private void updateMusclesView(){
-        updateMuscleView(filter.getMusclesFromExercises(adapter.getSelectedExercises()));
-        reloadWebview();
+        updateWebviewReady(getMusclesReady(filter.getMusclesFromExercises(adapter.getSelectedExercises())));
     }
 
    /* private void updateTypes(){
@@ -239,19 +233,21 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         }).show();
     }
 
-    private void updateMuscleView(List<String> musculos){
+    private String getMusclesReady(List<String> musculos){
         //Log.d(TAG,"muscle size "+musculos.size());
+        String muscles_js;
         if (musculos.size() < 1){
-            mMusclesStringJs = " ";
+            muscles_js = " ";
         }else {
-            mMusclesStringJs = mMusclesWebviewHandler.getMusclesReadyForWebview(utilities.deleteCopiesofList(musculos));
+            muscles_js = mMusclesWebviewHandler.getMusclesReadyForWebview(utilities.deleteCopiesofList(musculos));
         }
+        return muscles_js;
     }
 
-    private void reloadWebview(){
+    private void updateWebviewReady(String muscles){
         webView.reload();
-        utilities.loadUrlOfMuscleBody(this,webView);
-        mMusclesWebviewHandler.onWebviewReadyPaint(webView,mMusclesStringJs);
+        utilities.loadBodyFromLocal(this,webView);
+        mMusclesWebviewHandler.addWebviewClientPaint(webView,muscles);
     }
 
     private void onEmptyViewOff(){

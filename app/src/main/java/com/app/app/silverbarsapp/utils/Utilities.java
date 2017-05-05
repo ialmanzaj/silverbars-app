@@ -1,5 +1,6 @@
 package com.app.app.silverbarsapp.utils;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -10,11 +11,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.app.app.silverbarsapp.MainService;
@@ -26,11 +28,14 @@ import com.app.app.silverbarsapp.models.MuscleExercise;
 import com.app.app.silverbarsapp.models.Skill;
 import com.spotify.sdk.android.player.Connectivity;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -57,9 +62,89 @@ public class Utilities {
 
     private static final String TAG = "Utilities";
 
-    private   String strSeparator = "__,__";
+    private String strSeparator = "__,__";
 
     public Utilities (){}
+
+
+    public ArrayList<ExerciseRep> getExerciseWithTimesArray(ArrayList<ExerciseRep> exercises,int mSetsTotal){
+        for (ExerciseRep exercise: exercises){
+            exercise.createTimesPerSet(mSetsTotal);
+        }
+        return exercises;
+    }
+
+    public boolean isAppRunning(Context context, String packageName) {
+        final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        final List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
+        if (procInfos != null) {
+            for (final ActivityManager.RunningAppProcessInfo processInfo : procInfos) {
+                if (processInfo.processName.equals(packageName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void loadBodyFromLocal(Context context, WebView webView) {
+        String html = getLocalFile(context, "index.html");
+        webView.setWebViewClient(new WebViewClient());
+
+        webView.postDelayed(() -> webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "UTF-8"), 100);
+    }
+
+    public void loadBodyFromLocalAt80(Context context, WebView webView){
+        String html = getLocalFile(context,"index-80.html");
+        webView.setWebViewClient(new WebViewClient());
+
+        webView.postDelayed(() -> webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "utf-8", ""), 100);
+    }
+
+    private String getBodyUrlFromPhone(Context context){
+        SharedPreferences sharedPref = context.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
+        String default_url = context.getResources().getString(R.string.muscle_path);
+        return sharedPref.getString(context.getString(R.string.muscle_path),default_url);
+    }
+
+    public void loadBodyFromUrl(Context context, WebView webView){
+         String muscle_url = getBodyUrlFromPhone(context);
+         webView.setWebViewClient(new WebViewClient());
+
+
+          if (muscle_url.equals("/")){
+              webView.loadUrl(BODY_URL);
+          }else {
+              Log.d(TAG,"loading from phone");
+              String fileurl = "file://"+muscle_url;
+              webView.loadUrl(fileurl);
+          }
+     }
+
+    private void injectScriptFile(Context context,WebView view, String scriptFile) {
+        InputStream input;
+        try {
+            input = context.getAssets().open(scriptFile);
+            byte[] buffer = new byte[input.available()];
+            input.read(buffer);
+            input.close();
+
+            // String-ify the script byte-array using BASE64 encoding !!!
+            String encoded = Base64.encodeToString(buffer, Base64.NO_WRAP);
+            view.loadUrl("javascript:(function() {" +
+                    "var parent = document.getElementsByTagName('head').item(0);" +
+                    "var script = document.createElement('script');" +
+                    "script.type = 'text/javascript';" +
+                    // Tell the browser to BASE64-decode the string into your script !!!
+                    "script.innerHTML = window.atob('" + encoded + "');" +
+                    "parent.appendChild(script)" +
+                    "})()");
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
 
     public String getDate(int type_date){
         switch (type_date){
@@ -69,6 +154,46 @@ public class Utilities {
             default:
                 return "";
         }
+    }
+
+    public String getLocalFile(Context context,String name_file){
+        String json = null;
+        try {
+            InputStream is = context.getAssets().open(name_file);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return json;
+    }
+
+    public String readHtml(String remoteUrl) {
+        String out = "";
+        BufferedReader in = null;
+        try {
+            URL url = new URL(remoteUrl);
+            in = new BufferedReader(new InputStreamReader(url.openStream()));
+            String str;
+            while ((str = in.readLine()) != null) {
+                out += str;
+            }
+        } catch (IOException e) {
+            Log.e(TAG,"IOException");
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return out;
     }
 
     public List<Skill> getTypesByExerciseProgression(ArrayList<ExerciseProgression> exercises){
@@ -89,6 +214,21 @@ public class Utilities {
     }
 
 
+
+    public ArrayList<ExerciseProgression> convertToExerciseProgressions(ArrayList<ExerciseRep> exercises){
+        ArrayList<ExerciseProgression> exerciseProgressions = new ArrayList<>();
+
+        for (ExerciseRep exercise: exercises) {
+            ExerciseProgression exerciseProgression = new ExerciseProgression();
+            exerciseProgression.setExercise(exercise.getExercise());
+            exerciseProgression.setTotal_repetition(exercise.getRepetition());
+            exerciseProgression.setTotal_seconds(exercise.getSeconds());
+            exerciseProgression.setTotal_weight(exercise.getWeight());
+            exerciseProgressions.add(exerciseProgression);
+        }
+
+        return exerciseProgressions;
+    }
 
     public List<Skill> getTypesByExerciseRep(ArrayList<ExerciseRep> exercises){
         List<Skill> types = new ArrayList<>();
@@ -290,25 +430,6 @@ public class Utilities {
 
     public void toastLong(Context context,String text){
         Toast.makeText(context.getApplicationContext(),text,Toast.LENGTH_LONG).show();
-    }
-
-
-    public void loadUrlOfMuscleBody(Context context, WebView webView){
-        SharedPreferences sharedPref = context.getSharedPreferences("Mis preferencias",Context.MODE_PRIVATE);
-        String default_url = context.getResources().getString(R.string.muscle_path);
-        String muscle_url = sharedPref.getString(context.getString(R.string.muscle_path),default_url);
-
-        webView.setWebChromeClient(new WebChromeClient());
-
-        if (muscle_url.equals("/")){
-
-            webView.loadUrl(BODY_URL);
-
-        }else {
-
-            String fileurl = "file://"+muscle_url;
-            webView.loadUrl(fileurl);
-        }
     }
 
     public  int calculateContainerWidth(Context context) {

@@ -24,8 +24,6 @@ import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ExerciseListPresenter;
 import com.app.app.silverbarsapp.viewsets.ExerciseListView;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +48,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     @BindView(R.id.error_view) LinearLayout mErrorView;
     @BindView(R.id.reload)Button mReload;
 
-    @BindView(R.id.exercises_list) RecyclerView list;
+    @BindView(R.id.exercises_list) RecyclerView mExercisesList;
     @BindView(R.id.add_exercises) Button mAddExercises;
 
     @BindView(R.id.empty_state) LinearLayout mEmptyView;
@@ -90,7 +88,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
         getExtras(getIntent().getExtras());
 
-        list.setLayoutManager(new LinearLayoutManager(this));
+        mExercisesList.setLayoutManager(new LinearLayoutManager(this));
         mExerciseListPresenter.getExercises();
     }
 
@@ -106,22 +104,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getResources().getString(R.string.add_exercises_title));
-    }
-
-    private String getJson(){
-        String json = null;
-        try {
-            InputStream is = this.getAssets().open("exercises.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        return json;
     }
 
     @OnClick(R.id.reload)
@@ -183,7 +165,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     private void setExercisesView(ArrayList<Exercise> exercises){
         if (exercises.size() > 0) {
             adapter = new AllExercisesAdapter(this, exercises);
-            list.setAdapter(adapter);
+            mExercisesList.setAdapter(adapter);
         }else {
             onEmptyViewOn();
         }

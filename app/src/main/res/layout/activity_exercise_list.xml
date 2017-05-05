@@ -125,7 +125,7 @@
                             android:id="@+id/add_exercises"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/add_exercises_button"
+                            android:text="@string/activity_exercise_list_add_button"
                             android:textSize="18sp"
                             android:layout_alignParentBottom="true" />
                     </RelativeLayout>

@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,11 +21,15 @@ import java.util.List;
  */
 
 public class SeekbarWithIntervals extends LinearLayout {
+
     private LinearLayout mLinearLayout = null;
     private SeekBar mSeekBar = null;
 
     private int WidthMeasureSpec = 0;
     private int HeightMeasureSpec = 0;
+
+
+    List<Integer> list_progress = new ArrayList<>();
 
 
     public SeekbarWithIntervals(Context context, AttributeSet attributeSet) {
@@ -75,10 +80,12 @@ public class SeekbarWithIntervals extends LinearLayout {
         getSeekBar().setMax(intervals.size() - 1);
     }
 
-    public void setInitialProgress(int monday){
-        if (monday == 1) {
-            getSeekBar().setProgress(getMax()-2);
-        }
+    public void setInitialProgress(int element){
+        int a;
+        do {
+            a = (int) ((Math.random() * getMax()) + 1);
+        } while (a == element);
+        getSeekBar().setProgress(a);
     }
 
     public int getMax() {
@@ -124,6 +131,15 @@ public class SeekbarWithIntervals extends LinearLayout {
     public void changeTextColorNoSelected(int last_selected){
         TextView view = (TextView) getLinearLayout().getChildAt(last_selected);
         view.setTextColor(getResources().getColor(R.color.gray_active_icon));
+    }
+
+    public void changeSeekBarTextViewColor(int progress){
+        list_progress.add(progress);
+        changeTextColorSelected(progress);
+        if (list_progress.size() >= 2){
+            int penultimo_element = list_progress.size()-2;
+            changeTextColorNoSelected(list_progress.get(penultimo_element));
+        }
     }
 
     private LinearLayout getLinearLayout() {

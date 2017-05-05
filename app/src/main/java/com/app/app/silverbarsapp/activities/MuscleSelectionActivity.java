@@ -92,7 +92,6 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
         setupToolbar();
         setupWebview();
         mMuscleSelectionPresenter.getMuscles();
-
         if (getIntent().getExtras() != null) {getExtras(getIntent().getExtras());}
     }
 
@@ -103,7 +102,7 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     private void setupWebview(){
         myWebView.getSettings().setJavaScriptEnabled(true);
         myWebView.addJavascriptInterface(new WebAppInterface(this,this), "Android");
-        utilities.loadUrlOfMuscleBody(this,myWebView);
+        utilities.loadBodyFromLocal(this,myWebView);
     }
 
     public void setupToolbar(){
@@ -150,7 +149,6 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
         }
     }
 
-
     @OnClick(R.id.search_exercises)
     public void searchExercisesButton(){
 
@@ -190,21 +188,15 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     @Override
     public void getMuscles(List<Muscle> muscles) {
         //Log.d(TAG,"muscles "+muscles);
-        onLoadingViewOff();
-
         List<String> muscles_names = new ArrayList<>();
 
-        for (Muscle muscle: muscles){
-            muscles_names.add(muscle.getMuscle_name());
-        }
+        for (Muscle muscle: muscles){muscles_names.add(muscle.getMuscle_name());}
 
         String muscles_for_js = mMusclesWebviewHandler.getMusclesReadyForWebview(muscles_names);
 
-        myWebView.post(() -> {
-            mMusclesWebviewHandler.paintOnClick(muscles_for_js);
-            mMusclesWebviewHandler.execute(myWebView);
-        });
+        paintMuscles(muscles_for_js);
 
+        onLoadingViewOff();
     }
 
     @Override
@@ -214,35 +206,45 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
             //add muscle
             muscles_selected.add(muscle);
 
-            runOnUiThread(() -> {
-                //stuff that updates ui
-                mMusclesTextSelected.setText(muscles_selected.toString().replace("[","").replace("]",""));
-            });
-
-            mScrollText.postDelayed(() -> mScrollText.fullScroll(HorizontalScrollView.FOCUS_RIGHT), 100L);
-
+            updateViewMusclesTxt();
 
         }else {
-            //Log.d(TAG,"muscle selected: "+muscle);
 
             String muscles_for_js = mMusclesWebviewHandler.getMuscleReadyForWebview(muscle);
 
-            myWebView.post(() -> {
-                mMusclesWebviewHandler.removePaint(muscles_for_js);
-                mMusclesWebviewHandler.execute(myWebView);
-            });
+            removepaintMuscles(muscles_for_js);
 
-            //remove muscle
             muscles_selected.remove(muscle);
 
-
-            runOnUiThread(() -> {
-                //stuff that updates ui
-                mMusclesTextSelected.setText(muscles_selected.toString().replace("[","").replace("]",""));
-            });
-
-            mScrollText.postDelayed(() -> mScrollText.fullScroll(HorizontalScrollView.FOCUS_RIGHT), 100L);
+            updateViewMusclesTxt();
         }
+    }
+
+    private void paintMuscles(String muscles_for_js){
+        myWebView.post(() -> {
+            mMusclesWebviewHandler.paintOnClick(muscles_for_js);
+            mMusclesWebviewHandler.execute(myWebView);
+        });
+    }
+
+    private void removepaintMuscles(String muscles_for_js){
+        myWebView.post(() -> {
+            mMusclesWebviewHandler.removePaint(muscles_for_js);
+            mMusclesWebviewHandler.execute(myWebView);
+        });
+    }
+
+    private void updateViewMusclesTxt(){
+        runOnUiThread(() -> {
+            //stuff that updates ui
+            mMusclesTextSelected.setText(getMuscles(muscles_selected));
+        });
+
+        mScrollText.postDelayed(() -> mScrollText.fullScroll(HorizontalScrollView.FOCUS_RIGHT), 100L);
+    }
+
+    private String getMuscles(ArrayList<String> muscles_selected) {
+        return muscles_selected.toString().replace("[","").replace("]","");
     }
 
     private void onLoadingViewOn(){

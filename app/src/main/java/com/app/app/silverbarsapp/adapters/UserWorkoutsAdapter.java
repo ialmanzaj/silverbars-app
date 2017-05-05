@@ -93,7 +93,8 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
 
             new MaterialDialog.Builder( context )
                     .title(R.string.user_workout_adapter_delete_title).titleColor(context.getResources().getColor(R.color.black))
-                    .content(R.string.user_workout_adapter_delete_content).contentColor(context.getResources().getColor(R.color.black))
+                    .content(R.string.user_workout_adapter_delete_content)
+                    .contentColor(context.getResources().getColor(R.color.black))
                     .positiveText("Yes")
                     .onPositive((dialog, which) -> {
                         delete(workout_id);
@@ -124,7 +125,7 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return  new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_userworkout, parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_userworkout, parent, false));
     }
 
     @Override

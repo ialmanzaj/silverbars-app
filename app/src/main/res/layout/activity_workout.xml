@@ -58,11 +58,11 @@
 
                     <RelativeLayout
                         android:id="@+id/toggle_save_workout"
-                        android:minHeight="55dp"
+                        android:minHeight="45dp"
                         android:background="@color/colorSecondary"
                         android:paddingStart="15dp"
                         android:paddingEnd="15dp"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginBottom="15dp"
                         android:gravity="center_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -81,9 +81,22 @@
 
                     </RelativeLayout>
                     <LinearLayout
+                        android:minHeight="35dp"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:textSize="18sp"
+                            android:text="This workout start today at 2pm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+                    <LinearLayout
                         android:background="?selectableItemBackgroundBorderless"
                         android:id="@+id/select_music"
-                        android:minHeight="45dp"
+                        android:minHeight="40dp"
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
                         android:paddingStart="15dp"
@@ -101,21 +114,21 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/music_selection"
-                                android:textColor="@color/black"
+                                android:text="Music: "
+                                android:textColor="@color/gray_active_icon"
                                 android:textSize="18sp" />
 
-                            <ImageView
-                                android:layout_marginStart="3dp"
-                                android:id="@+id/music_img"
-                                android:layout_width="20dp"
-                                android:src="@drawable/musica_img"
-                                android:layout_height="20dp"
-                                android:text="@string/select_music_text"
-                                android:textColor="@color/white"
-                                android:contentDescription="@null"/>
+                            <TextView
+                                android:textStyle="bold"
+                                android:id="@+id/music"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="None"
+                                android:textColor="@color/black"
+                                android:textSize="19sp" />
 
                         </LinearLayout>
+
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -139,10 +152,11 @@
                             android:textSize="18sp" />
 
                         <TextView
+                            android:textStyle="bold"
                             android:layout_marginEnd="10dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="22sp"
+                            android:textSize="20sp"
                             android:text="@string/number_sets"
                             android:minWidth="45dp"
                             android:textColor="@color/black"
@@ -151,7 +165,6 @@
                             android:textAlignment="center" />
                     </LinearLayout>
                     <LinearLayout
-                        android:minHeight="45dp"
                         android:paddingStart="15dp"
                         android:paddingEnd="15dp"
                         android:gravity="center_vertical"
@@ -176,10 +189,10 @@
                                     android:id="@+id/rest_by_exercise"
                                     android:layout_width="50dp"
                                     android:layout_height="wrap_content"
-                                    android:textSize="22sp"
+                                    android:textSize="20sp"
                                     android:imeOptions="actionDone"
                                     android:textColor="@color/black"
-                                    android:ems="10"
+                                    android:textStyle="bold"
                                     android:text="@string/rest_exercise"
                                     android:maxLength="2"
                                     android:textColorHint="@color/black"
@@ -188,7 +201,6 @@
                             </android.support.design.widget.TextInputLayout>
                     </LinearLayout>
                     <LinearLayout
-                        android:minHeight="45dp"
                         android:paddingStart="15dp"
                         android:paddingEnd="15dp"
                         android:gravity="center_vertical"
@@ -209,20 +221,61 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
                                 <AutoCompleteTextView
+                                    android:textStyle="bold"
                                     android:gravity="center_horizontal"
                                     android:id="@+id/rest_by_set"
                                     android:layout_width="50dp"
                                     android:layout_height="wrap_content"
-                                    android:textSize="22sp"
+                                    android:textSize="20sp"
                                     android:imeOptions="actionDone"
                                     android:textColor="@color/black"
-                                    android:ems="10"
                                     android:text="@string/rest_sets"
                                     android:maxLength="2"
                                     android:textColorHint="@color/black"
                                     android:inputType="number"
                                     android:maxLines="1" />
                             </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:minHeight="35dp"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:layout_marginBottom="20dp"
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <android.support.v7.widget.SwitchCompat
+                            android:textSize="18sp"
+                            android:textColor="@color/black"
+                            android:text="Warm up"
+                            android:theme="@style/MySwitch"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="20dp"
+                            android:layout_width="match_parent"
+                            android:checked="false" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:minHeight="35dp"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:layout_marginBottom="20dp"
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <android.support.v7.widget.SwitchCompat
+                            android:textSize="18sp"
+                            android:textColor="@color/black"
+                            android:text="Cool down"
+                            android:theme="@style/MySwitch"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="20dp"
+                            android:layout_width="match_parent"
+                            android:checked="false" />
+
                     </LinearLayout>
                     <android.support.v7.widget.SwitchCompat
                         android:visibility="gone"

@@ -13,7 +13,6 @@
     card_view:cardElevation="1dp">
 
     <LinearLayout
-        android:id="@+id/itemSelected"
         android:baselineAligned="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -22,7 +21,7 @@
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.8"
+            android:layout_weight="1"
             android:id="@+id/imageLayout">
 
             <com.facebook.drawee.view.SimpleDraweeView
@@ -40,19 +39,18 @@
 
         </LinearLayout>
         <LinearLayout
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="5dp"
+            android:id="@+id/workout_layout"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:id="@+id/workout_layout">
+            android:layout_width="0dp"
+            android:layout_weight="3">
 
             <TextView
                 android:textStyle="bold"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:maxLines="1"
-                android:ellipsize="marquee"
                 android:id="@+id/exercise_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -68,14 +66,15 @@
 
                 <android.support.design.widget.TextInputLayout
                     android:theme="@style/TextLabel"
-                    android:layout_width="45dp"
+                    android:layout_width="wrap_content"
+                    android:minWidth="45dp"
                     android:layout_height="wrap_content">
                     <AutoCompleteTextView
                         android:gravity="center_horizontal"
                         android:id="@+id/repsOrSeconds"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:textSize="24sp"
+                        android:textSize="22sp"
                         android:imeOptions="actionDone"
                         android:textColor="@color/black"
                         android:maxLength="3"
@@ -83,7 +82,6 @@
                         android:inputType="number"
                         android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
-
                 <Spinner
                     android:layout_marginTop="14dp"
                     android:layout_gravity="center_vertical"
@@ -94,7 +92,7 @@
                     android:layout_height="match_parent" />
 
                 <LinearLayout
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="5dp"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -110,7 +108,8 @@
 
                     <android.support.design.widget.TextInputLayout
                         android:theme="@style/TextLabelSecondary"
-                        android:layout_width="40dp"
+                        android:layout_width="wrap_content"
+                        android:minWidth="45dp"
                         android:layout_height="wrap_content">
                         <AutoCompleteTextView
                             android:id="@+id/weight"
@@ -126,7 +125,6 @@
                             android:inputType="numberDecimal"
                             android:maxLines="1" />
                     </android.support.design.widget.TextInputLayout>
-
                     <TextView
                         android:layout_marginTop="18dp"
                         android:gravity="center_vertical"
@@ -138,7 +136,6 @@
                         android:layout_height="match_parent" />
                 </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

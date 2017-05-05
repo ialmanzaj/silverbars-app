@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item
-        android:drawable="@drawable/circle" />
+
+
+    <item android:drawable="@drawable/circle_red" />
+
 
     <item>
         <bitmap
             android:gravity="center_horizontal|center_vertical"
-            android:src="@drawable/ic_skip_next_white_24px" />
+            android:src="@drawable/ic_stop_white_24px" />
     </item>
 
 </layer-list>

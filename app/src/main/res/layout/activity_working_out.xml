@@ -15,32 +15,30 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="10">
+                android:layout_weight="1">
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/list"
                     android:orientation="horizontal" />
 
             </RelativeLayout>
-
             <LinearLayout
-                android:gravity="center_vertical"
-                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_weight="2"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="0dp">
 
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false">
+                    android:layout_height="wrap_content">
 
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical">
 
@@ -62,6 +60,7 @@
                             android:layout_centerVertical="true">
 
                             <TextView
+                                android:textStyle="bold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="1"
@@ -70,6 +69,7 @@
                                 android:textColor="@color/secondColor"
                                 android:textSize="32sp"
                                 android:layout_gravity="center_horizontal|top" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -91,6 +91,7 @@
 
                         </LinearLayout>
                     </RelativeLayout>
+
                     <LinearLayout
                         android:gravity="center_horizontal|center_vertical"
                         android:layout_weight="1"
@@ -120,7 +121,7 @@
 
                         <LinearLayout
                             android:id="@+id/weight_layout"
-                            android:visibility="invisible"
+                            android:visibility="gone"
                             android:gravity="center_horizontal"
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
@@ -148,9 +149,9 @@
                     </LinearLayout>
                     <RelativeLayout
                         android:layout_width="0dp"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:layout_height="match_parent"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical|center_horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -171,6 +172,7 @@
                             android:layout_centerHorizontal="true">
 
                             <TextView
+                                android:textStyle="bold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="1"
@@ -198,15 +200,15 @@
                         </LinearLayout>
                     </RelativeLayout>
                 </LinearLayout>
-                <RelativeLayout
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false">
+                    android:layout_height="wrap_content">
 
                     <TextView
-                        android:visibility="invisible"
+                        android:visibility="gone"
                         android:id="@+id/countdown"
-                        android:textSize="65sp"
+                        android:textSize="60sp"
                         android:textColor="@color/black"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
@@ -215,11 +217,11 @@
                         android:gravity="center_horizontal"
                         android:id="@+id/chronometer2"
                         android:textColor="@color/black"
-                        android:textSize="65sp"
+                        android:textSize="60sp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
-                </RelativeLayout>
+                </LinearLayout>
                 <LinearLayout
                     android:gravity="center_horizontal"
                     android:orientation="horizontal"
@@ -244,8 +246,7 @@
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:baselineAligned="false">
+                    android:layout_height="match_parent">
 
                     <TextView
                         android:visibility="invisible"
@@ -259,51 +260,36 @@
                         android:layout_weight="2"
                         android:layout_height="match_parent">
 
-                        <RelativeLayout
-                            android:visibility="invisible"
-                            android:id="@+id/stop_workout"
-
-                            android:layout_centerVertical="true"
-                            android:layout_alignParentStart="true"
-
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
 
                             <ImageView
-                                android:tint="@color/secondColor"
-                                android:src="@drawable/circle"
+                                android:id="@+id/stop_workout"
+                                android:src="@drawable/stop_button"
+
+                                android:visibility="invisible"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentStart="true"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:contentDescription="@null" />
 
                             <ImageView
+                                android:visibility="invisible"
+                                android:id="@+id/pause_workout"
+                                android:layout_centerVertical="true"
+                                android:layout_alignParentEnd="true"
+                                android:src="@drawable/ic_pause_circle_filled_black_36px"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:contentDescription="@null" />
+
+                            <ImageView
+                                android:id="@+id/play_workout"
                                 android:layout_centerVertical="true"
                                 android:layout_centerHorizontal="true"
-                                android:src="@drawable/ic_stop_black_36px"
+                                android:src="@drawable/ic_play_circle_filled_black_36px"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:contentDescription="@null" />
-
-                        </RelativeLayout>
-
-                        <ImageView
-                            android:visibility="invisible"
-                            android:id="@+id/pause_workout"
-                            android:layout_centerVertical="true"
-                            android:layout_alignParentEnd="true"
-                            android:src="@drawable/ic_pause_circle_filled_black_36px"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:contentDescription="@null" />
-
-                        <ImageView
-                            android:id="@+id/play_workout"
-                            android:layout_centerVertical="true"
-                            android:layout_centerHorizontal="true"
-                            android:src="@drawable/ic_play_circle_filled_black_36px"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:contentDescription="@null" />
 
                     </RelativeLayout>
                     <RelativeLayout
@@ -325,6 +311,8 @@
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/player_layout"
+                android:background="@color/black"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
@@ -332,18 +320,16 @@
                 android:paddingEnd="5dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="@color/black"
-                android:id="@+id/player_layout"
                 android:baselineAligned="false">
 
-                        <RelativeLayout
-                            android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:layout_marginStart="15dp"
-                            android:id="@+id/container_text_song">
+                    <RelativeLayout
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginStart="15dp"
+                        android:id="@+id/container_text_song">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -368,7 +354,7 @@
                                 android:layout_below="@+id/song_name" />
 
                         </RelativeLayout>
-                        <RelativeLayout
+                    <RelativeLayout
                             android:gravity="center_vertical"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
@@ -389,16 +375,17 @@
                                 android:src="@drawable/ic_pause_circle_outline_white_36px"
                                 android:contentDescription="@string/pause_button" />
                         </RelativeLayout>
+
                 </LinearLayout>
     </LinearLayout>
     <LinearLayout
         android:visibility="invisible"
-            android:orientation="vertical"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#c81f1f1f"
-            android:id="@+id/modal_overlay">
+        android:orientation="vertical"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#c81f1f1f"
+        android:id="@+id/modal_overlay">
 
             <TextView
                 android:layout_marginTop="-60dp"
@@ -427,6 +414,30 @@
                 android:textColor="@color/white"
                 android:textSize="35sp" />
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:gravity="start|center_vertical"
+                android:id="@+id/skip"
+                android:paddingTop="20dp"
+                android:paddingEnd="35dp"
+                android:paddingStart="35dp"
+                android:paddingBottom="20dp"
+                android:text="Skip"
+                android:theme="@style/ButtonMorado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:layout_marginEnd="10dp"
+                android:layout_alignEnd="@id/skip"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_skip_next_white_24px"
+                android:layout_width="24dp"
+                android:layout_height="24dp" />
+        </RelativeLayout>
     </LinearLayout>
     <LinearLayout
         android:visibility="invisible"
@@ -454,16 +465,17 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:layout_weight="1"
                 android:id="@+id/exercise_option"
                 android:gravity="center_vertical"
-                android:text=""
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textSize="24sp"
                 android:textColor="#fff" />
 
             <com.shawnlin.numberpicker.NumberPicker
-                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/numberPicker"
                 app:np_dividerColor="@color/secondColor"

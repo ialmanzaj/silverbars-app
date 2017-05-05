@@ -30,7 +30,7 @@
                 android:background="@color/colorSecondary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/text_create_workout"
+                android:text="@string/activity_create_workout_create_button"
                 android:id="@+id/create"
                 android:layout_gravity="center"
                 android:gravity="center" />

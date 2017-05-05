@@ -35,7 +35,6 @@ import com.app.app.silverbarsapp.viewsets.ProgressionView;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
-import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -73,8 +72,7 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
     @BindView(R.id.modal_overlay) LinearLayout mModal;
     @BindView(R.id.info) ImageView mInfo;
 
-    private ArrayList<ExerciseProgression> mYearProgressions;
-
+    private ArrayList<ExerciseProgression> mYearProgressions = new ArrayList<>();
 
     private Utilities.HandlerMover handlerMover;
     private Filter filter = new Filter();
@@ -82,9 +80,6 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
 
     private String mMuscleParts = " ";
     SimpleStringAdapter adapter;
-
-    LocalDate monthBegin;
-    LocalDate monthEnd;
 
     private int mCurrentMonth;
 
@@ -112,18 +107,17 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupWebview();
         //mProgressionPresenter.getMuscleProgressions();
         mProgressionPresenter.getExerciseProgression();
-        //to setup the adapter
+
         setupAdapter();
+        setupWebview();
     }
 
     private void setupWebview(){
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setDomStorageEnabled(true);
         webView.addJavascriptInterface( new WebAppInterface(CONTEXT,this), "Android");
-        mUtilities.loadUrlOfMuscleBody(CONTEXT,webView);
+        mUtilities.loadBodyFromUrl(CONTEXT,webView);
     }
 
     private void setupAdapter(){
@@ -146,7 +140,6 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         });
     }
 
-
     @OnClick(R.id.info)
     public void infoButton(){
         mModal.setVisibility(View.VISIBLE);
@@ -156,7 +149,6 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
     public void okayButton(){
         mModal.setVisibility(View.GONE);
     }
-
 
     @OnClick(R.id.reload)
     public void reload(){
@@ -226,23 +218,19 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
     @Override
     public void displayProgressions(List<ExerciseProgression> progressions) {
         onLoadingViewOff();
-
-        //date of the first progression to set the limits
-        monthBegin = new LocalDate(filter.getDateFormated((progressions.get(0)).getDate())).withDayOfMonth(1);
-
         //to reverse the order of the list
         Collections.reverse(progressions);
-
-        //date of the last progression to set the limits
-        monthEnd = new LocalDate(filter.getDateFormated((progressions.get(0)).getDate()).plusMonths(1).withDayOfMonth(1).minusDays(1));
-
         init(progressions);
     }
 
     private void init(List<ExerciseProgression> progressions){
-        Interval year_interval_of_progressions = new Interval(monthBegin.toDateTimeAtStartOfDay(), monthEnd.toDateTimeAtStartOfDay());
 
-        mYearProgressions = filter.getProgressionFiltered(progressions,year_interval_of_progressions);
+        Interval year_interval =
+                new Interval(FIRST_DAY_YEAR.withTimeAtStartOfDay(),
+                        FIRST_DAY_YEAR.plusMonths(11).plusMonths(1).withDayOfMonth(1).minusDays(1));
+
+
+        mYearProgressions = filter.getProgressionFiltered(progressions,year_interval);
 
         initUI();
     }
@@ -257,9 +245,11 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         //handle the next and preview logic
         handlerMover.setPosition(mCurrentMonth);
 
+
         //update the ui with the current month
         updateMainView(getProgressionByMonth(mCurrentMonth));
     }
+
 
     private int whichMonthIs(DateTime today){
         if (filter.filterByDate(today, getMonths().get(0))){
@@ -378,7 +368,7 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
 
     private void insertMuscleToWebview(String muscle_name){
         mMuscleParts += mMusclesWebviewHandler.getMuscleReadyForWebview(muscle_name);
-        webView.post( () ->  mMusclesWebviewHandler.onWebviewOnClickPain(webView,mMuscleParts));
+        webView.post( () ->  mMusclesWebviewHandler.addWebviewClientOnClickPaint(webView,mMuscleParts));
     }
 
     private void clearWebview(){

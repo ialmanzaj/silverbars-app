@@ -9,10 +9,10 @@ import android.content.pm.Signature;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
@@ -48,7 +48,7 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
     @Inject
     LoginPresenter mLoginPresenter;
 
-    @BindView(R.id.loading)LinearLayout mLoadingView;
+    @BindView(R.id.loading)RelativeLayout mLoadingView;
     @BindView(R.id.error_view)LinearLayout mErrorView;
 
     @BindView(R.id.login_button) LoginButton mFacebookButton;
@@ -85,7 +85,7 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
-                Log.d("KeyHash ", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+                //Log.d("KeyHash ", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
         } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
             Log.e(TAG,"NameNotFoundException or NoSuchAlgorithmException",e);}

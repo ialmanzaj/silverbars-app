@@ -6,14 +6,13 @@ package com.app.app.silverbarsapp.components;
 
 
 import com.app.app.silverbarsapp.ActivityScope;
-import com.app.app.silverbarsapp.activities.WorkoutsDoneActivity;
+import com.app.app.silverbarsapp.fragments.WorkoutsFinishedFragment;
 import com.app.app.silverbarsapp.modules.WorkoutsDoneModule;
 import com.app.app.silverbarsapp.presenters.WorkoutsDonePresenter;
 
 import dagger.Component;
 
 /**
- * Created by Pedro Antonio Hernández on 13/06/2015.
  *
  * <p>
  *     Methods to inject dependencies into {@link }
@@ -27,7 +26,7 @@ import dagger.Component;
 )
 public interface WorkoutsDoneComponent {
 
-    void inject(WorkoutsDoneActivity activity);
+    void inject(WorkoutsFinishedFragment finishedFragment);
 
     WorkoutsDonePresenter getPresenter();
 

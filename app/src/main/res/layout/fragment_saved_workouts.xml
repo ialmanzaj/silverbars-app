@@ -20,7 +20,7 @@
                     android:textSize="22sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/blank_text_my_workouts_saved"
+                    android:text="@string/fragment_my_workouts_saved_empty"
                     android:layout_gravity="center"
                     android:gravity="center" />
 

@@ -17,7 +17,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,9 +63,9 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     @BindView(R.id.list) RecyclerView mExercisesList;
     @BindView(R.id.chageImg) RelativeLayout changeImg;
 
-    @BindView(R.id.strength)SeekBar strenghtBar;
+ /*   @BindView(R.id.strength)SeekBar strenghtBar;
     @BindView(R.id.porcentaje) TextView mPorcentajeTextView;
-
+*/
     @BindView(R.id.loading) LinearLayout mLoadingView;
     @BindView(R.id.error_view) LinearLayout mErrorView;
 
@@ -104,7 +103,6 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupToolbar();
-
 
         Bundle extras = getIntent().getExtras();
         ArrayList<ExerciseRep> mExercisesSelected = utilities.returnExercisesRep(extras.getParcelableArrayList("exercises_selected"));
@@ -165,12 +163,10 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         saveResults();
     }
 
-
     @OnClick(R.id.save)
     public void saveButton() {
         saveResults();
     }
-
 
 
     private void saveResults(){

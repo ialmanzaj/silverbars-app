@@ -25,7 +25,6 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
 
     private static final String TAG = ExerciseWorkingOutAdapter.class.getSimpleName();
 
-
     private List<ExerciseRep> exercises;
     private Context context;
     private Utilities utilities = new Utilities();
@@ -33,7 +32,6 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
     public ExerciseWorkingOutAdapter(Context context, List<ExerciseRep> exercises) {
         this.context = context;
         this.exercises = exercises;
-
     }
 
     public class WorkoutsViewHolder extends RecyclerView.ViewHolder {
@@ -49,23 +47,23 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
             //binding views
             ButterKnife.bind(this,view);
         }
-
     }
-
     @Override
     public int getItemCount() {
         return exercises.size();
     }
 
-
     @Override
     public WorkoutsViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-        return new WorkoutsViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.exercise_working_out, viewGroup, false));
+        return new WorkoutsViewHolder(
+                LayoutInflater.from(viewGroup.getContext()).inflate(
+                        R.layout.exercise_working_out, viewGroup, false));
     }
 
 
     @Override
     public void onBindViewHolder(WorkoutsViewHolder viewHolder, int position) {
+        viewHolder.layout.getLayoutParams().width = utilities.calculateContainerWidth(context);
 
         viewHolder.mExerciseName.setText(exercises.get(position).getExercise().getExercise_name());
 
@@ -89,10 +87,7 @@ public class ExerciseWorkingOutAdapter extends RecyclerView.Adapter<ExerciseWork
         }
 
 
-
     }
-
-
 
 
 

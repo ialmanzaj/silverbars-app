@@ -54,8 +54,8 @@
 
     <!-- Strings related to activity_myworkouts -->
     <string name="blank_text_my_workouts">THERE\'S NO WORKOUT YET</string>
-    <string name="blank_text_my_workouts_saved">THERE\'S NO SAVED WORKOUTS YET</string>
-    <string name="text_create_workout">Create new workout</string>
+    <string name="fragment_my_workouts_saved_empty">THERE\'S NO SAVED WORKOUTS YET</string>
+    <string name="activity_create_workout_create_button">Create workout</string>
     <string name="explore_button">EXPLORE</string>
 
 
@@ -205,7 +205,9 @@
     <string name="title_playlist">Type the name of your playlist</string>
     <string name="cancel">Cancel</string>
     <string name="playlist_name">Playlist name</string>
+
     <string name="add_exercises_button">Add exercise to workout</string>
+
     <string name="level">Level</string>
 
     <!---    Strings of Exercise adapter    -->
@@ -240,7 +242,7 @@
     <string name="loading">Loading…</string>
 
     <!---    Strings of activity activity_muscle_selection  -->
-    <string name="activity_muscle_selection_toolbar">Exercise selection per muscle</string>
+    <string name="activity_muscle_selection_toolbar">Filter</string>
     <string name="activity_muscle_selection_title">Select the muscles that you want to train</string>
     <string name="activity_muscle_selection_exercises">Exercises</string>
     <string name="activity_muscle_selection_search">Search exercises</string>
@@ -302,6 +304,13 @@
     <string name="fragment_progress_daily_empty">You haven\'t train :(</string>
     <string name="fragment_progress_weekly_empty">You haven\'t train :(</string>
     <string name="fragment_progress_monthly_empty">You haven\'t train :(</string>
+
+    <string name="fragment_progress_daily_today">Today</string>
+
+
+    <string name="activity_exercise_list_add_button">Add to workout</string>
+
+    <string name="activity_settings_title">Options</string>
 
 
 </resources>

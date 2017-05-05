@@ -54,10 +54,10 @@ public class CreateFinalExercisesAdapter extends RecyclerView.Adapter<CreateFina
         MutableWatcher mTextWatcher;
 
         @BindView(R.id.exercise_name) TextView mExerciseName;
-        @BindView(R.id.repsOrSeconds) AutoCompleteTextView mOptionrepsOrseconds;
+        @BindView(R.id.repsOrSeconds) AutoCompleteTextView mOption;
         @BindView(R.id.imagen) SimpleDraweeView mExerciseImg;
         @BindView(R.id.spinner_rep) Spinner mSelectTypeWorkoutSpinner;
-        @BindView(R.id.weight) AutoCompleteTextView weightTextView;
+        @BindView(R.id.weight) AutoCompleteTextView mWeight;
 
         public ExerciseViewHolder(View view) {
             super(view);
@@ -104,22 +104,22 @@ public class CreateFinalExercisesAdapter extends RecyclerView.Adapter<CreateFina
 
     @Override
     public ExerciseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ExerciseViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.exercises_create_final, parent, false));
+        return new ExerciseViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_exercises_create_final, parent, false));
     }
 
     @Override
     public void onBindViewHolder(ExerciseViewHolder viewHolder, int position) {
 
         try {
-
+            //listener to get the weight and the option of the exercise
             viewHolder.mTextWatcher = new MutableWatcher();
             viewHolder.mTextWatcher.updatePosition(position);
 
-            viewHolder.mOptionrepsOrseconds.setTag(mExercises.get(position).getExercise().getId());
-            viewHolder.mOptionrepsOrseconds.setText(String.valueOf(mExercises.get(position).getNumber()));
-            viewHolder.mOptionrepsOrseconds.addTextChangedListener(viewHolder.mTextWatcher);
+            viewHolder.mOption.setTag(mExercises.get(position).getExercise().getId());
+            viewHolder.mOption.setText(String.valueOf(mExercises.get(position).getNumber()));
+            viewHolder.mOption.addTextChangedListener(viewHolder.mTextWatcher);
 
-            viewHolder.weightTextView.setText(String.valueOf(mExercises.get(position).getWeight()));
+            viewHolder.mWeight.setText(String.valueOf(mExercises.get(position).getWeight()));
 
 
             //asignar nombre y repeticiones a cada elemento del recycler.

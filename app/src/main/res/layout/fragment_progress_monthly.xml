@@ -26,7 +26,6 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
-
         android:gravity="center_horizontal|center_vertical"
         android:id="@+id/loading"
         android:orientation="vertical"
@@ -44,17 +43,14 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
     <RelativeLayout
-        android:background="@color/white"
-        android:gravity="center_horizontal|center_vertical"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:layout_above="@+id/container"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
             <LinearLayout
                 android:visibility="gone"
                 android:id="@+id/empty_state"
@@ -66,7 +62,7 @@
                     android:gravity="center"
                     android:textAlignment="center"
                     android:id="@+id/empty_text"
-                    android:textSize="35sp"
+                    android:textSize="28sp"
                     android:textColor="@color/black"
                     android:text="@string/fragment_progress_empty"
                     android:layout_width="wrap_content"
@@ -77,8 +73,9 @@
                 android:layout_marginTop="5dp"
                 android:id="@+id/webview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
         </LinearLayout>
+
         <LinearLayout
             android:visibility="gone"
             android:gravity="center_vertical|center_horizontal"
@@ -103,24 +100,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
+
         <ImageView
             android:id="@+id/info"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:src="@drawable/ic_info_outline_black_24px"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null" />
+
         <LinearLayout
-            android:gravity="center_horizontal|center_vertical"
-            android:background="@color/grey100"
+            android:id="@+id/container"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal"
             android:padding="16dp"
+            android:background="@color/grey100"
+            android:gravity="center_horizontal|center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <ImageView
                 android:id="@+id/preview"
                 android:tint="@color/colorSecondary"
@@ -146,6 +146,5 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@null"/>
         </LinearLayout>
-
     </RelativeLayout>
 </LinearLayout>

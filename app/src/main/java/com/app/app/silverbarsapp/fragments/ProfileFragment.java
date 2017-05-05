@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
+import com.app.app.silverbarsapp.activities.SettingsActivity;
 import com.app.app.silverbarsapp.activities.WorkoutsDoneActivity;
 import com.app.app.silverbarsapp.components.DaggerProfileComponent;
 import com.app.app.silverbarsapp.database_models.ProfileFacebook;
@@ -26,6 +27,7 @@ import java.sql.SQLException;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import okhttp3.ResponseBody;
 
 
@@ -47,7 +49,6 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
     protected int getFragmentLayout() {
         return R.layout.fragment_profile;
     }
-
 
     @Override
     protected BasePresenter getPresenter() {
@@ -87,6 +88,13 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
         }
     }
 
+
+    @OnClick(R.id.settings)
+    public void settings(){
+        CONTEXT.startActivity(new Intent(CONTEXT, SettingsActivity.class));
+    }
+
+
     @Override
     public void displayProfileFacebook(ProfileFacebook profile) {
         mProfileName.setText(profile.getFirst_name() +" "+ profile.getLast_name());
@@ -99,6 +107,7 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
            setProfileImg(getProfileImg());
         }
     }
+
     private void setProfileImg(Bitmap bitmap){
         mProfileImg.setImageBitmap(bitmap);
     }
@@ -106,6 +115,5 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
     private Bitmap getProfileImg(){
         return utilities.loadWorkoutImageFromDevice(CONTEXT,"profile");
     }
-
 
 }

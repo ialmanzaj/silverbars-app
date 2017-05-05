@@ -43,9 +43,7 @@ public class SelectionMusicActivity extends AppCompatActivity {
 
         mLocalSongsSelectionButton.setOnClickListener(v -> startActivityForResult(new Intent(this, SongsActivity.class), LOCAL_MUSIC));
         mCreateLocalPlaylistButton.setOnClickListener(v -> startActivityForResult(new Intent(this, PlaylistPickerActivity.class), LOCAL_MUSIC));
-        mSpotifyMusicButton.setOnClickListener(v -> startActivityForResult(new Intent(this, SpotifyActivity.class), SPOTIFY_MUSIC));
     }
-
 
     private void setupToolbar(){
         if (mToolbar != null) {
@@ -54,6 +52,7 @@ public class SelectionMusicActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Music Selection");
         }
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -73,29 +72,8 @@ public class SelectionMusicActivity extends AppCompatActivity {
                     finish();
                 }
             }
-
-        }else if (requestCode == SPOTIFY_MUSIC){
-            if (resultCode == RESULT_OK){
-
-                if (data.hasExtra("playlist_spotify") && data.hasExtra("token")){
-
-                    String playlist_spotify = data.getStringExtra("playlist_spotify");
-                    String token =  data.getStringExtra("token");
-
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("playlist_spotify",playlist_spotify);
-                    returnIntent.putExtra("token",token);
-
-                    setResult(RESULT_OK,returnIntent);
-                    finish();
-                }
-            }
-
-
         }
-
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -109,8 +87,5 @@ public class SelectionMusicActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
 
 }

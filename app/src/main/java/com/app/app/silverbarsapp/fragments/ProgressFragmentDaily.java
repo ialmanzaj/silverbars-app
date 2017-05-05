@@ -76,13 +76,12 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
     private Utilities mUtilities = new Utilities();
     private Filter filter = new Filter();
     MusclesWebviewHandler mMusclesWebviewHandler = new MusclesWebviewHandler();
+    ProgressionAlgoritm mProgressionAlgoritm = new ProgressionAlgoritm();
 
 
     private int mCurrentDay;
-    List<Integer> list_progress = new ArrayList<>();
     private String mMuscleParts = " ";
 
-    ProgressionAlgoritm mProgressionAlgoritm = new ProgressionAlgoritm();
 
     @Override
     protected int getFragmentLayout() {
@@ -106,47 +105,37 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (this.isAdded()) {
 
-        setupWebview();
-        //mProgressionPresenter.getMuscleProgressions();
-        mProgressionPresenter.getExerciseProgression();
+            setupWebview();
+            mProgressionPresenter.getExerciseProgression();
 
+            List<String> days = getDaysOfWeekAbreb();
+            DateTime today = new DateTime();
+            days.set(today.getDayOfWeek() - 1, CONTEXT.getString(R.string.fragment_progress_daily_today));
 
-        List<String> days = getDaysOfWeekAbreb();
-        DateTime today = new DateTime();
-        days.set(today.getDayOfWeek()-1,"Today");
-
-        mSeekbarWithIntervals.setIntervals(days);
-        mSeekbarWithIntervals.setInitialProgress(today.getDayOfWeek());
-        mSeekbarWithIntervals.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                changeSeekBarTextViewColor(progress);
-                //Log.d(TAG,"progress "+progress);
-                mCurrentDay = progress;
-                updateMainUi(getProgressionByDay(progress));
-            }
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
-        });
+            mSeekbarWithIntervals.setIntervals(days);
+            mSeekbarWithIntervals.setInitialProgress(today.getDayOfWeek());
+            mSeekbarWithIntervals.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    mSeekbarWithIntervals.changeSeekBarTextViewColor(progress);
+                    //Log.d(TAG,"progress "+progress);
+                    mCurrentDay = progress;
+                    updateMainUi(getProgressionByDay(progress));
+                }
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {}
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {}
+            });
+        }
     }
 
     private void setupWebview(){
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setDomStorageEnabled(true);
-        webView.addJavascriptInterface( new WebAppInterface(CONTEXT,this), "Android");
-        mUtilities.loadUrlOfMuscleBody(CONTEXT,webView);
-    }
-
-    private void changeSeekBarTextViewColor(int progress){
-        list_progress.add(progress);
-        mSeekbarWithIntervals.changeTextColorSelected(progress);
-        if (list_progress.size() >= 2){
-            int penultimo_element = list_progress.size()-2;
-            mSeekbarWithIntervals.changeTextColorNoSelected(list_progress.get(penultimo_element));
-        }
+        webView.addJavascriptInterface(new WebAppInterface(CONTEXT,this), "Android");
+        mUtilities.loadBodyFromLocal(CONTEXT,webView);
     }
 
     private List<LocalDate> getLocalDates() {
@@ -172,7 +161,6 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
             add(new Interval(getLocalDates().get(6).toDateTimeAtStartOfDay(), Days.ONE));
         }};
     }
-
 
     private ArrayList<ExerciseProgression> getProgressionByDay(int day){
         switch (day) {
@@ -221,7 +209,6 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
 
     @Override
     public void onMuscleSelected(String muscle) {
-
         ArrayList<ExerciseProgression> current_exercises =
                 filter.getProgressionFilteredByMuscle(getProgressionByDay(mCurrentDay),muscle);
 
@@ -252,16 +239,10 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
     }
 
     private void init(List<ExerciseProgression> progressions){
-        //Log.d(TAG,"init");
-
         //filter the progressions
         Interval this_week = new Interval(getLocalDates().get(0).toDateTimeAtStartOfDay().minusDays(1), Weeks.ONE);
         mWeekProgressions = filter.getProgressionFiltered(progressions,this_week);
-
-        //Log.d(TAG,"this_week: "+this_week);
-        //Log.d(TAG,"mWeekProgressions: "+mWeekProgressions);
-
-
+        Log.d(TAG,"mWeekProgressions "+mWeekProgressions.size());
         initUI();
     }
 
@@ -269,7 +250,6 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
         //filter the ui
         mSeekbarWithIntervals.setProgress(new DateTime().getDayOfWeek() - 1);
     }
-
 
     @Override
     public void displayNetworkError() {
@@ -293,6 +273,7 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
 
     private void updateMainUi(List<ExerciseProgression> progressions_filtered){
         if (progressions_filtered.size() > 0) {
+            //Log.d(TAG,"progressions_filtered"+progressions_filtered.size());
             onEmptyViewOff();
             clearWebview();
             updateBodyMuscleWebView(progressions_filtered);
@@ -311,7 +292,7 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
 
     private void insertMuscleToWebview(String muscle_name){
         mMuscleParts += mMusclesWebviewHandler.getMuscleReadyForWebview(muscle_name);
-        mMusclesWebviewHandler.onWebviewOnClickPain(webView,mMuscleParts);
+        mMusclesWebviewHandler.addWebviewClientOnClickPaint(webView,mMuscleParts);
     }
 
     private void clearWebview(){

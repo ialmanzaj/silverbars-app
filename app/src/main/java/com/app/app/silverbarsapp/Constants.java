@@ -32,6 +32,17 @@ public class Constants {
     public static final String REDIRECT_URI = "testschema://callback";
 
 
+    public static final class BroadcastTypes {
+        public static final String SPOTIFY_PACKAGE = "com.spotify.music";
+        public static final String PLAYBACK_STATE_CHANGED = SPOTIFY_PACKAGE + ".playbackstatechanged";
+        public static final String QUEUE_CHANGED = SPOTIFY_PACKAGE + ".queuechanged";
+        public static final String METADATA_CHANGED = SPOTIFY_PACKAGE + ".jsonchanged";
+        public static final String METADATA_CHANGED_1 = SPOTIFY_PACKAGE + ".metadatachanged";
+
+    }
+
+
+
     public static final int BETTER = 2;
     public static final int EQUAL = 1;
     public static final int WORST = 0;

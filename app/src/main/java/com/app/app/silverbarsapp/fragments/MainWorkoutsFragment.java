@@ -21,8 +21,6 @@ import com.app.app.silverbarsapp.viewsets.MainWorkoutsView;
 
 import org.lucasr.twowayview.widget.TwoWayView;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -80,23 +78,6 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
        mMainWorkoutsPresenter.getMyWorkout();
     }
-
-    private String getJson(){
-        String json = null;
-        try {
-            InputStream is = getActivity().getAssets().open("example.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        return json;
-    }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

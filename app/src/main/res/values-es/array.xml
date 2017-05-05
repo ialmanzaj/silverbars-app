@@ -22,17 +22,17 @@
     </string-array>
 
     <string-array name="weeks_abreb">
-        <item>Semana 1</item>
-        <item>Semana 2</item>
-        <item>Semana 3</item>
-        <item>Semana 4</item>
+        <item>Sem 1</item>
+        <item>Sem 2</item>
+        <item>Sem 3</item>
+        <item>Sem 4</item>
     </string-array>
 
     <string-array name="weeks">
-        <item>Primera week</item>
-        <item>Segunda week</item>
-        <item>Tercera week</item>
-        <item>Cuarta week</item>
+        <item>Primera semana</item>
+        <item>Segunda semana</item>
+        <item>Tercera semana</item>
+        <item>Cuarta semana</item>
     </string-array>
 
     <string-array name="months">
@@ -49,6 +49,5 @@
         <item>Noviembre</item>
         <item>Diciembre</item>
     </string-array>
-
 
 </resources>

@@ -7,10 +7,10 @@ import com.app.app.silverbarsapp.database_models.ExerciseProgression;
 import com.app.app.silverbarsapp.database_models.ExerciseRep;
 import com.app.app.silverbarsapp.database_models.Muscle;
 import com.app.app.silverbarsapp.database_models.MySavedWorkout;
+import com.app.app.silverbarsapp.database_models.Person;
 import com.app.app.silverbarsapp.database_models.TypeExercise;
 import com.app.app.silverbarsapp.database_models.UserWorkout;
 import com.app.app.silverbarsapp.database_models.WorkoutDone;
-import com.app.app.silverbarsapp.models.Person;
 import com.app.app.silverbarsapp.models.Workout;
 import com.app.app.silverbarsapp.utils.DatabaseHelper;
 import com.j256.ormlite.stmt.DeleteBuilder;
@@ -92,6 +92,10 @@ public class DatabaseQueries {
         return helper.getExerciseProgressionDao().queryForId(exercise_progression_id);
     }
 
+    public Person getPersonById(int id) throws SQLException {
+       return helper.getMyProfile().queryForId(id);
+    }
+
     private Exercise getExercise(int id) throws SQLException {
         return helper.getExerciseDao().queryForId(id);
     }
@@ -142,16 +146,21 @@ public class DatabaseQueries {
      *
      */
 
-    public void saveProfile(Person person) throws SQLException {
-        helper.getMyProfile().create(
-                new com.app.app.silverbarsapp.database_models.Person(
-                        person.getId(),
-                        person.getUser().getUsername(),
-                        person.getUser().getFirst_name(),
-                        person.getUser().getLast_name(),
-                        person.getUser().getEmail()
-                )
-        );
+
+    public Person saveProfile(com.app.app.silverbarsapp.models.Person person) throws SQLException {
+        Person person_database = getPersonById(person.getId());
+        if (person_database == null) {
+            person_database = new Person(
+                    person.getId(),
+                    person.getUser().getUsername(),
+                    person.getUser().getFirst_name(),
+                    person.getUser().getLast_name(),
+                    person.getUser().getEmail()
+            );
+            helper.getMyProfile().create(person_database);
+        }
+
+        return person_database;
     }
 
     public ExerciseProgression saveExerciseProgression(com.app.app.silverbarsapp.models.ExerciseProgression exerciseProgression) throws SQLException {

@@ -58,7 +58,6 @@
             android:layout_height="match_parent">
 
             <LinearLayout
-                android:visibility="gone"
                 android:id="@+id/empty_state"
                 android:gravity="center_horizontal|center_vertical"
                 android:orientation="vertical"
@@ -68,7 +67,7 @@
                     android:gravity="center"
                     android:textAlignment="center"
                     android:id="@+id/empty_text"
-                    android:textSize="35sp"
+                    android:textSize="28sp"
                     android:textColor="@color/black"
                     android:text="@string/fragment_progress_empty"
                     android:layout_width="wrap_content"
@@ -80,8 +79,9 @@
                 android:background="@color/white"
                 android:id="@+id/webview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
         </LinearLayout>
+
         <LinearLayout
             android:visibility="gone"
             android:gravity="center_vertical|center_horizontal"
@@ -109,6 +109,7 @@
                 android:layout_height="wrap_content" />
 
         </LinearLayout>
+
         <ImageView
             android:id="@+id/info"
             android:layout_marginTop="8dp"
@@ -131,7 +132,5 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
-
-
     </RelativeLayout>
 </LinearLayout>

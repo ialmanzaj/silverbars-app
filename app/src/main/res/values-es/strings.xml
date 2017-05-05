@@ -46,8 +46,8 @@
 
     <!-- Strings related to activity_myworkouts -->
     <string name="blank_text_my_workouts">NO HAY WORKOUT AÚN</string>
-    <string name="blank_text_my_workouts_saved">NO HAY WORKOUTS GUARDADOS AÚN</string>
-    <string name="text_create_workout">Crear nueva rutina</string>
+    <string name="fragment_my_workouts_saved_empty">NO HAY WORKOUTS GUARDADOS AÚN</string>
+    <string name="activity_create_workout_create_button">Crear nueva rutina</string>
     <string name="explore_button">EXPLORAR</string>
 
     <!-- Strings related to activity_playlist picker -->
@@ -220,11 +220,11 @@
     <string name="loading">Cargando…</string>
 
     <!---    Strings of activity activity_muscle_selection  -->
+    <string name="activity_muscle_selection_toolbar">Filtro</string>
     <string name="activity_muscle_selection_title">Selecciona los músculos vas a entrenar</string>
     <string name="activity_muscle_selection_exercises">Ejercicios</string>
     <string name="activity_muscle_selection_search">Buscar ejercicios</string>
     <string name="activity_muscle_selection_selection">Seleccione que músculos</string>
-    <string name="activity_muscle_selection_toolbar">Selección de ejercicio por músculo</string>
 
     <!---    Strings of activity_results -->
     <string name="activity_results_title">Resultados</string>
@@ -287,6 +287,13 @@
     <string name="fragment_progress_daily_empty">No has entrenado :(</string>
     <string name="fragment_progress_weekly_empty">No has entrenado :(</string>
     <string name="fragment_progress_monthly_empty">No has entrenado:(</string>
+
+    <string name="fragment_progress_daily_today">Hoy</string>
+
+
+    <string name="activity_exercise_list_add_button">Añadir a rutina</string>
+    <string name="activity_settings_title">Opciones</string>
+
 
 
 </resources>
