@@ -14,8 +14,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.app.app.silverbarsapp.Filter;
-import com.app.app.silverbarsapp.ProgressionAlgoritm;
+import com.app.app.silverbarsapp.handlers.Filter;
+import com.app.app.silverbarsapp.handlers.ProgressionAlgoritm;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.activities.ExerciseDetailMonthlyActivity;
@@ -27,7 +27,7 @@ import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ProgressionPresenter;
 import com.app.app.silverbarsapp.utils.DisableTouchRecyclerListener;
 import com.app.app.silverbarsapp.utils.MuscleListener;
-import com.app.app.silverbarsapp.utils.MusclesWebviewHandler;
+import com.app.app.silverbarsapp.handlers.MusclesWebviewHandler;
 import com.app.app.silverbarsapp.utils.OnSwipeTouchListener;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.utils.WebAppInterface;
@@ -52,7 +52,6 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
 
     private static final DateTime FIRST_DAY_YEAR = new DateTime().dayOfYear().withMinimumValue();
 
-    private Utilities mUtilities = new Utilities();
 
     @Inject
     ProgressionPresenter mProgressionPresenter;
@@ -71,6 +70,9 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
 
     @BindView(R.id.modal_overlay) LinearLayout mModal;
     @BindView(R.id.info) ImageView mInfo;
+
+
+    private Utilities mUtilities = new Utilities();
 
     private ArrayList<ExerciseProgression> mYearProgressions = new ArrayList<>();
 
@@ -242,7 +244,7 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         //move the list to the current item
         mMonths.post(() -> mMonths.scrollToPosition(mCurrentMonth));
 
-        //handle the next and preview logic
+        //handle the nextMusic and previewMusic logic
         handlerMover.setPosition(mCurrentMonth);
 
 
@@ -353,7 +355,6 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
             updateBodyMuscleWebView(progressions_filtered);
 
         }else {
-
             onEmptyViewOn(CONTEXT.getString(R.string.fragment_progress_monthly_empty));
         }
     }
@@ -375,6 +376,7 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         webView.post(() -> webView.reload());
         mMuscleParts = " ";
     }
+
 
     private void onEmptyViewOn(String text){mEmptyView.setVisibility(View.VISIBLE);mEmptyText.setText(text);mInfo.setVisibility(View.GONE);}
 

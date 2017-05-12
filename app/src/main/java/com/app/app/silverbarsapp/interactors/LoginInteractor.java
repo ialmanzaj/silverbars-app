@@ -5,8 +5,9 @@ import android.util.Log;
 import com.app.app.silverbarsapp.LoginService;
 import com.app.app.silverbarsapp.callbacks.LoginCallback;
 import com.app.app.silverbarsapp.database_models.ProfileFacebook;
+import com.app.app.silverbarsapp.handlers.DatabaseHelper;
+import com.app.app.silverbarsapp.handlers.DatabaseQueries;
 import com.app.app.silverbarsapp.models.AccessToken;
-import com.app.app.silverbarsapp.utils.DatabaseHelper;
 
 import java.sql.SQLException;
 
@@ -25,16 +26,29 @@ public class LoginInteractor {
 
     private static final String TAG = LoginInteractor.class.getSimpleName();
 
-    private DatabaseHelper helper;
     private LoginService loginService;
+    private DatabaseQueries databaseQueries;
 
     public LoginInteractor(LoginService loginService,DatabaseHelper helper){
         this.loginService = loginService;
-        this.helper = helper;
+        this.databaseQueries = new DatabaseQueries(helper);
+    }
+
+    public void saveProfile(ProfileFacebook profile,LoginCallback callback){
+        try {
+
+            ProfileFacebook profile_saved = databaseQueries.saveFaceProfile(profile);
+            callback.onProfileSaved(profile_saved);
+
+        } catch (SQLException e) {
+           // Log.e(TAG,"SQLException",e);
+        }
     }
 
     public void getAccessToken(LoginCallback callback, String facebook_token){
-        loginService.getAccessToken("convert_token",CONSUMER_KEY,CONSUMER_SECRET,"facebook",facebook_token).enqueue(new Callback<AccessToken>() {
+        loginService
+                .getAccessToken("convert_token",CONSUMER_KEY,CONSUMER_SECRET,"facebook",facebook_token)
+                .enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
                 if (response.isSuccessful()) {
@@ -42,28 +56,16 @@ public class LoginInteractor {
                     callback.onToken(response.body());
 
                 } else{
-                    Log.e(TAG, "statusCode:" + response.code());
                     callback.onServerError();
                 }
             }
             @Override
             public void onFailure(Call<AccessToken> call, Throwable t) {
-                Log.e(TAG, "initial token, onFailure", t);
-                callback.onServerError();
+                callback.onNetworkError();
             }
         });
     }
 
-    public void saveProfile(ProfileFacebook profile){
-        try {
-
-            helper.getProfileFacebook().create(profile);
-            Log.d(TAG,"profile created");
-
-        } catch (SQLException e) {
-            Log.e(TAG,"SQLException",e);
-        }
-    }
 
 }
 

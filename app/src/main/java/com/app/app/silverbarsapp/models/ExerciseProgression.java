@@ -23,7 +23,7 @@ public class ExerciseProgression extends Progression implements Parcelable{
     private int person;
 
     @SerializedName("total_time")
-    private double total_time;
+    private String total_time;
 
     @SerializedName("exercise")
     private Exercise exercise;
@@ -43,13 +43,13 @@ public class ExerciseProgression extends Progression implements Parcelable{
     @SerializedName("total_weight")
     private double total_weight;
 
+    private int sets_completed;
     private double progress;
-
 
     public ExerciseProgression(){}
 
 
-    public ExerciseProgression(int id,String date,WorkoutDone my_workout_done,int person,double total_time,Exercise exercise,
+    public ExerciseProgression(int id,String date,WorkoutDone my_workout_done,int person,String total_time,Exercise exercise,
                                int total_repetition,int repetitions_done,int total_seconds,int seconds_done,double total_weight){
         this.id = id;
         this.date = date;
@@ -71,13 +71,14 @@ public class ExerciseProgression extends Progression implements Parcelable{
         date = in.readString();
         my_workout_done = in.readParcelable(WorkoutDone.class.getClassLoader());
         person = in.readInt();
-        total_time = in.readDouble();
+        total_time = in.readString();
         exercise = in.readParcelable(Exercise.class.getClassLoader());
         total_repetition = in.readInt();
         repetitions_done = in.readInt();
         total_seconds = in.readInt();
         seconds_done = in.readInt();
         total_weight = in.readDouble();
+        sets_completed = in.readInt();
         progress = in.readDouble();
     }
 
@@ -88,13 +89,14 @@ public class ExerciseProgression extends Progression implements Parcelable{
         dest.writeString(date);
         dest.writeParcelable(my_workout_done, flags);
         dest.writeInt(person);
-        dest.writeDouble(total_time);
+        dest.writeString(total_time);
         dest.writeParcelable(exercise, flags);
         dest.writeInt(total_repetition);
         dest.writeInt(repetitions_done);
         dest.writeInt(total_seconds);
         dest.writeInt(seconds_done);
         dest.writeDouble(total_weight);
+        dest.writeInt(sets_completed);
         dest.writeDouble(progress);
     }
 
@@ -152,7 +154,7 @@ public class ExerciseProgression extends Progression implements Parcelable{
         this.total_seconds = total_seconds;
     }
 
-    public void setTotal_time(double total_time) {
+    public void setTotal_time(String total_time) {
         this.total_time = total_time;
     }
 
@@ -160,7 +162,7 @@ public class ExerciseProgression extends Progression implements Parcelable{
         return repetitions_done;
     }
 
-    public double getTotal_time() {
+    public String getTotal_time() {
         return total_time;
     }
 
@@ -212,4 +214,11 @@ public class ExerciseProgression extends Progression implements Parcelable{
         this.total_weight = total_weight;
     }
 
+    public void setSets_completed(int sets_completed) {
+        this.sets_completed = sets_completed;
+    }
+
+    public int getSets_completed() {
+        return sets_completed;
+    }
 }

@@ -1,8 +1,10 @@
-package com.app.app.silverbarsapp.utils;
+package com.app.app.silverbarsapp.handlers;
 
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.app.app.silverbarsapp.utils.Utilities;
 
 import java.util.List;
 

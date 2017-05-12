@@ -2,7 +2,7 @@ package com.app.app.silverbarsapp.interactors;
 
 import com.app.app.silverbarsapp.callbacks.SavedWorkoutsCallback;
 import com.app.app.silverbarsapp.database_models.MySavedWorkout;
-import com.app.app.silverbarsapp.utils.DatabaseHelper;
+import com.app.app.silverbarsapp.handlers.DatabaseHelper;
 
 import java.sql.SQLException;
 

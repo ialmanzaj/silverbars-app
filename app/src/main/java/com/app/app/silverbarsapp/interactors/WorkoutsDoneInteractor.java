@@ -5,7 +5,7 @@ import android.util.Log;
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.callbacks.WorkoutsDoneCallback;
 import com.app.app.silverbarsapp.models.WorkoutDone;
-import com.app.app.silverbarsapp.utils.DatabaseHelper;
+import com.app.app.silverbarsapp.handlers.DatabaseHelper;
 
 import java.util.List;
 

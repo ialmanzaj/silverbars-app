@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.app.app.silverbarsapp.Filter;
+import com.app.app.silverbarsapp.handlers.Filter;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.activities.WorkoutActivity;
 import com.app.app.silverbarsapp.models.Workout;

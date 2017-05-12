@@ -2,11 +2,11 @@ package com.app.app.silverbarsapp.interactors;
 
 import android.util.Log;
 
-import com.app.app.silverbarsapp.DatabaseQueries;
+import com.app.app.silverbarsapp.handlers.DatabaseQueries;
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.callbacks.CreateWorkoutFinalCallback;
 import com.app.app.silverbarsapp.models.Workout;
-import com.app.app.silverbarsapp.utils.DatabaseHelper;
+import com.app.app.silverbarsapp.handlers.DatabaseHelper;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

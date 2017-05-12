@@ -29,7 +29,7 @@ import com.app.app.silverbarsapp.models.Workout;
 import com.app.app.silverbarsapp.modules.CreateWorkoutFinalModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.CreateWorkoutFinalPresenter;
-import com.app.app.silverbarsapp.utils.MuscleHandler;
+import com.app.app.silverbarsapp.handlers.MuscleHandler;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.CreateWorkoutFinalView;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -339,14 +339,12 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
     @Override
     public void displayNetworkError() {
-        Log.e(TAG,"displayNetworkError");
         onLoadingViewOff();
         onErrorViewOn();
     }
 
     @Override
     public void displayServerError() {
-        Log.e(TAG,"displayServerError");
         onLoadingViewOff();
         onErrorViewOn();
     }

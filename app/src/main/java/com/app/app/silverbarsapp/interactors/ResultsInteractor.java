@@ -2,12 +2,13 @@ package com.app.app.silverbarsapp.interactors;
 
 import android.util.Log;
 
-import com.app.app.silverbarsapp.DatabaseQueries;
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.callbacks.ResultsCallback;
+import com.app.app.silverbarsapp.handlers.DatabaseHelper;
+import com.app.app.silverbarsapp.handlers.DatabaseQueries;
+import com.app.app.silverbarsapp.handlers.Filter;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
 import com.app.app.silverbarsapp.models.WorkoutDone;
-import com.app.app.silverbarsapp.utils.DatabaseHelper;
 
 import org.joda.time.DateTime;
 
@@ -33,63 +34,76 @@ public class ResultsInteractor {
     private MainService mainService;
     private DatabaseQueries queries;
 
+    private int mProfileId;
+    private String today;
+
     public ResultsInteractor(DatabaseHelper helper,MainService mainService){
         this.mainService = mainService;
         queries = new DatabaseQueries(helper);
     }
 
-    public void createWorkoutDone(int workout_id, int sets, String total_time, ResultsCallback callback) throws SQLException {
-        mainService.createWorkoutDone(
-                new DateTime().toString(),
-                workout_id,
-                queries.getMyProfile().getId(),
-                sets,
-                total_time
-       ).enqueue(new Callback<WorkoutDone>() {
+    public void createWorkoutDone(int workout_id, int sets, String total_time, boolean isMyWorkout,ResultsCallback callback) throws SQLException {
+        Callback<WorkoutDone> workout_done_Callback = new Callback<WorkoutDone>() {
             @Override
             public void onResponse(Call<WorkoutDone> call, Response<WorkoutDone> response) {
                 if(response.isSuccessful()){
-
                     callback.onWorkoutDone(response.body());
-
                 }else {
-                    Log.e(TAG,"error "+response.errorBody()+" code "+response.code());
                     callback.onServerError();
                 }
             }
             @Override
             public void onFailure(Call<WorkoutDone> call, Throwable t) {
-                Log.e(TAG,"onFailure",t);
                 callback.onNetworkError();
             }
-        });
+        };
+
+
+        today =  new Filter().formatDayTime(new DateTime());
+        mProfileId = queries.getMyProfile().getId();
+
+
+        if (isMyWorkout){
+            mainService.createWorkoutDoneMyWorkout(
+                    today,
+                    workout_id,
+                    mProfileId,
+                    sets,
+                    total_time).enqueue(workout_done_Callback);
+        }else {
+            mainService.createWorkoutDoneWorkout(
+                    today,
+                    workout_id,
+                    mProfileId,
+                    sets,
+                    total_time).enqueue(workout_done_Callback);
+        }
     }
 
     public void saveExerciseProgressions(
-            int my_workout_done_id, ArrayList<com.app.app.silverbarsapp.models.ExerciseProgression> exercises,
+            int my_workout_done_id,int sets,ArrayList<com.app.app.silverbarsapp.models.ExerciseProgression> exercises,
             ResultsCallback callback) throws SQLException {
 
-        int my_id = queries.getMyProfile().getId();
-
         Observable.from(exercises)
-                .flatMap(exercise ->  mainService.saveExerciseProgression(
+                .flatMap(exercise ->
+                        mainService.saveExerciseProgression(
                         my_workout_done_id,
-                        my_id,
+                                mProfileId,
                         exercise.getExercise().getId(),
-                        0,
-                        exercise.getTotal_repetition(),
+                        exercise.getTotal_time(),
+                        (exercise.getTotal_repetition() * sets),
                         exercise.getRepetitions_done(),
-                        exercise.getTotal_seconds(),
+                        (exercise.getTotal_seconds() * sets),
                         exercise.getSeconds_done(),
                         exercise.getTotal_weight(),
-                        new DateTime().toString()
-                )) .subscribeOn(Schedulers.newThread())
+                        today)
+                )
+                .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(callback::onSavedExerciseProgress,
                         error -> {Log.e(TAG, "onFailure error ", error);callback.onNetworkError();}
                 );
     }
-
 
     public void getProgressions(List<ExerciseProgression> exercises, ResultsCallback callback) throws SQLException {
         ArrayList<ExerciseProgression> progressions = new ArrayList<>();

@@ -241,6 +241,9 @@
 
     <string name="loading">Loading…</string>
 
+    <string name="activity_workout_title">Workouts</string>
+    <string name="activity_workout_dialog_title">Select your music</string>
+
     <!---    Strings of activity activity_muscle_selection  -->
     <string name="activity_muscle_selection_toolbar">Filter</string>
     <string name="activity_muscle_selection_title">Select the muscles that you want to train</string>
@@ -264,6 +267,9 @@
     <string name="activity_workingout_total">Total time:</string>
     <string name="activity_workingout_review_rep">Repetitions completed:</string>
     <string name="activity_workingout_review_sec">Seconds completed:</string>
+
+    <string name="activity_workingout_dialog_title">Finish workout</string>
+    <string name="activity_workingout_dialog_content">Are you sure that you want to exit the workout?</string>
 
     <!---    Strings of fragment profile -->
     <string name="fragment_profile_workout_done">My workouts done</string>
@@ -311,6 +317,20 @@
     <string name="activity_exercise_list_add_button">Add to workout</string>
 
     <string name="activity_settings_title">Options</string>
+
+    <string name="connect_internet">Please, connect to the internet</string>
+
+    <string name="activity_workout_music">Music: </string>
+    <string name="activity_workout_none">None</string>
+
+
+    <string name="activity_song_title">My Music</string>
+    <string name="activity_song_empty">There\'s no songs:(</string>
+    <string name="activity_song_done_button">Add to workout</string>
+    <string name="activity_song_error_no_music">Select at least one song</string>
+
+    <string name="music_dialog_spotify">Spotify</string>
+    <string name="music_dialog_my_music">My Music</string>
 
 
 </resources>

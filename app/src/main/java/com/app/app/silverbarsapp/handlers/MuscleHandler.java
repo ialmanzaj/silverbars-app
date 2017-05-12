@@ -1,9 +1,10 @@
-package com.app.app.silverbarsapp.utils;
+package com.app.app.silverbarsapp.handlers;
 
 import android.util.Log;
 
 import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.models.MuscleExercise;
+import com.app.app.silverbarsapp.utils.Utilities;
 
 import java.util.ArrayList;
 import java.util.Arrays;

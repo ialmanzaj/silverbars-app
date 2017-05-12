@@ -1,5 +1,6 @@
 package com.app.app.silverbarsapp.viewsets;
 
+import com.app.app.silverbarsapp.database_models.ProfileFacebook;
 import com.app.app.silverbarsapp.models.AccessToken;
 
 /**
@@ -7,5 +8,6 @@ import com.app.app.silverbarsapp.models.AccessToken;
  */
 
 public interface LoginView extends BaseView{
-    void displayToken(AccessToken accessToken,String name_account);
+    void displayToken(AccessToken accessToken);
+    void onProfileSaved(ProfileFacebook profile);
 }

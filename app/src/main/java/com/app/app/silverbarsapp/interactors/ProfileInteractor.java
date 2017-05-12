@@ -5,7 +5,7 @@ import android.util.Log;
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.callbacks.ProfileCallback;
 import com.app.app.silverbarsapp.database_models.ProfileFacebook;
-import com.app.app.silverbarsapp.utils.DatabaseHelper;
+import com.app.app.silverbarsapp.handlers.DatabaseHelper;
 
 import java.sql.SQLException;
 

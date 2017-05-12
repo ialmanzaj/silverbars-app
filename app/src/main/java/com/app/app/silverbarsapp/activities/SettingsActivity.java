@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.andretietz.retroauth.AuthAccountManager;
 import com.app.app.silverbarsapp.R;
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 
 import butterknife.BindView;
@@ -28,15 +27,11 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.close_session) RelativeLayout close_session;
     @BindView(R.id.toolbar) Toolbar toolbar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        FacebookSdk.sdkInitialize(getApplicationContext());
-
         ButterKnife.bind(this);
-
 
         setupToolbar();
 
@@ -63,8 +58,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void logout(){
-        //facebook logout
-        LoginManager.getInstance().logOut();
+        facebookLogout();
 
         //remove account
         AuthAccountManager authAccountManager = new AuthAccountManager();
@@ -72,6 +66,11 @@ public class SettingsActivity extends AppCompatActivity {
 
         //return to login activity
         loginActivity();
+    }
+
+    private void facebookLogout(){
+        //facebook logout
+        LoginManager.getInstance().logOut();
     }
 
     private void loginActivity(){

@@ -1,6 +1,8 @@
-package com.app.app.silverbarsapp.utils;
+package com.app.app.silverbarsapp.handlers;
 
 import android.os.CountDownTimer;
+
+import com.app.app.silverbarsapp.utils.Utilities;
 
 /**
  * Created by isaacalmanza on 02/19/17.

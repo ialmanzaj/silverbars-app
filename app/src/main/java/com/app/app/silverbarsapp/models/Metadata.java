@@ -1,5 +1,6 @@
 package com.app.app.silverbarsapp.models;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -14,9 +15,16 @@ public class Metadata implements Parcelable{
     private String trackName;
     private int trackLengthInSec;
     private boolean playing;
-
+    private Context context;
 
     public Metadata(){}
+
+
+    public Metadata(String trackName,String artistName){
+        this.trackName = trackName;
+        this.artistName = artistName;
+    }
+
 
     protected Metadata(Parcel in) {
         artistName = in.readString();
@@ -69,6 +77,7 @@ public class Metadata implements Parcelable{
         this.trackLengthInSec = trackLengthInSec;
     }
 
+
     public void setTrackName(String trackName) {
         this.trackName = trackName;
     }
@@ -91,6 +100,14 @@ public class Metadata implements Parcelable{
 
     public boolean isPlaying() {
         return playing;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public Context getContext() {
+        return context;
     }
 
 }

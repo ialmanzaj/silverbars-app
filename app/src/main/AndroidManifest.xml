@@ -3,15 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.app.app.silverbarsapp">
 
+    <!--   PROFILE INFO     -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <!--  FOR WORKOUT    -->
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!--   INTERNET     -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--   STORAGE     -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!--   PAY IN APP     -->
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
@@ -28,10 +37,8 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
@@ -46,7 +53,6 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -56,9 +62,11 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="authentication_ACTION" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <service
             android:name="com.andretietz.retroauth.RetroauthAuthenticationService"
             android:exported="false"
@@ -71,25 +79,29 @@
                 android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".activities.MainActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".activities.WorkoutActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
+
+        <service android:name=".utils.MusicService" />
 
         <receiver
-            android:name="MainBroadcastReceiver"
+            android:name=".utils.SpotifyBroadcastReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.spotify.music.playbackstatechanged"/>
-                <action android:name="com.spotify.music.metadatachanged"/>
-                <action android:name="com.spotify.music.queuechanged"/>
+                <action android:name="com.spotify.music.playbackstatechanged" />
+                <action android:name="com.spotify.music.metadatachanged" />
+                <action android:name="com.spotify.music.queuechanged" />
             </intent-filter>
         </receiver>
 
@@ -145,7 +157,8 @@
         <activity android:name=".activities.WorkoutsDoneActivity" />
         <activity android:name=".activities.ExerciseDetailDailyActivity" />
         <activity android:name=".activities.ExerciseDetailMonthlyActivity" />
-        <activity android:name=".activities.ExerciseDetailWeeklyActivity"></activity>
+        <activity android:name=".activities.ExerciseDetailWeeklyActivity" />
+        <activity android:name=".activities.ExerciseResultDetailActivity"></activity>
     </application>
 
 </manifest>

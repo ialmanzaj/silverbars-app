@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
@@ -17,13 +16,13 @@ import android.widget.TextView;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.components.DaggerMuscleSelectionComponent;
+import com.app.app.silverbarsapp.handlers.MusclesWebviewHandler;
 import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.models.Muscle;
 import com.app.app.silverbarsapp.modules.MuscleSelectionModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.MuscleSelectionPresenter;
 import com.app.app.silverbarsapp.utils.MuscleListener;
-import com.app.app.silverbarsapp.utils.MusclesWebviewHandler;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.utils.WebAppInterface;
 import com.app.app.silverbarsapp.viewsets.MuscleSelectionView;
@@ -175,13 +174,11 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
 
     @Override
     public void displayNetworkError() {
-        Log.e(TAG,"displayNetworkError");
         onErrorViewOn();
     }
 
     @Override
     public void displayServerError() {
-        Log.e(TAG,"displayServerError");
         onErrorViewOn();
     }
 

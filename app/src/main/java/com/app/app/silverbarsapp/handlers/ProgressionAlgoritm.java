@@ -1,4 +1,4 @@
-package com.app.app.silverbarsapp;
+package com.app.app.silverbarsapp.handlers;
 
 import android.util.Log;
 
@@ -20,9 +20,20 @@ public class ProgressionAlgoritm {
     private static final String TAG = ProgressionAlgoritm.class.getSimpleName();
 
     private Filter filter = new Filter();
-    Utilities utilities = new Utilities();
+    private Utilities utilities = new Utilities();
 
     public ProgressionAlgoritm(){}
+
+    public ArrayList<ExerciseProgression> addFirstProgressions(ArrayList<ExerciseProgression> current_exercises){
+        //Log.d(TAG,"there's any progression");
+        ArrayList<ExerciseProgression> progressions = new ArrayList<>();
+        for (ExerciseProgression  current_exercise: current_exercises) {
+            progressions.add(
+                    setOldValues(
+                            checkImprovementsWithNoOldProgression(current_exercise),current_exercise));
+        }
+        return progressions;
+    }
 
     public ArrayList<ExerciseProgression> compareExerciseProgression(List<ExerciseProgression> old_progressions, ArrayList<ExerciseProgression> current_exercises){
         Filter filter = new Filter();
@@ -33,15 +44,25 @@ public class ProgressionAlgoritm {
 
             if (old_progressions_by_exercise.size() > 0){
                 progressions.add(
-                        getComparationReady(
-                                old_progressions_by_exercise.get(old_progressions_by_exercise.size()-1),
+                        setOldValues(
+                                getComparationReady(
+                                old_progressions_by_exercise.get(old_progressions_by_exercise.size()-1), current_exercise),
                                 current_exercise)
                 );
             }else {
-                progressions.add(checkImprovementsWithNoOldProgression(current_exercise));
+                progressions.add(
+                        setOldValues(
+                                checkImprovementsWithNoOldProgression(current_exercise),current_exercise));
             }
         }
         return progressions;
+    }
+
+    private ExerciseProgression setOldValues(ExerciseProgression progression,ExerciseProgression old_progression){
+        progression.setSets_completed(old_progression.getSets_completed());
+        progression.setTotal_time(old_progression.getTotal_time());
+
+        return progression;
     }
 
     private ExerciseProgression getComparationReady(ExerciseProgression old_progression,ExerciseProgression current_progression){
@@ -65,14 +86,7 @@ public class ProgressionAlgoritm {
         }
     }
 
-    public ArrayList<ExerciseProgression> addFirstProgressions(ArrayList<ExerciseProgression> current_exercises){
-        Log.d(TAG,"there's any progression");
-        ArrayList<ExerciseProgression> progressions = new ArrayList<>();
-        for (ExerciseProgression  current_exercise: current_exercises) {
-            progressions.add(checkImprovementsWithNoOldProgression(current_exercise));
-        }
-        return progressions;
-    }
+
 
     private ExerciseProgression checkImprovementsWithNoOldProgression(ExerciseProgression exerciseProgression_ready){
         if (exerciseProgression_ready.getRepetitions_done() > 0 || exerciseProgression_ready.getSeconds_done() > 0) {
@@ -89,11 +103,11 @@ public class ProgressionAlgoritm {
 
     private ExerciseProgression checkWetherIsRepOrSecond(ExerciseProgression exerciseProgression_ready){
         if (exerciseProgression_ready.getTotal_repetition() > 0){
+            //Log.d(TAG,"setRepImprove ");
             exerciseProgression_ready.setRepImprove(true);
-            Log.d(TAG,"setRepImprove ");
         }else {
+            //Log.d(TAG,"setSecondImprove ");
             exerciseProgression_ready.setSecondImprove(true);
-            Log.d(TAG,"setSecondImprove ");
         }
         return exerciseProgression_ready;
     }
@@ -103,14 +117,14 @@ public class ProgressionAlgoritm {
 
         if (current_exercise.getTotal_weight()  > old_progression.getTotal_weight()){
             current_exercise.setWeightImprove(true);
-            Log.d(TAG,"weightImprovement: Positive");
+            //Log.d(TAG,"weightImprovement: Positive");
 
             current_exercise.setProgress(getProgress(current_exercise.getTotal_weight(), old_progression.getTotal_weight()));
             current_exercise.setPositive(true);
 
         }else if (current_exercise.getTotal_weight() < old_progression.getTotal_weight() ) {
             current_exercise.setWeightImprove(true);
-            Log.d(TAG,"weightImprovement: negative");
+            //Log.d(TAG,"weightImprovement: negative");
 
 
             current_exercise.setProgress(getProgress(current_exercise.getTotal_weight(), old_progression.getTotal_weight()));
@@ -121,7 +135,7 @@ public class ProgressionAlgoritm {
 
 
     private ExerciseProgression secondImprovement(int seconds_done_old_progression, ExerciseProgression current_exercise){
-        Log.d(TAG,"secondImprovement ");
+        //Log.d(TAG,"secondImprovement ");
         current_exercise.setSecondImprove(true);
 
         if (current_exercise.getSeconds_done()  > seconds_done_old_progression){
@@ -137,7 +151,7 @@ public class ProgressionAlgoritm {
     }
 
     private ExerciseProgression repImprovement(int reps_done_old_progression, ExerciseProgression current_exercise){
-        Log.d(TAG,"repImprovement ");
+        //Log.d(TAG,"repImprovement ");
         current_exercise.setRepImprove(true);
 
         if (current_exercise.getRepetitions_done()  > reps_done_old_progression){
@@ -162,23 +176,22 @@ public class ProgressionAlgoritm {
 
     public double getProgress(int new_rep,int old_rep){
         if (old_rep == 0) return 100;
-        Log.d(TAG,"new: "+new_rep+" "+"old:  "+old_rep);
+        //Log.d(TAG,"new: "+new_rep+" "+"old:  "+old_rep);
         double progress = (( new_rep - old_rep)  / (double) old_rep)*100;
-        Log.d(TAG,"progress "+progress);
+        //Log.d(TAG,"progress "+progress);
         return progress;
     }
 
 
     private double getProgress(double new_weight,double old_weight){
-        Log.d(TAG,"new_weight "+new_weight+" "+"old_weight "+old_weight);
+        //Log.d(TAG,"new_weight "+new_weight+" "+"old_weight "+old_weight);
         double progress = (( new_weight - old_weight)  / old_weight)*100;
-        Log.d(TAG,"progress "+progress);
+        //Log.d(TAG,"progress "+progress);
         return progress;
     }
 
     public ArrayList<ExerciseProgression> compareWithOldProgressions(ArrayList<ExerciseProgression> current_week_progressions, ArrayList<ExerciseProgression> last_week_progressions){
         ArrayList<ExerciseProgression> progressions_results = new ArrayList<>();
-
 
         for (ExerciseProgression current_progression: current_week_progressions){
 
@@ -212,14 +225,14 @@ public class ProgressionAlgoritm {
 
             if (!progressions_best.contains(exerciseProgression_list)) {
                 if (same_exercises.size() > 1) {
-                    Log.d(TAG, "same_exercises: " +exerciseProgression.getExercise().getExercise_name() +" : "+ same_exercises.size() );
+                    //Log.d(TAG, "same_exercises: " +exerciseProgression.getExercise().getExercise_name() +" : "+ same_exercises.size() );
 
                     ExerciseProgression exerciseProgression_best  = getBestProgressions(same_exercises);
 
-                    Log.d(TAG, "exerciseProgression_best: " + exerciseProgression_best.getExercise().getExercise_name());
-                    Log.d(TAG, "exerciseProgression_best: " + exerciseProgression_best.getTotal_weight());
-                    Log.d(TAG, "exerciseProgression_best: " + exerciseProgression_best.getTotal_repetition());
-                    Log.d(TAG, "exerciseProgression_best: " + exerciseProgression_best.getTotal_seconds());
+                    //Log.d(TAG, "name: " + exerciseProgression_best.getExercise().getExercise_name());
+                    //Log.d(TAG, "weight: " + exerciseProgression_best.getTotal_weight());
+                    //Log.d(TAG, "rep: " + exerciseProgression_best.getTotal_repetition());
+                    //Log.d(TAG, "second: " + exerciseProgression_best.getTotal_seconds());
 
                     exerciseProgression_list = exerciseProgression_best;
                     progressions_best.add(exerciseProgression);
@@ -258,18 +271,18 @@ public class ProgressionAlgoritm {
 
             if (progression1.getTotal_weight() > progression2.getTotal_weight()){
 
-                Log.d(TAG,"weight better: "+ progression1.getTotal_weight()+ ":"+ progression2.getTotal_weight());
+                //Log.d(TAG,"weight better: "+ progression1.getTotal_weight()+ ":"+ progression2.getTotal_weight());
                 return progression1;
             }else {
 
                 if (useRepOrSecond(progression1)) {
 
-                    Log.d(TAG,"rep better: "+ progression1.getRepetitions_done() + ":"+ progression2.getRepetitions_done() );
+                    //Log.d(TAG,"rep better: "+ progression1.getRepetitions_done() + ":"+ progression2.getRepetitions_done() );
                     if (progression1.getRepetitions_done() > progression2.getRepetitions_done()) return progression1;else return progression2;
 
                 } else {
 
-                    Log.d(TAG,"second better: "+ progression1.getSeconds_done() + ":"+ progression2.getSeconds_done() );
+                    //Log.d(TAG,"second better: "+ progression1.getSeconds_done() + ":"+ progression2.getSeconds_done() );
                     if (progression1.getSeconds_done() > progression2.getSeconds_done() ) return progression1;else return progression2;
                 }
             }
@@ -281,16 +294,16 @@ public class ProgressionAlgoritm {
         int muscle_activation = getActivationTotal(current_muscle,exercises);
         int counter = utilities.counter(filter.getMusclesStringFromExerciseProgression(exercises),current_muscle);
 
-        Log.d(TAG,"muscle_activation: "+muscle_activation);
-        Log.d(TAG,"counter "+counter);
+        //Log.d(TAG,"muscle_activation: "+muscle_activation);
+        //Log.d(TAG,"counter "+counter);
         return counter > 0 ? muscle_activation / counter: 0;
     }
 
     public int getMuscleActivationAverage(String current_muscle, ArrayList<ExerciseProgression> exercises,int muscle_activation){
         int counter = utilities.counter(filter.getMusclesStringFromExerciseProgression(exercises),current_muscle);
 
-        Log.d(TAG,"muscle_activation: "+muscle_activation);
-        Log.d(TAG,"counter "+counter);
+        //Log.d(TAG,"muscle_activation: "+muscle_activation);
+        //Log.d(TAG,"counter "+counter);
         return counter > 0 ? muscle_activation / counter: 0;
     }
 
@@ -349,7 +362,7 @@ public class ProgressionAlgoritm {
             muscleActivation.setMuscle_name(muscle);
             muscleActivation.setMuscle_activation(filter.getMuscleExercise(muscle, current_exercises).getMuscle_activation());
 
-            Log.d(TAG,"muscleActivation "+muscleActivation.getMuscle_activation());
+            //Log.d(TAG,"muscleActivation "+muscleActivation.getMuscle_activation());
             muscleActivations.add(muscleActivation);
         }
         return muscleActivations;

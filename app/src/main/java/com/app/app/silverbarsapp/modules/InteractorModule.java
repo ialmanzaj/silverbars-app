@@ -18,12 +18,11 @@ import com.app.app.silverbarsapp.interactors.ProfileInteractor;
 import com.app.app.silverbarsapp.interactors.ProgressionInteractor;
 import com.app.app.silverbarsapp.interactors.ResultsInteractor;
 import com.app.app.silverbarsapp.interactors.SavedWorkoutsInteractor;
-import com.app.app.silverbarsapp.interactors.SpotifyInteractor;
 import com.app.app.silverbarsapp.interactors.UserPreferencesInteractor;
 import com.app.app.silverbarsapp.interactors.UserWorkoutsInteractor;
 import com.app.app.silverbarsapp.interactors.WorkoutInteractor;
 import com.app.app.silverbarsapp.interactors.WorkoutsDoneInteractor;
-import com.app.app.silverbarsapp.utils.DatabaseHelper;
+import com.app.app.silverbarsapp.handlers.DatabaseHelper;
 
 import dagger.Module;
 import dagger.Provides;
@@ -56,12 +55,6 @@ public class InteractorModule {
     }
 
     @Provides
-    public SpotifyInteractor provideSpotifyInteractor(){
-        return new SpotifyInteractor();
-    }
-
-
-    @Provides
     public WorkoutInteractor provideWorkoutInteractor(DatabaseHelper helper){
         return new WorkoutInteractor(helper);
     }
@@ -70,7 +63,6 @@ public class InteractorModule {
     public SavedWorkoutsInteractor provideSavedWorkoutsInteractor(DatabaseHelper helper){
         return new SavedWorkoutsInteractor(helper);
     }
-
 
     @Provides
     public ExerciseListInteractor provideExerciseListInteractor(MainService mainService){
@@ -121,8 +113,6 @@ public class InteractorModule {
     public ExerciseDetailInteractor provideExerciseDetailInteractor(DatabaseHelper databaseHelper){
         return new ExerciseDetailInteractor(databaseHelper);
     }
-
-
 
 
 

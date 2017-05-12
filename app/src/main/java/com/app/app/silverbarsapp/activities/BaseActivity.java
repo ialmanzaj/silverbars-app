@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
  * return null on {@link BaseActivity#getPresenter()}
  * </p>
  * <p>
- * I made some modifications to the BaseActivity presented in the next project.
+ * I made some modifications to the BaseActivity presented in the nextMusic project.
  * I implement Dagger 2 instead Dagger 1 and i attach the presenter directly
  * <a href="https://github.com/pedrovgs/EffectiveAndroidUI">EffectiveAndroidUI</a>
  * </p>

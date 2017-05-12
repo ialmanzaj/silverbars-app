@@ -7,17 +7,16 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.app.app.silverbarsapp.Filter;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.adapters.AllExercisesAdapter;
 import com.app.app.silverbarsapp.components.DaggerExerciseListComponent;
+import com.app.app.silverbarsapp.handlers.Filter;
 import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.modules.ExerciseListModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
@@ -152,13 +151,11 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
     @Override
     public void displayNetworkError() {
-        Log.e(TAG,"displayNetworkError");
         onErrorOn();
     }
 
     @Override
     public void displayServerError() {
-        Log.e(TAG,"displayServerError");
         onErrorOn();
     }
 

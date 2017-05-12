@@ -26,7 +26,6 @@ import com.app.app.silverbarsapp.models.ExerciseProgression;
 import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.models.MuscleExercise;
 import com.app.app.silverbarsapp.models.Skill;
-import com.spotify.sdk.android.player.Connectivity;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -67,11 +66,12 @@ public class Utilities {
     public Utilities (){}
 
 
-    public ArrayList<ExerciseRep> getExerciseWithTimesArray(ArrayList<ExerciseRep> exercises,int mSetsTotal){
-        for (ExerciseRep exercise: exercises){
-            exercise.createTimesPerSet(mSetsTotal);
-        }
-        return exercises;
+    public boolean isOnline(Context context) {
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        //should check null because in airplane mode it will be null
+        return (netInfo != null && netInfo.isConnected());
     }
 
     public boolean isAppRunning(Context context, String packageName) {
@@ -92,13 +92,6 @@ public class Utilities {
         webView.setWebViewClient(new WebViewClient());
 
         webView.postDelayed(() -> webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "UTF-8"), 100);
-    }
-
-    public void loadBodyFromLocalAt80(Context context, WebView webView){
-        String html = getLocalFile(context,"index-80.html");
-        webView.setWebViewClient(new WebViewClient());
-
-        webView.postDelayed(() -> webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "utf-8", ""), 100);
     }
 
     private String getBodyUrlFromPhone(Context context){
@@ -293,7 +286,7 @@ public class Utilities {
         public int moveNext(){
             if ( size > 1 && position + 1 < size) {
                 position = (position + 1) % size;
-                //Log.d(TAG,"next "+position);
+                //Log.d(TAG,"nextMusic "+position);
                 return position;
             }
             return -1;
@@ -306,7 +299,7 @@ public class Utilities {
         public int movePreview(){
             if (size > 1 && (position-1) >= 0 ) {
                 position = (position - 1) % size;
-                //Log.d(TAG,"preview "+position);
+                //Log.d(TAG,"previewMusic "+position);
                 return position;
             }
            return -1;
@@ -367,20 +360,13 @@ public class Utilities {
         return exerciseReps;
     }
 
-
-    public Connectivity getNetworkConnectivity(Context context) {
-        ConnectivityManager connectivityManager;
-        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if (activeNetwork != null && activeNetwork.isConnected()) {
-            return Connectivity.fromNetworkType(activeNetwork.getType());
-        } else {
-            return Connectivity.OFFLINE;
+    public String[] getSongsNamesBySongsFiles(Context context,ArrayList<File> songs){
+        String[] songs_names = new String[songs.size()];
+        for (int i = 0; i < songs.size(); i++) {
+            songs_names[i] = removeLastMp3(getSongName(context, songs.get(i)));
         }
+        return songs_names;
     }
-
-
-
 
     public ArrayList<File> findSongs(Context context,File root){
         ArrayList<File> songs = new ArrayList<File>();
@@ -737,20 +723,20 @@ public class Utilities {
 
 
     public  String getSongName(Context context, File file){
-        String title = null;
-        try{
-            if (file.getPath().contains("/storage/emulated/0/Download/")){
-                title = file.getPath().split("/storage/emulated/0/Download/")[1];
-                Log.v(TAG,"title: "+title);
-            }else {
+        String title;
+
+            if (file.getPath().contains("/")){
+                String[] file_splited = file.getPath().split("/");
+                title = file_splited[file_splited.length - 1];
+
+            } else {
                 MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
                 Uri uri = Uri.fromFile(file);
                 mediaMetadataRetriever.setDataSource(context, uri);
                 title = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
             }
-        } catch(Exception e){
-            Log.e(TAG,"Exception: ",e);
-        }
+
+
         return title;
     }
 
@@ -803,6 +789,16 @@ public class Utilities {
         }
         return song;
     }
+
+    public ArrayList<File> getSongs(ArrayList<File> audio_files){
+        ArrayList<File> songs = new ArrayList<>();
+        if (audio_files.size() > 0) {
+            songs = deleteVoiceNote(audio_files);
+        }
+
+        return songs;
+    }
+
 
     public  List<String> deleteCopiesofList(List<String> elements_with_copies){
         List<String> elements_with_no_copies = new ArrayList<>();

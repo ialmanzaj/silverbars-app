@@ -1,11 +1,12 @@
 package com.app.app.silverbarsapp.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.app.app.silverbarsapp.utils.MusicService;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.utils.Utilities;
 
@@ -35,101 +37,110 @@ public class SongsActivity extends AppCompatActivity {
 
     @BindView(R.id.empty_state) LinearLayout mEmptyStateView;
 
-    private ArrayList<File> local_audio;
-    private ArrayList<File> songs = new ArrayList<>();
-
-    private Utilities  utilities = new Utilities();
+    private Utilities utilities = new Utilities();
+    private ArrayList<File> songs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_songs);
+        //bind view
         ButterKnife.bind(this);
-
-        local_audio = utilities.findSongs(this, Environment.getExternalStorageDirectory());
-
         setupToolbar();
-        songValidation();
-        setupAdapter();
+
+        //service to know all the music in the phone
+        startService(new Intent(this, MusicService.class));
     }
 
-    private void setupAdapter(){
-        String[] songs_names = new String[songs.size()];
-        for (int i = 0; i < songs.size(); i++) {
-            songs_names[i] = utilities.removeLastMp3(utilities.getSongName(this,songs.get(i)));
+    @Override
+    protected void onResume() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(MusicService.ACTION_COMPLETED);
+        registerReceiver(receiver, filter);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(receiver);
+        super.onPause();
+    }
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction().equals(MusicService.ACTION_COMPLETED)) {
+                songs = (ArrayList<File>) intent.getSerializableExtra("songs");
+                setupAdapter(songs);
+            }
         }
+    };
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, songs_names);
+    private void setupAdapter(ArrayList<File> songs){
+        if (songs.size() > 0) {
 
-        mListSongsView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        mListSongsView.setAdapter(adapter);
-    }
+            String[] songs_names = utilities.getSongsNamesBySongsFiles(this,songs);
+            mListSongsView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+            mListSongsView.setAdapter(new ArrayAdapter<>(this, R.layout.simple_list_item_multiple_choice, android.R.id.text1, songs_names));
 
-    private void songValidation(){
-
-        if (local_audio.size() < 1) {
+        }else
             onEmptyViewOn();
-            return;
-        }
-
-        songs = utilities.deleteVoiceNote(local_audio);
-
-        if (songs.size() < 1){
-            onEmptyViewOn();
-            return;
-        }
-
-
     }
-
-
 
     @OnClick(R.id.done)
     public void doneButton(){
+        int[] playlist = getPositionsSelected(mListSongsView,songs);
 
-        songValidation();
+        if (playlist == null){
+            utilities.toast(this,getString(R.string.activity_song_error_no_music));
+            return;
+        }
 
-        int choice = mListSongsView.getCount();
+        Intent return_Intent = new Intent();
+        return_Intent.putExtra("songs",getSongsSelected(playlist,songs));
+        setResult(RESULT_OK, return_Intent);
+        finish();
+    }
+
+    private int[] getPositionsSelected(ListView listView,ArrayList<File> songs){
+        int choice = listView.getCount();
         long[] selected = new long[choice];
-        final SparseBooleanArray spa = mListSongsView.getCheckedItemPositions();
-
+        final SparseBooleanArray spa = listView.getCheckedItemPositions();
 
         if (spa.size() != 0) {
-
-
-            String[] playlist = new String[mListSongsView.getCheckedItemCount()];
+            int[] playlist = new int[listView.getCheckedItemCount()];
             int x = 0;
             for (int i = 0; i < choice; i++) {
                 selected[i] = -1;
             }
             for (int i = 0; i < choice; i++) {
                 if (spa.get(i)) {
-                    selected[i] = mListSongsView.getItemIdAtPosition(i);
+                    selected[i] = listView.getItemIdAtPosition(i);
                 }
             }
-            for(int j = 0; j < songs.size(); j++){
-                if (j == selected[j]){
-                    playlist[x] = utilities.getSongName(SongsActivity.this,songs.get(j));
-                    x++;
-                }
+            for (int j = 0; j < songs.size(); j++) {if (j == selected[j]) {
+                playlist[x] =  j;
+                x++;
             }
+            }
+            return playlist;
+        }else
+            return null;
+    }
 
-
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("positions", playlist);
-            returnIntent.putExtra("songs",songs);
-            setResult(RESULT_OK, returnIntent);
-            finish();
-
-        } else
-            songs = null;
+    private ArrayList<File> getSongsSelected(int[] positions_selected,ArrayList<File> songs){
+        ArrayList<File> songs_selected = new ArrayList<>();
+        for (int song_selected_pos : positions_selected) {
+            songs_selected.add(songs.get(song_selected_pos));
+        }
+        return songs_selected;
     }
 
     private void setupToolbar(){
-        if ( mToolbar != null) {
+        if (mToolbar != null) {
             setSupportActionBar(mToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Song selection");
+            getSupportActionBar().setTitle(getString(R.string.activity_song_title));
         }
     }
 
@@ -141,7 +152,6 @@ public class SongsActivity extends AppCompatActivity {
         mEmptyStateView.setVisibility(View.GONE);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -149,7 +159,7 @@ public class SongsActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            Log.d(TAG, "action bar clicked");
+            //Log.d(TAG, "action bar clicked");
             finish();
         }
         return super.onOptionsItemSelected(item);

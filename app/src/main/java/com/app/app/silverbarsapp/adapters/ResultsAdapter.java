@@ -1,6 +1,7 @@
 package com.app.app.silverbarsapp.adapters;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,8 @@ import static com.app.app.silverbarsapp.Constants.WORST;
  */
 
 public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultViewHolder> {
+    private static final String TAG = ResultsAdapter.class.getSimpleName();
+
 
     private Context context;
     private ArrayList<ExerciseProgression> exercises;
@@ -37,13 +40,14 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultVi
 
     public class ResultViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.exercise_name) TextView exercise_name;
+        @BindView(R.id.exercise_name) TextView mExerciseName;
         @BindView(R.id.total) TextView total;
-        @BindView(R.id.weight) TextView weight;
-        @BindView(R.id.type_progress) TextView type_progress;
+        @BindView(R.id.weight) TextView mWeight;
+        @Nullable @BindView(R.id.type_progress) TextView mTypeProgress;
+        @BindView(R.id.sets) TextView mSetsCompleted;
+        @BindView(R.id.total_time) TextView mTotalTime;
 
-
-        @BindView(R.id.progress) TextView progress;
+        @BindView(R.id.progress) TextView mProgression;
 
         public ResultViewHolder(View view) {
             super(view);
@@ -82,12 +86,13 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultVi
 
     @Override
     public void onBindViewHolder(ResultViewHolder viewHolder, int position) {
-
-        viewHolder.exercise_name.setText(exercises.get(position).getExercise().getExercise_name());
-        viewHolder.progress.setText(utilities.formaterDecimal(String.valueOf(exercises.get(position).getProgress())));
+        viewHolder.mExerciseName.setText(exercises.get(position).getExercise().getExercise_name());
+        viewHolder.mProgression.setText(utilities.formaterDecimal(String.valueOf(exercises.get(position).getProgress())));
+        viewHolder.mSetsCompleted.setText(String.valueOf(exercises.get(position).getSets_completed()));
+        //viewHolder.mTotalTime.setText(exercises.get(position).getTotal_time());
 
         if (exercises.get(position).getTotal_weight() > 0) {
-            viewHolder.weight.setText(
+            viewHolder.mWeight.setText(
                     " (+"+
                     utilities.formaterDecimal(String.valueOf(exercises.get(position).getTotal_weight()))
                     +"kg" +")");
@@ -100,13 +105,13 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultVi
         }
 
 
-        if (exercises.get(position).isWeightImprove()){
-            viewHolder.type_progress.setText("weight");
+      /*  if (exercises.get(position).isWeightImprove()){
+            viewHolder.mTypeProgress.setText("weight");
             return;
         }
 
-        if (exercises.get(position).isRepImprove()){viewHolder.type_progress.setText("reps");}
-        else {viewHolder.type_progress.setText("seconds");}
+        if (exercises.get(position).isRepImprove()){viewHolder.mTypeProgress.setText("reps");}
+        else {viewHolder.mTypeProgress.setText("seconds");}*/
 
     }
     @Override

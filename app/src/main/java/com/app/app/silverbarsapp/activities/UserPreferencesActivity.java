@@ -5,7 +5,9 @@ import android.accounts.AccountManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.andretietz.retroauth.AuthAccountManager;
 import com.app.app.silverbarsapp.R;
@@ -15,9 +17,13 @@ import com.app.app.silverbarsapp.models.Person;
 import com.app.app.silverbarsapp.modules.UserPreferencesModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.UserPreferencesPresenter;
+import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.UserPreferencesView;
 
 import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 
 public class UserPreferencesActivity extends BaseActivity implements UserPreferencesView {
 
@@ -26,7 +32,12 @@ public class UserPreferencesActivity extends BaseActivity implements UserPrefere
     @Inject
     UserPreferencesPresenter mUserPreferencesPresenter;
 
-    Person person;
+    @BindView(R.id.error_view)LinearLayout mErrorView;
+    @BindView(R.id.loading)LinearLayout mLoadingView;
+    @BindView(R.id.error_text) TextView mErrorText;
+
+
+    private Person person;
 
     @Override
     protected int getLayout() {
@@ -51,6 +62,11 @@ public class UserPreferencesActivity extends BaseActivity implements UserPrefere
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getMyProfilefromApi();
+    }
+
+    private void getMyProfilefromApi(){
         mUserPreferencesPresenter.getMyProfile();
     }
 
@@ -58,6 +74,27 @@ public class UserPreferencesActivity extends BaseActivity implements UserPrefere
     public void onProfileSaved(Person person) {
         this.person = person;
         mUserPreferencesPresenter.getMyWorkouts();
+    }
+
+    private boolean checkConnection(){
+        return new Utilities().isOnline(this);
+    }
+
+    @OnClick(R.id.reload)
+    public void reload(){
+        onErrorViewOff();
+        onLoadingOn();
+        getMyProfilefromApi();
+    }
+
+    @Override
+    public void displayNetworkError() {
+        onErrorViewOn();
+    }
+
+    @Override
+    public void displayServerError() {
+        onErrorViewOn();
     }
 
     @Override
@@ -70,19 +107,22 @@ public class UserPreferencesActivity extends BaseActivity implements UserPrefere
     private void saveAccount(){
         AuthAccountManager authAccountManager = new AuthAccountManager();
         Account activeAccount = authAccountManager.getActiveAccount(getString(R.string.authentication_ACCOUNT));
-        AccountManager.get(UserPreferencesActivity.this).setUserData(
+        AccountManager.get(this).setUserData(
                 activeAccount, getString(R.string.authentication_USER),person.toString());
     }
 
-    @Override
-    public void displayNetworkError() {
-        Log.e(TAG,"displayNetworkError");
+
+    private void onLoadingOn(){
+        mLoadingView.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void displayServerError() {
-        Log.e(TAG,"displayServerError");
+    private void onErrorViewOn(){
+        mErrorView.setVisibility(View.VISIBLE);
     }
 
+    private void onErrorViewOn(String error_text){mErrorText.setText(error_text);mErrorView.setVisibility(View.VISIBLE);}
 
+    private void onErrorViewOff(){
+        mErrorView.setVisibility(View.GONE);
+    }
 }

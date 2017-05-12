@@ -1,6 +1,4 @@
-package com.app.app.silverbarsapp;
-
-import android.util.Log;
+package com.app.app.silverbarsapp.handlers;
 
 import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
@@ -160,7 +158,6 @@ public class Filter {
 
 
     public ArrayList<Exercise> filterExerciseByMuscle(ArrayList<String> muscles_selected, ArrayList<Exercise> exercises){
-        Log.d(TAG,"muscles_selected: "+muscles_selected);
         ArrayList<Exercise> exercises_filtered_muscles = new ArrayList<>();
         for (Exercise exercise: exercises){
             for (String muscle_name: muscles_selected){
@@ -196,6 +193,11 @@ public class Filter {
     public DateTime getDateFormated(String date){
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
         return formatter.parseDateTime(date);
+    }
+
+    public String formatDayTime(DateTime dateTime){
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
+        return formatter.print(dateTime);
     }
 
     public ArrayList<ExerciseProgression> getProgressionFilteredByMuscle(List<ExerciseProgression> progressions,String muscle){

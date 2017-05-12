@@ -1,9 +1,9 @@
 package com.app.app.silverbarsapp.interactors;
 
-import com.app.app.silverbarsapp.DatabaseQueries;
+import com.app.app.silverbarsapp.handlers.DatabaseQueries;
 import com.app.app.silverbarsapp.callbacks.ExerciseDetailCallback;
 import com.app.app.silverbarsapp.database_models.ExerciseProgression;
-import com.app.app.silverbarsapp.utils.DatabaseHelper;
+import com.app.app.silverbarsapp.handlers.DatabaseHelper;
 
 import java.sql.SQLException;
 import java.util.List;

@@ -26,7 +26,7 @@ public class ExerciseRep implements Parcelable{
     private int workout;
 
 
-    private long[] times_per_set;
+    private String times_per_set;
     private STATE exercise_state = STATE.REP;
     private int number;
     private double weight;
@@ -56,7 +56,7 @@ public class ExerciseRep implements Parcelable{
         repetition = in.readInt();
         seconds = in.readInt();
         workout = in.readInt();
-        times_per_set = in.createLongArray();
+        times_per_set = in.readString();
         number = in.readInt();
         weight = in.readDouble();
     }
@@ -68,7 +68,7 @@ public class ExerciseRep implements Parcelable{
         dest.writeInt(repetition);
         dest.writeInt(seconds);
         dest.writeInt(workout);
-        dest.writeLongArray(times_per_set);
+        dest.writeString(times_per_set);
         dest.writeInt(number);
         dest.writeDouble(weight);
     }
@@ -155,15 +155,11 @@ public class ExerciseRep implements Parcelable{
         return exercise_state;
     }
 
-    public void createTimesPerSet(int total_sets){
-        times_per_set = new long[total_sets];
+    public void setTimes_per_set(String times_per_set) {
+        this.times_per_set = times_per_set;
     }
 
-    public void addTimesPerSet(int current_set,long time){
-        times_per_set[current_set] = time;
-    }
-
-    public long[] getTimes_per_set() {
+    public String getTimes_per_set() {
         return times_per_set;
     }
 

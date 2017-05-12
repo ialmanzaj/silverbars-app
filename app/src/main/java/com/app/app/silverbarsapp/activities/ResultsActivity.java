@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,14 +13,12 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.app.app.silverbarsapp.ProgressionAlgoritm;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.adapters.ResultsAdapter;
-import com.app.app.silverbarsapp.adapters.ResultsMuscleActivation;
 import com.app.app.silverbarsapp.components.DaggerResultsComponent;
+import com.app.app.silverbarsapp.handlers.ProgressionAlgoritm;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
-import com.app.app.silverbarsapp.models.MuscleActivation;
 import com.app.app.silverbarsapp.models.WorkoutDone;
 import com.app.app.silverbarsapp.modules.ResultsModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
@@ -31,7 +28,6 @@ import com.app.app.silverbarsapp.viewsets.ResultsView;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -51,20 +47,23 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.total_time) TextView mTotalTime;
-    @BindView(R.id.sets) TextView mTotalSets;
+    @BindView(R.id.sets) TextView mSetsCompletedText;
     @BindView(R.id.exercises) RecyclerView mExercisesList;
 
     @BindView(R.id.loading) LinearLayout mLoadingView;
     @BindView(R.id.error_view) LinearLayout mErrorView;
 
-    @BindView(R.id.muscles) RecyclerView mMuscleActivation;
+    //@BindView(R.id.muscles) RecyclerView mMuscleActivation;
 
     private Utilities utilities = new Utilities();
-    private ProgressionAlgoritm progressionAlgoritm = new ProgressionAlgoritm();
+    private ProgressionAlgoritm mProgressionAlgoritm = new ProgressionAlgoritm();
 
     private int workout_id;
+    boolean isUserWorkout;
     private String total_time;
-    private int sets_completed;
+    private int mSetsCompleted;
+    private int mTotalSets;
+    private int exercises_completed;
     private ArrayList<ExerciseProgression> mExercises = new ArrayList<>();
 
     @Override
@@ -92,30 +91,33 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         super.onCreate(savedInstanceState);
         setupToolbar();
         setupTabs();
-
         Bundle extras =  getIntent().getExtras();
 
         workout_id = extras.getInt("workout_id");
+        isUserWorkout = extras.getBoolean("user_workout",false);
         mExercises = extras.getParcelableArrayList("exercises");
-        int total_sets = extras.getInt("sets");
-        sets_completed = extras.getInt("sets_completed");
+        mTotalSets = extras.getInt("sets");
+        int current_set = extras.getInt("current_set");
+        exercises_completed = extras.getInt("exercises_completed");
         total_time = extras.getString("total_time");
+        mSetsCompleted = getSetsCompleted(current_set,exercises_completed,mExercises.size());
 
-
-        mTotalSets.setText(String.valueOf(sets_completed-1)+"/"+String.valueOf(total_sets));
-        mTotalTime.setText(formatTime(String.valueOf(total_time)));
+        //update UI
+        mSetsCompletedText.setText(String.valueOf(mSetsCompleted) + "/" + String.valueOf(mTotalSets));
+        mTotalTime.setText(String.valueOf(total_time));
 
 
         getOldProgression();
     }
 
-    private String formatTime(String time){
-        String[] total_time = time.split(":");
-        Log.d(TAG,"total_time "+ Arrays.toString(total_time));
-        return total_time[0] + "min"
-                +"," + Integer.parseInt(total_time[1]) + "sec" +","
-                + Integer.parseInt(total_time[2])  + "mili" ;
+    private int getSetsCompleted(int current_set,int exercises_completed,int total_exercises){
+        if (exercises_completed == total_exercises){
+            return current_set;
+        }else {
+            return current_set-1;
+        }
     }
+
 
     private void getOldProgression(){
         try {
@@ -151,21 +153,21 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         exercises.setIndicator(getString(R.string.activity_results_tab_exercises));
         exercises.setContent(R.id.exercises);
 
-        TabHost.TabSpec muscles = Tab_layout.newTabSpec("Muscles");
-        muscles.setIndicator(getString(R.string.tab_muscles));
-        muscles.setContent(R.id.muscles);
+        //TabHost.TabSpec muscles = Tab_layout.newTabSpec("Muscles");
+        //muscles.setIndicator(getString(R.string.tab_muscles));
+        //muscles.setContent(R.id.muscles);
 
-        Tab_layout.addTab(overview);
         Tab_layout.addTab(exercises);
-        Tab_layout.addTab(muscles);
+        Tab_layout.addTab(overview);
+        //Tab_layout.addTab(muscles);
     }
 
-    private void setupAdapterMuscleActivation(ArrayList<MuscleActivation> muscleActivations){
+   /* private void setupAdapterMuscleActivation(ArrayList<MuscleActivation> muscleActivations){
         mMuscleActivation.setLayoutManager(new LinearLayoutManager(this));
         mMuscleActivation.setNestedScrollingEnabled(false);
         mMuscleActivation.setHasFixedSize(false);
         mMuscleActivation.setAdapter(new ResultsMuscleActivation(muscleActivations));
-    }
+    }*/
 
     @OnClick(R.id.save_button)
     public void savebutton(){
@@ -182,7 +184,7 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     private void saveResults(){
         try {
             onLoadingViewOn();
-            mResultsPresenter.createWorkoutDone(workout_id,sets_completed,total_time);
+            mResultsPresenter.createWorkoutDone(workout_id,mSetsCompleted,total_time,isUserWorkout);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -190,21 +192,18 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
     @Override
     public void displayNetworkError() {
-        Log.e(TAG,"displayNetworkError");
         onErrorViewOn();
     }
 
     @Override
     public void displayServerError() {
-        Log.e(TAG,"displayServerError");
         onErrorViewOn();
     }
 
     @Override
     public void onWorkoutDone(WorkoutDone workout) {
-        //Log.d(TAG,"workout done saved: " +workout.getId());
         try {
-            mResultsPresenter.saveExerciseProgressions(workout.getId(),mExercises);
+            mResultsPresenter.saveExerciseProgressions(workout.getId(),mTotalSets,mExercises);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -219,17 +218,15 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
     @Override
     public void isEmptyProgression() {
-        setupAdapter(progressionAlgoritm.addFirstProgressions(mExercises));
+        ArrayList<ExerciseProgression> progressions_compared = mProgressionAlgoritm.addFirstProgressions(mExercises);
+        setupAdapter(progressions_compared);
     }
 
     @Override
     public void onExerciseProgression(ArrayList<ExerciseProgression> exerciseProgressions) {
-        ArrayList<ExerciseProgression> progressions_compared =
-                progressionAlgoritm.compareExerciseProgression(exerciseProgressions,mExercises);
+        ArrayList<ExerciseProgression> progressions_compared = mProgressionAlgoritm.compareExerciseProgression(exerciseProgressions,mExercises);
         setupAdapter(progressions_compared);
-        setupAdapterMuscleActivation(progressionAlgoritm.getMusclesActivationByExercisesProgressions(mExercises));
     }
-
 
     private void onLoadingViewOn(){
         mLoadingView.setVisibility(View.VISIBLE);
@@ -245,6 +242,11 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
     @Override
     public void onBackPressed() {
+        dialog();
+    }
+
+    @OnClick(R.id.delete)
+    public void deleteButton(){
         dialog();
     }
 
@@ -274,4 +276,5 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

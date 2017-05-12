@@ -4,7 +4,6 @@ package com.app.app.silverbarsapp.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -13,19 +12,19 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.app.app.silverbarsapp.Filter;
-import com.app.app.silverbarsapp.ProgressionAlgoritm;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.activities.ExerciseDetailDailyActivity;
 import com.app.app.silverbarsapp.components.DaggerTodayProgressionComponent;
+import com.app.app.silverbarsapp.handlers.Filter;
+import com.app.app.silverbarsapp.handlers.MusclesWebviewHandler;
+import com.app.app.silverbarsapp.handlers.ProgressionAlgoritm;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
 import com.app.app.silverbarsapp.models.MuscleExercise;
 import com.app.app.silverbarsapp.modules.ProgressionModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ProgressionPresenter;
 import com.app.app.silverbarsapp.utils.MuscleListener;
-import com.app.app.silverbarsapp.utils.MusclesWebviewHandler;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.utils.WebAppInterface;
 import com.app.app.silverbarsapp.viewsets.ProgressionView;
@@ -70,14 +69,15 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
     @BindView(R.id.modal_overlay) LinearLayout mModal;
     @BindView(R.id.info) ImageView mInfo;
 
-    private List<ExerciseProgression> progressions;
-    private List<ExerciseProgression> mWeekProgressions = new ArrayList<>();
 
     private Utilities mUtilities = new Utilities();
     private Filter filter = new Filter();
     MusclesWebviewHandler mMusclesWebviewHandler = new MusclesWebviewHandler();
     ProgressionAlgoritm mProgressionAlgoritm = new ProgressionAlgoritm();
 
+
+    private List<ExerciseProgression> progressions;
+    private List<ExerciseProgression> mWeekProgressions = new ArrayList<>();
 
     private int mCurrentDay;
     private String mMuscleParts = " ";
@@ -111,18 +111,21 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
             mProgressionPresenter.getExerciseProgression();
 
             List<String> days = getDaysOfWeekAbreb();
-            DateTime today = new DateTime();
-            days.set(today.getDayOfWeek() - 1, CONTEXT.getString(R.string.fragment_progress_daily_today));
+            mCurrentDay = new DateTime().getDayOfWeek() - 1;
 
+            //set the current day
+            days.set(mCurrentDay, CONTEXT.getString(R.string.fragment_progress_daily_today));
+
+
+            //setup seekbar
             mSeekbarWithIntervals.setIntervals(days);
-            mSeekbarWithIntervals.setInitialProgress(today.getDayOfWeek());
+            mSeekbarWithIntervals.setInitialProgress(mCurrentDay);
             mSeekbarWithIntervals.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    mSeekbarWithIntervals.changeSeekBarTextViewColor(progress);
-                    //Log.d(TAG,"progress "+progress);
-                    mCurrentDay = progress;
-                    updateMainUi(getProgressionByDay(progress));
+                public void onProgressChanged(SeekBar seekBar, int day, boolean fromUser) {
+                    mSeekbarWithIntervals.changeSeekBarTextViewColor(day);
+                    mCurrentDay = day;
+                    updateMainUi(getProgressionByDay(day));
                 }
                 @Override
                 public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -242,7 +245,6 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
         //filter the progressions
         Interval this_week = new Interval(getLocalDates().get(0).toDateTimeAtStartOfDay().minusDays(1), Weeks.ONE);
         mWeekProgressions = filter.getProgressionFiltered(progressions,this_week);
-        Log.d(TAG,"mWeekProgressions "+mWeekProgressions.size());
         initUI();
     }
 
@@ -253,13 +255,11 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
 
     @Override
     public void displayNetworkError() {
-        Log.e(TAG,"displayNetworkError");
         onErrorViewOn();
     }
 
     @Override
     public void displayServerError() {
-        Log.e(TAG,"displayServerError");
         onErrorViewOn();
     }
 
@@ -273,7 +273,6 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
 
     private void updateMainUi(List<ExerciseProgression> progressions_filtered){
         if (progressions_filtered.size() > 0) {
-            //Log.d(TAG,"progressions_filtered"+progressions_filtered.size());
             onEmptyViewOff();
             clearWebview();
             updateBodyMuscleWebView(progressions_filtered);

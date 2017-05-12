@@ -1,4 +1,4 @@
-package com.app.app.silverbarsapp.utils;
+package com.app.app.silverbarsapp.handlers;
 
 import android.content.Context;
 import android.database.SQLException;

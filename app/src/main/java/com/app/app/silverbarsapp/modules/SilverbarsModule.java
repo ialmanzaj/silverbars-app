@@ -11,7 +11,7 @@ import com.app.app.silverbarsapp.LoginService;
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.ServiceGenerator;
 import com.app.app.silverbarsapp.SilverbarsApp;
-import com.app.app.silverbarsapp.utils.DatabaseHelper;
+import com.app.app.silverbarsapp.handlers.DatabaseHelper;
 
 import javax.inject.Singleton;
 

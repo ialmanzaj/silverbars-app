@@ -6,17 +6,14 @@
     android:orientation="vertical"
     tools:context="com.app.app.silverbarsapp.activities.SongsActivity">
     <android.support.design.widget.AppBarLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:elevation="2dp">
         <android.support.v7.widget.Toolbar
-            android:titleTextColor="@color/white"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </android.support.design.widget.AppBarLayout>
-
     <LinearLayout
         android:visibility="gone"
         android:orientation="vertical"
@@ -30,11 +27,10 @@
             android:textSize="26sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="There's no songs:("
+            android:text="@string/activity_song_empty"
             android:layout_gravity="center"
             android:gravity="center" />
     </LinearLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -47,14 +43,12 @@
             android:choiceMode="multipleChoice"/>
 
         <Button
+            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Elegir"
+            android:text="@string/activity_song_done_button"
             android:id="@+id/done"
-            android:background="@color/colorSecondary"
-            android:layout_alignParentBottom="true"/>
-
+            android:background="@color/colorSecondary" />
     </RelativeLayout>
-
 
 </LinearLayout>

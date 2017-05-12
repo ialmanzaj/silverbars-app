@@ -2,19 +2,21 @@ package com.app.app.silverbarsapp.presenters;
 
 import android.content.Context;
 
+import com.app.app.silverbarsapp.handlers.MusicHandler;
+import com.app.app.silverbarsapp.handlers.WorkoutHandler;
 import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.utils.Utilities;
-import com.app.app.silverbarsapp.utils.WorkoutHandler;
 import com.app.app.silverbarsapp.viewsets.WorkingOutView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
  * Created by isaacalmanza on 01/11/17.
  */
 
-public class WorkingOutPresenter extends BasePresenter implements /*MusicHandler.MusicEvents,*/ WorkoutHandler.WorkoutEvents {
+public class WorkingOutPresenter extends BasePresenter implements MusicHandler.MusicEvents, WorkoutHandler.WorkoutEvents {
 
     private static final String TAG = WorkingOutPresenter.class.getSimpleName();
 
@@ -30,25 +32,26 @@ public class WorkingOutPresenter extends BasePresenter implements /*MusicHandler
 
     //exercise audio flag
     private boolean isAudioExerciseActive;
+
+    //handle the workout logic
     private WorkoutHandler mWorkoutHandler;
-    //private MusicHandler mMusicHandler;
+
+    //handle the music logic
+    private MusicHandler mMusicHandler;
 
     public void setInitialSetup(ArrayList<ExerciseRep> exercises,boolean exerciseActive,int sets,int restbyexercise,int restbyset){
         isAudioExerciseActive = exerciseActive;
-        //mMusicHandler = new MusicHandler(context,this);
         mWorkoutHandler = new WorkoutHandler(this,exercises,sets,restbyexercise,restbyset);
+        mMusicHandler = new MusicHandler(context,this);
     }
 
-/*
-
-    public void createSpotifyPlayer(String spotify_token, String spotify_playlist){
-        mMusicHandler.createSpotifyPlayer(spotify_token,spotify_playlist);
+    public void setupSpotifyPlayer(){
+        mMusicHandler.setupSpotifyPlayer();
     }
 
-    public void createLocalMusicPlayer(String[] song_names,ArrayList<File> songs_files){
-        mMusicHandler.createLocalMusicPlayer(song_names,songs_files);
+    public void setupMusicPlayerLocal(ArrayList<File> songs_selected){
+        mMusicHandler.setupMusicPlayerLocal(songs_selected);
     }
-*/
 
     public ArrayList<ExerciseRep> getExercises(){
         return mWorkoutHandler.getExercises();
@@ -58,39 +61,48 @@ public class WorkingOutPresenter extends BasePresenter implements /*MusicHandler
         return mWorkoutHandler.isWorkoutPaused();
     }
 
-
     /**
-     *    Music events
+     *
+     *
+     *   Music actions
      *<p>
      *
-     */
-  /*  public void playMusic(){mMusicHandler.playMusic();}
-
-    public void stopMusic(){
-        mMusicHandler.stopMusic();
-    }*/
-
-    public void onSwipeMusicPreview(){}
-
-    public void onSwipeMusicNext(){}
-
-
-    /**
-     *    Workout events
-     *<p>
+     *
+     *
+     *
      *
      */
 
 
-    public void playWorkout(){
-        mWorkoutHandler.playWorkout();
-    }
+    public void playMusic(){mMusicHandler.playMusic();}
+
+    public void pauseMusic(){mMusicHandler.pauseMusic();}
+
+    public void previewMusic(){mMusicHandler.skipPreview();}
+
+    public void nextMusic(){mMusicHandler.skipNext();}
+
+
+
+
+    /**
+     *
+     *
+     *
+     *
+     *    Workout Main actions
+     *<p>
+     *
+     *
+     *
+     *
+     */
+
+    public void playWorkout(){mWorkoutHandler.playWorkout();}
 
     public void pauseWorkout(){
         mWorkoutHandler.pauseWorkout();
     }
-
-    public void finishWorkout() {mWorkoutHandler.finishWorkout();}
 
     public void nextExercise(){
         mWorkoutHandler.nextExercise();
@@ -100,11 +112,42 @@ public class WorkingOutPresenter extends BasePresenter implements /*MusicHandler
         mWorkoutHandler.startRest();
     }
 
-
+    public void skipRest(){mWorkoutHandler.restFinished();}
 
     public void saveTime(long time){
-        mWorkoutHandler.saveTime(time);
+        mWorkoutHandler.saveTimePerExercise(time);
     }
+
+    public void stopWorkout(long time){
+        //Log.d(TAG,"stopWorkout");
+        saveTime(time);
+        pauseWorkout();
+        startRest();
+    }
+
+
+    /**
+     *
+     *    Clean all
+     *<p>
+     *
+     */
+
+    private void destroy(){
+        mMusicHandler.destroy();
+        mWorkoutHandler.destroy();
+    }
+
+
+    /**
+     *
+     *
+     *    Workout events
+     *<p>
+     *
+     *
+     *
+     */
 
     @Override
     public void onCountDownWorking(String second) {
@@ -130,8 +173,6 @@ public class WorkingOutPresenter extends BasePresenter implements /*MusicHandler
         //mMusicHandler.stopMusic();
         view.onPauseWorkout();
     }
-
-
 
     @Override
     public void onWorkoutFinished() {
@@ -161,29 +202,35 @@ public class WorkingOutPresenter extends BasePresenter implements /*MusicHandler
         //play exercise audio
         if (isAudioExerciseActive){
             //playing Exercise Audio
-           // mMusicHandler.playExerciseAudio(exercise.getExercise_audio());
+           //mMusicHandler.playExerciseAudio(exercise.getExercise_audio());
         }
     }
 
     @Override
     public void onChangeToNextExercise(int exercise_position) {
-        //Log.d(TAG,"onChangeToNextExercise "+exercise_position);
         view.onChangeToExercise(exercise_position);
-
-        //reset the workout UI
         view.onWorkoutReady();
     }
 
     @Override
     public void onChangeToNextSet(int current_set) {
-        //Log.d(TAG,"onChangeToNextSet "+current_set);
         view.onSetFinished(current_set);
 
         //reset the workout UI
         view.onWorkoutReady();
     }
 
-/*
+
+    /**
+     *
+     *
+     *    Music events
+     *<p>
+     *
+     *
+     *
+     */
+
     @Override
     public void updateSongName(String song_name) {
         view.updateSongName(song_name);
@@ -203,7 +250,20 @@ public class WorkingOutPresenter extends BasePresenter implements /*MusicHandler
     public void onMusicPaused() {
         view.onPauseMusic();
     }
-    */
+
+
+    /**
+     *
+     *
+     *
+     *    Activity lifecycle
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
 
     @Override
     public void onStart() {
@@ -213,13 +273,13 @@ public class WorkingOutPresenter extends BasePresenter implements /*MusicHandler
 
     @Override
     public void onResume() {
-       // Log.d(TAG,"onResume");
+        // Log.d(TAG,"onResume");
         //playWorkout();
     }
 
     @Override
     public void onPause() {
-       // Log.d(TAG,"onPause");
+        // Log.d(TAG,"onPause");
         //pauseWorkout();
     }
 
@@ -239,11 +299,6 @@ public class WorkingOutPresenter extends BasePresenter implements /*MusicHandler
     public void onDestroy() {
         //Log.d(TAG,"onDestroy");
         destroy();
-    }
-
-    private void destroy(){
-        //mMusicHandler.destroy();
-        mWorkoutHandler.destroy();
     }
 
 }

@@ -72,13 +72,27 @@ public interface MainService {
             R.string.authentication_TOKEN})
     @FormUrlEncoded
     @POST("v1/userworkoutsdone/")
-    Call<WorkoutDone> createWorkoutDone(
+    Call<WorkoutDone> createWorkoutDoneMyWorkout(
             @Field("date") String date,
             @Field("my_workout_id") int my_workout_id,
             @Field("person") int person,
             @Field("sets_completed") int sets_completed,
             @Field("total_time") String total_time
     );
+
+
+    @Authenticated({R.string.authentication_ACCOUNT,
+            R.string.authentication_TOKEN})
+    @FormUrlEncoded
+    @POST("v1/userworkoutsdone/")
+    Call<WorkoutDone> createWorkoutDoneWorkout(
+            @Field("date") String date,
+            @Field("workout_id") int workout_id,
+            @Field("person") int person,
+            @Field("sets_completed") int sets_completed,
+            @Field("total_time") String total_time
+    );
+
 
     @Authenticated({R.string.authentication_ACCOUNT,
             R.string.authentication_TOKEN})
@@ -98,7 +112,7 @@ public interface MainService {
             @Field("my_workout_done_id") int my_workout_done_id,
             @Field("person") int person,
             @Field("exercise_id") int exercise_id,
-            @Field("total_time") double total_time,
+            @Field("total_time") String total_time,
             @Field("total_repetition") int total_repetition,
             @Field("repetitions_done") int repetitions_done,
             @Field("total_seconds") int total_seconds,

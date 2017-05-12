@@ -10,8 +10,8 @@ import com.app.app.silverbarsapp.viewsets.UserPreferencesView;
  */
 public class UserPreferencesPresenter extends BasePresenter implements UserPreferencesCallback {
 
-    UserPreferencesInteractor interactor;
-    UserPreferencesView view;
+    private UserPreferencesInteractor interactor;
+    private UserPreferencesView view;
 
     public UserPreferencesPresenter(UserPreferencesView view,UserPreferencesInteractor interactor){
         this.interactor = interactor;
@@ -22,7 +22,9 @@ public class UserPreferencesPresenter extends BasePresenter implements UserPrefe
         interactor.getMyProfile(this);
     }
 
-    public void getMyWorkouts(){interactor.getMyWorkouts(this);}
+    public void getMyWorkouts() { interactor.getMyWorkouts(this);}
+
+
 
     @Override
     public void onProfileSaved(Person person) {

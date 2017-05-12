@@ -18,6 +18,9 @@ public class WorkoutDone implements Parcelable{
     private String date;
 
     @SerializedName("my_workout")
+    private Workout my_workout;
+
+    @SerializedName("workout")
     private Workout workout;
 
     @SerializedName("person")
@@ -31,11 +34,10 @@ public class WorkoutDone implements Parcelable{
 
     public WorkoutDone(){}
 
-
-    public WorkoutDone(int id,String date, Workout workout,int person,String total_time,int sets_completed){
+    public WorkoutDone(int id,String date, Workout my_workout,int person,String total_time,int sets_completed){
         this.id = id;
         this.date = date;
-        this.workout = workout;
+        this.my_workout = my_workout;
         this.person = person;
         this.total_time = total_time;
         this.sets_completed = sets_completed;
@@ -45,17 +47,21 @@ public class WorkoutDone implements Parcelable{
     protected WorkoutDone(Parcel in) {
         id = in.readInt();
         date = in.readString();
-        workout = in.readParcelable(Workout.class.getClassLoader());
+        my_workout = in.readParcelable(Workout.class.getClassLoader());
         person = in.readInt();
         total_time = in.readString();
         sets_completed = in.readInt();
+    }
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeString(date);
-        dest.writeParcelable(workout, flags);
+        dest.writeParcelable(my_workout, flags);
         dest.writeInt(person);
         dest.writeString(total_time);
         dest.writeInt(sets_completed);
@@ -66,7 +72,6 @@ public class WorkoutDone implements Parcelable{
         public WorkoutDone createFromParcel(Parcel in) {
             return new WorkoutDone(in);
         }
-
         @Override
         public WorkoutDone[] newArray(int size) {
             return new WorkoutDone[size];
@@ -85,6 +90,9 @@ public class WorkoutDone implements Parcelable{
         return person;
     }
 
+    public Workout getMy_workout() {
+        return my_workout;
+    }
 
     public Workout getWorkout() {
         return workout;
@@ -97,11 +105,5 @@ public class WorkoutDone implements Parcelable{
     public int getSets_completed() {
         return sets_completed;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
 
 }

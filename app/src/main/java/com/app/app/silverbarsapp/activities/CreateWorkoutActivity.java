@@ -16,11 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.Toast;
 
-import com.app.app.silverbarsapp.Filter;
+import com.app.app.silverbarsapp.handlers.Filter;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.adapters.ExercisesSelectedAdapter;
 import com.app.app.silverbarsapp.models.Exercise;
-import com.app.app.silverbarsapp.utils.MusclesWebviewHandler;
+import com.app.app.silverbarsapp.handlers.MusclesWebviewHandler;
 import com.app.app.silverbarsapp.utils.OnStartDragListener;
 import com.app.app.silverbarsapp.utils.SimpleItemTouchHelperCallback;
 import com.app.app.silverbarsapp.utils.Utilities;

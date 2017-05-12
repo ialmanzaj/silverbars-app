@@ -28,20 +28,18 @@ public class ResultsPresenter extends BasePresenter  implements ResultsCallback 
         this.interactor = interactor;
     }
 
-    public void createWorkoutDone(int workout_id,int sets,String total_time) throws SQLException {
-        interactor.createWorkoutDone(workout_id,sets,total_time,this);
+    public void createWorkoutDone(int workout_id,int sets,String total_time,boolean isUserWorkout) throws SQLException {
+        interactor.createWorkoutDone(workout_id,sets,total_time,isUserWorkout,this);
     }
 
-    public void saveExerciseProgressions(int workout_id, ArrayList<com.app.app.silverbarsapp.models.ExerciseProgression> exercises) throws SQLException {
+    public void saveExerciseProgressions(int workout_id,int sets, ArrayList<com.app.app.silverbarsapp.models.ExerciseProgression> exercises) throws SQLException {
         mExercises = exercises;
-        interactor.saveExerciseProgressions(workout_id,exercises,this);
+        interactor.saveExerciseProgressions(workout_id,sets,exercises,this);
     }
-
 
     public void getExercisesProgression(List<ExerciseProgression> exercises) throws SQLException {
         interactor.getProgressions(exercises,this);
     }
-
 
     @Override
     public void isEmptyProgression() {
@@ -73,8 +71,6 @@ public class ResultsPresenter extends BasePresenter  implements ResultsCallback 
     public void onNetworkError() {
         view.displayNetworkError();
     }
-
-
 
 
     @Override

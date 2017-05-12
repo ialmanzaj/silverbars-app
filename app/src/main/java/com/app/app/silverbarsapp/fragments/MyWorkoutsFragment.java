@@ -35,9 +35,9 @@ public class MyWorkoutsFragment extends Fragment {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new MainWorkoutsFragment(), "Workouts");
+        adapter.addFragment(new MainWorkoutsFragment(), getActivity().getString(R.string.activity_workout_title));
         adapter.addFragment(new UserWorkoutsFragment(), getActivity().getString(R.string.myworkouts_fragment_myworkouts));
-        adapter.addFragment(new WorkoutsFinishedFragment(), "Workouts finished");
+        //adapter.addFragment(new WorkoutsFinishedFragment(), "Workouts finished");
         //adapter.addFragment(new SavedWorkoutsFragment(), getActivity().getString(R.string.myworkouts_fragment_saved));
         viewPager.setAdapter(adapter);
     }

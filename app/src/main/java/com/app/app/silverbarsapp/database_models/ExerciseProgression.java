@@ -22,7 +22,7 @@ public class ExerciseProgression {
     private int person;
 
     @DatabaseField
-    private double total_time;
+    private String total_time;
 
     @DatabaseField(foreign = true)
     private Exercise exercise;
@@ -47,7 +47,7 @@ public class ExerciseProgression {
 
 
     public ExerciseProgression(int id, String date, WorkoutDone my_workout_done, int person,
-                               double total_time, Exercise exercise, int total_repetition,
+                               String total_time, Exercise exercise, int total_repetition,
                                int repetitions_done,int total_seconds,int seconds_done, double total_weight){
         this.id = id;
         this.date = date;
@@ -95,11 +95,11 @@ public class ExerciseProgression {
         this.repetitions_done = repetitions_done;
     }
 
-    public double getTotal_time() {
+    public String getTotal_time() {
         return total_time;
     }
 
-    public void setTotal_time(double total_time) {
+    public void setTotal_time(String total_time) {
         this.total_time = total_time;
     }
 

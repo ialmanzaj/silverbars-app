@@ -175,7 +175,7 @@ public class ProgressionActivity extends AppCompatActivity {
 
                 if (progress >= 100) {
 
-                    Log.v(TAG,"next level: yes");
+                    Log.v(TAG,"nextMusic level: yes");
                     progress = 100 - progress;
                     level++;
 
