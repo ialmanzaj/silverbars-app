@@ -94,7 +94,6 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
     @Override
     public void onBindViewHolder(WorkoutHolder viewHolder, int position) {
-
         viewHolder.layout.getLayoutParams().height = utilities.calculateContainerHeight(context) / 3;
 
         try {

@@ -119,13 +119,11 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
     private String cleanDate(String date){
         String[] date_splited = date.split(":");
         String date_new = "";
-
         for (String aDate_splited : date_splited) {
             if (!Objects.equals(aDate_splited, "00")) {
                 date_new = !date_new.equals("") ? date_new + ":"+ aDate_splited : aDate_splited;
             }
         }
-
         return date_new.isEmpty() ? "0" : date_new;
     }
 

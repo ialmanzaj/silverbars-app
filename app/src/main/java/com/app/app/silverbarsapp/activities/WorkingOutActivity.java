@@ -114,8 +114,19 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     private ArrayList<File> mSongsLocal;
     private Metadata mFirstSongMetadata;
 
-    private boolean mReviewFinished = false;
-    private int mPositionExercise;
+    PendingAction pendingAction;
+
+    private enum PendingAction {
+        WAITING_TO_NEXT_EXERCISE,
+        WAITING_TO_NEXT_SET,
+        WAITING_TO_FINISH,
+        MOVE_ON_TO_NEXT_EXERCISE,
+        MOVE_ON_TO_NEXT_SET,
+        MOVE_ON_TO_FINISH
+    }
+
+    private int mCurrentPositionExercise;
+    private int mCurrentPositionSet;
 
     @Override
     protected int getLayout() {
@@ -153,19 +164,31 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     }
 
     @OnClick(R.id.save_progress)
-    public void saveProgress(){
+    public void saveReviewProgress(){
         int position = Integer.parseInt(mCurrentExercisePositionText.getText().toString())-1;
 
         //add to the again with the user data
         progressions.set(position,addTotalProgression(progressions.get(position),position,mNumberPicker.getValue()));
 
-        //FLAG to move to the next exercise
-        mReviewFinished = true;
-
-        //ui events
+        //ui events to hide overlay
         onOverlayUiOff();
         onReviewOff();
-        onChangeToExercise(mPositionExercise);
+
+        //to update the other UI related
+        switch (pendingAction){
+            case WAITING_TO_NEXT_EXERCISE:
+                pendingAction = PendingAction.MOVE_ON_TO_NEXT_EXERCISE;
+                onChangeToExercise(mCurrentPositionExercise);
+                break;
+            case WAITING_TO_NEXT_SET:
+                pendingAction = PendingAction.MOVE_ON_TO_NEXT_SET;
+                onSetFinished(mCurrentPositionSet);
+                break;
+            case WAITING_TO_FINISH:
+                pendingAction = PendingAction.MOVE_ON_TO_FINISH;
+                onFinishWorkout();
+                break;
+        }
     }
 
     private ExerciseProgression addTotalProgression(ExerciseProgression exerciseProgression,int position,int number){
@@ -407,6 +430,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
      *
      *
      */
+
     @Override
     public void onWorkoutReady() {
         mPlayWorkoutButton.setVisibility(View.VISIBLE);
@@ -445,8 +469,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     @Override
     public void onChangeToExercise(int exercise_position_list) {
-        mPositionExercise = exercise_position_list;
-        if (mReviewFinished) {
+        if (pendingAction == PendingAction.MOVE_ON_TO_NEXT_EXERCISE) {
             //restarting mExercisesList to exercise_position
             mExercisesList.smoothScrollToPosition(exercise_position_list);
 
@@ -459,29 +482,46 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
             //change the current exercise indicator
             mCurrentExercisePositionText.setText(String.valueOf(exercise_position_list + 1));
 
-            //FLAG
-            mReviewFinished = false;
+            //FLAG TO WAIT THE NEXT EXERCISE
+            pendingAction = PendingAction.WAITING_TO_NEXT_EXERCISE;
+        }else {
+            mCurrentPositionExercise = exercise_position_list;
+
+            //FLAG TO WAIT THE NEXT EXERCISE
+            pendingAction = PendingAction.WAITING_TO_NEXT_EXERCISE;
         }
     }
 
     @Override
     public void onSetFinished(int set) {
-        activateVibrationPerSet();
+        if (pendingAction == PendingAction.MOVE_ON_TO_NEXT_SET) {
+            activateVibrationPerSet();
 
-        //restarting mExercisesList to first position
-        mExercisesList.smoothScrollToPosition(0);
+            //restarting mExercisesList to first position
+            mExercisesList.smoothScrollToPosition(0);
 
-        //changes of exercise
-        initExerciseUI(0);
+            //changes of exercise
+            initExerciseUI(0);
 
-        //hide exercise button
-        hideNextExerciseButton(0);
+            //hide exercise button
+            hideNextExerciseButton(0);
 
-        //set the current set
-        mCurrentSetText.setText(String.valueOf(set));
-        //restart current exercise to the first
-        mCurrentExercisePositionText.setText(String.valueOf("1"));
+            //set the current set
+            mCurrentSetText.setText(String.valueOf(set));
+            //restart current exercise to the first
+            mCurrentExercisePositionText.setText(String.valueOf("1"));
+
+            //FLAG TO WAIT THE NEXT SET
+            pendingAction = PendingAction.WAITING_TO_NEXT_SET;
+        }else {
+            mCurrentPositionSet = set;
+
+            //FLAG TO WAIT THE NEXT SET
+            pendingAction = PendingAction.WAITING_TO_NEXT_SET;
+        }
     }
+
+
 
     @Override
     public void onStartChronometer() {
@@ -493,14 +533,18 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     }
 
     @Override
+    public void onStopChronometer() {
+        mChronometer.stop();
+    }
+
+
+
+    @Override
     public void onCountDownWorking(String second) {
         mCountDownTimer.setText(second);
     }
 
-    @Override
-    public void onStopChronometer() {
-        mChronometer.stop();
-    }
+
 
     @Override
     public void onResumeWorkout() {
@@ -512,10 +556,16 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         onPauseWorkoutUI();
     }
 
+
     @Override
     public void onFinishWorkout() {
-        onScreenOff();
-        launchResultsActivity();
+        if (pendingAction == PendingAction.MOVE_ON_TO_FINISH) {
+            onScreenOff();
+            launchResultsActivity();
+        }else {
+            //FLAG TO WAIT to finish
+            pendingAction = PendingAction.WAITING_TO_FINISH;
+        }
     }
 
     private void launchResultsActivity() {
@@ -546,10 +596,8 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
             if (total_time.toLowerCase().contains("_")){
                 sets_completed = total_time.toLowerCase().split("_").length;
-            }else if (Objects.equals(total_time, "0")){
-                sets_completed = 0;
             } else {
-                sets_completed = total_time.isEmpty() ? 0 : 1;
+                sets_completed =  (total_time.isEmpty() || Objects.equals(total_time, "0"))  ? 0 : 1;
             }
 
             exercises_progresions.get(position).setSets_completed(sets_completed);
@@ -557,10 +605,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         return exercises_progresions;
     }
 
-    @Override
-    public void onBackPressed(){
-        dialogTOExitWorkout();
-    }
 
     private void dialogTOExitWorkout(){
         new MaterialDialog.Builder(this)
@@ -688,15 +732,42 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         mReviewExerciseView.setVisibility(View.GONE);
     }
 
-    @Override
-    protected void onDestroy() {
-        destroy();
-        super.onDestroy();
-    }
+
 
     private void destroy(){
         onScreenOff();
         RXSubscriptionManager.unsubscribe(this);
+    }
+
+
+
+    /**
+     *
+     *
+     *
+     *
+     *
+     *    Activity lifecycle
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+
+
+    @Override
+    public void onBackPressed(){
+        dialogTOExitWorkout();
+    }
+
+    @Override
+    protected void onDestroy() {
+        destroy();
+        super.onDestroy();
     }
 
 }

@@ -39,6 +39,7 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
     //handle the music logic
     private MusicHandler mMusicHandler;
 
+
     public void setInitialSetup(ArrayList<ExerciseRep> exercises,boolean exerciseActive,int sets,int restbyexercise,int restbyset){
         isAudioExerciseActive = exerciseActive;
         mWorkoutHandler = new WorkoutHandler(this,exercises,sets,restbyexercise,restbyset);
@@ -73,7 +74,6 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
      *
      */
 
-
     public void playMusic(){mMusicHandler.playMusic();}
 
     public void pauseMusic(){mMusicHandler.pauseMusic();}
@@ -81,8 +81,6 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
     public void previewMusic(){mMusicHandler.skipPreview();}
 
     public void nextMusic(){mMusicHandler.skipNext();}
-
-
 
 
     /**
@@ -209,6 +207,8 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
     @Override
     public void onChangeToNextExercise(int exercise_position) {
         view.onChangeToExercise(exercise_position);
+
+        //reset the workout UI
         view.onWorkoutReady();
     }
 

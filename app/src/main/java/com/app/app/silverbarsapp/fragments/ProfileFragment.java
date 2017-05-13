@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.activities.SettingsActivity;
-import com.app.app.silverbarsapp.activities.WorkoutsDoneActivity;
 import com.app.app.silverbarsapp.components.DaggerProfileComponent;
 import com.app.app.silverbarsapp.database_models.ProfileFacebook;
 import com.app.app.silverbarsapp.modules.ProfileModule;
@@ -70,7 +69,7 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
         mProfilePresenter.getProfile();
         getImg();
 
-        mMyWorkoutsDone.setOnClickListener(v -> {startActivity(new Intent(CONTEXT, WorkoutsDoneActivity.class));});
+        //mMyWorkoutsDone.setOnClickListener(v -> {startActivity(new Intent(CONTEXT, WorkoutsDoneActivity.class));});
     }
 
     private void getImg(){
@@ -102,7 +101,6 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
 
     @Override
     public void displayProfileImg(ResponseBody img) {
-        //Log.d(TAG,"displayProfileImg");
         if (utilities.saveWorkoutImgInDevice(CONTEXT,img,"profile")){
            setProfileImg(getProfileImg());
         }
