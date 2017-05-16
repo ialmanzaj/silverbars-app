@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.app.app.silverbarsapp.MainService;
@@ -89,9 +88,7 @@ public class Utilities {
 
     public void loadBodyFromLocal(Context context, WebView webView) {
         String html = getLocalFile(context, "index.html");
-        webView.setWebViewClient(new WebViewClient());
-
-        webView.postDelayed(() -> webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "UTF-8"), 100);
+        webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "UTF-8");
     }
 
     private String getBodyUrlFromPhone(Context context){
@@ -102,13 +99,9 @@ public class Utilities {
 
     public void loadBodyFromUrl(Context context, WebView webView){
          String muscle_url = getBodyUrlFromPhone(context);
-         webView.setWebViewClient(new WebViewClient());
-
-
           if (muscle_url.equals("/")){
               webView.loadUrl(BODY_URL);
           }else {
-              Log.d(TAG,"loading from phone");
               String fileurl = "file://"+muscle_url;
               webView.loadUrl(fileurl);
           }
@@ -347,6 +340,23 @@ public class Utilities {
     public boolean checkIfRep(ExerciseRep exercise){
         //repetitions  or seconds
         return exercise.getRepetition() > 0;
+    }
+
+    public boolean checkIfRep(ExerciseProgression exercise){
+        //repetitions  or seconds
+        return exercise.getTotal_repetition() > 0;
+    }
+
+
+    public ExerciseProgression accumulateProgression(ExerciseProgression exerciseProgression,int number){
+        if (checkIfRep(exerciseProgression)) {
+            int total_reps_done = exerciseProgression.getRepetitions_done() + number;
+            exerciseProgression.setRepetitions_done(total_reps_done);
+        }else {
+            int total_second_done = exerciseProgression.getSeconds_done() + number;
+            exerciseProgression.setSeconds_done(total_second_done);
+        }
+        return exerciseProgression;
     }
 
     public ArrayList<ExerciseRep> returnExercisesRep(List<Exercise> exercises){

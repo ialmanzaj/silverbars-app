@@ -3,8 +3,9 @@ package com.app.app.silverbarsapp.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.app.app.silverbarsapp.R;
@@ -16,8 +17,6 @@ import com.app.app.silverbarsapp.modules.MainWorkoutsModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.MainWorkoutsPresenter;
 import com.app.app.silverbarsapp.viewsets.MainWorkoutsView;
-
-import org.lucasr.twowayview.widget.TwoWayView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +37,11 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
     @Inject
     MainWorkoutsPresenter mMainWorkoutsPresenter;
 
-    @BindView(R.id.workout_list) TwoWayView mWorkoutList;
+    @BindView(R.id.workout_list) RecyclerView mWorkoutList;
+
 
     @BindView(R.id.loading) LinearLayout loadingView;
     @BindView(R.id.error_view) LinearLayout mErrorView;
-    @BindView(R.id.reload) Button mReload;
 
     private WorkoutsAdapter adapter;
     private String mMuscleSelected = "ALL";
@@ -60,8 +59,7 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
     @Override
     public void injectDependencies() {
         super.injectDependencies();
-        DaggerMainWorkoutsComponent
-                .builder()
+        DaggerMainWorkoutsComponent.builder()
                 .silverbarsComponent(SilverbarsApp.getApp(CONTEXT).getComponent())
                 .mainWorkoutsModule(new MainWorkoutsModule(this))
                 .build().inject(this);
@@ -70,13 +68,17 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-       mMainWorkoutsPresenter.getMyWorkout();
+        mMainWorkoutsPresenter.getMyWorkout();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (this.isAdded()){
+            mWorkoutList.setHasFixedSize(true);
+            StaggeredGridLayoutManager sGridLayoutManager = new StaggeredGridLayoutManager(2,
+                    StaggeredGridLayoutManager.VERTICAL);
+            mWorkoutList.setLayoutManager(sGridLayoutManager);
             adapter = new WorkoutsAdapter(CONTEXT);
             mWorkoutList.setAdapter(adapter);
         }

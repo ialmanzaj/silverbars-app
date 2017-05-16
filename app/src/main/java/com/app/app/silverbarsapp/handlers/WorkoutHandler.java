@@ -33,14 +33,14 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
     private int mCurrentRest = 0;
     private int mRestByExercise,mRestBySet;
 
-
     public WorkoutHandler(WorkoutEvents listener,ArrayList<ExerciseRep> exercises,int sets,int restbyexercise,int restbyset){
         this.listener = listener;
         this.exercises = exercises;
-        mCountDownController = new CountDownController(this);
         this.mTotalSets = sets;
         mRestByExercise = restbyexercise;
         mRestBySet = restbyset;
+
+        mCountDownController = new CountDownController(this);
     }
 
     public ArrayList<ExerciseRep> getExercises(){
@@ -69,6 +69,26 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
             mCountDownController.resumeMainCountDown();
     }
 
+
+
+
+    /**
+     *
+     *
+     *
+     *
+     *
+     *   Workout controls
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
     public void playWorkout(){
         if (!utilities.checkIfRep(exercises.get(mCurrentExercisePosition))){
 
@@ -109,12 +129,33 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
     }
 
 
+
+    /**
+     *
+     *
+     *
+     *
+     *
+     *   Workout utilities
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+
+
     private void checkOnNextExerciseOrSet(int currentExercisePosition){
         if (currentExercisePosition<exercises.size())
             onChangeToNextExercise(currentExercisePosition);
         else
             onChangeToNextSet();
     }
+
 
     private String cleanDate(String date){
         String[] date_splited = date.split(":");
@@ -128,20 +169,14 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
     }
 
     private void onChangeToNextSet(){
-
         if (mCurrentSet+1 <= mTotalSets){
-
             //set the exercise in the first position
             mCurrentExercisePosition = 0;
-
             //plus one more set
             mCurrentSet++;
-
             //update UI
             listener.onChangeToNextSet(mCurrentSet);
-
         } else {
-
             listener.onWorkoutFinished();
         }
     }
@@ -153,14 +188,17 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
     /**
      *
      *
-     *    Events when timer has finished
+     *
+     *  Rest controls
+     *
      *<p>
      *
      *
      *
      *
+     *
      */
-    public void setListenerOverlayView(int  second){
+    public void setRestListener(int  second){
         if (second == 0){
             restFinished();
         }
@@ -176,7 +214,6 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
         if (mCurrentExercisePosition+1 < exercises.size()){
             //Log.d(TAG,"rest by exercise");
             startRestCountDown(mRestByExercise);
-
         }else {
             //Log.d(TAG,"rest by set");
             startRestCountDown(mRestBySet);
@@ -209,11 +246,44 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
         checkOnNextExerciseOrSet(mCurrentExercisePosition);
     }
 
+
+
+    /**
+     *
+     *
+     *
+     *  to clean
+     *
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
+
     public void destroy() {
         mCountDownController.destroyMainCountDownTimer();
         mCountDownController.destroyRestCountDownTimer();
     }
 
+
+
+
+
+    /**
+     *
+     *
+     *
+     *  Main workout events
+     *
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
     public interface WorkoutEvents{
         void onCountDownWorking(String second);
 

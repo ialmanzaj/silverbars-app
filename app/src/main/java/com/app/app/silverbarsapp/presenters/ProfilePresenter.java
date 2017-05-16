@@ -1,7 +1,7 @@
 package com.app.app.silverbarsapp.presenters;
 
 import com.app.app.silverbarsapp.callbacks.ProfileCallback;
-import com.app.app.silverbarsapp.database_models.ProfileFacebook;
+import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.interactors.ProfileInteractor;
 import com.app.app.silverbarsapp.viewsets.ProfileView;
 
@@ -33,7 +33,7 @@ public class ProfilePresenter extends BasePresenter implements ProfileCallback{
 
 
     @Override
-    public void getProfileFacebook(ProfileFacebook profile) {
+    public void getProfileFacebook(FbProfile profile) {
         view.displayProfileFacebook(profile);
     }
 

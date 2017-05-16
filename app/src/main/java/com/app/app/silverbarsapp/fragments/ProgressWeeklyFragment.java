@@ -4,27 +4,25 @@ package com.app.app.silverbarsapp.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.app.app.silverbarsapp.handlers.Filter;
-import com.app.app.silverbarsapp.handlers.ProgressionAlgoritm;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.activities.ExerciseDetailWeeklyActivity;
 import com.app.app.silverbarsapp.components.DaggerMonthlyProgressionComponent;
+import com.app.app.silverbarsapp.handlers.Filter;
+import com.app.app.silverbarsapp.handlers.MusclesWebviewHandler;
+import com.app.app.silverbarsapp.handlers.ProgressionAlgoritm;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
 import com.app.app.silverbarsapp.models.MuscleExercise;
 import com.app.app.silverbarsapp.modules.ProgressionModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ProgressionPresenter;
 import com.app.app.silverbarsapp.utils.MuscleListener;
-import com.app.app.silverbarsapp.handlers.MusclesWebviewHandler;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.utils.WebAppInterface;
 import com.app.app.silverbarsapp.viewsets.ProgressionView;
@@ -44,6 +42,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import im.delight.android.webview.AdvancedWebView;
 
 
 public class ProgressWeeklyFragment extends BaseFragment implements ProgressionView,MuscleListener {
@@ -60,7 +59,7 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
 
     @BindView(R.id.error_view) LinearLayout mErrorView;
 
-    @BindView(R.id.webview) WebView webView;
+    @BindView(R.id.webview) AdvancedWebView webView;
 
     @BindView(R.id.seekbarWithIntervals) SeekbarWithIntervals mSeekbarWithIntervals;
 
@@ -68,17 +67,16 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
     @BindView(R.id.info) ImageView mInfo;
 
 
-    private List<ExerciseProgression> mMonthProgressions = new ArrayList<>();
-
     private Utilities mUtilities = new Utilities();
     MusclesWebviewHandler mMusclesWebviewHandler = new MusclesWebviewHandler();
-
+    ProgressionAlgoritm mProgressionAlgoritm = new ProgressionAlgoritm();
     private Filter filter = new Filter();
+
+
+    private List<ExerciseProgression> mMonthProgressions = new ArrayList<>();
 
     String mMuscleParts = " ";
     private int mCurrentWeek = 0;
-
-    ProgressionAlgoritm mProgressionAlgoritm = new ProgressionAlgoritm();
 
     LocalDate monthBegin = new LocalDate().withDayOfMonth(1);
     LocalDate monthEnd  = new LocalDate().plusMonths(1).withDayOfMonth(1).minusDays(1);
@@ -148,7 +146,7 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
     private void setupWebview(){
         webView.getSettings().setJavaScriptEnabled(true);
         webView.addJavascriptInterface(new WebAppInterface(CONTEXT,this), "Android");
-        mUtilities.loadBodyFromLocal(CONTEXT,webView);
+        mUtilities.loadBodyFromUrl(CONTEXT,webView);
     }
 
     @OnClick(R.id.reload)
@@ -178,21 +176,17 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
 
     @Override
     public void emptyProgress() {
-        //Log.d(TAG,"emptyProgress");
         onLoadingViewOff();
-        onEmptyViewOn(CONTEXT.getString(R.string.fragment_progress_weekly_empty));
         initUI();
     }
 
     @Override
     public void displayNetworkError() {
-        Log.e(TAG,"displayNetworkError");
         onErrorViewOn();
     }
 
     @Override
     public void displayServerError() {
-        Log.e(TAG,"displayServerError");
         onErrorViewOn();
     }
 

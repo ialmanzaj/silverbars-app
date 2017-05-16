@@ -219,10 +219,9 @@
 
     <string name="loading">Cargando…</string>
 
-
+    <!---    Strings of activity workout  -->
     <string name="activity_workout_title">Rutinas</string>
     <string name="activity_workout_dialog_title">Selecciona tu música</string>
-
 
     <!---    Strings of activity activity_muscle_selection  -->
     <string name="activity_muscle_selection_toolbar">Filtro</string>
@@ -267,10 +266,12 @@
     <string name="activity_create_workout_final_workout_name_seleccion">Selecciona el nombre de tu rutina</string>
     <string name="activity_create_workout_final_sets_seleccion">Selecciona tus sets</string>
     <string name="activity_create_workout_final_reps_seleccion">Selecciona tus reps o segundos</string>
+    <string name="activity_create_workout_final_button_save">Guardar</string>
 
-
+    <!---    Strings of activity user preferences-->
     <string name="activity_user_preferences">Cargando configuraciones iniciales</string>
 
+    <!---    Strings of fragment user workout -->
     <string name="user_workout_adapter_delete_title">Borrar rutina</string>
     <string name="user_workout_adapter_delete_content">Esta seguro, que desea eliminar esta rutina?</string>
 
@@ -298,15 +299,16 @@
 
     <string name="fragment_progress_daily_today">Hoy</string>
 
-
     <string name="activity_exercise_list_add_button">Añadir a rutina</string>
     <string name="activity_settings_title">Opciones</string>
 
     <string name="connect_internet">Por favor, conectese a internet</string>
 
+    <!---    Strings of  activity workout  -->
     <string name="activity_workout_music">Música:</string>
     <string name="activity_workout_none">Ninguna</string>
 
+    <!---    Strings of  activity songs  -->
     <string name="activity_song_title">Mi Música</string>
     <string name="activity_song_empty">No hay canciones :(</string>
     <string name="activity_song_done_button">Añadir a rutina</string>

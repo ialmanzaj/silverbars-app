@@ -1,6 +1,6 @@
 package com.app.app.silverbarsapp.callbacks;
 
-import com.app.app.silverbarsapp.database_models.ProfileFacebook;
+import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.models.AccessToken;
 
 /**
@@ -10,5 +10,5 @@ import com.app.app.silverbarsapp.models.AccessToken;
 public interface LoginCallback extends ServerCallback {
     void onToken(AccessToken accessToken);
 
-    void onProfileSaved(ProfileFacebook profile);
+    void onProfileSaved(FbProfile profile);
 }

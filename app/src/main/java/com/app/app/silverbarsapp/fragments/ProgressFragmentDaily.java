@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -46,6 +45,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import im.delight.android.webview.AdvancedWebView;
 
 public class ProgressFragmentDaily extends BaseFragment implements ProgressionView,MuscleListener {
 
@@ -57,7 +57,7 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
     @BindView(R.id.empty_state) LinearLayout mEmptyView;
     @BindView(R.id.empty_text)TextView mEmptyText;
 
-    @BindView(R.id.webview) WebView webView;
+    @BindView(R.id.webview) AdvancedWebView webView;
 
     @BindView(R.id.loading) LinearLayout mLoadingView;
 
@@ -138,7 +138,7 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
     private void setupWebview(){
         webView.getSettings().setJavaScriptEnabled(true);
         webView.addJavascriptInterface(new WebAppInterface(CONTEXT,this), "Android");
-        mUtilities.loadBodyFromLocal(CONTEXT,webView);
+        mUtilities.loadBodyFromUrl(CONTEXT,webView);
     }
 
     private List<LocalDate> getLocalDates() {
@@ -229,7 +229,6 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
     @Override
     public void emptyProgress() {
         onLoadingViewOff();
-        onEmptyViewOn(CONTEXT.getString(R.string.fragment_progress_daily_empty));
         initUI();
     }
 

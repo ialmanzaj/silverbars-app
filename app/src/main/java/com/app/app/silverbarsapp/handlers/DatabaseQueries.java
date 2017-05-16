@@ -8,7 +8,7 @@ import com.app.app.silverbarsapp.database_models.ExerciseRep;
 import com.app.app.silverbarsapp.database_models.Muscle;
 import com.app.app.silverbarsapp.database_models.MySavedWorkout;
 import com.app.app.silverbarsapp.database_models.Person;
-import com.app.app.silverbarsapp.database_models.ProfileFacebook;
+import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.database_models.TypeExercise;
 import com.app.app.silverbarsapp.database_models.UserWorkout;
 import com.app.app.silverbarsapp.database_models.WorkoutDone;
@@ -94,8 +94,12 @@ public class DatabaseQueries {
        return helper.getMyProfile().queryForId(id);
     }
 
-    public ProfileFacebook getFaceProfile(ProfileFacebook profile) throws SQLException {
+    public FbProfile getFaceProfile(FbProfile profile) throws SQLException {
         return helper.getProfileFacebook().queryForSameId(profile);
+    }
+
+    public FbProfile getMyFaceProfile() throws SQLException {
+        return helper.getProfileFacebook().queryForAll().get(0);
     }
 
     private Exercise getExercise(int id) throws SQLException {
@@ -148,15 +152,15 @@ public class DatabaseQueries {
      *
      */
 
-    public ProfileFacebook saveFaceProfile(ProfileFacebook profile) throws SQLException {
-        ProfileFacebook profileFacebook_database = getFaceProfile(profile);
+    public FbProfile saveFaceProfile(FbProfile profile) throws SQLException {
+        FbProfile fbProfile_database = getFaceProfile(profile);
 
-        if (profileFacebook_database == null){
-            profileFacebook_database = profile;
-            helper.getProfileFacebook().create(profileFacebook_database);
+        if (fbProfile_database == null){
+            fbProfile_database = profile;
+            helper.getProfileFacebook().create(fbProfile_database);
         }
 
-        return profileFacebook_database;
+        return fbProfile_database;
     }
 
     public Person saveProfile(com.app.app.silverbarsapp.models.Person person) throws SQLException {

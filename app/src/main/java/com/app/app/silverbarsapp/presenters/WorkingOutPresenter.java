@@ -189,7 +189,7 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
         view.onRestCounterStarted(String.valueOf(rest));
 
         //rest listener
-        mWorkoutHandler.setListenerOverlayView(rest);
+        mWorkoutHandler.setRestListener(rest);
     }
 
     @Override

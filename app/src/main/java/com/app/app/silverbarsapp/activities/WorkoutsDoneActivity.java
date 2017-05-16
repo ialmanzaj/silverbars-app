@@ -5,9 +5,10 @@ import android.app.Activity;
 public class WorkoutsDoneActivity extends Activity {
 
     private static final String TAG = WorkoutsDoneActivity.class.getSimpleName();
+/*
 
-
-    /*@BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @Override
     protected int getLayout() {

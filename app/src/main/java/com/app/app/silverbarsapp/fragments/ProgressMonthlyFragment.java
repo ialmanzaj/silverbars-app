@@ -6,28 +6,26 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.app.app.silverbarsapp.handlers.Filter;
-import com.app.app.silverbarsapp.handlers.ProgressionAlgoritm;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.activities.ExerciseDetailMonthlyActivity;
 import com.app.app.silverbarsapp.adapters.SimpleStringAdapter;
 import com.app.app.silverbarsapp.components.DaggerTotalProgressionComponent;
+import com.app.app.silverbarsapp.handlers.Filter;
+import com.app.app.silverbarsapp.handlers.MusclesWebviewHandler;
+import com.app.app.silverbarsapp.handlers.ProgressionAlgoritm;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
 import com.app.app.silverbarsapp.modules.ProgressionModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ProgressionPresenter;
 import com.app.app.silverbarsapp.utils.DisableTouchRecyclerListener;
 import com.app.app.silverbarsapp.utils.MuscleListener;
-import com.app.app.silverbarsapp.handlers.MusclesWebviewHandler;
 import com.app.app.silverbarsapp.utils.OnSwipeTouchListener;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.utils.WebAppInterface;
@@ -45,6 +43,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import im.delight.android.webview.AdvancedWebView;
 
 public class ProgressMonthlyFragment extends BaseFragment implements ProgressionView,MuscleListener {
 
@@ -64,7 +63,7 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
     @BindView(R.id.empty_state) LinearLayout mEmptyView;
     @BindView(R.id.empty_text)TextView mEmptyText;
 
-    @BindView(R.id.webview) WebView webView;
+    @BindView(R.id.webview) AdvancedWebView webView;
 
     @BindView(R.id.months)RecyclerView mMonths;
 
@@ -196,24 +195,19 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         startActivity(intent);
     }
 
-
     @Override
     public void displayNetworkError() {
-        Log.e(TAG,"displayNetworkError");
         onErrorViewOn();
     }
 
     @Override
     public void displayServerError() {
-        Log.e(TAG,"displayServerError");
         onErrorViewOn();
     }
-
 
     @Override
     public void emptyProgress() {
         onLoadingViewOff();
-        onEmptyViewOn(CONTEXT.getString(R.string.fragment_progress_weekly_empty));
         initUI();
     }
 
@@ -349,11 +343,9 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
 
     private void updateMainView(List<ExerciseProgression> progressions_filtered){
         if (progressions_filtered.size() > 0) {
-
             onEmptyViewOff();
             clearWebview();
             updateBodyMuscleWebView(progressions_filtered);
-
         }else {
             onEmptyViewOn(CONTEXT.getString(R.string.fragment_progress_monthly_empty));
         }

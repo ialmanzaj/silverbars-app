@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.callbacks.ProfileCallback;
-import com.app.app.silverbarsapp.database_models.ProfileFacebook;
+import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.handlers.DatabaseHelper;
 
 import java.sql.SQLException;
@@ -33,9 +33,9 @@ public class ProfileInteractor {
     public void getProfile(ProfileCallback callback){
         try {
 
-            ProfileFacebook profileFacebook = helper.getProfileFacebook().queryForAll().get(0);
+            FbProfile fbProfile = helper.getProfileFacebook().queryForAll().get(0);
 
-            callback.getProfileFacebook(profileFacebook);
+            callback.getProfileFacebook(fbProfile);
 
         } catch (SQLException e) {
             e.printStackTrace();

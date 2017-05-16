@@ -3,6 +3,8 @@ package com.app.app.silverbarsapp.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -17,8 +19,6 @@ import com.app.app.silverbarsapp.modules.UserWorkoutsModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.UserWorkoutsPresenter;
 import com.app.app.silverbarsapp.viewsets.UserWorkoutsView;
-
-import org.lucasr.twowayview.widget.TwoWayView;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,15 +38,17 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
 
     private static final String TAG = UserWorkoutsFragment.class.getSimpleName();
 
-    @BindView(R.id.list_my_workouts) TwoWayView mMyWorkoutViewList;
+    @Inject
+    UserWorkoutsPresenter mUserWorkoutsPresenter;
+
+
+    @BindView(R.id.list_my_workouts) RecyclerView mMyWorkoutViewList;
 
     @BindView(R.id.empty_state) LinearLayout mEmpyStateMyWorkouts;
     @BindView(R.id.create) Button mCreateWorkoutButton;
 
-    @Inject
-    UserWorkoutsPresenter mUserWorkoutsPresenter;
 
-    UserWorkoutsAdapter adapter;
+    private UserWorkoutsAdapter adapter;
 
     @Override
     protected int getFragmentLayout() {
@@ -71,7 +73,10 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (this.isAdded()){
-            adapter = new UserWorkoutsAdapter(getActivity());
+            StaggeredGridLayoutManager sGridLayoutManager = new StaggeredGridLayoutManager(2,
+                    StaggeredGridLayoutManager.VERTICAL);
+            mMyWorkoutViewList.setLayoutManager(sGridLayoutManager);
+            adapter = new UserWorkoutsAdapter(CONTEXT);
             adapter.setWorkoutListener(this);
             mMyWorkoutViewList.setAdapter(adapter);
         }
@@ -114,7 +119,6 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
 
     @Override
     public void onEmptyWorkouts() {
-       // Log.i(TAG,"onEmptyWorkouts");
         onEmptyViewOn();
     }
 

@@ -2,7 +2,6 @@ package com.app.app.silverbarsapp;
 
 import android.content.Context;
 import android.support.multidex.MultiDexApplication;
-import android.util.Log;
 
 import com.app.app.silverbarsapp.components.DaggerSilverbarsComponent;
 import com.app.app.silverbarsapp.components.SilverbarsComponent;
@@ -31,10 +30,10 @@ public class SilverbarsApp extends MultiDexApplication {
         }
 
         if (!BuildConfig.DEBUG) {
-            Log.d("SilverbarsApp", "Release mode. Crashlytics enable");
+            //Log.d("SilverbarsApp", "Release mode. Crashlytics enable");
             Fabric.with(this, new Crashlytics());
         } else {
-            Log.d("SilverbarsApp", "Debug mode. Crashlytics disable");
+            //Log.d("SilverbarsApp", "Debug mode. Crashlytics disable");
         }
 
     }

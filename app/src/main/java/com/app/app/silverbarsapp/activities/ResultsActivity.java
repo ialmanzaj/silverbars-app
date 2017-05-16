@@ -25,6 +25,7 @@ import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ResultsPresenter;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.ResultsView;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -33,6 +34,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
+import static com.app.app.silverbarsapp.activities.MainActivity.USERDATA;
 
 
 /**
@@ -53,10 +57,10 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     @BindView(R.id.loading) LinearLayout mLoadingView;
     @BindView(R.id.error_view) LinearLayout mErrorView;
 
-    //@BindView(R.id.muscles) RecyclerView mMuscleActivation;
 
     private Utilities utilities = new Utilities();
     private ProgressionAlgoritm mProgressionAlgoritm = new ProgressionAlgoritm();
+
 
     private int workout_id;
     boolean isUserWorkout;
@@ -65,6 +69,8 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     private int mTotalSets;
     private int exercises_completed;
     private ArrayList<ExerciseProgression> mExercises = new ArrayList<>();
+
+    MixpanelAPI mMixpanel;
 
     @Override
     protected int getLayout() {
@@ -108,6 +114,14 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
 
         getOldProgression();
+
+
+        //mix panel init
+        mMixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
+    }
+
+    private void eventWorkoutSaved(){
+        mMixpanel.track("Workout Saved", USERDATA);
     }
 
     private int getSetsCompleted(int current_set,int exercises_completed,int total_exercises){
@@ -117,7 +131,6 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
             return current_set-1;
         }
     }
-
 
     private void getOldProgression(){
         try {
@@ -174,6 +187,12 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         saveResults();
     }
 
+    @OnClick(R.id.delete)
+    public void deleteButton(){
+        dialog();
+    }
+
+
     @OnClick(R.id.reload)
     public void reload(){
         onErrorViewOff();
@@ -211,6 +230,9 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
     @Override
     public void onExerciseProgressionsSaved() {
+        //mix panel event
+        eventWorkoutSaved();
+
         onLoadingViewOff();
         utilities.toast(this,getString(R.string.activity_results_saved));
         finish();
@@ -228,27 +250,11 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         setupAdapter(progressions_compared);
     }
 
-    private void onLoadingViewOn(){
-        mLoadingView.setVisibility(View.VISIBLE);
-    }
-
-    private void onLoadingViewOff(){
-        mLoadingView.setVisibility(View.GONE);
-    }
-
-    private void onErrorViewOn(){mErrorView.setVisibility(View.VISIBLE);}
-
-    private void onErrorViewOff(){mErrorView.setVisibility(View.GONE);}
-
     @Override
     public void onBackPressed() {
         dialog();
     }
 
-    @OnClick(R.id.delete)
-    public void deleteButton(){
-        dialog();
-    }
 
     private void dialog(){
         new MaterialDialog.Builder(this)
@@ -263,6 +269,20 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
                 .onPositive((dialog, which) -> finish()).negativeText(getResources().getString(R.string.negative_dialog)).
                 onNegative((dialog, which) -> dialog.dismiss()).show();
     }
+
+
+    private void onLoadingViewOn(){
+        mLoadingView.setVisibility(View.VISIBLE);
+    }
+
+    private void onLoadingViewOff(){
+        mLoadingView.setVisibility(View.GONE);
+    }
+
+    private void onErrorViewOn(){mErrorView.setVisibility(View.VISIBLE);}
+
+    private void onErrorViewOff(){mErrorView.setVisibility(View.GONE);}
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

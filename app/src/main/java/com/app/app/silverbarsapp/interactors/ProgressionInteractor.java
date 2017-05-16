@@ -1,13 +1,11 @@
 package com.app.app.silverbarsapp.interactors;
 
-import android.util.Log;
-
-import com.app.app.silverbarsapp.handlers.DatabaseQueries;
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.callbacks.ProgressionCallback;
+import com.app.app.silverbarsapp.handlers.DatabaseHelper;
+import com.app.app.silverbarsapp.handlers.DatabaseQueries;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
 import com.app.app.silverbarsapp.models.MuscleProgression;
-import com.app.app.silverbarsapp.handlers.DatabaseHelper;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -78,7 +76,6 @@ public class ProgressionInteractor {
 
 
                 }else {
-                    Log.e(TAG,"error" + response.code() + response.errorBody());
                     callback.onServerError();
                 }
 
@@ -87,7 +84,6 @@ public class ProgressionInteractor {
 
             @Override
             public void onFailure(Call<List<ExerciseProgression>> call, Throwable t) {
-                Log.e(TAG,"onFailure",t);
                 callback.onNetworkError();
             }
         });

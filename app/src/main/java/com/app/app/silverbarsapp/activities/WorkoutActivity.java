@@ -25,6 +25,8 @@ import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.adapters.ExerciseAdapter;
 import com.app.app.silverbarsapp.components.DaggerWorkoutComponent;
+import com.app.app.silverbarsapp.handlers.MusclesWebviewHandler;
+import com.app.app.silverbarsapp.handlers.SpotifyHandler;
 import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.models.Metadata;
 import com.app.app.silverbarsapp.models.MuscleExercise;
@@ -32,12 +34,11 @@ import com.app.app.silverbarsapp.models.Workout;
 import com.app.app.silverbarsapp.modules.WorkoutModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.WorkoutPresenter;
-import com.app.app.silverbarsapp.handlers.MusclesWebviewHandler;
-import com.app.app.silverbarsapp.handlers.SpotifyHandler;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.WorkoutView;
 import com.michaelflisar.rxbus.RXBusBuilder;
 import com.michaelflisar.rxbus.rx.RXSubscriptionManager;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -52,6 +53,8 @@ import rx.functions.Action1;
 
 import static com.app.app.silverbarsapp.Constants.BroadcastTypes.METADATA_CHANGED;
 import static com.app.app.silverbarsapp.Constants.BroadcastTypes.PLAYBACK_STATE_CHANGED;
+import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
+import static com.app.app.silverbarsapp.activities.MainActivity.USERDATA;
 
 /**
  * Created by isaacalmanza on 10/04/16.
@@ -104,8 +107,8 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     private String mMusclesJs;
 
     //for local songs
-    ArrayList<File> mLocalSongs;
-    Metadata mFirstSongMetadata;
+    private ArrayList<File> mLocalSongs;
+    private Metadata mFirstSongMetadata;
 
     @Override
     protected int getLayout() {
@@ -171,7 +174,8 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         RestbySet.setText("60");
 
         mVoicePerExercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {});
-        mStartButton.setOnClickListener(view -> LaunchWorkingOutActivity());
+
+        mStartButton.setOnClickListener(view -> {LaunchWorkingOutActivity();addMixPanelTracker();});
         mSelectMusicButton.setOnClickListener(v -> dialogMusic());
 
 
@@ -182,6 +186,10 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         }
     }
 
+    private void addMixPanelTracker(){
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
+        mixpanel.track("StartWorkout", USERDATA);
+    }
 
 
     private void setupTabs(){
@@ -266,9 +274,10 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
     private void addSpotifyListener(){
         mSpotifyHandler = new SpotifyHandler(this);
+
         Subscription subscription_playstate = RXBusBuilder.create(Metadata.class)
                 .withKey(PLAYBACK_STATE_CHANGED)
-                 .subscribe(this::onSpotifySelected, (Action1<Throwable>) throwable -> Log.e(TAG,"error",throwable));
+                .subscribe(this::onSpotifySelected, (Action1<Throwable>) throwable -> Log.e(TAG,"error",throwable));
 
         Subscription subscription_song_metadata = RXBusBuilder.create(Metadata.class)
                 .withKey(METADATA_CHANGED)
@@ -330,10 +339,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
             //flag off
             mSpotifyHandler.setSpotifyLaunched(false);
         }
-    }
-
-    private boolean doesItHaveSongMetadata(Metadata metadata){
-        return metadata.getArtistName() != null;
     }
 
     private void bringMyApp(Context context){

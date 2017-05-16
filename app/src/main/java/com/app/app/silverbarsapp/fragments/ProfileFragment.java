@@ -14,7 +14,7 @@ import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.activities.SettingsActivity;
 import com.app.app.silverbarsapp.components.DaggerProfileComponent;
-import com.app.app.silverbarsapp.database_models.ProfileFacebook;
+import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.modules.ProfileModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ProfilePresenter;
@@ -95,7 +95,7 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
 
 
     @Override
-    public void displayProfileFacebook(ProfileFacebook profile) {
+    public void displayProfileFacebook(FbProfile profile) {
         mProfileName.setText(profile.getFirst_name() +" "+ profile.getLast_name());
     }
 

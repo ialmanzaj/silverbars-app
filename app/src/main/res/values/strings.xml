@@ -279,13 +279,16 @@
     <string name="fragment_progress_muscle_selection">Select which muscle to see progression</string>
     <string name="fragment_progress_okaybutton">Okay</string>
 
+    <!---    Strings of create workout  -->
     <string name="activity_create_workout_deleted">Exercise deleted</string>
     <string name="activity_create_workout_restored">Exercise is restored!</string>
     <string name="activity_create_workout_undo">UNDO</string>
 
+    <!---    Strings of create workout final -->
     <string name="activity_create_workout_final_workout_name_seleccion">Select your workout name</string>
     <string name="activity_create_workout_final_sets_seleccion">Select your sets</string>
     <string name="activity_create_workout_final_reps_seleccion">Select your reps or seconds</string>
+    <string name="activity_create_workout_final_button_save">Save</string>
 
     <string name="activity_user_preferences">Loading initial settings</string>
 
@@ -320,10 +323,12 @@
 
     <string name="connect_internet">Please, connect to the internet</string>
 
+    <!---    Strings of  activity workout  -->
+
     <string name="activity_workout_music">Music: </string>
     <string name="activity_workout_none">None</string>
 
-
+    <!---    Strings of  activity songs  -->
     <string name="activity_song_title">My Music</string>
     <string name="activity_song_empty">There\'s no songs:(</string>
     <string name="activity_song_done_button">Add to workout</string>

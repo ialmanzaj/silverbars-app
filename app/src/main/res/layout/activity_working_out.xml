@@ -304,7 +304,6 @@
                             android:id="@+id/next_exercise"
                             android:src="@drawable/skip"
                             android:contentDescription="@null" />
-
                     </RelativeLayout>
                 </LinearLayout>
             </LinearLayout>

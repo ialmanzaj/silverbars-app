@@ -16,14 +16,15 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.Toast;
 
-import com.app.app.silverbarsapp.handlers.Filter;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.adapters.ExercisesSelectedAdapter;
-import com.app.app.silverbarsapp.models.Exercise;
+import com.app.app.silverbarsapp.handlers.Filter;
 import com.app.app.silverbarsapp.handlers.MusclesWebviewHandler;
+import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.utils.OnStartDragListener;
 import com.app.app.silverbarsapp.utils.SimpleItemTouchHelperCallback;
 import com.app.app.silverbarsapp.utils.Utilities;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
+import static com.app.app.silverbarsapp.activities.MainActivity.USERDATA;
 
 
 public class CreateWorkoutActivity extends AppCompatActivity implements OnStartDragListener, ExercisesSelectedAdapter.OnExerciseListener {
@@ -56,17 +60,13 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     private SkillAdapter skill_adapter;*/
 
-    private ExercisesSelectedAdapter adapter;
-    private ItemTouchHelper mItemTouchHelper;
-
-    private String mMusclesStringJs = " ";
-
     private Utilities utilities = new Utilities();
     private Filter filter = new Filter();
+    private MusclesWebviewHandler mMusclesWebviewHandler= new MusclesWebviewHandler();
 
 
-    MusclesWebviewHandler mMusclesWebviewHandler= new MusclesWebviewHandler();
-
+    private ExercisesSelectedAdapter adapter;
+    private ItemTouchHelper mItemTouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +75,9 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         ButterKnife.bind(this);
 
         initUI();
+
+        //mix panel events
+        eventCreateWorkout();
     }
 
     private void initUI(){
@@ -82,6 +85,11 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         setupTabs();
         setupExercisesAdapter();
         setupWebview();
+    }
+
+    private void eventCreateWorkout(){
+        MixpanelAPI mMixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
+        mMixpanel.track("CreateWorkout_1", USERDATA);
     }
 
     private void setupToolbar(){

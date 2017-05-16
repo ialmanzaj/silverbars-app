@@ -7,11 +7,13 @@ package com.app.app.silverbarsapp.modules;
 
 import com.app.app.silverbarsapp.LoginService;
 import com.app.app.silverbarsapp.MainService;
+import com.app.app.silverbarsapp.handlers.DatabaseHelper;
 import com.app.app.silverbarsapp.interactors.CreateWorkoutFinalInteractor;
 import com.app.app.silverbarsapp.interactors.CreateWorkoutInteractor;
 import com.app.app.silverbarsapp.interactors.ExerciseDetailInteractor;
 import com.app.app.silverbarsapp.interactors.ExerciseListInteractor;
 import com.app.app.silverbarsapp.interactors.LoginInteractor;
+import com.app.app.silverbarsapp.interactors.MainInteractor;
 import com.app.app.silverbarsapp.interactors.MainWorkoutsInteractor;
 import com.app.app.silverbarsapp.interactors.MuscleSelectionInteractor;
 import com.app.app.silverbarsapp.interactors.ProfileInteractor;
@@ -22,7 +24,6 @@ import com.app.app.silverbarsapp.interactors.UserPreferencesInteractor;
 import com.app.app.silverbarsapp.interactors.UserWorkoutsInteractor;
 import com.app.app.silverbarsapp.interactors.WorkoutInteractor;
 import com.app.app.silverbarsapp.interactors.WorkoutsDoneInteractor;
-import com.app.app.silverbarsapp.handlers.DatabaseHelper;
 
 import dagger.Module;
 import dagger.Provides;
@@ -112,6 +113,11 @@ public class InteractorModule {
     @Provides
     public ExerciseDetailInteractor provideExerciseDetailInteractor(DatabaseHelper databaseHelper){
         return new ExerciseDetailInteractor(databaseHelper);
+    }
+
+    @Provides
+    public MainInteractor provideExerciseMainInteractor(DatabaseHelper databaseHelper){
+        return new MainInteractor(databaseHelper);
     }
 
 

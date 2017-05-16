@@ -11,6 +11,7 @@ import com.app.app.silverbarsapp.interactors.CreateWorkoutInteractor;
 import com.app.app.silverbarsapp.interactors.ExerciseDetailInteractor;
 import com.app.app.silverbarsapp.interactors.ExerciseListInteractor;
 import com.app.app.silverbarsapp.interactors.LoginInteractor;
+import com.app.app.silverbarsapp.interactors.MainInteractor;
 import com.app.app.silverbarsapp.interactors.MainWorkoutsInteractor;
 import com.app.app.silverbarsapp.interactors.MuscleSelectionInteractor;
 import com.app.app.silverbarsapp.interactors.ProfileInteractor;
@@ -79,4 +80,7 @@ public interface SilverbarsComponent {
     WorkoutsDoneInteractor getWorkoutsDoneInteractor();
 
     ExerciseDetailInteractor getExerciseDetailInteractor();
+
+    MainInteractor getMainInteractor();
 }
+

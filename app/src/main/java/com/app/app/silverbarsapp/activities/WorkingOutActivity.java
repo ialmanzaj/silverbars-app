@@ -34,6 +34,7 @@ import com.app.app.silverbarsapp.viewsets.WorkingOutView;
 import com.app.app.silverbarsapp.widgets.PausableChronometer;
 import com.michaelflisar.rxbus.RXBusBuilder;
 import com.michaelflisar.rxbus.rx.RXSubscriptionManager;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -43,8 +44,12 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 import rx.Subscription;
 import rx.functions.Action1;
+
+import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
+import static com.app.app.silverbarsapp.activities.MainActivity.USERDATA;
 
 
 public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
@@ -52,11 +57,10 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     private static final String TAG = WorkingOutActivity.class.getSimpleName();
 
 
-    private Utilities utilities = new Utilities();
-
-
     @Inject
     WorkingOutPresenter mWorkingOutPresenter;
+
+
 
     @BindView(R.id.player_layout) LinearLayout mPlayerLayout;
 
@@ -102,6 +106,9 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     @BindView(R.id.numberPicker) com.shawnlin.numberpicker.NumberPicker mNumberPicker;
 
 
+    private Utilities utilities = new Utilities();
+
+
     private ArrayList<ExerciseProgression> progressions;
     private ArrayList<ExerciseRep> mExercises;
 
@@ -128,6 +135,8 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     private int mCurrentPositionExercise;
     private int mCurrentPositionSet;
 
+    private MixpanelAPI mMixpanel;
+
     @Override
     protected int getLayout() {
         return R.layout.activity_working_out;
@@ -148,6 +157,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
                 .build().inject(this);
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,14 +171,97 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
                 mWorkingOutPresenter.nextMusic();
             }
         });
+
+
+        //mix panel init
+        mMixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
     }
 
-    @OnClick(R.id.save_progress)
-    public void saveReviewProgress(){
+
+    private void mixPanelEventWorkoutCompleted(){
+        mMixpanel.track("Workout Completed", USERDATA);
+    }
+
+    private void mixPanelEventWorkoutCancel(){mMixpanel.track("Workout Canceled", USERDATA);}
+
+
+
+    private void getExtras(Bundle extras){
+        mWorkout_id = extras.getInt("workout_id");
+        isUserWorkout = extras.getBoolean("user_workout",false);
+        mExercises = extras.getParcelableArrayList("exercises");
+        mSetsTotal = extras.getInt("sets");
+        int mRestByExercise = extras.getInt("rest_exercise");
+        int mRestBySet = extras.getInt("rest_set");
+        mVibrationPerSet = extras.getBoolean("vibration_per_set");
+        boolean play_exercise_audio = extras.getBoolean("exercise_audio");
+
+        //music extras
+        int typeMusic = extras.getInt("type_music",0);
+
+        mFirstSongMetadata = extras.getParcelable("metadata");
+        mSongsLocal = (ArrayList<File>) extras.getSerializable("songs");
+
+        //init presenter
+        mWorkingOutPresenter.setInitialSetup(
+                mExercises,play_exercise_audio,mSetsTotal, mRestByExercise, mRestBySet);
+
+        //music selection
+        onMusicSelection(typeMusic);
+
+        //set new array progression to the other user data that we need
+        progressions = utilities.convertToExerciseProgressions(mExercises);
+
+        //init THE UI
+        initMainUI();
+    }
+
+    @OnClick({ R.id.play_music,R.id.pause_music,R.id.play_workout, R.id.pause_workout,R.id.stop_workout,R.id.skip,R.id.save_progress})
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id){
+            case R.id.play_music:
+                mWorkingOutPresenter.playMusic();
+                break;
+            case R.id.pause_music:
+                mWorkingOutPresenter.pauseMusic();
+                break;
+            case R.id.play_workout:
+                mWorkingOutPresenter.playWorkout();
+                break;
+            case R.id.pause_workout:
+                mWorkingOutPresenter.pauseWorkout();
+                break;
+            case R.id.stop_workout:
+                mWorkingOutPresenter.stopWorkout(mChronometer.getTimeElapsed());
+                break;
+            case R.id.skip:
+                mWorkingOutPresenter.skipRest();
+                break;
+            case R.id.save_progress:
+                saveProgression();
+                break;
+        }
+    }
+
+    @OnLongClick(R.id.next_exercise)
+    public boolean nextButton(){
+
+        //Flag  allow to move
+        pendingAction = PendingAction.MOVE_ON_TO_NEXT_EXERCISE;
+
+        //move
+        mWorkingOutPresenter.nextExercise();
+
+        return false;
+    }
+
+
+    private void saveProgression(){
         int position = Integer.parseInt(mCurrentExercisePositionText.getText().toString())-1;
 
         //add to the again with the user data
-        progressions.set(position,addTotalProgression(progressions.get(position),position,mNumberPicker.getValue()));
+        progressions.set(position,utilities.accumulateProgression(progressions.get(position),mNumberPicker.getValue()));
 
         //ui events to hide overlay
         onOverlayUiOff();
@@ -191,82 +284,16 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         }
     }
 
-    private ExerciseProgression addTotalProgression(ExerciseProgression exerciseProgression,int position,int number){
-        if (utilities.checkIfRep(mExercises.get(position))) {
-            int total_reps_done = exerciseProgression.getRepetitions_done() + number;
-            exerciseProgression.setRepetitions_done(total_reps_done);
-        }else {
-            int total_second_done = exerciseProgression.getSeconds_done() + number;
-            exerciseProgression.setSeconds_done(total_second_done);
-        }
-        return exerciseProgression;
-    }
-
-    @OnClick({ R.id.play_music,R.id.pause_music,R.id.play_workout, R.id.pause_workout,R.id.stop_workout, R.id.next_exercise,R.id.skip})
-    public void onClick(View view) {
-        int id = view.getId();
-        switch (id){
-            case R.id.play_music:
-                mWorkingOutPresenter.playMusic();
-                break;
-            case R.id.pause_music:
-                mWorkingOutPresenter.pauseMusic();
-                break;
-            case R.id.play_workout:
-                mWorkingOutPresenter.playWorkout();
-                break;
-            case R.id.pause_workout:
-                mWorkingOutPresenter.pauseWorkout();
-                break;
-            case R.id.stop_workout:
-                mWorkingOutPresenter.stopWorkout(mChronometer.getTimeElapsed());
-                break;
-            case R.id.next_exercise:
-                mWorkingOutPresenter.nextExercise();
-                break;
-            case R.id.skip:
-                mWorkingOutPresenter.skipRest();
-                break;
-        }
-    }
-
-    private void getExtras(Bundle extras){
-        mWorkout_id = extras.getInt("workout_id");
-        isUserWorkout = extras.getBoolean("user_workout",false);
-        mExercises = extras.getParcelableArrayList("exercises");
-        mSetsTotal = extras.getInt("sets");
-        int mRestByExercise = extras.getInt("rest_exercise");
-        int mRestBySet = extras.getInt("rest_set");
-        mVibrationPerSet = extras.getBoolean("vibration_per_set");
-        boolean play_exercise_audio = extras.getBoolean("exercise_audio");
-
-        //music extras
-        int typeMusic = extras.getInt("type_music",0);
-        mFirstSongMetadata = extras.getParcelable("metadata");
-        mSongsLocal = (ArrayList<File>) extras.getSerializable("songs");
-
-        //init presenter
-        mWorkingOutPresenter.setInitialSetup(
-                mExercises,play_exercise_audio,mSetsTotal, mRestByExercise, mRestBySet);
-
-        //music selection
-        onMusicSelection(typeMusic);
-
-        //set new array progression to the other user data that we need
-        progressions = utilities.convertToExerciseProgressions(mExercises);
-
-        //init THE UI
-        initMainUI();
-    }
-
-
     /**
+     *
      *
      *
      *
      *
      *   INIT functions
      *<p>
+     *
+     *
      *
      *
      *
@@ -290,10 +317,10 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
             mWorkingOutPresenter.setupSpotifyPlayer();
 
             //handle the events with spotify broadcast
-            Subscription subscription =
+            Subscription metadata_subscription =
                     RXBusBuilder.create(Metadata.class)
                             .subscribe(this::updateMusicUI, (Action1<Throwable>) throwable -> Log.e(TAG,"error",throwable));
-            RXSubscriptionManager.addSubscription(this, subscription);
+            RXSubscriptionManager.addSubscription(this, metadata_subscription);
 
             mWorkingOutPresenter.playMusic();
             mFirstSongMetadata.setPlaying(true);
@@ -431,12 +458,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
      *
      */
 
-    @Override
-    public void onWorkoutReady() {
-        mPlayWorkoutButton.setVisibility(View.VISIBLE);
-        mStopWorkoutButton.setVisibility(View.INVISIBLE);
-        mPauseWorkoutButton.setVisibility(View.INVISIBLE);
-    }
+
 
     @Override
     public void onRestCounterStarted(String second) {
@@ -466,6 +488,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         //overlay gone
         mModalOverlayView.setVisibility(View.GONE);
     }
+
 
     @Override
     public void onChangeToExercise(int exercise_position_list) {
@@ -508,11 +531,13 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
             //set the current set
             mCurrentSetText.setText(String.valueOf(set));
+
             //restart current exercise to the first
             mCurrentExercisePositionText.setText(String.valueOf("1"));
 
             //FLAG TO WAIT THE NEXT SET
             pendingAction = PendingAction.WAITING_TO_NEXT_SET;
+
         }else {
             mCurrentPositionSet = set;
 
@@ -520,8 +545,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
             pendingAction = PendingAction.WAITING_TO_NEXT_SET;
         }
     }
-
-
 
     @Override
     public void onStartChronometer() {
@@ -537,14 +560,32 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         mChronometer.stop();
     }
 
-
-
     @Override
     public void onCountDownWorking(String second) {
         mCountDownTimer.setText(second);
     }
 
 
+    /**
+     *
+     *
+     *
+     *
+     *    Main Workout UI events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
+
+    @Override
+    public void onWorkoutReady() {
+        mPlayWorkoutButton.setVisibility(View.VISIBLE);
+        mStopWorkoutButton.setVisibility(View.INVISIBLE);
+        mPauseWorkoutButton.setVisibility(View.INVISIBLE);
+    }
 
     @Override
     public void onResumeWorkout() {
@@ -556,12 +597,15 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         onPauseWorkoutUI();
     }
 
-
     @Override
     public void onFinishWorkout() {
         if (pendingAction == PendingAction.MOVE_ON_TO_FINISH) {
             onScreenOff();
             launchResultsActivity();
+
+            //mix panel event
+            mixPanelEventWorkoutCompleted();
+
         }else {
             //FLAG TO WAIT to finish
             pendingAction = PendingAction.WAITING_TO_FINISH;
@@ -597,16 +641,20 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
             if (total_time.toLowerCase().contains("_")){
                 sets_completed = total_time.toLowerCase().split("_").length;
             } else {
-                sets_completed =  (total_time.isEmpty() || Objects.equals(total_time, "0"))  ? 0 : 1;
+                sets_completed =  (total_time.isEmpty()
+                        || Objects.equals(total_time, "0"))
+                        &&  (exercises_progresions.get(position).getRepetitions_done() <= 0
+                        || exercises_progresions.get(position).getSeconds_done() <= 0)? 0 : 1;
             }
 
             exercises_progresions.get(position).setSets_completed(sets_completed);
         }
+
         return exercises_progresions;
     }
 
 
-    private void dialogTOExitWorkout(){
+    private void dialogToCancelWorkout(){
         new MaterialDialog.Builder(this)
                 .title(getString(R.string.activity_workingout_dialog_title))
                 .titleColor(getResources().getColor(R.color.colorPrimaryText))
@@ -617,8 +665,14 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
                 .content(getString(R.string.activity_workingout_dialog_content))
                 .positiveText(getResources().getString(R.string.positive_dialog))
                 .onPositive((dialog, which) -> {
+
+                    //mix panel event
+                    mixPanelEventWorkoutCancel();
+
                     onScreenOff();
                     launchResultsActivity();
+
+
                 }).negativeText(getResources().getString(R.string.negative_dialog)).
                 onNegative((dialog, which) -> {
                     dialog.dismiss();
@@ -732,13 +786,13 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         mReviewExerciseView.setVisibility(View.GONE);
     }
 
-
-
     private void destroy(){
+        mMixpanel.flush();
+
+
         onScreenOff();
         RXSubscriptionManager.unsubscribe(this);
     }
-
 
 
     /**
@@ -761,7 +815,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     @Override
     public void onBackPressed(){
-        dialogTOExitWorkout();
+        dialogToCancelWorkout();
     }
 
     @Override

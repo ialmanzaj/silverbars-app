@@ -1,6 +1,6 @@
 package com.app.app.silverbarsapp.callbacks;
 
-import com.app.app.silverbarsapp.database_models.ProfileFacebook;
+import com.app.app.silverbarsapp.database_models.FbProfile;
 
 import okhttp3.ResponseBody;
 
@@ -9,6 +9,6 @@ import okhttp3.ResponseBody;
  */
 
 public interface ProfileCallback {
-    void getProfileFacebook(ProfileFacebook profile);
+    void getProfileFacebook(FbProfile profile);
     void getProfileImg(ResponseBody img);
 }

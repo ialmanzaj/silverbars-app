@@ -32,6 +32,7 @@ import com.app.app.silverbarsapp.presenters.CreateWorkoutFinalPresenter;
 import com.app.app.silverbarsapp.handlers.MuscleHandler;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.CreateWorkoutFinalView;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -45,6 +46,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+
+import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
+import static com.app.app.silverbarsapp.activities.MainActivity.USERDATA;
 
 public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWorkoutFinalView{
 
@@ -63,22 +67,23 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     @BindView(R.id.list) RecyclerView mExercisesList;
     @BindView(R.id.chageImg) RelativeLayout changeImg;
 
- /*   @BindView(R.id.strength)SeekBar strenghtBar;
-    @BindView(R.id.porcentaje) TextView mPorcentajeTextView;
-*/
+    //@BindView(R.id.strength)SeekBar strenghtBar;
+    //@BindView(R.id.porcentaje) TextView mPorcentajeTextView;
+
     @BindView(R.id.loading) LinearLayout mLoadingView;
     @BindView(R.id.error_view) LinearLayout mErrorView;
 
 
+    private Utilities utilities = new Utilities();
+    MuscleHandler mMuscleHandler = new MuscleHandler();
+
+
+    private CreateFinalExercisesAdapter adapter;
     private int mCurrentSet = 1;
     private String workoutImage = "/";
 
-    private CreateFinalExercisesAdapter adapter;
-    private Utilities utilities = new Utilities();
+    private MixpanelAPI mMixpanel;
 
-
-    MuscleHandler mMuscleHandler = new MuscleHandler();
-    
     @Override
     protected int getLayout() {
         return R.layout.activity_create_workout_final;
@@ -146,7 +151,15 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });*/
+
+
+        mMixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
     }
+
+    private void mixPanelEventCreateWorkoutSaved(){
+        mMixpanel.track("Create Workout Saved", USERDATA);
+    }
+
 
     public void setupToolbar(){
         if (toolbar!=null) {
@@ -332,6 +345,11 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     public void displayWorkoutApiCreated(Workout workout) {
         try {
             mCreateWorkoutFinalPresenter.saveWorkoutDatabase(workout);
+
+            //mix panel events
+            mixPanelEventCreateWorkoutSaved();
+
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -339,15 +357,16 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
     @Override
     public void displayNetworkError() {
-        onLoadingViewOff();
         onErrorViewOn();
     }
 
     @Override
     public void displayServerError() {
-        onLoadingViewOff();
         onErrorViewOn();
     }
+
+
+
 
     private void onLoadingViewOn(){
         mLoadingView.setVisibility(View.VISIBLE);
@@ -360,6 +379,8 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     private void onErrorViewOn(){mErrorView.setVisibility(View.VISIBLE);}
 
     private void onErrorViewOff(){mErrorView.setVisibility(View.GONE);}
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

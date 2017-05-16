@@ -3,7 +3,8 @@ package com.app.app.silverbarsapp.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -17,8 +18,6 @@ import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.SavedWorkoutsPresenter;
 import com.app.app.silverbarsapp.viewsets.SavedWorkoutsView;
 
-import org.lucasr.twowayview.widget.TwoWayView;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,7 +29,7 @@ public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkouts
 
     private static final String TAG = SavedWorkoutsFragment.class.getSimpleName();
 
-    @BindView(R.id.list_saved) TwoWayView mLocalWorkoutsList;
+    @BindView(R.id.list_saved) RecyclerView mLocalWorkoutsList;
     @BindView(R.id.empty_state)  LinearLayout mEmpyStateSavedWorkout;
 
     @Inject
@@ -61,7 +60,10 @@ public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkouts
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (this.isAdded()){
-            adapter = new SavedWorkoutsAdapter(getActivity());
+            StaggeredGridLayoutManager sGridLayoutManager = new StaggeredGridLayoutManager(2,
+                    StaggeredGridLayoutManager.VERTICAL);
+            mLocalWorkoutsList.setLayoutManager(sGridLayoutManager);
+            adapter = new SavedWorkoutsAdapter(CONTEXT);
             mLocalWorkoutsList.setAdapter(adapter);
         }
 
@@ -76,7 +78,6 @@ public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkouts
 
     @Override
     public void onEmptyWorkouts() {
-        Log.i(TAG,"empty");
         onEmptyOn();
     }
 

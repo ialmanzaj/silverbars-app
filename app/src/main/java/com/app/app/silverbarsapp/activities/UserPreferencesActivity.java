@@ -17,7 +17,6 @@ import com.app.app.silverbarsapp.models.Person;
 import com.app.app.silverbarsapp.modules.UserPreferencesModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.UserPreferencesPresenter;
-import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.UserPreferencesView;
 
 import javax.inject.Inject;
@@ -74,10 +73,6 @@ public class UserPreferencesActivity extends BaseActivity implements UserPrefere
     public void onProfileSaved(Person person) {
         this.person = person;
         mUserPreferencesPresenter.getMyWorkouts();
-    }
-
-    private boolean checkConnection(){
-        return new Utilities().isOnline(this);
     }
 
     @OnClick(R.id.reload)

@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.components.DaggerLoginComponent;
-import com.app.app.silverbarsapp.database_models.ProfileFacebook;
+import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.models.AccessToken;
 import com.app.app.silverbarsapp.modules.LoginModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
@@ -23,11 +23,12 @@ import com.app.app.silverbarsapp.viewsets.LoginView;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
+import com.facebook.GraphRequest;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import org.json.JSONException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -53,11 +54,10 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
 
     private CallbackManager callbackManager;
 
-    private String mFacebookToken;
-    private ProfileFacebook profile_fb;
-    private ProfileTracker mProfileTracker;
+    private String mFbToken;
+    private FbProfile profile_fb;
 
-    Utilities utilities = new Utilities();
+    private Utilities utilities = new Utilities();
     private PendingAction pendingAction = PendingAction.NONE;
 
     private enum PendingAction {
@@ -111,9 +111,48 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
                 onLoadingOn();
 
                 //saving the token
-                mFacebookToken = loginResult.getAccessToken().getToken();
+                mFbToken = loginResult.getAccessToken().getToken();
 
-                updateUI();
+                // App code
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(),
+                        (object, response) -> {
+
+                            String id = "";
+                            String email = "";
+                            String birthday = "";
+                            String gender = "";
+                            String name = "";
+
+                            try {
+
+                                id = object.getString("id");
+                                email = object.getString("email");
+                                birthday = object.getString("birthday"); // 01/31/1980 format
+                                gender = object.getString("gender");
+                                name = object.getString("name");
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            if (name != null) {
+                                getProfileInfo(
+                                        id,
+                                        getFirstName(name),
+                                        getLastName(name),
+                                        birthday,
+                                        gender,
+                                        email
+                                );
+                            }
+                        });
+
+
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email,gender,birthday");
+                request.setParameters(parameters);
+                request.executeAsync();
             }
             @Override
             public void onCancel() {}
@@ -122,37 +161,46 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
                 connect();
             }
         });
+    }
 
-        mProfileTracker = new ProfileTracker() {
-            @Override
-            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
-                updateUI();
-            }
-        };
+    private String getFirstName(String name){
+        String first_name;
+        if (name.contains(" ")){
+            first_name = name.split(" ")[0];
+        }else {
+            first_name = name;
+        }
 
-        mProfileTracker.startTracking();
+        return first_name;
+    }
+
+    private String getLastName(String name){
+        String last_name = "";
+        if (name.contains(" ")){
+            last_name = name.split(" ")[1];
+        }
+
+        return last_name;
     }
 
     private void connect(){
         utilities.toast(this,getString(R.string.connect_internet));
     }
 
-    private void updateUI() {
+
+    private void getProfileInfo(String id,String first_name,String last_name,String birthday,String gender,String email) {
         switch (pendingAction) {
             case NONE:
-                Profile profile = Profile.getCurrentProfile();
-                if (profile != null) {
-                    saveProfile(createProfile(profile));
-                    pendingAction = PendingAction.SENDED;
-                }
+                saveProfile(new FbProfile(Long.parseLong(id),first_name,last_name,birthday,gender,email));
+                pendingAction = PendingAction.SENDED;
                 break;
-        };
+        }
     }
 
     @Override
-    public void onProfileSaved(ProfileFacebook profile_fb) {
+    public void onProfileSaved(FbProfile profile_fb) {
         this.profile_fb = profile_fb;
-        mLoginPresenter.getAccessToken(mFacebookToken);
+        mLoginPresenter.getAccessToken(mFbToken);
     }
 
     @Override
@@ -180,18 +228,8 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
         new Utilities().toast(this,getString(R.string.connect_internet));
     }
 
-    private void saveProfile(ProfileFacebook profile){
+    private void saveProfile(FbProfile profile){
         mLoginPresenter.saveProfile(profile);
-    }
-
-    private ProfileFacebook createProfile(Profile currentProfile){
-        ProfileFacebook profileFacebook = new ProfileFacebook();
-
-        profileFacebook.setId(Long.parseLong(currentProfile.getId()));
-        profileFacebook.setFirst_name(currentProfile.getFirstName());
-        profileFacebook.setLast_name(currentProfile.getLastName());
-
-        return profileFacebook;
     }
 
     @Override
@@ -212,5 +250,11 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
     private void onLoadingOff(){
         mLoadingView.setVisibility(View.GONE);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
 }
 

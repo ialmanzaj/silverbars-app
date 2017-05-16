@@ -1,10 +1,8 @@
 package com.app.app.silverbarsapp.interactors;
 
-import android.util.Log;
-
 import com.app.app.silverbarsapp.LoginService;
 import com.app.app.silverbarsapp.callbacks.LoginCallback;
-import com.app.app.silverbarsapp.database_models.ProfileFacebook;
+import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.handlers.DatabaseHelper;
 import com.app.app.silverbarsapp.handlers.DatabaseQueries;
 import com.app.app.silverbarsapp.models.AccessToken;
@@ -34,10 +32,10 @@ public class LoginInteractor {
         this.databaseQueries = new DatabaseQueries(helper);
     }
 
-    public void saveProfile(ProfileFacebook profile,LoginCallback callback){
+    public void saveProfile(FbProfile profile, LoginCallback callback){
         try {
 
-            ProfileFacebook profile_saved = databaseQueries.saveFaceProfile(profile);
+            FbProfile profile_saved = databaseQueries.saveFaceProfile(profile);
             callback.onProfileSaved(profile_saved);
 
         } catch (SQLException e) {
@@ -45,9 +43,8 @@ public class LoginInteractor {
         }
     }
 
-    public void getAccessToken(LoginCallback callback, String facebook_token){
-        loginService
-                .getAccessToken("convert_token",CONSUMER_KEY,CONSUMER_SECRET,"facebook",facebook_token)
+    public void getAccessToken(LoginCallback callback, String fbAccesstoken){
+        loginService.getAccessToken("convert_token",CONSUMER_KEY,CONSUMER_SECRET,"facebook",fbAccesstoken)
                 .enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {

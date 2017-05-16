@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <WebView
+            <im.delight.android.webview.AdvancedWebView
                 android:layout_marginTop="5dp"
                 android:background="@color/white"
                 android:id="@+id/webview"

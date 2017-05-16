@@ -1,6 +1,6 @@
 package com.app.app.silverbarsapp.handlers;
 
-import android.util.Log;
+import android.os.Build;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -19,6 +19,7 @@ public class MusclesWebviewHandler {
     private Utilities utilities = new Utilities();
     private String js_ready;
 
+
     public MusclesWebviewHandler(){}
 
     public String getMusclesReadyForWebview(List<String> muscles_names){
@@ -35,7 +36,7 @@ public class MusclesWebviewHandler {
 
     public void paint(String muscles){
         muscles = utilities.removeLastChar(muscles);
-        js_ready = "javascript: (" + "window.onload = function () {" +
+        js_ready = "javascript:(window.onload = function () {" +
                 "var muscles = Snap.selectAll('" +  muscles + "');" +
                 "muscles.forEach( function(muscle,i) {" +
                 "muscle.attr({stroke:'#602C8D',fill:'#602C8D'});" +
@@ -45,18 +46,18 @@ public class MusclesWebviewHandler {
     public void paintOnClick(String muscles){
         muscles = utilities.removeLastChar(muscles);
         //Log.d(TAG,"muscles:"+muscles);
-        js_ready =  "javascript: (" + "window.onload = function () {" +
+        js_ready =  "javascript:(window.onload = function () {" +
                 "var muscles = Snap.selectAll('" + muscles + "');" +
-                "muscles.forEach( function(muscle,i) {" +
-                "muscle.node.onclick = function () {"+
-                "muscle.attr({stroke:'#602C8D',fill:'#602C8D'});"+
-                "Android.setMuscle(muscle.node.id);"+
+                "muscles.forEach(function(muscle,i) {" +
+                    "muscle.node.onclick = function () {"+
+                    "muscle.attr({stroke:'#602C8D',fill:'#602C8D'});"+
+                    "Android.setMuscle(muscle.node.id);"+
                 "};" + "});" + "}" + ")()";
     }
 
     public void removePaint(String muscle){
         muscle = utilities.removeLastChar(muscle);
-        js_ready =  "javascript: (" + "window.onload = function () {" +
+        js_ready = "javascript:(window.onload = function () {" +
                 "var muscle = Snap.select('" +  muscle  + "');" +
                 "muscle.attr({stroke:'#fff',fill:'#fff'});" +
                  "}" + ")()";
@@ -65,7 +66,7 @@ public class MusclesWebviewHandler {
     public void paintedAndSetClickListener(String muscles){
         muscles = utilities.removeLastChar(muscles);
         //Log.d(TAG,"muscles:"+muscles);
-        js_ready =  "javascript: (" + "window.onload = function () {" +
+        js_ready =  "javascript:(window.onload = function () {" +
                 "var muscles = Snap.selectAll('" + muscles + "');" +
                 "muscles.forEach( function(muscle,i) {" +
                     "muscle.attr({stroke:'#602C8D',fill:'#602C8D'});"+
@@ -75,13 +76,10 @@ public class MusclesWebviewHandler {
     }
 
     public void execute(WebView webView) {
-        try {
-
-            Log.d(TAG,"execute");
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            webView.evaluateJavascript(js_ready,null);
+        }else {
             webView.loadUrl(js_ready);
-
-        } catch (Exception e) {
-            Log.e(TAG,"Exception",e);
         }
     }
 
@@ -91,6 +89,17 @@ public class MusclesWebviewHandler {
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 paint(muscles);
+                execute(webView);
+            }
+        });
+    }
+
+    public void addWebviewClickListenerClientPaint(WebView webView, String muscles){
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                paintOnClick(muscles);
                 execute(webView);
             }
         });
@@ -106,6 +115,5 @@ public class MusclesWebviewHandler {
             }
         });
     }
-
 
 }

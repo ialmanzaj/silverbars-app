@@ -1,9 +1,7 @@
 package com.app.app.silverbarsapp.presenters;
 
-import android.util.Log;
-
 import com.app.app.silverbarsapp.callbacks.LoginCallback;
-import com.app.app.silverbarsapp.database_models.ProfileFacebook;
+import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.interactors.LoginInteractor;
 import com.app.app.silverbarsapp.models.AccessToken;
 import com.app.app.silverbarsapp.viewsets.LoginView;
@@ -24,7 +22,7 @@ public class LoginPresenter extends BasePresenter  implements LoginCallback{
         this.interactor = interactor;
     }
 
-    public void saveProfile(ProfileFacebook profile){
+    public void saveProfile(FbProfile profile){
         interactor.saveProfile(profile,this);
     }
 
@@ -38,7 +36,7 @@ public class LoginPresenter extends BasePresenter  implements LoginCallback{
     }
 
     @Override
-    public void onProfileSaved(ProfileFacebook profile) {
+    public void onProfileSaved(FbProfile profile) {
         view.onProfileSaved(profile);
     }
 
