@@ -3,6 +3,7 @@ package com.app.app.silverbarsapp.widgets;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
+import com.app.app.silverbarsapp.utils.ProgressDrawable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,15 +34,18 @@ public class SeekbarWithIntervals extends LinearLayout {
     List<Integer> list_progress = new ArrayList<>();
 
 
+    private Context context;
+
     public SeekbarWithIntervals(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        this.context = context;
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        getActivity().getLayoutInflater().inflate(R.layout.seekbar_with_intervals, this);
+        LayoutInflater.from(getContext()).inflate(R.layout.seekbar_with_intervals, this);
     }
 
     private Activity getActivity() {
@@ -153,6 +158,14 @@ public class SeekbarWithIntervals extends LinearLayout {
     private SeekBar getSeekBar() {
         if (mSeekBar == null) {
             mSeekBar = (SeekBar) findViewById(R.id.seekbar);
+
+            mSeekBar.setProgressDrawable(new ProgressDrawable(
+                    mSeekBar.getProgressDrawable(),
+                    mSeekBar,
+                    getMax(),
+                    ContextCompat.getColor(context,R.color.grey300))
+            );
+
         }
 
         return mSeekBar;

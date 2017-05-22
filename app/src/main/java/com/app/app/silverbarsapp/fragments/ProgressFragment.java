@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.adapters.ViewPagerAdapter;
+import com.app.app.silverbarsapp.widgets.NonSwipeableViewPager;
 
 
 public class ProgressFragment extends Fragment {
@@ -31,7 +32,7 @@ public class ProgressFragment extends Fragment {
             //((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
             //getActivity().setTitle("My Progression");
 
-            ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+            NonSwipeableViewPager viewPager = (NonSwipeableViewPager) view.findViewById(R.id.viewpager);
             viewPager.setOffscreenPageLimit(3);
             setupViewPager(viewPager);
 

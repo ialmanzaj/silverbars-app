@@ -10,37 +10,37 @@ import com.j256.ormlite.table.DatabaseTable;
 public class ExerciseProgression {
 
     @DatabaseField(id = true, columnName = "ID", canBeNull = false)
-    private int id;
+    int id;
 
     @DatabaseField
-    private String date;
+    String date;
 
     @DatabaseField(foreign = true)
-    private WorkoutDone my_workout_done;
+    WorkoutDone my_workout_done;
 
     @DatabaseField
-    private int person;
+    int person;
 
     @DatabaseField
-    private String total_time;
+    String total_time;
 
     @DatabaseField(foreign = true)
-    private Exercise exercise;
+    Exercise exercise;
 
     @DatabaseField
-    private int total_repetition;
+    int total_repetition;
 
     @DatabaseField
-    private int repetitions_done;
+    int repetitions_done;
 
     @DatabaseField
-    private int total_seconds;
+    int total_seconds;
 
     @DatabaseField
-    private int seconds_done;
+    int seconds_done;
 
     @DatabaseField
-    private double total_weight;
+    double total_weight;
 
 
     public ExerciseProgression(){}

@@ -22,7 +22,6 @@ public class SilverbarsApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-
         setupGraph();
 
         if (!Fresco.hasBeenInitialized()){
@@ -51,6 +50,7 @@ public class SilverbarsApp extends MultiDexApplication {
     public SilverbarsComponent getComponent() {
         return component;
     }
+
 
     public static SilverbarsApp getApp(Context context) {
         return (SilverbarsApp) context.getApplicationContext();

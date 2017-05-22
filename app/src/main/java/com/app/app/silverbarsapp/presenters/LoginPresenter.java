@@ -1,7 +1,6 @@
 package com.app.app.silverbarsapp.presenters;
 
 import com.app.app.silverbarsapp.callbacks.LoginCallback;
-import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.interactors.LoginInteractor;
 import com.app.app.silverbarsapp.models.AccessToken;
 import com.app.app.silverbarsapp.viewsets.LoginView;
@@ -22,10 +21,6 @@ public class LoginPresenter extends BasePresenter  implements LoginCallback{
         this.interactor = interactor;
     }
 
-    public void saveProfile(FbProfile profile){
-        interactor.saveProfile(profile,this);
-    }
-
     public void getAccessToken(String facebook_token){
         interactor.getAccessToken(this,facebook_token);
     }
@@ -35,10 +30,6 @@ public class LoginPresenter extends BasePresenter  implements LoginCallback{
         view.displayToken(accessToken);
     }
 
-    @Override
-    public void onProfileSaved(FbProfile profile) {
-        view.onProfileSaved(profile);
-    }
 
     @Override
     public void onServerError() {

@@ -50,78 +50,16 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent">
 
-        <LinearLayout
-            android:layout_above="@+id/week"
-            android:orientation="vertical"
+        <FrameLayout
+            android:layout_above="@+id/container"
+            android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:background="#C0FFFFFF"
-                android:id="@+id/empty_state"
-                android:gravity="center_horizontal|center_vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <TextView
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    android:id="@+id/empty_text"
-                    android:textSize="28sp"
-                    android:textColor="@color/black"
-                    android:text="@string/fragment_progress_empty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-            <im.delight.android.webview.AdvancedWebView
-                android:layout_marginTop="5dp"
-                android:id="@+id/webview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </LinearLayout>
-        <LinearLayout
-            android:visibility="gone"
-            android:gravity="center_vertical|center_horizontal"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#c81f1f1f"
-            android:id="@+id/modal_overlay">
-
-            <TextView
-                android:textAlignment="center"
-                android:textSize="20sp"
-                android:text="@string/fragment_progress_muscle_selection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|center"
-                android:textColor="@color/white" />
-
-            <Button
-                android:id="@+id/okay"
-                android:text="@string/fragment_progress_okaybutton"
-                android:theme="@style/ButtonGreen"
-                android:padding="15dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/info"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_info_outline_black_24px"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@null" />
+            android:layout_height="match_parent" />
 
         <LinearLayout
             android:background="@color/grey100"
             android:layout_alignParentBottom="true"
-            android:id="@+id/week"
+            android:id="@+id/container"
             android:padding="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

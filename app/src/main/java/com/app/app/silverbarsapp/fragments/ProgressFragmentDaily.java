@@ -4,28 +4,25 @@ package com.app.app.silverbarsapp.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
-import com.app.app.silverbarsapp.activities.ExerciseDetailDailyActivity;
+import com.app.app.silverbarsapp.activities.ExerciseDetailActivity;
 import com.app.app.silverbarsapp.components.DaggerTodayProgressionComponent;
 import com.app.app.silverbarsapp.handlers.Filter;
-import com.app.app.silverbarsapp.handlers.MusclesWebviewHandler;
 import com.app.app.silverbarsapp.handlers.ProgressionAlgoritm;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
-import com.app.app.silverbarsapp.models.MuscleExercise;
 import com.app.app.silverbarsapp.modules.ProgressionModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ProgressionPresenter;
 import com.app.app.silverbarsapp.utils.MuscleListener;
-import com.app.app.silverbarsapp.utils.Utilities;
-import com.app.app.silverbarsapp.utils.WebAppInterface;
 import com.app.app.silverbarsapp.viewsets.ProgressionView;
 import com.app.app.silverbarsapp.widgets.SeekbarWithIntervals;
 
@@ -45,19 +42,13 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import im.delight.android.webview.AdvancedWebView;
 
-public class ProgressFragmentDaily extends BaseFragment implements ProgressionView,MuscleListener {
+public class ProgressFragmentDaily extends BaseFragment implements ProgressionView, MuscleListener {
 
     private static final String TAG = ProgressFragmentDaily.class.getSimpleName();
 
     @Inject
     ProgressionPresenter mProgressionPresenter;
-
-    @BindView(R.id.empty_state) LinearLayout mEmptyView;
-    @BindView(R.id.empty_text)TextView mEmptyText;
-
-    @BindView(R.id.webview) AdvancedWebView webView;
 
     @BindView(R.id.loading) LinearLayout mLoadingView;
 
@@ -66,21 +57,25 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
 
     @BindView(R.id.seekbarWithIntervals) SeekbarWithIntervals mSeekbarWithIntervals;
 
-    @BindView(R.id.modal_overlay) LinearLayout mModal;
-    @BindView(R.id.info) ImageView mInfo;
 
-
-    private Utilities mUtilities = new Utilities();
+    private ProgressionAlgoritm mProgressionAlgoritm;
     private Filter filter = new Filter();
-    MusclesWebviewHandler mMusclesWebviewHandler = new MusclesWebviewHandler();
-    ProgressionAlgoritm mProgressionAlgoritm = new ProgressionAlgoritm();
 
 
     private List<ExerciseProgression> progressions;
     private List<ExerciseProgression> mWeekProgressions = new ArrayList<>();
 
     private int mCurrentDay;
-    private String mMuscleParts = " ";
+
+    private PENDING_ACTIONS mPendingAction = PENDING_ACTIONS.NONE;
+
+
+    private enum PENDING_ACTIONS {
+        NONE,
+        CHANGE_TO_EMPTY,
+        CHANGED_BODY
+    }
+
 
 
     @Override
@@ -105,9 +100,11 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (this.isAdded()) {
 
-            setupWebview();
+            mProgressionAlgoritm = new ProgressionAlgoritm(CONTEXT);
+
+
+            //setupWebview();
             mProgressionPresenter.getExerciseProgression();
 
             List<String> days = getDaysOfWeekAbreb();
@@ -132,14 +129,9 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {}
             });
-        }
+
     }
 
-    private void setupWebview(){
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.addJavascriptInterface(new WebAppInterface(CONTEXT,this), "Android");
-        mUtilities.loadBodyFromUrl(CONTEXT,webView);
-    }
 
     private List<LocalDate> getLocalDates() {
         return new ArrayList<LocalDate>() {{
@@ -193,7 +185,7 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
         }
     }
 
-    @OnClick(R.id.info)
+ /*   @OnClick(R.id.info)
     public void infoButton(){
         mModal.setVisibility(View.VISIBLE);
     }
@@ -201,7 +193,7 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
     @OnClick(R.id.okay)
     public void okayButton(){
         mModal.setVisibility(View.GONE);
-    }
+    }*/
 
     @OnClick(R.id.reload)
     public void reload(){
@@ -211,25 +203,26 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
     }
 
     @Override
-    public void onMuscleSelected(String muscle) {
-        ArrayList<ExerciseProgression> current_exercises =
-                filter.getProgressionFilteredByMuscle(getProgressionByDay(mCurrentDay),muscle);
-
-        ArrayList<ExerciseProgression> last_progression = filter.getLastProgressions(current_exercises,progressions);
-
-        Intent intent = new Intent(CONTEXT, ExerciseDetailDailyActivity.class);
-        intent.putExtra("title", getDaysOfWeek().get(mCurrentDay));
-        intent.putExtra("subtitle", muscle);
-        intent.putExtra("type_date", 0);
-        intent.putExtra("exercises", mProgressionAlgoritm.compareWithOldProgressions(current_exercises,last_progression));
-        intent.putExtra("muscle_activation",mProgressionAlgoritm.getMuscleActivationProgression(muscle,current_exercises,last_progression));
-        startActivity(intent);
-    }
-
-    @Override
     public void emptyProgress() {
         onLoadingViewOff();
         initUI();
+    }
+
+
+    @Override
+    public void onMuscleSelected(String muscle) {
+
+        ArrayList<ExerciseProgression> current_day_progressions =
+                filter.getProgressionFilteredByMuscle(getProgressionByDay(mCurrentDay),muscle);
+
+        ArrayList<ExerciseProgression> last_progression = filter.getLastProgressions(current_day_progressions,progressions);
+
+        Intent intent = new Intent(CONTEXT, ExerciseDetailActivity.class);
+        intent.putExtra("title", getDaysOfWeek().get(mCurrentDay));
+        intent.putExtra("subtitle", muscle);
+        intent.putExtra("exercises", mProgressionAlgoritm.getProgressionComparedDaily(last_progression,current_day_progressions));
+        intent.putExtra("muscle_activation",mProgressionAlgoritm.getMuscleActivationProgression(muscle,last_progression,current_day_progressions));
+        startActivity(intent);
     }
 
     @Override
@@ -270,37 +263,60 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
         return Arrays.asList(CONTEXT.getResources().getStringArray(R.array.days));
     }
 
-    private void updateMainUi(List<ExerciseProgression> progressions_filtered){
-        if (progressions_filtered.size() > 0) {
-            onEmptyViewOff();
-            clearWebview();
-            updateBodyMuscleWebView(progressions_filtered);
-        }else {
-            onEmptyViewOn(CONTEXT.getString(R.string.fragment_progress_daily_empty));
-        }
-    }
+    private void updateMainUi(ArrayList<ExerciseProgression> progressions_filtered){
+        Bundle extras = new Bundle();
 
-    private void updateBodyMuscleWebView(List<ExerciseProgression> exerciseProgressions){
-        for (ExerciseProgression exercise_progress: exerciseProgressions){
-            for (MuscleExercise muscle: exercise_progress.getExercise().getMuscles()) {
-                insertMuscleToWebview(muscle.getMuscle());
+        if (progressions_filtered.size() > 0){
+
+            extras.putParcelableArrayList("progressions", progressions_filtered);
+            BodyFragment currentFragment = new BodyFragment();
+            currentFragment.setArguments(extras);
+            currentFragment.addListener(this);
+
+            changeFragment(currentFragment);
+
+            mPendingAction = PENDING_ACTIONS.CHANGED_BODY;
+
+        }else {
+
+            if (mPendingAction != PENDING_ACTIONS.CHANGE_TO_EMPTY) {
+
+                EmptyViewFragment currentFragment = new EmptyViewFragment();
+                changeFragment(currentFragment);
+
+
+                //FLAG
+                mPendingAction = PENDING_ACTIONS.CHANGE_TO_EMPTY;
             }
         }
+
+
     }
 
-    private void insertMuscleToWebview(String muscle_name){
-        mMuscleParts += mMusclesWebviewHandler.getMuscleReadyForWebview(muscle_name);
-        mMusclesWebviewHandler.addWebviewClientOnClickPaint(webView,mMuscleParts);
+    private void changeFragment(Fragment currentFragment){
+        if (this.isAdded()) {
+            FragmentManager fragmentManager = getChildFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.fragment_container, currentFragment);
+            transaction.commit();
+        }
     }
 
-    private void clearWebview(){
-        webView.reload();
-        mMuscleParts = " ";
-    }
 
-    private void onEmptyViewOn(String text){mEmptyView.setVisibility(View.VISIBLE);mEmptyText.setText(text);mInfo.setVisibility(View.GONE);}
+    /**
+     *
+     *
+     *
+     *
+     *     UI events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
 
-    private void onEmptyViewOff(){mEmptyView.setVisibility(View.GONE);mInfo.setVisibility(View.VISIBLE);}
 
     private void onLoadingViewOn(){
         mLoadingView.setVisibility(View.VISIBLE);

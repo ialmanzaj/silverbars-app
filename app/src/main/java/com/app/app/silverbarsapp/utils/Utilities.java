@@ -1,5 +1,7 @@
 package com.app.app.silverbarsapp.utils;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,18 +15,30 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.Display;
 import android.view.WindowManager;
 import android.webkit.WebView;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.andretietz.retroauth.AuthAccountManager;
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.R;
+import com.app.app.silverbarsapp.handlers.Filter;
 import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
+import com.app.app.silverbarsapp.models.ExerciseProgressionCompared;
 import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.models.MuscleExercise;
 import com.app.app.silverbarsapp.models.Skill;
+
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -63,6 +77,78 @@ public class Utilities {
     private String strSeparator = "__,__";
 
     public Utilities (){}
+
+
+    public ArrayList<File> getFilesSelectedByPositions(int[] positions_selected,ArrayList<File> files){
+        ArrayList<File> songs_selected = new ArrayList<>();
+        for (int song_selected_pos : positions_selected) {
+            songs_selected.add(files.get(song_selected_pos));
+        }
+        return songs_selected;
+    }
+
+    public int[] getPositionsSelected(ListView listView, int files_size){
+        int choice = listView.getCount();
+        long[] selected = new long[choice];
+        final SparseBooleanArray spa = listView.getCheckedItemPositions();
+
+        if (spa.size() != 0) {
+            int[] playlist = new int[listView.getCheckedItemCount()];
+            int x = 0;
+            for (int i = 0; i < choice; i++) {
+                selected[i] = -1;
+            }
+            for (int i = 0; i < choice; i++) {
+                if (spa.get(i)) {
+                    selected[i] = listView.getItemIdAtPosition(i);
+                }
+            }
+            for (int j = 0; j < files_size; j++) {if (j == selected[j]) {
+                playlist[x] =  j;
+                x++;
+            }
+            }
+            return playlist;
+        }else
+            return null;
+    }
+
+
+    public String getAge(String birthday){
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
+        DateTime dateTime = formatter.parseDateTime(birthday);
+        Period period = new Period(dateTime, new DateTime());
+        return String.valueOf(period.getYears());
+    }
+
+    public JSONObject getUserData(Context context){
+        AuthAccountManager authAccountManager = new AuthAccountManager();
+        Account activeAccount = authAccountManager.getActiveAccount(context.getString(R.string.authentication_ACCOUNT));
+
+        String age = AccountManager.get(context).getUserData(activeAccount, context.getString(R.string.authentication_AGE));
+        String gender = AccountManager.get(context).getUserData(activeAccount, context.getString(R.string.authentication_GENDER));
+
+        try {
+
+            JSONObject jsonObject = new JSONObject();
+
+
+            if (!Objects.equals(age, "age")){
+                jsonObject.put("Age",age);
+            }
+
+            if (!Objects.equals(gender, "gender")){
+                jsonObject.put("Gender",gender);
+            }
+
+            return jsonObject;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 
 
     public boolean isOnline(Context context) {
@@ -182,11 +268,11 @@ public class Utilities {
         return out;
     }
 
-    public List<Skill> getTypesByExerciseProgression(ArrayList<ExerciseProgression> exercises){
+    public List<Skill> getTypesByExerciseProgression(ArrayList<ExerciseProgressionCompared> exercises){
         List<Skill> types = new ArrayList<>();
         List<String> types_list = new ArrayList<>();
-        for (ExerciseProgression exercise: exercises){
-            for (String type: exercise.getExercise().getType_exercise()){
+        for (ExerciseProgressionCompared exercise: exercises){
+            for (String type: exercise.getExerciseProgression_newer().getExercise().getType_exercise()){
                 types_list.add(type);
             }
         }
@@ -211,6 +297,7 @@ public class Utilities {
             exerciseProgression.setTotal_seconds(exercise.getSeconds());
             exerciseProgression.setTotal_weight(exercise.getWeight());
             exerciseProgressions.add(exerciseProgression);
+            exerciseProgression.setDate(new Filter().formatDayTime(new DateTime()));
         }
 
         return exerciseProgressions;
@@ -852,13 +939,11 @@ public class Utilities {
                     if (read == -1) {break;}
                     output.write(buffer, 0, read);
                     fileSizeDownloaded += read;
-                    Log.d(TAG, "Download file from saveHtmInDevice: " + fileSizeDownloaded + " of " + fileSize);
                 }
                 output.flush();
                 return true;
 
             } catch (IOException e) {
-                Log.e(TAG,"IOEXEPTION",e);
                 return false;
             } finally {
                 if (input != null) {input.close();}

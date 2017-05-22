@@ -39,7 +39,6 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
     @BindView(R.id.workout_list) RecyclerView mWorkoutList;
 
-
     @BindView(R.id.loading) LinearLayout loadingView;
     @BindView(R.id.error_view) LinearLayout mErrorView;
 

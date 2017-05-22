@@ -32,12 +32,14 @@ public class WorkoutDone implements Parcelable{
     @SerializedName("sets_completed")
     private int sets_completed;
 
+
     public WorkoutDone(){}
 
-    public WorkoutDone(int id,String date, Workout my_workout,int person,String total_time,int sets_completed){
+
+    public WorkoutDone(int id, Workout my_workout,Workout workout,int person,String total_time,int sets_completed){
         this.id = id;
-        this.date = date;
         this.my_workout = my_workout;
+        this.workout = workout;
         this.person = person;
         this.total_time = total_time;
         this.sets_completed = sets_completed;
@@ -48,23 +50,10 @@ public class WorkoutDone implements Parcelable{
         id = in.readInt();
         date = in.readString();
         my_workout = in.readParcelable(Workout.class.getClassLoader());
+        workout = in.readParcelable(Workout.class.getClassLoader());
         person = in.readInt();
         total_time = in.readString();
         sets_completed = in.readInt();
-    }
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(date);
-        dest.writeParcelable(my_workout, flags);
-        dest.writeInt(person);
-        dest.writeString(total_time);
-        dest.writeInt(sets_completed);
     }
 
     public static final Creator<WorkoutDone> CREATOR = new Creator<WorkoutDone>() {
@@ -72,6 +61,7 @@ public class WorkoutDone implements Parcelable{
         public WorkoutDone createFromParcel(Parcel in) {
             return new WorkoutDone(in);
         }
+
         @Override
         public WorkoutDone[] newArray(int size) {
             return new WorkoutDone[size];
@@ -106,4 +96,19 @@ public class WorkoutDone implements Parcelable{
         return sets_completed;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(date);
+        dest.writeParcelable(my_workout, flags);
+        dest.writeParcelable(workout, flags);
+        dest.writeInt(person);
+        dest.writeString(total_time);
+        dest.writeInt(sets_completed);
+    }
 }

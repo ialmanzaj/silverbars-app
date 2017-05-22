@@ -168,6 +168,21 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
         }
     }
 
+
+    /**
+     *
+     *
+     *
+     *
+     *     UI events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
+
     private void onErrorOn(){
         mErrorView.setVisibility(View.VISIBLE);
     }
@@ -187,6 +202,8 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     private void onEmptyViewOn(){mEmptyView.setVisibility(View.VISIBLE);}
 
     private void onEmptyViewOff(){mEmptyView.setVisibility(View.GONE);}
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

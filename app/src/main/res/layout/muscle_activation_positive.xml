@@ -64,6 +64,13 @@
                 android:contentDescription="@null" />
 
             <TextView
+                android:text="+"
+                android:textColor="@color/greenColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
+
+            <TextView
                 android:text="0"
                 android:textColor="@color/greenColor"
                 android:layout_width="wrap_content"
@@ -77,28 +84,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp" />
-
-            <TextView
-                android:layout_marginStart="5dp"
-                android:text="more activation than the "
-                android:textColor="@color/gray_active_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/date"
-                android:textColor="@color/gray_active_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp" />
-
-            <TextView
-                android:text=" before"
-                android:textColor="@color/gray_active_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp" />
 
         </LinearLayout>
     </LinearLayout>

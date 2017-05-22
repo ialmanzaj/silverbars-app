@@ -107,6 +107,21 @@ public class UserPreferencesActivity extends BaseActivity implements UserPrefere
     }
 
 
+    /**
+     *
+     *
+     *
+     *
+     *     UI events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
+
+
     private void onLoadingOn(){
         mLoadingView.setVisibility(View.VISIBLE);
     }

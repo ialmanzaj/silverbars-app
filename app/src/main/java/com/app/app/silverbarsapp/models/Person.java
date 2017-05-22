@@ -19,21 +19,16 @@ public class Person implements Parcelable{
     @SerializedName("user")
     private User user;
 
-
     @SerializedName("age")
     private int age;
-
 
     @SerializedName("muscles")
     private List<Muscle> muscles;
 
-
     @SerializedName("my_workouts")
     private List<String> my_workouts;
 
-
     public Person(){}
-
 
     protected Person(Parcel in) {
         id = in.readInt();

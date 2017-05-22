@@ -2,45 +2,18 @@
 <resources>
     <string name="app_name">Silverbars</string>
 
-
     <!-- Strings MAIN-MENU BOTTOM-BAR  -->
-    <string name="menu_home">Inicio</string>
     <string name="menu_myworkouts">Mis rutinas</string>
     <string name="menu_profile">Perfil</string>
     <string name="menu_progression">Mi progreso</string>
 
-    <string name="hello_blank_fragment">Hola fragmento en blanco</string>
-    <string name="title_activity_login">Ingresar</string>
-    <string name="content">Contenido</string>
-    <string name="action_websearch">Web search</string>
-    <string name="app_not_available">Lo siento, no explorador disponible</string>
-
-
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-    completions.</string>
-
-    <string name="search_hint">Buscar artista</string>
-
-
     <string name="action_settings">Configuraciones</string>
-
-    <string name="rep_edit">Total de Repeticiones</string>
 
     <!-- Strings related to activity_exercise_cards -->
     <string name="exercise_name">Nombre de Ejercicio</string>
     <string name="reps_value">1</string>
     <string name="reps_text">Reps</string>
 
-    <string name="filtertitle">Filtrar Rutinas</string>
     <string name="choose">Escoger</string>
 
 
@@ -51,19 +24,15 @@
     <string name="explore_button">EXPLORAR</string>
 
     <!-- Strings related to activity_playlist picker -->
-    <string name="clean_button_picker">Limpiar</string>
-    <string name="ready_button_picker">Listo</string>
 
     <!-- Strings related to activity_workingout -->
     <string name="zero">0</string>
     <string name="set_text">SET</string>
     <string name="exercise_text">EJERCICIO</string>
     <string name="pause_button">PAUSAR Rutina</string>
-    <string name="end_button">TERMINAR Rutina</string>
     <string name="song_name">NOMBRE DE CANCION</string>
     <string name="artist_name">NOMBRE DE ARTISTA</string>
     <string name="number_five">5</string>
-    <string name="get_ready_text">Prepárarate!</string>
 
 
     <!-- Strings related to activity_workouts -->
@@ -73,89 +42,23 @@
     <string name="rest_exercise">30s</string>
     <string name="rest_sets_text">Descanso entre Serie:</string>
     <string name="rest_sets">60s</string>
-    <string name="vibration_rep_text">Activar vibracion por repetición</string>
-    <string name="vibration_set_text">Activar vibracion por serie</string>
-    <string name="tempo_text">Tempo en Reps</string>
-    <string name="tempo_positive">3</string>
-    <string name="tempo_isometric">1</string>
-    <string name="tempo_negative">3</string>
-    <string name="select_music_text">Seleccionar tu música</string>
     <string name="exercises_text">Ejercicios</string>
     <string name="start_button">EMPEZAR</string>
-
-    <string name="no_song">No hay canción</string>
 
 
     <!-- Strings related to item workouts -->
     <string name="workout_name">NOMBRE DE RUTINA</string>
-    <string name="done_text">Listo</string>
     <string name="resume_workout_text">SEGUIR RUTINA</string>
-    <string name="pause_workout_text">PAUSAR RUTINA</string>
     <string name="rest_text">Descanso</string>
 
-    <string name="set_edit">Total de Sets</string>
 
-    <string name="tab_saved">Rutinas Guardadas</string>
-    <string name="tab_my_workouts">Mis Rutinas</string>
-
-    <string name="tab_workouts_home">Rutinas</string>
-    <string name="tab_myworkouts_home">Mis Rutinas</string>
-    <string name="tab_profile">Perfil</string>
-
-
-    <string-array name="navigation_array">
-        <item>Rutinas</item>
-        <item>Mis Rutinas</item>
-        <item>Perfil</item>
-    </string-array>
-
-    <string-array name="filter_items">
-        <item>ALL</item>
-        <item>ABS/CORE</item>
-        <item>UPPER BODY</item>
-        <item>LOWER BODY</item>
-    </string-array>
-
-    <string-array name="filter_items_text">
-        <item>Todo</item>
-        <item>ABS</item>
-        <item>Tren Superior</item>
-        <item>Tren Inferior</item>
-    </string-array>
-
-    <string-array name="preference_values">
-        <item>Twitter</item>
-        <item>Google</item>
-        <item>Instagram</item>
-        <item>Facebook</item>
-    </string-array>
-
-
-    <string name="rest_text_set">Descanso entre serie</string>
-    <string name="rest_text_exercise">Descanso entre ejercicio</string>
-
-    <string name="error_title_internet">Estás sin conexión a internet</string>
-    <string name="error_message_internet">Por Favor, Conectate a Internet y prueba de nuevo</string>
-    <string name="error_failure">La conexion fallo</string>
     <string name="error_message">Por Favor, intenta de nuevo</string>
     <string name="reload">Recargar</string>
 
-    <string name="title_dialog">Estas seguro de terminar la rutina?</string>
-    <string name="content_dialog">Vas a perder el progreso de tu rutina.</string>
     <string name="positive_dialog">SI</string>
     <string name="negative_dialog">NO</string>
 
-    <string name="create_text">Crear nueva rutina</string>
-    <string name="music_selection">Selecciona tu música</string>
-
-    <string name="progression_">Mi Progresión</string>
-    <string name="team">Mis equipos</string>
-    <string name="skill_progress">Progreso de mis Habilidades</string>
-    <string name="workout_shared">Rutinas Compartidas</string>
-    <string name="history_workouts_done">Mis rutinas completadas</string>
-
     <string name="exercises_no_selected">No has seleccionado ningún ejercicio</string>
-    <string name="muscles_involved">Músculos involucrados</string>
     <string name="something_wrong">Algo salió mal</string>
 
     <string name="session_content">Se cerrará la sesión con tu cuenta y todos los datos que tenga guardados se borrarán</string>
@@ -166,33 +69,10 @@
     <string name="add_exercises_title">Agregar ejercicios</string>
     <string name="add_more">Agregar más ejercicios</string>
 
-    <string name="songs">Mis Canciones</string>
-    <string name="playlist">Mis listas de reproducción</string>
-    <string name="spotify">Spotify</string>
-    <string name="soundcloud">SoundCloud</string>
-    <string name="coming_soon">Proximamente</string>
-
-    <string name="STRENGTH">FUERZA</string>
-    <string name="CARDIO">CARDIO</string>
-    <string name="ISOMETRIC">ISOMETRIC</string>
-    <string name="PYLOMETRICS">PLIOMETRÍA</string>
-
     <string name="save_workout">Guardar Rutina</string>
     <string name="audio_exercise">Descargar audio de cada ejercicio</string>
 
-    <string name="premium">Solo Premium</string>
-    <string name="only_premium">Solo disponible a usuarios Premium</string>
-    <string name="empty_playlist">No hay ninguna lista de reproducción</string>
-    <string name="results">Mis  Resultados</string>
-
-    <string name="create_playlist">Crea una nueva lista de reproducción</string>
-    <string name="title_playlist">Escribe el nombre de tu lista</string>
-    <string name="cancel">Cancelar</string>
-    <string name="playlist_name">Nombre de lista</string>
-
     <string name="exercise_adapter_option">Segundos</string>
-    <string name="add_exercises_button">Añadir ejercicio a rutina</string>
-    <string name="level">Nivel</string>
 
     <!---    Strings of LOGIN    -->
     <string name="slogan_login">Iniciando sesión para empezar a entrenar</string>
@@ -203,7 +83,6 @@
     <string name="working_out_seconds">Segundos</string>
 
     <!---    Strings of my workouts fragment   -->
-    <string name="myworkouts_fragment_saved">Rutinas guardadas</string>
     <string name="myworkouts_fragment_myworkouts">Mis rutinas</string>
 
     <!---    Strings of progress fragment   -->
@@ -251,7 +130,7 @@
     <string name="activity_workingout_dialog_content">Esta seguro que desea salir de la rutina?</string>
 
     <!---    Strings of fragment profile -->
-    <string name="fragment_profile_workout_done">Mis rutinas terminadas</string>
+    <string name="fragment_profile_workout_done">Mis rutinas completadas</string>
 
     <!---    Strings of fragment progress -->
     <string name="fragment_progress_empty">No has entrenado :(</string>
@@ -276,11 +155,6 @@
     <string name="user_workout_adapter_delete_content">Esta seguro, que desea eliminar esta rutina?</string>
 
     <!---    Strings of DIALOG  -->
-    <string name="yes_option">SI</string>
-    <string name="no_option">NO</string>
-
-    <string name="agree">De acuerdo</string>
-    <string name="disagree">Desacuerdo</string>
 
     <!---    Strings of tabs  -->
     <string name="tab_workout">Rutina</string>
@@ -316,6 +190,26 @@
 
     <string name="music_dialog_spotify">Spotify</string>
     <string name="music_dialog_my_music">Mi Música</string>
+
+    <!---    exercise progression view     -->
+    <string name="exercise_progresion_detail_equal">=</string>
+    <string name="exercise_progresion_detail_plus">+</string>
+    <string name="exercise_progresion_detail_porcen">%</string>
+    <string name="exercise_progresion_detail_positive_more">&#160;más&#160;</string>
+    <string name="exercise_progresion_detail_than">&#160;que&#160;</string>
+    <string name="exercise_progresion_detail_less">menos&#160;</string>
+    <string name="exercise_progresion_detail_same">igual&#160;</string>
+
+    <string name="progression_algoritm_days">días</string>
+    <string name="progression_algoritm_before">anterior</string>
+    <string name="progression_algoritm_week">semana</string>
+    <string name="progression_algoritm_month">mes</string>
+    <string name="progression_algoritm_last_time">hace algún tiempo</string>
+
+    <!---    exercise detail view     -->
+    <string name="exercise_detail_tab_exercises">Ejercicios</string>
+    <string name="exercise_detail_tab_focus">Enfoque</string>
+    <string name="exercise_detail_tab_activacion">Activación</string>
 
 
 </resources>

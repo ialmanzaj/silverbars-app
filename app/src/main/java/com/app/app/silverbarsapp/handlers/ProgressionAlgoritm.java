@@ -1,11 +1,16 @@
 package com.app.app.silverbarsapp.handlers;
 
-import android.util.Log;
+import android.content.Context;
 
+import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
-import com.app.app.silverbarsapp.models.MuscleActivation;
+import com.app.app.silverbarsapp.models.ExerciseProgressionCompared;
+import com.app.app.silverbarsapp.models.MuscleActivationCompared;
 import com.app.app.silverbarsapp.models.MuscleExercise;
 import com.app.app.silverbarsapp.utils.Utilities;
+
+import org.joda.time.DateTime;
+import org.joda.time.Period;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,67 +24,220 @@ public class ProgressionAlgoritm {
 
     private static final String TAG = ProgressionAlgoritm.class.getSimpleName();
 
-    private Filter filter = new Filter();
-    private Utilities utilities = new Utilities();
+    private Filter filter;
+    private Utilities utilities;
+    private Context context;
 
-    public ProgressionAlgoritm(){}
+    public ProgressionAlgoritm(Context context){
+        this.context = context;
+        filter =  new Filter();
+        utilities = new Utilities();
+    }
 
-    public ArrayList<ExerciseProgression> addFirstProgressions(ArrayList<ExerciseProgression> current_exercises){
-        //Log.d(TAG,"there's any progression");
-        ArrayList<ExerciseProgression> progressions = new ArrayList<>();
-        for (ExerciseProgression  current_exercise: current_exercises) {
+    public ArrayList<ExerciseProgressionCompared> addFirstProgressions(ArrayList<ExerciseProgression> progressions_newer){
+        ArrayList<ExerciseProgressionCompared> progressions = new ArrayList<>();
+        for (ExerciseProgression  current_progression: progressions_newer) {
+
             progressions.add(
-                    setOldValues(
-                            checkImprovementsWithNoOldProgression(current_exercise),current_exercise));
+                    checkImprovementsWithNoOldProgression(
+                            new ExerciseProgressionCompared(
+                                    null,
+                                    current_progression,
+                                    getPeriodDaily()
+                            )
+                    ));
         }
+
         return progressions;
     }
 
-    public ArrayList<ExerciseProgression> compareExerciseProgression(List<ExerciseProgression> old_progressions, ArrayList<ExerciseProgression> current_exercises){
-        Filter filter = new Filter();
-        ArrayList<ExerciseProgression> progressions = new ArrayList<>();
-        for (ExerciseProgression current_exercise : current_exercises){
 
-            ArrayList<ExerciseProgression> old_progressions_by_exercise = filter.filterProgressionByExercise(current_exercise.getExercise().getId(),old_progressions);
 
-            if (old_progressions_by_exercise.size() > 0){
-                progressions.add(
-                        setOldValues(
-                                getComparationReady(
-                                old_progressions_by_exercise.get(old_progressions_by_exercise.size()-1), current_exercise),
-                                current_exercise)
-                );
+    public ArrayList<ExerciseProgressionCompared> getProgressionComparedDaily(ArrayList<ExerciseProgression> last_progressions_old,ArrayList<ExerciseProgression> current_progressions){
+        //array of the progression compared
+        ArrayList<ExerciseProgressionCompared> progressions = new ArrayList<>();
+
+        for (ExerciseProgression current_progression: current_progressions){
+
+            //get the exercise id by progression
+            int exercise_id = current_progression.getExercise().getId();
+
+            ArrayList<ExerciseProgression> last_old_progressions_by_exercise = filter.filterProgressionByExercise(exercise_id,last_progressions_old);
+
+            //progression compared to the list
+            ExerciseProgressionCompared compared;
+
+            if (last_old_progressions_by_exercise.size() > 0) {
+
+                ExerciseProgression last_old_progression = last_old_progressions_by_exercise.get(last_old_progressions_by_exercise.size()-1);
+
+                compared = getComparationReady(
+                        new ExerciseProgressionCompared(
+                                last_old_progression,
+                                current_progression,
+                                getPeriodDaily(
+                                        filter.getDateFormated(last_old_progression.getDate()),
+                                        filter.getDateFormated(current_progression.getDate())
+                                )
+                        )
+                 );
+
             }else {
-                progressions.add(
-                        setOldValues(
-                                checkImprovementsWithNoOldProgression(current_exercise),current_exercise));
+
+                compared = checkImprovementsWithNoOldProgression(
+                        new ExerciseProgressionCompared(
+                                null,
+                                current_progression,
+                                getPeriodDaily()
+                        )
+                );
+            }
+
+            if (!filter.existExercise(progressions,exercise_id)){
+                progressions.add(compared);
             }
         }
         return progressions;
     }
 
-    private ExerciseProgression setOldValues(ExerciseProgression progression,ExerciseProgression old_progression){
-        progression.setSets_completed(old_progression.getSets_completed());
-        progression.setTotal_time(old_progression.getTotal_time());
 
-        return progression;
+    public ArrayList<ExerciseProgressionCompared> getProgressionComparedWeekly(
+            ArrayList<ExerciseProgression> progressions_last_week,ArrayList<ExerciseProgression> progressions_current_week){
+
+        //array of the progression compared
+        ArrayList<ExerciseProgressionCompared> progressions = new ArrayList<>();
+
+        for (ExerciseProgression current_week_progression: progressions_current_week){
+
+            //get the exercise id by progression
+            int exercise_id = current_week_progression.getExercise().getId();
+
+            //get all the acumulative old progression of this exercise
+            ExerciseProgression last_week_progressions_acumulative = getAcumulativeSameExerciseProgressions(
+                    filter.filterProgressionByExercise(exercise_id,progressions_last_week));
+
+            //get all the acumulative of the current progressions of this exercise
+            ExerciseProgression current_week_progressions_acumulative = getAcumulativeSameExerciseProgressions(
+                    filter.filterProgressionByExercise(exercise_id,progressions_current_week));
+
+            //progression compared to the list
+            ExerciseProgressionCompared compared;
+
+            if (last_week_progressions_acumulative != null) {
+
+                compared = getComparationReady(
+                        new ExerciseProgressionCompared(
+                                last_week_progressions_acumulative,
+                                current_week_progressions_acumulative,
+                                getPeriodWeekly()
+                        )
+                );
+
+            }else {
+
+                compared = checkImprovementsWithNoOldProgression(
+                        new ExerciseProgressionCompared(
+                                null,
+                                current_week_progressions_acumulative,
+                                getPeriodWeekly()
+                        )
+                );
+            }
+
+            if (!filter.existExercise(progressions,exercise_id)){
+                progressions.add(compared);
+            }
+        }
+        return progressions;
     }
 
-    private ExerciseProgression getComparationReady(ExerciseProgression old_progression,ExerciseProgression current_progression){
-          if (old_progression.getTotal_repetition() > 0) {
-              ExerciseProgression rep_exerciseProgression = repImprovement(old_progression.getRepetitions_done(), current_progression);
 
-            if (rep_exerciseProgression.isRepImprove() && rep_exerciseProgression.isPositive()){
-                return weightImprovement(old_progression,rep_exerciseProgression);
-            };
+    public ArrayList<ExerciseProgressionCompared> getProgressionComparedMonthly
+            (ArrayList<ExerciseProgression> progressions_last_month,ArrayList<ExerciseProgression> progressions_current_month){
+        ArrayList<ExerciseProgressionCompared> progressions = new ArrayList<>();
+
+        for (ExerciseProgression current_month_progression: progressions_current_month){
+
+            //get the exercise id by progression
+            int exercise_id = current_month_progression.getExercise().getId();
+
+            ExerciseProgression last_month_progressions_acumulative = getAcumulativeSameExerciseProgressions(
+                    filter.filterProgressionByExercise(exercise_id,progressions_last_month));
+
+            ExerciseProgression current_month_progressions_acumulative = getAcumulativeSameExerciseProgressions(
+                    filter.filterProgressionByExercise(exercise_id,progressions_current_month));
+
+            //progression compared to the list
+            ExerciseProgressionCompared compared;
+
+
+            if (last_month_progressions_acumulative != null) {
+
+                compared = getComparationReady(
+                        new ExerciseProgressionCompared(
+                                last_month_progressions_acumulative,
+                                current_month_progressions_acumulative,
+                                getPeriodMonthly()
+                        )
+                );
+
+            }else {
+
+                compared = checkImprovementsWithNoOldProgression(
+                        new ExerciseProgressionCompared(
+                                null,
+                                current_month_progressions_acumulative,
+                                getPeriodMonthly()
+                        )
+                );
+            }
+
+            if (!filter.existExercise(progressions,exercise_id)){
+                progressions.add(compared);
+            }
+        }
+        return progressions;
+    }
+
+    private String getPeriodDaily(DateTime date_progression_old,DateTime date_progression_newer){
+        Period period = new Period(date_progression_old, date_progression_newer);
+        return String.valueOf(period.getDays())+context.getString(R.string.progression_algoritm_days);
+    }
+
+    private String getPeriodDaily(){
+        return context.getString(R.string.progression_algoritm_last_time);
+    }
+
+    private String getPeriodWeekly(){
+        return context.getString(R.string.progression_algoritm_week)
+                +" "+
+                context.getString(R.string.progression_algoritm_before);
+    }
+
+    private String getPeriodMonthly(){
+        return context.getString(R.string.progression_algoritm_month)
+                +" " +
+                context.getString(R.string.progression_algoritm_before);
+    }
+
+
+    private ExerciseProgressionCompared getComparationReady(ExerciseProgressionCompared progressionCompared){
+          if (progressionCompared.getExerciseProgression_old().getTotal_repetition() > 0) {
+
+              ExerciseProgressionCompared rep_exerciseProgression = repImprovement(progressionCompared);
+
+            if (progressionCompared.isRepImprove() && progressionCompared.isPositive()){
+                return weightImprovement(progressionCompared);
+            }
 
             return rep_exerciseProgression;
 
         } else {
-              ExerciseProgression second_exerciseProgression = secondImprovement(old_progression.getSeconds_done(), current_progression);
 
-              if (second_exerciseProgression.isSecondImprove() && second_exerciseProgression.isPositive() ){
-                  return weightImprovement(old_progression,second_exerciseProgression);
+              ExerciseProgressionCompared second_exerciseProgression = secondImprovement(progressionCompared);
+
+              if (progressionCompared.isSecondImprove() && progressionCompared.isPositive() ){
+                  return weightImprovement(progressionCompared);
               }
 
               return second_exerciseProgression;
@@ -87,90 +245,120 @@ public class ProgressionAlgoritm {
     }
 
 
+    private ExerciseProgressionCompared checkImprovementsWithNoOldProgression(ExerciseProgressionCompared progressionCompared){
 
-    private ExerciseProgression checkImprovementsWithNoOldProgression(ExerciseProgression exerciseProgression_ready){
-        if (exerciseProgression_ready.getRepetitions_done() > 0 || exerciseProgression_ready.getSeconds_done() > 0) {
-            exerciseProgression_ready.setProgress(100);
-            exerciseProgression_ready.setPositive(true);
-            checkWetherIsRepOrSecond(exerciseProgression_ready);
+        checkWetherIsRepOrSecondBetter(progressionCompared);
+
+        if (progressionCompared.getExerciseProgression_newer().getRepetitions_done() > 0 ||
+                progressionCompared.getExerciseProgression_newer().getSeconds_done() > 0) {
+
+            progressionCompared.setProgress(100);
+            progressionCompared.setPositive(true);
+
         }else {
-            exerciseProgression_ready.setProgress(0);
-            exerciseProgression_ready.setNegative(true);
-            checkWetherIsRepOrSecond(exerciseProgression_ready);
+            progressionCompared.setProgress(0);
+            progressionCompared.setNegative(true);
+
         }
-        return exerciseProgression_ready;
+
+        return progressionCompared;
     }
 
-    private ExerciseProgression checkWetherIsRepOrSecond(ExerciseProgression exerciseProgression_ready){
-        if (exerciseProgression_ready.getTotal_repetition() > 0){
+
+    private ExerciseProgressionCompared checkWetherIsRepOrSecondBetter(ExerciseProgressionCompared progressionCompared){
+        if (progressionCompared.getExerciseProgression_newer().getTotal_repetition() > 0){
             //Log.d(TAG,"setRepImprove ");
-            exerciseProgression_ready.setRepImprove(true);
+            progressionCompared.setRepImprove(true);
         }else {
             //Log.d(TAG,"setSecondImprove ");
-            exerciseProgression_ready.setSecondImprove(true);
+            progressionCompared.setSecondImprove(true);
         }
-        return exerciseProgression_ready;
+        return progressionCompared;
     }
 
-    private ExerciseProgression weightImprovement(ExerciseProgression old_progression, ExerciseProgression current_exercise){
-        Log.d(TAG,current_exercise.getTotal_weight() + " : "+old_progression.getTotal_weight());
 
-        if (current_exercise.getTotal_weight()  > old_progression.getTotal_weight()){
-            current_exercise.setWeightImprove(true);
+
+    private ExerciseProgressionCompared weightImprovement(ExerciseProgressionCompared progressionCompared){
+        //Log.d(TAG,current_exercise.getTotal_weight() + " : "+old_progression.getTotal_weight());
+
+        ExerciseProgression exerciseProgression_newer = progressionCompared.getExerciseProgression_newer();
+        ExerciseProgression exerciseProgression_old = progressionCompared.getExerciseProgression_old();
+
+        double progress = getProgress(exerciseProgression_newer.getTotal_weight(),exerciseProgression_old.getTotal_weight());
+
+
+        if (exerciseProgression_newer.getTotal_weight()  > exerciseProgression_old.getTotal_weight()){
+            progressionCompared.setWeightImprove(true);
             //Log.d(TAG,"weightImprovement: Positive");
 
-            current_exercise.setProgress(getProgress(current_exercise.getTotal_weight(), old_progression.getTotal_weight()));
-            current_exercise.setPositive(true);
+            progressionCompared.setProgress(progress);
+            progressionCompared.setPositive(true);
 
-        }else if (current_exercise.getTotal_weight() < old_progression.getTotal_weight() ) {
-            current_exercise.setWeightImprove(true);
+        }else if (exerciseProgression_newer.getTotal_weight() < exerciseProgression_old.getTotal_weight() ) {
+            progressionCompared.setWeightImprove(true);
             //Log.d(TAG,"weightImprovement: negative");
 
 
-            current_exercise.setProgress(getProgress(current_exercise.getTotal_weight(), old_progression.getTotal_weight()));
-            current_exercise.setNegative(true);
+            progressionCompared.setProgress(progress);
+            progressionCompared.setNegative(true);
         }
-        return current_exercise;
+
+        return progressionCompared;
     }
 
 
-    private ExerciseProgression secondImprovement(int seconds_done_old_progression, ExerciseProgression current_exercise){
+    private ExerciseProgressionCompared secondImprovement(ExerciseProgressionCompared progressionCompared){
         //Log.d(TAG,"secondImprovement ");
-        current_exercise.setSecondImprove(true);
+        progressionCompared.setSecondImprove(true);
 
-        if (current_exercise.getSeconds_done()  > seconds_done_old_progression){
-            current_exercise.setProgress(getProgress(current_exercise.getRepetitions_done(),seconds_done_old_progression));
-            current_exercise.setPositive(true);
-        }else if(current_exercise.getSeconds_done() == seconds_done_old_progression) {
-            current_exercise.setEqual(true);
+        int  seconds_exerciseProgression_newer = progressionCompared.getExerciseProgression_newer().getSeconds_done();
+        int  seconds_done_exerciseProgression_old = progressionCompared.getExerciseProgression_old().getSeconds_done();
+
+        double progress = getProgress(seconds_exerciseProgression_newer,seconds_done_exerciseProgression_old);
+
+
+        if (seconds_exerciseProgression_newer  > seconds_done_exerciseProgression_old ){
+
+            progressionCompared.setProgress(progress);
+            progressionCompared.setPositive(true);
+
+        }else if(seconds_exerciseProgression_newer == seconds_done_exerciseProgression_old ) {
+            progressionCompared.setEqual(true);
         }else {
-            current_exercise.setProgress(getProgress(current_exercise.getRepetitions_done(),seconds_done_old_progression));
-            current_exercise.setNegative(true);
+            progressionCompared.setProgress(progress);
+            progressionCompared.setNegative(true);
         }
-        return current_exercise;
+
+        return progressionCompared;
     }
 
-    private ExerciseProgression repImprovement(int reps_done_old_progression, ExerciseProgression current_exercise){
-        //Log.d(TAG,"repImprovement ");
-        current_exercise.setRepImprove(true);
+    private ExerciseProgressionCompared repImprovement(ExerciseProgressionCompared progressionCompared){
+        progressionCompared.setRepImprove(true);
 
-        if (current_exercise.getRepetitions_done()  > reps_done_old_progression){
-            Log.d(TAG,current_exercise.getExercise().getExercise_name()+" rep mejoro ");
+        ExerciseProgression exerciseProgression_newer = progressionCompared.getExerciseProgression_newer();
+        ExerciseProgression exerciseProgression_old = progressionCompared.getExerciseProgression_old();
 
-            current_exercise.setProgress(getProgress(current_exercise.getRepetitions_done(),reps_done_old_progression));
-            current_exercise.setPositive(true);
+        double progress = getProgress(exerciseProgression_newer.getRepetitions_done(),exerciseProgression_old.getRepetitions_done());
 
-        }else if(current_exercise.getRepetitions_done() == reps_done_old_progression) {
-            current_exercise.setProgress(0);
-            current_exercise.setEqual(true);
+
+        if (exerciseProgression_newer.getRepetitions_done()  > exerciseProgression_old.getRepetitions_done()){
+
+            progressionCompared.setProgress(progress);
+
+            progressionCompared.setPositive(true);
+
+        }else if(exerciseProgression_newer.getRepetitions_done() == exerciseProgression_old.getRepetitions_done()) {
+
+            progressionCompared.setProgress(0);
+            progressionCompared.setEqual(true);
+
         }else {
-            Log.d(TAG,current_exercise.getExercise().getExercise_name()+" rep bajo ");
 
-            current_exercise.setProgress(getProgress(current_exercise.getRepetitions_done(),reps_done_old_progression));
-            current_exercise.setNegative(true);
+            progressionCompared.setProgress(progress);
+            progressionCompared.setNegative(true);
         }
 
-        return current_exercise;
+        return progressionCompared;
     }
 
 
@@ -190,26 +378,6 @@ public class ProgressionAlgoritm {
         return progress;
     }
 
-    public ArrayList<ExerciseProgression> compareWithOldProgressions(ArrayList<ExerciseProgression> current_week_progressions, ArrayList<ExerciseProgression> last_week_progressions){
-        ArrayList<ExerciseProgression> progressions_results = new ArrayList<>();
-
-        for (ExerciseProgression current_progression: current_week_progressions){
-
-            ExerciseProgression best_old_progression_by_current_exercise = getBestProgressions(
-                            filter.filterProgressionByExercise(current_progression.getExercise().getId(),last_week_progressions));
-
-            if (best_old_progression_by_current_exercise != null) {
-
-                progressions_results.add(getComparationReady(best_old_progression_by_current_exercise, current_progression));
-
-            }else {
-                progressions_results.add(checkImprovementsWithNoOldProgression(current_progression));
-            }
-
-        }
-
-        return progressions_results;
-    }
 
 
 
@@ -227,14 +395,12 @@ public class ProgressionAlgoritm {
                 if (same_exercises.size() > 1) {
                     //Log.d(TAG, "same_exercises: " +exerciseProgression.getExercise().getExercise_name() +" : "+ same_exercises.size() );
 
-                    ExerciseProgression exerciseProgression_best  = getBestProgressions(same_exercises);
-
                     //Log.d(TAG, "name: " + exerciseProgression_best.getExercise().getExercise_name());
                     //Log.d(TAG, "weight: " + exerciseProgression_best.getTotal_weight());
                     //Log.d(TAG, "rep: " + exerciseProgression_best.getTotal_repetition());
                     //Log.d(TAG, "second: " + exerciseProgression_best.getTotal_seconds());
 
-                    exerciseProgression_list = exerciseProgression_best;
+                    exerciseProgression_list = getBestProgressions(same_exercises);
                     progressions_best.add(exerciseProgression);
 
 
@@ -262,6 +428,34 @@ public class ProgressionAlgoritm {
                 best = bestProgression(best, old_progression);
             }
             return best;
+        }
+        return null;
+    }
+
+
+    public ExerciseProgression getAcumulativeSameExerciseProgressions(List<ExerciseProgression> progressions){
+        if (progressions.size() > 0) {
+            ExerciseProgression exerciseProgression = progressions.get(0);
+            int acumulative = 0;
+            double weight_acumulative = 0;
+
+            for (ExerciseProgression progression: progressions){
+                 if (progression.getTotal_repetition() > 0){
+
+                     acumulative = acumulative+progression.getRepetitions_done();
+                     exerciseProgression.setRepetitions_done(acumulative);
+
+                 }else {
+
+                     acumulative = acumulative+progression.getSeconds_done();
+                     exerciseProgression.setRepetitions_done(acumulative);
+                 }
+
+                weight_acumulative = weight_acumulative+progression.getTotal_weight();
+                exerciseProgression.setTotal_weight(weight_acumulative);
+            }
+
+            return exerciseProgression;
         }
         return null;
     }
@@ -318,15 +512,14 @@ public class ProgressionAlgoritm {
     }
 
 
-    public MuscleActivation getMuscleActivationProgression(String current_muscle, ArrayList<ExerciseProgression> current_progressions, ArrayList<ExerciseProgression> old_progressions){
-        int current_muscle_activation = getActivationTotal(current_muscle,current_progressions);
+    public MuscleActivationCompared getMuscleActivationProgression(
+            String current_muscle, ArrayList<ExerciseProgression> old_progressions, ArrayList<ExerciseProgression> progressions_newer){
+
         int old_muscle_activation = getActivationTotal(current_muscle,old_progressions);
+        int current_muscle_activation = getActivationTotal(current_muscle,progressions_newer);
 
-        //Log.d(TAG,"current_muscle_activation: "+current_muscle_activation);
-        //Log.d(TAG,"old_muscle_activation:  "+old_muscle_activation);
-
-        MuscleActivation muscleActivation = new MuscleActivation();
-        muscleActivation.setMuscle_name(current_muscle);
+        MuscleActivationCompared muscleActivation =
+                new MuscleActivationCompared(old_muscle_activation,current_muscle_activation,current_muscle);
 
         if (current_muscle_activation > old_muscle_activation){
             muscleActivation.setPositive(true);
@@ -336,31 +529,22 @@ public class ProgressionAlgoritm {
             muscleActivation.setNegative(true);
         }
 
+        muscleActivation.setMuscle_activation_average(
+                getMuscleActivationAverage(current_muscle,progressions_newer,current_muscle_activation));
 
-        muscleActivation.setMuscle_activation(getMuscleActivationAverage(current_muscle,current_progressions,current_muscle_activation));
-        muscleActivation.setPorcentaje(getProgress(current_muscle_activation,old_muscle_activation));
-
-        return muscleActivation;
-    }
-
-    public MuscleActivation getMusclesActivationTotal(String current_muscle, ArrayList<ExerciseProgression> current_progressions){
-        int current_muscle_activation = getActivationTotal(current_muscle,current_progressions);
-
-        MuscleActivation muscleActivation = new MuscleActivation();
-        muscleActivation.setMuscle_name(current_muscle);
-
-        muscleActivation.setMuscle_activation(current_muscle_activation);
+        muscleActivation.setProgress(
+                getProgress(current_muscle_activation,old_muscle_activation));
 
         return muscleActivation;
     }
 
-    public ArrayList<MuscleActivation> getMusclesActivationByExercisesProgressions(ArrayList<ExerciseProgression> current_exercises){
-        ArrayList<MuscleActivation> muscleActivations = new ArrayList<>();
+    public ArrayList<MuscleActivationCompared> getMusclesActivationByExercisesProgressions(ArrayList<ExerciseProgression> current_exercises){
+        ArrayList<MuscleActivationCompared> muscleActivations = new ArrayList<>();
         for ( String muscle: utilities.deleteCopiesofList(filter.getMusclesStringFromExerciseProgression(current_exercises))){
 
-            MuscleActivation muscleActivation = new MuscleActivation();
+            MuscleActivationCompared muscleActivation = new MuscleActivationCompared();
             muscleActivation.setMuscle_name(muscle);
-            muscleActivation.setMuscle_activation(filter.getMuscleExercise(muscle, current_exercises).getMuscle_activation());
+            muscleActivation.setMuscle_activation_average(filter.getMuscleExercise(muscle, current_exercises).getMuscle_activation());
 
             //Log.d(TAG,"muscleActivation "+muscleActivation.getMuscle_activation());
             muscleActivations.add(muscleActivation);

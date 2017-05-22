@@ -113,7 +113,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                 //Log.d(TAG,"img from local");
 
                 viewHolder.mExerciseImglocal.setVisibility(View.VISIBLE);
-                viewHolder.mExerciseImglocal.setImageBitmap(utilities.loadExerciseImageFromDevice(context,exercises.get(position).getExercise().getExercise_image()));
+                viewHolder.mExerciseImglocal.setImageBitmap
+                        (utilities.loadExerciseImageFromDevice(
+                                context,exercises.get(position).getExercise().getExercise_image()));
             }
 
 

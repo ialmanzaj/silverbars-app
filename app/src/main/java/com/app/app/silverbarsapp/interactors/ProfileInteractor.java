@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.app.app.silverbarsapp.MainService;
 import com.app.app.silverbarsapp.callbacks.ProfileCallback;
-import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.handlers.DatabaseHelper;
 
 import java.sql.SQLException;
@@ -25,40 +24,26 @@ public class ProfileInteractor {
 
     private DatabaseHelper helper;
 
+
     public ProfileInteractor(DatabaseHelper helper){
         this.helper = helper;
     }
 
 
-    public void getProfile(ProfileCallback callback){
-        try {
-
-            FbProfile fbProfile = helper.getProfileFacebook().queryForAll().get(0);
-
-            callback.getProfileFacebook(fbProfile);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void getProfileImage(ProfileCallback callback) throws SQLException {
+    public void getProfileImage(String id,ProfileCallback callback) throws SQLException {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://graph.facebook.com/")
                 .build();
 
-        String url_complete =  helper.getProfileFacebook().queryForAll().get(0).getId() + "/picture?type=large";
+        String url_complete =  id + "/picture?type=large";
 
-        Log.d(TAG,"url_complete: "+url_complete);
 
         MainService downloadService = retrofit.create(MainService.class);
         downloadService.downloadFile(url_complete).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
-                    Log.d(TAG,"response ");
                     callback.getProfileImg(response.body());
-
                 } else {
                     Log.v(TAG,"State server contact failed");
                 }

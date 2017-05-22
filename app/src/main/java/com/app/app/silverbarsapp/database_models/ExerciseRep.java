@@ -13,25 +13,25 @@ import java.io.Serializable;
 public class ExerciseRep  implements Serializable {
 
     @DatabaseField(generatedId = true,canBeNull = false, columnName = "id")
-    private int id;
+    int id;
 
     @DatabaseField(foreign = true)
-    private Exercise exercise;
+    Exercise exercise;
 
     @DatabaseField
-    private int repetition;
+    int repetition;
 
     @DatabaseField
-    private int seconds;
+    int seconds;
 
     @DatabaseField(foreign = true)
-    private UserWorkout userWorkout;
+    UserWorkout userWorkout;
 
     @DatabaseField(foreign = true)
-    private MySavedWorkout saved_workout;
+     MySavedWorkout saved_workout;
 
     @DatabaseField
-    private double weight;
+    double weight;
 
 
     public ExerciseRep() {}
@@ -104,9 +104,12 @@ public class ExerciseRep  implements Serializable {
         return weight;
     }
 
+
     public MySavedWorkout getSaved_workout() {
         return saved_workout;
     }
 }
+
+
 
 

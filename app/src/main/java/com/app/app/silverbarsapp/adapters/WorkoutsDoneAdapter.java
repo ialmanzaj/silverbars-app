@@ -70,12 +70,16 @@ public class WorkoutsDoneAdapter extends RecyclerView.Adapter<WorkoutsDoneAdapte
 
     @Override
     public void onBindViewHolder(WorkoutsDoneAdapter.ViewHolder viewHolder, int position) {
-        viewHolder.name.setText(items.get(position).getMy_workout().getWorkout_name());
+
+        String workout_name = items.get(position).getMy_workout() != null ?
+                items.get(position).getMy_workout().getWorkout_name() : items.get(position).getWorkout().getWorkout_name();
+
+
+        viewHolder.name.setText(workout_name);
         viewHolder.date.setText(items.get(position).getDate());
         viewHolder.total_time.setText(items.get(position).getTotal_time());
         viewHolder.sets.setText(String.valueOf(items.get(position).getSets_completed()));
     }
-
 
 
 }

@@ -34,7 +34,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
-import static com.app.app.silverbarsapp.activities.MainActivity.USERDATA;
 
 
 public class CreateWorkoutActivity extends AppCompatActivity implements OnStartDragListener, ExercisesSelectedAdapter.OnExerciseListener {
@@ -89,7 +88,7 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     private void eventCreateWorkout(){
         MixpanelAPI mMixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
-        mMixpanel.track("CreateWorkout_1", USERDATA);
+        mMixpanel.track("Create Workout 1", utilities.getUserData(this));
     }
 
     private void setupToolbar(){

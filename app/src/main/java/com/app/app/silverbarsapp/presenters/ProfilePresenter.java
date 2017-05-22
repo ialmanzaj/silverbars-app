@@ -1,7 +1,6 @@
 package com.app.app.silverbarsapp.presenters;
 
 import com.app.app.silverbarsapp.callbacks.ProfileCallback;
-import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.interactors.ProfileInteractor;
 import com.app.app.silverbarsapp.viewsets.ProfileView;
 
@@ -23,18 +22,8 @@ public class ProfilePresenter extends BasePresenter implements ProfileCallback{
         this.interactor = interactor;
     }
 
-    public void getProfile(){
-        interactor.getProfile(this);
-    }
-
-    public void getProfileImg() throws SQLException {
-        interactor.getProfileImage(this);
-    }
-
-
-    @Override
-    public void getProfileFacebook(FbProfile profile) {
-        view.displayProfileFacebook(profile);
+    public void getProfileImg(String id) throws SQLException {
+        interactor.getProfileImage(id,this);
     }
 
     @Override

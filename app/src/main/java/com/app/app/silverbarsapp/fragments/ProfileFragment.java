@@ -1,6 +1,8 @@
 package com.app.app.silverbarsapp.fragments;
 
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -10,11 +12,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.andretietz.retroauth.AuthAccountManager;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.activities.SettingsActivity;
+import com.app.app.silverbarsapp.activities.WorkoutsDoneActivity;
 import com.app.app.silverbarsapp.components.DaggerProfileComponent;
-import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.modules.ProfileModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ProfilePresenter;
@@ -34,15 +37,17 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
 
     private static final String TAG = ProfileFragment.class.getSimpleName();
 
+    @Inject
+    ProfilePresenter mProfilePresenter;
+
     @BindView(R.id.Profile_name) TextView mProfileName;
     @BindView(R.id.profile_image) ImageView mProfileImg;
 
     @BindView(R.id.my_workouts_done) LinearLayout mMyWorkoutsDone;
 
-    @Inject
-    ProfilePresenter mProfilePresenter;
 
     private Utilities utilities = new Utilities();
+    private String id;
 
     @Override
     protected int getFragmentLayout() {
@@ -66,10 +71,18 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mProfilePresenter.getProfile();
+        AuthAccountManager authAccountManager = new AuthAccountManager();
+        Account activeAccount = authAccountManager.getActiveAccount(CONTEXT.getString(R.string.authentication_ACCOUNT));
+
+        String name = AccountManager.get(CONTEXT).getUserData(activeAccount, CONTEXT.getString(R.string.authentication_NAME));
+        id = AccountManager.get(CONTEXT).getUserData(activeAccount, CONTEXT.getString(R.string.authentication_ID));
+
+
+        displayProfile(name);
         getImg();
 
-        //mMyWorkoutsDone.setOnClickListener(v -> {startActivity(new Intent(CONTEXT, WorkoutsDoneActivity.class));});
+
+        mMyWorkoutsDone.setOnClickListener(v -> {startActivity(new Intent(CONTEXT, WorkoutsDoneActivity.class));});
     }
 
     private void getImg(){
@@ -80,23 +93,20 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
         }else {
 
             try {
-                mProfilePresenter.getProfileImg();
+                mProfilePresenter.getProfileImg(id);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
 
-
     @OnClick(R.id.settings)
     public void settings(){
         CONTEXT.startActivity(new Intent(CONTEXT, SettingsActivity.class));
     }
 
-
-    @Override
-    public void displayProfileFacebook(FbProfile profile) {
-        mProfileName.setText(profile.getFirst_name() +" "+ profile.getLast_name());
+    private void displayProfile(String first_name) {
+        mProfileName.setText(first_name);
     }
 
     @Override

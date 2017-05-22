@@ -3,15 +3,15 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    android:layout_marginStart="5dp"
-    android:layout_marginEnd="5dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginStart="2dp"
+    android:layout_marginEnd="2dp"
     card_view:cardCornerRadius="2dp"
-    card_view:cardElevation="0.8dp">
+    card_view:cardElevation="1dp">
 
     <LinearLayout
         android:background="?selectableItemBackgroundBorderless"
-        android:padding="8dp"
+        android:padding="4dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -48,25 +48,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-
-
         </LinearLayout>
         <LinearLayout
+            android:minHeight="35dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:textSize="24sp"
-                android:text="="
+                android:textSize="25sp"
+                android:text="@string/exercise_progresion_detail_equal"
                 android:layout_marginStart="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/progress"
-                android:text="0"
                 android:layout_marginStart="5dp"
                 android:textColor="@color/gray_active_icon"
                 android:layout_width="wrap_content"
@@ -74,14 +72,14 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:text="%"
-                android:textColor="@color/gray_active_icon"
+                android:text="@string/exercise_progresion_detail_porcen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/gray_active_icon"
                 android:textSize="16sp" />
 
             <TextView
-                android:text="same "
+                android:text="@string/exercise_progresion_detail_same"
                 android:layout_marginStart="5dp"
                 android:textColor="@color/gray_active_icon"
                 android:layout_width="wrap_content"
@@ -95,22 +93,17 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp" />
 
+
             <TextView
-                android:text=" than the "
+                android:text="@string/exercise_progresion_detail_than"
                 android:textColor="@color/gray_active_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp" />
+
 
             <TextView
                 android:id="@+id/date"
-                android:textColor="@color/gray_active_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp" />
-
-            <TextView
-                android:text=" before"
                 android:textColor="@color/gray_active_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

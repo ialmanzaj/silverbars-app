@@ -24,12 +24,12 @@ import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.adapters.CreateFinalExercisesAdapter;
 import com.app.app.silverbarsapp.components.DaggerCreateWorkoutFinalComponent;
+import com.app.app.silverbarsapp.handlers.MuscleHandler;
 import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.models.Workout;
 import com.app.app.silverbarsapp.modules.CreateWorkoutFinalModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.CreateWorkoutFinalPresenter;
-import com.app.app.silverbarsapp.handlers.MuscleHandler;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.CreateWorkoutFinalView;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -48,7 +48,6 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
 import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
-import static com.app.app.silverbarsapp.activities.MainActivity.USERDATA;
 
 public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWorkoutFinalView{
 
@@ -157,7 +156,7 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     }
 
     private void mixPanelEventCreateWorkoutSaved(){
-        mMixpanel.track("Create Workout Saved", USERDATA);
+        mMixpanel.track("Create Workout Saved", utilities.getUserData(this));
     }
 
 

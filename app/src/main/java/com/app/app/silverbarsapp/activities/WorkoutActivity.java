@@ -54,7 +54,7 @@ import rx.functions.Action1;
 import static com.app.app.silverbarsapp.Constants.BroadcastTypes.METADATA_CHANGED;
 import static com.app.app.silverbarsapp.Constants.BroadcastTypes.PLAYBACK_STATE_CHANGED;
 import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
-import static com.app.app.silverbarsapp.activities.MainActivity.USERDATA;
+
 
 /**
  * Created by isaacalmanza on 10/04/16.
@@ -133,6 +133,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //init the presenter to get the context
         mWorkoutPresenter.init(this);
 
@@ -188,7 +189,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
     private void addMixPanelTracker(){
         MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
-        mixpanel.track("StartWorkout", USERDATA);
+        mixpanel.track("Start Workout", utilities.getUserData(this));
     }
 
 
@@ -243,7 +244,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         }
 
 
-        mExercisesList.setAdapter( new ExerciseAdapter(this,exercises));
+        mExercisesList.setAdapter(new ExerciseAdapter(this,exercises));
 
         setMusclesToView(muscles);
     }
@@ -271,6 +272,20 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
             }
         }
     }
+
+    /**
+     *
+     *
+     *
+     *
+     *     Music selection
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
 
     private void addSpotifyListener(){
         mSpotifyHandler = new SpotifyHandler(this);
@@ -323,6 +338,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         mLocalSongs = local_songs;
     }
 
+
     private void onSpotifySelected(Metadata metadata){
         if (mSpotifyHandler.isSpotifyLaunched()) {
             mSpotifyHandler.stopMusic();
@@ -372,7 +388,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
         startActivity(intent);
     }
-
 
     private Workout getCurrentWorkout(){
         return new Workout(workoutId,workoutName,workoutImgUrl,workoutSets,workoutLevel,mainMuscle,mExercises);

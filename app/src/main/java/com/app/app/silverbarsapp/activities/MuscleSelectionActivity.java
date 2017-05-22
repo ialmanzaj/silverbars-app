@@ -38,7 +38,6 @@ import butterknife.OnClick;
 import im.delight.android.webview.AdvancedWebView;
 
 import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
-import static com.app.app.silverbarsapp.activities.MainActivity.USERDATA;
 
 public class MuscleSelectionActivity extends BaseActivity implements MuscleSelectionView,MuscleListener,AdvancedWebView.Listener {
 
@@ -114,9 +113,9 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     }
 
 
-    private void mixPanelEventMuscleSelection(){mMixpanel.track("on Muscle Selection", USERDATA);}
+    private void mixPanelEventMuscleSelection(){mMixpanel.track("on Muscle Selection", utilities.getUserData(this));}
 
-    private void mixPanelEventMuscleSelectionCompleted(){mMixpanel.track("Muscle Selection Completed", USERDATA);}
+    private void mixPanelEventMuscleSelectionCompleted(){mMixpanel.track("Muscle Selection Completed", utilities.getUserData(this));}
 
 
     private void getExtras(Bundle extras){
@@ -287,6 +286,19 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     }
 
 
+    /**
+     *
+     *
+     *
+     *
+     *     Webview events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
 
     @Override
     public void onPageStarted(String url, Bitmap favicon) {}
@@ -297,6 +309,21 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     @Override
     public void onExternalPageRequest(String url) {}
 
+
+
+    /**
+     *
+     *
+     *
+     *
+     *     UI events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
 
 
     private void onLoadingViewOn(){
@@ -310,6 +337,8 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     private void onErrorViewOn(){mErrorView.setVisibility(View.VISIBLE);}
 
     private void onErrorViewOff(){mErrorView.setVisibility(View.GONE);}
+
+
 
 
     @Override

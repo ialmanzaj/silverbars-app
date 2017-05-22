@@ -8,7 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
-import com.app.app.silverbarsapp.models.MuscleActivation;
+import com.app.app.silverbarsapp.models.MuscleActivationCompared;
 import com.app.app.silverbarsapp.utils.Utilities;
 
 import java.util.ArrayList;
@@ -28,15 +28,14 @@ public class MuscleActivationAdapter extends RecyclerView.Adapter<MuscleActivati
     private static final String TAG = MuscleActivationAdapter.class.getSimpleName();
 
     private Utilities utilities = new Utilities();
-    private ArrayList<MuscleActivation> muscles_activations;
-    private int type_date;
+    private ArrayList<MuscleActivationCompared> muscles_activations;
 
-    public MuscleActivationAdapter(int type_date) {
+
+    public MuscleActivationAdapter() {
         muscles_activations = new ArrayList<>();
-        this.type_date = type_date;
     }
 
-    public void add(MuscleActivation muscleActivation) {
+    public void add(MuscleActivationCompared muscleActivation) {
         muscles_activations.add(muscleActivation);   
     }
 
@@ -44,7 +43,7 @@ public class MuscleActivationAdapter extends RecyclerView.Adapter<MuscleActivati
 
         @BindView(R.id.muscle_activation) ProgressBar muscle_activation;
         @BindView(R.id.porcentaje) TextView porcentaje;
-        @BindView(R.id.date) TextView date;
+
 
         public ViewHolder(View view) {
             super(view);
@@ -88,9 +87,8 @@ public class MuscleActivationAdapter extends RecyclerView.Adapter<MuscleActivati
 
     @Override
     public void onBindViewHolder(MuscleActivationAdapter.ViewHolder viewHolder, int position) {
-        viewHolder.date.setText(utilities.getDate(type_date));
-        viewHolder.muscle_activation.setProgress(muscles_activations.get(0).getMuscle_activation());
-        viewHolder.porcentaje.setText(utilities.formaterDecimal(String.valueOf(muscles_activations.get(0).getPorcentaje())));
+        viewHolder.muscle_activation.setProgress(muscles_activations.get(position).getMuscle_activation_average());
+        viewHolder.porcentaje.setText(utilities.formaterDecimal(String.valueOf(muscles_activations.get(position).getProgress())));
     }
 
 

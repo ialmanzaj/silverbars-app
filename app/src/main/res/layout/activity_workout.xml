@@ -234,6 +234,7 @@
                             </android.support.design.widget.TextInputLayout>
                     </LinearLayout>
                     <LinearLayout
+                        android:visibility="gone"
                         android:minHeight="35dp"
                         android:paddingStart="15dp"
                         android:paddingEnd="15dp"
@@ -254,6 +255,7 @@
 
                     </LinearLayout>
                     <LinearLayout
+                        android:visibility="gone"
                         android:minHeight="35dp"
                         android:paddingStart="15dp"
                         android:paddingEnd="15dp"

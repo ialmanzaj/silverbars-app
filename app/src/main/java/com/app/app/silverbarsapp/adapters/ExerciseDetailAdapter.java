@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
-import com.app.app.silverbarsapp.models.ExerciseProgression;
+import com.app.app.silverbarsapp.models.ExerciseProgressionCompared;
 import com.app.app.silverbarsapp.utils.Utilities;
 
 import java.util.ArrayList;
@@ -16,10 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.app.app.silverbarsapp.Constants.BETTER;
-import static com.app.app.silverbarsapp.Constants.DAILY;
 import static com.app.app.silverbarsapp.Constants.EQUAL;
-import static com.app.app.silverbarsapp.Constants.MONTH;
-import static com.app.app.silverbarsapp.Constants.WEEK;
 import static com.app.app.silverbarsapp.Constants.WORST;
 
 
@@ -31,13 +28,12 @@ public class ExerciseDetailAdapter extends RecyclerView.Adapter<ExerciseDetailAd
 
     private static final String TAG = ExerciseDetailAdapter.class.getSimpleName();
 
-    private ArrayList<ExerciseProgression> exercises;
+    private ArrayList<ExerciseProgressionCompared> progressions;
     private Utilities utilities = new Utilities();
-    private int type_date;
+    
 
-    public ExerciseDetailAdapter(ArrayList<ExerciseProgression> exercises,int type_date) {
-        this.exercises = exercises;
-        this.type_date = type_date;
+    public ExerciseDetailAdapter(ArrayList<ExerciseProgressionCompared> progressions) {
+        this.progressions = progressions;
     }
 
     public class ProgressionViewHolder extends RecyclerView.ViewHolder {
@@ -61,14 +57,14 @@ public class ExerciseDetailAdapter extends RecyclerView.Adapter<ExerciseDetailAd
 
     @Override
     public int getItemCount() {
-        return exercises.size();
+        return progressions.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (exercises.get(position).isPositive()){
+        if (progressions.get(position).isPositive()){
             return BETTER;
-        }else if (exercises.get(position).isEqual()){
+        }else if (progressions.get(position).isEqual()){
             return EQUAL;
         }else {
             return WORST;
@@ -80,54 +76,44 @@ public class ExerciseDetailAdapter extends RecyclerView.Adapter<ExerciseDetailAd
         switch (viewType){
             case BETTER:
                 return new ProgressionViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(
-                        R.layout.exercise_detail_item_positive, viewGroup, false));
+                        R.layout.exercise_progresion_detail_positive, viewGroup, false));
             case EQUAL:
                 return new ProgressionViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(
-                        R.layout.exercise_detail_item_equal, viewGroup, false));
+                        R.layout.exercise_progression_detail_equal, viewGroup, false));
             case WORST:
                 return new ProgressionViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(
-                        R.layout.exercise_detail_item_negative, viewGroup, false));
+                        R.layout.exercise_progression_detail_negative, viewGroup, false));
             default:
                 return null;
         }
     }
 
-    private String getDate(){
-        switch (type_date){
-            case DAILY: return "day";
-            case WEEK: return "week";
-            case MONTH: return "month";
-            default:
-                return "";
-        }
-    }
-
     @Override
     public void onBindViewHolder(ProgressionViewHolder viewHolder, int position) {
-        viewHolder.exercise_name.setText(exercises.get(position).getExercise().getExercise_name());
-        viewHolder.date.setText(getDate());
-        viewHolder.progress.setText(utilities.formaterDecimal(String.valueOf(exercises.get(position).getProgress())));
+        viewHolder.exercise_name.setText(progressions.get(position).getExerciseProgression_newer().getExercise().getExercise_name());
+        viewHolder.date.setText(progressions.get(position).getPeriod_in_beetween());
+        viewHolder.progress.setText(utilities.formaterDecimal(String.valueOf(progressions.get(position).getProgress())));
 
-        if (exercises.get(position).getTotal_weight() > 0) {
+        if (progressions.get(position).getExerciseProgression_newer().getTotal_weight() > 0) {
             viewHolder.weight.setText(" (+"+
-                    utilities.formaterDecimal(String.valueOf(exercises.get(position).getTotal_weight()))
+                    utilities.formaterDecimal(String.valueOf(progressions.get(position).getExerciseProgression_newer().getTotal_weight()))
                     +"kg)");
         }
 
-
-        if (exercises.get(position).getTotal_repetition() > 0) {
-            viewHolder.total.setText(String.valueOf(exercises.get(position).getRepetitions_done() + " reps"));
+        if (progressions.get(position).getExerciseProgression_newer().getTotal_repetition() > 0) {
+            viewHolder.total.setText(String.valueOf(progressions.get(position).getExerciseProgression_newer().getRepetitions_done() + " reps"));
 
         }else {
-            viewHolder.total.setText(String.valueOf(exercises.get(position).getSeconds_done() + " secs"));
+            viewHolder.total.setText(String.valueOf(progressions.get(position).getExerciseProgression_newer().getSeconds_done() + " secs"));
         }
 
-        if (exercises.get(position).isWeightImprove()){
+
+        if (progressions.get(position).isWeightImprove()){
             viewHolder.type_progress.setText("weight");
             return;
         }
 
-        if (exercises.get(position).isRepImprove()){viewHolder.type_progress.setText("reps");}
+        if (progressions.get(position).isRepImprove()){viewHolder.type_progress.setText("reps");}
         else {viewHolder.type_progress.setText("seconds");}
     }
 

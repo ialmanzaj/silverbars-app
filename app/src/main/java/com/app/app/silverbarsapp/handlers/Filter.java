@@ -1,7 +1,10 @@
 package com.app.app.silverbarsapp.handlers;
 
+import android.util.Log;
+
 import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
+import com.app.app.silverbarsapp.models.ExerciseProgressionCompared;
 import com.app.app.silverbarsapp.models.ExerciseRep;
 import com.app.app.silverbarsapp.models.MuscleExercise;
 import com.app.app.silverbarsapp.models.Workout;
@@ -26,6 +29,17 @@ public class Filter {
 
     public Filter(){}
 
+
+    public boolean existExercise(ArrayList<ExerciseProgressionCompared> progressions, int exercise_id){
+        for (ExerciseProgressionCompared compared: progressions){
+            if (compared.getExerciseProgression_newer().getExercise().getId() == exercise_id){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public MuscleExercise getMuscleExercise(String muscle, ArrayList<ExerciseProgression> current_exercises){
         for (MuscleExercise muscleExercise: getMusclesFromExerciseProgression(current_exercises)){
             if (Objects.equals(muscleExercise.getMuscle(), muscle)){
@@ -47,14 +61,19 @@ public class Filter {
     }
 
     public ArrayList<ExerciseProgression> getLastProgressions(List<ExerciseProgression> exercises_selected,List<ExerciseProgression> progressions){
-        ArrayList<ExerciseProgression> last_exercisesProgressions = new ArrayList<>();
-        for (ExerciseProgression exercise_selected:exercises_selected){
-            List<ExerciseProgression> exercises_found = filterProgressionByExercise(exercise_selected.getExercise().getId(),progressions);
-            if (exercises_found.size() > 2){
-                last_exercisesProgressions.add(exercises_found.get(exercises_found.size()-2));
+        ArrayList<ExerciseProgression> last_progressions = new ArrayList<>();
+        for (ExerciseProgression exercise_selected: exercises_selected){
+
+            int exercise_id  = exercise_selected.getExercise().getId();
+
+            List<ExerciseProgression> exercises_found = filterProgressionByExercise(exercise_id,progressions);
+            Log.d(TAG,"exercises_found"+exercises_found.size());
+
+            if (exercises_found.size() >= 2){
+                last_progressions.add(exercises_found.get(exercises_found.size()-2));
             }
         }
-        return last_exercisesProgressions;
+        return last_progressions;
     }
 
     public List<String> getMusclesStringFromExerciseProgression(ArrayList<ExerciseProgression> exercises){

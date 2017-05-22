@@ -49,17 +49,14 @@ import rx.Subscription;
 import rx.functions.Action1;
 
 import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
-import static com.app.app.silverbarsapp.activities.MainActivity.USERDATA;
 
 
 public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     private static final String TAG = WorkingOutActivity.class.getSimpleName();
 
-
     @Inject
     WorkingOutPresenter mWorkingOutPresenter;
-
 
 
     @BindView(R.id.player_layout) LinearLayout mPlayerLayout;
@@ -177,13 +174,9 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         mMixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
     }
 
+    private void mixPanelEventWorkoutCompleted(){mMixpanel.track("Workout Completed", utilities.getUserData(this));}
 
-    private void mixPanelEventWorkoutCompleted(){
-        mMixpanel.track("Workout Completed", USERDATA);
-    }
-
-    private void mixPanelEventWorkoutCancel(){mMixpanel.track("Workout Canceled", USERDATA);}
-
+    private void mixPanelEventWorkoutCancel(){mMixpanel.track("Workout Canceled", utilities.getUserData(this));}
 
 
     private void getExtras(Bundle extras){
@@ -253,9 +246,9 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         //move
         mWorkingOutPresenter.nextExercise();
 
+
         return false;
     }
-
 
     private void saveProgression(){
         int position = Integer.parseInt(mCurrentExercisePositionText.getText().toString())-1;
@@ -629,6 +622,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     private ArrayList<ExerciseProgression> setTotalTimeToExercises(ArrayList<ExerciseRep> exercises,
                                                                    ArrayList<ExerciseProgression> exercises_progresions){
+
         for (int position = 0;position<exercises.size();position++){
             //set the total time
 
@@ -789,7 +783,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     private void destroy(){
         mMixpanel.flush();
 
-
         onScreenOff();
         RXSubscriptionManager.unsubscribe(this);
     }
@@ -823,5 +816,29 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         destroy();
         super.onDestroy();
     }
+
+
+
+
+    /**
+     *
+     *
+     *
+     *
+     *
+     *    Data for mixpanel
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+
+
+
+
 
 }

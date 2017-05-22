@@ -1,26 +1,13 @@
 package com.app.app.silverbarsapp.activities;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
-import android.widget.RelativeLayout;
-
-import com.app.app.silverbarsapp.R;
-
-import java.io.File;
-import java.util.ArrayList;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by isaacalmanza on 10/04/16.
  */
 public class SelectionMusicActivity extends AppCompatActivity {
 
-    private static final String TAG = SelectionMusicActivity.class.getSimpleName();
+    /*private static final String TAG = SelectionMusicActivity.class.getSimpleName();
 
     private static final int LOCAL_MUSIC = 1;
     private static final int SPOTIFY_MUSIC = 2;
@@ -87,5 +74,5 @@ public class SelectionMusicActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
+*/
 }

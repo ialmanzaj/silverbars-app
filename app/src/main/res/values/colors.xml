@@ -4,21 +4,13 @@
     <color name="colorPrimaryDark">#000</color>
     <color name="colorSecondary">#512da8</color>
     <color name="morado_oscuro">#3C1964</color>
-    <color name="itemSelected">#92673ab7</color>
-    <color name="colorAccent">#607d8b</color>
     <color name="colorPrimaryText">#212121</color>
-    <color name="colorSecondaryText">#727272</color>
     <color name="firstColor">#1ac300</color>
     <color name="secondColor">#cb0000</color>
     <color name="greenColor">#2FCCAA</color>
-    <color name="thirdColor">#000595</color>
-    <color name="fourthColor">#4d4d4d</color>
     <color name="grey300">#E0E0E0</color>
-    <color name="grey200">#EEEEEE</color>
     <color name="grey100">#F5F5F5</color>
-    <color name="colorInactive">#f5f5f5</color>
     <color name="grey50">#FAFAFA</color>
     <color name="white">#fff</color>
-    <color name="bookmark">#DBD872</color>
 </resources>
 

@@ -15,8 +15,8 @@ import com.app.app.silverbarsapp.adapters.ExerciseDetailAdapter;
 import com.app.app.silverbarsapp.adapters.MuscleActivationAdapter;
 import com.app.app.silverbarsapp.adapters.SkillAdapter;
 import com.app.app.silverbarsapp.components.DaggerExerciseDetailComponent;
-import com.app.app.silverbarsapp.models.ExerciseProgression;
-import com.app.app.silverbarsapp.models.MuscleActivation;
+import com.app.app.silverbarsapp.models.ExerciseProgressionCompared;
+import com.app.app.silverbarsapp.models.MuscleActivationCompared;
 import com.app.app.silverbarsapp.modules.ExerciseDetailModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ExerciseDetailPresenter;
@@ -24,7 +24,6 @@ import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.ExerciseDetailView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -45,7 +44,9 @@ public class ExerciseDetailActivity extends BaseActivity implements ExerciseDeta
     @BindView(R.id.muscle_selected)TextView mMuscleSelected;
     @BindView(R.id.activation) RecyclerView mMuscleActivation;
 
+
     private Utilities utilities = new Utilities();
+
 
     @Override
     protected int getLayout() {
@@ -82,18 +83,14 @@ public class ExerciseDetailActivity extends BaseActivity implements ExerciseDeta
         String muscle = extras.getString("subtitle","");
         mMuscleSelected.setText(muscle);
 
-        //which date is month,week or daily
-        int type_date = extras.getInt("type_date");
+        ArrayList<ExerciseProgressionCompared> mExercises = extras.getParcelableArrayList("exercises");
 
-        ArrayList<ExerciseProgression> mExercises = extras.getParcelableArrayList("exercises");
-
-        setupAdapter(mExercises,type_date);
+        setupAdapter(mExercises);
         setupAdapterSkills(mExercises);
 
 
-
-        MuscleActivation muscleActivation = extras.getParcelable("muscle_activation");
-        setupAdapterMuscleActivation(muscleActivation,type_date);
+        MuscleActivationCompared muscleActivation = extras.getParcelable("muscle_activation");
+        setupAdapterMuscleActivation(muscleActivation);
     }
 
     private void setupTabs(){
@@ -101,40 +98,40 @@ public class ExerciseDetailActivity extends BaseActivity implements ExerciseDeta
         Tab_layout.setup();
 
         TabHost.TabSpec muscle_activation = Tab_layout.newTabSpec("Activation");
-        muscle_activation.setIndicator("Activation");
+        muscle_activation.setIndicator(getString(R.string.exercise_detail_tab_activacion));
         muscle_activation.setContent(R.id.activation);
 
         TabHost.TabSpec exercises = Tab_layout.newTabSpec("Exercises");
-        exercises.setIndicator("Exercises");
+        exercises.setIndicator(getString(R.string.exercise_detail_tab_exercises));
         exercises.setContent(R.id.exercises);
 
         TabHost.TabSpec skills = Tab_layout.newTabSpec("Focus");
-        skills.setIndicator("Focus");
+        skills.setIndicator(getString(R.string.exercise_detail_tab_focus));
         skills.setContent(R.id.skills);
 
-        Tab_layout.addTab(muscle_activation);
         Tab_layout.addTab(exercises);
         Tab_layout.addTab(skills);
+        Tab_layout.addTab(muscle_activation);
     }
 
-    private void setupAdapter(ArrayList<ExerciseProgression> exercises,int type_date){
+    private void setupAdapter(ArrayList<ExerciseProgressionCompared> progressions){
         //mExercisesList settings
         mExercisesList.setLayoutManager(new LinearLayoutManager(this));
         mExercisesList.setNestedScrollingEnabled(false);
         mExercisesList.setHasFixedSize(false);
-        mExercisesList.setAdapter(new ExerciseDetailAdapter(exercises,type_date));
+        mExercisesList.setAdapter(new ExerciseDetailAdapter(progressions));
     }
 
-    private void setupAdapterSkills(ArrayList<ExerciseProgression> exercises){
+    private void setupAdapterSkills(ArrayList<ExerciseProgressionCompared> progressions){
         //mExercisesList settings
         mSkillsList.setLayoutManager(new LinearLayoutManager(this));
         mSkillsList.setNestedScrollingEnabled(false);
         mSkillsList.setHasFixedSize(false);
-        mSkillsList.setAdapter(new SkillAdapter(utilities.getTypesByExerciseProgression(exercises)));
+        mSkillsList.setAdapter(new SkillAdapter(utilities.getTypesByExerciseProgression(progressions)));
     }
 
-    private void setupAdapterMuscleActivation(MuscleActivation muscleActivation,int type_date ){
-        MuscleActivationAdapter adapter = new MuscleActivationAdapter(type_date);
+    private void setupAdapterMuscleActivation(MuscleActivationCompared muscleActivation){
+        MuscleActivationAdapter adapter = new MuscleActivationAdapter();
         //mExercisesList settings
         adapter.add(muscleActivation);
         mMuscleActivation.setLayoutManager(new LinearLayoutManager(this));
@@ -143,8 +140,6 @@ public class ExerciseDetailActivity extends BaseActivity implements ExerciseDeta
         mMuscleActivation.setAdapter(adapter);
     }
 
-
-
     private void setupToolbar(String title){
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -152,10 +147,6 @@ public class ExerciseDetailActivity extends BaseActivity implements ExerciseDeta
             getSupportActionBar().setTitle(title);
         }
     }
-
-    @Override
-    public void onProgressions(List<com.app.app.silverbarsapp.database_models.ExerciseProgression> progressions) {}
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

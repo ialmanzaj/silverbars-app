@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.components.DaggerLoginComponent;
-import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.models.AccessToken;
 import com.app.app.silverbarsapp.modules.LoginModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
@@ -24,6 +23,8 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -33,6 +34,7 @@ import org.json.JSONException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -55,7 +57,7 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
     private CallbackManager callbackManager;
 
     private String mFbToken;
-    private FbProfile profile_fb;
+    private Account account;
 
     private Utilities utilities = new Utilities();
     private PendingAction pendingAction = PendingAction.NONE;
@@ -113,7 +115,7 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
                 //saving the token
                 mFbToken = loginResult.getAccessToken().getToken();
 
-                // App code
+                //GET user data
                 GraphRequest request = GraphRequest.newMeRequest(
                         loginResult.getAccessToken(),
                         (object, response) -> {
@@ -127,10 +129,11 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
                             try {
 
                                 id = object.getString("id");
+                                name = object.getString("name");
                                 email = object.getString("email");
                                 birthday = object.getString("birthday"); // 01/31/1980 format
                                 gender = object.getString("gender");
-                                name = object.getString("name");
+
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -139,15 +142,13 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
                             if (name != null) {
                                 getProfileInfo(
                                         id,
-                                        getFirstName(name),
-                                        getLastName(name),
+                                        name,
                                         birthday,
                                         gender,
                                         email
                                 );
                             }
                         });
-
 
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "id,name,email,gender,birthday");
@@ -161,51 +162,58 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
                 connect();
             }
         });
+
+
+        ProfileTracker profileTracker = new ProfileTracker() {
+            @Override
+            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {}
+        };
+        profileTracker.startTracking();
     }
 
-    private String getFirstName(String name){
-        String first_name;
-        if (name.contains(" ")){
-            first_name = name.split(" ")[0];
-        }else {
-            first_name = name;
-        }
-
-        return first_name;
-    }
-
-    private String getLastName(String name){
-        String last_name = "";
-        if (name.contains(" ")){
-            last_name = name.split(" ")[1];
-        }
-
-        return last_name;
-    }
 
     private void connect(){
         utilities.toast(this,getString(R.string.connect_internet));
     }
 
 
-    private void getProfileInfo(String id,String first_name,String last_name,String birthday,String gender,String email) {
+    private void getProfileInfo(String id,String first_name,String birthday,String gender,String email) {
         switch (pendingAction) {
             case NONE:
-                saveProfile(new FbProfile(Long.parseLong(id),first_name,last_name,birthday,gender,email));
+                saveUserData(id,first_name,birthday,gender,email);
                 pendingAction = PendingAction.SENDED;
                 break;
         }
     }
 
-    @Override
-    public void onProfileSaved(FbProfile profile_fb) {
-        this.profile_fb = profile_fb;
+    private void saveUserData(String id,String name,String birthday,String gender,String email){
+        if (account == null) {
+            //current account
+            account = createOrGetAccount(name);
+
+            //store data
+            storeUserData(account, getString(R.string.authentication_ID),
+                    !Objects.equals(id, "") ? id : "id");
+
+            storeUserData(account, getString(R.string.authentication_NAME),
+                    !Objects.equals(name, "") ? name : "name");
+
+            storeUserData(account, getString(R.string.authentication_EMAIL),
+                    !Objects.equals(email, "") ? email : "email");
+
+            storeUserData(account,getString(R.string.authentication_GENDER),
+                    !Objects.equals(gender, "") ? gender : "gender");
+
+            storeUserData(account,getString(R.string.authentication_AGE),
+                    !Objects.equals(birthday, "") ? utilities.getAge(birthday) : "age");
+        }
+
+        //get access token
         mLoginPresenter.getAccessToken(mFbToken);
     }
 
     @Override
     public void displayToken(AccessToken accessToken) {
-        Account account = createOrGetAccount(profile_fb.getFirst_name());
         storeToken(account, getString(R.string.authentication_TOKEN),  accessToken.getAccess_token(),  accessToken.getRefresh_token());
         storeUserData(account,getString(R.string.authentication_USER),"user");
 
@@ -213,6 +221,8 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
         startActivity(new Intent(this, UserPreferencesActivity.class));
         finalizeAuthentication(account);
     }
+
+
 
     @Override
     public void displayNetworkError() {
@@ -228,10 +238,6 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
         new Utilities().toast(this,getString(R.string.connect_internet));
     }
 
-    private void saveProfile(FbProfile profile){
-        mLoginPresenter.saveProfile(profile);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -243,6 +249,21 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
         LoginManager.getInstance().logOut();
     }
 
+
+    /**
+     *
+     *
+     *
+     *
+     *     UI events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
+
     private void onLoadingOn(){
         mLoadingView.setVisibility(View.VISIBLE);
     }
@@ -250,6 +271,8 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
     private void onLoadingOff(){
         mLoadingView.setVisibility(View.GONE);
     }
+
+
 
     @Override
     protected void onDestroy() {

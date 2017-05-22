@@ -13,23 +13,23 @@ import java.io.Serializable;
 public class Muscle implements Serializable{
 
     @DatabaseField(generatedId = true,canBeNull = false, columnName = "id")
-    protected int id;
+    int id;
 
     @DatabaseField
-    private String muscle;
+    String muscle;
 
     @DatabaseField
-    private int muscle_activation;
+    int muscle_activation;
 
     @DatabaseField
-    private String classification;
+    String classification;
 
     @DatabaseField
-    private int progression_level;
+    int progression_level;
 
 
     @DatabaseField(foreign = true)
-    protected Exercise exercise;
+    Exercise exercise;
 
 
     public Muscle(){}

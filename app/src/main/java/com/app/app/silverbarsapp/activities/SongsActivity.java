@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.SparseBooleanArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -15,8 +14,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.app.app.silverbarsapp.utils.MusicService;
 import com.app.app.silverbarsapp.R;
+import com.app.app.silverbarsapp.utils.MusicService;
 import com.app.app.silverbarsapp.utils.Utilities;
 
 import java.io.File;
@@ -89,7 +88,7 @@ public class SongsActivity extends AppCompatActivity {
 
     @OnClick(R.id.done)
     public void doneButton(){
-        int[] playlist = getPositionsSelected(mListSongsView,songs);
+        int[] playlist = utilities.getPositionsSelected(mListSongsView,songs.size());
 
         if (playlist == null){
             utilities.toast(this,getString(R.string.activity_song_error_no_music));
@@ -97,43 +96,9 @@ public class SongsActivity extends AppCompatActivity {
         }
 
         Intent return_Intent = new Intent();
-        return_Intent.putExtra("songs",getSongsSelected(playlist,songs));
+        return_Intent.putExtra("songs",utilities.getFilesSelectedByPositions(playlist,songs));
         setResult(RESULT_OK, return_Intent);
         finish();
-    }
-
-    private int[] getPositionsSelected(ListView listView,ArrayList<File> songs){
-        int choice = listView.getCount();
-        long[] selected = new long[choice];
-        final SparseBooleanArray spa = listView.getCheckedItemPositions();
-
-        if (spa.size() != 0) {
-            int[] playlist = new int[listView.getCheckedItemCount()];
-            int x = 0;
-            for (int i = 0; i < choice; i++) {
-                selected[i] = -1;
-            }
-            for (int i = 0; i < choice; i++) {
-                if (spa.get(i)) {
-                    selected[i] = listView.getItemIdAtPosition(i);
-                }
-            }
-            for (int j = 0; j < songs.size(); j++) {if (j == selected[j]) {
-                playlist[x] =  j;
-                x++;
-            }
-            }
-            return playlist;
-        }else
-            return null;
-    }
-
-    private ArrayList<File> getSongsSelected(int[] positions_selected,ArrayList<File> songs){
-        ArrayList<File> songs_selected = new ArrayList<>();
-        for (int song_selected_pos : positions_selected) {
-            songs_selected.add(songs.get(song_selected_pos));
-        }
-        return songs_selected;
     }
 
     private void setupToolbar(){
@@ -144,6 +109,21 @@ public class SongsActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     *
+     *
+     *
+     *
+     *     UI events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
+
     private void onEmptyViewOn(){
         mEmptyStateView.setVisibility(View.VISIBLE);
     }
@@ -151,6 +131,8 @@ public class SongsActivity extends AppCompatActivity {
     private void onEmptyViewOff(){
         mEmptyStateView.setVisibility(View.GONE);
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -14,25 +14,25 @@ import java.io.Serializable;
 public class Exercise implements Serializable{
 
     @DatabaseField(id = true,canBeNull = false, columnName = "id")
-    private int id;
+    int id;
 
     @DatabaseField
-    private String exercise_name;
+    String exercise_name;
 
     @DatabaseField
-    protected String level;
+    String level;
 
     @ForeignCollectionField(eager = true)
-    private ForeignCollection<TypeExercise> type_exercise;
+    ForeignCollection<TypeExercise> type_exercise;
 
     @DatabaseField
-    private String exercise_audio;
+    String exercise_audio;
 
     @DatabaseField
-    private String exercise_image;
+    String exercise_image;
 
     @ForeignCollectionField(eager = true)
-    private ForeignCollection<Muscle> muscles;
+    ForeignCollection<Muscle> muscles;
 
     public Exercise(){}
 

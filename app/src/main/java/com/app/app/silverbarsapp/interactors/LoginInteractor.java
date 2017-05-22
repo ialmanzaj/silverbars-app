@@ -2,12 +2,9 @@ package com.app.app.silverbarsapp.interactors;
 
 import com.app.app.silverbarsapp.LoginService;
 import com.app.app.silverbarsapp.callbacks.LoginCallback;
-import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.handlers.DatabaseHelper;
 import com.app.app.silverbarsapp.handlers.DatabaseQueries;
 import com.app.app.silverbarsapp.models.AccessToken;
-
-import java.sql.SQLException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,17 +27,6 @@ public class LoginInteractor {
     public LoginInteractor(LoginService loginService,DatabaseHelper helper){
         this.loginService = loginService;
         this.databaseQueries = new DatabaseQueries(helper);
-    }
-
-    public void saveProfile(FbProfile profile, LoginCallback callback){
-        try {
-
-            FbProfile profile_saved = databaseQueries.saveFaceProfile(profile);
-            callback.onProfileSaved(profile_saved);
-
-        } catch (SQLException e) {
-           // Log.e(TAG,"SQLException",e);
-        }
     }
 
     public void getAccessToken(LoginCallback callback, String fbAccesstoken){

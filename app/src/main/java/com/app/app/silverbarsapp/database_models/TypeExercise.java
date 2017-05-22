@@ -10,13 +10,13 @@ import com.j256.ormlite.table.DatabaseTable;
 public class TypeExercise {
 
     @DatabaseField(generatedId = true,canBeNull = false, columnName = "id")
-    private int id;
+    int id;
 
     @DatabaseField
-    private String type;
+    String type;
 
     @DatabaseField(foreign = true)
-    protected Exercise exercise;
+    Exercise exercise;
 
 
     public TypeExercise(){}

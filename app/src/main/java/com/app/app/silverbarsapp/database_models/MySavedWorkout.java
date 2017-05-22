@@ -10,10 +10,10 @@ import com.j256.ormlite.table.DatabaseTable;
 public class MySavedWorkout extends Workout {
 
     @DatabaseField(id = true, columnName = "ID", canBeNull = false)
-    private int id;
+    int id;
 
     @DatabaseField
-    private boolean saved;
+    boolean saved;
 
     public MySavedWorkout(){}
 
@@ -39,6 +39,7 @@ public class MySavedWorkout extends Workout {
     public void setId(int id) {
         this.id = id;
     }
+
 }
 
 

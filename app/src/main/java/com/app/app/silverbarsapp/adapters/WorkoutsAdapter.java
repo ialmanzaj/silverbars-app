@@ -71,7 +71,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
         }
 
         @OnClick(R.id.btn)
-        public void startWorkout(View view){
+        public void startWorkoutButton(View view){
             Workout workout = (Workout) view.getTag();
 
             Intent intent = new Intent(context, WorkoutActivity.class);
@@ -100,7 +100,6 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
             viewHolder.workout_name.setText(workouts.get(position).getWorkout_name());
             viewHolder.start_button.setTag(workouts.get(position));
-
             viewHolder.workout_img_cache.setImageURI(Uri.parse(workouts.get(position).getWorkout_image()));
 
         }catch (NullPointerException e){Log.e(TAG,"NullPointerException",e.getCause());}

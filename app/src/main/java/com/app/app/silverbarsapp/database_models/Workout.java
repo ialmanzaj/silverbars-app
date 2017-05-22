@@ -12,22 +12,22 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Workout {
 
     @DatabaseField
-    private String workout_name;
+    String workout_name;
 
     @DatabaseField
-    private String workout_image;
+    String workout_image;
 
     @DatabaseField
-    private int sets;
+    int sets;
 
     @DatabaseField
-    private String level;
+    String level;
 
     @DatabaseField
-    private String main_muscle;
+    String main_muscle;
 
     @ForeignCollectionField(eager = true)
-    private ForeignCollection<ExerciseRep> exercises;
+    ForeignCollection<ExerciseRep> exercises;
 
 
     public Workout(String workout_name,String workout_image,int sets,String level,String main_muscle){
@@ -87,5 +87,6 @@ public class Workout {
     public void setExercises(ForeignCollection<ExerciseRep> exercises) {
         this.exercises = exercises;
     }
+
 
 }

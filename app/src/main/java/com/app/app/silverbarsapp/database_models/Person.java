@@ -10,19 +10,19 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Person {
 
     @DatabaseField(id = true, columnName = "ID", canBeNull = false)
-    private int id;
+    int id;
 
     @DatabaseField
-    private String username;
+    String username;
 
     @DatabaseField
-    private String first_name;
+    String first_name;
 
     @DatabaseField
-    private String last_name;
+    String last_name;
 
     @DatabaseField
-    private String email;
+    String email;
 
 
     public Person(){}

@@ -8,7 +8,6 @@ import com.app.app.silverbarsapp.database_models.ExerciseRep;
 import com.app.app.silverbarsapp.database_models.Muscle;
 import com.app.app.silverbarsapp.database_models.MySavedWorkout;
 import com.app.app.silverbarsapp.database_models.Person;
-import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.database_models.TypeExercise;
 import com.app.app.silverbarsapp.database_models.UserWorkout;
 import com.app.app.silverbarsapp.database_models.WorkoutDone;
@@ -94,14 +93,6 @@ public class DatabaseQueries {
        return helper.getMyProfile().queryForId(id);
     }
 
-    public FbProfile getFaceProfile(FbProfile profile) throws SQLException {
-        return helper.getProfileFacebook().queryForSameId(profile);
-    }
-
-    public FbProfile getMyFaceProfile() throws SQLException {
-        return helper.getProfileFacebook().queryForAll().get(0);
-    }
-
     private Exercise getExercise(int id) throws SQLException {
         return helper.getExerciseDao().queryForId(id);
     }
@@ -152,16 +143,7 @@ public class DatabaseQueries {
      *
      */
 
-    public FbProfile saveFaceProfile(FbProfile profile) throws SQLException {
-        FbProfile fbProfile_database = getFaceProfile(profile);
 
-        if (fbProfile_database == null){
-            fbProfile_database = profile;
-            helper.getProfileFacebook().create(fbProfile_database);
-        }
-
-        return fbProfile_database;
-    }
 
     public Person saveProfile(com.app.app.silverbarsapp.models.Person person) throws SQLException {
         Person person_database = getPersonById(person.getId());
@@ -378,7 +360,7 @@ public class DatabaseQueries {
         );
     }
 
-    private com.app.app.silverbarsapp.models.WorkoutDone getWorkoutDoneModel(WorkoutDone workout_done_database) throws SQLException {
+   /* private com.app.app.silverbarsapp.models.WorkoutDone getWorkoutDoneModel(WorkoutDone workout_done_database) throws SQLException {
         UserWorkout myWorkout_database = getMyWorkout(workout_done_database.getMy_workout().getId());
 
         return new com.app.app.silverbarsapp.models.WorkoutDone(
@@ -389,7 +371,7 @@ public class DatabaseQueries {
                 workout_done_database.getTotal_time(),
                 workout_done_database.getSets_completed()
         );
-    }
+    }*/
 
     private com.app.app.silverbarsapp.models.Workout getMyWorkoutModel(UserWorkout my_workout_database) throws SQLException {
         return new com.app.app.silverbarsapp.models.Workout(

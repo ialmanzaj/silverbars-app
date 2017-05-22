@@ -11,7 +11,6 @@ import com.app.app.silverbarsapp.database_models.ExerciseRep;
 import com.app.app.silverbarsapp.database_models.Muscle;
 import com.app.app.silverbarsapp.database_models.MySavedWorkout;
 import com.app.app.silverbarsapp.database_models.Person;
-import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.database_models.TypeExercise;
 import com.app.app.silverbarsapp.database_models.UserWorkout;
 import com.app.app.silverbarsapp.database_models.WorkoutDone;
@@ -29,17 +28,16 @@ import static com.app.app.silverbarsapp.Constants.DATABASE_VERSION;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
-    private Dao<MySavedWorkout, Integer> mSavedWorkoutDao;
-    private Dao<UserWorkout, Integer> mUserWorkoutDao;
-    private Dao<ExerciseRep, Integer> mExerciseRepDao;
-    private Dao<Exercise, Integer> mExerciseDao;
-    private Dao<Muscle, Integer> sMuscleDao;
-    private Dao<TypeExercise, Integer> mTypeDao;
-    private Dao<FbProfile, Integer> mProfileFacebook;
-    private Dao<Person, Integer> mPersonDao;
+    Dao<MySavedWorkout, Integer> mSavedWorkoutDao;
+    Dao<UserWorkout, Integer> mUserWorkoutDao;
+    Dao<ExerciseRep, Integer> mExerciseRepDao;
+    Dao<Exercise, Integer> mExerciseDao;
+    Dao<Muscle, Integer> sMuscleDao;
+    Dao<TypeExercise, Integer> mTypeDao;
+    Dao<Person, Integer> mPersonDao;
 
-    private Dao<WorkoutDone, Integer> mWorkoutDoneDao;
-    private Dao<ExerciseProgression, Integer> mExerciseProgressionDao;
+    Dao<WorkoutDone, Integer> mWorkoutDoneDao;
+    Dao<ExerciseProgression, Integer> mExerciseProgressionDao;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION,
@@ -63,7 +61,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, ExerciseRep.class);
             TableUtils.createTable(connectionSource, MySavedWorkout.class);
             TableUtils.createTable(connectionSource, UserWorkout.class);
-            TableUtils.createTable(connectionSource, FbProfile.class);
             TableUtils.createTable(connectionSource, Person.class);
             TableUtils.createTable(connectionSource, WorkoutDone.class);
             TableUtils.createTable(connectionSource, ExerciseProgression.class);
@@ -87,7 +84,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, ExerciseRep.class,false);
             TableUtils.dropTable(connectionSource, MySavedWorkout.class, false);
             TableUtils.dropTable(connectionSource, UserWorkout.class,false);
-            TableUtils.dropTable(connectionSource, FbProfile.class,false);
             TableUtils.dropTable(connectionSource, Person.class,false);
             TableUtils.dropTable(connectionSource, WorkoutDone.class,false);
             TableUtils.dropTable(connectionSource, ExerciseProgression.class,false);
@@ -150,13 +146,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             mUserWorkoutDao = getDao(UserWorkout.class);
         }
         return mUserWorkoutDao;
-    }
-
-    public Dao<FbProfile, Integer> getProfileFacebook() throws java.sql.SQLException {
-        if(mProfileFacebook == null) {
-            mProfileFacebook = getDao(FbProfile.class);
-        }
-        return mProfileFacebook;
     }
 
     public Dao<Person, Integer> getMyProfile() throws java.sql.SQLException {

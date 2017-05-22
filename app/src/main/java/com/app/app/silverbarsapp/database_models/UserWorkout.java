@@ -11,7 +11,7 @@ public class UserWorkout extends Workout{
 
 
     @DatabaseField(id = true, columnName = "ID", canBeNull = false)
-    private int id;
+    int id;
 
 
     public UserWorkout(){}

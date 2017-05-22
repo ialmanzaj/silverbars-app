@@ -4,17 +4,17 @@ package com.app.app.silverbarsapp.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
-import com.app.app.silverbarsapp.activities.ExerciseDetailMonthlyActivity;
+import com.app.app.silverbarsapp.activities.ExerciseDetailActivity;
 import com.app.app.silverbarsapp.adapters.SimpleStringAdapter;
 import com.app.app.silverbarsapp.components.DaggerTotalProgressionComponent;
 import com.app.app.silverbarsapp.handlers.Filter;
@@ -28,7 +28,6 @@ import com.app.app.silverbarsapp.utils.DisableTouchRecyclerListener;
 import com.app.app.silverbarsapp.utils.MuscleListener;
 import com.app.app.silverbarsapp.utils.OnSwipeTouchListener;
 import com.app.app.silverbarsapp.utils.Utilities;
-import com.app.app.silverbarsapp.utils.WebAppInterface;
 import com.app.app.silverbarsapp.viewsets.ProgressionView;
 
 import org.joda.time.DateTime;
@@ -43,38 +42,28 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import im.delight.android.webview.AdvancedWebView;
 
 public class ProgressMonthlyFragment extends BaseFragment implements ProgressionView,MuscleListener {
 
     private static final String TAG = ProgressMonthlyFragment.class.getSimpleName();
-
     private static final DateTime FIRST_DAY_YEAR = new DateTime().dayOfYear().withMinimumValue();
 
 
     @Inject
     ProgressionPresenter mProgressionPresenter;
 
+
+
     @BindView(R.id.loading) LinearLayout mLoadingView;
 
     @BindView(R.id.error_view) LinearLayout mErrorView;
-    @BindView(R.id.reload) Button mReload;
-
-    @BindView(R.id.empty_state) LinearLayout mEmptyView;
-    @BindView(R.id.empty_text)TextView mEmptyText;
-
-    @BindView(R.id.webview) AdvancedWebView webView;
 
     @BindView(R.id.months)RecyclerView mMonths;
 
-    @BindView(R.id.modal_overlay) LinearLayout mModal;
-    @BindView(R.id.info) ImageView mInfo;
-
-
-    private Utilities mUtilities = new Utilities();
 
     private ArrayList<ExerciseProgression> mYearProgressions = new ArrayList<>();
 
+    private Utilities mUtilities = new Utilities();
     private Utilities.HandlerMover handlerMover;
     private Filter filter = new Filter();
     MusclesWebviewHandler mMusclesWebviewHandler = new MusclesWebviewHandler();
@@ -84,7 +73,18 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
 
     private int mCurrentMonth;
 
-    ProgressionAlgoritm mProgressionAlgoritm = new ProgressionAlgoritm();
+    ProgressionAlgoritm mProgressionAlgoritm;
+
+
+    private PENDING_ACTIONS mPendingAction = PENDING_ACTIONS.NONE;
+
+
+    private enum PENDING_ACTIONS {
+        NONE,
+        CHANGE_TO_EMPTY,
+        CHANGED_BODY
+    }
+
 
     @Override
     protected BasePresenter getPresenter() {
@@ -109,17 +109,14 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //mProgressionPresenter.getMuscleProgressions();
+
+        mProgressionAlgoritm = new ProgressionAlgoritm(CONTEXT);
+
         mProgressionPresenter.getExerciseProgression();
-
         setupAdapter();
-        setupWebview();
     }
 
-    private void setupWebview(){
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.addJavascriptInterface( new WebAppInterface(CONTEXT,this), "Android");
-        mUtilities.loadBodyFromUrl(CONTEXT,webView);
-    }
+
 
     private void setupAdapter(){
         mMonths.addOnItemTouchListener(new DisableTouchRecyclerListener());
@@ -141,15 +138,6 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         });
     }
 
-    @OnClick(R.id.info)
-    public void infoButton(){
-        mModal.setVisibility(View.VISIBLE);
-    }
-
-    @OnClick(R.id.okay)
-    public void okayButton(){
-        mModal.setVisibility(View.GONE);
-    }
 
     @OnClick(R.id.reload)
     public void reload(){
@@ -164,7 +152,7 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         if (handlerMover.allowToMove(position)) {
             mCurrentMonth = position;
             mMonths.post(() -> mMonths.smoothScrollToPosition(mCurrentMonth));
-            updateMainView(getProgressionByMonth(mCurrentMonth));
+            updateMainUi(getProgressionByMonth(mCurrentMonth));
         }
     }
 
@@ -174,24 +162,22 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         if (handlerMover.allowToMove(position)) {
             mCurrentMonth = position;
             mMonths.post(() -> mMonths.smoothScrollToPosition(mCurrentMonth));
-            updateMainView(getProgressionByMonth(mCurrentMonth));
+            updateMainUi(getProgressionByMonth(mCurrentMonth));
         }
     }
 
     @Override
     public void onMuscleSelected(String muscle) {
-        ArrayList<ExerciseProgression> current_month = mProgressionAlgoritm.getListOfAllBestProgression(
-                filter.getProgressionFilteredByMuscle(getProgressionByMonth(mCurrentMonth), muscle));
 
-        ArrayList<ExerciseProgression> last_month = mProgressionAlgoritm.getListOfAllBestProgression(
-                filter.getProgressionFilteredByMuscle(getProgressionByMonth(mCurrentMonth-1), muscle));
+        ArrayList<ExerciseProgression> last_month_progressions = filter.getProgressionFilteredByMuscle(getProgressionByMonth(mCurrentMonth-1), muscle);
+        ArrayList<ExerciseProgression> current_month_progressions = filter.getProgressionFilteredByMuscle(getProgressionByMonth(mCurrentMonth), muscle);
 
-        Intent intent = new Intent(CONTEXT, ExerciseDetailMonthlyActivity.class);
+
+        Intent intent = new Intent(CONTEXT, ExerciseDetailActivity.class);
         intent.putExtra("title", getMonthsNames().get(mCurrentMonth));
         intent.putExtra("subtitle",muscle);
-        intent.putExtra("type_date",2);
-        intent.putExtra("exercises", mProgressionAlgoritm.compareWithOldProgressions(current_month,last_month));
-        intent.putExtra("muscle_activation",mProgressionAlgoritm.getMuscleActivationProgression(muscle,current_month,last_month));
+        intent.putExtra("exercises", mProgressionAlgoritm.getProgressionComparedMonthly(last_month_progressions,current_month_progressions));
+        intent.putExtra("muscle_activation",mProgressionAlgoritm.getMuscleActivationProgression(muscle,last_month_progressions,current_month_progressions));
         startActivity(intent);
     }
 
@@ -243,7 +229,7 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
 
 
         //update the ui with the current month
-        updateMainView(getProgressionByMonth(mCurrentMonth));
+        updateMainUi(getProgressionByMonth(mCurrentMonth));
     }
 
 
@@ -341,38 +327,61 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         }
     }
 
-    private void updateMainView(List<ExerciseProgression> progressions_filtered){
-        if (progressions_filtered.size() > 0) {
-            onEmptyViewOff();
-            clearWebview();
-            updateBodyMuscleWebView(progressions_filtered);
-        }else {
-            onEmptyViewOn(CONTEXT.getString(R.string.fragment_progress_monthly_empty));
-        }
-    }
+    private void updateMainUi(ArrayList<ExerciseProgression> progressions_filtered){
+        Bundle extras = new Bundle();
 
-    private void updateBodyMuscleWebView(List<ExerciseProgression> exerciseProgressions){
-        for (ExerciseProgression exercise_progress: exerciseProgressions){
-            for (String muscle: mUtilities.deleteCopiesofMuscles(exercise_progress.getExercise().getMuscles())) {
-                insertMuscleToWebview(muscle);
+        if (progressions_filtered.size() > 0){
+
+            extras.putParcelableArrayList("progressions", progressions_filtered);
+            BodyFragment currentFragment = new BodyFragment();
+            currentFragment.setArguments(extras);
+            currentFragment.addListener(this);
+
+            changeFragment(currentFragment);
+
+            mPendingAction = PENDING_ACTIONS.CHANGED_BODY;
+
+        }else {
+
+            if (mPendingAction != PENDING_ACTIONS.CHANGE_TO_EMPTY) {
+
+                EmptyViewFragment currentFragment = new EmptyViewFragment();
+                changeFragment(currentFragment);
+
+
+                //FLAG
+                mPendingAction = PENDING_ACTIONS.CHANGE_TO_EMPTY;
             }
         }
+
+
     }
 
-    private void insertMuscleToWebview(String muscle_name){
-        mMuscleParts += mMusclesWebviewHandler.getMuscleReadyForWebview(muscle_name);
-        webView.post( () ->  mMusclesWebviewHandler.addWebviewClientOnClickPaint(webView,mMuscleParts));
+    private void changeFragment(Fragment currentFragment){
+        if (this.isAdded()) {
+            FragmentManager fragmentManager = getChildFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.replace(R.id.fragment_container, currentFragment);
+            transaction.commit();
+        }
     }
 
-    private void clearWebview(){
-        webView.post(() -> webView.reload());
-        mMuscleParts = " ";
-    }
 
 
-    private void onEmptyViewOn(String text){mEmptyView.setVisibility(View.VISIBLE);mEmptyText.setText(text);mInfo.setVisibility(View.GONE);}
+    /**
+     *
+     *
+     *
+     *
+     *     UI events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
 
-    private void onEmptyViewOff(){mEmptyView.setVisibility(View.GONE);mInfo.setVisibility(View.VISIBLE);}
 
     private void onLoadingViewOn(){
         mLoadingView.setVisibility(View.VISIBLE);

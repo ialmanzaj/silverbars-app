@@ -9,26 +9,28 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable
 public class WorkoutDone {
 
+
     @DatabaseField(id = true, columnName = "ID", canBeNull = false)
-    private int id;
+    int id;
 
     @DatabaseField
-    private String date;
+    String date;
 
     @DatabaseField(foreign = true)
-    private UserWorkout my_workout;
+    UserWorkout my_workout;
 
     @DatabaseField
-    private int person;
+    int person;
 
     @DatabaseField
-    private String total_time;
+    String total_time;
 
     @DatabaseField
-    private int sets_completed;
+    int sets_completed;
 
 
     public WorkoutDone(){}
+
 
 
     public WorkoutDone(int id, String date, UserWorkout my_workout, int person, String total_time, int sets_completed){
@@ -40,6 +42,31 @@ public class WorkoutDone {
         this.sets_completed = sets_completed;
     }
 
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setMy_workout(UserWorkout my_workout) {
+        this.my_workout = my_workout;
+    }
+
+
+    public void setPerson(int person) {
+        this.person = person;
+    }
+
+    public void setSets_completed(int sets_completed) {
+        this.sets_completed = sets_completed;
+    }
+
+
+    public void setTotal_time(String total_time) {
+        this.total_time = total_time;
+    }
 
     public int getId() {
         return id;

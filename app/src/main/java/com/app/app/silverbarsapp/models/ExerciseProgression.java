@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by isaacalmanza on 04/04/17.
  */
-public class ExerciseProgression extends Progression implements Parcelable{
+public class ExerciseProgression implements Parcelable{
 
     @SerializedName("id")
     private int id;
@@ -44,7 +44,6 @@ public class ExerciseProgression extends Progression implements Parcelable{
     private double total_weight;
 
     private int sets_completed;
-    private double progress;
 
     public ExerciseProgression(){}
 
@@ -66,7 +65,6 @@ public class ExerciseProgression extends Progression implements Parcelable{
 
 
     protected ExerciseProgression(Parcel in) {
-        super(in);
         id = in.readInt();
         date = in.readString();
         my_workout_done = in.readParcelable(WorkoutDone.class.getClassLoader());
@@ -79,12 +77,10 @@ public class ExerciseProgression extends Progression implements Parcelable{
         seconds_done = in.readInt();
         total_weight = in.readDouble();
         sets_completed = in.readInt();
-        progress = in.readDouble();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
         dest.writeInt(id);
         dest.writeString(date);
         dest.writeParcelable(my_workout_done, flags);
@@ -97,7 +93,6 @@ public class ExerciseProgression extends Progression implements Parcelable{
         dest.writeInt(seconds_done);
         dest.writeDouble(total_weight);
         dest.writeInt(sets_completed);
-        dest.writeDouble(progress);
     }
 
     @Override
@@ -116,15 +111,6 @@ public class ExerciseProgression extends Progression implements Parcelable{
             return new ExerciseProgression[size];
         }
     };
-
-    public double getProgress() {
-        return progress;
-    }
-
-    public void setProgress(double progress) {
-        this.progress = progress;
-    }
-
 
     public void setId(int id) {
         this.id = id;

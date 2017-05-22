@@ -107,6 +107,7 @@ public class ResultsInteractor {
 
     public void getProgressions(List<ExerciseProgression> exercises, ResultsCallback callback) throws SQLException {
         ArrayList<ExerciseProgression> progressions = new ArrayList<>();
+
        for (ExerciseProgression exercise: exercises){
 
            ExerciseProgression exerciseProgression = queries.getLastProgressionByExerciseId(exercise.getExercise().getId());
@@ -114,6 +115,7 @@ public class ResultsInteractor {
            if (exerciseProgression != null){
                progressions.add(exerciseProgression);
            }
+
        }
 
         if (progressions.size() <= 0){

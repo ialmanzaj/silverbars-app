@@ -16,7 +16,6 @@ import android.view.View;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.components.DaggerMainComponent;
-import com.app.app.silverbarsapp.database_models.FbProfile;
 import com.app.app.silverbarsapp.fragments.MyWorkoutsFragment;
 import com.app.app.silverbarsapp.fragments.ProfileFragment;
 import com.app.app.silverbarsapp.fragments.ProgressFragment;
@@ -25,15 +24,6 @@ import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.MainPresenter;
 import com.app.app.silverbarsapp.utils.OnItemSelectedListener;
 import com.app.app.silverbarsapp.viewsets.MainView;
-
-import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.sql.SQLException;
 
 import javax.inject.Inject;
 
@@ -51,8 +41,6 @@ public class MainActivity extends BaseActivity implements MainView,BottomNavigat
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
     private String muscle = "ALL";
-
-    public static  JSONObject USERDATA = null;
 
     @Override
     protected int getLayout() {
@@ -78,11 +66,6 @@ public class MainActivity extends BaseActivity implements MainView,BottomNavigat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            mMainPresenter.getFbProfile();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
@@ -146,36 +129,5 @@ public class MainActivity extends BaseActivity implements MainView,BottomNavigat
     public void onChangeNavigation(int position) {
         selectItem(position);
     }
-
-
-    @Override
-    public void displayProfile(FbProfile profile) {
-       if (USERDATA == null) {
-            USERDATA = new JSONObject();
-            try {
-
-                if (profile.getFirst_name() != null){
-                    USERDATA.put("Name", profile.getFirst_name());
-                }
-
-                if (profile.getGender() != null){
-                    USERDATA.put("Gender", profile.getGender());
-                }
-
-                if (profile.getBirthday() != null){
-
-                    DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
-                    DateTime dateTime = formatter.parseDateTime(profile.getBirthday());
-                    Period period = new Period(dateTime, new DateTime());
-
-                    USERDATA.put("Age",period.getYears());
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
 
 }

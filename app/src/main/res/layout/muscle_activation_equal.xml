@@ -58,6 +58,13 @@
             android:layout_height="wrap_content">
 
             <TextView
+                android:text="="
+                android:layout_marginStart="5dp"
+                android:textColor="@color/gray_active_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
+            <TextView
 
                 android:id="@+id/porcentaje"
                 android:text="0"
@@ -69,36 +76,6 @@
 
             <TextView
                 android:text="%"
-                android:textColor="@color/gray_active_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp" />
-
-            <TextView
-                android:text="same "
-                android:layout_marginStart="5dp"
-                android:textColor="@color/gray_active_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/type_progress"
-                android:text=" than the "
-                android:textColor="@color/gray_active_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/date"
-                android:textColor="@color/gray_active_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp" />
-
-            <TextView
-                android:text=" before"
                 android:textColor="@color/gray_active_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

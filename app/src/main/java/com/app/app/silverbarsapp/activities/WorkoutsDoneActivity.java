@@ -1,21 +1,78 @@
 package com.app.app.silverbarsapp.activities;
 
-import android.app.Activity;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
 
-public class WorkoutsDoneActivity extends Activity {
+import com.app.app.silverbarsapp.R;
+import com.app.app.silverbarsapp.SilverbarsApp;
+import com.app.app.silverbarsapp.adapters.WorkoutsDoneAdapter;
+import com.app.app.silverbarsapp.components.DaggerWorkoutsDoneComponent;
+import com.app.app.silverbarsapp.models.WorkoutDone;
+import com.app.app.silverbarsapp.modules.WorkoutsDoneModule;
+import com.app.app.silverbarsapp.presenters.BasePresenter;
+import com.app.app.silverbarsapp.presenters.WorkoutsDonePresenter;
+import com.app.app.silverbarsapp.viewsets.WorkoutsDoneView;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import butterknife.BindView;
+
+public class WorkoutsDoneActivity extends BaseActivity implements WorkoutsDoneView {
 
     private static final String TAG = WorkoutsDoneActivity.class.getSimpleName();
-/*
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    @Inject
+    WorkoutsDonePresenter mWorkoutsDonePresenter;
+
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.list)RecyclerView mWorkoutsDoneList;
+
+    WorkoutsDoneAdapter adapter;
 
     @Override
     protected int getLayout() {
         return R.layout.activity_workouts_done;
     }
 
+    @Nullable
+    @Override
+    protected BasePresenter getPresenter() {
+        return mWorkoutsDonePresenter;
+    }
 
+    @Override
+    public void injectDependencies() {
+        super.injectDependencies();
+        DaggerWorkoutsDoneComponent.builder()
+                .silverbarsComponent(SilverbarsApp.getApp(this).getComponent())
+                .workoutsDoneModule(new WorkoutsDoneModule(this))
+                .build().inject(this);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setupToolbar();
+        mWorkoutsDonePresenter.getWorkoutsDone();
+        setupAdapter();
+    }
+
+    private void setupAdapter(){
+        //list settings
+        mWorkoutsDoneList.setLayoutManager(new LinearLayoutManager(this));
+        mWorkoutsDoneList.setNestedScrollingEnabled(false);
+        mWorkoutsDoneList.setHasFixedSize(false);
+        adapter = new WorkoutsDoneAdapter();
+        mWorkoutsDoneList.setAdapter(adapter);
+    }
 
     public void setupToolbar(){
         if (toolbar != null) {
@@ -25,6 +82,21 @@ public class WorkoutsDoneActivity extends Activity {
         }
     }
 
+    @Override
+    public void onWorkoutsDone(List<WorkoutDone> workouts) {
+        Collections.reverse(workouts);
+        adapter.set(workouts);
+    }
+
+    @Override
+    public void displayNetworkError() {
+        Log.e(TAG,"displayNetworkError");
+    }
+
+    @Override
+    public void displayServerError() {
+        Log.e(TAG,"displayServerError");
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -37,6 +109,6 @@ public class WorkoutsDoneActivity extends Activity {
             finish();
         }
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
 }

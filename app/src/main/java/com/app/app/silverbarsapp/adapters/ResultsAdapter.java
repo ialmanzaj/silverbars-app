@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
-import com.app.app.silverbarsapp.models.ExerciseProgression;
+import com.app.app.silverbarsapp.models.ExerciseProgressionCompared;
 import com.app.app.silverbarsapp.utils.Utilities;
 
 import java.util.ArrayList;
@@ -28,12 +28,11 @@ import static com.app.app.silverbarsapp.Constants.WORST;
 public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultViewHolder> {
     private static final String TAG = ResultsAdapter.class.getSimpleName();
 
-
     private Context context;
-    private ArrayList<ExerciseProgression> exercises;
+    private ArrayList<ExerciseProgressionCompared> exercises;
     private Utilities utilities = new Utilities();
 
-    public ResultsAdapter(Context context, ArrayList<ExerciseProgression> exercises) {
+    public ResultsAdapter(Context context, ArrayList<ExerciseProgressionCompared> exercises) {
         this.context = context;
         this.exercises = exercises;
     }
@@ -86,22 +85,25 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.ResultVi
 
     @Override
     public void onBindViewHolder(ResultViewHolder viewHolder, int position) {
-        viewHolder.mExerciseName.setText(exercises.get(position).getExercise().getExercise_name());
+        viewHolder.mExerciseName.setText(exercises.get(position).getExerciseProgression_newer().getExercise().getExercise_name());
         viewHolder.mProgression.setText(utilities.formaterDecimal(String.valueOf(exercises.get(position).getProgress())));
-        viewHolder.mSetsCompleted.setText(String.valueOf(exercises.get(position).getSets_completed()));
+        viewHolder.mSetsCompleted.setText(String.valueOf(exercises.get(position).getExerciseProgression_newer().getSets_completed()));
         //viewHolder.mTotalTime.setText(exercises.get(position).getTotal_time());
 
-        if (exercises.get(position).getTotal_weight() > 0) {
+        if (exercises.get(position).getExerciseProgression_newer().getTotal_weight() > 0) {
             viewHolder.mWeight.setText(
                     " (+"+
-                    utilities.formaterDecimal(String.valueOf(exercises.get(position).getTotal_weight()))
+                    utilities.formaterDecimal(String.valueOf(exercises.get(position).getExerciseProgression_newer().getTotal_weight()))
                     +"kg" +")");
         }
 
-        if (exercises.get(position).getTotal_repetition() > 0) {
-            viewHolder.total.setText(String.valueOf(exercises.get(position).getRepetitions_done() + " reps"));
+        if (exercises.get(position).getExerciseProgression_newer().getTotal_repetition() > 0) {
+
+            viewHolder.total.setText(String.valueOf(exercises.get(position)
+                    .getExerciseProgression_newer().getRepetitions_done() + " reps"));
         }else {
-            viewHolder.total.setText(String.valueOf(exercises.get(position).getSeconds_done() + " secs"));
+            viewHolder.total.setText(String.valueOf(exercises.get(position)
+                    .getExerciseProgression_newer().getSeconds_done() + " secs"));
         }
 
 

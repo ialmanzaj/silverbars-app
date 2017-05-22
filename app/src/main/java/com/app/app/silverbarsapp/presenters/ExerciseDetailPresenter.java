@@ -31,7 +31,6 @@ public class ExerciseDetailPresenter extends BasePresenter implements ExerciseDe
 
     @Override
     public void onProgressions(List<ExerciseProgression> progressions) {
-        view.onProgressions(progressions);
     }
 
     @Override

@@ -19,6 +19,7 @@ import com.app.app.silverbarsapp.adapters.ResultsAdapter;
 import com.app.app.silverbarsapp.components.DaggerResultsComponent;
 import com.app.app.silverbarsapp.handlers.ProgressionAlgoritm;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
+import com.app.app.silverbarsapp.models.ExerciseProgressionCompared;
 import com.app.app.silverbarsapp.models.WorkoutDone;
 import com.app.app.silverbarsapp.modules.ResultsModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
@@ -36,7 +37,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
-import static com.app.app.silverbarsapp.activities.MainActivity.USERDATA;
 
 
 /**
@@ -57,10 +57,8 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     @BindView(R.id.loading) LinearLayout mLoadingView;
     @BindView(R.id.error_view) LinearLayout mErrorView;
 
-
     private Utilities utilities = new Utilities();
-    private ProgressionAlgoritm mProgressionAlgoritm = new ProgressionAlgoritm();
-
+    private ProgressionAlgoritm mProgressionAlgoritm;
 
     private int workout_id;
     boolean isUserWorkout;
@@ -95,10 +93,12 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mProgressionAlgoritm = new ProgressionAlgoritm(this);
         setupToolbar();
         setupTabs();
-        Bundle extras =  getIntent().getExtras();
 
+
+        Bundle extras =  getIntent().getExtras();
         workout_id = extras.getInt("workout_id");
         isUserWorkout = extras.getBoolean("user_workout",false);
         mExercises = extras.getParcelableArrayList("exercises");
@@ -108,21 +108,20 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         total_time = extras.getString("total_time");
         mSetsCompleted = getSetsCompleted(current_set,exercises_completed,mExercises.size());
 
-        //update UI
-        mSetsCompletedText.setText(String.valueOf(mSetsCompleted) + "/" + String.valueOf(mTotalSets));
-        mTotalTime.setText(String.valueOf(total_time));
-
+        initUI();
 
         getOldProgression();
-
 
         //mix panel init
         mMixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
     }
 
-    private void eventWorkoutSaved(){
-        mMixpanel.track("Workout Saved", USERDATA);
+    private void initUI(){
+        //update UI
+        mSetsCompletedText.setText(String.valueOf(mSetsCompleted) + "/" + String.valueOf(mTotalSets));
+        mTotalTime.setText(String.valueOf(total_time));
     }
+
 
     private int getSetsCompleted(int current_set,int exercises_completed,int total_exercises){
         if (exercises_completed == total_exercises){
@@ -140,7 +139,7 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         }
     }
 
-    private void setupAdapter(ArrayList<ExerciseProgression> exercises){
+    private void setupAdapter(ArrayList<ExerciseProgressionCompared> exercises){
         mExercisesList.setLayoutManager(new LinearLayoutManager(this));
         mExercisesList.setNestedScrollingEnabled(false);
         mExercisesList.setHasFixedSize(false);
@@ -174,13 +173,6 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         Tab_layout.addTab(overview);
         //Tab_layout.addTab(muscles);
     }
-
-   /* private void setupAdapterMuscleActivation(ArrayList<MuscleActivation> muscleActivations){
-        mMuscleActivation.setLayoutManager(new LinearLayoutManager(this));
-        mMuscleActivation.setNestedScrollingEnabled(false);
-        mMuscleActivation.setHasFixedSize(false);
-        mMuscleActivation.setAdapter(new ResultsMuscleActivation(muscleActivations));
-    }*/
 
     @OnClick(R.id.save_button)
     public void savebutton(){
@@ -240,13 +232,20 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
     @Override
     public void isEmptyProgression() {
-        ArrayList<ExerciseProgression> progressions_compared = mProgressionAlgoritm.addFirstProgressions(mExercises);
+
+        ArrayList<ExerciseProgressionCompared> progressions_compared =
+                mProgressionAlgoritm.addFirstProgressions(mExercises);
+
         setupAdapter(progressions_compared);
     }
 
     @Override
-    public void onExerciseProgression(ArrayList<ExerciseProgression> exerciseProgressions) {
-        ArrayList<ExerciseProgression> progressions_compared = mProgressionAlgoritm.compareExerciseProgression(exerciseProgressions,mExercises);
+    public void onExerciseProgression(ArrayList<ExerciseProgression> progressions_old) {
+
+        ArrayList<ExerciseProgressionCompared> progressions_compared =
+                mProgressionAlgoritm.getProgressionComparedDaily(progressions_old,mExercises);
+
+
         setupAdapter(progressions_compared);
     }
 
@@ -271,6 +270,20 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     }
 
 
+    /**
+     *
+     *
+     *
+     *
+     *     UI events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
+
     private void onLoadingViewOn(){
         mLoadingView.setVisibility(View.VISIBLE);
     }
@@ -282,6 +295,9 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
     private void onErrorViewOn(){mErrorView.setVisibility(View.VISIBLE);}
 
     private void onErrorViewOff(){mErrorView.setVisibility(View.GONE);}
+
+
+
 
 
     @Override
@@ -296,5 +312,7 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void eventWorkoutSaved(){mMixpanel.track("Workout Saved", utilities.getUserData(this));}
 
 }
