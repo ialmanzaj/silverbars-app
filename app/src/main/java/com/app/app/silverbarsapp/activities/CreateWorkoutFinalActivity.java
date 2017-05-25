@@ -148,6 +148,7 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
 
         mMixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
+        mixPanelEventOnCreateWorkoutFinal();
     }
 
 
@@ -387,6 +388,7 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     private void onErrorViewOff(){mErrorView.setVisibility(View.GONE);}
 
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -406,17 +408,16 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
      *
      *
      *
-     *
      *    Mix panel events
-     *<p>
-     *
-     *
-     *
      *
      *
      *
      *
      */
+
+    private void mixPanelEventOnCreateWorkoutFinal(){
+        mMixpanel.track("onCreate Workout final", utilities.getUserData(this));
+    }
 
     private void mixPanelEventCreateWorkoutSaved(){
         mMixpanel.track("Create Workout Saved", utilities.getUserData(this));

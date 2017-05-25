@@ -17,7 +17,6 @@ import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.components.DaggerMuscleSelectionComponent;
 import com.app.app.silverbarsapp.handlers.MusclesWebviewHandler;
-import com.app.app.silverbarsapp.models.Exercise;
 import com.app.app.silverbarsapp.models.Muscle;
 import com.app.app.silverbarsapp.modules.MuscleSelectionModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
@@ -62,14 +61,6 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
 
     List<String> muscles_names = new ArrayList<>();
     private ArrayList<String> muscles_selected = new ArrayList<>();
-    private ArrayList<Integer> exercises_ids_selected;
-
-    PendingActions pendingActions = PendingActions.EMPTY_EXERCISE;
-
-    private enum PendingActions{
-        EMPTY_EXERCISE,
-        WITH_EXERCISES
-    }
 
 
     private MixpanelAPI mMixpanel;
@@ -99,7 +90,6 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
         super.onCreate(savedInstanceState);
         setupToolbar();
         mMuscleSelectionPresenter.getMuscles();
-        if (getIntent().getExtras() != null) {getExtras(getIntent().getExtras());}
 
         //mix panel events
 
@@ -108,29 +98,24 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     }
 
 
-    private void mixPanelEventMuscleSelection(){mMixpanel.track("on Muscle Selection", utilities.getUserData(this));}
-
-    private void mixPanelEventMuscleSelectionCompleted(){mMixpanel.track("Muscle Selection Completed", utilities.getUserData(this));}
 
 
-    private void getExtras(Bundle extras){
-        exercises_ids_selected = extras.getIntegerArrayList("exercises_selected");
-    }
-
-    private void setupWebview(){
-        myWebView.setListener(this, this);
-        myWebView.getSettings().setJavaScriptEnabled(true);
-        myWebView.addJavascriptInterface(new WebAppInterface(this,this), "Android");
-        utilities.loadBodyFromLocal(this,myWebView);
-    }
-
-    public void setupToolbar(){
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(R.string.activity_muscle_selection_toolbar);
-        }
-    }
+    /**
+     *
+     *
+     *
+     *
+     *
+     *    Click listeners
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
 
     @OnClick(R.id.info)
     public void infoButton(){
@@ -142,30 +127,11 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
         mModal.setVisibility(View.GONE);
     }
 
-
     @OnClick(R.id.reload)
     public void reload(){
         onErrorViewOff();
         onLoadingViewOn();
         mMuscleSelectionPresenter.getMuscles();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK){
-                if (data.hasExtra("exercises_selected")) {
-
-                    ArrayList<Exercise>  exercises = data.getParcelableArrayListExtra("exercises_selected");
-
-                    Intent return_intent = new Intent();
-                    return_intent.putExtra("exercises_selected",exercises);
-                    setResult(RESULT_OK, return_intent);
-                    finish();
-                }
-            }
-        }
     }
 
     @OnClick(R.id.search_exercises)
@@ -176,41 +142,32 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
             return;
         }
 
-        if (exercises_ids_selected != null){
-            pendingActions = PendingActions.WITH_EXERCISES;
-        }
-
-
         //mix panel events
         mixPanelEventMuscleSelectionCompleted();
 
 
-        launchExercisesList();
+        //return muscle selected
+        Intent return_intent = new Intent();
+        return_intent.putExtra("muscles",muscles_selected);
+        setResult(RESULT_OK, return_intent);
+        finish();
     }
 
 
-    private void launchExercisesList(){
-        Intent intent = new Intent(this, ExerciseListActivity.class);
-        switch (pendingActions){
-            case WITH_EXERCISES:
-                intent.putExtra("exercises",exercises_ids_selected);
-                break;
-        }
-        intent.putExtra("muscles",muscles_selected);
-        startActivityForResult(intent,1);
-    }
+    /**
+     *
+     *
+     *
+     *
+     *
+     *    Events listening
+     *
+     *
 
-
-    @Override
-    public void displayNetworkError() {
-        onErrorViewOn();
-    }
-
-    @Override
-    public void displayServerError() {
-        onErrorViewOn();
-    }
-
+     *
+     *
+     *
+     */
     @Override
     public void getMuscles(List<Muscle> muscles) {
         //Log.d(TAG,"muscles "+muscles);
@@ -241,7 +198,79 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
         }
     }
 
+    @Override
+    public void displayNetworkError() {
+        onErrorViewOn();
+    }
 
+    @Override
+    public void displayServerError() {
+        onErrorViewOn();
+    }
+
+    private String getMuscles(ArrayList<String> muscles_selected) {
+        return muscles_selected.toString().replace("[","").replace("]","");
+    }
+
+    @Override
+    public void onPageFinished(String url) {
+        String muscles_for_js = mMusclesWebviewHandler.getMusclesReadyForWebview(muscles_names);
+        setMusclesOnClick(muscles_for_js);
+
+        //loading off
+        onLoadingViewOff();
+    }
+
+
+    /**
+     *
+     *
+     *
+     *     Webview events
+     *
+     *
+     *
+     */
+
+    @Override
+    public void onPageStarted(String url, Bitmap favicon) {}
+    @Override
+    public void onPageError(int errorCode, String description, String failingUrl) {}
+    @Override
+    public void onDownloadRequested(String url, String suggestedFilename, String mimeType, long contentLength, String contentDisposition, String userAgent) {}
+    @Override
+    public void onExternalPageRequest(String url) {}
+
+
+
+    /**
+     *
+     *
+     *
+     *
+     *     UI events
+     *
+     *
+     *
+     *
+     */
+
+
+    public void setupToolbar(){
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.activity_muscle_selection_toolbar);
+            toolbar.setNavigationIcon(R.drawable.ic_clear_white_24px);
+        }
+    }
+
+    private void setupWebview(){
+        myWebView.setListener(this, this);
+        myWebView.getSettings().setJavaScriptEnabled(true);
+        myWebView.addJavascriptInterface(new WebAppInterface(this,this), "Android");
+        utilities.loadBodyFromLocal(this,myWebView);
+    }
 
     private void setMusclesOnClick(String muscles_for_js){
         myWebView.post(() -> {
@@ -267,59 +296,6 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
         mScrollText.postDelayed(() -> mScrollText.fullScroll(HorizontalScrollView.FOCUS_RIGHT), 100L);
     }
 
-    private String getMuscles(ArrayList<String> muscles_selected) {
-        return muscles_selected.toString().replace("[","").replace("]","");
-    }
-
-    @Override
-    public void onPageFinished(String url) {
-        String muscles_for_js = mMusclesWebviewHandler.getMusclesReadyForWebview(muscles_names);
-        setMusclesOnClick(muscles_for_js);
-
-        //loading off
-        onLoadingViewOff();
-    }
-
-
-    /**
-     *
-     *
-     *
-     *
-     *     Webview events
-     *<p>
-     *
-     *
-     *
-     *
-     *
-     */
-
-    @Override
-    public void onPageStarted(String url, Bitmap favicon) {}
-    @Override
-    public void onPageError(int errorCode, String description, String failingUrl) {}
-    @Override
-    public void onDownloadRequested(String url, String suggestedFilename, String mimeType, long contentLength, String contentDisposition, String userAgent) {}
-    @Override
-    public void onExternalPageRequest(String url) {}
-
-
-
-    /**
-     *
-     *
-     *
-     *
-     *     UI events
-     *<p>
-     *
-     *
-     *
-     *
-     *
-     */
-
 
     private void onLoadingViewOn(){
         mLoadingView.setVisibility(View.VISIBLE);
@@ -334,8 +310,6 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     private void onErrorViewOff(){mErrorView.setVisibility(View.GONE);}
 
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -348,5 +322,27 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
         }
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     *
+     *
+     *
+     *
+     *
+     *    Mix panel events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+
+    private void mixPanelEventMuscleSelection(){mMixpanel.track("on Muscle Selection", utilities.getUserData(this));}
+
+    private void mixPanelEventMuscleSelectionCompleted(){mMixpanel.track("Muscle Selection Completed", utilities.getUserData(this));}
+
 }
 

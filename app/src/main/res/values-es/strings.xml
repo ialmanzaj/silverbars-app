@@ -94,7 +94,8 @@
     <string name="activity_create_workout_final_saving">Guardando…</string>
 
     <!---    Strings of activity exercise_list  -->
-    <string name="activity_exercise_list_empty">No hay mas ejercicios :(</string>
+    <string name="activity_exercise_list_empty">No hay más ejercicios :(</string>
+    <string name="activity_exercise_list_no_selection">Selecciona tus ejercicios</string>
 
     <string name="loading">Cargando…</string>
 
@@ -105,8 +106,8 @@
     <!---    Strings of activity activity_muscle_selection  -->
     <string name="activity_muscle_selection_toolbar">Filtro</string>
     <string name="activity_muscle_selection_title">Selecciona los músculos vas a entrenar</string>
-    <string name="activity_muscle_selection_exercises">Ejercicios</string>
-    <string name="activity_muscle_selection_search">Buscar ejercicios</string>
+    <string name="activity_muscle_selection_exercises">Musculos</string>
+    <string name="activity_muscle_selection_search">Buscar</string>
     <string name="activity_muscle_selection_selection">Seleccione que músculos</string>
 
     <!---    Strings of activity_results -->
@@ -173,7 +174,7 @@
 
     <string name="fragment_progress_daily_today">Hoy</string>
 
-    <string name="activity_exercise_list_add_button">Añadir a rutina</string>
+    <string name="activity_exercise_list_add_button">Añadir a mi rutina</string>
     <string name="activity_settings_title">Opciones</string>
 
     <string name="connect_internet">Por favor, conectese a internet</string>

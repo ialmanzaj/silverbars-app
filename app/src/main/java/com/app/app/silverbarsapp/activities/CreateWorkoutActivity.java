@@ -74,7 +74,6 @@ public class CreateWorkoutActivity extends BaseActivity implements OnStartDragLi
         return null;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,36 +92,6 @@ public class CreateWorkoutActivity extends BaseActivity implements OnStartDragLi
 
 
 
-    public void setupToolbar(){
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(getResources().getString(R.string.activity_create_workout_create_button));
-            toolbar.setNavigationIcon(R.drawable.ic_clear_white_24px);
-        }
-    }
-
-    private void setupTabs(){
-        //Defining Tabs
-        TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost3);
-        tabHost2.setup();
-
-        TabHost.TabSpec rutina = tabHost2.newTabSpec(getResources().getString(R.string.tab_workout));
-        rutina.setIndicator(getResources().getString(R.string.tab_workout));
-        rutina.setContent(R.id.workout);
-
-        TabHost.TabSpec muscles = tabHost2.newTabSpec(getResources().getString(R.string.tab_muscles));
-        muscles.setIndicator(getResources().getString(R.string.tab_muscles));
-        muscles.setContent(R.id.muscles);
-
-      /*  TabHost.TabSpec skills = tabHost2.newTabSpec("Focus");
-        skills.setIndicator("Focus");
-        skills.setContent(R.id.types);
-*/
-        tabHost2.addTab(rutina);
-        tabHost2.addTab(muscles);
-        //tabHost2.addTab(skills);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -143,35 +112,23 @@ public class CreateWorkoutActivity extends BaseActivity implements OnStartDragLi
         }
     }
 
-   /* private void setupAdapterSkills(List<Exercise> exercises){
-        onEmptyTypesViewOff();
 
-        //mExercisesList settings
-        mSkillsList.setLayoutManager(new LinearLayoutManager(this));
-        mSkillsList.setNestedScrollingEnabled(false);
-        mSkillsList.setHasFixedSize(false);
-        skill_adapter = new SkillAdapter(utilities.getTypesByExercise(exercises));
-        mSkillsList.setAdapter(skill_adapter);
-    }*/
-
-    private void setupWebview(){
-        webView.getSettings().setJavaScriptEnabled(true);
-        utilities.loadBodyFromLocal(this,webView);
-    }
-
-    private void setupExercisesAdapter(){
-        mExercisesSelectedList.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ExercisesSelectedAdapter(this,this);
-
-        //listener to know what happen in the adapter
-        adapter.setOnDataChangeListener(this);
-
-        mExercisesSelectedList.setAdapter(adapter);
-
-        //touch listener
-        mItemTouchHelper  = new ItemTouchHelper(new SimpleItemTouchHelperCallback(adapter));
-        mItemTouchHelper.attachToRecyclerView(mExercisesSelectedList);
-    }
+    /**
+     *
+     *
+     *
+     *
+     *
+     *    Click listeners
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
 
     @OnClick(R.id.next)
     public void nextButton(){
@@ -185,40 +142,43 @@ public class CreateWorkoutActivity extends BaseActivity implements OnStartDragLi
         startActivityForResult(intent,FINAL_CREATE_WORKOUT);
     }
 
+
     @OnClick(R.id.add_exercises)
     public void addExerciseButton(){
-        Intent intent = new Intent(this,MuscleSelectionActivity.class);
+        Intent intent = new Intent(this,ExerciseListActivity.class);
         startActivityForResult(intent,LIST_EXERCISES_SELECTION);
     }
 
     @OnClick(R.id.readd)
     public void readAddExerciseButton(){
-        Intent intent = new Intent(this,MuscleSelectionActivity.class);
+        Intent intent = new Intent(this,ExerciseListActivity.class);
         intent.putExtra("exercises",filter.getExercisesIds(adapter.getSelectedExercises()));
         startActivityForResult(intent,LIST_EXERCISES_SELECTION);
     }
 
-    private void setExercisesAdapter(List<Exercise> exercises){
-        //empty view off
-        onEmptyViewOff();
 
-        //set exercises in adapter
-        adapter.setExercises(exercises);
+    /**
+     *
+     *
+     *
+     *
+     *
+     *    Events listening
+     *
+     *
 
-        //update  body muscle of webview
-        mMusclesWebviewHandler.paint(getMusclesReady(filter.getMusclesFromExercises(exercises)));
-        mMusclesWebviewHandler.execute(webView);
-    }
+     *
+     *
+     *
+     */
+
 
     @Override
     public void onUpdateMuscleView() {
         updateMusclesView();
-        //updateTypes();
+
     }
 
-   /* private void updateTypes(){
-        skill_adapter.set(utilities.getTypesByExercise(adapter.getSelectedExercises()));
-    }*/
 
     @Override
     public void onExerciseDeleted(Exercise exercise,int position) {
@@ -262,6 +222,69 @@ public class CreateWorkoutActivity extends BaseActivity implements OnStartDragLi
      *
      *
      */
+
+    public void setupToolbar(){
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(getResources().getString(R.string.activity_create_workout_create_button));
+            toolbar.setNavigationIcon(R.drawable.ic_clear_white_24px);
+        }
+    }
+
+    private void setupTabs(){
+        //Defining Tabs
+        TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost3);
+        tabHost2.setup();
+
+        TabHost.TabSpec rutina = tabHost2.newTabSpec(getResources().getString(R.string.tab_workout));
+        rutina.setIndicator(getResources().getString(R.string.tab_workout));
+        rutina.setContent(R.id.workout);
+
+        TabHost.TabSpec muscles = tabHost2.newTabSpec(getResources().getString(R.string.tab_muscles));
+        muscles.setIndicator(getResources().getString(R.string.tab_muscles));
+        muscles.setContent(R.id.muscles);
+
+      /*  TabHost.TabSpec skills = tabHost2.newTabSpec("Focus");
+        skills.setIndicator("Focus");
+        skills.setContent(R.id.types);
+*/
+        tabHost2.addTab(rutina);
+        tabHost2.addTab(muscles);
+        //tabHost2.addTab(skills);
+    }
+
+
+    private void setupWebview(){
+        webView.getSettings().setJavaScriptEnabled(true);
+        utilities.loadBodyFromLocal(this,webView);
+    }
+
+    private void setupExercisesAdapter(){
+        mExercisesSelectedList.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new ExercisesSelectedAdapter(this,this);
+
+        //listener to know what happen in the adapter
+        adapter.setOnDataChangeListener(this);
+
+        mExercisesSelectedList.setAdapter(adapter);
+
+        //touch listener
+        mItemTouchHelper  = new ItemTouchHelper(new SimpleItemTouchHelperCallback(adapter));
+        mItemTouchHelper.attachToRecyclerView(mExercisesSelectedList);
+    }
+
+    private void setExercisesAdapter(List<Exercise> exercises){
+        //empty view off
+        onEmptyViewOff();
+
+        //set exercises in adapter
+        adapter.setExercises(exercises);
+
+        //update  body muscle of webview
+        mMusclesWebviewHandler.paint(getMusclesReady(filter.getMusclesFromExercises(exercises)));
+        mMusclesWebviewHandler.execute(webView);
+    }
 
     private void updateMusclesView(){
         updateWebviewReady(getMusclesReady(filter.getMusclesFromExercises(adapter.getSelectedExercises())));

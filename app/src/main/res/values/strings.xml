@@ -101,6 +101,8 @@
 
     <!---    Strings of activity exercise_list  -->
     <string name="activity_exercise_list_empty">There\'s no more exercises:(</string>
+    <string name="activity_exercise_list_no_selection">Select your exercises</string>
+
 
     <string name="loading">Loading…</string>
 
@@ -110,8 +112,8 @@
     <!---    Strings of activity activity_muscle_selection  -->
     <string name="activity_muscle_selection_toolbar">Filter</string>
     <string name="activity_muscle_selection_title">Select the muscles that you want to train</string>
-    <string name="activity_muscle_selection_exercises">Exercises</string>
-    <string name="activity_muscle_selection_search">Search exercises</string>
+    <string name="activity_muscle_selection_exercises">Muscles</string>
+    <string name="activity_muscle_selection_search">Search</string>
     <string name="activity_muscle_selection_selection">Select which muscles</string>
 
     <!---    Strings of activity_results -->
@@ -178,7 +180,7 @@
     <string name="fragment_progress_daily_today">Today</string>
 
 
-    <string name="activity_exercise_list_add_button">Add to workout</string>
+    <string name="activity_exercise_list_add_button">Add to my workout</string>
 
     <string name="activity_settings_title">Options</string>
 
@@ -222,6 +224,7 @@
     <!---    exercise result view     -->
     <string name="exercise_results_sets">sets</string>
     <string name="exercise_results_of">\u0020of\u0020</string>
+
 
 
 

@@ -76,10 +76,8 @@
 
                             <Button
                                 android:id="@+id/add_exercises"
-                                android:layout_marginTop="10dp"
-                                android:paddingStart="25dp"
-                                android:paddingEnd="25dp"
-                                android:theme="@style/ButtonRed"
+                                android:layout_marginTop="15dp"
+                                android:theme="@style/ButtonCreate"
                                 android:layout_gravity="center_horizontal"
                                 android:text="@string/add_exercises_title"
                                 android:layout_width="wrap_content"
@@ -99,7 +97,7 @@
 
                             <Button
                                 android:layout_alignParentBottom="true"
-                                android:theme="@style/ButtonRed"
+                                android:theme="@style/ButtonCreate"
                                 android:id="@+id/readd"
                                 android:text="@string/add_more"
                                 android:layout_width="match_parent"

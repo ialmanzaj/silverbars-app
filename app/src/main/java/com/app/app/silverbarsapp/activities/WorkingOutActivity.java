@@ -44,7 +44,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.OnLongClick;
 import rx.Subscription;
 import rx.functions.Action1;
 
@@ -94,7 +93,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
     private ArrayList<ExerciseProgression> progressions;
     private ArrayList<ExerciseRep> mExercises;
-
 
     private boolean mVibrationPerSet;
     private int mSetsTotal;
@@ -160,8 +158,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         mMixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
     }
 
-
-
     private void getExtras(Bundle extras){
         mWorkout_id = extras.getInt("workout_id");
         isUserWorkout = extras.getBoolean("user_workout",false);
@@ -220,17 +216,13 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         }
     }
 
-    @OnLongClick(R.id.next_exercise)
-    public boolean nextButton(){
-
+    @OnClick(R.id.next_exercise)
+    public void nextButton(){
         //Flag  allow to move
         pendingAction = PendingAction.MOVE_ON_TO_NEXT_EXERCISE;
 
         //move
         mWorkingOutPresenter.nextExercise();
-
-
-        return false;
     }
 
     private void saveProgression(){
@@ -264,15 +256,9 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
      *
      *
      *
-     *
-     *
      *   INIT functions
      *<p>
-     *
-     *
-     *
-     *
-     *
+
      *
      *
      *
