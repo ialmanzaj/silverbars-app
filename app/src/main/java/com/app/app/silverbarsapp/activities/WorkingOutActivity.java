@@ -60,43 +60,29 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
 
     @BindView(R.id.player_layout) LinearLayout mPlayerLayout;
-
     @BindView(R.id.play_music) ImageView mPlayMusicbutton;
     @BindView(R.id.pause_music) ImageView mPauseMusicbutton;
-
     @BindView(R.id.repetition_timer) TextView mRepetitionTimerText;
-    
     @BindView(R.id.song_name) TextView mSongName;
     @BindView(R.id.artist_name) TextView mArtistName;
-    
     @BindView(R.id.current_set) TextView mCurrentSetText;
     @BindView(R.id.sets_total) TextView mTotalSetsText;
     @BindView(R.id.current_exercise) TextView mCurrentExercisePositionText;
-
     @BindView(R.id.modal_overlay) LinearLayout mModalOverlayView;
     @BindView(R.id.rest_counter) TextView mOverlayTextCounter;
     @BindView(R.id.headerText) TextView mHeaderTextOverlay;
-
     @BindView(R.id.play_workout) ImageView mPlayWorkoutButton;
     @BindView(R.id.pause_workout) ImageView mPauseWorkoutButton;
     @BindView(R.id.stop_workout) ImageView mStopWorkoutButton;
-
     @BindView(R.id.next_exercise) ImageView mNextExercisebutton;
-
     @BindView(R.id.option) TextView mOption;
-
     @BindView(R.id.weight_layout) LinearLayout mWeightLayout;
     @BindView(R.id.weight) TextView mExerciseWeight;
-
     @BindView(R.id.list) RecyclerView mExercisesList;
-    
     @BindView(R.id.total_exercises) TextView mTotalExercises;
-
     @BindView(R.id.chronometer2) PausableChronometer mChronometer;
     @BindView(R.id.countdown) TextView mCountDownTimer;
-
     @BindView(R.id.total_timer) PausableChronometer mTotalTimerChronometer;
-
     @BindView(R.id.review) LinearLayout mReviewExerciseView;
     @BindView(R.id.exercise_name) TextView mExerciseName;
     @BindView(R.id.exercise_option)TextView mExerciseOption;
@@ -174,9 +160,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         mMixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
     }
 
-    private void mixPanelEventWorkoutCompleted(){mMixpanel.track("Workout Completed", utilities.getUserData(this));}
-
-    private void mixPanelEventWorkoutCancel(){mMixpanel.track("Workout Canceled", utilities.getUserData(this));}
 
 
     private void getExtras(Bundle extras){
@@ -818,8 +801,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     }
 
 
-
-
     /**
      *
      *
@@ -837,8 +818,9 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
      *
      */
 
+    private void mixPanelEventWorkoutCompleted(){mMixpanel.track("Workout Completed", utilities.getUserData(this));}
 
-
+    private void mixPanelEventWorkoutCancel(){mMixpanel.track("Workout Canceled", utilities.getUserData(this));}
 
 
 }

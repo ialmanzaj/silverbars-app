@@ -69,26 +69,23 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     @Inject
     WorkoutPresenter mWorkoutPresenter;
 
+
     @BindView(R.id.toolbar) Toolbar myToolbar;
     @BindView(R.id.tabHost2) TabHost mTabLayout;
-
     @BindView(R.id.sets) TextView Sets;
     @BindView(R.id.rest_by_set) AutoCompleteTextView RestbySet;
     @BindView(R.id.rest_by_exercise) AutoCompleteTextView RestbyExercise;
-
     @BindView(R.id.exercises) RecyclerView mExercisesList;
     @BindView(R.id.webview) WebView webview;
-
     @BindView(R.id.toggle_save_workout) RelativeLayout mSaveWorkoutLayout;
     @BindView(R.id.save_workout_local) SwitchCompat mSaveWorkoutSwitch;
-
     @BindView(R.id.voice_per_exercise)SwitchCompat mVoicePerExercise;
-
     @BindView(R.id.start_button) Button mStartButton;
     @BindView(R.id.select_music) LinearLayout mSelectMusicButton;
 
     //@BindView(R.id.skills)RecyclerView mSkillsList;
     @BindView(R.id.music)TextView mTypeOfMusicText;
+    @BindView(R.id.level) TextView mLevelText;
 
 
     private ArrayList<ExerciseRep> mExercises;
@@ -109,6 +106,8 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     //for local songs
     private ArrayList<File> mLocalSongs;
     private Metadata mFirstSongMetadata;
+
+    MixpanelAPI mixpanel;
 
     @Override
     protected int getLayout() {
@@ -170,15 +169,19 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     private void initUI(){
         setExercisesInAdapter(mExercises);
 
+        mLevelText.setText(workoutLevel);
         Sets.setText(String.valueOf(workoutSets));
         RestbyExercise.setText("30");
         RestbySet.setText("60");
 
-        mVoicePerExercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {});
+        //mVoicePerExercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {});
 
-        mStartButton.setOnClickListener(view -> {LaunchWorkingOutActivity();addMixPanelTracker();});
+        mStartButton.setOnClickListener(view -> {
+            LaunchWorkingOutActivity();
+            mixpanelEventStartWorkout();
+        });
+
         mSelectMusicButton.setOnClickListener(v -> dialogMusic());
-
 
         try {
             onSaveWorkout();
@@ -187,10 +190,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         }
     }
 
-    private void addMixPanelTracker(){
-        MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
-        mixpanel.track("Start Workout", utilities.getUserData(this));
-    }
+
 
 
     private void setupTabs(){
@@ -227,7 +227,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     }
 
     private void setupAdapter(){
-        //mExercisesList settings
         mExercisesList.setLayoutManager(new LinearLayoutManager(this));
         mExercisesList.setNestedScrollingEnabled(false);
         mExercisesList.setHasFixedSize(false);
@@ -307,19 +306,32 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     }
 
     private void dialogMusic(){
+        //mix panel
+        mixpanelEventMusicDialog();
+
         MaterialDialog.Builder builder = new MaterialDialog.Builder(this)
                 .title(getString(R.string.activity_workout_dialog_title))
                 .titleColor(getResources().getColor(R.color.colorPrimaryText))
                 .customView(R.layout.music_view_dialog,true);
         MaterialDialog dialog = builder.build();
         dialog.show();
+
         View dialog_view = dialog.getCustomView();
         if (dialog_view != null) {
             LinearLayout spotify = (LinearLayout) dialog_view.findViewById(R.id.spotify);
-            spotify.setOnClickListener(v -> { dialog.dismiss(); mSpotifyHandler.launch(); } );
-
             LinearLayout local_music = (LinearLayout) dialog_view.findViewById(R.id.local_music);
-            local_music.setOnClickListener(v -> { dialog.dismiss(); launchLocalMusic(); } );
+
+            spotify.setOnClickListener(v -> {
+                dialog.dismiss();
+                mSpotifyHandler.launch();
+                mixpanelEventSpotify();
+            });
+
+            local_music.setOnClickListener(v -> {
+                dialog.dismiss();
+                launchLocalMusic();
+                mixpanelEventLocalMusic();
+            });
         }
     }
 
@@ -336,6 +348,9 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
         //set the local song
         mLocalSongs = local_songs;
+
+        //mix panel events
+        mixpanelEventLocalMusicSelected();
     }
 
 
@@ -354,6 +369,9 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
             //flag off
             mSpotifyHandler.setSpotifyLaunched(false);
+
+            //mix panel events
+            mixpanelEventSpotifySelected();
         }
     }
 
@@ -449,5 +467,51 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     }
 
 
+    /**
+     *
+     *
+     *
+     *
+     *
+     *    Mix panel events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+
+    private void mixpanelEventStartWorkout(){
+        mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
+        mixpanel.track("Start Workout", utilities.getUserData(this));
+    }
+
+    private void mixpanelEventMusicDialog(){
+        mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
+        mixpanel.track("Music dialog", utilities.getUserData(this));
+    }
+
+    private void mixpanelEventSpotify(){
+        mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
+        mixpanel.track("on Spotify", utilities.getUserData(this));
+    }
+
+    private void mixpanelEventSpotifySelected(){
+        mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
+        mixpanel.track("spotify Selected", utilities.getUserData(this));
+    }
+
+    private void mixpanelEventLocalMusic(){
+        mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
+        mixpanel.track("on LocalMusic", utilities.getUserData(this));
+    }
+
+    private void mixpanelEventLocalMusicSelected(){
+        mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
+        mixpanel.track("localMusic Selected", utilities.getUserData(this));
+    }
 
 }

@@ -1,6 +1,8 @@
 package com.app.app.silverbarsapp.activities;
 
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.andretietz.retroauth.AuthAccountManager;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.components.DaggerMainComponent;
@@ -24,11 +27,14 @@ import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.MainPresenter;
 import com.app.app.silverbarsapp.utils.OnItemSelectedListener;
 import com.app.app.silverbarsapp.viewsets.MainView;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
 
 public class MainActivity extends BaseActivity implements MainView,BottomNavigationView.OnNavigationItemSelectedListener,OnItemSelectedListener {
 
@@ -72,6 +78,12 @@ public class MainActivity extends BaseActivity implements MainView,BottomNavigat
         if (savedInstanceState == null){
             selectItem(0);
         }
+
+        AuthAccountManager authAccountManager = new AuthAccountManager();
+        Account activeAccount = authAccountManager.getActiveAccount(getString(R.string.authentication_ACCOUNT));
+
+        String id =  AccountManager.get(this).getUserData(activeAccount, getString(R.string.authentication_ID));
+        mixpanelEvent(id);
     }
 
     private void selectItem(int position){
@@ -112,22 +124,43 @@ public class MainActivity extends BaseActivity implements MainView,BottomNavigat
         return true;
     }
 
+    private void mixpanelEvent(String id){
+        MixpanelAPI mixpanel =
+                MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
+
+        mixpanel.getPeople().identify(id);
+    }
+
+    @Override
+    public void onChangeNavigation(int position) {
+        selectItem(position);
+    }
+
+
     @OnClick(R.id.fab)
     public void createButton(){
         startActivity(new Intent(this,CreateWorkoutActivity.class));
     }
 
+    /**
+     *
+     *
+     *
+     *
+     *     UI events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
     private void createWorkoutbuttonOn(){
         mButtonCreateWorkout.setVisibility(View.VISIBLE);
     }
 
     private void createWorkoutbuttonff(){
         mButtonCreateWorkout.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onChangeNavigation(int position) {
-        selectItem(position);
     }
 
 }

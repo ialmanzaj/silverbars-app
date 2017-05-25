@@ -3,6 +3,7 @@ package com.app.app.silverbarsapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -57,10 +58,8 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
 
     @BindView(R.id.seekbarWithIntervals) SeekbarWithIntervals mSeekbarWithIntervals;
 
-
     private ProgressionAlgoritm mProgressionAlgoritm;
     private Filter filter = new Filter();
-
 
     private List<ExerciseProgression> progressions;
     private List<ExerciseProgression> mWeekProgressions = new ArrayList<>();
@@ -295,10 +294,13 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
 
     private void changeFragment(Fragment currentFragment){
         if (this.isAdded()) {
-            FragmentManager fragmentManager = getChildFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.fragment_container, currentFragment);
-            transaction.commit();
+            new Handler().post(() -> {
+                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.fragment_container, currentFragment);
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                transaction.commit();
+            });
         }
     }
 

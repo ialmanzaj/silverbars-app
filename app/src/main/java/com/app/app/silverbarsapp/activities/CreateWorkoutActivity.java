@@ -2,8 +2,8 @@ package com.app.app.silverbarsapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +21,7 @@ import com.app.app.silverbarsapp.adapters.ExercisesSelectedAdapter;
 import com.app.app.silverbarsapp.handlers.Filter;
 import com.app.app.silverbarsapp.handlers.MusclesWebviewHandler;
 import com.app.app.silverbarsapp.models.Exercise;
+import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.utils.OnStartDragListener;
 import com.app.app.silverbarsapp.utils.SimpleItemTouchHelperCallback;
 import com.app.app.silverbarsapp.utils.Utilities;
@@ -30,28 +31,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
 
 
-public class CreateWorkoutActivity extends AppCompatActivity implements OnStartDragListener, ExercisesSelectedAdapter.OnExerciseListener {
+public class CreateWorkoutActivity extends BaseActivity implements OnStartDragListener, ExercisesSelectedAdapter.OnExerciseListener {
 
     private static final String TAG = CreateWorkoutActivity.class.getSimpleName();
 
     private static final int FINAL_CREATE_WORKOUT = 2;
     private static final int LIST_EXERCISES_SELECTION = 1;
 
+
     @BindView(R.id.toolbar) Toolbar toolbar;
-
     @BindView(R.id.content) LinearLayout mMainContentLayout;
-
     @BindView(R.id.content_empty) LinearLayout mEmptyView;
     @BindView(R.id.webview) WebView webView;
-
     @BindView(R.id.readd) Button mReAddButton;
-
     @BindView(R.id.exercises_selected) RecyclerView mExercisesSelectedList;
 
     /*@BindView(R.id.skills)RecyclerView mSkillsList;
@@ -61,18 +58,26 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
 
     private Utilities utilities = new Utilities();
     private Filter filter = new Filter();
-    private MusclesWebviewHandler mMusclesWebviewHandler= new MusclesWebviewHandler();
-
+    private MusclesWebviewHandler mMusclesWebviewHandler = new MusclesWebviewHandler();
 
     private ExercisesSelectedAdapter adapter;
     private ItemTouchHelper mItemTouchHelper;
 
     @Override
+    protected int getLayout() {
+        return R.layout.activity_create_workout;
+    }
+
+    @Nullable
+    @Override
+    protected BasePresenter getPresenter() {
+        return null;
+    }
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_workout);
-        ButterKnife.bind(this);
-
         initUI();
 
         //mix panel events
@@ -86,12 +91,9 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         setupWebview();
     }
 
-    private void eventCreateWorkout(){
-        MixpanelAPI mMixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
-        mMixpanel.track("Create Workout 1", utilities.getUserData(this));
-    }
 
-    private void setupToolbar(){
+
+    public void setupToolbar(){
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -214,10 +216,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         //updateTypes();
     }
 
-    private void updateMusclesView(){
-        updateWebviewReady(getMusclesReady(filter.getMusclesFromExercises(adapter.getSelectedExercises())));
-    }
-
    /* private void updateTypes(){
         skill_adapter.set(utilities.getTypesByExercise(adapter.getSelectedExercises()));
     }*/
@@ -251,6 +249,25 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         return muscles_js;
     }
 
+    /**
+     *
+     *
+     *
+     *
+     *     UI events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
+
+    private void updateMusclesView(){
+        updateWebviewReady(getMusclesReady(filter.getMusclesFromExercises(adapter.getSelectedExercises())));
+    }
+
+
     private void updateWebviewReady(String muscles){
         webView.reload();
         utilities.loadBodyFromLocal(this,webView);
@@ -263,13 +280,6 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
         mExercisesSelectedList.setVisibility(View.VISIBLE);
     }
 
-    /*private void onEmptyTypesViewOn(){
-        mEmptyTypesView.setVisibility(View.VISIBLE);
-    }
-
-    private void onEmptyTypesViewOff(){
-        mEmptyTypesView.setVisibility(View.GONE);
-    }*/
 
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {mItemTouchHelper.startDrag(viewHolder);}
@@ -285,6 +295,29 @@ public class CreateWorkoutActivity extends AppCompatActivity implements OnStartD
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    /**
+     *
+     *
+     *
+     *
+     *
+     *    Mix panel events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+
+    private void eventCreateWorkout(){
+        MixpanelAPI mMixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
+        mMixpanel.track("Create Workout 1", utilities.getUserData(this));
     }
 
 }

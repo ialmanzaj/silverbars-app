@@ -33,7 +33,6 @@ public class SongsActivity extends AppCompatActivity {
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.music_selection) ListView mListSongsView;
     @BindView(R.id.done) Button mDoneButton;
-
     @BindView(R.id.empty_state) LinearLayout mEmptyStateView;
 
     private Utilities utilities = new Utilities();

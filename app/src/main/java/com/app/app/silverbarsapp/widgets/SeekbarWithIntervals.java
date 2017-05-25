@@ -13,7 +13,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
-import com.app.app.silverbarsapp.utils.ProgressDrawable;
 
 import java.util.ArrayList;
 import java.util.List;

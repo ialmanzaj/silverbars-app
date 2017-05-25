@@ -296,10 +296,6 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
 
     private void onErrorViewOff(){mErrorView.setVisibility(View.GONE);}
 
-
-
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -312,6 +308,24 @@ public class ResultsActivity extends BaseActivity implements ResultsView {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    /**
+     *
+     *
+     *
+     *
+     *
+     *    Mix panel events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
 
     private void eventWorkoutSaved(){mMixpanel.track("Workout Saved", utilities.getUserData(this));}
 

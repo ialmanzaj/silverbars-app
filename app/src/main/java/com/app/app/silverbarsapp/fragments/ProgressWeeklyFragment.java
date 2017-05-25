@@ -3,6 +3,7 @@ package com.app.app.silverbarsapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -275,10 +276,13 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
 
     private void changeFragment(Fragment currentFragment){
         if (this.isAdded()) {
-            FragmentManager fragmentManager = getChildFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.replace(R.id.fragment_container, currentFragment);
-            transaction.commit();
+            new Handler().post(() -> {
+                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.fragment_container, currentFragment);
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                transaction.commit();
+            });
         }
     }
 

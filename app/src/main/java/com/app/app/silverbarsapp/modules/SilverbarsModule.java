@@ -48,13 +48,11 @@ public class SilverbarsModule {
         return app;
     }
 
-
     @Provides
     @Singleton
     public MainService provideMainService(){
         return ServiceGenerator.createService(MainService.class,"token");
     }
-
 
     @Provides
     @Singleton
@@ -67,9 +65,5 @@ public class SilverbarsModule {
     public DatabaseHelper provideDatabaseHelper(Context context){
         return new DatabaseHelper(context);
     }
-
-
-
-
 
 }

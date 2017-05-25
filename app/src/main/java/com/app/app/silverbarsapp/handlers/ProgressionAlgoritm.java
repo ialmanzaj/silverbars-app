@@ -52,7 +52,6 @@ public class ProgressionAlgoritm {
     }
 
 
-
     public ArrayList<ExerciseProgressionCompared> getProgressionComparedDaily(ArrayList<ExerciseProgression> last_progressions_old,ArrayList<ExerciseProgression> current_progressions){
         //array of the progression compared
         ArrayList<ExerciseProgressionCompared> progressions = new ArrayList<>();

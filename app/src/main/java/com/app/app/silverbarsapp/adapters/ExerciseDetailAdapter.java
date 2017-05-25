@@ -1,5 +1,6 @@
 package com.app.app.silverbarsapp.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,9 +31,10 @@ public class ExerciseDetailAdapter extends RecyclerView.Adapter<ExerciseDetailAd
 
     private ArrayList<ExerciseProgressionCompared> progressions;
     private Utilities utilities = new Utilities();
-    
+    Context context;
 
-    public ExerciseDetailAdapter(ArrayList<ExerciseProgressionCompared> progressions) {
+    public ExerciseDetailAdapter(Context context,ArrayList<ExerciseProgressionCompared> progressions) {
+        this.context = context;
         this.progressions = progressions;
     }
 

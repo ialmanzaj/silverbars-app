@@ -82,5 +82,6 @@ public interface SilverbarsComponent {
     ExerciseDetailInteractor getExerciseDetailInteractor();
 
     MainInteractor getMainInteractor();
+
 }
 

@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
@@ -24,6 +26,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class WorkoutsDoneActivity extends BaseActivity implements WorkoutsDoneView {
 
@@ -32,7 +35,10 @@ public class WorkoutsDoneActivity extends BaseActivity implements WorkoutsDoneVi
     @Inject
     WorkoutsDonePresenter mWorkoutsDonePresenter;
 
+
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.loading) LinearLayout mLoadingView;
+    @BindView(R.id.error_view) LinearLayout mErrorView;
     @BindView(R.id.list)RecyclerView mWorkoutsDoneList;
 
     WorkoutsDoneAdapter adapter;
@@ -61,8 +67,8 @@ public class WorkoutsDoneActivity extends BaseActivity implements WorkoutsDoneVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupToolbar();
-        mWorkoutsDonePresenter.getWorkoutsDone();
         setupAdapter();
+        mWorkoutsDonePresenter.getWorkoutsDone();
     }
 
     private void setupAdapter(){
@@ -78,12 +84,20 @@ public class WorkoutsDoneActivity extends BaseActivity implements WorkoutsDoneVi
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("My workouts done");
+            getSupportActionBar().setTitle(getString(R.string.fragment_profile_workout_done));
         }
+    }
+
+    @OnClick(R.id.reload)
+    public void reload(){
+        onErrorViewOff();
+        onLoadingViewOn();
+        mWorkoutsDonePresenter.getWorkoutsDone();
     }
 
     @Override
     public void onWorkoutsDone(List<WorkoutDone> workouts) {
+        onLoadingViewOff();
         Collections.reverse(workouts);
         adapter.set(workouts);
     }
@@ -91,12 +105,40 @@ public class WorkoutsDoneActivity extends BaseActivity implements WorkoutsDoneVi
     @Override
     public void displayNetworkError() {
         Log.e(TAG,"displayNetworkError");
+        onErrorViewOn();
     }
 
     @Override
     public void displayServerError() {
         Log.e(TAG,"displayServerError");
+        onErrorViewOn();
     }
+
+    /**
+     *
+     *
+     *
+     *
+     *     UI events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
+    private void onLoadingViewOn(){
+        mLoadingView.setVisibility(View.VISIBLE);
+    }
+
+    private void onLoadingViewOff(){
+        mLoadingView.setVisibility(View.GONE);
+    }
+
+    private void onErrorViewOn(){mErrorView.setVisibility(View.VISIBLE);}
+
+    private void onErrorViewOff(){mErrorView.setVisibility(View.GONE);}
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

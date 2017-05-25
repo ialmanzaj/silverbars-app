@@ -94,6 +94,33 @@
 
                     </LinearLayout>
                     <LinearLayout
+                        android:visibility="gone"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:minHeight="40dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Level: "
+                                android:textColor="@color/gray_active_icon"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/level"
+                                android:textColor="@color/gray_active_icon"
+                                android:textSize="18sp" />
+
+                    </LinearLayout>
+                    <LinearLayout
                         android:background="?selectableItemBackgroundBorderless"
                         android:id="@+id/select_music"
                         android:minHeight="40dp"

@@ -47,17 +47,12 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     MuscleSelectionPresenter mMuscleSelectionPresenter;
 
     @BindView(R.id.toolbar) Toolbar toolbar;
-
     @BindView(R.id.webview) AdvancedWebView myWebView;
     @BindView(R.id.search_exercises) Button mLookExercises;
-
     @BindView(R.id.muscles_selected)TextView mMusclesTextSelected;
-
     @BindView(R.id.scroll_text) HorizontalScrollView mScrollText;
-
     @BindView(R.id.loading) LinearLayout mLoadingView;
     @BindView(R.id.error_view) LinearLayout mErrorView;
-
     @BindView(R.id.modal_overlay) LinearLayout mModal;
     @BindView(R.id.info) ImageView mInfo;
 

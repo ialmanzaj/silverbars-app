@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
-import com.app.app.silverbarsapp.adapters.AllExercisesAdapter;
+import com.app.app.silverbarsapp.adapters.ExercisesAllAdapter;
 import com.app.app.silverbarsapp.components.DaggerExerciseListComponent;
 import com.app.app.silverbarsapp.handlers.Filter;
 import com.app.app.silverbarsapp.models.Exercise;
@@ -52,7 +52,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
     @BindView(R.id.empty_state) LinearLayout mEmptyView;
 
-    private AllExercisesAdapter adapter;
+    private ExercisesAllAdapter adapter;
 
     private ArrayList<Exercise> mExercises = new ArrayList<>();
     private ArrayList<String> muscles_selected;
@@ -161,7 +161,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
     private void setExercisesView(ArrayList<Exercise> exercises){
         if (exercises.size() > 0) {
-            adapter = new AllExercisesAdapter(this, exercises);
+            adapter = new ExercisesAllAdapter(exercises);
             mExercisesList.setAdapter(adapter);
         }else {
             onEmptyViewOn();
@@ -202,7 +202,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     private void onEmptyViewOn(){mEmptyView.setVisibility(View.VISIBLE);}
 
     private void onEmptyViewOff(){mEmptyView.setVisibility(View.GONE);}
-
 
 
     @Override

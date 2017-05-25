@@ -1,6 +1,5 @@
 package com.app.app.silverbarsapp.adapters;
 
-import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.app.app.silverbarsapp.R;
@@ -21,23 +19,20 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
 
 /**
  * Created by isaacalmanza on 10/04/16.
  */
 
-public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapter.ExerciseViewHolder> {
+public class ExercisesAllAdapter extends RecyclerView.Adapter<ExercisesAllAdapter.ExerciseViewHolder> {
 
-    private static final String TAG = AllExercisesAdapter.class.getSimpleName();
+    private static final String TAG = ExercisesAllAdapter.class.getSimpleName();
 
-    private Context mContext;
     private ArrayList<Exercise> mExercises = new ArrayList<>();
 
     private SparseBooleanArray mExercisesSelected = new SparseBooleanArray();
 
-    public AllExercisesAdapter(Context context, ArrayList<Exercise> exercises) {
-        mContext = context;
+    public ExercisesAllAdapter(ArrayList<Exercise> exercises) {
         mExercises = exercises;
     }
 
@@ -48,10 +43,9 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
 
     public class ExerciseViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.itemSelected) LinearLayout item;
-        @BindView(R.id.nombre) TextView exercise_name;
-        @BindView(R.id.imagen) SimpleDraweeView exercise_img;
-        @BindView(R.id.checkbox) CheckBox selection;
+        @BindView(R.id.nombre) TextView mExerciseName;
+        @BindView(R.id.imagen) SimpleDraweeView mExerciseImg;
+        @BindView(R.id.checkbox) CheckBox mSelectedBox;
 
         public ExerciseViewHolder(View view) {
             super(view);
@@ -59,14 +53,20 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
             ButterKnife.bind(this,view);
         }
 
-        @OnCheckedChanged(R.id.checkbox)
-        public void selectedItem(CompoundButton button){
-            int exercise_id = (Integer) button.getTag();
-            if (!mExercisesSelected.get(exercise_id)) {
-                mExercisesSelected.put(exercise_id, true);
-            } else
-                mExercisesSelected.put(exercise_id, false);
+
+        void setOnCheckedChangeListener(){
+            mSelectedBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                int id = (Integer)  buttonView.getTag();
+                mExercisesSelected.put(id,isChecked);
+            });
         }
+
+        boolean isChecked(CompoundButton buttonView){
+            //Log.v(TAG,"buttonView"+buttonView.getTag());
+            int id = (Integer)  buttonView.getTag();
+            return mExercisesSelected.get(id);
+        }
+
     }
 
     @Override
@@ -79,12 +79,15 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
     public void onBindViewHolder(ExerciseViewHolder viewHolder, int position) {
         try {
 
-            viewHolder.exercise_name.setText(mExercises.get(position).getExercise_name());
+            viewHolder.mExerciseName.setText(mExercises.get(position).getExercise_name());
+            viewHolder.mExerciseImg.setImageURI(Uri.parse(mExercises.get(position).getExercise_image()));
 
-            viewHolder.selection.setTag(mExercises.get(position).getId());
-            mExercisesSelected.put(mExercises.get(position).getId(),false);
+            //OnChecked Listener
+            viewHolder.mSelectedBox.setTag(mExercises.get(position).getId());
+            viewHolder.setOnCheckedChangeListener();
+            viewHolder.mSelectedBox.setChecked(viewHolder.isChecked(viewHolder.mSelectedBox));
 
-            viewHolder.exercise_img.setImageURI(Uri.parse(mExercises.get(position).getExercise_image()));
+
 
         }catch (NullPointerException e){Log.e(TAG,"NullPointerException");}
     }
@@ -93,7 +96,5 @@ public class AllExercisesAdapter extends RecyclerView.Adapter<AllExercisesAdapte
     public int getItemCount() {
         return mExercises.size();
     }
-
-
 
 }

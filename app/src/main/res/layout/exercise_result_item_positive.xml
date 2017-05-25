@@ -42,6 +42,7 @@
                         android:textColor="@color/black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
+
             </LinearLayout>
 
             <TextView
@@ -50,6 +51,7 @@
                 android:textColor="@color/greenColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+
         </LinearLayout>
         <LinearLayout
             android:gravity="end"
@@ -58,7 +60,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text=" of "
+                android:text="@string/exercise_results_of"
                 android:textSize="22sp"
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
@@ -72,7 +74,7 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:text=" sets"
+                android:text="@string/exercise_results_sets"
                 android:textSize="22sp"
                 android:textColor="@color/black"
                 android:layout_width="wrap_content"
@@ -101,19 +103,24 @@
 
             <TextView
                 android:id="@+id/progress"
-                android:text="1"
                 android:textColor="@color/greenColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp" />
 
             <TextView
-                android:text="+%"
+                android:text="@string/exercise_progresion_detail_plus"
                 android:textColor="@color/greenColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp" />
 
+            <TextView
+                android:text="@string/exercise_progresion_detail_porcen"
+                android:textColor="@color/greenColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
 
         </LinearLayout>
     </LinearLayout>

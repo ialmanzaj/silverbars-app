@@ -125,6 +125,7 @@ public class Utilities {
         AuthAccountManager authAccountManager = new AuthAccountManager();
         Account activeAccount = authAccountManager.getActiveAccount(context.getString(R.string.authentication_ACCOUNT));
 
+        String name = AccountManager.get(context).getUserData(activeAccount, context.getString(R.string.authentication_NAME));
         String age = AccountManager.get(context).getUserData(activeAccount, context.getString(R.string.authentication_AGE));
         String gender = AccountManager.get(context).getUserData(activeAccount, context.getString(R.string.authentication_GENDER));
 
@@ -132,6 +133,9 @@ public class Utilities {
 
             JSONObject jsonObject = new JSONObject();
 
+            if (!Objects.equals(name, "name")){
+                jsonObject.put("Name",name);
+            }
 
             if (!Objects.equals(age, "age")){
                 jsonObject.put("Age",age);

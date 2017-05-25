@@ -51,7 +51,6 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
     LoginPresenter mLoginPresenter;
 
     @BindView(R.id.loading)RelativeLayout mLoadingView;
-
     @BindView(R.id.login_button) LoginButton mFacebookButton;
 
     private CallbackManager callbackManager;

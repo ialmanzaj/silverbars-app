@@ -36,17 +36,14 @@ public class ExerciseDetailActivity extends BaseActivity implements ExerciseDeta
     @Inject
     ExerciseDetailPresenter mExerciseDetailPresenter;
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
 
+    @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.exercises)RecyclerView mExercisesList;
     @BindView(R.id.skills)RecyclerView mSkillsList;
-
     @BindView(R.id.muscle_selected)TextView mMuscleSelected;
     @BindView(R.id.activation) RecyclerView mMuscleActivation;
 
-
     private Utilities utilities = new Utilities();
-
 
     @Override
     protected int getLayout() {
@@ -119,7 +116,7 @@ public class ExerciseDetailActivity extends BaseActivity implements ExerciseDeta
         mExercisesList.setLayoutManager(new LinearLayoutManager(this));
         mExercisesList.setNestedScrollingEnabled(false);
         mExercisesList.setHasFixedSize(false);
-        mExercisesList.setAdapter(new ExerciseDetailAdapter(progressions));
+        mExercisesList.setAdapter(new ExerciseDetailAdapter(this,progressions));
     }
 
     private void setupAdapterSkills(ArrayList<ExerciseProgressionCompared> progressions){

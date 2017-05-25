@@ -64,8 +64,7 @@ public class Constants {
         public static final String METADATA_CHANGED_1 = SPOTIFY_PACKAGE + ".metadatachanged";
     }
 
+
     public static final String MIX_PANEL_TOKEN = "babda126dda01228e181324ab3fc9b99";
-
-
 
 }

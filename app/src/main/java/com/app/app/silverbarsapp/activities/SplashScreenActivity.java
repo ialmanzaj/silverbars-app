@@ -14,13 +14,15 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private static final String TAG = SplashScreenActivity.class.getSimpleName();
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        AuthAccountManager authAccountManager = new AuthAccountManager();
-        Account activeAccount = authAccountManager.getActiveAccount(getString(R.string.authentication_ACCOUNT));
+        AuthAccountManager mAuthAccountManager = new AuthAccountManager();
+        Account activeAccount = mAuthAccountManager.getActiveAccount(getString(R.string.authentication_ACCOUNT));
 
         if (activeAccount != null){
 

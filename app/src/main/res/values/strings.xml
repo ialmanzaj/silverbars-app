@@ -202,22 +202,38 @@
     <string name="exercise_progresion_detail_equal">=</string>
     <string name="exercise_progresion_detail_plus">+</string>
     <string name="exercise_progresion_detail_porcen">%</string>
-    <string name="exercise_progresion_detail_positive_more">&#160;more&#160;;</string>
-    <string name="exercise_progresion_detail_than">&#160;than&#160;</string>
-    <string name="exercise_progresion_detail_less">less&#160;;</string>
-    <string name="exercise_progresion_detail_same">same&#160;</string>
+    <string name="exercise_progresion_detail_positive_more">\u0020more\u0020</string>
+    <string name="exercise_progresion_detail_than">\u0020than\u0020</string>
+    <string name="exercise_progresion_detail_less">\u0020less\u0020</string>
+    <string name="exercise_progresion_detail_same">same\u0020</string>
 
     <!---    progression_algoritm view     -->
     <string name="progression_algoritm_days">days ago</string>
-    <string name="progression_algoritm_before">before</string>
-    <string name="progression_algoritm_week">week</string>
-    <string name="progression_algoritm_month">month</string>
-    <string name="progression_algoritm_last_time">last time</string>
+    <string name="progression_algoritm_before">the before</string>
+    <string name="progression_algoritm_week">the week</string>
+    <string name="progression_algoritm_month">the month</string>
+    <string name="progression_algoritm_last_time">for first time</string>
 
     <!---    exercise detail view     -->
     <string name="exercise_detail_tab_exercises">Exercises</string>
     <string name="exercise_detail_tab_focus">Focus</string>
     <string name="exercise_detail_tab_activacion">Activation</string>
+
+    <!---    exercise result view     -->
+    <string name="exercise_results_sets">sets</string>
+    <string name="exercise_results_of">\u0020of\u0020</string>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
