@@ -26,13 +26,14 @@ public class ExerciseRep implements Parcelable{
     private int workout;
 
 
-    private String times_per_set;
-    private STATE exercise_state = STATE.REP;
-    private int number;
     private double weight;
 
+    private String timeperset;
+    private String exercise_state = "REP";
+    private int number;
 
     public ExerciseRep() {}
+
 
     public ExerciseRep(int id,Exercise exercise,int repetition,int seconds) {
         this.id = id;
@@ -56,9 +57,10 @@ public class ExerciseRep implements Parcelable{
         repetition = in.readInt();
         seconds = in.readInt();
         workout = in.readInt();
-        times_per_set = in.readString();
-        number = in.readInt();
         weight = in.readDouble();
+        timeperset = in.readString();
+        exercise_state = in.readString();
+        number = in.readInt();
     }
 
     @Override
@@ -68,9 +70,10 @@ public class ExerciseRep implements Parcelable{
         dest.writeInt(repetition);
         dest.writeInt(seconds);
         dest.writeInt(workout);
-        dest.writeString(times_per_set);
-        dest.writeInt(number);
         dest.writeDouble(weight);
+        dest.writeString(timeperset);
+        dest.writeString(exercise_state);
+        dest.writeInt(number);
     }
 
     @Override
@@ -89,6 +92,8 @@ public class ExerciseRep implements Parcelable{
             return new ExerciseRep[size];
         }
     };
+
+
 
     public void setId(int id) {
         this.id = id;
@@ -147,25 +152,23 @@ public class ExerciseRep implements Parcelable{
         this.weight = weight;
     }
 
-    public void setExerciseState(int position){
-        exercise_state = STATE.values()[position];
+    public void setExerciseState(String type){
+        exercise_state = type;
     }
 
-    public STATE getExercise_state() {
+    public String getExercise_state() {
         return exercise_state;
     }
 
     public void setTimes_per_set(String times_per_set) {
-        this.times_per_set = times_per_set;
+        this.timeperset = times_per_set;
     }
 
     public String getTimes_per_set() {
-        return times_per_set;
+        return timeperset;
     }
 
-    public enum STATE {
-        REP, SECOND,
-    }
+
 
 }
 

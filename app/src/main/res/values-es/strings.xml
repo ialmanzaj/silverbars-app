@@ -218,6 +218,7 @@
     <string name="exercise_results_sets">sets</string>
     <string name="exercise_results_of">\u0020de\u0020</string>
 
-
+    <string name="activity_exercise_selected_reps">reps</string>
+    <string name="activity_exercise_selected_secs">secs</string>
 
 </resources>

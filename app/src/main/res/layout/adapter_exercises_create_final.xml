@@ -2,17 +2,19 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="115dp"
+    android:layout_height="110dp"
     xmlns:fresco="http://schemas.android.com/tools"
-    android:layout_marginTop="5dp"
-    android:layout_marginStart="5dp"
-    android:layout_marginEnd="5dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginStart="2dp"
+    android:layout_marginEnd="2dp"
     android:layout_marginBottom="0dp"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="2dp"
     card_view:cardElevation="1dp">
 
     <LinearLayout
+        android:background="?selectableItemBackgroundBorderless"
+        android:id="@+id/item"
         android:baselineAligned="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -45,11 +47,10 @@
             android:orientation="vertical"
             android:layout_height="match_parent"
             android:layout_width="0dp"
-            android:layout_weight="3">
+            android:layout_weight="2">
 
             <TextView
-                android:textStyle="bold"
-                android:textSize="16sp"
+                android:textSize="22sp"
                 android:maxLines="1"
                 android:id="@+id/exercise_name"
                 android:layout_width="wrap_content"
@@ -58,82 +59,62 @@
                 android:textColor="@color/black" />
 
             <LinearLayout
+                android:gravity="center_vertical"
                 android:layout_marginTop="5dp"
-                android:gravity="center_vertical|center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:baselineAligned="false">
 
-                <android.support.design.widget.TextInputLayout
-                    android:theme="@style/TextLabel"
+             <TextView
+                 android:textStyle="bold"
+                 android:textColor="@color/black"
+                 android:text="0"
+                 android:textSize="30sp"
+                 android:id="@+id/exercise_number"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content" />
+
+                <TextView
+
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/black"
+                    android:text="reps"
+                    android:textSize="24sp"
+                    android:id="@+id/exercise_option"
                     android:layout_width="wrap_content"
-                    android:minWidth="45dp"
-                    android:layout_height="wrap_content">
-                    <AutoCompleteTextView
-                        android:gravity="center_horizontal"
-                        android:id="@+id/repsOrSeconds"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textSize="22sp"
-                        android:imeOptions="actionDone"
-                        android:textColor="@color/black"
-                        android:maxLength="3"
-                        android:textColorHint="@color/black"
-                        android:inputType="number"
-                        android:maxLines="1" />
-                </android.support.design.widget.TextInputLayout>
-                <Spinner
-                    android:layout_marginTop="14dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="-8dp"
-                    android:backgroundTint="@color/black"
-                    android:id="@+id/spinner_rep"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content" />
 
                 <LinearLayout
-                    android:layout_marginStart="5dp"
+                    android:id="@+id/weight_layout"
+                    android:visibility="invisible"
+                    android:gravity="center_vertical"
+                    android:layout_marginStart="20dp"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
                     <TextView
-                        android:layout_marginTop="10dp"
-                        android:gravity="center_vertical"
-                        android:textSize="22sp"
+                        android:textSize="24sp"
                         android:textColor="@color/gray_active_icon"
                         android:text="+"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent" />
+                        android:layout_height="wrap_content" />
 
-                    <android.support.design.widget.TextInputLayout
-                        android:theme="@style/TextLabelSecondary"
-                        android:layout_width="wrap_content"
-                        android:minWidth="45dp"
-                        android:layout_height="wrap_content">
-                        <AutoCompleteTextView
-                            android:id="@+id/weight"
-                            android:gravity="center_horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="22sp"
-                            android:imeOptions="actionDone"
-                            android:textColor="@color/gray_active_icon"
-                            android:maxLength="3"
-                            android:text="0"
-                            android:textColorHint="@color/black"
-                            android:inputType="numberDecimal"
-                            android:maxLines="1" />
-                    </android.support.design.widget.TextInputLayout>
                     <TextView
-                        android:layout_marginTop="18dp"
-                        android:gravity="center_vertical"
+                        android:textColor="@color/gray_active_icon"
+                        android:text="0"
+                        android:textSize="24sp"
+                        android:id="@+id/weight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
                         android:id="@+id/kg"
-                        android:textSize="20sp"
+                        android:textSize="22sp"
                         android:textColor="@color/gray_active_icon"
                         android:text="Kg"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent" />
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

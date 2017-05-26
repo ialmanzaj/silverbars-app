@@ -42,7 +42,6 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
 
     @BindView(R.id.Profile_name) TextView mProfileName;
     @BindView(R.id.profile_image) ImageView mProfileImg;
-
     @BindView(R.id.my_workouts_done) LinearLayout mMyWorkoutsDone;
 
 

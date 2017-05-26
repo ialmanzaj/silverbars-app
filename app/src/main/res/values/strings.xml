@@ -226,7 +226,8 @@
     <string name="exercise_results_of">\u0020of\u0020</string>
 
 
-
+    <string name="activity_exercise_selected_reps">reps</string>
+    <string name="activity_exercise_selected_secs">secs</string>
 
 
 
@@ -246,7 +247,6 @@
     <string name="com.andretietz.retroauth.authentication.ACTION" translatable="false">com.app.app.silverbarsapp.ACTION</string>
     <string name="authentication_ACCOUNT" translatable="false">com.app.app.silverbarsapp.ACCOUNT</string>
     <string name="authentication_TOKEN" translatable="false">com.app.app.silverbarsapp.TOKEN</string>
-
 
 
     <!---          USER data       -->

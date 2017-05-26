@@ -48,9 +48,11 @@ import butterknife.OnTextChanged;
 
 import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
 
-public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWorkoutFinalView{
+public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWorkoutFinalView,CreateFinalExercisesAdapter.ExerciseListener {
 
     private static final String TAG = CreateWorkoutFinalActivity.class.getSimpleName();
+    private static final int EXERCISE_SELECTION = 3;
+
 
     @Inject
     CreateWorkoutFinalPresenter mCreateWorkoutFinalPresenter;
@@ -67,7 +69,6 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
     //@BindView(R.id.strength)SeekBar strenghtBar;
     //@BindView(R.id.porcentaje) TextView mPorcentajeTextView;
-
 
     private Utilities utilities = new Utilities();
     private MuscleHandler mMuscleHandler = new MuscleHandler();
@@ -108,44 +109,10 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
         mExercisesList.setLayoutManager(new LinearLayoutManager(this));
         adapter = new CreateFinalExercisesAdapter(this, mExercisesSelected);
+        adapter.addListener(this);
         mExercisesList.setAdapter(adapter);
 
         mSets.setText(String.valueOf(mCurrentSet));
-
-        /*strenghtBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                for (int a = 0;a<adapter.getExercises().size();a++){
-                    ExerciseRep exercise =  adapter.getExercises().get(a);
-
-                    List<String> muscles = new ArrayList<>();
-                    for (MuscleExercise muscle: exercise.getExercise().getMusclesFromExerciseProgression()){muscles.add(muscle.getMuscle());}
-
-                    if (muscles.contains("RECTUS-ABDOMINIS")){
-
-                        exercise.setNumber(progress*2);
-
-                    }else {
-
-
-                        if (exercise.getNumber() < 10){
-                            exercise.setNumber(10);
-                        }
-
-                        exercise.setWeight(progress*2);
-                    }
-
-                    adapter.set(a,exercise);
-                }
-
-                mPorcentajeTextView.setText(String.valueOf(progress));
-            }
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
-        });*/
-
 
         mMixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
         mixPanelEventOnCreateWorkoutFinal();
@@ -254,6 +221,18 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
                 Exception error = result.getError();
                 Log.e(TAG,"error",error);
             }
+
+
+        }else if (requestCode == EXERCISE_SELECTION){
+            if (resultCode == RESULT_OK && data != null) {
+
+                int position = data.getIntExtra("position", 0);
+                ExerciseRep exercise = data.getParcelableExtra("exercise");
+
+
+                //update adapter
+                adapter.set(position, exercise);
+            }
         }
     }
     
@@ -310,10 +289,10 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     private ArrayList<ExerciseRep> getExercisesReady(ArrayList<ExerciseRep> exercises){
         for (ExerciseRep exercise: exercises){
             switch (exercise.getExercise_state()){
-                case REP:
+                case "REP":
                     exercise.setRepetition(exercise.getNumber());
                     break;
-                case SECOND:
+                case "SEC":
                     exercise.setSeconds(exercise.getNumber());
                     break;
             }
@@ -358,6 +337,15 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     @Override
     public void displayServerError() {
         onErrorViewOn();
+    }
+
+
+    @Override
+    public void onExerciseSelected(ExerciseRep exercise,int position) {
+        Intent intent = new Intent(this, ExerciseSelectedActivity.class);
+        intent.putExtra("position",position);
+        intent.putExtra("exercise",exercise);
+        startActivityForResult(intent,EXERCISE_SELECTION);
     }
 
 
@@ -407,10 +395,7 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
      *
      *
      *
-     *
      *    Mix panel events
-     *
-     *
      *
      *
      */

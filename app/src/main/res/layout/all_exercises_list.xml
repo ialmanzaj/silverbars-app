@@ -4,21 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     xmlns:fresco="http://schemas.android.com/tools"
-    android:layout_marginTop="5dp"
-    android:layout_marginStart="5dp"
-    android:layout_marginEnd="5dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginStart="2dp"
+    android:layout_marginEnd="2dp"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="2dp"
     card_view:cardElevation="1dp">
 
     <FrameLayout
-        android:id="@+id/LinearLayout"
         android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:background="@color/white">
+        android:layout_width="match_parent">
 
         <LinearLayout
-            android:id="@+id/itemSelected"
             android:baselineAligned="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -27,8 +24,7 @@
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:id="@+id/imageLayout">
+                android:layout_weight="1">
 
                 <com.facebook.drawee.view.SimpleDraweeView
                     fresco:actualImageScaleType="centerInside"
@@ -47,8 +43,8 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:id="@+id/nameLayout">
+                android:layout_weight="2">
+
                 <TextView
                     android:id="@+id/nombre"
                     android:layout_width="match_parent"
@@ -56,21 +52,20 @@
                     android:gravity="center_vertical|center"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/exercise_name"
-                    android:textColor="#000" />
+                    android:textColor="@color/black" />
+
             </LinearLayout>
             <LinearLayout
+                android:gravity="center_horizontal|center_vertical"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_gravity="center_vertical"
-                android:gravity="center"
-                android:id="@+id/repsLayout">
+                android:layout_weight="1">
 
                 <CheckBox
                     android:theme="@style/MyCheckBox"
                     android:id="@+id/checkbox"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent" />
 
             </LinearLayout>
 

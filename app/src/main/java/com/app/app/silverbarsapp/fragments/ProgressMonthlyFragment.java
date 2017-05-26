@@ -19,7 +19,6 @@ import com.app.app.silverbarsapp.activities.ExerciseDetailActivity;
 import com.app.app.silverbarsapp.adapters.SimpleStringAdapter;
 import com.app.app.silverbarsapp.components.DaggerTotalProgressionComponent;
 import com.app.app.silverbarsapp.handlers.Filter;
-import com.app.app.silverbarsapp.handlers.MusclesWebviewHandler;
 import com.app.app.silverbarsapp.handlers.ProgressionAlgoritm;
 import com.app.app.silverbarsapp.models.ExerciseProgression;
 import com.app.app.silverbarsapp.modules.ProgressionModule;
@@ -30,6 +29,7 @@ import com.app.app.silverbarsapp.utils.MuscleListener;
 import com.app.app.silverbarsapp.utils.OnSwipeTouchListener;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.ProgressionView;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -44,6 +44,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
+
 public class ProgressMonthlyFragment extends BaseFragment implements ProgressionView,MuscleListener {
 
     private static final String TAG = ProgressMonthlyFragment.class.getSimpleName();
@@ -55,20 +57,16 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
 
 
     @BindView(R.id.loading) LinearLayout mLoadingView;
-
     @BindView(R.id.error_view) LinearLayout mErrorView;
-
     @BindView(R.id.months)RecyclerView mMonths;
 
 
     private ArrayList<ExerciseProgression> mYearProgressions = new ArrayList<>();
 
-    private Utilities mUtilities = new Utilities();
+    private Utilities utilities = new Utilities();
     private Utilities.HandlerMover handlerMover;
     private Filter filter = new Filter();
-    MusclesWebviewHandler mMusclesWebviewHandler = new MusclesWebviewHandler();
 
-    private String mMuscleParts = " ";
     SimpleStringAdapter adapter;
 
     private int mCurrentMonth;
@@ -84,6 +82,8 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         CHANGE_TO_EMPTY,
         CHANGED_BODY
     }
+
+    private MixpanelAPI mMixpanel;
 
 
     @Override
@@ -110,34 +110,23 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         super.onViewCreated(view, savedInstanceState);
         //mProgressionPresenter.getMuscleProgressions();
 
-        mProgressionAlgoritm = new ProgressionAlgoritm(CONTEXT);
+        mMixpanel = MixpanelAPI.getInstance(CONTEXT, MIX_PANEL_TOKEN);
 
+
+        mProgressionAlgoritm = new ProgressionAlgoritm(CONTEXT);
         mProgressionPresenter.getExerciseProgression();
         setupAdapter();
     }
 
 
-
-    private void setupAdapter(){
-        mMonths.addOnItemTouchListener(new DisableTouchRecyclerListener());
-        mMonths.setLayoutManager(new LinearLayoutManager(CONTEXT, LinearLayoutManager.HORIZONTAL, false));
-
-        adapter = new SimpleStringAdapter(getMonthsNames());
-        handlerMover = new Utilities.HandlerMover(getMonthsNames().size());
-        mMonths.setAdapter(adapter);
-
-        mMonths.setOnTouchListener(new OnSwipeTouchListener(CONTEXT){
-            @Override
-            public void onSwipeRight() {
-                handlerMover.moveNext();
-            }
-            @Override
-            public void onSwipeLeft() {
-                 handlerMover.movePreview();
-            }
-        });
-    }
-
+    /**
+     *
+     *
+     *    Click listeners
+     *
+     *
+     *
+     */
 
     @OnClick(R.id.reload)
     public void reload(){
@@ -166,6 +155,15 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         }
     }
 
+    /**
+     *
+     *
+     *   Muscle events
+     *
+     *
+     *
+     */
+
     @Override
     public void onMuscleSelected(String muscle) {
 
@@ -181,15 +179,16 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         startActivity(intent);
     }
 
-    @Override
-    public void displayNetworkError() {
-        onErrorViewOn();
-    }
+    /**
+     *
+     *
+     *
+     *   API events
+     *
+     *
+     *
+     */
 
-    @Override
-    public void displayServerError() {
-        onErrorViewOn();
-    }
 
     @Override
     public void emptyProgress() {
@@ -205,6 +204,17 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         init(progressions);
     }
 
+    @Override
+    public void displayNetworkError() {
+        onErrorViewOn();
+    }
+
+    @Override
+    public void displayServerError() {
+        onErrorViewOn();
+    }
+
+
     private void init(List<ExerciseProgression> progressions){
 
         Interval year_interval =
@@ -216,6 +226,39 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
 
         initUI();
     }
+
+    /**
+     *
+     *
+     *
+     *     UI events
+     *
+     *
+     *
+     *
+     *
+     */
+
+    private void setupAdapter(){
+        mMonths.addOnItemTouchListener(new DisableTouchRecyclerListener());
+        mMonths.setLayoutManager(new LinearLayoutManager(CONTEXT, LinearLayoutManager.HORIZONTAL, false));
+
+        adapter = new SimpleStringAdapter(getMonthsNames());
+        handlerMover = new Utilities.HandlerMover(getMonthsNames().size());
+        mMonths.setAdapter(adapter);
+
+        mMonths.setOnTouchListener(new OnSwipeTouchListener(CONTEXT){
+            @Override
+            public void onSwipeRight() {
+                handlerMover.moveNext();
+            }
+            @Override
+            public void onSwipeLeft() {
+                handlerMover.movePreview();
+            }
+        });
+    }
+
 
     private void initUI(){
         //filter the progressions to get the current month
@@ -232,7 +275,74 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         updateMainUi(getProgressionByMonth(mCurrentMonth));
     }
 
+    private void updateMainUi(ArrayList<ExerciseProgression> progressions_filtered){
+        Bundle extras = new Bundle();
 
+        if (progressions_filtered.size() > 0){
+
+            extras.putParcelableArrayList("progressions", progressions_filtered);
+            BodyFragment currentFragment = new BodyFragment();
+            currentFragment.setArguments(extras);
+            currentFragment.addListener(this);
+
+            changeFragment(currentFragment);
+
+            mPendingAction = PENDING_ACTIONS.CHANGED_BODY;
+
+        }else {
+
+            if (mPendingAction != PENDING_ACTIONS.CHANGE_TO_EMPTY) {
+
+                EmptyViewFragment currentFragment = new EmptyViewFragment();
+                changeFragment(currentFragment);
+
+
+                //FLAG
+                mPendingAction = PENDING_ACTIONS.CHANGE_TO_EMPTY;
+            }
+        }
+    }
+
+
+    private void changeFragment(Fragment currentFragment){
+        if (this.isAdded()) {
+            new Handler().post(() -> {
+                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.fragment_container, currentFragment);
+                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                transaction.commit();
+            });
+        }
+    }
+
+    private void onLoadingViewOn(){
+        mLoadingView.setVisibility(View.VISIBLE);
+    }
+
+    private void onLoadingViewOff(){
+        mLoadingView.setVisibility(View.GONE);
+    }
+
+    private void onErrorViewOn(){
+        mErrorView.setVisibility(View.VISIBLE);
+    }
+
+    private void onErrorViewOff(){
+        mErrorView.setVisibility(View.GONE);
+    }
+
+
+
+    /**
+     *
+     *
+     *
+     *   Date functions
+     *
+     *
+     *
+     */
     private int whichMonthIs(DateTime today){
         if (filter.filterByDate(today, getMonths().get(0))){
             return 0;
@@ -279,10 +389,7 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         }};
     }
 
-
-    private List<String> getMonthsNames() {
-        return Arrays.asList(CONTEXT.getResources().getStringArray(R.array.months));
-    }
+    private List<String> getMonthsNames() {return Arrays.asList(CONTEXT.getResources().getStringArray(R.array.months));}
 
     private ArrayList<ExerciseProgression> getProgressionByMonth(int month) {
         switch (month){
@@ -327,48 +434,6 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
         }
     }
 
-    private void updateMainUi(ArrayList<ExerciseProgression> progressions_filtered){
-        Bundle extras = new Bundle();
-
-        if (progressions_filtered.size() > 0){
-
-            extras.putParcelableArrayList("progressions", progressions_filtered);
-            BodyFragment currentFragment = new BodyFragment();
-            currentFragment.setArguments(extras);
-            currentFragment.addListener(this);
-
-            changeFragment(currentFragment);
-
-            mPendingAction = PENDING_ACTIONS.CHANGED_BODY;
-
-        }else {
-
-            if (mPendingAction != PENDING_ACTIONS.CHANGE_TO_EMPTY) {
-
-                EmptyViewFragment currentFragment = new EmptyViewFragment();
-                changeFragment(currentFragment);
-
-
-                //FLAG
-                mPendingAction = PENDING_ACTIONS.CHANGE_TO_EMPTY;
-            }
-        }
-
-
-    }
-
-    private void changeFragment(Fragment currentFragment){
-        if (this.isAdded()) {
-            new Handler().post(() -> {
-                FragmentManager fragmentManager = getChildFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.fragment_container, currentFragment);
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                transaction.commit();
-            });
-        }
-    }
-
 
 
     /**
@@ -376,30 +441,19 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
      *
      *
      *
-     *     UI events
-     *<p>
-     *
+     *    Mix panel events
      *
      *
      *
      *
      */
 
-
-    private void onLoadingViewOn(){
-        mLoadingView.setVisibility(View.VISIBLE);
+    private void mixPanelEventProgressionMonthly(){
+        mMixpanel.track("on Progression monthly", utilities.getUserData(CONTEXT));
     }
 
-    private void onLoadingViewOff(){
-        mLoadingView.setVisibility(View.GONE);
-    }
 
-    private void onErrorViewOn(){
-        mErrorView.setVisibility(View.VISIBLE);
-    }
 
-    private void onErrorViewOff(){
-        mErrorView.setVisibility(View.GONE);
-    }
+
 
 }

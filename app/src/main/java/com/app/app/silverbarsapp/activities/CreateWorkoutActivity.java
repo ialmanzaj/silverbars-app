@@ -91,8 +91,6 @@ public class CreateWorkoutActivity extends BaseActivity implements OnStartDragLi
     }
 
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -116,15 +114,7 @@ public class CreateWorkoutActivity extends BaseActivity implements OnStartDragLi
     /**
      *
      *
-     *
-     *
-     *
      *    Click listeners
-     *<p>
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -164,9 +154,6 @@ public class CreateWorkoutActivity extends BaseActivity implements OnStartDragLi
      *
      *
      *    Events listening
-     *
-     *
-
      *
      *
      *
@@ -213,10 +200,7 @@ public class CreateWorkoutActivity extends BaseActivity implements OnStartDragLi
      *
      *
      *
-     *
      *     UI events
-     *<p>
-     *
      *
      *
      *
@@ -325,15 +309,7 @@ public class CreateWorkoutActivity extends BaseActivity implements OnStartDragLi
      *
      *
      *
-     *
-     *
      *    Mix panel events
-     *<p>
-     *
-     *
-     *
-     *
-     *
      *
      *
      */

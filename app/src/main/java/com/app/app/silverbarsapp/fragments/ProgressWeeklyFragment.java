@@ -23,8 +23,10 @@ import com.app.app.silverbarsapp.modules.ProgressionModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ProgressionPresenter;
 import com.app.app.silverbarsapp.utils.MuscleListener;
+import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.ProgressionView;
 import com.app.app.silverbarsapp.widgets.SeekbarWithIntervals;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -41,6 +43,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
+
 
 public class ProgressWeeklyFragment extends BaseFragment implements ProgressionView,MuscleListener {
 
@@ -51,15 +55,13 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
 
 
     @BindView(R.id.loading) LinearLayout mLoadingView;
-
     @BindView(R.id.error_view) LinearLayout mErrorView;
-
     @BindView(R.id.seekbarWithIntervals) SeekbarWithIntervals mSeekbarWithIntervals;
 
 
+    private Utilities utilities = new Utilities();
     private Filter filter = new Filter();
     private ProgressionAlgoritm mProgressionAlgoritm;
-
 
     private List<ExerciseProgression> mMonthProgressions = new ArrayList<>();
 
@@ -68,7 +70,6 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
     LocalDate monthBegin = new LocalDate().withDayOfMonth(1);
     LocalDate monthEnd  = new LocalDate().plusMonths(1).withDayOfMonth(1).minusDays(1);
 
-
     private PENDING_ACTIONS mPendingAction = PENDING_ACTIONS.NONE;
 
     private enum PENDING_ACTIONS {
@@ -76,6 +77,8 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
         CHANGE_TO_EMPTY,
         CHANGED_BODY
     }
+
+    private MixpanelAPI mMixpanel;
 
 
     @Override
@@ -99,27 +102,35 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (this.isAdded()) {
 
-            mProgressionAlgoritm = new ProgressionAlgoritm(CONTEXT);
 
-            mProgressionPresenter.getExerciseProgression();
+        mMixpanel = MixpanelAPI.getInstance(CONTEXT, MIX_PANEL_TOKEN);
 
-            mSeekbarWithIntervals.setIntervals(getWeeksAbreb());
-            mSeekbarWithIntervals.setInitialProgress(whichWeekIs(new DateTime()));
-            mSeekbarWithIntervals.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    mSeekbarWithIntervals.changeSeekBarTextViewColor(progress);
-                    mCurrentWeek = progress;
-                    updateMainUi(getProgressionByWeek(progress));
-                }
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {}
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {}
-            });
-        }
+
+        mProgressionAlgoritm = new ProgressionAlgoritm(CONTEXT);
+        mProgressionPresenter.getExerciseProgression();
+
+
+        initSeekbar();
+    }
+
+
+    private void initSeekbar(){
+
+        mSeekbarWithIntervals.setIntervals(getWeeksAbreb());
+        mSeekbarWithIntervals.setInitialProgress(whichWeekIs(new DateTime()));
+        mSeekbarWithIntervals.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mSeekbarWithIntervals.changeSeekBarTextViewColor(progress);
+                mCurrentWeek = progress;
+                updateMainUi(getProgressionByWeek(progress));
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
     }
 
 
@@ -169,6 +180,7 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
     public void displayServerError() {
         onErrorViewOn();
     }
+
 
     @Override
     public void displayProgressions(List<ExerciseProgression> progressions) {
@@ -244,35 +256,7 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
         }};
     }
 
-    private void updateMainUi(ArrayList<ExerciseProgression> progressions_filtered){
-        Bundle extras = new Bundle();
 
-        if (progressions_filtered.size() > 0){
-
-            extras.putParcelableArrayList("progressions", progressions_filtered);
-            BodyFragment currentFragment = new BodyFragment();
-            currentFragment.setArguments(extras);
-            currentFragment.addListener(this);
-
-            changeFragment(currentFragment);
-
-            mPendingAction = PENDING_ACTIONS.CHANGED_BODY;
-
-        }else {
-
-            if (mPendingAction != PENDING_ACTIONS.CHANGE_TO_EMPTY) {
-
-                EmptyViewFragment currentFragment = new EmptyViewFragment();
-                changeFragment(currentFragment);
-
-
-                //FLAG
-                mPendingAction = PENDING_ACTIONS.CHANGE_TO_EMPTY;
-            }
-        }
-
-
-    }
 
     private void changeFragment(Fragment currentFragment){
         if (this.isAdded()) {
@@ -303,6 +287,33 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
      *
      */
 
+    private void updateMainUi(ArrayList<ExerciseProgression> progressions_filtered){
+        Bundle extras = new Bundle();
+
+        if (progressions_filtered.size() > 0){
+
+            extras.putParcelableArrayList("progressions", progressions_filtered);
+            BodyFragment currentFragment = new BodyFragment();
+            currentFragment.setArguments(extras);
+            currentFragment.addListener(this);
+
+            changeFragment(currentFragment);
+
+            mPendingAction = PENDING_ACTIONS.CHANGED_BODY;
+
+        }else {
+
+            if (mPendingAction != PENDING_ACTIONS.CHANGE_TO_EMPTY) {
+
+                EmptyViewFragment currentFragment = new EmptyViewFragment();
+                changeFragment(currentFragment);
+
+
+                //FLAG
+                mPendingAction = PENDING_ACTIONS.CHANGE_TO_EMPTY;
+            }
+        }
+    }
 
 
     private void onLoadingViewOn(){
@@ -319,6 +330,25 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
 
     private void onErrorViewOff(){
         mErrorView.setVisibility(View.GONE);
+    }
+
+
+
+
+    /**
+     *
+     *
+     *
+     *
+     *    Mix panel events
+     *
+     *
+     *
+     *
+     */
+
+    private void mixPanelEventProgressionWeekly(){
+        mMixpanel.track("on Progression weekly", utilities.getUserData(CONTEXT));
     }
 
 }

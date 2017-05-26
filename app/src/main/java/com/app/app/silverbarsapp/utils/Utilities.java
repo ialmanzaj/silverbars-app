@@ -455,6 +455,7 @@ public class Utilities {
         for (Exercise exercise: exercises){
             ExerciseRep exerciseRep = new ExerciseRep();
             exerciseRep.setExercise(exercise);
+            exerciseRep.setExerciseState("REP");
             exerciseRep.setNumber(0);
             exerciseReps.add(exerciseRep);
         }
