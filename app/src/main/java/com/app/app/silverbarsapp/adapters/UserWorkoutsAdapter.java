@@ -66,7 +66,7 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
         notifyDataSetChanged();
 
         //notify listener of the activity and delete from the database
-        listener.deleteWorkout(workout_id);
+        listener.onDelete(workout_id);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -143,7 +143,7 @@ public class UserWorkoutsAdapter extends RecyclerView.Adapter<UserWorkoutsAdapte
     }
 
     public interface OnWorkoutListener {
-        void deleteWorkout(int workout_id);
+        void onDelete(int workout_id);
     }
 
 }

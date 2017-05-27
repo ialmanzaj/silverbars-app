@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 app:elevation="2dp">
                 <Button
-                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:theme="@style/ButtonRed"
                     android:id="@+id/next"
                     android:text="@string/next"
                     android:layout_width="wrap_content"

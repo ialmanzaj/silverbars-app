@@ -72,15 +72,15 @@
     <string name="save_workout">Guardar Rutina</string>
     <string name="audio_exercise">Descargar audio de cada ejercicio</string>
 
-    <string name="exercise_adapter_option">Segundos</string>
+    <string name="exercise_adapter_option">secs</string>
 
     <!---    Strings of LOGIN    -->
     <string name="slogan_login">Iniciando sesión para empezar a entrenar</string>
     <string name="slogan_silverbars">Be your own machine</string>
 
     <!---    Strings of workingout activity    -->
-    <string name="working_out_reps">Reps</string>
-    <string name="working_out_seconds">Segundos</string>
+    <string name="working_out_reps">reps</string>
+    <string name="working_out_seconds">secs</string>
 
     <!---    Strings of my workouts fragment   -->
     <string name="myworkouts_fragment_myworkouts">Mis rutinas</string>
@@ -218,7 +218,12 @@
     <string name="exercise_results_sets">sets</string>
     <string name="exercise_results_of">\u0020de\u0020</string>
 
+
+    <string name="activity_exercise_selected_change">Cambiar</string>
     <string name="activity_exercise_selected_reps">reps</string>
     <string name="activity_exercise_selected_secs">secs</string>
+
+    <string name="create_activity_workout_final_success">Rutina creada!</string>
+
 
 </resources>

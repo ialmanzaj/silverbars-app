@@ -148,7 +148,7 @@
         <Button
             android:id="@+id/change"
             android:layout_alignParentBottom="true"
-            android:text="Change"
+            android:text="@string/activity_exercise_selected_change"
             android:theme="@style/ButtonRed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

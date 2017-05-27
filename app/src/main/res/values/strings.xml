@@ -77,16 +77,16 @@
     <!---    Strings of Exercise adapter    -->
     <string name="exercise_name">Exercise Name</string>
     <string name="reps_value">1</string>
-    <string name="exercise_adapter_option">Seconds</string>
-    <string name="reps_text">Reps</string>
+    <string name="exercise_adapter_option">secs</string>
+    <string name="reps_text">reps</string>
 
     <!---    Strings of LOGIN    -->
     <string name="slogan_login">Logging in to start training</string>
     <string name="slogan_silverbars">Be your own machine</string>
 
     <!---    Strings of workingout activity    -->
-    <string name="working_out_reps">Reps</string>
-    <string name="working_out_seconds">Seconds</string>
+    <string name="working_out_reps">reps</string>
+    <string name="working_out_seconds">secs</string>
 
     <!---    Strings of my workouts fragment   -->
     <string name="myworkouts_fragment_myworkouts">My workouts</string>
@@ -225,22 +225,11 @@
     <string name="exercise_results_sets">sets</string>
     <string name="exercise_results_of">\u0020of\u0020</string>
 
-
+    <string name="activity_exercise_selected_change">Change</string>
     <string name="activity_exercise_selected_reps">reps</string>
     <string name="activity_exercise_selected_secs">secs</string>
 
-
-
-
-
-
-
-
-
-
-
-
-
+    <string name="create_activity_workout_final_success">Workout created!</string>
 
 
     <!---           Strings for authentication       -->
@@ -256,5 +245,8 @@
     <string name="authentication_AGE" translatable="false">com.app.app.silverbarsapp.AGE</string>
     <string name="authentication_GENDER" translatable="false">com.app.app.silverbarsapp.GENDER</string>
     <string name="authentication_EMAIL" translatable="false">com.app.app.silverbarsapp.EMAIL</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
 

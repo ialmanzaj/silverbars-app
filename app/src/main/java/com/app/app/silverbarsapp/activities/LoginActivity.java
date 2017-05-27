@@ -255,11 +255,6 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
      *
      *
      *     UI events
-     *<p>
-     *
-     *
-     *
-     *
      *
      */
 

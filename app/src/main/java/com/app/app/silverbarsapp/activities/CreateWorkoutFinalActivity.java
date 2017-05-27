@@ -11,10 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,7 +46,7 @@ import butterknife.OnTextChanged;
 
 import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
 
-public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWorkoutFinalView,CreateFinalExercisesAdapter.ExerciseListener {
+public class CreateWorkoutFinalActivity extends BaseActivityExtended implements CreateWorkoutFinalView,CreateFinalExercisesAdapter.ExerciseListener {
 
     private static final String TAG = CreateWorkoutFinalActivity.class.getSimpleName();
     private static final int EXERCISE_SELECTION = 3;
@@ -57,15 +55,12 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
     @Inject
     CreateWorkoutFinalPresenter mCreateWorkoutFinalPresenter;
 
-
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.sets) TextView mSets;
     @BindView(R.id.img_profile) ImageView imgProfile;
     @BindView(R.id.workout_name) AutoCompleteTextView workoutName;
     @BindView(R.id.exercises_list) RecyclerView mExercisesList;
     @BindView(R.id.chageImg) RelativeLayout changeImg;
-    @BindView(R.id.loading) LinearLayout mLoadingView;
-    @BindView(R.id.error_view) LinearLayout mErrorView;
 
     //@BindView(R.id.strength)SeekBar strenghtBar;
     //@BindView(R.id.porcentaje) TextView mPorcentajeTextView;
@@ -300,11 +295,7 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         return exercises;
     }
 
-    @Override
-    public void displayWorkoutDatabaseCreated() {
-        setResult(RESULT_OK, new Intent());
-        finish();
-    }
+
 
     private boolean didYouSelectedReps(){
         for (ExerciseRep exerciseRep: adapter.getExercises()){
@@ -315,6 +306,18 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         return true;
     }
 
+
+
+
+    /**
+     *
+     *
+     *
+     *    Api calls
+     *
+     *
+     */
+
     @Override
     public void displayWorkoutApiCreated(Workout workout) {
         try {
@@ -322,23 +325,49 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
 
             //mix panel events
             mixPanelEventCreateWorkoutSaved();
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void displayNetworkError() {
-        onErrorViewOn();
-    }
+    public void displayNetworkError() {onErrorViewOn();}
 
     @Override
     public void displayServerError() {
         onErrorViewOn();
     }
 
+
+
+    /**
+     *
+     *
+     *
+     *   Database event
+     *
+     *
+     */
+
+
+    @Override
+    public void displayWorkoutDatabaseCreated() {
+        Toast.makeText(this, getString(R.string.create_activity_workout_final_success), Toast.LENGTH_SHORT).show();
+        setResult(RESULT_OK, new Intent());
+        finish();
+    }
+
+
+
+
+    /**
+     *
+     *
+     *
+     *    Exercise listener
+     *
+     *
+     */
 
     @Override
     public void onExerciseSelected(ExerciseRep exercise,int position) {
@@ -347,34 +376,6 @@ public class CreateWorkoutFinalActivity extends BaseActivity implements CreateWo
         intent.putExtra("exercise",exercise);
         startActivityForResult(intent,EXERCISE_SELECTION);
     }
-
-
-    /**
-     *
-     *
-     *
-     *
-     *     UI events
-     *<p>
-     *
-     *
-     *
-     *
-     *
-     */
-
-    private void onLoadingViewOn(){
-        mLoadingView.setVisibility(View.VISIBLE);
-    }
-
-    private void onLoadingViewOff(){
-        mLoadingView.setVisibility(View.GONE);
-    }
-
-    private void onErrorViewOn(){mErrorView.setVisibility(View.VISIBLE);}
-
-    private void onErrorViewOff(){mErrorView.setVisibility(View.GONE);}
-
 
 
     @Override

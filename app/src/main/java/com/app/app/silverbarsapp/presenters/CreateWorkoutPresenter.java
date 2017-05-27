@@ -10,6 +10,7 @@ import com.app.app.silverbarsapp.viewsets.CreateWorkoutView;
 
 public class CreateWorkoutPresenter extends BasePresenter implements CreateWorkoutCallback {
 
+    private static final String TAG = CreateWorkoutPresenter.class.getSimpleName();
 
     private CreateWorkoutView view;
     private CreateWorkoutInteractor interactor;
@@ -25,35 +26,15 @@ public class CreateWorkoutPresenter extends BasePresenter implements CreateWorko
 
 
     @Override
-    public void onStart() {
-
-    }
-
+    public void onStart() {}
     @Override
-    public void onStop() {
-
-    }
-
+    public void onStop() {}
     @Override
-    public void onResume() {
-
-    }
-
+    public void onResume() {}
     @Override
-    public void onPause() {
-
-    }
-
+    public void onPause() {}
     @Override
-    public void onRestart() {
-
-    }
-
+    public void onRestart() {}
     @Override
-    public void onDestroy() {
-
-    }
-
-
-
+    public void onDestroy() {}
 }

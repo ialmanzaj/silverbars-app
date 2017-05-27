@@ -158,6 +158,16 @@ public interface MainService {
     @GET("v1/me/")
     Call<List<Person>> getMyProfile();
 
+
+    @Authenticated({R.string.authentication_ACCOUNT, R.string.authentication_TOKEN})
+    @POST("v1/me/")
+    Call<Person> saveProfile(
+            @Field("age") int age,
+            @Field("email") String email,
+            @Field("gender") String gender
+    );
+
+
     @GET
     Call<ResponseBody> downloadFile(@Url String fileUrl);
 

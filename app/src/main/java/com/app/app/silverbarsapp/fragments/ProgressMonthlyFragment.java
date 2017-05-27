@@ -3,15 +3,10 @@ package com.app.app.silverbarsapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
@@ -46,7 +41,7 @@ import butterknife.OnClick;
 
 import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
 
-public class ProgressMonthlyFragment extends BaseFragment implements ProgressionView,MuscleListener {
+public class ProgressMonthlyFragment extends BaseProgressionFragment implements ProgressionView,MuscleListener {
 
     private static final String TAG = ProgressMonthlyFragment.class.getSimpleName();
     private static final DateTime FIRST_DAY_YEAR = new DateTime().dayOfYear().withMinimumValue();
@@ -56,13 +51,12 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
     ProgressionPresenter mProgressionPresenter;
 
 
-    @BindView(R.id.loading) LinearLayout mLoadingView;
-    @BindView(R.id.error_view) LinearLayout mErrorView;
     @BindView(R.id.months)RecyclerView mMonths;
 
 
     private ArrayList<ExerciseProgression> mYearProgressions = new ArrayList<>();
 
+    ProgressionAlgoritm mProgressionAlgoritm;
     private Utilities utilities = new Utilities();
     private Utilities.HandlerMover handlerMover;
     private Filter filter = new Filter();
@@ -71,17 +65,7 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
 
     private int mCurrentMonth;
 
-    ProgressionAlgoritm mProgressionAlgoritm;
-
-
     private PENDING_ACTIONS mPendingAction = PENDING_ACTIONS.NONE;
-
-
-    private enum PENDING_ACTIONS {
-        NONE,
-        CHANGE_TO_EMPTY,
-        CHANGED_BODY
-    }
 
     private MixpanelAPI mMixpanel;
 
@@ -293,7 +277,7 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
 
             if (mPendingAction != PENDING_ACTIONS.CHANGE_TO_EMPTY) {
 
-                EmptyViewFragment currentFragment = new EmptyViewFragment();
+                EmptyFragment currentFragment = new EmptyFragment();
                 changeFragment(currentFragment);
 
 
@@ -302,36 +286,6 @@ public class ProgressMonthlyFragment extends BaseFragment implements Progression
             }
         }
     }
-
-
-    private void changeFragment(Fragment currentFragment){
-        if (this.isAdded()) {
-            new Handler().post(() -> {
-                FragmentManager fragmentManager = getChildFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.fragment_container, currentFragment);
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                transaction.commit();
-            });
-        }
-    }
-
-    private void onLoadingViewOn(){
-        mLoadingView.setVisibility(View.VISIBLE);
-    }
-
-    private void onLoadingViewOff(){
-        mLoadingView.setVisibility(View.GONE);
-    }
-
-    private void onErrorViewOn(){
-        mErrorView.setVisibility(View.VISIBLE);
-    }
-
-    private void onErrorViewOff(){
-        mErrorView.setVisibility(View.GONE);
-    }
-
 
 
     /**

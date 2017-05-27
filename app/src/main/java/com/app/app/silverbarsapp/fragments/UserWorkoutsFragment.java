@@ -79,6 +79,8 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
             adapter = new UserWorkoutsAdapter(CONTEXT);
             adapter.setWorkoutListener(this);
             mMyWorkoutViewList.setAdapter(adapter);
+
+
         }
 
         mUserWorkoutsPresenter.getMyWorkouts();
@@ -110,17 +112,21 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
     }
 
     @Override
-    public void deleteWorkout(int workout_id) {
+    public void onDelete(int workout_id) {
         mUserWorkoutsPresenter.deleteWorkout(workout_id);
         if (adapter.getItemCount() < 1){
             onEmptyViewOn();
         }
     }
 
+
     @Override
     public void onEmptyWorkouts() {
         onEmptyViewOn();
     }
+
+
+
 
     private void onEmptyViewOn(){
         mEmpyStateMyWorkouts.setVisibility(View.VISIBLE);

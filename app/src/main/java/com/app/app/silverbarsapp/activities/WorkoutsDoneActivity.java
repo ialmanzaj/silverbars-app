@@ -7,8 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
@@ -28,7 +26,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class WorkoutsDoneActivity extends BaseActivity implements WorkoutsDoneView {
+public class WorkoutsDoneActivity extends BaseActivityExtended implements WorkoutsDoneView {
 
     private static final String TAG = WorkoutsDoneActivity.class.getSimpleName();
 
@@ -37,8 +35,6 @@ public class WorkoutsDoneActivity extends BaseActivity implements WorkoutsDoneVi
 
 
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.loading) LinearLayout mLoadingView;
-    @BindView(R.id.error_view) LinearLayout mErrorView;
     @BindView(R.id.list)RecyclerView mWorkoutsDoneList;
 
     WorkoutsDoneAdapter adapter;
@@ -114,30 +110,6 @@ public class WorkoutsDoneActivity extends BaseActivity implements WorkoutsDoneVi
         onErrorViewOn();
     }
 
-    /**
-     *
-     *
-     *
-     *
-     *     UI events
-     *<p>
-     *
-     *
-     *
-     *
-     *
-     */
-    private void onLoadingViewOn(){
-        mLoadingView.setVisibility(View.VISIBLE);
-    }
-
-    private void onLoadingViewOff(){
-        mLoadingView.setVisibility(View.GONE);
-    }
-
-    private void onErrorViewOn(){mErrorView.setVisibility(View.VISIBLE);}
-
-    private void onErrorViewOff(){mErrorView.setVisibility(View.GONE);}
 
 
     @Override

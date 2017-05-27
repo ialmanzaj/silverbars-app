@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
@@ -30,7 +29,7 @@ import butterknife.OnClick;
 /**
  * Created by isaacalmanza on 10/04/16.
  */
-public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsView{
+public class MainWorkoutsFragment extends BaseFragmentExtended implements MainWorkoutsView{
 
     private static final String TAG = MainWorkoutsFragment.class.getSimpleName();
 
@@ -39,8 +38,6 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
 
     @BindView(R.id.workout_list) RecyclerView mWorkoutList;
 
-    @BindView(R.id.loading) LinearLayout loadingView;
-    @BindView(R.id.error_view) LinearLayout mErrorView;
 
     private WorkoutsAdapter adapter;
     private String mMuscleSelected = "ALL";
@@ -130,19 +127,5 @@ public class MainWorkoutsFragment extends BaseFragment implements MainWorkoutsVi
         }
     }
 
-    private void onLoadingViewOn(){
-        loadingView.setVisibility(View.VISIBLE);
-    }
 
-    private void onLoadingViewOff(){
-        loadingView.setVisibility(View.GONE);
-    }
-
-    private void onErrorViewOn(){
-        mErrorView.setVisibility(View.VISIBLE);
-    }
-
-    private void onErrorViewOff(){
-        mErrorView.setVisibility(View.GONE);
-    }
 }

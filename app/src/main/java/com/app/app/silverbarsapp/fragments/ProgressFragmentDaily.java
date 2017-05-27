@@ -3,14 +3,8 @@ package com.app.app.silverbarsapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
 import com.app.app.silverbarsapp.R;
@@ -48,17 +42,13 @@ import butterknife.OnClick;
 
 import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
 
-public class ProgressFragmentDaily extends BaseFragment implements ProgressionView, MuscleListener {
+public class ProgressFragmentDaily extends BaseProgressionFragment implements ProgressionView, MuscleListener {
 
     private static final String TAG = ProgressFragmentDaily.class.getSimpleName();
 
     @Inject
     ProgressionPresenter mProgressionPresenter;
 
-
-    @BindView(R.id.loading) LinearLayout mLoadingView;
-    @BindView(R.id.error_view) LinearLayout mErrorView;
-    @BindView(R.id.reload) Button mReload;
     @BindView(R.id.seekbarWithIntervals) SeekbarWithIntervals mSeekbarWithIntervals;
 
     private ProgressionAlgoritm mProgressionAlgoritm;
@@ -72,11 +62,6 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
 
     private PENDING_ACTIONS mPendingAction = PENDING_ACTIONS.NONE;
 
-    private enum PENDING_ACTIONS {
-        NONE,
-        CHANGE_TO_EMPTY,
-        CHANGED_BODY
-    }
 
     private MixpanelAPI mMixpanel;
 
@@ -258,7 +243,7 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
 
             if (mPendingAction != PENDING_ACTIONS.CHANGE_TO_EMPTY) {
 
-                EmptyViewFragment currentFragment = new EmptyViewFragment();
+                EmptyFragment currentFragment = new EmptyFragment();
                 changeFragment(currentFragment);
 
 
@@ -268,33 +253,6 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
         }
     }
 
-
-    private void changeFragment(Fragment currentFragment){
-        if (this.isAdded()) {
-            new Handler().post(() -> {
-                FragmentManager fragmentManager = getChildFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.fragment_container, currentFragment);
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                transaction.commit();
-            });
-        }
-    }
-
-
-    private void onLoadingViewOn(){
-        mLoadingView.setVisibility(View.VISIBLE);
-    }
-
-    private void onLoadingViewOff(){mLoadingView.setVisibility(View.GONE);}
-
-    private void onErrorViewOn(){
-        mErrorView.setVisibility(View.VISIBLE);
-    }
-
-    private void onErrorViewOff(){
-        mErrorView.setVisibility(View.GONE);
-    }
 
 
 
@@ -306,17 +264,11 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
      *   Date functions
      *
      *
-     *
      */
 
-    private List<String> getDaysOfWeekAbreb() {
-        return Arrays.asList(CONTEXT.getResources().getStringArray(R.array.days_abreb));
-    }
+    private List<String> getDaysOfWeekAbreb() {return Arrays.asList(CONTEXT.getResources().getStringArray(R.array.days_abreb));}
 
-    private List<String> getDaysOfWeek() {
-        return Arrays.asList(CONTEXT.getResources().getStringArray(R.array.days));
-    }
-
+    private List<String> getDaysOfWeek() {return Arrays.asList(CONTEXT.getResources().getStringArray(R.array.days));}
 
     private List<LocalDate> getLocalDates() {return new ArrayList<LocalDate>() {{
             add(new LocalDate().withDayOfWeek(DateTimeConstants.MONDAY));
@@ -369,15 +321,12 @@ public class ProgressFragmentDaily extends BaseFragment implements ProgressionVi
     }
 
 
-
     /**
      *
      *
      *
      *
      *    Mix panel events
-     *
-     *
      *
      *
      */

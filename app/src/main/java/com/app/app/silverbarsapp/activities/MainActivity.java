@@ -47,6 +47,7 @@ public class MainActivity extends BaseActivity implements MainView,BottomNavigat
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
     private String muscle = "ALL";
+    private Bundle extras;
 
     @Override
     protected int getLayout() {
@@ -72,6 +73,7 @@ public class MainActivity extends BaseActivity implements MainView,BottomNavigat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        extras = new Bundle();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
@@ -96,15 +98,20 @@ public class MainActivity extends BaseActivity implements MainView,BottomNavigat
     }
 
     @Override
+    public void onChangeNavigation(int position) {
+        selectItem(position);
+    }
+
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment currentFragment = null;
 
-        Bundle extras = new Bundle();
 
         switch (item.getItemId()) {
             case R.id.home:
                 currentFragment = new MyWorkoutsFragment();
+                currentFragment.setArguments(extras);
                 createWorkoutbuttonOn();
                 break;
             case R.id.my_workouts:
@@ -124,34 +131,29 @@ public class MainActivity extends BaseActivity implements MainView,BottomNavigat
         return true;
     }
 
-    private void mixpanelEvent(String id){
-        MixpanelAPI mixpanel =
-                MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
-
-        mixpanel.getPeople().identify(id);
+    @OnClick(R.id.fab)
+    public void createButton(){
+        startActivityForResult(new Intent(this,CreateWorkoutActivity.class),1);
     }
 
     @Override
-    public void onChangeNavigation(int position) {
-        selectItem(position);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK){
+
+                //created succesfully
+                extras.putInt("position",1);
+                selectItem(0);
+            }
+        }
     }
 
-
-    @OnClick(R.id.fab)
-    public void createButton(){
-        startActivity(new Intent(this,CreateWorkoutActivity.class));
-    }
 
     /**
      *
      *
-     *
-     *
      *     UI events
-     *<p>
-     *
-     *
-     *
      *
      *
      */
@@ -162,5 +164,20 @@ public class MainActivity extends BaseActivity implements MainView,BottomNavigat
     private void createWorkoutbuttonff(){
         mButtonCreateWorkout.setVisibility(View.GONE);
     }
+
+
+    /**
+     *
+     *
+     *     Mixpanel events
+     *
+     *
+     */
+
+    private void mixpanelEvent(String id){
+        MixpanelAPI mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
+        mixpanel.getPeople().identify(id);
+    }
+
 
 }

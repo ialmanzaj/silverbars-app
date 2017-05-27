@@ -18,7 +18,7 @@ import im.delight.android.webview.AdvancedWebView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EmptyViewFragment extends BaseFragment {
+public class EmptyFragment extends BaseFragment {
 
     @BindView(R.id.empty_state) LinearLayout mEmptyView;
     @BindView(R.id.empty_text) TextView mEmptyText;

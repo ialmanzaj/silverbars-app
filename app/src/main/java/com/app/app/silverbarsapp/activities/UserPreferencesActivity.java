@@ -35,7 +35,6 @@ public class UserPreferencesActivity extends BaseActivity implements UserPrefere
     @BindView(R.id.loading)LinearLayout mLoadingView;
     @BindView(R.id.error_text) TextView mErrorText;
 
-
     private Person person;
 
     @Override
@@ -110,12 +109,7 @@ public class UserPreferencesActivity extends BaseActivity implements UserPrefere
     /**
      *
      *
-     *
-     *
      *     UI events
-     *<p>
-     *
-     *
      *
      *
      *

@@ -132,7 +132,6 @@ public class CreateWorkoutActivity extends BaseActivity implements OnStartDragLi
         startActivityForResult(intent,FINAL_CREATE_WORKOUT);
     }
 
-
     @OnClick(R.id.add_exercises)
     public void addExerciseButton(){
         Intent intent = new Intent(this,ExerciseListActivity.class);
@@ -152,18 +151,13 @@ public class CreateWorkoutActivity extends BaseActivity implements OnStartDragLi
      *
      *
      *
-     *
-     *    Events listening
-     *
-     *
+     * Muscle events
      *
      */
-
 
     @Override
     public void onUpdateMuscleView() {
         updateMusclesView();
-
     }
 
 

@@ -39,7 +39,6 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
     //handle the music logic
     private MusicHandler mMusicHandler;
 
-
     public void setInitialSetup(ArrayList<ExerciseRep> exercises,boolean exerciseActive,int sets,int restbyexercise,int restbyset){
         isAudioExerciseActive = exerciseActive;
         mWorkoutHandler = new WorkoutHandler(this,exercises,sets,restbyexercise,restbyset);
@@ -50,16 +49,10 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
         mMusicHandler.setupSpotifyPlayer();
     }
 
-    public void setupMusicPlayerLocal(ArrayList<File> songs_selected){
-        mMusicHandler.setupMusicPlayerLocal(songs_selected);
-    }
+    public void setupMusicPlayerLocal(ArrayList<File> songs_selected){mMusicHandler.setupMusicPlayerLocal(songs_selected);}
 
     public ArrayList<ExerciseRep> getExercises(){
         return mWorkoutHandler.getExercises();
-    }
-
-    public boolean isWorkoutPaused() {
-        return mWorkoutHandler.isWorkoutPaused();
     }
 
     /**
@@ -106,13 +99,13 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
         mWorkoutHandler.nextExercise();
     }
 
-    public void startRest(){
+    private void startRest(){
         mWorkoutHandler.startRest();
     }
 
     public void skipRest(){mWorkoutHandler.restFinished();}
 
-    public void saveTime(long time){
+    private void saveTime(long time){
         mWorkoutHandler.saveTimePerExercise(time);
     }
 
@@ -214,7 +207,7 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
 
     @Override
     public void onChangeToNextSet(int current_set) {
-        view.onSetFinished(current_set);
+        view.onSetFinished(current_set+1);
 
         //reset the workout UI
         view.onWorkoutReady();
@@ -257,7 +250,6 @@ public class WorkingOutPresenter extends BasePresenter implements MusicHandler.M
      *
      *
      *    Activity lifecycle
-     *<p>
      *
      *
      *

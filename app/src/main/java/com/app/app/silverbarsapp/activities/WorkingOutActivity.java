@@ -102,6 +102,10 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     private ArrayList<File> mSongsLocal;
     private Metadata mFirstSongMetadata;
 
+
+    private int mCurrentPositionExercise;
+    private int mCurrentPositionSet;
+
     PendingAction pendingAction;
 
     private enum PendingAction {
@@ -112,9 +116,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         MOVE_ON_TO_NEXT_SET,
         MOVE_ON_TO_FINISH
     }
-
-    private int mCurrentPositionExercise;
-    private int mCurrentPositionSet;
 
     private MixpanelAPI mMixpanel;
 
@@ -159,16 +160,20 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     }
 
     private void getExtras(Bundle extras){
-        mWorkout_id = extras.getInt("workout_id");
         isUserWorkout = extras.getBoolean("user_workout",false);
+
+        //workout
+        mWorkout_id = extras.getInt("workout_id");
         mExercises = extras.getParcelableArrayList("exercises");
         mSetsTotal = extras.getInt("sets");
         int mRestByExercise = extras.getInt("rest_exercise");
         int mRestBySet = extras.getInt("rest_set");
+
+        //options
         mVibrationPerSet = extras.getBoolean("vibration_per_set");
         boolean play_exercise_audio = extras.getBoolean("exercise_audio");
 
-        //music extras
+        //music option extras
         int typeMusic = extras.getInt("type_music",0);
 
         mFirstSongMetadata = extras.getParcelable("metadata");
@@ -176,13 +181,19 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
         //init presenter
         mWorkingOutPresenter.setInitialSetup(
-                mExercises,play_exercise_audio,mSetsTotal, mRestByExercise, mRestBySet);
+                mExercises,
+                play_exercise_audio,
+                mSetsTotal,
+                mRestByExercise,
+                mRestBySet
+        );
 
         //music selection
         onMusicSelection(typeMusic);
 
         //set new array progression to the other user data that we need
         progressions = utilities.convertToExerciseProgressions(mExercises);
+
 
         //init THE UI
         initMainUI();
@@ -257,8 +268,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
      *
      *
      *   INIT functions
-     *<p>
-
      *
      *
      *
@@ -272,7 +281,11 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
 
         //to move the song name marquee
         mSongName.setSelected(true);
+
+        //next button
+        hideNextExerciseButton(0);
     }
+
 
     private void onMusicSelection(int typeMusic){
         if (typeMusic == Constants.MusicTypes.SPOTIFY) {
@@ -303,71 +316,10 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         }
     }
 
-    private void setupAdapter(){
-        mExercisesList.addOnItemTouchListener(new DisableTouchRecyclerListener());
-        mExercisesList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mExercisesList.setAdapter(new ExerciseWorkingOutAdapter(this,mExercises));
-    }
-
-    private void initExerciseUI(int exercise_position){
-        //setup the rep or sec
-        if (utilities.checkIfRep(mExercises.get(exercise_position))){
-            mRepetitionTimerText.setText(String.valueOf(mExercises.get(exercise_position).getRepetition()));
-            mOption.setText(getString(R.string.working_out_reps));
-        }else {
-            mRepetitionTimerText.setText(String.valueOf(mExercises.get(exercise_position).getSeconds()));
-            mOption.setText(getString(R.string.working_out_seconds));
-        }
-
-        //check the weight
-        checkWeightUI(exercise_position);
-
-        //setup the chronometer or CountDown
-        initChronometerOrCountDown(mExercises.get(exercise_position));
-    }
-
-    private void checkWeightUI(int exercise_position){
-        if (mExercises.get(exercise_position).getWeight() > 0){
-            mWeightLayout.setVisibility(View.VISIBLE);
-            mExerciseWeight.setText(utilities.formaterDecimal(String.valueOf(mExercises.get(exercise_position).getWeight())));
-        }else {
-            mWeightLayout.setVisibility(View.GONE);
-        }
-    }
-
-    private void initChronometerOrCountDown(ExerciseRep exercise){
-        if (!utilities.checkIfRep(exercise)) {
-
-            mChronometer.setVisibility(View.GONE);
-            mCountDownTimer.setVisibility(View.VISIBLE);
-
-            mCountDownTimer.setText(utilities.formatHMS(exercise.getSeconds()));
-        }else {
-
-            mCountDownTimer.setVisibility(View.GONE);
-            mChronometer.setVisibility(View.VISIBLE);
-
-            //changes in the chronometer
-            restartChronometer();
-        }
-    }
-
-    private void setupPicker(ExerciseRep exercise){
-        mExerciseName.setText(exercise.getExercise().getExercise_name());
-        mNumberPicker.setMinValue(0);
-
-        if (utilities.checkIfRep(exercise)) {
-            mExerciseOption.setText(getString(R.string.activity_workingout_review_rep));
-            mNumberPicker.setMaxValue(exercise.getRepetition());
-        }else {
-            mExerciseOption.setText(getString(R.string.activity_workingout_review_sec));
-            mNumberPicker.setMaxValue(exercise.getSeconds());
-        }
-    }
-
     private void restartChronometer(){
         mChronometer.reset();
     }
+
 
     /**
      *
@@ -375,19 +327,13 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
      *
      *
      *    Music events
-     *<p>
-     *
-     *
-     *
      *
      *
      *
      */
 
     @Override
-    public void updateSongName(String song_name) {
-        mSongName.setText(utilities.removeLastMp3(song_name));
-    }
+    public void updateSongName(String song_name) {mSongName.setText(utilities.removeLastMp3(song_name));}
 
     @Override
     public void updateArtistName(String artist_name) {
@@ -406,22 +352,17 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
         onScreenOn();
     }
 
+
     /**
      *
      *
      *
      *
      *    Workout events
-     *<p>
-     *
-     *
      *
      *
      *
      */
-
-
-
     @Override
     public void onRestCounterStarted(String second) {
         mOverlayTextCounter.setText(second);
@@ -534,9 +475,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
      *
      *
      *    Main Workout UI events
-     *<p>
-     *
-     *
      *
      *
      *
@@ -642,7 +580,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
                 }).show();
     }
 
-
     /**
      *
      *
@@ -650,7 +587,6 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
      *
      *
      *    UI events
-     *<p>
      *
      *
      *
@@ -659,6 +595,71 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
      *
      *
      */
+
+    private void setupAdapter(){
+        mExercisesList.addOnItemTouchListener(new DisableTouchRecyclerListener());
+        mExercisesList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        mExercisesList.setAdapter(new ExerciseWorkingOutAdapter(this,mExercises));
+    }
+
+
+    private void initExerciseUI(int exercise_position){
+        //setup the rep or sec
+        if (utilities.checkIfRep(mExercises.get(exercise_position))){
+            mRepetitionTimerText.setText(String.valueOf(mExercises.get(exercise_position).getRepetition()));
+            mOption.setText(getString(R.string.working_out_reps));
+        }else {
+            mRepetitionTimerText.setText(String.valueOf(mExercises.get(exercise_position).getSeconds()));
+            mOption.setText(getString(R.string.working_out_seconds));
+        }
+
+        //check the weight
+        checkWeightUI(exercise_position);
+
+        //setup the chronometer or CountDown
+        initChronometerOrCountDown(mExercises.get(exercise_position));
+    }
+
+
+    private void initChronometerOrCountDown(ExerciseRep exercise){
+        if (!utilities.checkIfRep(exercise)) {
+
+            mChronometer.setVisibility(View.GONE);
+            mCountDownTimer.setVisibility(View.VISIBLE);
+
+            mCountDownTimer.setText(utilities.formatHMS(exercise.getSeconds()));
+        }else {
+
+            mCountDownTimer.setVisibility(View.GONE);
+            mChronometer.setVisibility(View.VISIBLE);
+
+            //changes in the chronometer
+            restartChronometer();
+        }
+    }
+
+    private void setupPicker(ExerciseRep exercise){
+        mExerciseName.setText(exercise.getExercise().getExercise_name());
+        mNumberPicker.setMinValue(0);
+
+        if (utilities.checkIfRep(exercise)) {
+            mExerciseOption.setText(getString(R.string.activity_workingout_review_rep));
+            mNumberPicker.setMaxValue(exercise.getRepetition());
+        }else {
+            mExerciseOption.setText(getString(R.string.activity_workingout_review_sec));
+            mNumberPicker.setMaxValue(exercise.getSeconds());
+        }
+    }
+
+    private void checkWeightUI(int exercise_position){
+        if (mExercises.get(exercise_position).getWeight() > 0){
+            mWeightLayout.setVisibility(View.VISIBLE);
+            mExerciseWeight.setText(utilities.formaterDecimal(String.valueOf(mExercises.get(exercise_position).getWeight())));
+        }else {
+            mWeightLayout.setVisibility(View.GONE);
+        }
+    }
+
 
     public void updateMusicUI(Metadata metadata) {
         if (metadata.isPlaying()) {
@@ -733,11 +734,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     private void activateVibrationPerSet(){
         if (mVibrationPerSet){
             Vibrator vb = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            if (!mWorkingOutPresenter.isWorkoutPaused()){
-                vb.vibrate(1000);
-            }else {
-                vb.cancel();
-            }
+            vb.vibrate(1000);
         }
     }
 
@@ -761,14 +758,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
      *
      *
      *
-     *
-     *
      *    Activity lifecycle
-     *<p>
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -790,16 +780,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
     /**
      *
      *
-     *
-     *
-     *
-     *    Data for mixpanel
-     *<p>
-     *
-     *
-     *
-     *
-     *
+     *    Mixpanel
      *
      *
      */

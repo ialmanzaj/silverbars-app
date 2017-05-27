@@ -24,8 +24,6 @@ public class UserPreferencesPresenter extends BasePresenter implements UserPrefe
 
     public void getMyWorkouts() { interactor.getMyWorkouts(this);}
 
-
-
     @Override
     public void onProfileSaved(Person person) {
         view.onProfileSaved(person);
@@ -46,19 +44,21 @@ public class UserPreferencesPresenter extends BasePresenter implements UserPrefe
         view.displayNetworkError();
     }
 
-
-
     @Override
     public void onStart() {}
+
     @Override
     public void onStop() {}
+
     @Override
     public void onResume() {}
+
     @Override
     public void onPause() {}
+
     @Override
     public void onRestart() {}
+
     @Override
     public void onDestroy() {}
-
 }

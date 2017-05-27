@@ -27,7 +27,8 @@
                     android:layout_marginEnd="8dp"
                     android:src="@drawable/ic_settings_white_36px"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@null" />
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -46,14 +47,13 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:textAppearance="?android:attr/textAppearanceLarge"
-      android:text=""
       android:id="@+id/Profile_name"
       android:layout_gravity="center"
-      android:textColor="@color/colorPrimaryText" />
+      android:textColor="@color/black" />
 
     <android.support.v7.widget.CardView
         android:layout_marginTop="10dp"
-        app:cardElevation="0.5dp"
+        app:cardElevation="0.8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -74,6 +74,40 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/fragment_profile_workout_done"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_keyboard_arrow_right_black_24px"
+                android:contentDescription="@null" />
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        android:visibility="gone"
+        app:cardElevation="0.8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:background="?selectableItemBackgroundBorderless"
+            android:id="@+id/last_exercise_progress"
+            android:minHeight="45dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Your last exercise progress"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 

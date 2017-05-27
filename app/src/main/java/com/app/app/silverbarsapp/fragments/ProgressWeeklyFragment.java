@@ -3,13 +3,8 @@ package com.app.app.silverbarsapp.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
 import com.app.app.silverbarsapp.R;
@@ -46,16 +41,13 @@ import butterknife.OnClick;
 import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
 
 
-public class ProgressWeeklyFragment extends BaseFragment implements ProgressionView,MuscleListener {
+public class ProgressWeeklyFragment extends BaseProgressionFragment implements ProgressionView,MuscleListener {
 
     private static final String TAG = ProgressWeeklyFragment.class.getSimpleName();
 
     @Inject
     ProgressionPresenter mProgressionPresenter;
 
-
-    @BindView(R.id.loading) LinearLayout mLoadingView;
-    @BindView(R.id.error_view) LinearLayout mErrorView;
     @BindView(R.id.seekbarWithIntervals) SeekbarWithIntervals mSeekbarWithIntervals;
 
 
@@ -71,12 +63,6 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
     LocalDate monthEnd  = new LocalDate().plusMonths(1).withDayOfMonth(1).minusDays(1);
 
     private PENDING_ACTIONS mPendingAction = PENDING_ACTIONS.NONE;
-
-    private enum PENDING_ACTIONS {
-        NONE,
-        CHANGE_TO_EMPTY,
-        CHANGED_BODY
-    }
 
     private MixpanelAPI mMixpanel;
 
@@ -258,17 +244,6 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
 
 
 
-    private void changeFragment(Fragment currentFragment){
-        if (this.isAdded()) {
-            new Handler().post(() -> {
-                FragmentManager fragmentManager = getChildFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.fragment_container, currentFragment);
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                transaction.commit();
-            });
-        }
-    }
 
 
 
@@ -305,7 +280,7 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
 
             if (mPendingAction != PENDING_ACTIONS.CHANGE_TO_EMPTY) {
 
-                EmptyViewFragment currentFragment = new EmptyViewFragment();
+                EmptyFragment currentFragment = new EmptyFragment();
                 changeFragment(currentFragment);
 
 
@@ -314,25 +289,6 @@ public class ProgressWeeklyFragment extends BaseFragment implements ProgressionV
             }
         }
     }
-
-
-    private void onLoadingViewOn(){
-        mLoadingView.setVisibility(View.VISIBLE);
-    }
-
-    private void onLoadingViewOff(){
-        mLoadingView.setVisibility(View.GONE);
-    }
-
-    private void onErrorViewOn(){
-        mErrorView.setVisibility(View.VISIBLE);
-    }
-
-    private void onErrorViewOff(){
-        mErrorView.setVisibility(View.GONE);
-    }
-
-
 
 
     /**

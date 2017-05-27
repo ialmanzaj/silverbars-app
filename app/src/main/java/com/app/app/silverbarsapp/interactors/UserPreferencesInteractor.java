@@ -33,6 +33,11 @@ public class UserPreferencesInteractor {
         queries = new DatabaseQueries(databaseHelper);
     }
 
+    public void saveProfileInfo(){
+
+    }
+
+
     public void getMyProfile(UserPreferencesCallback callback){
         mainService.getMyProfile().enqueue(new Callback<List<Person>>() {
             @Override

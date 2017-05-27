@@ -35,7 +35,7 @@ import butterknife.OnClick;
 /**
  * Created by isaacalmanza on 10/04/16.
  */
-public class ExerciseListActivity extends BaseActivity implements ExerciseListView,FilterAdapter.onMuscleSelected {
+public class ExerciseListActivity extends BaseActivityExtended implements ExerciseListView,FilterAdapter.onMuscleSelected {
 
     private static final String TAG = ExerciseListActivity.class.getSimpleName();
 
@@ -43,8 +43,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
     ExerciseListPresenter mExerciseListPresenter;
 
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.loading) LinearLayout mLoadingView;
-    @BindView(R.id.error_view) LinearLayout mErrorView;
+
     @BindView(R.id.exercises_list) RecyclerView mExercisesList;
     @BindView(R.id.empty_state) LinearLayout mEmptyView;
     @BindView(R.id.filters) RecyclerView mMuscleFilters;
@@ -122,8 +121,8 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
     @OnClick(R.id.reload)
     public void reloadButton(){
-        onErrorOff();
-        onProgressViewOn();
+        onErrorViewOff();
+        onLoadingViewOn();
         mExerciseListPresenter.getExercises();
     }
 
@@ -205,7 +204,7 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
     @Override
     public void displayExercises(List<Exercise> exercises) {
-        onProgressViewOff();
+        onLoadingViewOff();
         mExercises.addAll(exercises);
         if (mExercisesSelectedIds != null){
             setExercisesView(filter.getExercisesNoSelected(mExercisesSelectedIds,mExercises));
@@ -216,12 +215,12 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
 
     @Override
     public void displayNetworkError() {
-        onErrorOn();
+        onErrorViewOn();
     }
 
     @Override
     public void displayServerError() {
-        onErrorOn();
+        onErrorViewOn();
     }
 
 
@@ -275,21 +274,6 @@ public class ExerciseListActivity extends BaseActivity implements ExerciseListVi
         }
     }
 
-    private void onErrorOn(){
-        mErrorView.setVisibility(View.VISIBLE);
-    }
-
-    private void onErrorOff(){
-        mErrorView.setVisibility(View.GONE);
-    }
-
-    private void onProgressViewOn(){
-        mLoadingView.setVisibility(View.VISIBLE);
-    }
-
-    private void onProgressViewOff(){
-        mLoadingView.setVisibility(View.GONE);
-    }
 
     private void onEmptyViewOn(){mEmptyView.setVisibility(View.VISIBLE);}
 

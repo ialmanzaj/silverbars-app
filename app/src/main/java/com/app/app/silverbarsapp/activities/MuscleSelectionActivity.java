@@ -38,7 +38,7 @@ import im.delight.android.webview.AdvancedWebView;
 
 import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
 
-public class MuscleSelectionActivity extends BaseActivity implements MuscleSelectionView,MuscleListener,AdvancedWebView.Listener {
+public class MuscleSelectionActivity extends BaseActivityExtended implements MuscleSelectionView,MuscleListener,AdvancedWebView.Listener {
 
     private static final String TAG = MuscleSelectionActivity.class.getSimpleName();
 
@@ -50,8 +50,6 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     @BindView(R.id.search_exercises) Button mLookExercises;
     @BindView(R.id.muscles_selected)TextView mMusclesTextSelected;
     @BindView(R.id.scroll_text) HorizontalScrollView mScrollText;
-    @BindView(R.id.loading) LinearLayout mLoadingView;
-    @BindView(R.id.error_view) LinearLayout mErrorView;
     @BindView(R.id.modal_overlay) LinearLayout mModal;
     @BindView(R.id.info) ImageView mInfo;
 
@@ -103,15 +101,7 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     /**
      *
      *
-     *
-     *
-     *
      *    Click listeners
-     *<p>
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -153,28 +143,14 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
         finish();
     }
 
-
     /**
      *
      *
      *
-     *
-     *
-     *    Events listening
-     *
-     *
-
-     *
+     *    Muscle listener
      *
      *
      */
-    @Override
-    public void getMuscles(List<Muscle> muscles) {
-        //Log.d(TAG,"muscles "+muscles);
-        for (Muscle muscle: muscles){muscles_names.add(muscle.getMuscle_name());}
-
-        setupWebview();
-    }
 
     @Override
     public void onMuscleSelected(String muscle) {
@@ -198,6 +174,24 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
         }
     }
 
+
+
+    /**
+     *
+     *
+     *
+     *    Api calls
+     *
+     *
+     */
+    @Override
+    public void getMuscles(List<Muscle> muscles) {
+        //Log.d(TAG,"muscles "+muscles);
+        for (Muscle muscle: muscles){muscles_names.add(muscle.getMuscle_name());}
+
+        setupWebview();
+    }
+
     @Override
     public void displayNetworkError() {
         onErrorViewOn();
@@ -208,9 +202,16 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
         onErrorViewOn();
     }
 
-    private String getMuscles(ArrayList<String> muscles_selected) {
-        return muscles_selected.toString().replace("[","").replace("]","");
-    }
+
+
+    /**
+     *
+     *
+     *
+     *     Webview events
+     *
+     *
+     */
 
     @Override
     public void onPageFinished(String url) {
@@ -221,17 +222,6 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
         onLoadingViewOff();
     }
 
-
-    /**
-     *
-     *
-     *
-     *     Webview events
-     *
-     *
-     *
-     */
-
     @Override
     public void onPageStarted(String url, Bitmap favicon) {}
     @Override
@@ -240,7 +230,6 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
     public void onDownloadRequested(String url, String suggestedFilename, String mimeType, long contentLength, String contentDisposition, String userAgent) {}
     @Override
     public void onExternalPageRequest(String url) {}
-
 
 
     /**
@@ -255,6 +244,10 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
      *
      */
 
+
+    private String getMuscles(ArrayList<String> muscles_selected) {
+        return muscles_selected.toString().replace("[","").replace("]","");
+    }
 
     public void setupToolbar(){
         if (toolbar != null) {
@@ -295,19 +288,6 @@ public class MuscleSelectionActivity extends BaseActivity implements MuscleSelec
 
         mScrollText.postDelayed(() -> mScrollText.fullScroll(HorizontalScrollView.FOCUS_RIGHT), 100L);
     }
-
-
-    private void onLoadingViewOn(){
-        mLoadingView.setVisibility(View.VISIBLE);
-    }
-
-    private void onLoadingViewOff(){
-        mLoadingView.setVisibility(View.GONE);
-    }
-
-    private void onErrorViewOn(){mErrorView.setVisibility(View.VISIBLE);}
-
-    private void onErrorViewOff(){mErrorView.setVisibility(View.GONE);}
 
 
     @Override

@@ -20,27 +20,26 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
     private CountDownController mCountDownController;
     private WorkoutEvents listener;
 
-    private int mTotalSets;
     private ArrayList<ExerciseRep> exercises;
 
     private int mCurrentExercisePosition = 0;
-    private int mCurrentSet = 1;
-
-    //FLAGS for the events in workout
-    private boolean isWorkoutPaused = false,isWorkoutRest = false;
-
-    //this var for the countdown;
+    private int mCurrentSet = 0;
     private int mCurrentRest = 0;
+
     private int mRestByExercise,mRestBySet;
 
-    public WorkoutHandler(WorkoutEvents listener,ArrayList<ExerciseRep> exercises,int sets,int restbyexercise,int restbyset){
+    private Utilities.HandlerMover mExerciseMover;
+    private Utilities.HandlerMover mSetMover;
+
+    public WorkoutHandler(WorkoutEvents listener,ArrayList<ExerciseRep> exercises,int sets,int rest_by_exercise,int rest_by_set){
         this.listener = listener;
         this.exercises = exercises;
-        this.mTotalSets = sets;
-        mRestByExercise = restbyexercise;
-        mRestBySet = restbyset;
+        mRestByExercise = rest_by_exercise;
+        mRestBySet = rest_by_set;
 
         mCountDownController = new CountDownController(this);
+        mExerciseMover = new Utilities.HandlerMover(exercises.size());
+        mSetMover = new Utilities.HandlerMover(sets);
     }
 
     public ArrayList<ExerciseRep> getExercises(){
@@ -58,17 +57,6 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
         listener.onRestWorking(mCurrentRest);
     }
 
-    public boolean isWorkoutPaused(){
-        return isWorkoutPaused;
-    }
-
-    private void playCountDown(){
-        if (!mCountDownController.isMainCountDownTimerAvailable()){
-            mCountDownController.createMainCountDownTimer(exercises.get(mCurrentExercisePosition).getSeconds());
-        }else
-            mCountDownController.resumeMainCountDown();
-    }
-
 
 
 
@@ -77,13 +65,7 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
      *
      *
      *
-     *
      *   Workout controls
-     *<p>
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -113,8 +95,7 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
     }
 
     public void nextExercise(){
-        mCurrentExercisePosition++;
-        checkOnNextExerciseOrSet(mCurrentExercisePosition);
+        changeNextExerciseOrSet();
     }
 
     public void saveTimePerExercise(long seconds){
@@ -130,18 +111,18 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
 
 
 
+    private void playCountDown(){
+        if (!mCountDownController.isMainCountDownTimerAvailable()){
+            mCountDownController.createMainCountDownTimer(exercises.get(mCurrentExercisePosition).getSeconds());
+        }else
+            mCountDownController.resumeMainCountDown();
+    }
+
     /**
      *
      *
      *
-     *
-     *
      *   Workout utilities
-     *<p>
-     *
-     *
-     *
-     *
      *
      *
      *
@@ -149,12 +130,6 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
      */
 
 
-    private void checkOnNextExerciseOrSet(int currentExercisePosition){
-        if (currentExercisePosition<exercises.size())
-            onChangeToNextExercise(currentExercisePosition);
-        else
-            onChangeToNextSet();
-    }
 
 
     private String cleanDate(String date){
@@ -168,31 +143,15 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
         return date_new.isEmpty() ? "0" : date_new;
     }
 
-    private void onChangeToNextSet(){
-        if (mCurrentSet+1 <= mTotalSets){
-            //set the exercise in the first position
-            mCurrentExercisePosition = 0;
-            //plus one more set
-            mCurrentSet++;
-            //update UI
-            listener.onChangeToNextSet(mCurrentSet);
-        } else {
-            listener.onWorkoutFinished();
-        }
-    }
 
-    private void onChangeToNextExercise(int currentExercisePosition){
-        listener.onChangeToNextExercise(currentExercisePosition);
-    }
+
+
 
     /**
      *
      *
      *
      *  Rest controls
-     *
-     *<p>
-     *
      *
      *
      *
@@ -205,10 +164,6 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
     }
 
     public void startRest(){
-        //Log.d(TAG,"startRest");
-
-        //set rest flag active
-        isWorkoutRest = true;
 
         //starting rest CountDownTimer
         if (mCurrentExercisePosition+1 < exercises.size()){
@@ -223,30 +178,72 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
         listener.onRestStarted();
     }
 
-    private void startRestCountDown(int rest){
+    private void startRestCountDown(int rest_seconds){
         //set the actual rest var
-        mCurrentRest = rest;
-        int total_secs = (rest +1);
+        mCurrentRest = rest_seconds;
+        int total_secs = (rest_seconds +1);
+
+
         //create timer
         mCountDownController.createRestTimer(total_secs);
     }
 
+
     public void restFinished(){
         //Log.d(TAG,"restFinished");
-        mCountDownController.destroyRestCountDownTimer();
-
-        //flag rest off
-        isWorkoutRest = false;
+        destroyRestCountDown();
 
         //rest finished event
         listener.onRestFinished(exercises.get(mCurrentExercisePosition).getExercise());
 
-        //move to the nextMusic exercise or set after rest
-        mCurrentExercisePosition++;
-        checkOnNextExerciseOrSet(mCurrentExercisePosition);
+        changeNextExerciseOrSet();
     }
 
 
+    /**
+     *
+     *
+     *
+     *   Controls to move next exercise or next set
+     *
+     *
+     *
+     *
+     */
+
+    private void changeNextExerciseOrSet(){
+        int position = mExerciseMover.moveNext();
+
+        if (mExerciseMover.allowToMove(position)) {
+            mCurrentExercisePosition++;
+
+            listener.onChangeToNextExercise(mCurrentExercisePosition);
+
+        }else {
+            changeToNextSet();
+        }
+
+    }
+
+
+    private void changeToNextSet(){
+        int position = mSetMover.moveNext();
+
+        if (mSetMover.allowToMove(position)){
+            mCurrentSet++;
+
+            //set the exercise in the first position
+            mCurrentExercisePosition = 0;
+
+            //restart
+            mExerciseMover.setPosition(0);
+
+            //update UI
+            listener.onChangeToNextSet(mCurrentSet);
+        } else {
+            listener.onWorkoutFinished();
+        }
+    }
 
     /**
      *
@@ -254,21 +251,17 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
      *
      *  to clean
      *
-     *<p>
-     *
-     *
-     *
-     *
      *
      */
 
-    public void destroy() {
-        mCountDownController.destroyMainCountDownTimer();
+    private void destroyRestCountDown() {
         mCountDownController.destroyRestCountDownTimer();
     }
 
-
-
+    public void destroy() {
+        mCountDownController.destroyMainCountDownTimer();
+        destroyRestCountDown();
+    }
 
 
     /**
@@ -276,10 +269,6 @@ public class WorkoutHandler implements CountDownController.CountDownEvents {
      *
      *
      *  Main workout events
-     *
-     *<p>
-     *
-     *
      *
      *
      *

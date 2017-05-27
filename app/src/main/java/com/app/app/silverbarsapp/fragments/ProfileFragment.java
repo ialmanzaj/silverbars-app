@@ -42,8 +42,9 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
 
     @BindView(R.id.Profile_name) TextView mProfileName;
     @BindView(R.id.profile_image) ImageView mProfileImg;
-    @BindView(R.id.my_workouts_done) LinearLayout mMyWorkoutsDone;
 
+    @BindView(R.id.my_workouts_done) LinearLayout mMyWorkoutsDone;
+    @BindView(R.id.last_exercise_progress) LinearLayout mLastExerciseProgression;
 
     private Utilities utilities = new Utilities();
     private String id;
@@ -81,8 +82,13 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
         getImg();
 
 
-        mMyWorkoutsDone.setOnClickListener(v -> {startActivity(new Intent(CONTEXT, WorkoutsDoneActivity.class));});
+        mMyWorkoutsDone.setOnClickListener(v -> startActivity(new Intent(CONTEXT, WorkoutsDoneActivity.class)));
+
+        mLastExerciseProgression.setOnClickListener(v -> {
+            startActivity(new Intent(CONTEXT, WorkoutsDoneActivity.class));
+        });
     }
+
 
     private void getImg(){
         Bitmap profile_img = getProfileImg();
