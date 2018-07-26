@@ -40,7 +40,6 @@ public class MainWorkoutsInteractor {
             }
             @Override
             public void onFailure(Call<List<Workout>> call, Throwable t) {
-                Log.e(TAG,"displayNetworkError",t);
                 callback.onNetworkError();
             }
         });

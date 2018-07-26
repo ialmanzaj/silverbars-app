@@ -14,328 +14,286 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <Button
-                    android:theme="@style/ButtonRed"
+                    android:theme="@style/ButtonGrey"
+                    android:id="@+id/edit"
+                    android:text="Edit"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/start_button"
                     android:layout_gravity="end"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp"
-                    android:layout_marginEnd="5dp"
-                    android:id="@+id/start_button" />
+                    android:layout_marginEnd="5dp"/>
             </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-    <TabHost
-        android:id="@+id/tabHost2"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal">
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_alignParentTop="true"
+
+            android:id="@+id/toggle_save_workout"
+            android:minHeight="35dp"
+            android:background="@color/secondColor"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:layout_marginBottom="5dp"
+
+
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.SwitchCompat
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:text="@string/activity_workout_save_workout"
+                android:theme="@style/MySwitch"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_width="match_parent"
+                android:checked="false"
+                android:id="@+id/save_workout_local" />
+
+        </RelativeLayout>
 
         <LinearLayout
+            android:layout_below="@+id/toggle_save_workout"
+
+            android:id="@+id/main_muscle_layout"
+            android:background="?selectableItemBackgroundBorderless"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+
+            android:gravity="center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:background="@color/white">
+            android:layout_height="wrap_content"
+            android:baselineAligned="false">
 
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimary" />
+                android:text="Main mucle: "
+                android:textColor="@color/gray_active_icon"
+                android:textSize="18sp" />
 
-            <FrameLayout
-                android:id="@android:id/tabcontent"
+            <TextView
+                android:textStyle="bold"
+                android:id="@+id/main_muscle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textColor="@color/black"
+                android:textSize="19sp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_below="@+id/main_muscle_layout"
+
+            android:id="@+id/select_music"
+            android:background="?selectableItemBackgroundBorderless"
+
+
+            android:paddingBottom="5dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_workout_music"
+                    android:textColor="@color/gray_active_icon"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:textStyle="bold"
+                    android:id="@+id/music"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity_workout_none"
+                    android:textColor="@color/black"
+                    android:textSize="19sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_keyboard_arrow_right_black_24px"
+                android:contentDescription="@null" />
+
+        </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:layout_below="@+id/select_music"
+            android:layout_above="@+id/start_button"
+
+            android:scrollbars="vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/exercises"
+            android:layout_gravity="center_horizontal" />
+
+        <WebView
+            android:visibility="gone"
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/overview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:visibility="gone"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:gravity="center_vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:id="@+id/overview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <RelativeLayout
-                        android:id="@+id/toggle_save_workout"
-                        android:minHeight="45dp"
-                        android:background="@color/colorSecondary"
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
-                        android:layout_marginBottom="15dp"
-                        android:gravity="center_vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                            <android.support.v7.widget.SwitchCompat
-                                android:textSize="18sp"
-                                android:textColor="@color/white"
-                                android:text="@string/activity_workout_save_workout"
-                                android:theme="@style/MySwitch"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="20dp"
-                                android:layout_alignParentEnd="true"
-                                android:layout_width="match_parent"
-                                android:checked="false"
-                                android:id="@+id/save_workout_local" />
-
-                    </RelativeLayout>
-                    <LinearLayout
-                        android:visibility="gone"
-                        android:minHeight="35dp"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:textSize="18sp"
-                            android:text="This workout start today at 2pm"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:visibility="gone"
-                        android:background="?selectableItemBackgroundBorderless"
-                        android:minHeight="40dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
-                        android:gravity="center_vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Level: "
-                                android:textColor="@color/gray_active_icon"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/level"
-                                android:textColor="@color/gray_active_icon"
-                                android:textSize="18sp" />
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:background="?selectableItemBackgroundBorderless"
-                        android:id="@+id/select_music"
-                        android:minHeight="40dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
-                        android:gravity="center_vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                        <LinearLayout
-                            android:layout_weight="1"
-                            android:orientation="horizontal"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/activity_workout_music"
-                                android:textColor="@color/gray_active_icon"
-                                android:textSize="18sp" />
-
-                            <TextView
-                                android:textStyle="bold"
-                                android:id="@+id/music"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/activity_workout_none"
-                                android:textColor="@color/black"
-                                android:textSize="19sp" />
-                        </LinearLayout>
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_keyboard_arrow_right_black_24px"
-                            android:contentDescription="@null" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:minHeight="45dp"
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
-                        android:gravity="center_vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_weight="1"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/number_sets_text"
-                            android:textColor="@color/black"
-                            android:textSize="18sp" />
-
-                        <TextView
-                            android:textStyle="bold"
-                            android:layout_marginEnd="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="20sp"
-                            android:text="@string/number_sets"
-                            android:minWidth="45dp"
-                            android:textColor="@color/black"
-                            android:gravity="center_vertical|center_horizontal"
-                            android:id="@+id/sets"
-                            android:textAlignment="center" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
-                        android:gravity="center_vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                            <TextView
-                               android:layout_weight="1"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:text="@string/rest_exercise_text"
-                                android:textColor="@color/black"
-                                android:textSize="18sp" />
-
-                            <android.support.design.widget.TextInputLayout
-                                android:layout_marginEnd="10dp"
-                                android:theme="@style/TextLabel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
-                                <AutoCompleteTextView
-                                    android:gravity="center_horizontal"
-                                    android:id="@+id/rest_by_exercise"
-                                    android:layout_width="50dp"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="20sp"
-                                    android:imeOptions="actionDone"
-                                    android:textColor="@color/black"
-                                    android:textStyle="bold"
-                                    android:text="@string/rest_exercise"
-                                    android:maxLength="2"
-                                    android:textColorHint="@color/black"
-                                    android:inputType="number"
-                                    android:maxLines="1" />
-                            </android.support.design.widget.TextInputLayout>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
-                        android:gravity="center_vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_weight="1"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/rest_sets_text"
-                            android:textColor="@color/black"
-                            android:textSize="18sp" />
-
-                            <android.support.design.widget.TextInputLayout
-                                android:layout_marginEnd="10dp"
-                                android:theme="@style/TextLabel"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
-                                <AutoCompleteTextView
-                                    android:textStyle="bold"
-                                    android:gravity="center_horizontal"
-                                    android:id="@+id/rest_by_set"
-                                    android:layout_width="50dp"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="20sp"
-                                    android:imeOptions="actionDone"
-                                    android:textColor="@color/black"
-                                    android:text="@string/rest_sets"
-                                    android:maxLength="2"
-                                    android:textColorHint="@color/black"
-                                    android:inputType="number"
-                                    android:maxLines="1" />
-                            </android.support.design.widget.TextInputLayout>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:visibility="gone"
-                        android:minHeight="35dp"
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
-                        android:layout_marginBottom="20dp"
-                        android:gravity="center_vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                            <android.support.v7.widget.SwitchCompat
-                                android:textSize="18sp"
-                                android:textColor="@color/black"
-                                android:text="Warm up"
-                                android:theme="@style/MySwitch"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="20dp"
-                                android:layout_width="match_parent"
-                                android:checked="false" />
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:visibility="gone"
-                        android:minHeight="35dp"
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
-                        android:layout_marginBottom="20dp"
-                        android:gravity="center_vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <android.support.v7.widget.SwitchCompat
-                            android:textSize="18sp"
-                            android:textColor="@color/black"
-                            android:text="Cool down"
-                            android:theme="@style/MySwitch"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="20dp"
-                            android:layout_width="match_parent"
-                            android:checked="false" />
-
-                    </LinearLayout>
-                    <android.support.v7.widget.SwitchCompat
-                        android:visibility="gone"
-                        android:id="@+id/voice_per_exercise"
-                        android:minHeight="45dp"
-                        android:theme="@style/MySwitch2"
-                        android:paddingTop="7dp"
-                        android:paddingBottom="7dp"
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/audio_exercise"
+                        android:text="@string/rest_exercise_text"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_marginEnd="10dp"
+                        android:theme="@style/TextLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <AutoCompleteTextView
+                            android:gravity="center_horizontal"
+                            android:id="@+id/rest_by_exercise"
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:textSize="20sp"
+                            android:imeOptions="actionDone"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:text="@string/rest_exercise"
+                            android:maxLength="2"
+                            android:textColorHint="@color/black"
+                            android:inputType="number"
+                            android:maxLines="1" />
+                    </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
-                <android.support.v7.widget.RecyclerView
-                    android:scrollbars="vertical"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"
-                    android:id="@+id/exercises"
-                    android:layout_gravity="center_horizontal" />
-                <LinearLayout
-                    android:scrollbars="vertical"
-                    android:id="@+id/muscles"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <WebView
-                        android:id="@+id/webview"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+            <LinearLayout
+                android:visibility="gone"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rest_sets_text"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_marginEnd="10dp"
+                        android:theme="@style/TextLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <AutoCompleteTextView
+                            android:textStyle="bold"
+                            android:gravity="center_horizontal"
+                            android:id="@+id/rest_by_set"
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:textSize="20sp"
+                            android:imeOptions="actionDone"
+                            android:textColor="@color/black"
+                            android:text="@string/rest_sets"
+                            android:maxLength="2"
+                            android:textColorHint="@color/black"
+                            android:inputType="number"
+                            android:maxLines="1" />
+                    </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
-            </FrameLayout>
+            <LinearLayout
+                android:visibility="gone"
+                android:minHeight="45dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/number_sets_text"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:textStyle="bold"
+                        android:layout_marginEnd="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20sp"
+                        android:text="@string/number_sets"
+                        android:minWidth="45dp"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:id="@+id/sets"
+                        android:textAlignment="center" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.SwitchCompat
+                android:visibility="gone"
+                android:id="@+id/voice_per_exercise"
+                android:minHeight="45dp"
+                android:theme="@style/MySwitch2"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/audio_exercise"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
         </LinearLayout>
-    </TabHost>
+
+        <Button
+            android:layout_alignParentBottom="true"
+
+            android:theme="@style/ButtonCreate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/start_button"
+            android:layout_gravity="end"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:layout_marginEnd="5dp"
+            android:id="@+id/start_button" />
+
+    </RelativeLayout>
 </LinearLayout>
 
 

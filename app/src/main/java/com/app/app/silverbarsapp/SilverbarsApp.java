@@ -14,7 +14,6 @@ import io.fabric.sdk.android.Fabric;
 /**
  * Created by isaacalmanza on 10/04/16.
  */
-
 public class SilverbarsApp extends MultiDexApplication {
 
     private SilverbarsComponent component;

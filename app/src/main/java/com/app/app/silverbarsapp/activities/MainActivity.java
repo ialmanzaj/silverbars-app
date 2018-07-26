@@ -3,36 +3,33 @@ package com.app.app.silverbarsapp.activities;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.andretietz.retroauth.AuthAccountManager;
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.components.DaggerMainComponent;
-import com.app.app.silverbarsapp.fragments.MyWorkoutsFragment;
 import com.app.app.silverbarsapp.fragments.ProfileFragment;
 import com.app.app.silverbarsapp.fragments.ProgressFragment;
+import com.app.app.silverbarsapp.fragments.WorkoutsFragment;
 import com.app.app.silverbarsapp.modules.MainModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.MainPresenter;
 import com.app.app.silverbarsapp.utils.OnItemSelectedListener;
 import com.app.app.silverbarsapp.viewsets.MainView;
+import com.facebook.appevents.AppEventsLogger;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 
 import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
 
@@ -43,7 +40,6 @@ public class MainActivity extends BaseActivity implements MainView,BottomNavigat
     @Inject
     MainPresenter mMainPresenter;
 
-    @BindView(R.id.fab) FloatingActionButton mButtonCreateWorkout;
     @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
 
     private String muscle = "ALL";
@@ -51,7 +47,7 @@ public class MainActivity extends BaseActivity implements MainView,BottomNavigat
 
     @Override
     protected int getLayout() {
-        return R.layout.activity_main_screen;
+        return R.layout.activity_main;
     }
 
     @Nullable
@@ -73,6 +69,8 @@ public class MainActivity extends BaseActivity implements MainView,BottomNavigat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppEventsLogger.activateApp(getApplication());
+
         extras = new Bundle();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -110,17 +108,13 @@ public class MainActivity extends BaseActivity implements MainView,BottomNavigat
 
         switch (item.getItemId()) {
             case R.id.home:
-                currentFragment = new MyWorkoutsFragment();
-                currentFragment.setArguments(extras);
-                createWorkoutbuttonOn();
+                currentFragment = new WorkoutsFragment();
                 break;
             case R.id.my_workouts:
                 currentFragment = new ProgressFragment();
-                createWorkoutbuttonff();
                 break;
             case R.id.my_progression:
                 currentFragment = new ProfileFragment();
-                createWorkoutbuttonff();
                 break;
         }
 
@@ -131,39 +125,9 @@ public class MainActivity extends BaseActivity implements MainView,BottomNavigat
         return true;
     }
 
-    @OnClick(R.id.fab)
-    public void createButton(){
-        startActivityForResult(new Intent(this,CreateWorkoutActivity.class),1);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK){
-
-                //created succesfully
-                extras.putInt("position",1);
-                selectItem(0);
-            }
-        }
-    }
 
 
-    /**
-     *
-     *
-     *     UI events
-     *
-     *
-     */
-    private void createWorkoutbuttonOn(){
-        mButtonCreateWorkout.setVisibility(View.VISIBLE);
-    }
 
-    private void createWorkoutbuttonff(){
-        mButtonCreateWorkout.setVisibility(View.GONE);
-    }
 
 
     /**

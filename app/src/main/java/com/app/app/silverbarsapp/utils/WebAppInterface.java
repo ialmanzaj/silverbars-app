@@ -6,7 +6,6 @@ import android.webkit.JavascriptInterface;
 /**
  * Created by isaacalmanza on 03/20/17.
  */
-
 public class WebAppInterface {
     private Context mContext;
 

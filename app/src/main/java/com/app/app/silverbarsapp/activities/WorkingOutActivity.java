@@ -571,7 +571,7 @@ public class WorkingOutActivity extends BaseActivity implements WorkingOutView{
                     mixPanelEventWorkoutCancel();
 
                     onScreenOff();
-                    launchResultsActivity();
+                    finish();
 
 
                 }).negativeText(getResources().getString(R.string.negative_dialog)).

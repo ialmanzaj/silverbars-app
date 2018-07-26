@@ -47,7 +47,6 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
     @BindView(R.id.last_exercise_progress) LinearLayout mLastExerciseProgression;
 
     private Utilities utilities = new Utilities();
-    private String id;
 
     @Override
     protected int getFragmentLayout() {
@@ -75,22 +74,19 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
         Account activeAccount = authAccountManager.getActiveAccount(CONTEXT.getString(R.string.authentication_ACCOUNT));
 
         String name = AccountManager.get(CONTEXT).getUserData(activeAccount, CONTEXT.getString(R.string.authentication_NAME));
-        id = AccountManager.get(CONTEXT).getUserData(activeAccount, CONTEXT.getString(R.string.authentication_ID));
+        String id = AccountManager.get(CONTEXT).getUserData(activeAccount, CONTEXT.getString(R.string.authentication_ID));
 
 
         displayProfile(name);
-        getImg();
+        getImg(id);
 
 
         mMyWorkoutsDone.setOnClickListener(v -> startActivity(new Intent(CONTEXT, WorkoutsDoneActivity.class)));
-
-        mLastExerciseProgression.setOnClickListener(v -> {
-            startActivity(new Intent(CONTEXT, WorkoutsDoneActivity.class));
-        });
+        mLastExerciseProgression.setOnClickListener(v -> startActivity(new Intent(CONTEXT, WorkoutsDoneActivity.class)));
     }
 
 
-    private void getImg(){
+    private void getImg(String id){
         Bitmap profile_img = getProfileImg();
 
         if (profile_img != null){
@@ -114,19 +110,17 @@ public class ProfileFragment extends BaseFragment implements ProfileView{
         mProfileName.setText(first_name);
     }
 
-    @Override
-    public void displayProfileImg(ResponseBody img) {
-        if (utilities.saveWorkoutImgInDevice(CONTEXT,img,"profile")){
-           setProfileImg(getProfileImg());
-        }
-    }
-
     private void setProfileImg(Bitmap bitmap){
         mProfileImg.setImageBitmap(bitmap);
     }
 
-    private Bitmap getProfileImg(){
-        return utilities.loadWorkoutImageFromDevice(CONTEXT,"profile");
+    private Bitmap getProfileImg(){return utilities.loadWorkoutImageFromDevice(CONTEXT,"profile");}
+
+    @Override
+    public void displayProfileImg(ResponseBody img) {
+        if (utilities.saveWorkoutImgInDevice(CONTEXT,img,"profile")){
+            setProfileImg(getProfileImg());
+        }
     }
 
 }

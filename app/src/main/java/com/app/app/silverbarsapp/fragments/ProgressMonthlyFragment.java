@@ -40,11 +40,38 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
+import static com.app.app.silverbarsapp.fragments.ProgressMonthlyFragment.MonthsOfYear.APRIL;
+import static com.app.app.silverbarsapp.fragments.ProgressMonthlyFragment.MonthsOfYear.AUGUST;
+import static com.app.app.silverbarsapp.fragments.ProgressMonthlyFragment.MonthsOfYear.DECEMBER;
+import static com.app.app.silverbarsapp.fragments.ProgressMonthlyFragment.MonthsOfYear.FEBRUARY;
+import static com.app.app.silverbarsapp.fragments.ProgressMonthlyFragment.MonthsOfYear.JANUARY;
+import static com.app.app.silverbarsapp.fragments.ProgressMonthlyFragment.MonthsOfYear.JULY;
+import static com.app.app.silverbarsapp.fragments.ProgressMonthlyFragment.MonthsOfYear.JUNE;
+import static com.app.app.silverbarsapp.fragments.ProgressMonthlyFragment.MonthsOfYear.MARCH;
+import static com.app.app.silverbarsapp.fragments.ProgressMonthlyFragment.MonthsOfYear.MAY;
+import static com.app.app.silverbarsapp.fragments.ProgressMonthlyFragment.MonthsOfYear.NOVEMBER;
+import static com.app.app.silverbarsapp.fragments.ProgressMonthlyFragment.MonthsOfYear.OCTOBER;
+import static com.app.app.silverbarsapp.fragments.ProgressMonthlyFragment.MonthsOfYear.SEPTEMBER;
 
 public class ProgressMonthlyFragment extends BaseProgressionFragment implements ProgressionView,MuscleListener {
 
     private static final String TAG = ProgressMonthlyFragment.class.getSimpleName();
     private static final DateTime FIRST_DAY_YEAR = new DateTime().dayOfYear().withMinimumValue();
+
+    public static final class MonthsOfYear {
+        static final int JANUARY = 0;
+        static final int FEBRUARY = 1;
+        static final int MARCH = 2;
+        static final int APRIL = 3;
+        static final int MAY = 4;
+        static final int JUNE = 5;
+        static final int JULY = 6;
+        static final int AUGUST = 7;
+        static final int SEPTEMBER = 8;
+        static final int OCTOBER = 9;
+        static final int NOVEMBER = 10;
+        static final int DECEMBER = 11;
+    }
 
 
     @Inject
@@ -56,7 +83,7 @@ public class ProgressMonthlyFragment extends BaseProgressionFragment implements 
 
     private ArrayList<ExerciseProgression> mYearProgressions = new ArrayList<>();
 
-    ProgressionAlgoritm mProgressionAlgoritm;
+    private ProgressionAlgoritm mProgressionAlgoritm;
     private Utilities utilities = new Utilities();
     private Utilities.HandlerMover handlerMover;
     private Filter filter = new Filter();
@@ -200,11 +227,13 @@ public class ProgressMonthlyFragment extends BaseProgressionFragment implements 
 
 
     private void init(List<ExerciseProgression> progressions){
-
         Interval year_interval =
-                new Interval(FIRST_DAY_YEAR.withTimeAtStartOfDay(),
-                        FIRST_DAY_YEAR.plusMonths(11).plusMonths(1).withDayOfMonth(1).minusDays(1));
-
+                new Interval(
+                        FIRST_DAY_YEAR.withHourOfDay(0)
+                                .withMinuteOfHour(0).withSecondOfMinute(0),
+                        FIRST_DAY_YEAR.plusMonths(11).plusMonths(1)
+                                .withDayOfMonth(1).minusDays(1)
+                                .withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59));
 
         mYearProgressions = filter.getProgressionFiltered(progressions,year_interval);
 
@@ -216,8 +245,6 @@ public class ProgressMonthlyFragment extends BaseProgressionFragment implements 
      *
      *
      *     UI events
-     *
-     *
      *
      *
      *
@@ -251,9 +278,7 @@ public class ProgressMonthlyFragment extends BaseProgressionFragment implements 
         //move the list to the current item
         mMonths.post(() -> mMonths.scrollToPosition(mCurrentMonth));
 
-        //handle the nextMusic and previewMusic logic
         handlerMover.setPosition(mCurrentMonth);
-
 
         //update the ui with the current month
         updateMainUi(getProgressionByMonth(mCurrentMonth));
@@ -262,7 +287,7 @@ public class ProgressMonthlyFragment extends BaseProgressionFragment implements 
     private void updateMainUi(ArrayList<ExerciseProgression> progressions_filtered){
         Bundle extras = new Bundle();
 
-        if (progressions_filtered.size() > 0){
+        if (progressions_filtered != null && progressions_filtered.size() > 0){
 
             extras.putParcelableArrayList("progressions", progressions_filtered);
             BodyFragment currentFragment = new BodyFragment();
@@ -298,48 +323,56 @@ public class ProgressMonthlyFragment extends BaseProgressionFragment implements 
      *
      */
     private int whichMonthIs(DateTime today){
-        if (filter.filterByDate(today, getMonths().get(0))){
-            return 0;
-        }else if (filter.filterByDate(today, getMonths().get(1))){
-            return 1;
-        }else if (filter.filterByDate(today, getMonths().get(2))){
-            return 2;
-        } else if (filter.filterByDate(today, getMonths().get(3))){
-            return 3;
-        } else if (filter.filterByDate(today, getMonths().get(4))){
-            return 4;
-        }else if (filter.filterByDate(today, getMonths().get(5))){
-            return 5;
-        }else if (filter.filterByDate(today, getMonths().get(6))){
-            return 6;
-        } else if (filter.filterByDate(today, getMonths().get(7))){
-            return 7;
-        } else if (filter.filterByDate(today, getMonths().get(8))){
-            return 8;
-        }else if (filter.filterByDate(today, getMonths().get(9))){
-            return 9;
-        }else if (filter.filterByDate(today, getMonths().get(10))){
-            return 10;
-        } else if (filter.filterByDate(today, getMonths().get(11))){
-            return 11;
+        //Log.d(TAG,"today "+today);
+        for (int month = 0;month<12;month++) {
+            //Log.d(TAG,"month "+Months().get(month));
+            if (filter.filterByDate(today, Months().get(month))) {
+                switch (month) {
+                    case JANUARY:
+                        return JANUARY;
+                    case FEBRUARY:
+                        return FEBRUARY;
+                    case MARCH:
+                        return MARCH;
+                    case APRIL:
+                        return APRIL;
+                    case MAY:
+                        return MAY;
+                    case JUNE:
+                        return JUNE;
+                    case JULY:
+                        return JULY;
+                    case AUGUST:
+                        return AUGUST;
+                    case SEPTEMBER:
+                        return SEPTEMBER;
+                    case OCTOBER:
+                        return OCTOBER;
+                    case NOVEMBER:
+                        return NOVEMBER;
+                    case DECEMBER:
+                        return DECEMBER;
+                }
+            }
         }
+
         return -1;
     }
 
-    private List<Interval> getMonths() {
+    private List<Interval> Months() {
         return new ArrayList<Interval>() {{
-            add(new Interval(FIRST_DAY_YEAR.withTimeAtStartOfDay(), FIRST_DAY_YEAR.plusMonths(1).withDayOfMonth(1).minusDays(1) ));
-            add(new Interval(FIRST_DAY_YEAR.plusMonths(1).withDayOfMonth(1), FIRST_DAY_YEAR.plusMonths(2).withDayOfMonth(1).minusDays(1) ));
-            add(new Interval(FIRST_DAY_YEAR.plusMonths(2).withDayOfMonth(1), FIRST_DAY_YEAR.plusMonths(3).withDayOfMonth(1).minusDays(1) ));
-            add(new Interval(FIRST_DAY_YEAR.plusMonths(3).withDayOfMonth(1), FIRST_DAY_YEAR.plusMonths(4).withDayOfMonth(1).minusDays(1) ));
-            add(new Interval(FIRST_DAY_YEAR.plusMonths(4).withDayOfMonth(1), FIRST_DAY_YEAR.plusMonths(5).withDayOfMonth(1).minusDays(1) ));
-            add(new Interval(FIRST_DAY_YEAR.plusMonths(5).withDayOfMonth(1), FIRST_DAY_YEAR.plusMonths(6).withDayOfMonth(1).minusDays(1) ));
-            add(new Interval(FIRST_DAY_YEAR.plusMonths(6).withDayOfMonth(1), FIRST_DAY_YEAR.plusMonths(7).withDayOfMonth(1).minusDays(1) ));
-            add(new Interval(FIRST_DAY_YEAR.plusMonths(7).withDayOfMonth(1), FIRST_DAY_YEAR.plusMonths(8).withDayOfMonth(1).minusDays(1) ));
-            add(new Interval(FIRST_DAY_YEAR.plusMonths(8).withDayOfMonth(1), FIRST_DAY_YEAR.plusMonths(9).withDayOfMonth(1).minusDays(1) ));
-            add(new Interval(FIRST_DAY_YEAR.plusMonths(9).withDayOfMonth(1), FIRST_DAY_YEAR.plusMonths(10).withDayOfMonth(1).minusDays(1) ));
-            add(new Interval(FIRST_DAY_YEAR.plusMonths(10).withDayOfMonth(1), FIRST_DAY_YEAR.plusMonths(11).withDayOfMonth(1).minusDays(1)));
-            add(new Interval(FIRST_DAY_YEAR.plusMonths(11).withDayOfMonth(1), FIRST_DAY_YEAR.plusMonths(12).withDayOfMonth(1).minusDays(1) ));
+            add(new Interval(FIRST_DAY_YEAR.withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0), FIRST_DAY_YEAR.plusMonths(1).withDayOfMonth(1).minusDays(1)));
+            add(new Interval(FIRST_DAY_YEAR.plusMonths(1).withDayOfMonth(1).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0), FIRST_DAY_YEAR.plusMonths(2).withDayOfMonth(1).minusDays(1).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59) ));
+            add(new Interval(FIRST_DAY_YEAR.plusMonths(2).withDayOfMonth(1).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0), FIRST_DAY_YEAR.plusMonths(3).withDayOfMonth(1).minusDays(1).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59) ));
+            add(new Interval(FIRST_DAY_YEAR.plusMonths(3).withDayOfMonth(1).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0), FIRST_DAY_YEAR.plusMonths(4).withDayOfMonth(1).minusDays(1).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59) ));
+            add(new Interval(FIRST_DAY_YEAR.plusMonths(4).withDayOfMonth(1).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0), FIRST_DAY_YEAR.plusMonths(5).withDayOfMonth(1).minusDays(1).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59) ));
+            add(new Interval(FIRST_DAY_YEAR.plusMonths(5).withDayOfMonth(1).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0), FIRST_DAY_YEAR.plusMonths(6).withDayOfMonth(1).minusDays(1).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59) ));
+            add(new Interval(FIRST_DAY_YEAR.plusMonths(6).withDayOfMonth(1).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0), FIRST_DAY_YEAR.plusMonths(7).withDayOfMonth(1).minusDays(1).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59) ));
+            add(new Interval(FIRST_DAY_YEAR.plusMonths(7).withDayOfMonth(1).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0), FIRST_DAY_YEAR.plusMonths(8).withDayOfMonth(1).minusDays(1).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59) ));
+            add(new Interval(FIRST_DAY_YEAR.plusMonths(8).withDayOfMonth(1).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0), FIRST_DAY_YEAR.plusMonths(9).withDayOfMonth(1).minusDays(1).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59) ));
+            add(new Interval(FIRST_DAY_YEAR.plusMonths(9).withDayOfMonth(1).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0), FIRST_DAY_YEAR.plusMonths(10).withDayOfMonth(1).minusDays(1).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59) ));
+            add(new Interval(FIRST_DAY_YEAR.plusMonths(10).withDayOfMonth(1).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0), FIRST_DAY_YEAR.plusMonths(11).withDayOfMonth(1).minusDays(1).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59) ));
+            add(new Interval(FIRST_DAY_YEAR.plusMonths(11).withDayOfMonth(1).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0), FIRST_DAY_YEAR.plusMonths(12).withDayOfMonth(1).minusDays(1).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59) ));
         }};
     }
 
@@ -347,42 +380,42 @@ public class ProgressMonthlyFragment extends BaseProgressionFragment implements 
 
     private ArrayList<ExerciseProgression> getProgressionByMonth(int month) {
         switch (month){
-            case 0:
+            case JANUARY:
                 //Log.d(TAG,"January: "+getMonths().get(0));
-                return filter.getProgressionFiltered(mYearProgressions, getMonths().get(0));
-            case 1:
+                return filter.getProgressionFiltered(mYearProgressions, Months().get(month));
+            case FEBRUARY:
                 //Log.d(TAG,"February: "+getMonths().get(1));
-                return filter.getProgressionFiltered(mYearProgressions,getMonths().get(1));
-            case 2:
+                return filter.getProgressionFiltered(mYearProgressions, Months().get(month));
+            case MARCH:
                 //Log.d(TAG,"March: "+getMonths().get(2));
-                return filter.getProgressionFiltered(mYearProgressions,getMonths().get(2));
-            case 3:
+                return filter.getProgressionFiltered(mYearProgressions, Months().get(month));
+            case APRIL:
                 //Log.d(TAG,"April: "+getMonths().get(3));
-                return filter.getProgressionFiltered(mYearProgressions,getMonths().get(3));
-            case 4:
+                return filter.getProgressionFiltered(mYearProgressions, Months().get(month));
+            case MAY:
                 //Log.d(TAG,"May: "+getMonths().get(4));
-                return filter.getProgressionFiltered(mYearProgressions,getMonths().get(4));
-            case 5:
+                return filter.getProgressionFiltered(mYearProgressions, Months().get(month));
+            case JUNE:
                 //Log.d(TAG,"June: "+getMonths().get(5));
-                return filter.getProgressionFiltered(mYearProgressions,getMonths().get(5));
-            case 6:
+                return filter.getProgressionFiltered(mYearProgressions, Months().get(month));
+            case JULY:
                 //Log.d(TAG,"July: "+getMonths().get(6));
-                return filter.getProgressionFiltered(mYearProgressions,getMonths().get(6));
-            case 7:
+                return filter.getProgressionFiltered(mYearProgressions, Months().get(month));
+            case AUGUST:
                 //Log.d(TAG,"August: "+getMonths().get(7));
-                return filter.getProgressionFiltered(mYearProgressions,getMonths().get(7));
-            case 8:
+                return filter.getProgressionFiltered(mYearProgressions, Months().get(month));
+            case SEPTEMBER:
                 //Log.d(TAG,"September: "+getMonths().get(8));
-                return filter.getProgressionFiltered(mYearProgressions,getMonths().get(8));
-            case 9:
+                return filter.getProgressionFiltered(mYearProgressions, Months().get(month));
+            case OCTOBER:
                 //Log.d(TAG,"October: "+getMonths().get(9));
-                return filter.getProgressionFiltered(mYearProgressions,getMonths().get(9));
-            case 10:
+                return filter.getProgressionFiltered(mYearProgressions, Months().get(month));
+            case NOVEMBER:
                 //Log.d(TAG,"November: "+getMonths().get(10));
-                return(filter.getProgressionFiltered(mYearProgressions,getMonths().get(10)));
-            case 11:
+                return filter.getProgressionFiltered(mYearProgressions, Months().get(month));
+            case DECEMBER:
                 //Log.d(TAG,"December: "+getMonths().get(11));
-                return(filter.getProgressionFiltered(mYearProgressions,getMonths().get(11)));
+                return filter.getProgressionFiltered(mYearProgressions, Months().get(month));
             default:
                 return null;
         }
@@ -399,15 +432,11 @@ public class ProgressMonthlyFragment extends BaseProgressionFragment implements 
      *
      *
      *
-     *
      */
 
     private void mixPanelEventProgressionMonthly(){
         mMixpanel.track("on Progression monthly", utilities.getUserData(CONTEXT));
     }
-
-
-
 
 
 }

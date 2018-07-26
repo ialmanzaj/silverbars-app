@@ -18,6 +18,7 @@ import com.app.app.silverbarsapp.presenters.MainWorkoutsPresenter;
 import com.app.app.silverbarsapp.viewsets.MainWorkoutsView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,7 +38,6 @@ public class MainWorkoutsFragment extends BaseFragmentExtended implements MainWo
     MainWorkoutsPresenter mMainWorkoutsPresenter;
 
     @BindView(R.id.workout_list) RecyclerView mWorkoutList;
-
 
     private WorkoutsAdapter adapter;
     private String mMuscleSelected = "ALL";
@@ -70,14 +70,10 @@ public class MainWorkoutsFragment extends BaseFragmentExtended implements MainWo
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (this.isAdded()){
-            mWorkoutList.setHasFixedSize(true);
-            StaggeredGridLayoutManager sGridLayoutManager = new StaggeredGridLayoutManager(2,
-                    StaggeredGridLayoutManager.VERTICAL);
-            mWorkoutList.setLayoutManager(sGridLayoutManager);
-            adapter = new WorkoutsAdapter(CONTEXT);
-            mWorkoutList.setAdapter(adapter);
-        }
+        mWorkoutList.setHasFixedSize(true);
+        mWorkoutList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        adapter = new WorkoutsAdapter(CONTEXT);
+        mWorkoutList.setAdapter(adapter);
     }
 
     @OnClick(R.id.reload)
@@ -89,6 +85,7 @@ public class MainWorkoutsFragment extends BaseFragmentExtended implements MainWo
 
     @Override
     public void displayWorkouts(List<Workout> workouts) {
+        Collections.reverse(workouts);
         onLoadingViewOff();
         setWorkoutsInAdapter(workouts);
     }

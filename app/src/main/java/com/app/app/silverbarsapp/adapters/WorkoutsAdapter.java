@@ -2,12 +2,12 @@ package com.app.app.silverbarsapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -60,9 +60,10 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
         @BindView(R.id.layout) FrameLayout layout;
 
-        @BindView(R.id.text) TextView workout_name;
-        @BindView(R.id.btn)Button start_button;
-        @BindView(R.id.img)SimpleDraweeView workout_img_cache;
+        @BindView(R.id.workout_name) TextView mWorkoutName;
+        @BindView(R.id.start_button)Button mStartButton;
+        @BindView(R.id.workout_img)SimpleDraweeView mWorkoutImgCache;
+        @BindView(R.id.webview) WebView webView;
 
         public WorkoutHolder(View view) {
             super(view);
@@ -70,7 +71,7 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
             ButterKnife.bind(this,view);
         }
 
-        @OnClick(R.id.btn)
+        @OnClick(R.id.start_button)
         public void startWorkoutButton(View view){
             Workout workout = (Workout) view.getTag();
 
@@ -89,18 +90,25 @@ public class WorkoutsAdapter extends RecyclerView.Adapter<WorkoutsAdapter.Workou
 
     @Override
     public WorkoutHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new WorkoutHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_workout, parent, false));
+        return new WorkoutHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.workout_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(WorkoutHolder viewHolder, int position) {
         viewHolder.layout.getLayoutParams().height = utilities.calculateContainerHeight(context) / 3;
 
+
+        //String frameVideo = "<html><body><iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/pNNMr5glICM\" frameborder=\"0\" allowfullscreen></iframe></body></html>";
+
+        //viewHolder.webView.getSettings().setJavaScriptEnabled(true);
+        //viewHolder.webView.loadData(frameVideo, "text/html", "utf-8");
+
+
         try {
 
-            viewHolder.workout_name.setText(workouts.get(position).getWorkout_name());
-            viewHolder.start_button.setTag(workouts.get(position));
-            viewHolder.workout_img_cache.setImageURI(Uri.parse(workouts.get(position).getWorkout_image()));
+            viewHolder.mWorkoutName.setText(workouts.get(position).getWorkout_name());
+            viewHolder.mStartButton.setTag(workouts.get(position));
+            //viewHolder.mWorkoutImgCache.setImageURI(Uri.parse(workouts.get(position).getWorkout_image()));
 
         }catch (NullPointerException e){Log.e(TAG,"NullPointerException",e.getCause());}
 

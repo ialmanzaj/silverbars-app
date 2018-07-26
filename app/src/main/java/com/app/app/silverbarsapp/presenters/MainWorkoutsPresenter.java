@@ -1,7 +1,5 @@
 package com.app.app.silverbarsapp.presenters;
 
-import android.util.Log;
-
 import com.app.app.silverbarsapp.callbacks.MainWorkoutsCallback;
 import com.app.app.silverbarsapp.interactors.MainWorkoutsInteractor;
 import com.app.app.silverbarsapp.models.Workout;
@@ -25,50 +23,14 @@ public class MainWorkoutsPresenter extends BasePresenter implements MainWorkouts
         this.interactor = interactor;
     }
 
-    public void fetchTimelineAsync() {
-        interactor.getWorkouts(this);
-    }
-
     public void getMyWorkout(){
         interactor.getWorkouts(this);
     }
 
     @Override
-    public void onStart() {
-
-    }
-
-    @Override
-    public void onStop() {
-
-    }
-
-    @Override
-    public void onResume() {
-
-    }
-
-    @Override
-    public void onPause() {
-
-    }
-
-    @Override
-    public void onRestart() {
-
-    }
-
-    @Override
-    public void onDestroy() {
-
-    }
-
-    @Override
     public void onWorkoutsFound(List<Workout> workouts) {
-        Log.v(TAG,"onWorkoutsFound");
         view.displayWorkouts(workouts);
     }
-
 
     @Override
     public void onServerError() {
@@ -80,5 +42,24 @@ public class MainWorkoutsPresenter extends BasePresenter implements MainWorkouts
         view.displayNetworkError();
     }
 
+
+
+    @Override
+    public void onStart() {}
+
+    @Override
+    public void onStop() {}
+
+    @Override
+    public void onResume() {}
+
+    @Override
+    public void onPause() {}
+
+    @Override
+    public void onRestart() {}
+
+    @Override
+    public void onDestroy() {}
 
 }

@@ -17,11 +17,10 @@
 
                 <TextView
                     android:textColor="@color/black"
-                    android:textSize="22sp"
+                    android:textSize="20sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/fragment_my_workouts_saved_empty"
-                    android:layout_gravity="center"
                     android:gravity="center" />
 
                 <Button
@@ -36,14 +35,15 @@
                     android:layout_gravity="center"
                     android:gravity="center" />
 
-
         </LinearLayout>
+
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/list_saved"
+            android:id="@+id/workouts_saved"
             android:paddingTop="5dp"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical" />
+
 </LinearLayout>

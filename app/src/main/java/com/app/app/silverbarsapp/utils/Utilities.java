@@ -177,7 +177,13 @@ public class Utilities {
     }
 
     public void loadBodyFromLocal(Context context, WebView webView) {
-        String html = getLocalFile(context, "index.html");
+        String html;
+        try {
+            html = getLocalFile(context, "index.html");
+        } catch (IOException e) {
+            e.printStackTrace();
+            html = readHtml(BODY_URL);
+        }
         webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "UTF-8");
     }
 
@@ -232,18 +238,15 @@ public class Utilities {
         }
     }
 
-    public String getLocalFile(Context context,String name_file){
+    public String getLocalFile(Context context,String name_file) throws IOException{
         String json = null;
-        try {
-            InputStream is = context.getAssets().open(name_file);
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+
+        InputStream is = context.getAssets().open(name_file);
+        int size = is.available();
+        byte[] buffer = new byte[size];
+        is.read(buffer);
+        is.close();
+        json = new String(buffer, "UTF-8");
 
         return json;
     }

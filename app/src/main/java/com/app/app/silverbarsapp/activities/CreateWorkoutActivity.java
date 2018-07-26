@@ -13,6 +13,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.Toast;
 
@@ -46,7 +47,7 @@ public class CreateWorkoutActivity extends BaseActivity implements OnStartDragLi
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.content) LinearLayout mMainContentLayout;
-    @BindView(R.id.content_empty) LinearLayout mEmptyView;
+    @BindView(R.id.content_empty) RelativeLayout mEmptyView;
     @BindView(R.id.webview) WebView webView;
     @BindView(R.id.readd) Button mReAddButton;
     @BindView(R.id.exercises_selected) RecyclerView mExercisesSelectedList;
@@ -215,9 +216,9 @@ public class CreateWorkoutActivity extends BaseActivity implements OnStartDragLi
         TabHost tabHost2 = (TabHost) findViewById(R.id.tabHost3);
         tabHost2.setup();
 
-        TabHost.TabSpec rutina = tabHost2.newTabSpec(getResources().getString(R.string.tab_workout));
-        rutina.setIndicator(getResources().getString(R.string.tab_workout));
-        rutina.setContent(R.id.workout);
+        TabHost.TabSpec exercises = tabHost2.newTabSpec("Exercises");
+        exercises.setIndicator(getResources().getString(R.string.activity_create_workout_tab_exercises));
+        exercises.setContent(R.id.workout);
 
         TabHost.TabSpec muscles = tabHost2.newTabSpec(getResources().getString(R.string.tab_muscles));
         muscles.setIndicator(getResources().getString(R.string.tab_muscles));
@@ -227,8 +228,8 @@ public class CreateWorkoutActivity extends BaseActivity implements OnStartDragLi
         skills.setIndicator("Focus");
         skills.setContent(R.id.types);
 */
-        tabHost2.addTab(rutina);
-        tabHost2.addTab(muscles);
+        tabHost2.addTab(exercises);
+        //tabHost2.addTab(muscles);
         //tabHost2.addTab(skills);
     }
 

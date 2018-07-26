@@ -34,8 +34,7 @@ public class BodyFragment extends BaseFragment implements MuscleListener {
     private MusclesWebviewHandler mMusclesWebviewHandler = new MusclesWebviewHandler();
 
     private String mMuscleParts = " ";
-
-    MuscleListener muscleListener;
+    private MuscleListener muscleListener;
 
     @Override
     protected int getFragmentLayout() {
@@ -100,7 +99,5 @@ public class BodyFragment extends BaseFragment implements MuscleListener {
     public void okayButton(){
         mModal.setVisibility(View.GONE);
     }
-
-
 
 }

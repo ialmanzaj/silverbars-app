@@ -13,7 +13,6 @@ import java.util.List;
  */
 public class SavedWorkoutsPresenter  extends BasePresenter implements SavedWorkoutsCallback {
 
-
     private SavedWorkoutsInteractor interactor;
     private SavedWorkoutsView view;
 
@@ -22,14 +21,9 @@ public class SavedWorkoutsPresenter  extends BasePresenter implements SavedWorko
         this.interactor = interactor;
     }
 
-    public void getWorkouts() {
-        try {
-            interactor.getWorkout(this);
-    } catch (SQLException e) {
-        e.printStackTrace();
+    public void getWorkouts() throws SQLException {
+        interactor.getWorkout(this);
     }
-    }
-
 
     @Override
     public void onWorkouts(List<Workout> workouts) {
@@ -41,35 +35,18 @@ public class SavedWorkoutsPresenter  extends BasePresenter implements SavedWorko
         view.onEmptyWorkouts();
     }
 
-    @Override
-    public void onStart() {
 
-    }
 
     @Override
-    public void onStop() {
-
-    }
-
+    public void onStart() {}
     @Override
-    public void onResume() {
-
-    }
-
+    public void onStop() {}
     @Override
-    public void onPause() {
-
-    }
-
+    public void onResume() {}
     @Override
-    public void onRestart() {
-
-    }
-
+    public void onPause() {}
     @Override
-    public void onDestroy() {
-        //interactor.onDestroy();
-    }
-
-
+    public void onRestart() {}
+    @Override
+    public void onDestroy() {}
 }

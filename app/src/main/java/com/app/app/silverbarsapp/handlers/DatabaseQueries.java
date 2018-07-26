@@ -50,6 +50,20 @@ public class DatabaseQueries {
         return !helper.getUserWorkoutDao().queryForAll().isEmpty();
     }
 
+    public boolean checkSavedWorkoutsExist() throws SQLException {
+        return !helper.getSavedWorkoutDao().queryForAll().isEmpty();
+    }
+
+    public boolean checkSavedWorkoutsIsOn() throws SQLException {
+        for (MySavedWorkout my_saved_workout: helper.getSavedWorkoutDao().queryForAll()){
+            if (my_saved_workout.getSaved()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     public List<Workout> getMyWorkouts() throws SQLException {
         List<Workout> my_workouts  = new ArrayList<>();
 
@@ -67,6 +81,17 @@ public class DatabaseQueries {
 
     public MySavedWorkout getSavedtWorkout(int saved_workout_id) throws SQLException {
         return helper.getSavedWorkoutDao().queryForId(saved_workout_id);
+    }
+
+    public List<Workout> getSavedWorkouts() throws SQLException {
+        List<Workout> my_workouts  = new ArrayList<>();
+
+        for (MySavedWorkout my_workout:  helper.getSavedWorkoutDao().queryForAll()){
+            //add user_workout completed to list
+            my_workouts.add(getSavedWorkoutModel(my_workout));
+
+        }
+        return my_workouts;
     }
 
     public boolean isWorkoutSaved(int workout_id) throws SQLException {
@@ -385,7 +410,19 @@ public class DatabaseQueries {
         );
     }
 
-    private  ArrayList<com.app.app.silverbarsapp.models.ExerciseRep> getExercisesRepsModel(UserWorkout my_workout_database) throws SQLException {
+    private com.app.app.silverbarsapp.models.Workout getSavedWorkoutModel(MySavedWorkout my_workout_database) throws SQLException {
+        return new com.app.app.silverbarsapp.models.Workout(
+                my_workout_database.getId(),
+                my_workout_database.getWorkout_name(),
+                my_workout_database.getWorkout_image(),
+                my_workout_database.getSets(),
+                my_workout_database.getLevel(),
+                my_workout_database.getMain_muscle(),
+                getExercisesRepsModel(my_workout_database)
+        );
+    }
+
+    private  ArrayList<com.app.app.silverbarsapp.models.ExerciseRep> getExercisesRepsModel(com.app.app.silverbarsapp.database_models.Workout my_workout_database) throws SQLException {
         ArrayList<com.app.app.silverbarsapp.models.ExerciseRep> exerciseReps = new ArrayList<>();
 
         for (ExerciseRep exerciseRep: my_workout_database.getExercises()){

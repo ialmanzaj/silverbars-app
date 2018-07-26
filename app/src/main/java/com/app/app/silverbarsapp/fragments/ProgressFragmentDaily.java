@@ -41,10 +41,27 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
+import static com.app.app.silverbarsapp.fragments.ProgressFragmentDaily.DayOfWeek.FRIDAY;
+import static com.app.app.silverbarsapp.fragments.ProgressFragmentDaily.DayOfWeek.MONDAY;
+import static com.app.app.silverbarsapp.fragments.ProgressFragmentDaily.DayOfWeek.SATURDAY;
+import static com.app.app.silverbarsapp.fragments.ProgressFragmentDaily.DayOfWeek.SUNDAY;
+import static com.app.app.silverbarsapp.fragments.ProgressFragmentDaily.DayOfWeek.THURSDAY;
+import static com.app.app.silverbarsapp.fragments.ProgressFragmentDaily.DayOfWeek.TUESDAY;
+import static com.app.app.silverbarsapp.fragments.ProgressFragmentDaily.DayOfWeek.WEDNESDAY;
 
 public class ProgressFragmentDaily extends BaseProgressionFragment implements ProgressionView, MuscleListener {
 
     private static final String TAG = ProgressFragmentDaily.class.getSimpleName();
+
+    public static final class DayOfWeek {
+        static final int MONDAY = 0;
+        static final int TUESDAY = 1;
+        static final int WEDNESDAY = 2;
+        static final int THURSDAY = 3;
+        static final int FRIDAY = 4;
+        static final int SATURDAY = 5;
+        static final int SUNDAY = 6;
+    }
 
     @Inject
     ProgressionPresenter mProgressionPresenter;
@@ -167,7 +184,7 @@ public class ProgressFragmentDaily extends BaseProgressionFragment implements Pr
 
     private void init(List<ExerciseProgression> progressions){
         //filter the progressions
-        Interval this_week = new Interval(getLocalDates().get(0).toDateTimeAtStartOfDay().minusDays(1), Weeks.ONE);
+        Interval this_week = new Interval(daysOfWeek().get(MONDAY).toDateTimeAtStartOfDay().minusDays(1), Weeks.ONE);
         mWeekProgressions = filter.getProgressionFiltered(progressions,this_week);
         initUI();
     }
@@ -270,7 +287,7 @@ public class ProgressFragmentDaily extends BaseProgressionFragment implements Pr
 
     private List<String> getDaysOfWeek() {return Arrays.asList(CONTEXT.getResources().getStringArray(R.array.days));}
 
-    private List<LocalDate> getLocalDates() {return new ArrayList<LocalDate>() {{
+    private List<LocalDate> daysOfWeek() {return new ArrayList<LocalDate>() {{
             add(new LocalDate().withDayOfWeek(DateTimeConstants.MONDAY));
             add(new LocalDate().withDayOfWeek(DateTimeConstants.TUESDAY));
             add(new LocalDate().withDayOfWeek(DateTimeConstants.WEDNESDAY));
@@ -282,39 +299,39 @@ public class ProgressFragmentDaily extends BaseProgressionFragment implements Pr
 
     private List<Interval> getDays() {
         return new ArrayList<Interval>() {{
-            add(new Interval(getLocalDates().get(0).toDateTimeAtStartOfDay(), Days.ONE));
-            add(new Interval(getLocalDates().get(1).toDateTimeAtStartOfDay(), Days.ONE));
-            add(new Interval(getLocalDates().get(2).toDateTimeAtStartOfDay(), Days.ONE));
-            add(new Interval(getLocalDates().get(3).toDateTimeAtStartOfDay(), Days.ONE));
-            add(new Interval(getLocalDates().get(4).toDateTimeAtStartOfDay(), Days.ONE));
-            add(new Interval(getLocalDates().get(5).toDateTimeAtStartOfDay(), Days.ONE));
-            add(new Interval(getLocalDates().get(6).toDateTimeAtStartOfDay(), Days.ONE));
+            add(new Interval(daysOfWeek().get(MONDAY).toDateTimeAtStartOfDay(), Days.ONE));
+            add(new Interval(daysOfWeek().get(TUESDAY).toDateTimeAtStartOfDay(), Days.ONE));
+            add(new Interval(daysOfWeek().get(WEDNESDAY).toDateTimeAtStartOfDay(), Days.ONE));
+            add(new Interval(daysOfWeek().get(THURSDAY).toDateTimeAtStartOfDay(), Days.ONE));
+            add(new Interval(daysOfWeek().get(FRIDAY).toDateTimeAtStartOfDay(), Days.ONE));
+            add(new Interval(daysOfWeek().get(SATURDAY).toDateTimeAtStartOfDay(), Days.ONE));
+            add(new Interval(daysOfWeek().get(SUNDAY).toDateTimeAtStartOfDay(), Days.ONE));
         }};
     }
 
     private ArrayList<ExerciseProgression> getProgressionByDay(int day){
         switch (day) {
-            case 0:
+            case MONDAY:
                 //Log.d(TAG, "Monday");
-                return filter.getProgressionFiltered(mWeekProgressions, getDays().get(0));
-            case 1:
+                return filter.getProgressionFiltered(mWeekProgressions, getDays().get(day));
+            case TUESDAY:
                 //Log.d(TAG, "Tuesday");
-                return (filter.getProgressionFiltered(mWeekProgressions, getDays().get(1)));
-            case 2:
+                return filter.getProgressionFiltered(mWeekProgressions, getDays().get(day));
+            case WEDNESDAY:
                 //Log.d(TAG, "Wednesday");
-                return(filter.getProgressionFiltered(mWeekProgressions, getDays().get(2)));
-            case 3:
+                return(filter.getProgressionFiltered(mWeekProgressions, getDays().get(day)));
+            case THURSDAY:
                 //Log.d(TAG, "Thursday");
-                return(filter.getProgressionFiltered(mWeekProgressions, getDays().get(3)));
-            case 4:
+                return filter.getProgressionFiltered(mWeekProgressions, getDays().get(day));
+            case FRIDAY:
                 //Log.d(TAG, "Friday");
-                return(filter.getProgressionFiltered(mWeekProgressions, getDays().get(4)));
-            case 5:
+                return filter.getProgressionFiltered(mWeekProgressions, getDays().get(day));
+            case SATURDAY:
                 //Log.d(TAG, "Saturday");
-                return(filter.getProgressionFiltered(mWeekProgressions, getDays().get(5)));
-            case 6:
+                return filter.getProgressionFiltered(mWeekProgressions, getDays().get(day));
+            case SUNDAY:
                 //Log.d(TAG, "Sunday");
-                return(filter.getProgressionFiltered(mWeekProgressions, getDays().get(6) ));
+                return filter.getProgressionFiltered(mWeekProgressions, getDays().get(day));
             default:
                 return null;
         }

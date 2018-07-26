@@ -16,6 +16,9 @@ public abstract class BaseFragmentExtended extends BaseFragment  {
     @BindView(R.id.loading) LinearLayout mLoadingView;
     @BindView(R.id.error_view) LinearLayout mErrorView;
 
+
+
+
     protected void onLoadingViewOn(){
         mLoadingView.setVisibility(View.VISIBLE);
     }

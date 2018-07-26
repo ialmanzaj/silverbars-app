@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -23,6 +25,7 @@ import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.ExerciseListPresenter;
 import com.app.app.silverbarsapp.utils.Utilities;
 import com.app.app.silverbarsapp.viewsets.ExerciseListView;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +34,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static com.app.app.silverbarsapp.Constants.MIX_PANEL_TOKEN;
 
 /**
  * Created by isaacalmanza on 10/04/16.
@@ -56,6 +61,7 @@ public class ExerciseListActivity extends BaseActivityExtended implements Exerci
     private Filter filter = new Filter();
 
     FilterAdapter filterAdapter;
+    MixpanelAPI mixpanel;
 
     @Override
     protected int getLayout() {
@@ -77,7 +83,6 @@ public class ExerciseListActivity extends BaseActivityExtended implements Exerci
                 .build().inject(this);
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +95,10 @@ public class ExerciseListActivity extends BaseActivityExtended implements Exerci
         mExerciseListPresenter.getExercises();
 
         setFilterAdapter();
+
+        mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
+
+        mixpanelExerciseList();
     }
 
     private void getExtras(Bundle extras){
@@ -113,11 +122,7 @@ public class ExerciseListActivity extends BaseActivityExtended implements Exerci
      *
      */
 
-    @OnClick(R.id.filter)
-    public void filterExercises(){
-        Intent intent = new Intent(this,MuscleSelectionActivity.class);
-        startActivityForResult(intent,1);
-    }
+
 
     @OnClick(R.id.reload)
     public void reloadButton(){
@@ -141,11 +146,14 @@ public class ExerciseListActivity extends BaseActivityExtended implements Exerci
         }
 
         if (exercise_selected_ids.size() > 0) {
+            mixpanelExercisesSelected();
+
 
             Intent return_intent = new Intent();
             return_intent.putExtra("exercises_selected",filter.getExercisesById(mExercises, exercise_selected_ids));
             setResult(RESULT_OK, return_intent);
             finish();
+
         }else {
             new Utilities().toast(this,getString(R.string.activity_exercise_list_no_selection));
         }
@@ -281,17 +289,57 @@ public class ExerciseListActivity extends BaseActivityExtended implements Exerci
 
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.filter_menu, menu);
+        return true;
+    }
+
+
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            //Log.d(TAG, "action bar clicked");
-            finish();
+
+        // Handle item selection
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.filter:
+                mixpanelFilter();
+
+                Intent intent = new Intent(this,MuscleSelectionActivity.class);
+                startActivityForResult(intent,1);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
+    /**
+     *
+     *
+     *
+     *    Mix panel events
+     *
+     *
+     *
+     */
+
+    private void mixpanelExerciseList(){
+        mixpanel.track("on Exercise list", new Utilities().getUserData(this));
+    }
+
+    private void mixpanelExercisesSelected(){
+        mixpanel.track("on Exercises Selected", new Utilities().getUserData(this));
+    }
+
+    private void mixpanelFilter(){
+        mixpanel.track("on Filter", new Utilities().getUserData(this));
+    }
 
 }

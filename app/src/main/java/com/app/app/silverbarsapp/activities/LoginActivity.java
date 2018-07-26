@@ -7,12 +7,16 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
+import com.app.app.silverbarsapp.adapters.ViewPagerAdapter;
 import com.app.app.silverbarsapp.components.DaggerLoginComponent;
+import com.app.app.silverbarsapp.fragments.MainWorkoutsFragment;
+import com.app.app.silverbarsapp.fragments.SavedWorkoutsFragment;
 import com.app.app.silverbarsapp.models.AccessToken;
 import com.app.app.silverbarsapp.modules.LoginModule;
 import com.app.app.silverbarsapp.presenters.BasePresenter;
@@ -105,6 +109,14 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
+
+      /*  ViewPager mImageViewPager = (ViewPager) findViewById(R.id.pager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabDots);
+
+        setupViewPager(mImageViewPager,0);
+        tabLayout.setupWithViewPager(mImageViewPager, true);*/
+
+
         mFacebookButton.setReadPermissions(Arrays.asList("public_profile", "email", "user_friends"));
         mFacebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -170,11 +182,18 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
         profileTracker.startTracking();
     }
 
+    private void setupViewPager(ViewPager viewPager,int position) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFragment(new MainWorkoutsFragment(), "");
+        adapter.addFragment(new SavedWorkoutsFragment(), "");
 
-    private void connect(){
-        utilities.toast(this,getString(R.string.connect_internet));
+        //adapter.addFragment(new WorkoutsFinishedFragment(), "Workouts finished");
+        //adapter.addFragment(new SavedWorkoutsFragment(), getActivity().getString(R.string.myworkouts_fragment_saved));
+
+        //set adapter
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(position);
     }
-
 
     private void getProfileInfo(String id,String first_name,String birthday,String gender,String email) {
         switch (pendingAction) {
@@ -221,21 +240,16 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
         finalizeAuthentication(account);
     }
 
-
-
     @Override
     public void displayNetworkError() {
-        onLoadingOff();
-        facebookLogout();
-        new Utilities().toast(this,getString(R.string.connect_internet));
+       onError();
     }
 
     @Override
     public void displayServerError() {
-        onLoadingOff();
-        facebookLogout();
-        new Utilities().toast(this,getString(R.string.connect_internet));
+        onError();
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -243,10 +257,6 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void facebookLogout(){
-        //facebook logout
-        LoginManager.getInstance().logOut();
-    }
 
 
     /**
@@ -258,15 +268,31 @@ public class LoginActivity extends BaseAuthenticationActivity implements LoginVi
      *
      */
 
+
+    private void onError(){
+        onLoadingOff();
+        facebookLogout();
+        new Utilities().toast(this,getString(R.string.connect_internet));
+    }
+
+    private void connect(){
+        utilities.toast(this,getString(R.string.connect_internet));
+    }
     private void onLoadingOn(){
         mLoadingView.setVisibility(View.VISIBLE);
     }
 
-    private void onLoadingOff(){
-        mLoadingView.setVisibility(View.GONE);
+    private void facebookLogout(){
+        //facebook logout
+        LoginManager.getInstance().logOut();
     }
 
 
+
+
+    private void onLoadingOff(){
+        mLoadingView.setVisibility(View.GONE);
+    }
 
     @Override
     protected void onDestroy() {

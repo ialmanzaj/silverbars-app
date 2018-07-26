@@ -3,7 +3,6 @@ package com.app.app.silverbarsapp.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +80,7 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return  new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_saved_workout, parent, false));
+        return  new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.saved_workout_item, parent, false));
     }
 
     @Override
@@ -90,16 +89,6 @@ public class SavedWorkoutsAdapter extends RecyclerView.Adapter<SavedWorkoutsAdap
 
         viewholder.mExerciseName.setText(workouts.get(position).getWorkout_name());
         viewholder.mStartButton.setTag(workouts.get(position));
-
-        try {
-
-            String[] workoutImgDir = workouts.get(position).getWorkout_image().split(context.getFilesDir().getPath()+"/SilverbarsImg/");
-
-            if (workoutImgDir.length == 2){
-                viewholder.mExerciseImglocal.setImageBitmap( utilities.loadWorkoutImageFromDevice(context,workoutImgDir[1]));
-            }
-
-        }catch (NullPointerException e){Log.e(TAG,"NullPointerException");}
     }
 
     @Override

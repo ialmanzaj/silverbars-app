@@ -43,7 +43,7 @@
     <string name="rest_sets_text">Descanso entre Serie:</string>
     <string name="rest_sets">60s</string>
     <string name="exercises_text">Ejercicios</string>
-    <string name="start_button">EMPEZAR</string>
+    <string name="start_button">Empezar Rutina</string>
 
 
     <!-- Strings related to item workouts -->
@@ -180,7 +180,7 @@
     <string name="connect_internet">Por favor, conectese a internet</string>
 
     <!---    Strings of  activity workout  -->
-    <string name="activity_workout_music">Música:</string>
+    <string name="activity_workout_music">Música:\u0020</string>
     <string name="activity_workout_none">Ninguna</string>
 
     <!---    Strings of  activity songs  -->
@@ -214,16 +214,21 @@
     <string name="exercise_detail_tab_focus">Enfoque</string>
     <string name="exercise_detail_tab_activacion">Activación</string>
 
+
     <!---    exercise result view     -->
     <string name="exercise_results_sets">sets</string>
     <string name="exercise_results_of">\u0020de\u0020</string>
-
 
     <string name="activity_exercise_selected_change">Cambiar</string>
     <string name="activity_exercise_selected_reps">reps</string>
     <string name="activity_exercise_selected_secs">secs</string>
 
-    <string name="create_activity_workout_final_success">Rutina creada!</string>
+    <string name="activity_create_workout_final_success">Rutina creada!</string>
+
+    <string name="activity_create_workout_tab_exercises">Ejercicios</string>
+
+    <string name="workout_adapter_start_button">Empezar</string>
+
 
 
 </resources>

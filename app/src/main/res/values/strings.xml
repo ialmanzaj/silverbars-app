@@ -40,7 +40,7 @@
     <string name="rest_sets">60s</string>
 
     <string name="exercises_text">Exercises</string>
-    <string name="start_button">START</string>
+    <string name="start_button">Start Workout</string>
 
     <!-- Strings related to item workouts -->
     <string name="workout_name">Workout Name</string>
@@ -188,7 +188,7 @@
 
     <!---    Strings of  activity workout  -->
 
-    <string name="activity_workout_music">Music: </string>
+    <string name="activity_workout_music">Music:\u0020</string>
     <string name="activity_workout_none">None</string>
 
     <!---    Strings of  activity songs  -->
@@ -229,7 +229,12 @@
     <string name="activity_exercise_selected_reps">reps</string>
     <string name="activity_exercise_selected_secs">secs</string>
 
-    <string name="create_activity_workout_final_success">Workout created!</string>
+    <string name="activity_create_workout_final_success">Workout created!</string>
+
+    <string name="activity_create_workout_tab_exercises">Exercises</string>
+
+
+    <string name="workout_adapter_start_button">Start</string>
 
 
     <!---           Strings for authentication       -->
@@ -246,7 +251,5 @@
     <string name="authentication_GENDER" translatable="false">com.app.app.silverbarsapp.GENDER</string>
     <string name="authentication_EMAIL" translatable="false">com.app.app.silverbarsapp.EMAIL</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
 

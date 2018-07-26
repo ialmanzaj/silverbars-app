@@ -29,11 +29,9 @@ public class ServiceGenerator {
             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create());
 
-
     private static Retrofit.Builder builder2 = new Retrofit.Builder()
             .baseUrl(API_URL)
             .addConverterFactory(GsonConverterFactory.create());
-
 
     public static <S> S createService(Class<S> serviceClass) {
         return createService(serviceClass,null);
@@ -44,9 +42,10 @@ public class ServiceGenerator {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         httpClient.addInterceptor(logging);
+
         //time outs
-        httpClient.connectTimeout(10, TimeUnit.SECONDS);
-        httpClient.readTimeout(20, TimeUnit.SECONDS);
+        httpClient.connectTimeout(30, TimeUnit.SECONDS);
+        httpClient.readTimeout(30, TimeUnit.SECONDS);
 
         // return header complete url with header token
         if (token != null){
@@ -57,7 +56,5 @@ public class ServiceGenerator {
         Retrofit retrofit = builder2.client(httpClient.build()).build();
         return retrofit.create(serviceClass);
     }
-
-
 
 }

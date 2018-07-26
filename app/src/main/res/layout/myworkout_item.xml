@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    card_view:cardBackgroundColor="@color/secondColor"
+    card_view:cardCornerRadius="2dp"
+    card_view:cardElevation="2dp"
+    android:layout_margin="4dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3">
+
+            <TextView
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:textSize="45sp"
+                android:textColor="@color/white"
+                android:id="@+id/initial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+            <ImageView
+                android:id="@+id/delete"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_clear_white_24px"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/img"
+                android:contentDescription="@string/workout_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"/>
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/workout_name"
+                android:visibility="gone"
+                android:id="@+id/img_local"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/workout_name"
+                android:textColor="@color/white"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:id="@+id/text" />
+
+        </RelativeLayout>
+        <LinearLayout
+            android:padding="5dp"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal"
+            android:layout_height="5dp"
+            android:layout_weight="1">
+            <Button
+                android:theme="@style/ButtonCreate"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/start_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/workout_adapter_start_button" />
+
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

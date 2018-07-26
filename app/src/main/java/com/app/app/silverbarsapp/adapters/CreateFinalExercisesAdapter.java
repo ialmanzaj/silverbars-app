@@ -20,6 +20,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by isaacalmanza on 10/04/16.
@@ -72,12 +73,10 @@ public class CreateFinalExercisesAdapter extends RecyclerView.Adapter<CreateFina
             ButterKnife.bind(this,view);
         }
 
-
-        public void setExerciseListener(){
-            item.setOnClickListener(view -> {
-                int position = (int) view.getTag();
-                exerciseListener.onExerciseSelected(mExercises.get(position),position);
-            });
+        @OnClick(R.id.item)
+        public void onExerciseSelected(View view){
+            int position = (int) view.getTag();
+            exerciseListener.onExerciseSelected(mExercises.get(position),position);
         }
     }
 
@@ -99,7 +98,6 @@ public class CreateFinalExercisesAdapter extends RecyclerView.Adapter<CreateFina
         try {
 
             viewHolder.item.setTag(position);
-            viewHolder.setExerciseListener();
 
             //asignar nombre y repeticiones a cada elemento del recycler.
             viewHolder.mExerciseName.setText(mExercises.get(position).getExercise().getExercise_name());

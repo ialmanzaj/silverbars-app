@@ -16,7 +16,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -71,7 +70,6 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
 
     @BindView(R.id.toolbar) Toolbar myToolbar;
-    @BindView(R.id.tabHost2) TabHost mTabLayout;
     @BindView(R.id.sets) TextView Sets;
     @BindView(R.id.rest_by_set) AutoCompleteTextView RestbySet;
     @BindView(R.id.rest_by_exercise) AutoCompleteTextView RestbyExercise;
@@ -85,7 +83,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
 
     //@BindView(R.id.skills)RecyclerView mSkillsList;
     @BindView(R.id.music)TextView mTypeOfMusicText;
-    @BindView(R.id.level) TextView mLevelText;
+    @BindView(R.id.main_muscle) TextView mMainMuscle;
 
 
     private ArrayList<ExerciseRep> mExercises;
@@ -107,7 +105,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     private ArrayList<File> mLocalSongs;
     private Metadata mFirstSongMetadata;
 
-    MixpanelAPI mixpanel;
+    private MixpanelAPI mixpanel;
 
     @Override
     protected int getLayout() {
@@ -139,22 +137,24 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         //get the extras
         getExtras(getIntent().getExtras());
         setupToolbar();
-        setupTabs();
+        //setupTabs();
         setupWebview();
         setupAdapter();
 
         addSpotifyListener();
+
+        mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
     }
 
     private void getExtras(Bundle extras){
-        workoutId = extras.getInt("workout_id",0);
+        workoutId = extras.getInt("workout_id", 0);
         workoutName = extras.getString("name");
         workoutImgUrl = extras.getString("image");
         workoutSets = extras.getInt("sets", 1);
         workoutLevel = extras.getString("level");
         mainMuscle = extras.getString("main_muscle");
         mExercises =  getIntent().getParcelableArrayListExtra("exercises");
-        isUserWorkout = extras.getBoolean("user_workout",false);
+        isUserWorkout = extras.getBoolean("user_workout", false);
 
         //init the ui
         initUI();
@@ -169,10 +169,10 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     private void initUI(){
         setExercisesInAdapter(mExercises);
 
-        mLevelText.setText(workoutLevel);
         Sets.setText(String.valueOf(workoutSets));
         RestbyExercise.setText("30");
         RestbySet.setText("60");
+        mMainMuscle.setText(mainMuscle);
 
         //mVoicePerExercise.setOnCheckedChangeListener((compoundButton, isChecked) -> {});
 
@@ -190,11 +190,8 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         }
     }
 
-
-
-
     private void setupTabs(){
-        //Defining Tabs
+       /* //Defining Tabs
         mTabLayout.setup();
 
         TabHost.TabSpec overview = mTabLayout.newTabSpec(getResources().getString(R.string.tab_workout));
@@ -210,14 +207,14 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         exercises.setIndicator(getResources().getString(R.string.tab_exercises));
         exercises.setContent(R.id.exercises);
 
-       /* TabHost.TabSpec skills = mTabLayout.newTabSpec("Focus");
+       *//* TabHost.TabSpec skills = mTabLayout.newTabSpec("Focus");
         skills.setIndicator("Focus");
-        skills.setContent(R.id.skills);*/
+        skills.setContent(R.id.skills);*//*
 
         mTabLayout.addTab(overview);
         mTabLayout.addTab(exercises);
         mTabLayout.addTab(muscles);
-        //mTabLayout.addTab(skills);
+        //mTabLayout.addTab(skills);*/
     }
 
     private void setupWebview(){
@@ -238,13 +235,9 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
     private void setExercisesInAdapter(ArrayList<ExerciseRep> exercises){
         List<String> muscles = new ArrayList<>();
 
-        for (ExerciseRep exerciseRep: exercises){
-          for (MuscleExercise muscle:  exerciseRep.getExercise().getMuscles()){muscles.add(muscle.getMuscle());}
-        }
-
+        for (ExerciseRep exerciseRep: exercises){for (MuscleExercise muscle:  exerciseRep.getExercise().getMuscles()){muscles.add(muscle.getMuscle());}}
 
         mExercisesList.setAdapter(new ExerciseAdapter(this,exercises));
-
         setMusclesToView(muscles);
     }
 
@@ -254,11 +247,10 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
         }
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LOCAL_MUSIC && resultCode == RESULT_OK && data != null){
+        if (requestCode == LOCAL_MUSIC && resultCode == RESULT_OK){
             if (data.hasExtra("songs")){
 
                 ArrayList<File> local_songs = (ArrayList<File>) data.getSerializableExtra("songs");
@@ -276,10 +268,7 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
      *
      *
      *
-     *
      *     Music selection
-     *<p>
-     *
      *
      *
      *
@@ -471,46 +460,33 @@ public class WorkoutActivity extends BaseActivity implements WorkoutView{
      *
      *
      *
-     *
-     *
      *    Mix panel events
-     *<p>
-     *
-     *
-     *
-     *
      *
      *
      *
      */
 
     private void mixpanelEventStartWorkout(){
-        mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
         mixpanel.track("Start Workout", utilities.getUserData(this));
     }
 
     private void mixpanelEventMusicDialog(){
-        mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
         mixpanel.track("Music dialog", utilities.getUserData(this));
     }
 
     private void mixpanelEventSpotify(){
-        mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
         mixpanel.track("on Spotify", utilities.getUserData(this));
     }
 
     private void mixpanelEventSpotifySelected(){
-        mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
         mixpanel.track("spotify Selected", utilities.getUserData(this));
     }
 
     private void mixpanelEventLocalMusic(){
-        mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
         mixpanel.track("on LocalMusic", utilities.getUserData(this));
     }
 
     private void mixpanelEventLocalMusicSelected(){
-        mixpanel = MixpanelAPI.getInstance(this, MIX_PANEL_TOKEN);
         mixpanel.track("localMusic Selected", utilities.getUserData(this));
     }
 

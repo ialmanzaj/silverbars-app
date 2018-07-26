@@ -352,7 +352,7 @@ public class CreateWorkoutFinalActivity extends BaseActivityExtended implements 
 
     @Override
     public void displayWorkoutDatabaseCreated() {
-        Toast.makeText(this, getString(R.string.create_activity_workout_final_success), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.activity_create_workout_final_success), Toast.LENGTH_SHORT).show();
         setResult(RESULT_OK, new Intent());
         finish();
     }

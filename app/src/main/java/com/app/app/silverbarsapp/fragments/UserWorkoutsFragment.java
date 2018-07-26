@@ -6,13 +6,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.app.app.silverbarsapp.R;
 import com.app.app.silverbarsapp.SilverbarsApp;
 import com.app.app.silverbarsapp.activities.CreateWorkoutActivity;
-import com.app.app.silverbarsapp.adapters.UserWorkoutsAdapter;
+import com.app.app.silverbarsapp.adapters.MyWorkoutsAdapter;
 import com.app.app.silverbarsapp.components.DaggerUserWorkoutsComponent;
 import com.app.app.silverbarsapp.models.Workout;
 import com.app.app.silverbarsapp.modules.UserWorkoutsModule;
@@ -34,21 +33,17 @@ import static android.app.Activity.RESULT_OK;
  * Created by isaacalmanza on 10/04/16.
  */
 
-public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsView,UserWorkoutsAdapter.OnWorkoutListener{
+public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsView,MyWorkoutsAdapter.OnWorkoutListener{
 
     private static final String TAG = UserWorkoutsFragment.class.getSimpleName();
 
     @Inject
     UserWorkoutsPresenter mUserWorkoutsPresenter;
 
-
     @BindView(R.id.list_my_workouts) RecyclerView mMyWorkoutViewList;
-
     @BindView(R.id.empty_state) LinearLayout mEmpyStateMyWorkouts;
-    @BindView(R.id.create) Button mCreateWorkoutButton;
 
-
-    private UserWorkoutsAdapter adapter;
+    private MyWorkoutsAdapter adapter;
 
     @Override
     protected int getFragmentLayout() {
@@ -72,16 +67,10 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (this.isAdded()){
-            StaggeredGridLayoutManager sGridLayoutManager = new StaggeredGridLayoutManager(2,
-                    StaggeredGridLayoutManager.VERTICAL);
-            mMyWorkoutViewList.setLayoutManager(sGridLayoutManager);
-            adapter = new UserWorkoutsAdapter(CONTEXT);
-            adapter.setWorkoutListener(this);
-            mMyWorkoutViewList.setAdapter(adapter);
-
-
-        }
+        mMyWorkoutViewList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        adapter = new MyWorkoutsAdapter(CONTEXT);
+        adapter.setWorkoutListener(this);
+        mMyWorkoutViewList.setAdapter(adapter);
 
         mUserWorkoutsPresenter.getMyWorkouts();
     }
@@ -126,7 +115,19 @@ public class UserWorkoutsFragment extends BaseFragment implements UserWorkoutsVi
     }
 
 
-
+    /**
+     *
+     *
+     *
+     *
+     *     UI events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
 
     private void onEmptyViewOn(){
         mEmpyStateMyWorkouts.setVisibility(View.VISIBLE);

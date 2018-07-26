@@ -45,6 +45,14 @@ public class ProgressWeeklyFragment extends BaseProgressionFragment implements P
 
     private static final String TAG = ProgressWeeklyFragment.class.getSimpleName();
 
+    public static final class WeekOfMonth {
+        static final int WEEK_0 = -1;
+        static final int WEEK_1 = 0;
+        static final int WEEK_2 = 1;
+        static final int WEEK_3 = 2;
+        static final int WEEK_4 = 3;
+    }
+
     @Inject
     ProgressionPresenter mProgressionPresenter;
 
@@ -89,20 +97,17 @@ public class ProgressWeeklyFragment extends BaseProgressionFragment implements P
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         mMixpanel = MixpanelAPI.getInstance(CONTEXT, MIX_PANEL_TOKEN);
 
 
         mProgressionAlgoritm = new ProgressionAlgoritm(CONTEXT);
         mProgressionPresenter.getExerciseProgression();
 
-
         initSeekbar();
     }
 
 
     private void initSeekbar(){
-
         mSeekbarWithIntervals.setIntervals(getWeeksAbreb());
         mSeekbarWithIntervals.setInitialProgress(whichWeekIs(new DateTime()));
         mSeekbarWithIntervals.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -127,8 +132,6 @@ public class ProgressWeeklyFragment extends BaseProgressionFragment implements P
     private List<String> getTitlesWeek() {
         return Arrays.asList(CONTEXT.getResources().getStringArray(R.array.weeks));
     }
-
-
 
     @OnClick(R.id.reload)
     public void reload(){
@@ -195,21 +198,21 @@ public class ProgressWeeklyFragment extends BaseProgressionFragment implements P
 
     private ArrayList<ExerciseProgression> getProgressionByWeek(int week) {
         switch (week){
-            case -1:
+            case WeekOfMonth.WEEK_0:
                 //Log.d(TAG, "last_week of the past month");
-                return filter.getProgressionFiltered(mMonthProgressions,getWeeks().get(0));
-            case 0:
+                return filter.getProgressionFiltered(mMonthProgressions,getWeeks().get(week));
+            case WeekOfMonth.WEEK_1:
                 //Log.d(TAG, "week_one");
-                return filter.getProgressionFiltered(mMonthProgressions,getWeeks().get(1));
-            case 1:
+                return filter.getProgressionFiltered(mMonthProgressions,getWeeks().get(week));
+            case WeekOfMonth.WEEK_2:
                 //Log.d(TAG, "week_two");
-                return filter.getProgressionFiltered(mMonthProgressions,getWeeks().get(2));
-            case 2:
+                return filter.getProgressionFiltered(mMonthProgressions,getWeeks().get(week));
+            case WeekOfMonth.WEEK_3:
                 //Log.d(TAG, "week_three");
-                return filter.getProgressionFiltered(mMonthProgressions,getWeeks().get(3));
-            case 3:
+                return filter.getProgressionFiltered(mMonthProgressions,getWeeks().get(week));
+            case WeekOfMonth.WEEK_4:
                 //Log.d(TAG, "week_four");
-                return filter.getProgressionFiltered(mMonthProgressions,getWeeks().get(4));
+                return filter.getProgressionFiltered(mMonthProgressions,getWeeks().get(week));
             default:
                 return null;
         }

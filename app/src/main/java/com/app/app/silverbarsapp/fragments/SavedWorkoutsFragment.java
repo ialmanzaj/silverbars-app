@@ -18,6 +18,8 @@ import com.app.app.silverbarsapp.presenters.BasePresenter;
 import com.app.app.silverbarsapp.presenters.SavedWorkoutsPresenter;
 import com.app.app.silverbarsapp.viewsets.SavedWorkoutsView;
 
+import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -29,7 +31,7 @@ public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkouts
 
     private static final String TAG = SavedWorkoutsFragment.class.getSimpleName();
 
-    @BindView(R.id.list_saved) RecyclerView mLocalWorkoutsList;
+    @BindView(R.id.workouts_saved) RecyclerView mLocalWorkoutsList;
     @BindView(R.id.empty_state)  LinearLayout mEmpyStateSavedWorkout;
 
     @Inject
@@ -59,20 +61,23 @@ public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkouts
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (this.isAdded()){
-            StaggeredGridLayoutManager sGridLayoutManager = new StaggeredGridLayoutManager(2,
-                    StaggeredGridLayoutManager.VERTICAL);
-            mLocalWorkoutsList.setLayoutManager(sGridLayoutManager);
+        if (isAdded()){
+            mLocalWorkoutsList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
             adapter = new SavedWorkoutsAdapter(CONTEXT);
             mLocalWorkoutsList.setAdapter(adapter);
         }
 
-        mSavedWorkoutsPresenter.getWorkouts();
+        try {
+            mSavedWorkoutsPresenter.getWorkouts();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onWorkouts(List<Workout> workouts) {
         onEmptyOff();
+        Collections.reverse(workouts);
         adapter.set(workouts);
     }
 
@@ -81,6 +86,20 @@ public class SavedWorkoutsFragment extends BaseFragment implements SavedWorkouts
         onEmptyOn();
     }
 
+
+    /**
+     *
+     *
+     *
+     *
+     *     UI events
+     *<p>
+     *
+     *
+     *
+     *
+     *
+     */
     private void onEmptyOff(){
         mEmpyStateSavedWorkout.setVisibility(View.GONE);
     }

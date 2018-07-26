@@ -59,30 +59,51 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
-                        <LinearLayout
+
+                        <RelativeLayout
                             android:id="@+id/content_empty"
-                            android:gravity="center_vertical"
+
                             android:orientation="vertical"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
-                            <TextView
-                                android:textColor="@android:color/black"
-                                android:textSize="26sp"
-                                android:layout_gravity="center_horizontal|center_vertical"
-                                android:text="@string/empty_create"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:gravity="center_vertical"
+                                android:layout_above="@+id/add_exercises"
+                                android:orientation="vertical"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+                                <TextView
+                                    android:id="@+id/title"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/black"
+                                    android:textSize="28sp"
+                                    android:text="Tu rutina"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+
+                                <TextView
+                                    android:textAlignment="center"
+                                    android:textColor="@color/gray_active_icon"
+                                    android:textSize="22sp"
+                                    android:text="No hay ningun ejercicio aun"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+                            </LinearLayout>
+                            <Button
+                                android:layout_alignParentBottom="true"
+
+                                android:id="@+id/add_exercises"
+
+                                android:layout_marginStart="5dp"
+                                android:layout_marginEnd="5dp"
+
+                                android:theme="@style/ButtonCreate"
+                                android:text="@string/add_exercises_title"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content" />
 
-                            <Button
-                                android:id="@+id/add_exercises"
-                                android:layout_marginTop="15dp"
-                                android:theme="@style/ButtonCreate"
-                                android:layout_gravity="center_horizontal"
-                                android:text="@string/add_exercises_title"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-                        </LinearLayout>
+                        </RelativeLayout>
                         <RelativeLayout
                             android:orientation="vertical"
                             android:layout_width="match_parent"
